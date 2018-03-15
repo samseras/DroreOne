@@ -78,7 +78,7 @@
 		}
 	}
 </script>
-<style lang="scss" scoped>
+<style scoped>
 	*{margin: 0;padding:0;box-sizing: border-box;}
 	li{list-style: none;}
 	i{font-family: iconfont;font-style:normal;font-size: 26px;}
