@@ -1,30 +1,32 @@
 
 <template>
-	<el-container style="height: 100%;width: 100%;min-width: 1120px;">
-	    <el-header style="width: 100%;height: 70px;">
-	        <el-row :gutter="10" style="margin: 0;width: 100%;" class="alleye">
-			    <el-col :xs="6" :sm="7" :md="7" :lg="5" :xl="1">
-			    	<img src="../../static/img/eye.png"/>Workbench
-			    </el-col>
-			    <el-col :xs="6" :sm="6" :md="7" :lg="9" :xl="11" class="control">
-		 	        <div v-for="(k,index) in manage" @click="show(index)">{{k}}</div>
-			    </el-col>
-			    <el-col :xs="5" :sm="5" :md="5" :lg="5" :xl="11" id="getTime">
-	 	            	{{currTime}}
-			    </el-col>
-			    <el-col :xs="7" :sm="6" :md="5" :lg="5" :xl="1" >
-	 	            <div v-for="item in title"><a href="#"><i v-html="item"></i></a></div>
-			    </el-col>
-			</el-row>
-	    </el-header>
-	    <el-main>
-	    	<div v-show="isShow[0]" class="element">主页</div>
-	 	    <control v-show="isShow[1]" class="element"></control>
-	 	    <facility v-show="isShow[2]" class="element"></facility>
-	 	    <analyze v-show="isShow[3]" class="element"></analyze>
-            <div v-show="isShow[4]">配置</div>
-	    </el-main>
-	</el-container>
+	<div>
+        <el-container style="height: 100%;width: 100%;min-width: 1120px;">
+            <el-header style="width: 100%;height: 70px;">
+                <el-row :gutter="10" style="margin: 0;width: 100%;" class="alleye">
+                    <el-col :xs="6" :sm="7" :md="7" :lg="5" :xl="1">
+                        <img src="../../static/img/eye.png"/>Workbench
+                    </el-col>
+                    <el-col :xs="6" :sm="6" :md="7" :lg="9" :xl="11" class="control">
+                        <div v-for="(k,index) in manage" @click="show(index)">{{k}}</div>
+                    </el-col>
+                    <el-col :xs="5" :sm="5" :md="5" :lg="5" :xl="11" id="getTime">
+                        {{currTime}}
+                    </el-col>
+                    <el-col :xs="7" :sm="6" :md="5" :lg="5" :xl="1" >
+                        <div v-for="item in title"><a href="#"><i v-html="item"></i></a></div>
+                    </el-col>
+                </el-row>
+            </el-header>
+            <el-main>
+                <div v-show="isShow[0]" class="element">主页</div>
+                <control v-show="isShow[1]" class="element"></control>
+                <facility v-show="isShow[2]" class="element"></facility>
+                <analyze v-show="isShow[3]" class="element"></analyze>
+                <div v-show="isShow[4]">配置</div>
+            </el-main>
+        </el-container>
+    </div>
 </template>
 
 
@@ -76,7 +78,7 @@
 		}
 	}
 </script>
-<style scoped>
+<style lang="scss" scoped>
 	*{margin: 0;padding:0;box-sizing: border-box;}
 	li{list-style: none;}
 	i{font-family: iconfont;font-style:normal;font-size: 26px;}
@@ -93,5 +95,4 @@
 
 	.el-main{flex: 1;}
 	.element{width: 100%;height: 100%;}
-
 </style>
