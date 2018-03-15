@@ -1,0 +1,528 @@
+<template>
+    <div id="passenger-Flow">
+        <div id="passengerF-Top">
+            <p>客流分析</p>
+            <p>图标配置</p>
+
+        </div>
+        <div id="passengerF-Content" >
+            <div >
+                <div class="top">
+                    <div class="name">{{data[0].title}}</div>
+                    <div class="top_draw">
+                        <img src="../../../../static/img/all.png" alt="">
+                        <img src="../../../../static/img/out.png" alt="">
+                    </div>
+                </div>
+                <div id="pancake" :style="{width:data[0].width,height:data[0].height,left:data[0].left,top:data[0].top}" class="children">
+
+                </div>
+            </div>
+            <div >
+                <div class="top">
+                    <div class="name">{{data[1].title}}</div>
+                    <div class="top_draw">
+                        <img src="../../../../static/img/all.png" alt="">
+                        <img src="../../../../static/img/out.png" alt="">
+                    </div>
+                </div>
+                <div id="weather" :style="{width:data[1].width,height:data[1].height,left:data[1].left,top:data[1].top}" class="children">
+
+                </div>
+            </div>
+            <div >
+                <div class="top">
+                    <div class="name">{{data[2].title}}</div>
+                    <div class="top_draw">
+                        <img src="../../../../static/img/all.png" alt="">
+                        <img src="../../../../static/img/out.png" alt="">
+                    </div>
+                </div>
+                <div id="age" :style="{width:data[2].width,height:data[2].height,left:data[2].left,top:data[2].top}" class="children">
+
+                </div>
+            </div>
+            <div >
+                <div class="top">
+                    <div class="name">{{data[3].title}}</div>
+                    <div class="top_draw">
+                        <img src="../../../../static/img/all.png" alt="">
+                        <img src="../../../../static/img/out.png" alt="">
+                    </div>
+                </div>
+                <div id="province" :style="{width:data[3].width,height:data[3].height,left:data[3].left,top:data[3].top}" class="children">
+
+                </div>
+            </div>
+            <div >
+                <div class="top">
+                    <div class="name">{{data[4].title}}</div>
+                    <div class="top_draw">
+                        <img src="../../../../static/img/all.png" alt="">
+                        <img src="../../../../static/img/out.png" alt="">
+                    </div>
+                </div>
+                <div id="tendency" :style="{width:data[4].width,height:data[4].height,left:data[4].left,top:data[4].top}" class="children">
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</template>
+
+<script>
+    import echarts from "../../../../static/js/echarts.min.js"
+    import analyzeData from "../../../../API/entrance.js"
+
+    export default {
+        data(){
+            return{
+                data:[
+                    {width:"45%",height:"400px",left:"0%",top:"0%",title:"游客流入流出"},
+                    {width:"55%",height:"400px",left:"45%",top:"0%",title:"未来一周天气"},
+                    {width:"33.3%",height:"400px",left:"0%",top:"50%",title:"年龄段统计"},
+                    {width:"33.3%",height:"400px",left:"33.3%",top:"50%",title:"省份排名"},
+                    {width:"33.3%",height:"400px",left:"66.6%",top:"50%",title:"游客趋势分析"}
+                ],
+                Analyzedata:[]
+            }
+        },
+        methods:{
+            draw(){
+                analyzeData.getAnalyzeData((data)=>{
+                    console.log(data);
+                    this.Analyzedata = data.result;
+
+                    var  pancakeData=JSON.parse(this.Analyzedata[1].result);
+                    var  weatherData = JSON.parse(this.Analyzedata[2].result);
+                    var  ageData = JSON.parse(this.Analyzedata[4].result);
+                    var  provinceData = JSON.parse(this.Analyzedata[3].result);
+                    var  tendencyData = JSON.parse(this.Analyzedata[0].result);
+                    console.log(pancakeData);
+                    console.log(weatherData);
+                    console.log(ageData);
+                    console.log(provinceData);
+                    console.log(tendencyData);
+
+                    var myChartPancake = echarts.init(document.getElementById("pancake"));
+
+                    myChartPancake.setOption({
+                        title:{
+                            text:'',
+                            textStyle : {
+                                color: '#fff',
+                                fontSize:18
+                            }
+                        },
+                        legend:{//图例组件
+                            //                orient:'horizontal',
+                            data:['流入','流出'],
+                            right:'20',
+                            textStyle:{
+                                color:"#fff"
+                            }
+                        },
+                        tooltip : {//提示框
+                            trigger: 'axis',
+                            axisPointer : {            // 坐标轴指示器，坐标轴触发有效
+                                type : 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+                            }
+                        },
+                        xAxis :
+                            {
+                                type: 'category',
+                                /*data: ['11点','12点','13点','14点','15点','16点'],*/
+                                data:pancakeData.xData,
+                                axisLine:{
+                                    lineStyle:{
+                                        color:'#fff',
+                                        width:0.1
+                                    }
+                                }
+                            },
+                        yAxis :
+                            {
+                                type : 'value',
+                                axisLine:{//坐标轴轴线设置
+                                    lineStyle:{
+                                        color:"#fff",
+                                        width:1,
+                                    }
+                                }
+                            },
+                        series : [
+                            {
+                                name:'流入',
+                                type:'bar',
+                                barWidth: '35%',
+                                data:pancakeData.Cdata,
+                                /*data:[451,668,905,498,276,164],*/
+                                itemStyle:{
+                                    normal:{
+                                        color:'#9a57b4',
+                                        borderType:'dotted',
+                                        barBorderRadius:5
+                                    }
+                                },
+                                //图形上的文本标签
+                                label:{
+                                    normal:{
+                                        show:true,
+                                        position:'top',
+                                        color:'#fff'
+                                    }
+                                }
+                            },
+                            {
+                                name:'流出',
+                                type:'bar',
+                                barWidth: '30%',
+                                data:pancakeData.Rdata,
+//				                data:[221,683,358,321,257,632],
+                                itemStyle:{
+                                    normal:{
+                                        color:'#66cc66',
+                                        barBorderRadius:5
+                                    }
+                                },
+                                label: {
+                                    normal: {
+                                        show: true,
+                                        position: 'top',
+                                        color:"#fff"
+                                    }
+                                }
+                            },
+
+                        ]
+                    });
+                    //年龄段统计
+                    var myChartPancake = echarts.init(document.getElementById("age"));
+
+                    var pancakeData=[
+                        {value:1548, name: '青年'},
+                        {value:300, name: '少年'},
+                        {value:120, name: '童年'},
+                        {value:634, name: '中年'},
+                        {value:735, name: '老年'}
+                    ];
+
+
+                    var p = [' (18~40岁)：',' (7~17岁)：',' (0~7岁)：',' (41~65岁)：',' (65岁以后)：'];
+                    myChartPancake.setOption({
+                        tooltip : {
+                            trigger: 'item',
+                            formatter: "{a} <br/>{b} : {c} ({d}%)"
+                        },
+
+                        legend: {
+                            formatter:  function(name){
+                                var total = 0;
+                                var target;
+                                for (var i = 0, l = ageData.data.length; i < l; i++) {
+                                    total += ageData.data[i].value;
+                                    if (ageData.data[i].name == name) {
+                                        target = ageData.data[i].value;
+                                        name = name+ p[i];
+                                    }
+                                }
+                                return name + '' + ((target/total)*100).toFixed(0) + '%';
+                            },
+                            icon: 'circle',
+                            /*orient: 'vertical',*/
+                            right: '10px',
+                            top:'bottom',
+                            /*data: ['青年','童年','少年','中年','老年'],*/
+                            data:ageData.xData,
+                            textStyle:{color:"#fff"}
+                        },
+                        series : [
+                            {
+                                name: '',
+                                type: 'pie',
+                                radius : '50%',
+                                center: ['60%', '40%'],
+                                data:pancakeData,
+                                itemStyle: {
+                                    emphasis: {
+                                        shadowBlur: 10,
+                                        shadowOffsetX: 0,
+                                        shadowColor: 'rgba(0, 0, 0, 0.5)'
+                                    }
+                                }
+                            }
+                        ],
+                        color:['#68c6e0','#9acc5d','#f98860','#ffcc79','#f8bfdf']
+                    });
+
+
+                    //省份
+                    var myChartpie = echarts.init(document.getElementById("province"));
+
+                    myChartpie.setOption({
+                        color:["red",'black',"green",'blue','dark'],
+                        title: {
+                            text: '',
+                            textStyle:{
+                                color:"#fff"
+                            }
+                        },
+                        legend: {
+                            data: ['2011年']
+                        },
+                        grid: {
+                            left: '3%',
+                            right: '4%',
+                            bottom: '3%',
+                            containLabel: true
+                        },
+                        xAxis: {
+                            show:false,
+                            type: 'value',
+                            boundaryGap: [0, 0.01]
+                        },
+                        yAxis: {
+                            type: 'category',
+                            axisLine:{//坐标轴轴线设置
+                                show:false,
+                                lineStyle:{
+                                    color:"#fff",
+                                    width:1,
+                                }
+                            },
+                            data:provinceData.xData,
+                            /*data: ['广州','上海','北京','河南','陕西'],*/
+                            axisTick:{
+                                show:false
+                            },
+                        },
+                        series: [
+                            {
+                                barWidth:'40%',
+                                type: 'bar',
+                                center: ['50%', '40%'],
+                                data:provinceData.data,
+                                /*data: [1820, 2348, 2903, 6490, 7174],*/
+                                itemStyle:{
+                                    normal:{
+                                        color:function(params){
+                                            var colorList=['#f1c40f','#ff6633','#66cc66','#49a2de','#9a57b4'];
+                                            return colorList[params.dataIndex];
+                                        },
+                                        barBorderRadius:10
+                                    }
+                                },
+                                label: {
+                                    normal: {
+                                        show: true,
+                                        position: 'right',
+                                        color:"#fff"
+                                    }
+                                }
+                            },
+                        ]
+                    });
+
+
+                    //天气
+                    var myChartMap = echarts.init(document.getElementById("weather"));
+                    myChartMap.setOption({
+                        title: {
+                            text: '',
+                            textStyle:{
+                                color:'#fff',
+                            }
+                        },
+                        tooltip: {
+                            trigger: 'axis'
+                        },
+                        legend: {
+                            data:['最高气温','最低气温']
+                        },
+                        toolbox: {
+                            show: true,
+                            iconStyle:{
+                                normal:{
+                                    color:"#fff",
+                                    opacity:1,
+                                    borderWith:2,
+                                }
+                            },
+//			            feature: {
+//			                dataView: {readOnly: false},
+//			                magicType: {type: ['line', 'bar']},
+//			                saveAsImage: {}
+//			            }
+                        },
+                        xAxis:  {
+                            type: 'category',
+                            boundaryGap: false,
+                            axisLine:{
+                                lineStyle:{
+                                    color:'#fff'
+                                },
+                            },
+                            /*data: ['周一','周二','周三','周四','周五','周六','周日']*/
+                            data:weatherData.xData,
+                        },
+                        yAxis: {
+                            type: 'value',
+                            axisLine:{
+                                lineStyle:{
+                                    color:"#FFF"
+                                }
+                            },
+                            axisLabel: {
+                                formatter: '{value} °C'
+                            }
+                        },
+                        series: [
+                            {
+                                name:'最高气温',
+                                type:'line',
+                                /*data:[11, 11, 15, 13, 12, 13, 10],*/
+                                data:weatherData.Rdata,
+                                markPoint: {
+                                    data: [
+                                        {type: 'max', name: '最大值'},
+                                        {type: 'min', name: '最小值'}
+                                    ]
+                                },
+                                label:{
+                                    normal:{
+                                        show:"true",
+                                        position:'top',
+                                        color:"#fff"
+                                    }
+                                },
+                                itemStyle:{
+                                    normal:{
+                                        color:'#E9E793'
+                                    }
+                                }
+                            },
+                            {
+                                name:'最低气温',
+                                type:'line',
+                                data:weatherData.Cdata,
+//			                data:[1, -2, 2, 5, 3, 2, 0],
+                                markPoint: {
+                                    data: [
+                                        {type: 'max', name: '最大值'},
+                                        {type: 'min', name: '最小值'}
+                                    ]
+                                },
+                                label:{
+                                    normal:{
+                                        show:"true",
+                                        position:'top',
+                                        color:"#fff"
+                                    }
+                                },
+                                itemStyle:{
+                                    normal:{
+                                        color:'#D23D7C'
+                                    }
+                                }
+                            }
+                        ]
+                    });
+
+                    //区域游客统计
+
+                    var myChartBar = echarts.init(document.getElementById("tendency"));
+                    myChartBar.setOption({
+                        color:['#F1C40F'],
+                        title : {
+                            text: '',
+                            textStyle:{
+                                color:"#fff"
+                            }
+                        },
+                        tooltip : {
+                            trigger: 'axis'
+                        },
+                        calculable : true,
+                        xAxis : [
+                            {
+                                type : 'category',
+                                boundaryGap : false,
+                                /*data : ['10.1','10.2','10.3','10.4','10.5','10.6','10.7'],*/
+                                data : tendencyData.xData,
+                                axisLine:{
+                                    lineStyle:{
+                                        color:'#fff',
+                                        width:0.1
+                                    }
+                                }
+                            }
+                        ],
+                        yAxis : [
+                            {
+                                type : 'value',
+                                axisLine:{
+                                    lineStyle:{
+                                        color:'#fff',
+                                        width:0.1
+                                    }
+                                }
+                            }
+                        ],
+                        series : [
+                            {
+                                name:'人数',
+                                type:'line',
+                                smooth:true,
+                                itemStyle: {normal: {areaStyle: {type: 'default'}}},
+                                /* data:[240, 100, 130, 54, 260, 830, 710]*/
+                                data:tendencyData.data
+                            }
+
+                        ]
+                    });
+
+                });
+            }
+        },
+        mounted(){
+            this.draw();
+
+        }
+    }
+</script>
+
+<style scoped>
+    #passenger-Flow{width: 100%;height: 100%;background: #174984;display: flex;flex-direction: column;}
+    #passengerF-Top{
+        width: 92%;
+        height:35px;
+        margin: 15px auto;
+        background: #fafafa;
+        border: 1px solid #e0e0e0;
+        display: flex;
+        justify-content: space-between;
+    }
+    #passengerF-Top>p{
+        line-height: 35px;
+        font-size: 12px;
+        margin-left: 15px;
+        margin-right: 15px;
+    }
+    #passengerF-Content{width: 92%;margin: 0 auto;flex:1;position:relative;}
+    #passengerF-Content>div{
+        position: absolute;
+    }
+    div.name{height:40px;line-height:40px;float:left;padding-left:20px;}
+    div.top_draw{float:right;height:40px;line-height:40px;}
+
+    div.top_draw>img{padding:10px 10px;}
+    div.top{font-size:18px;background:#FAFAFA;height:40px;}
+    div.children{border:1px solid #EDEDED;}
+    div.children:first-child{border-bottom:none;border-right: none;}
+    div.children:nth-child(2){border-bottom:none;}
+    div.children:nth-child(3){border-bottom:none;border-right: none;}
+    div.children:nth-child(4){border-bottom:none;border-right: none;}
+    div.children:nth-child(5){border-bottom:none;}
+
+</style>

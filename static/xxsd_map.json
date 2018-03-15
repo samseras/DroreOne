@@ -1,0 +1,31 @@
+{
+	"count":10,
+	"current_page":1,
+	"data":[
+		{"id": "2d006e351891418bb57627da0d2cdf00", "name": "水质监测", "pageSrc": "http://label.drore.com/gisLabelTabImage/public/defaults/48*48/shuizhijiance.png", "src": "http://label.drore.com/gisLabelTabImage/public/defaults/24*24/shuizhijiance.png"}
+		,
+		{"id": "351ea160666c488e838b6fc91f5117d9", "name": "景区3D", "pageSrc": "http://label.drore.com/gisLabelTabImage/public/defaults/48*48/jingqu3d.png", "src": "http://label.drore.com/gisLabelTabImage/public/defaults/24*24/jingqu3d.png"}
+		,
+		{"id": "55a3b7f8ec3048d78fa308e9b9c28ffb", "name": "景点", "pageSrc": "http://label.drore.com/gisLabelTabImage/public/defaults/48*48/jingdian.png", "src": "http://label.drore.com/gisLabelTabImage/public/defaults/24*24/jingdian.png"}
+		,
+		{"id": "5f61d94594774af19d79a6e04e230a06", "name": "空中全景", "pageSrc": "http://label.drore.com/gisLabelTabImage/public/defaults/48*48/kongzhongquanjing.png", "src": "http://label.drore.com/gisLabelTabImage/public/defaults/24*24/kongzhongquanjing.png"}
+		,
+		{"id": "5f6f30dc1d3349f09bf24cf6ee7c2259", "name": "车站", "pageSrc": "http://label.drore.com/gisLabelTabImage/public/defaults/48*48/zhantai.png", "src": "http://label.drore.com/gisLabelTabImage/public/defaults/24*24/zhantai.png"}
+		,
+		{"id": "850f66e11a9c4987a1053ca1c3d28691", "name": "全景摄像头", "pageSrc": "http://label.drore.com/gisLabelTabImage/public/defaults/48*48/quanjingshexiangtou.png", "src": "http://label.drore.com/gisLabelTabImage/public/defaults/24*24/quanjingshexiangtou.png"}
+		,
+		{"id": "87b6f8a7502b4ccb9d89b0fc0421ece9", "name": "室内全景", "pageSrc": "http://label.drore.com/gisLabelTabImage/public/defaults/48*48/shineiquanjing.png", "src": "http://label.drore.com/gisLabelTabImage/public/defaults/24*24/shineiquanjing.png"}
+		,
+		{"id": "efd3eef53ced4666a3f6129b11c86b28", "name": "室外全景", "pageSrc": "http://label.drore.com/gisLabelTabImage/public/defaults/48*48/shiwaiquanjing.png", "src": "http://label.drore.com/gisLabelTabImage/public/defaults/24*24/shiwaiquanjing.png"}
+		,
+		{"id": "f9e38aac16ec4da69eb6e5694c96e435", "name": "环境监测", "pageSrc": "http://label.drore.com/gisLabelTabImage/public/defaults/48*48/huanjingjiance.png", "src": "http://label.drore.com/gisLabelTabImage/public/defaults/24*24/huanjingjiance.png"}
+		,
+		{"id": "ff68cb3ee7cc48d2984dfcf3c396044e", "name": "地面全景", "pageSrc": "http://label.drore.com/gisLabelTabImage/public/defaults/48*48/dimianquanjing.png", "src": "http://label.drore.com/gisLabelTabImage/public/defaults/24*24/dimianquanjing.png"}
+	],
+	"length":10,
+	"errCode":8200,
+	"message":"查询成功！",
+	"page_size":9999,
+	"success":true,
+	"total_page":1
+}
