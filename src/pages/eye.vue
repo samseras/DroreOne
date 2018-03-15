@@ -1,6 +1,5 @@
 
 <template>
-	<div>
         <el-container style="height: 100%;width: 100%;min-width: 1120px;">
             <el-header style="width: 100%;height: 70px;">
                 <el-row :gutter="10" style="margin: 0;width: 100%;" class="alleye">
@@ -26,7 +25,6 @@
                 <div v-show="isShow[4]">配置</div>
             </el-main>
         </el-container>
-    </div>
 </template>
 
 
