@@ -16,8 +16,7 @@ export default {
 }
 </script>
 
-<style lang="scss">
-    @import "style/func";
+<style>
 	*{margin: 0;padding: 0;}
 html,body,#app {
   width: 100%;
