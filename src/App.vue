@@ -6,7 +6,7 @@
 </template>
 
 <script>
-	
+
 export default {
   name: 'App',
   data(){
@@ -16,7 +16,8 @@ export default {
 }
 </script>
 
-<style>
+<style lang="scss">
+    @import "style/func";
 	*{margin: 0;padding: 0;}
 html,body,#app {
   width: 100%;

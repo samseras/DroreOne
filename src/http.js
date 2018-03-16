@@ -19,13 +19,13 @@ axios.interceptors.request.use(
 //响应拦截器即异常处理
 axios.interceptors.response.use(
     response => {
-        if (response.status === 200 && response.data.code === 200) {//成功判断
-            return response.data.data
+        if (response.status === 200 && response.request.status === 200) {//成功判断
+            return response.data
         }
         return response
     },
     error => {//失败判断
-        if (error.response.data.code === 401 || error.response.data.code === 201) {
+        if (error.response.data.code === 401 || error.request.status === 201) {
             store.dispatch('logout').then(() => location.reload())
         }
         return Promise.reject(error)

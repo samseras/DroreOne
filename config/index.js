@@ -15,6 +15,10 @@ module.exports = {
             target: 'http://192.168.0.150:8091',
             changeOrigin: true
         },
+        '/dsp': {
+            target: 'http://192.168.0.110:8090/',
+            changeOrigin: true
+        }
     },
 
     // Various Dev Server settings

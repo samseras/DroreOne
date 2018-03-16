@@ -13,7 +13,13 @@ import '../../static/js/echarts.min.js'
 import MicServiceManagementSystem from '@/pages/MicroService/MicroServiceManagementSystem'
 import Index from '@/pages/index'
 import login from '@/pages/login'
+
 import eye from '@/pages/eye'
+import Controler from '@/components/controler'
+import Analyze from '@/components/analyze'
+import Facility from '@/components/facility'
+import HomePage from '@/components/homePage'
+import Deploy from '@/components/deploy'
 
 
 
@@ -29,23 +35,55 @@ export default new Router({
   routes: [
     {
       path: '/',
-      component: eye
+      redirect: '/index',
+      component: Index
     },
     {
       path: '/MicServiceManagementSystem',
       component: MicServiceManagementSystem
     },
+      // 主页面
     {
-      path: '/Index',
+      path: '/index',
       component: Index
     },
     {
       path: '/login',
       component: login
     },
+      //全视之眼
     {
       path: '/eye',
-      component: eye
+      name: 'eye',
+      redirect: '/controler',
+      component: eye,
+        children: [
+            {
+                path: '/homePage',
+                name: 'homePage',
+                component: HomePage
+            },
+            {
+                path: '/controler',
+                name: 'controler',
+                component: Controler
+            },
+            {
+                path: '/analyze',
+                name: 'analyze',
+                component: Analyze
+            },
+            {
+                path: '/facility',
+                name: 'facility',
+                component: Facility
+            },
+            {
+                path: '/deploy',
+                name: 'deploy',
+                component: Deploy
+            }
+        ]
     }
   ]
 })

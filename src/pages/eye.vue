@@ -7,7 +7,7 @@
                         <img src="../../static/img/eye.png"/>Workbench
                     </el-col>
                     <el-col :xs="6" :sm="6" :md="7" :lg="9" :xl="11" class="control">
-                        <div v-for="(k,index) in manage" @click="show(index)">{{k}}</div>
+                        <div v-for="(item,index) in manage" @click="goModule(item)">{{item}}</div>
                     </el-col>
                     <el-col :xs="5" :sm="5" :md="5" :lg="5" :xl="11" id="getTime">
                         {{currTime}}
@@ -18,20 +18,23 @@
                 </el-row>
             </el-header>
             <el-main>
-                <div v-show="isShow[0]" class="element">主页</div>
-                <control v-show="isShow[1]" class="element"></control>
-                <facility v-show="isShow[2]" class="element"></facility>
-                <analyze v-show="isShow[3]" class="element"></analyze>
-                <div v-show="isShow[4]">配置</div>
+                <!--<div v-show="isShow[0]" class="element">主页</div>-->
+                <!--<control v-show="isShow[1]" class="element"></control>-->
+                <!--<facility v-show="isShow[2]" class="element"></facility>-->
+                <!--<analyze v-show="isShow[3]" class="element"></analyze>-->
+                <!--<div v-show="isShow[4]">配置</div>-->
+                <router-view/>
             </el-main>
+
         </el-container>
 </template>
 
 
 <script>
-    import control from "../components/eye/controler.vue"
-    import facility from "../components/eye/facility.vue"
-    import analyze from "../components/eye/analyze.vue"
+    import control from "../components/controler.vue"
+    import facility from "../components/facility.vue"
+    import analyze from "../components/analyze.vue"
+    // import api from '@/api'
 
 	export default {
 		data() {
@@ -42,8 +45,13 @@
 	            isShow:[false,true,false,false,false]
 				     }
 		 },
+        // created () {
+        //     api.analyze.getControlData().then((res)=>{
+        //         console.log(res, 'ioioioioioooo')
+        //     })
+        // },
 		 methods:{
-			time:function(){
+			time(){
 				var d = new Date();
 				var arr = ['天','一','二','三','四','五','六'];
 				var date = "";
@@ -59,11 +67,25 @@
 				date+="星期"+day+")";
 		        this.currTime = date;
 			},
-			show:function(index){
-				this.isShow.forEach((item,idx)=>{
-	  			    this.$set(this.isShow,idx,(idx == index ? true : false))
-				})
-				console.log(this.isShow)
+             goModule (item){
+				console.log(item, '909009090')
+                 switch (item){
+                     case '主页':
+                        this.$router.push({path:'/homePage'});
+                         break;
+                     case '管控':
+                         this.$router.push({path:'/controler'});
+                         break;
+                     case '设施':
+                         this.$router.push({path:'/facility'});
+                         break;
+                     case '分析':
+                         this.$router.push({path:'/analyze'});
+                         break;
+                     case '配置':
+                         this.$router.push({path:'/deploy'});
+                         break;
+                 }
 			}
 		},
 	   components:{

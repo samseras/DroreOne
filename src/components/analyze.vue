@@ -14,8 +14,8 @@
 </template>
 
 <script>
-  import echarts from "../../../static/js/echarts.min.js"
-  import passengerFlow from "./analyze/passengerFlowT.vue"
+  import echarts from "../../static/js/echarts.min.js"
+  import passengerFlow from "./eye/analyze/passengerFlowT.vue"
   export default {
   	data(){
   		return{

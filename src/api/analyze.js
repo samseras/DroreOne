@@ -8,8 +8,8 @@ import axios from '@/http'
 const analyze = {
     getControlData (params) {
         return axios ({
-            method: 'POST',
-            url: '/analysis/service/v1/scenario4dashboard',
+            method: 'GET',
+            url: '/dsp/service/v1/dashboard/scenarioMaps/1',
             params
         })
 

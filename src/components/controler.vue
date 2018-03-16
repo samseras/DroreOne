@@ -28,14 +28,14 @@
 </template>
 
 <script>
-	import dataId from "../../../static/xxsd_map.json"
-	import Map from "../../../static/js/droreMap.js"
-	import mapLabe from "../../../static/js/mapLabelInformationChildrenForm.js"
-	import masterDataGrid1 from "../../../static/js/masterDataGrid1.js"
-	import broadCast from "./controlChildren/broadcast.vue"
-	import warnEvent from "./controlChildren/warning.vue"
-	import securityPerson from "./controlChildren/securityperson.vue"
-    import build from "./controlChildren/building.vue"
+	import dataId from "../../static/xxsd_map.json"
+	import Map from "../../static/js/droreMap.js"
+	import mapLabe from "../../static/js/mapLabelInformationChildrenForm.js"
+	import masterDataGrid1 from "../../static/js/masterDataGrid1.js"
+	import broadCast from "./eye/controlChildren/broadcast.vue"
+	import warnEvent from "./eye/controlChildren/warning.vue"
+	import securityPerson from "./eye/controlChildren/securityperson.vue"
+    import build from "./eye/controlChildren/building.vue"
 
 
 export default {
@@ -86,7 +86,7 @@ export default {
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
+<style lang="scss" scoped>
   *{margin: 0;padding: 0;}
   ul,li {list-style-type: none;padding: 0;}
   .map{width: 100%;height: 100%;position: relative;display: flex;}

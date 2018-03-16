@@ -8,7 +8,9 @@
              	 		<div class="change"><a href="/MicServiceManagementSystem">大数据分析>><img src="../../static/img/bagData.png"/></a></div>
              	 		<div class="change"><a href="">第三方应用>><img src="../../static/img/threeSoft.png"/></a></div>
              	 	</li>
-             	 	<li class="two change" id="eye"><a href="/eye">全视之眼>><img src="../../static/img/eye.png"/></a></li>
+             	 	<li class="two change" id="eye">
+                        <router-link to="/eye">全视之眼>><img src="../../static/img/eye.png"/></router-link>
+                    </li>
              	 	<li class="three">
              	 		<div class="dataCenter change" id="dataCenter"><a href="">数据中心>><img src="../../static/img/dataCenter.png"/></a></div>
              	 		<div class="deploy" id="deploy">

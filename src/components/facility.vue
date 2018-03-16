@@ -27,13 +27,14 @@
 
 <script>
 
-    import toilet from "./facilityChildren/toilet.vue"
-    import park from "./facilityChildren/park.vue"
-    import shop from "./facilityChildren/shop.vue"
-    import road from "./facilityChildren/road.vue"
-    import dustbin from "./facilityChildren/dustbin.vue"
-    import scenicName from "./facilityChildren/scenicName.vue"
-    import build from "./facilityChildren/building.vue"
+    import toilet from "./eye/facilityChildren/toilet.vue"
+    import park from "./eye/facilityChildren/park.vue"
+    import shop from "./eye/facilityChildren/shop.vue"
+    import road from "./eye/facilityChildren/road.vue"
+    import dustbin from "./eye/facilityChildren/dustbin.vue"
+    import scenicName from "./eye/facilityChildren/scenicName.vue"
+    import build from "./eye/facilityChildren/building.vue"
+
 
   export default {
     data () {
