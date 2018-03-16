@@ -1,15 +1,15 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import '../../static/js/jquery-1.8.3.min.js'
-import ElementUI from 'element-ui'
-
-import 'element-ui/lib/theme-chalk/index.css'
-import 'element-ui/lib/index.js'
-import '../../static/css/font.css'
+// import ElementUI from 'element-ui'
+//
+// import 'element-ui/lib/theme-chalk/index.css'
+// import 'element-ui/lib/index.js'
+// import '../../static/css/font.css'
 
 
 import '../../static/js/echarts.min.js'
-import HelloWorld from '@/components/HelloWorld'
+// import HelloWorld from '@/components/HelloWorld'
 import MicServiceManagementSystem from '@/pages/MicroService/MicroServiceManagementSystem'
 import Index from '@/pages/index'
 import login from '@/pages/login'
@@ -19,7 +19,7 @@ import eye from '@/pages/eye'
 
 
 Vue.use(Router)
-Vue.use(ElementUI)
+// Vue.use(ElementUI)
 
 export default new Router({
 	mode:"history", //切换路径模式，变成history模式,不然路径为/#/home

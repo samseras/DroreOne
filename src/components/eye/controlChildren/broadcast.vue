@@ -118,7 +118,7 @@
 
 <script>
 	import broadcastZtree from "./children/broadcastzTree.vue"
-	import echarts from "../../../../static/js/echarts.min.js"
+	// import echarts from "../../../../static/js/echarts.min.js"
 
 	var date= [
         {value:1580, name: '1人'},
@@ -211,7 +211,7 @@ export default {
   	    },
         drawLine(){
 	        // 基于准备好的dom，初始化echarts实例
-	        let myChart = echarts.init(document.getElementById('pie'))
+	        let myChart = this.$echarts.init(document.getElementById('pie'))
 	        // 绘制图表
 	        myChart.setOption({
 	        series : [

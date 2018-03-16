@@ -60,7 +60,7 @@
 
 <script>
 	import securityZtree from "./children/securityzTree.vue"
-	import echarts from "../../../../static/js/echarts.min.js"
+	// import echarts from "../../../../static/js/echarts.min.js"
 	var data = [
         {value:1548, name: '1人'},
         {value:50, name: '4人'}
@@ -115,7 +115,7 @@ export default {
   	    },
         drawLine(){
 	        // 基于准备好的dom，初始化echarts实例
-	        let myChart = echarts.init(document.getElementById('security'))
+	        let myChart = this.$echarts.init(document.getElementById('security'))
 	        // 绘制图表
 	        myChart.setOption({
 	        series : [
