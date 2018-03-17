@@ -26,7 +26,7 @@
             height: 100%;
             width: 100%;
             overflow: auto;
-            padding-bottom: rem(20);
+            /*padding-bottom: rem(20);*/
             &::-webkit-scrollbar {
                 width: 0;
             }

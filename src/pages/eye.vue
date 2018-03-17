@@ -10,7 +10,7 @@
                         <div v-for="(item,index) in manage" @click="goModule(item)">{{item}}</div>
                     </el-col>
                     <el-col :xs="5" :sm="5" :md="5" :lg="5" :xl="11" id="getTime">
-                        {{currTime}}
+                        {{currTime | timeFiler}} ({{currTime | weekFiler}})
                     </el-col>
                     <el-col :xs="7" :sm="6" :md="5" :lg="5" :xl="1" >
                         <div v-for="item in title"><a href="#"><i v-html="item"></i></a></div>
@@ -18,11 +18,6 @@
                 </el-row>
             </el-header>
             <el-main>
-                <!--<div v-show="isShow[0]" class="element">主页</div>-->
-                <!--<control v-show="isShow[1]" class="element"></control>-->
-                <!--<facility v-show="isShow[2]" class="element"></facility>-->
-                <!--<analyze v-show="isShow[3]" class="element"></analyze>-->
-                <!--<div v-show="isShow[4]">配置</div>-->
                 <router-view/>
             </el-main>
 
@@ -31,16 +26,14 @@
 
 
 <script>
-    import control from "../components/controler.vue"
-    import facility from "../components/facility.vue"
-    import analyze from "../components/analyze.vue"
+    import moment from 'moment'
     // import api from '@/api'
 
 	export default {
 		data() {
 	        return {
 	        	manage:['主页','管控','设施','分析','配置'],
-	        	currTime:'',   //当前时间
+	        	currTime: new Date(),   //当前时间
 	            title:["&#xe8c0;","&#xe627;","&#xe647;"] ,
 	            isShow:[false,true,false,false,false]
 				     }
@@ -50,25 +43,22 @@
         //         console.log(res, 'ioioioioioooo')
         //     })
         // },
+        filters: {
+		  timeFiler (item) {
+		      console.log(item, '9090')
+		      return moment(item).format('YYYY年MM月DD日')
+          },
+          weekFiler (item) {
+              let arr = ['天','一','二','三','四','五','六']
+              let day = item.getDay()
+              let week = arr.filter((item,index) =>{
+                  return index === day
+              })
+              return `星期${week[0]}`
+            }
+        },
 		 methods:{
-			time(){
-				var d = new Date();
-				var arr = ['天','一','二','三','四','五','六'];
-				var date = "";
-				date+=d.getFullYear()+"年";
-				date+=d.getMonth()+1+"月";
-				date+=d.getDate()+"日 (";
-				var day = d.getDay();
-				for(var i=0;i<arr.length;i++){
-					if(day==i){
-						day = arr[i];
-					}
-				}
-				date+="星期"+day+")";
-		        this.currTime = date;
-			},
              goModule (item){
-				console.log(item, '909009090')
                  switch (item){
                      case '主页':
                         this.$router.push({path:'/homePage'});
@@ -89,12 +79,6 @@
 			}
 		},
 	   components:{
-	       control,
-	       facility,
-	       analyze
-		},
-		mounted:function(){
-			this.time()
 		}
 	}
 </script>

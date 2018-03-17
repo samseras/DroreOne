@@ -1,99 +1,145 @@
 <template>
-    <div id="passenger-Flow">
-        <div id="passengerF-Top">
-            <p>客流分析</p>
-            <p>图标配置</p>
+    <!--<div id="passenger-Flow">-->
+        <!--<div id="passengerF-Top">-->
+            <!--<p>客流分析</p>-->
+            <!--<p>图标配置</p>-->
+        <!--</div>-->
+        <!--<div id="passengerF-Content">-->
+            <!--<div :style="{width:data[0].width,height:data[0].height,left:data[0].left,top:data[0].top}"-->
+                 <!--class="children">-->
+                <!--<div class="top">-->
+                    <!--<div class="name">{{data[0].title}}</div>-->
+                    <!--<div class="top_draw">-->
+                        <!--<img src="../../../../static/img/all.png" alt="">-->
+                        <!--<img src="../../../../static/img/out.png" alt="">-->
+                    <!--</div>-->
+                <!--</div>-->
+                <!--<div id="pancake" style="width: 500px;height: 270px;">-->
 
-        </div>
-        <div id="passengerF-Content">
-            <div :style="{width:data[0].width,height:data[0].height,left:data[0].left,top:data[0].top}"
-                 class="children">
-                <div class="top">
-                    <div class="name">{{data[0].title}}</div>
-                    <div class="top_draw">
-                        <img src="../../../../static/img/all.png" alt="">
-                        <img src="../../../../static/img/out.png" alt="">
+                <!--</div>-->
+            <!--</div>-->
+            <!--<div :style="{width:data[1].width,height:data[1].height,left:data[1].left,top:data[1].top}"-->
+                 <!--class="children">-->
+                <!--<div class="top">-->
+                    <!--<div class="name">{{data[1].title}}</div>-->
+                    <!--<div class="top_draw">-->
+                        <!--<img src="../../../../static/img/all.png" alt="">-->
+                        <!--<img src="../../../../static/img/out.png" alt="">-->
+                    <!--</div>-->
+                <!--</div>-->
+                <!--<div id="weather" style="width:600px;height: 270px;">-->
+
+                <!--</div>-->
+            <!--</div>-->
+            <!--<div :style="{width:data[2].width,height:data[2].height,left:data[2].left,top:data[2].top}"-->
+                 <!--class="children">-->
+                <!--<div class="top">-->
+                    <!--<div class="name">{{data[2].title}}</div>-->
+                    <!--<div class="top_draw">-->
+                        <!--<img src="../../../../static/img/all.png" alt="">-->
+                        <!--<img src="../../../../static/img/out.png" alt="">-->
+                    <!--</div>-->
+                <!--</div>-->
+                <!--<div id="age" style="width: 310px;height: 265px;">-->
+
+                <!--</div>-->
+            <!--</div>-->
+            <!--<div :style="{width:data[3].width,height:data[3].height,left:data[3].left,top:data[3].top}"-->
+                 <!--class="children">-->
+                <!--<div class="top">-->
+                    <!--<div class="name">{{data[3].title}}</div>-->
+                    <!--<div class="top_draw">-->
+                        <!--<img src="../../../../static/img/all.png" alt="">-->
+                        <!--<img src="../../../../static/img/out.png" alt="">-->
+                    <!--</div>-->
+                <!--</div>-->
+                <!--<div id="province" style="width: 350px;height: 265px;">-->
+
+                <!--</div>-->
+            <!--</div>-->
+            <!--<div :style="{width:data[4].width,height:data[4].height,left:data[4].left,top:data[4].top}"-->
+                 <!--class="children">-->
+                <!--<div class="top">-->
+                    <!--<div class="name">{{data[4].title}}</div>-->
+                    <!--<div class="top_draw">-->
+                        <!--<img src="../../../../static/img/all.png" alt="">-->
+                        <!--<img src="../../../../static/img/out.png" alt="">-->
+                    <!--</div>-->
+                <!--</div>-->
+                <!--<div id="tendency" style="width: 400px;height: 280px;">-->
+
+                <!--</div>-->
+            <!--</div>-->
+
+        <!--</div>-->
+    <!--</div>-->
+    <div class="passengerFlow">
+        <ScrollContainer>
+            <div class="content">
+                <div class="contentTitle">
+                    <p class="passengerAnalyze">
+                        客流分析
+                    </p>
+                    <p class="formConfig">
+                        <img src="" alt="">
+                        图表配置
+                    </p>
+                </div>
+                <div class = "contentForm">
+                    <div class = "echatsForm" v-for = "(item,index) in echatList" :style = "{width:item.width,height:item.height}"
+                         v-dragging = "{ item: item, list: echatList, group: 'item' }"
+                         :key="item.title">
+                        <div class = "echatsTitle">
+                            <p class = "title">{{item.title}}</p>
+                            <div class = "echatsBtn">
+                                <img src="../../../../static/img/all.png" alt="" @click="showBigEchat(item)">
+                                <img src="../../../../static/img/out.png" alt="">
+                            </div>
+                        </div>
+                        <div class="echatsContent">
+
+                        </div>
                     </div>
                 </div>
-                <div id="pancake" style="width: 500px;height: 270px;">
-
-                </div>
             </div>
-            <div :style="{width:data[1].width,height:data[1].height,left:data[1].left,top:data[1].top}"
-                 class="children">
-                <div class="top">
-                    <div class="name">{{data[1].title}}</div>
-                    <div class="top_draw">
-                        <img src="../../../../static/img/all.png" alt="">
-                        <img src="../../../../static/img/out.png" alt="">
-                    </div>
-                </div>
-                <div id="weather" style="width:600px;height: 270px;">
-
-                </div>
-            </div>
-            <div :style="{width:data[2].width,height:data[2].height,left:data[2].left,top:data[2].top}"
-                 class="children">
-                <div class="top">
-                    <div class="name">{{data[2].title}}</div>
-                    <div class="top_draw">
-                        <img src="../../../../static/img/all.png" alt="">
-                        <img src="../../../../static/img/out.png" alt="">
-                    </div>
-                </div>
-                <div id="age" style="width: 310px;height: 265px;">
-
-                </div>
-            </div>
-            <div :style="{width:data[3].width,height:data[3].height,left:data[3].left,top:data[3].top}"
-                 class="children">
-                <div class="top">
-                    <div class="name">{{data[3].title}}</div>
-                    <div class="top_draw">
-                        <img src="../../../../static/img/all.png" alt="">
-                        <img src="../../../../static/img/out.png" alt="">
-                    </div>
-                </div>
-                <div id="province" style="width: 350px;height: 265px;">
-
-                </div>
-            </div>
-            <div :style="{width:data[4].width,height:data[4].height,left:data[4].left,top:data[4].top}"
-                 class="children">
-                <div class="top">
-                    <div class="name">{{data[4].title}}</div>
-                    <div class="top_draw">
-                        <img src="../../../../static/img/all.png" alt="">
-                        <img src="../../../../static/img/out.png" alt="">
-                    </div>
-                </div>
-                <div id="tendency" style="width: 400px;height: 280px;">
-
-                </div>
-            </div>
-
-        </div>
+            <EchatsCard
+                v-if="visible"
+                :visible="visible"
+                :echatData="echatData"
+                @closeEchatsDialog ="visible = false">
+            </EchatsCard>
+        </ScrollContainer>
     </div>
 </template>
 
 <script>
-    import echarts from "../../../../static/js/echarts.min.js"
     import analyzeData from "../../../../API/entrance.js"
+    import ScrollContainer from '@/components/ScrollContainer'
+    import EchatsCard from '@/components/eye/analyze/echats'
 
     export default {
         data() {
             return {
                 data: [
-                    {width: "45%", height: "50%", left: "0%", top: "0%", title: "游客流入流出"},
-                    {width: "55%", height: "50%", left: "45%", top: "0%", title: "未来一周天气"},
-                    {width: "33.3%", height: "55%", left: "0%", top: "50%", title: "年龄段统计"},
-                    {width: "33.3%", height: "55%", left: "33.3%", top: "50%", title: "省份排名"},
-                    {width: "33.3%", height: "55%", left: "66.6%", top: "50%", title: "游客趋势分析"}
+
                 ],
-                Analyzedata: []
+                Analyzedata: [],
+                echatList: [
+                    {width: "45%",   height: "300px", title: "游客流入流出"},
+                    {width: "33.3%", height: "300px",title: "年龄段统计"},
+                    {width: "33.3%", height: "300px", title: "省份排名"},
+                    {width: "55%",   height: "300px",  title: "未来一周天气"},
+                    {width: "33.3%", height: "300px", title: "游客趋势分析"}
+                ],
+                visible: false,
+                echatData: {}
             }
         },
         methods: {
+            showBigEchat (item) {
+                this.visible = true;
+                this.echatData = item
+            },
             draw() {
                 analyzeData.getAnalyzeData((data) => {
                     console.log(data);
@@ -111,7 +157,7 @@
                     console.log(tendencyData);
 
                     //游客流入流出
-                    var myChartPancake = echarts.init(document.getElementById("pancake"));
+                    var myChartPancake = this.$echarts.init(document.getElementById("pancake"));
 
                     myChartPancake.setOption({
                         title: {
@@ -494,91 +540,155 @@
         mounted() {
             this.draw();
 
+        },
+        components: {
+            ScrollContainer,
+            EchatsCard
         }
     }
 </script>
 
-<style scoped>
-    #passenger-Flow {
+<style lang="scss" scoped>
+    .passengerFlow{
         width: 100%;
         height: 100%;
-        background: #174984;
-        display: flex;
-        flex-direction: column;
-        overflow-y: scroll;
-    }
+        padding: rem(20) rem(30);
+        box-sizing: border-box;
+        background:  #174984;
+        .content{
+            width: 100%;
+            /*height: 100%;*/
+            .contentTitle{
+                width: 100%;
+                border: 1px solid #ccc;
+                padding: rem(8) rem(15);
+                box-sizing: border-box;
+                border-radius: rem(5);
+                p{
+                    color: #999;
+                    font-size: rem(16);
+                    display: inline-block;
+                }
+                .passengerAnalyze{
+                }
+                .formConfig{
+                   float: right;
+                }
+            }
+            .contentForm{
+                width: 100%;
+                height: 100%;
+                margin-top: rem(20);
+                .echatsForm{
+                    border: 1px solid #ccc;
+                    float: left;
+                    box-sizing: border-box;
+                    margin-bottom: rem(20);
+                    border-radius: rem(5);
+                    .echatsTitle{
+                        width: 100%;
+                        padding: rem(5) rem(10);
+                        box-sizing: border-box;
+                        text-align: left;
+                        color: #222;
+                        /*border-bottom: 1px solid #ccc;*/
+                        background: #f2f2f2;
+                        border-radius: rem(5);
+                        border-bottom-right-radius: rem(0);
+                        border-bottom-left-radius: rem(0);
+                        p{
+                            display: inline-block;
+                        }
+                        .echatsBtn{
+                            display: inline-block;
+                            float: right;
+                        }
 
-    #passengerF-Top {
-        width: 92%;
-        height: 35px;
-        margin: 15px auto;
-        background: #fafafa;
-        border: 1px solid #e0e0e0;
-        display: flex;
-        justify-content: space-between;
+                    }
+                }
+            }
+        }
     }
+    /*#passenger-Flow {*/
+        /*width: 100%;*/
+        /*height: 100%;*/
+        /*background: #174984;*/
+        /*display: flex;*/
+        /*flex-direction: column;*/
+        /*overflow-y: scroll;*/
+    /*}*/
 
-    #passengerF-Top > p {
-        line-height: 35px;
-        font-size: 12px;
-        margin-left: 15px;
-        margin-right: 15px;
-    }
+    /*#passengerF-Top {*/
+        /*width: 92%;*/
+        /*height: 35px;*/
+        /*margin: 15px auto;*/
+        /*background: #fafafa;*/
+        /*border: 1px solid #e0e0e0;*/
+        /*display: flex;*/
+        /*justify-content: space-between;*/
+    /*}*/
 
-    #passengerF-Content {
-        width: 92%;
-        margin: 0 auto;
-        flex: 1;
-        position: relative;
-    }
+    /*#passengerF-Top > p {*/
+        /*line-height: 35px;*/
+        /*font-size: 12px;*/
+        /*margin-left: 15px;*/
+        /*margin-right: 15px;*/
+    /*}*/
 
-    #passengerF-Content > div {
-        position: absolute;
-    }
+    /*#passengerF-Content {*/
+        /*width: 92%;*/
+        /*margin: 0 auto;*/
+        /*flex: 1;*/
+        /*position: relative;*/
+    /*}*/
 
-    div.name {
-        height: 40px;
-        line-height: 40px;
-        float: left;
-        padding-left: 20px;
-    }
+    /*#passengerF-Content > div {*/
+        /*position: absolute;*/
+    /*}*/
 
-    div.top_draw {
-        float: right;
-        height: 40px;
-        line-height: 40px;
-    }
+    /*div.name {*/
+        /*height: 40px;*/
+        /*line-height: 40px;*/
+        /*float: left;*/
+        /*padding-left: 20px;*/
+    /*}*/
 
-    div.top_draw > img {
-        padding: 10px 10px;
-    }
+    /*div.top_draw {*/
+        /*float: right;*/
+        /*height: 40px;*/
+        /*line-height: 40px;*/
+    /*}*/
 
-    div.top {
-        font-size: 18px;
-        background: #FAFAFA;
-        height: 40px;
-    }
+    /*div.top_draw > img {*/
+        /*padding: 10px 10px;*/
+    /*}*/
 
-    div.children {
-        border: 1px solid #EDEDED;
-    }
+    /*div.top {*/
+        /*font-size: 18px;*/
+        /*background: #FAFAFA;*/
+        /*height: 40px;*/
+    /*}*/
 
-    div.children:first-child {
-        border-bottom: none;
-        border-right: none;
-    }
+    /*div.children {*/
+        /*border: 1px solid #EDEDED;*/
+    /*}*/
 
-    div.children:nth-child(2) {
-        border-bottom: none;
-    }
+    /*div.children:first-child {*/
+        /*border-bottom: none;*/
+        /*border-right: none;*/
+    /*}*/
 
-    div.children:nth-child(3) {
-        border-right: none;
-    }
+    /*div.children:nth-child(2) {*/
+        /*border-bottom: none;*/
+    /*}*/
 
-    div.children:nth-child(4) {
-        border-right: none;
-    }
+    /*div.children:nth-child(3) {*/
+        /*border-right: none;*/
+    /*}*/
+
+    /*div.children:nth-child(4) {*/
+        /*border-right: none;*/
+    /*}*/
 
     /*div.children:nth-child(5){border-bottom:none;}*/
 

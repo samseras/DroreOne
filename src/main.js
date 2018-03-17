@@ -7,11 +7,13 @@ import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 import '../static/css/font.css'
 import echarts from 'echarts'
+import VueDND from 'awe-dnd'
 
 
 
 Vue.use(ElementUI)
 Vue.prototype.$echarts = echarts
+Vue.use(VueDND)
 Vue.config.productionTip = false
 
 /* eslint-disable no-new */
