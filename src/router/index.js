@@ -1,11 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import '../../static/js/jquery-1.8.3.min.js'
-// import ElementUI from 'element-ui'
-//
-// import 'element-ui/lib/theme-chalk/index.css'
-// import 'element-ui/lib/index.js'
-// import '../../static/css/font.css'
+// import '../../static/js/jquery-1.8.3.min.js'
 
 
 import '../../static/js/echarts.min.js'
@@ -16,7 +11,12 @@ import login from '@/pages/login'
 
 import eye from '@/pages/eye'
 import Controler from '@/components/controler'
+
+
 import Analyze from '@/components/analyze'
+import Passenger from '@/components/eye/analyze/passengerFlow'
+import Origin from '@/components/eye/analyze/passengerOrigin'
+import Ticket from '@/components/eye/analyze/ticketBusiness'
 import Facility from '@/components/facility'
 import HomePage from '@/components/homePage'
 import Deploy from '@/components/deploy'
@@ -25,14 +25,7 @@ import Deploy from '@/components/deploy'
 
 
 Vue.use(Router)
-// Vue.use(ElementUI)
-
-export default new Router({
-	mode:"history", //切换路径模式，变成history模式,不然路径为/#/home
-	scrollBehavior:()=>({ // 滚动条滚动的行为，不加这个默认就会记忆原来滚动条的位置
-　　　　y:0
-　　}),
-  routes: [
+const routes = [
     {
       path: '/',
       redirect: '/index',
@@ -71,7 +64,12 @@ export default new Router({
             {
                 path: '/analyze',
                 name: 'analyze',
-                component: Analyze
+                component: Analyze,
+                children: [
+                    {path: '/analyze/passenger',name: 'Passenger', component:Passenger},
+                    {path: '/analyze/origin',name: 'Origin', component:Origin},
+                    {path: '/analyze/ticket',name: 'Ticket', component:Ticket}
+                ]
             },
             {
                 path: '/facility',
@@ -86,4 +84,9 @@ export default new Router({
         ]
     }
   ]
+const router = new Router({
+    mode: 'history',
+    routes
 })
+export default router
+// })

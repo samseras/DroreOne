@@ -18,6 +18,7 @@ export default {
 
 <style lang="scss">
     @import "style/func.scss";
+    @import "style/common.scss";
 	*{margin: 0;padding: 0;}
 html,body,#app {
   width: 100%;
