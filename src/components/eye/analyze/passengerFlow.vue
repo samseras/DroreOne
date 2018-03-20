@@ -579,6 +579,7 @@
                 width: 100%;
                 height: 100%;
                 margin-top: rem(20);
+                cursor: pointer;
                 .echatsForm{
                     border: 1px solid #ccc;
                     float: left;

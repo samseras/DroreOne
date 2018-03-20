@@ -77,6 +77,7 @@
                  padding: rem(8) 0 rem(8) rem(40);
                  box-sizing: border-box;
                  text-align: left;
+                 cursor: pointer;
                  img{
                      display: inline-block;
                      width: rem(20);
