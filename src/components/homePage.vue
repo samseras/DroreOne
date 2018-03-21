@@ -11,10 +11,10 @@
     }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss" type="text/scss" scoped>
     .page{
-        width: rem(100);
-        height: rem(100);
+        width: rem(1000);
+        height: rem(1000);
         border: 1px solid red;
     }
 </style>

@@ -11,7 +11,7 @@
     }
 </script>
 
-<style lang="scss">
+<style lang="scss" type="text/scss">
     .scroll-container {
         width: 100%;
         height: 100%;
