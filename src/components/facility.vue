@@ -54,7 +54,7 @@
     },
   }
 </script>
-<style lang="scss" scoped>
+<style lang="scss" scoped type="text/scss">
     .facility{
         width: 100%;
         height: 100%;

@@ -64,7 +64,7 @@
     }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss" scoped type="text/scss">
     .controler{
         width: 100%;
         height: 100%;
