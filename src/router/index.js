@@ -38,11 +38,7 @@ import ScenicName from "@/components/eye/facilityChildren/scenicNameFacility"
 import Build from "@/components/eye/facilityChildren/buildFacility"
 
 import HomePage from '@/components/homePage'
-
 import Deploy from '@/components/deploy'
-//import Psreon from '@/components/eye/deployChildren/basicsPerson'
-// import BoatCart from '@/components/eye/deployChildren/boatCarts'
-
 
 
 
@@ -124,7 +120,7 @@ const routes = [
             {
                 path: '/deploy',
                 name: 'deploy',
-                component: Deploy,
+                component: Deploy
             }
         ]
     }
@@ -134,3 +130,4 @@ const router = new Router({
     routes
 })
 export default router
+// })

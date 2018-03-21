@@ -548,7 +548,7 @@
     }
 </script>
 
-<style lang="scss" scoped type="text/scss">
+<style lang="scss" scoped>
     .passengerFlow{
         width: 100%;
         height: 100%;

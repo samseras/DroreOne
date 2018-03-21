@@ -29,7 +29,7 @@
         }
     }
 </script>
-<style lang="scss" type="text/scss">
+<style lang="scss">
     .echat{
         width: 100%;
         height: 100%;

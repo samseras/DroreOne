@@ -53,15 +53,6 @@
             Map
         },
         methods: {
-            //该事件是显示对应的标识
-            // show: function (index) {
-            //     this.isShow.forEach((item, idx) => {
-            //         this.$set(this.isShow, idx, (idx == index ? true : false),
-            //             Map.unShowAllLayer(),
-            //             // Map.showLayer(dataId.data[idx].id)
-            //         )
-            //     })
-            // },
             packUpHidden () {
                 this.isShowControler = !this.isShowControler
                 this.exhibition = !this.exhibition
@@ -70,9 +61,6 @@
                 this.activeIndex = index
             }
         }
-        // mounted() {
-        //     Map.init();
-        // }
     }
 </script>
 
