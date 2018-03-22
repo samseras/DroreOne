@@ -38,7 +38,10 @@ import ScenicName from "@/components/eye/facilityChildren/scenicNameFacility"
 import Build from "@/components/eye/facilityChildren/buildFacility"
 
 import HomePage from '@/components/homePage'
+
 import Deploy from '@/components/deploy'
+import Basics from '@/components/eye/deployChildren/basics'
+import BasicCamera from '@/components/eye/deployChildren/camera'
 
 
 
@@ -121,7 +124,11 @@ const routes = [
             {
                 path: '/deploy',
                 name: 'deploy',
-                component: Deploy
+                component: Deploy,
+                children:[
+                    {path:'/deploy/basics',name:'Basics',component:Basics},
+                    {path:'/deploy/camera',name:'BasicCamera',components:BasicCamera}
+                ]
             }
         ]
     }
