@@ -95,6 +95,7 @@ const routes = [
             {
                 path: '/analyze',
                 name: 'analyze',
+                redirect: '/analyze/passenger',
                 component: Analyze,
                 children: [
                     {path: '/analyze/passenger',name: 'Passenger', component:Passenger},
