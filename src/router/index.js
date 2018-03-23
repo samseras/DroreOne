@@ -40,8 +40,18 @@ import Build from "@/components/eye/facilityChildren/buildFacility"
 import HomePage from '@/components/homePage'
 
 import Deploy from '@/components/deploy'
-import Basics from '@/components/eye/deployChildren/basics'
-import BasicCamera from '@/components/eye/deployChildren/camera'
+import AreaDeploy from '@/components/eye/deployChildren/basicDeploy/areaDeploy'       //片区
+import BoatDeploy from '@/components/eye/deployChildren/basicDeploy/boatCarDeploy'       //车船
+import IndicatorDeploy from '@/components/eye/deployChildren/basicDeploy/indicatorDeploy'       //指示牌
+import OtherDeploy from '@/components/eye/deployChildren/basicDeploy/otherDeploy'       //其他
+import ParkDeploy from '@/components/eye/deployChildren/basicDeploy/parkDeploy'       //停车场
+import PersonDeploy from '@/components/eye/deployChildren/basicDeploy/personDeploy'       //人员
+import RoatDeploy from '@/components/eye/deployChildren/basicDeploy/roatDeploy'       //路网
+import ScenceDeploy from '@/components/eye/deployChildren/basicDeploy/scenicDeploy'       //景点
+import ShopDeploy from '@/components/eye/deployChildren/basicDeploy/shopDeploy'       //商圈
+import ToiletDeploy from '@/components/eye/deployChildren/basicDeploy/toiletDeploy'       //洗手间
+import TrashDeploy from '@/components/eye/deployChildren/basicDeploy/trashDeploy'       //垃圾桶
+
 
 
 
@@ -124,10 +134,20 @@ const routes = [
             {
                 path: '/deploy',
                 name: 'deploy',
+                redirect: '/deploy/person-deploy',
                 component: Deploy,
                 children:[
-                    {path:'/deploy/basics',name:'Basics',component:Basics},
-                    {path:'/deploy/camera',name:'BasicCamera',components:BasicCamera}
+                    {path: '/deploy/area-deploy',name: 'AreaDeploy',component: AreaDeploy},
+                    {path: '/deploy/boat-deploy',name: 'BoatDeploy',component: BoatDeploy },
+                    {path: '/deploy/indicator-deploy',name: 'IndicatorDeploy',component: IndicatorDeploy },
+                    {path: '/deploy/other-deploy',name: 'OtherDeploy',component: OtherDeploy },
+                    {path: '/deploy/park-deploy',name: 'ParkDeploy',component: ParkDeploy },
+                    {path: '/deploy/person-deploy',name: 'PersonDeploy',component: PersonDeploy },
+                    {path: '/deploy/roat-deploy',name: 'RoatDeploy',component: RoatDeploy },
+                    {path: '/deploy/scence-deploy',name: 'ScenceDeploy',component: ScenceDeploy },
+                    {path: '/deploy/shop-deploy',name: 'ShopDeploy',component: ShopDeploy },
+                    {path: '/deploy/toilet-deploy',name: 'ToiletDeploy',component: ToiletDeploy },
+                    {path: '/deploy/trash-deploy',name: 'TrashDeploy',component: TrashDeploy }
                 ]
             }
         ]

@@ -1,38 +1,89 @@
 <template>
     <div class="deploy">
-        <el-menu default-active="/deploy/basics" router>
-            <template v-for="item in items">
-                <template v-if="item.subs">
-                    <el-submenu :index="item.index">
-                        <template slot="title"><i :class="item.icon"></i>{{ item.title }}</template>
-                        <el-menu-item v-for="(subItem,i) in item.subs" :key="i" :index="subItem.index">{{ subItem.title }}
+        <el-menu default-active="/deploy/person-deploy" router>
+            <ScrollContainer>
+                <template v-for="item in items">
+                    <template v-if="item.subs">
+                        <el-submenu :index="item.index">
+                            <template slot="title"><i :class="item.icon"></i>{{ item.title }}</template>
+                            <el-menu-item v-for="(subItem,i) in item.subs" :key="i" :index="subItem.index">
+                                <img src="" alt="">
+                                {{ subItem.title }}
+                            </el-menu-item>
+                        </el-submenu>
+                    </template>
+                    <template v-else>
+                        <el-menu-item :index="item.index">
+                            <i :class="item.icon"></i>{{ item.title }}
                         </el-menu-item>
-                    </el-submenu>
+                    </template>
                 </template>
-                <template v-else>
-                    <el-menu-item :index="item.index">
-                        <i :class="item.icon"></i>{{ item.title }}
-                    </el-menu-item>
-                </template>
-            </template>
+            </ScrollContainer>
         </el-menu>
         <div class="content">
-            <transition name="move" mode="out-in">
-                <router-view></router-view>
-            </transition>
+            <router-view></router-view>
         </div>
     </div>
 </template>
 
 <script>
+    import ScrollContainer from '@/components/ScrollContainer'
     export default{
         data() {
             return {
                 items: [
                     {
                         icon: 'el-icon-setting',
-                        index: '/deploy/basics',
-                        title: '基础信息'
+                        index: '/deploy/person-deploy',
+                        title: '基础信息',
+                        subs: [
+                            {
+                                index: '/deploy/person-deploy',
+                                title: '人员信息'
+                            },
+                            {
+                                index: '/deploy/boat-deploy',
+                                title: '车船'
+                            },
+                            {
+                                index: '/deploy/roat-deploy',
+                                title: '路网'
+                            },
+                            {
+                                index: '/deploy/area-deploy',
+                                title: '片区'
+                            },
+                            {
+                                index: '/deploy/toilet-deploy',
+                                title: '卫生间'
+                            },
+                            {
+                                index: '/deploy/park-deploy',
+                                title: '停车场'
+                            },
+                            {
+                                index: '/deploy/shop-deploy',
+                                title: '商圈'
+                            },
+                            {
+                                index: '/deploy/scence-deploy',
+                                title: '景点'
+                            },
+
+                            {
+                                index: '/deploy/trash-deploy',
+                                title: '垃圾桶'
+                            },
+                            {
+                                index: '/deploy/indicator-deploy',
+                                title: '指示牌'
+                            },
+                            {
+                                index: '/deploy/other-deploy',
+                                title: '其他'
+                            },
+
+                        ]
                     },
                     {
                         icon: 'el-icon-date',
@@ -79,60 +130,58 @@
             onRoutes(){
                 return this.$route.path.replace();
             }
+        },
+        components: {
+            ScrollContainer
         }
     }
 
 </script>
+
+<style lang="scss">
+    .deploy .el-submenu .el-menu-item{
+        width: 100%;
+        height: rem(30);
+        line-height: rem(30);
+        padding: rem(0)!important;
+        padding-left: rem(20)!important;
+        font-size: rem(14);
+        img{
+            display: inline-block;
+            width: rem(20);
+            height: rem(20);
+            vertical-align: middle;
+            background: red;
+            margin-right: rem(5);
+        }
+    }
+    .deploy .el-menu-item{
+        width: 100%;
+        height: rem(30);
+        line-height: rem(30);
+        /*border-bottom: 1px solid #ccc;*/
+    }
+    .deploy .el-menu .el-menu--inline{
+        width: 100%;
+        background: #eee;
+        box-sizing: border-box;
+        text-align: left;
+        /*padding-left: rem(8);*/
+        font-size: rem(14);
+    }
+</style>
 <style lang="scss"  type="text/scss" scoped>
     .deploy{
         display:flex;
-        position:absolute;
         width:100%;
-        left:0;
-        top:rem(70);
-        bottom:0;
-        ul{
-            height:100%;
-            width:15%;
+        height: 100%;
+        .el-menu{
+            width: rem(200);
         }
         .content{
-            background: none repeat scroll 0 0 #fff;
-            width:85%;
-            padding:rem(40);
-            box-sizing: border-box;
-            overflow-y: scroll;
+            flex: 1;
+            height: 100%;
         }
 
-        /*.el-row{*/
-        /*height:100%;*/
-        /*.el-col:first-child{*/
-        /*height:100%;*/
-        /*background-color:#f2f2f2;*/
-        /*margin-right:rem(30);*/
-        /*.el-menu{*/
-        /*border:none;*/
-        /*li{*/
-        /*div{*/
-        /*i{*/
-        /*font-size: rem(26);*/
-        /*padding-right:rem(20);*/
-        /*}*/
-        /*span{*/
-        /*font-size: rem(18);*/
-        /*color:#9b9b9b;*/
-        /*}*/
-        /*}*/
-        /*i{*/
-        /*font-size: rem(26);*/
-        /*padding-right: rem(20);*/
-        /*}*/
-        /*span{*/
-        /*font-size: rem(18);*/
-        /*color:#9b9b9b;*/
-        /*}*/
-        /*}*/
-        /*}*/
-        /*}*/
-        /*}*/
     }
 </style>
