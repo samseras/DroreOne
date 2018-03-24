@@ -5,36 +5,57 @@
         </div>
         <div class="personContent">
             <div class="funcTitle">
-                <div class="searchInfo">
-                    <input type="text" placeholder="Search Anything">
-                    <i class="el-icon-search"></i>
-                </div>
-                <div class="funcBtn">
-                    <el-button size="mini"plain><i class="el-icon-circle-plus"></i>添加</el-button>
-                    <el-button size="mini"plain><i class="el-icon-circle-check"></i>全选</el-button>
-                    <el-button size="mini"plain>导入</el-button>
-                    <el-button size="mini"plain>导出</el-button>
-                    <el-button size="mini"plain><i class="el-icon-delete"></i>删除</el-button>
-                </div>
-                <div class="filite">
-                    <el-checkbox-group v-model="filterList">
-                        <el-checkbox v-for="item in typeList" :label="item.type"></el-checkbox>
-                    </el-checkbox-group>
-                </div>
-                <div class="page">
-                    <span>当前第1页/共8页</span>
-                    <span class="upPage"><</span>
-                    <span class="downPage">></span>
-                    <span class="listForm"><i class="el-icon-tickets"></i></span>
-                    <span class="cardForm"><i class="el-icon-menu"></i></span>
-                </div>
+                <Header @addNewInfo = "addNewInfo"
+                        @deletInfo = "deletInfo"
+                        @toggleList = "toggleList"
+                        @choseType = 'choseType'>
+                </Header>
             </div>
             <div class="personList">
                 <ScrollContainer>
-                    <div class="personInfo" v-for="item in personList">
+                    <el-table
+                        v-if="!isShowPersonCard"
+                        ref="multipleTable"
+                        :data="personList"
+                        tooltip-effect="dark"
+                        style="width: 100%"
+                        @selection-change="handleSelectionChange">
+                        <el-table-column
+                            type="selection"
+                            width="55">
+                        </el-table-column>
+                        <el-table-column
+                            prop="name"
+                            label="姓名"
+                            width="120">
+                        </el-table-column>
+                        <el-table-column
+                            prop="type"
+                            label="人员角色">
+                        </el-table-column>
+                        <el-table-column
+                            prop="sex"
+                            label="性别">
+                        </el-table-column>
+                        <el-table-column
+                            prop="idNum"
+                            label="身份证号">
+                        </el-table-column>
+                        <el-table-column
+                            prop="phone"
+                            label="电话号码">
+                        </el-table-column>
+                        <el-table-column>
+                            <template slot-scope="scope">
+                                <span @click="showPersonDetail(scope.row)">编辑</span>
+                            </template>
+                        </el-table-column>
+                    </el-table>
+                    <div class="personInfo" v-for="item in choseList" v-if="isShowPersonCard && item.status">
                         <div class="checkBox">
+                            <input type="checkbox" :checked='item.checked' class="checkBtn" @change="checked(item.id)">
                         </div>
-                        <div class="personType">
+                        <div class="personType" @click.stop="showPersonDetail(item)">
                             <img src="" alt="">
                             <span class="type">
                                   {{item.type}}
@@ -48,6 +69,11 @@
                         </div>
                     </div>
                 </ScrollContainer>
+                <PersonDetail v-if="visible"
+                              :visible="visible"
+                              :personInfo="personInfo"
+                              @closeInfoDialog ="visible = false">
+                </PersonDetail>
             </div>
         </div>
     </div>
@@ -55,56 +81,107 @@
 
 <script>
     import ScrollContainer from '@/components/ScrollContainer'
+    import Header from './funHeader'
+    import PersonDetail from './personDetailDialog'
     export default {
         name: 'person-deploy',
         data(){
             return{
+                isShowPersonCard: true,
                 checkList: [],
                 filterList: [],
                 personList: [
-                    {id:1,name: '小明',type: '售票人员',sex: '男',idNum: '123456789',phone: '13674565455'},
-                    {id:2,name: '小明',type: '售票人员',sex: '男',idNum: '123456789',phone: '13674565455'},
-                    {id:3,name: '小明',type: '售票人员',sex: '男',idNum: '123456789',phone: '13674565455'},
-                    {id:4,name: '小明',type: '售票人员',sex: '男',idNum: '123456789',phone: '13674565455'},
-                    {id:5,name: '小明',type: '售票人员',sex: '男',idNum: '123456789',phone: '13674565455'},
-                    {id:6,name: '小明',type: '售票人员',sex: '男',idNum: '123456789',phone: '13674565455'},
-                    {id:7,name: '小明',type: '售票人员',sex: '男',idNum: '123456789',phone: '13674565455'},
-                    {id:8,name: '小明',type: '售票人员',sex: '男',idNum: '123456789',phone: '13674565455'}
+                    {id:1,name: '小明',type: '售票',sex: '男',idNum: '123456789',phone: '13674565455'},
+                    {id:2,name: '小红',type: '保洁',sex: '男',idNum: '123456789',phone: '13674565455'},
+                    {id:3,name: '小明',type: '安保',sex: '男',idNum: '123456789',phone: '13674565455'},
+                    {id:8,name: '小明',type: '司机',sex: '男',idNum: '123456789',phone: '13674565455'},
+                    {id:9,name: '小明',type: '船夫',sex: '男',idNum: '123456789',phone: '13674565455'}
                 ],
-                typeList: [
-                    {type: '安保'},
-                    {type: '售票'},
-                    {type: '保洁'},
-                    {type: '司机'},
-                    {type: '船夫'},
-                    {type: '检票'}
-                ]
+                visible: false,
+                personInfo: {},
+                choseInfoId: [],
+                choseList: []
             }
         },
         methods: {
-
+            handleSelectionChange(val) {
+                this.multipleSelection = val;
+            },
+            showPersonDetail (info) {
+                this.personInfo = info
+                this.visible = true
+            },
+            addNewInfo () {
+                // let route = this.$route.path
+                // if (route.includes('person')) {
+                //
+                // }
+                this.showPersonDetail({})
+            },
+            deletInfo () {
+                console.log(99999999)
+                for (let i = 0; i < this.choseInfoId.length; i++) {
+                    this.choseList = this.personList.filter((item, index) => {
+                        if (item.id === this.choseInfoId[i]){
+                            this.choseList[index].checked = false
+                        }
+                        return item.id !== this.choseInfoId[i]
+                    })
+                }
+                console.log(this.personList, 'opopopop')
+            },
+            toggleList (type) {
+                if (type === 'list') {
+                    this.isShowPersonCard = false
+                }else {
+                    this.isShowPersonCard = true
+                }
+            },
+            checked (id) {
+                if (this.choseInfoId.includes(id)) {
+                    this.choseInfoId = this.choseInfoId.filter((item) =>{
+                        return item !== id
+                    })
+                } else {
+                    this.choseInfoId.push(id)
+                }
+            },
+            choseType (type) {
+                console.log(type)
+                if (type.length === 0){
+                    this.choseList = this.personList.filter((item) => {
+                        item.status = true
+                        return item.status === true
+                    })
+                } else {
+                        this.choseList = this.personList.filter((item,index) => {
+                            if (types.includes(item.type)){
+                                item.status = true
+                            } else if(!types.includes(item.type)){
+                                item.status = false
+                                console.log(item.type, 'p[p[p[');
+                            }
+                            return item.status === true
+                        })
+                    }
+            }
         },
         created () {
-
+            for (let i = 0; i < this.personList.length; i++) {
+                this.personList[i].cheched = false
+                this.personList[i].status = true
+            }
+            this.choseList = this.personList
         },
         components: {
-            ScrollContainer
+            ScrollContainer,
+            Header,
+            PersonDetail
         }
     }
 
 </script>
 
-<style lang="scss">
-    .personDeploy{
-        .el-checkbox__label{
-            padding-left: rem(5);
-            font-size: rem(12);
-        }
-        .el-checkbox__inner{
-            margin-top: rem(5);
-        }
-    }
-</style>
 <style lang="scss" scoped type="text/scss">
     .personDeploy{
         width: 100%;
@@ -133,67 +210,6 @@
                 height: rem(30);
                 margin-top: rem(10);
                 border-bottom: 1px solid #a13309;
-                div{
-                    display: inline-block;
-                }
-                .searchInfo{
-                    input{
-                        border: none;
-                        outline:medium;
-                        list-style: none;
-                        border-bottom: 1px solid #ccc;
-                        font-size: rem(12);
-                        padding: rem(3) rem(4);
-                    }
-                    i{
-                        font-size: rem(12);
-                        margin-left: rem(-20);
-                        cursor: pointer;
-                    }
-                }
-                .funcBtn{
-                    margin-left: rem(20);
-                    margin-top: rem(4);
-                    button{
-                        border: none;
-                        margin-right: rem(-5);
-
-                        i{
-                            margin-right: rem(3);
-                        }
-                    }
-                    .el-button {
-                        padding: rem(5) rem(5);
-                    }
-                }
-                .filite{
-                    margin-left: rem(50);
-                    .el-checkbox{
-                        margin-left: rem(10);
-                    }
-
-                }
-                .page{
-                    margin-left: rem(20);
-                    font-size: rem(12);
-                    float: right;
-                    margin-top: rem(3);
-                    span{
-                        display: inline-block;
-                        cursor: pointer;
-                        margin-left: rem(5);
-                    }
-                    .upPage,downPage,listForm,cardForm{
-                        padding: rem(5);
-                        box-sizing: border-box;
-                    }
-                    .cardForm{
-                        i{
-                            color: #a13309;
-                        }
-                    }
-                }
-
             }
             .personList{
                 width: 100%;
@@ -214,6 +230,18 @@
                         background: #fff;
                         border-top-left-radius: rem(5);
                         border-top-right-radius: rem(5);
+                        position: relative;
+                        .checkBtn{
+                            /*width: rem(15);*/
+                            /*height: rem(15);*/
+                            /*outline: none;*/
+                            /*background: #fff;*/
+                            /*background: none;*/
+                            position: absolute;
+                            right: rem(5);
+                            top: rem(3);
+                            cursor: pointer;
+                        }
                     }
                     .personType{
                         width: 100%;
