@@ -53,8 +53,14 @@ import ToiletDeploy from '@/components/eye/deployChildren/basicDeploy/toiletDepl
 import TrashDeploy from '@/components/eye/deployChildren/basicDeploy/trashDeploy'       //垃圾桶
 
 
-
-
+import CameraHware from '@/components/eye/deployChildren/hardwareDeploy/cameraHardware'
+import BroadcastHware from '@/components/eye/deployChildren/hardwareDeploy/broadcastHardware'
+import GateHware from '@/components/eye/deployChildren/hardwareDeploy/gateHardware'
+import LightHware from '@/components/eye/deployChildren/hardwareDeploy/lampLightHardware'
+import LedHware from '@/components/eye/deployChildren/hardwareDeploy/ledHardware'
+import MonitorsHware from '@/components/eye/deployChildren/hardwareDeploy/monitorsHardware'
+import WifiHware from '@/components/eye/deployChildren/hardwareDeploy/wifiHardware'
+import VoiceHware from '@/components/eye/deployChildren/hardwareDeploy/voiceHardware'
 
 Vue.use(Router)
 const routes = [
@@ -147,7 +153,17 @@ const routes = [
                     {path: '/deploy/scence-deploy',name: 'ScenceDeploy',component: ScenceDeploy },
                     {path: '/deploy/shop-deploy',name: 'ShopDeploy',component: ShopDeploy },
                     {path: '/deploy/toilet-deploy',name: 'ToiletDeploy',component: ToiletDeploy },
-                    {path: '/deploy/trash-deploy',name: 'TrashDeploy',component: TrashDeploy }
+                    {path: '/deploy/trash-deploy',name: 'TrashDeploy',component: TrashDeploy },
+
+                    {path:'/deploy/camera-Hware',name:'CameraHware',component:CameraHware},
+                    {path:'/deploy/broadcast-Hware',name:'BroadcastHware',component:BroadcastHware},
+                    {path:'/deploy/gate-Hware',name:'GateHware',component:GateHware},
+                    {path:'/deploy/lampLight-Hware',name:'LightHware',component:LightHware},
+                    {path:'/deploy/lampLight-Hware',name:'LightHware',component:LightHware},
+                    {path:'/deploy/led-Hware',name:'LedHware',component:LedHware},
+                    {path:'/deploy/wifi-Hware',name:'WifiHware',component:WifiHware},
+                    {path:'/deploy/voice-Hware',name:'VoiceHware',component:VoiceHware},
+                    {path:'/deploy/monitors-Hware',name:'MonitorsHware',component:MonitorsHware}
                 ]
             }
         ]

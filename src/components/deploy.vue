@@ -91,21 +91,38 @@
                         title: '硬件信息',
                         subs: [
                             {
-                                index: '/deploy/camera',
-                                title: '摄像头设置'
+                                index: '/deploy/camera-Hware',
+                                title: '摄像头'
                             },
                             {
-                                index: '/deploy/broadcast',
-                                title: '广播配置'
+                                index: '/deploy/broadcast-Hware',
+                                title: '广播'
                             },
                             {
-                                index: '/deploy/monitoring',
+                                index: '/deploy/monitors-Hware',
                                 title: '环境监测传感器'
                             },
                             {
-                                index: '/deploy/street',
-                                title: '路灯'
+                                index: '/deploy/led-Hware',
+                                title: 'LED大屏'
                             },
+                            {
+                                index: '/deploy/wifi-Hware',
+                                title: 'WIFI'
+                            },
+                            {
+                                index: '/deploy/voice-Hware',
+                                title: '音响'
+                            },
+                            {
+                                index: '/deploy/gate-Hware',
+                                title: '闸机'
+                            },
+                            {
+                                index: '/deploy/lampLight-Hware',
+                                title: '灯光'
+                            },
+
                         ]
                     },
                     {
