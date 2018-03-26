@@ -6,12 +6,13 @@
         </div>
         <div class="funcBtn">
             <el-button size="mini"plain @click="addNewInfo"><i class="el-icon-circle-plus"></i>添加</el-button>
-            <el-button size="mini"plain><i class="el-icon-circle-check"></i>全选</el-button>
+            <el-button size="mini"plain class='selectedAll' ><el-checkbox v-model="isSelected" @change="selectedAll"></el-checkbox>全选</el-button>
             <el-button size="mini"plain>导入</el-button>
             <el-button size="mini"plain>导出</el-button>
             <el-button size="mini"plain @click="deleteCard"><i class="el-icon-delete"></i>删除</el-button>
+            <el-button size="mini"plain @click="fixCard"><i class="el-icon-delete"></i>修改</el-button>
         </div>
-        <div class="filite">
+        <div class="filite" v-if="isShowJobType">
             <el-checkbox-group v-model="filterList" @change="choseType">
                 <el-checkbox v-for="item in typeList" :label="item.type"></el-checkbox>
             </el-checkbox-group>
@@ -39,7 +40,9 @@
                     {type: '司机'},
                     {type: '船夫'},
                     {type: '检票'}
-                ]
+                ],
+                isSelected: false,
+                isShowJobType: true
             }
         },
         methods: {
@@ -55,7 +58,31 @@
             },
             choseType () {
                 this.$emit('choseType',this.filterList)
+            },
+            selectedAll () {
+                // this.isSelected = !this.isSelected
+                console.log(this.isSelected, 'zhehis')
+                this.$emit('selectedAll', this.isSelected)
+            },
+            fixCard () {
+                this.$emit('fixedInfo')
+            },
+            showPersonJob () {
+                let route = this.$route.path
+                if (route.includes('person')){
+                    this.isShowJobType = true
+                } else {
+                    this.isShowJobType = false
+                }
             }
+        },
+        watch: {
+            '$route' () {
+                this.showPersonJob()
+            }
+        },
+        created () {
+            this.showPersonJob()
         }
     }
 </script>
@@ -104,8 +131,12 @@
                     margin-right: rem(3);
                 }
             }
+            .el-button.selectedAll{
+                padding-bottom: rem(0);
+            }
             .el-button {
                 padding: rem(5) rem(5);
+                margin: 0;
             }
         }
         .filite{

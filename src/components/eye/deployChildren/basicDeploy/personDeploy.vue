@@ -8,7 +8,9 @@
                 <Header @addNewInfo = "addNewInfo"
                         @deletInfo = "deletInfo"
                         @toggleList = "toggleList"
-                        @choseType = 'choseType'>
+                        @choseType = 'choseType'
+                        @selectedAll = 'selectedAll'
+                        @fixedInfo = 'fixedInfo'>
                 </Header>
             </div>
             <div class="personList">
@@ -72,7 +74,10 @@
                 <PersonDetail v-if="visible"
                               :visible="visible"
                               :personInfo="personInfo"
-                              @closeInfoDialog ="visible = false">
+                              :isDisabled="isDisabled"
+                              @closeInfoDialog ="visible = false"
+                              @fixInfo = "fixInfo"
+                              @addNewPerson="addNewPerson">
                 </PersonDetail>
             </div>
         </div>
@@ -82,7 +87,7 @@
 <script>
     import ScrollContainer from '@/components/ScrollContainer'
     import Header from './funHeader'
-    import PersonDetail from './personDetailDialog'
+    import PersonDetail from './detailDialog'
     export default {
         name: 'person-deploy',
         data(){
@@ -100,7 +105,8 @@
                 visible: false,
                 personInfo: {},
                 choseInfoId: [],
-                choseList: []
+                choseList: [],
+                isDisabled: true
             }
         },
         methods: {
@@ -112,23 +118,21 @@
                 this.visible = true
             },
             addNewInfo () {
-                // let route = this.$route.path
-                // if (route.includes('person')) {
-                //
-                // }
                 this.showPersonDetail({})
+                this.isDisabled = false
             },
             deletInfo () {
                 console.log(99999999)
                 for (let i = 0; i < this.choseInfoId.length; i++) {
-                    this.choseList = this.personList.filter((item, index) => {
+                    this.personList = this.personList.filter((item, index) => {
                         if (item.id === this.choseInfoId[i]){
                             this.choseList[index].checked = false
                         }
                         return item.id !== this.choseInfoId[i]
                     })
                 }
-                console.log(this.personList, 'opopopop')
+                this.choseList = this.personList
+
             },
             toggleList (type) {
                 if (type === 'list') {
@@ -155,20 +159,65 @@
                     })
                 } else {
                         this.choseList = this.personList.filter((item,index) => {
-                            if (types.includes(item.type)){
+                            if (type.includes(item.type)){
                                 item.status = true
-                            } else if(!types.includes(item.type)){
+                            } else if(!type.includes(item.type)){
                                 item.status = false
                                 console.log(item.type, 'p[p[p[');
                             }
                             return item.status === true
                         })
                     }
+            },
+            selectedAll (state) {
+                console.log(state, 'opopopopop')
+                this.choseList = this.personList.filter((item) => {
+                    if (state === true) {
+                        item.checked = true
+                        this.choseInfoId.push(item.id)
+                        return item.checked === true
+                    } else {
+                        console.log('进入这个判断吗')
+                        item.checked = false
+                        this.choseInfoId = []
+                        return item.checked === false
+                    }
+                })
+                console.log(this.choseInfoId, 'opopop')
+            },
+            fixInfo (info) {
+                console.log(info, 'wertyuio')
+                let list = this.personList
+                for(let i = 0;i< list.length; i++){
+                    if (info.id === list[i].id) {
+                        this.personList[i] = info
+
+                    }
+                }
+                this.choseList = this.personList
+            },
+            addNewPerson (info) {
+                info.id = new Date().getTime()
+                this.personList.push(info)
+                this.choseList = this.personList
+            },
+            fixedInfo () {
+                if (this.choseInfoId.length > 0) {
+                    this.personList.map((item) => {
+                        if (item.id === this.choseInfoId[0]){
+                            this.personInfo = item
+                        }
+                    })
+                    this.showPersonDetail(this.personInfo)
+                    this.isDisabled = false
+                } else {
+                    this.$message.error('请选择要修改的人员')
+                }
             }
         },
         created () {
             for (let i = 0; i < this.personList.length; i++) {
-                this.personList[i].cheched = false
+                this.personList[i].checked = false
                 this.personList[i].status = true
             }
             this.choseList = this.personList
