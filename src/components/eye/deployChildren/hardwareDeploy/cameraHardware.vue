@@ -5,109 +5,149 @@
         </div>
         <div class="cameraContent">
             <div class="conTitle">
-                <div class="titleSearch">
-                    <input type="text" placeholder="Search Anything">
-                    <i class="el-icon-search"></i>
-                </div>
-                <div class="titleBtn">
-                    <el-button size="mini" plain @click="dialogFormVisible=true"><i class="el-icon-circle-plus">添加</i></el-button>
-                    <el-button size="mini" plain><i class="el-icon-circle-check">全选</i></el-button>
-                    <el-button size="mini" plain>导入</el-button>
-                    <el-button size="mini" plain>导出</el-button>
-                    <el-button size="mini"plain><i class="el-icon-delete"></i>删除</el-button>
-                    <el-button size="mini"plain><i class="el-icon-edit-outline"></i>修改</el-button>
-                </div>
-                <div class="titleCheck">
-                    <el-checkbox-group v-model="checkList">
-                        <el-checkbox label="室内"></el-checkbox>
-                        <el-checkbox label="室外"></el-checkbox>
-                    </el-checkbox-group>
-                </div>
-                <div class="titlePage">
-                    <span>当前第1页/共8页</span>
-                    <span class="upPage"><</span>
-                    <span class="downPage">></span>
-                    <span class="listForm"><i class="el-icon-tickets"></i></span>
-                    <span class="cardForm"><i class="el-icon-menu"></i></span>
-                </div>
+                <Header @addNewInfo="addNewInfo"
+                        @deletInfo="deletInfo"
+                        @selectedAll="selectedAll">
+                        <!--@fixedInfo="fixInfo">-->
+                        <!--@toggleList="toggleList"-->
+                        <!--@choseType="choseType"-->
+                </Header>
             </div>
 
             <div class="cameraList">
                 <ScrollContainer>
-                    <div class="personInfo" v-for="item in camera">
+                    <div class="personInfo" v-for="item in choseList" v-if="isShowPersonCard && item.status">
                         <div class="checkBox">
+                            <input type="checkbox" :checked="item.checked" class="checkBtn" @change="checked(item.id)">
                         </div>
-                        <div class="personType">
+                        <div class="personType" @click.stop="showPersonDetail(item)">
                             <img src="../../../../../static/img/camera.png" alt="">
                             <span class="type">
                                   {{item.type}}
                                 </span>
                         </div>
-                        <div class="specificInfo">
+                        <div class="specificInfo" >
                             <p class="name">所属区域：<span>{{item.area}}</span></p>
                             <p class="sex">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：<span>{{item.describe}}</span></p>
 
                         </div>
                     </div>
                 </ScrollContainer>
+                <HardWare v-if="visible"
+                        :visible="visible"
+                         :personInfo="personInfo"
+                          :isDisabled="isDisabled"
+                          @closeInfoDialog="visible=false"
+                           @addNewPerson="addNewPerson"
+                            @fixInfo="fixInfo">
+
+                </HardWare>
             </div>
-        <el-dialog title="添加摄像头信息" :visible.sync="dialogFormVisible" >
-            <el-form :model="form">
-                <!--<el-form-item label="类型" :label-width="formLabelWidth">-->
-                    <!--<el-select v-model="form.types" >-->
-                        <!--<el-option label="室内" value="nei"></el-option>-->
-                        <!--<el-option label="室外" value="wai"></el-option>-->
-                    <!--</el-select>-->
-                <!--</el-form-item>-->
-                <el-form-item label="名称" :label-width="formLabelWidth">
-                    <el-input v-model="form.name" auto-complete="off"></el-input>
-                </el-form-item>
-                <el-form-item label="厂家" :label-width="formLabelWidth">
-                    <el-select v-model="form.region">
-                        <el-option label="海康威视" value="weishi"></el-option>
-                        <el-option label="卓锐科技" value="keji"></el-option>
-                    </el-select>
-                </el-form-item>
-            </el-form>
-            <div slot="footer" class="dialog-footer">
-                <el-button @click="dialogFormVisible = false">取 消</el-button>
-                <el-button type="primary" @click="dialogFormVisible = false">确 定</el-button>
-            </div>
-        </el-dialog>
         </div>
     </div>
 </template>
 
 <script>
     import ScrollContainer from '@/components/ScrollContainer'
+    import Header from './camera.vue'
+    import HardWare from './hardwareDialog.vue'
 
     export default{
         data(){
             return{
-                dialogFormVisible:false,
+                isShowPersonCard:true,
+                visible:false,
                 camera:[
-                    {type:'摄像头名称',area:'A-片区',describe:'摄像头介绍'},
-                    {type:'摄像头名称',area:'A-片区',describe:'摄像头介绍'},
-                    {type:'摄像头名称',area:'A-片区',describe:'摄像头介绍'},
-                    {type:'摄像头名称',area:'A-片区',describe:'摄像头介绍'},
-                    {type:'摄像头名称',area:'A-片区',describe:'摄像头介绍'},
-                    {type:'摄像头名称',area:'A-片区',describe:'摄像头介绍'}
+                    {id:1,type:'室内',area:'A-片区',describe:'摄像头介绍'},
+                    {id:2,type:'室内',area:'A-片区',describe:'摄像头介绍'},
+                    {id:3,type:'室外',area:'A-片区',describe:'摄像头介绍'},
+                    {id:4,type:'室外',area:'A-片区',describe:'摄像头介绍'},
+                    {id:5,type:'室外',area:'A-片区',describe:'摄像头介绍'},
+                    {id:6,type:'室外',area:'A-片区',describe:'摄像头介绍'}
                 ],
-                form:{
-                    name:'',
-                    types:'',
-                    region:'',
-                    type:[],
-                    resource:'',
-                    delivery: false,
-                    desc:''
-                },
-                formLabelWidth:'120px',
                 checkList:[],
+//                isSelected:false,
+                personInfo:{},
+                choseInfoId:[],
+                choseList:[],
+                isDisabled:true,
+                filterList: []
             }
         },
+        methods:{
+            addNewInfo(){
+               this.showPersonDetail({})
+                this.isDisabled=false
+                this.visible = true
+            },
+            showPersonDetail(info){
+              this.personInfo=info
+
+            },
+            fixInfo(info){
+                let list=this.camera
+                for(let i=0;i<list.length;i++){
+                    if(info.id===list[i].id){
+                        this.camera[i]=info
+                    }
+                }
+                this.choseList=this.camera
+            },
+            deletInfo(){
+                console.log(122)
+                for(let i=0;i<this.choseInfoId.length;i++){
+                    this.camera=this.camera.filter((item,index)=>{
+                        if(item.id === this.choseInfoId[i]){
+                            this.choseList[index].checked=false
+                        }
+                        return item.id!==this.choseInfoId[i]
+                    })
+                }
+                this.choseList=this.camera
+            },
+            addNewPerson(info){
+                info.id=new Date().getTime()
+                this.camera.push(info)
+                this.choseList=this.camera
+            },
+            checked(id){
+                console.log(id)
+                if(this.choseInfoId.includes(id)){
+                    this.choseInfoId = this.choseInfoId.filter((item)=>{
+                        return item!== id
+                    })
+                }else{
+                    this.choseInfoId.push(id)
+                }
+            },
+            selectedAll(state){
+                this.choseList=this.camera.filter((item)=>{
+                    if(state==true){
+                        item.checked=true
+                        this.choseInfoId.push(item.id)
+                        return item.checked == true
+                    }else{
+                        console.log('进入判断')
+                        item.checked=false
+                        this.choseInfoId=[]
+                        return item.checked == false
+                    }
+                })
+                console.log(this.choseInfoId)
+            }
+        },
+        created (){
+          for (let i=0;i<this.camera.length;i++){
+              this.camera[i].checked=false
+              this.camera[i].status=true
+          }
+          this.choseList=this.camera
+        },
         components:{
-            ScrollContainer
+            ScrollContainer,
+            Header,
+            HardWare
+
         }
     }
 
@@ -149,65 +189,7 @@
                 width:100%;
                 height:rem(30);
                 margin-top:rem(10);
-                border-bottom:1px solid #a13309;
-                div{
-                    display:inline-block;
-                }
-                .titleSearch{
-                    input{
-                        border:none;
-                        outline:medium;
-                        border-bottom:1px solid #ccc;
-                        font-size:rem(13);
-                        padding:rem(3) rem(4);
-                    }
-                    i{
-                        font-size:rem(13);
-                        margin-left:rem(-20);
-                        cursor: pointer;
-                    }
-                }
-                .titleBtn{
-                    margin-left:rem(20);
-                    margin-top:rem(4);
-                    button{
-                        border:none;
-                        margin-right:rem(-5);
-                        font-weight: 600;
-                        i{
-                            margin-right:rem(3);
-                        }
-                    }
-                    .el-button{
-                        padding:rem(5) rem(5);
-                    }
-                }
-                .titleCheck{
-                    margin-left:rem(50);
-                    .el-checkbox{
-                        margin-left:rem(10)
-                    }
-                }
-                .titlePage{
-                    margin-left: rem(20);
-                    font-size:rem(13);
-                    float:right;
-                    margin-top:rem(3);
-                    span{
-                        display:inline-block;
-                        cursor: pointer;
-                        margin-left:rem(5);
-                    }
-                    .upPage,downPage,listForm,cardForm{
-                        padding: rem(5);
-                        box-sizing: border-box;
-                    }
-                    .cardForm{
-                        i{
-                            color: #a13309;
-                        }
-                    }
-                }
+                border-bottom: 1px solid #a13309;
             }
             .cameraList{
                 width:100%;
@@ -222,8 +204,22 @@
                     margin-right: rem(5.5);
                     margin-bottom: rem(5);
                     border-radius: rem(5);
+                    .checkBox{
+                        width:100%;
+                        height:rem(20);
+                        background:#fff;
+                        border-top-left-radius:rem(5);
+                        border-top-right-radius:rem(5);
+                        position:relative;
+                        .checkBtn{
+                            position:absolute;
+                            right:rem(5);
+                            top:rem(3);
+                            cursor:pointer;
+                        }
+                    }
                     .personType{
-                        margin-top:rem(20);
+                        /*margin-top:rem(20);*/
                         width:100%;
                         height:rem(25);
                         background:#0086b3;
@@ -232,6 +228,7 @@
                         img{
                             width:rem(40);
                             height:rem(40);
+                            border:2px solid #2c3b47;
                             border-radius: 50%;
                             position:absolute;
                             left:rem(15);
