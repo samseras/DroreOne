@@ -9,15 +9,16 @@
                         @deletInfo = "deletInfo"
                         @toggleList = "toggleList"
                         @choseType = 'choseType'
-                        @selectedAll = 'selectedAll'>
+                        @selectedAll = 'selectedAll'
+                        @fixedInfo = 'fixedInfo'>
                 </Header>
             </div>
             <div class="personList">
                 <ScrollContainer>
                     <el-table
-                        v-if="!isShowPersonCard"
+                        v-if="!isShowBoatCard"
                         ref="multipleTable"
-                        :data="personList"
+                        :data="boatCarList"
                         tooltip-effect="dark"
                         style="width: 100%"
                         @selection-change="handleSelectionChange">
@@ -26,56 +27,62 @@
                             width="55">
                         </el-table-column>
                         <el-table-column
-                            prop="name"
-                            label="姓名"
+                            prop="driver"
+                            label="驾驶人员"
                             width="120">
                         </el-table-column>
                         <el-table-column
-                            prop="type"
-                            label="人员角色">
+                            prop="safeStatus"
+                            label="维护状态">
                         </el-table-column>
                         <el-table-column
-                            prop="sex"
-                            label="性别">
-                        </el-table-column>
-                        <el-table-column
-                            prop="idNum"
-                            label="身份证号">
+                            prop="loadNum"
+                            label="核载人数">
                         </el-table-column>
                         <el-table-column
                             prop="phone"
                             label="电话号码">
                         </el-table-column>
+                        <el-table-column
+                            prop="facilityNum"
+                            label="设备号码">
+                        </el-table-column>
+                        <el-table-column
+                            prop="safeTime"
+                            label="维护时间">
+                        </el-table-column>
                         <el-table-column>
                             <template slot-scope="scope">
-                                <span @click="showPersonDetail(scope.row)">编辑</span>
+                                <span @click="showPersonDetail(scope.row, '车船信息')">编辑</span>
                             </template>
                         </el-table-column>
                     </el-table>
-                    <div class="personInfo" v-for="item in choseList" v-if="isShowPersonCard && item.status">
+                    <div class="personInfo" v-for="item in choseList" v-if="isShowBoatCard && item.status">
                         <div class="checkBox">
                             <input type="checkbox" :checked='item.checked' class="checkBtn" @change="checked(item.id)">
                         </div>
-                        <div class="personType" :class="item.type === '车辆'? 'carInfo':''" @click.stop="showPersonDetail(item)">
+                        <div class="personType" :class="item.type === '车辆'? 'carInfo':''" @click.stop="showPersonDetail(item ,'车船信息')">
                             <img src="" alt="">
                             <span class="type">
                                   {{item.type}}
                                 </span>
                         </div>
                         <div class="specificInfo">
-                            <p class="name">驾驶人员：<span>{{item.name}}</span></p>
-                            <p class="sex">状&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;态：<span>{{item.state}}</span></p>
-                            <p class="idNum">核载人数：<span>{{item.busload}}</span></p>
+                            <p class="name">驾驶人员：<span>{{item.driver}}</span></p>
+                            <p class="sex">状&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;态：<span>{{item.safeStatus}}</span></p>
+                            <p class="idNum">核载人数：<span>{{item.loadNum}}</span></p>
                             <p class="phoneNum">电&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;话：<span>{{item.phone}}</span></p>
                         </div>
                     </div>
                 </ScrollContainer>
                 <PersonDetail v-if="visible"
                               :visible="visible"
-                              :personInfo="personInfo"
-                              @closeInfoDialog ="visible = false"
+                              :Info="boatCarInfo"
+                              :isDisabled="isDisabled"
+                              :title="title"
+                              @closeInfoDialog ="visible = false; isDisabled = true"
                               @fixInfo = "fixInfo"
-                              @addNewPerson="addNewPerson">
+                              @addNewInfo="addNewBoatCar">
                 </PersonDetail>
             </div>
         </div>
@@ -90,48 +97,51 @@
         name: 'boatCar-deploy',
         data () {
             return {
-                isShowPersonCard: true,
+                isShowBoatCard: true,
                 checkList: [],
                 filterList: [],
-                personList: [
-                    {id:1,name: '小明',type: '船只',state: '正常',busload: 15,phone: '13674565455'},
-                    {id:2,name: '小红',type: '车辆',state: '正常',busload: 15,phone: '13674565455'},
-                    {id:3,name: '小明',type: '船只',state: '正常',busload: 15,phone: '13674565455'},
-                    {id:8,name: '小明',type: '车辆',state: '正常',busload: 15,phone: '13674565455'},
-                    {id:9,name: '小明',type: '车辆',state: '正常',busload: 15,phone: '13674565455'}
+                boatCarList: [
+                    {id:1,type: '船只',serNum:'che-002',safeStatus: '正常',loadNum: 15,buyTime:'2018-1-2',safeTime:'2018-3-2',driver:'张三',phone: '13674565455',facilityNum:'IISO-0001'},
+                    {id:2,type: '车辆',serNum:'che-002',safeStatus: '正常',loadNum: 15,buyTime:'2018-1-2',safeTime:'2018-3-2',driver:'张三',phone: '13674565455',facilityNum:'IISO-0001'},
+                    {id:3,type: '船只',serNum:'che-002',safeStatus: '正常',loadNum: 15,buyTime:'2018-1-2',safeTime:'2018-3-2',driver:'张三',phone: '13674565455',facilityNum:'IISO-0001'},
+                    {id:8,type: '车辆',serNum:'che-002',safeStatus: '正常',loadNum: 15,buyTime:'2018-1-2',safeTime:'2018-3-2',driver:'张三',phone: '13674565455',facilityNum:'IISO-0001'},
+                    {id:9,type: '车辆',serNum:'che-002',safeStatus: '正常',loadNum: 15,buyTime:'2018-1-2',safeTime:'2018-3-2',driver:'张三',phone: '13674565455',facilityNum:'IISO-0001'}
                 ],
                 visible: false,
-                personInfo: {},
+                boatCarInfo: {},
                 choseInfoId: [],
-                choseList: []
+                choseList: [],
+                isDisabled: true,
+                title: ''
             }
         },
         methods: {
-            showPersonDetail (info) {
-                this.personInfo = info
+            showPersonDetail (info, title) {
+                this.boatCarInfo = info
                 this.visible = true
+                this.title = title
             },
             addNewInfo () {
-                this.showPersonDetail({})
+                this.showPersonDetail({},'添加车船信息')
+                this.isDisabled = false
             },
             deletInfo () {
-                console.log(99999999)
                 for (let i = 0; i < this.choseInfoId.length; i++) {
-                    this.personList = this.personList.filter((item, index) => {
+                    this.boatCarList = this.boatCarList.filter((item, index) => {
                         if (item.id === this.choseInfoId[i]){
                             this.choseList[index].checked = false
                         }
                         return item.id !== this.choseInfoId[i]
                     })
                 }
-                this.choseList = this.personList
+                this.choseList = this.boatCarList
 
             },
             toggleList (type) {
                 if (type === 'list') {
-                    this.isShowPersonCard = false
+                    this.isShowBoatCard = false
                 }else {
-                    this.isShowPersonCard = true
+                    this.isShowBoatCard = true
                 }
             },
             checked (id) {
@@ -146,12 +156,12 @@
             choseType (type) {
                 console.log(type)
                 if (type.length === 0){
-                    this.choseList = this.personList.filter((item) => {
+                    this.choseList = this.boatCarList.filter((item) => {
                         item.status = true
                         return item.status === true
                     })
                 } else {
-                    this.choseList = this.personList.filter((item,index) => {
+                    this.choseList = this.boatCarList.filter((item,index) => {
                         if (type.includes(item.type)){
                             item.status = true
                         } else if(!type.includes(item.type)){
@@ -164,7 +174,7 @@
             },
             selectedAll (state) {
                 console.log(state, 'opopopopop')
-                this.choseList = this.personList.filter((item) => {
+                this.choseList = this.boatCarList.filter((item) => {
                     if (state === true) {
                         item.checked = true
                         this.choseInfoId.push(item.id)
@@ -180,28 +190,41 @@
             },
             fixInfo (info) {
                 console.log(info, 'wertyuio')
-                let list = this.personList
+                let list = this.boatCarList
                 for(let i = 0;i< list.length; i++){
                     if (info.id === list[i].id) {
-                        this.personList[i] = info
+                        this.boatCarList[i] = info
 
                     }
                 }
-                this.choseList = this.personList
+                this.choseList = this.boatCarList
             },
-            addNewPerson (info) {
+            addNewBoatCar (info) {
                 info.id = new Date().getTime()
-                this.personList.push(info)
-                this.choseList = this.personList
+                this.boatCarList.push(info)
+                this.choseList = this.boatCarList
+            },
+            fixedInfo () {
+                if (this.choseInfoId.length > 0) {
+                    this.boatCarList.map((item) => {
+                        if (item.id === this.choseInfoId[0]){
+                            this.boatCarInfo = item
+                        }
+                    })
+                    this.showPersonDetail(this.boatCarInfo,'修改车船信息')
+                    this.isDisabled = false
+                } else {
+                    this.$message.error('请选择要修改的车船')
+                }
             }
 
         },
         created () {
-            for (let i = 0; i < this.personList.length; i++) {
-                this.personList[i].checked = false
-                this.personList[i].status = true
+            for (let i = 0; i < this.boatCarList.length; i++) {
+                this.boatCarList[i].checked = false
+                this.boatCarList[i].status = true
             }
-            this.choseList = this.personList
+            this.choseList = this.boatCarList
         },
         components:{
             ScrollContainer,
@@ -298,7 +321,7 @@
                         background: #cc9755;
                     }
                     .specificInfo{
-                        margin-top: rem(5);
+                        margin-top: rem(10);
                         font-size: rem(12);
                         p{
                             margin-left: rem(10);

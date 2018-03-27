@@ -66,7 +66,7 @@
                                 title: '商圈'
                             },
                             {
-                                index: '/deploy/scence-deploy',
+                                index: '/deploy/scenic-deploy',
                                 title: '景点'
                             },
 

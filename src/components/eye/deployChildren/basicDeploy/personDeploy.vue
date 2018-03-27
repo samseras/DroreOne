@@ -57,7 +57,7 @@
                         <div class="checkBox">
                             <input type="checkbox" :checked='item.checked' class="checkBtn" @change="checked(item.id)">
                         </div>
-                        <div class="personType" @click.stop="showPersonDetail(item)">
+                        <div class="personType" @click.stop="showPersonDetail(item, '人员信息')">
                             <img src="" alt="">
                             <span class="type">
                                   {{item.type}}
@@ -73,11 +73,12 @@
                 </ScrollContainer>
                 <PersonDetail v-if="visible"
                               :visible="visible"
-                              :personInfo="personInfo"
+                              :Info="personInfo"
                               :isDisabled="isDisabled"
+                              :title="title"
                               @closeInfoDialog ="visible = false"
                               @fixInfo = "fixInfo"
-                              @addNewPerson="addNewPerson">
+                              @addNewInfo="addNewPerson">
                 </PersonDetail>
             </div>
         </div>
@@ -106,23 +107,24 @@
                 personInfo: {},
                 choseInfoId: [],
                 choseList: [],
-                isDisabled: true
+                isDisabled: true,
+                title: ''
             }
         },
         methods: {
             handleSelectionChange(val) {
                 this.multipleSelection = val;
             },
-            showPersonDetail (info) {
+            showPersonDetail (info,title) {
                 this.personInfo = info
                 this.visible = true
+                this.title = title
             },
             addNewInfo () {
-                this.showPersonDetail({})
+                this.showPersonDetail({}, '添加人员信息')
                 this.isDisabled = false
             },
             deletInfo () {
-                console.log(99999999)
                 for (let i = 0; i < this.choseInfoId.length; i++) {
                     this.personList = this.personList.filter((item, index) => {
                         if (item.id === this.choseInfoId[i]){
@@ -208,7 +210,7 @@
                             this.personInfo = item
                         }
                     })
-                    this.showPersonDetail(this.personInfo)
+                    this.showPersonDetail(this.personInfo, '修改人员信息')
                     this.isDisabled = false
                 } else {
                     this.$message.error('请选择要修改的人员')

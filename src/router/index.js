@@ -47,7 +47,7 @@ import OtherDeploy from '@/components/eye/deployChildren/basicDeploy/otherDeploy
 import ParkDeploy from '@/components/eye/deployChildren/basicDeploy/parkDeploy'       //停车场
 import PersonDeploy from '@/components/eye/deployChildren/basicDeploy/personDeploy'       //人员
 import RoatDeploy from '@/components/eye/deployChildren/basicDeploy/roatDeploy'       //路网
-import ScenceDeploy from '@/components/eye/deployChildren/basicDeploy/scenicDeploy'       //景点
+import ScenicDeploy from '@/components/eye/deployChildren/basicDeploy/scenicDeploy'       //景点
 import ShopDeploy from '@/components/eye/deployChildren/basicDeploy/shopDeploy'       //商圈
 import ToiletDeploy from '@/components/eye/deployChildren/basicDeploy/toiletDeploy'       //洗手间
 import TrashDeploy from '@/components/eye/deployChildren/basicDeploy/trashDeploy'       //垃圾桶
@@ -150,7 +150,7 @@ const routes = [
                     {path: '/deploy/park-deploy',name: 'ParkDeploy',component: ParkDeploy },
                     {path: '/deploy/person-deploy',name: 'PersonDeploy',component: PersonDeploy },
                     {path: '/deploy/roat-deploy',name: 'RoatDeploy',component: RoatDeploy },
-                    {path: '/deploy/scence-deploy',name: 'ScenceDeploy',component: ScenceDeploy },
+                    {path: '/deploy/scenic-deploy',name: 'ScenicDeploy',component: ScenicDeploy },
                     {path: '/deploy/shop-deploy',name: 'ShopDeploy',component: ShopDeploy },
                     {path: '/deploy/toilet-deploy',name: 'ToiletDeploy',component: ToiletDeploy },
                     {path: '/deploy/trash-deploy',name: 'TrashDeploy',component: TrashDeploy },

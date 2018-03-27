@@ -12,9 +12,29 @@
             <el-button size="mini"plain @click="deleteCard"><i class="el-icon-delete"></i>删除</el-button>
             <el-button size="mini"plain @click="fixCard"><i class="el-icon-delete"></i>修改</el-button>
         </div>
-        <div class="filite" v-if="isShowJobType">
+        <div class="filite" v-if="route.includes('person')">
             <el-checkbox-group v-model="filterList" @change="choseType">
-                <el-checkbox v-for="item in typeList" :label="item.type"></el-checkbox>
+                <el-checkbox v-for="item in personTypeList" :label="item.type"></el-checkbox>
+            </el-checkbox-group>
+        </div>
+        <div class="filite" v-if="route.includes('indicator')">
+            <el-checkbox-group v-model="filterList" @change="choseType">
+                <el-checkbox v-for="item in indicatorType" :label="item.type"></el-checkbox>
+            </el-checkbox-group>
+        </div>
+        <div class="filite" v-if="route.includes('trash')">
+            <el-checkbox-group v-model="filterList" @change="choseType">
+                <el-checkbox v-for="item in trashType" :label="item.type"></el-checkbox>
+            </el-checkbox-group>
+        </div>
+        <div class="filite" v-if="route.includes('shop')">
+            <el-checkbox-group v-model="filterList" @change="choseType">
+                <el-checkbox v-for="item in shopType" :label="item.type"></el-checkbox>
+            </el-checkbox-group>
+        </div>
+        <div class="filite" v-if="route.includes('park')">
+            <el-checkbox-group v-model="filterList" @change="choseType">
+                <el-checkbox v-for="item in parkType" :label="item.type"></el-checkbox>
             </el-checkbox-group>
         </div>
         <div class="page">
@@ -33,7 +53,7 @@
         data () {
             return {
                 filterList: [],
-                typeList: [
+                personTypeList: [
                     {type: '安保'},
                     {type: '售票'},
                     {type: '保洁'},
@@ -41,8 +61,30 @@
                     {type: '船夫'},
                     {type: '检票'}
                 ],
+                indicatorType: [
+                    {type: '设施'},
+                    {type: '路线'},
+                    {type: '标语'}
+                ],
+                trashType: [
+                    {type: '临时'},
+                    {type: '固定'}
+                ],
+                shopType: [
+                    {type: '零售'},
+                    {type: '餐饮'},
+                    {type: '游乐'},
+                    {type: '其他'}
+                ],
+                parkType: [
+                    {type: '室内'},
+                    {type: '室外'}
+                ],
+                route: '',
                 isSelected: false,
-                isShowJobType: true
+                isShowJobType: true,
+                isShowIndicatorType: true,
+                isShowTrashType: true
             }
         },
         methods: {
@@ -68,12 +110,18 @@
                 this.$emit('fixedInfo')
             },
             showPersonJob () {
-                let route = this.$route.path
-                if (route.includes('person')){
-                    this.isShowJobType = true
-                } else {
-                    this.isShowJobType = false
-                }
+                this.route = this.$route.path
+                // if (route.includes('person')){
+                //     this.isShowJobType = true
+                //     this.isShowIndicatorType = false
+                //     this.isShowTrashType = false
+                // } else if (route.includes('indicator')){
+                //     this.isShowJobType = false
+                //     this.isShowIndicatorType = true
+                // } else {
+                //     this.isShowJobType = false
+                //     this.isShowIndicatorType = false
+                // }
             }
         },
         watch: {

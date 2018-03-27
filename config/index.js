@@ -12,7 +12,7 @@ module.exports = {
     assetsPublicPath: '/',
     proxyTable: {//做跨域配置
         '/analysis': {
-            target: 'http://192.168.0.150:8091',
+            target: 'http://192.168.0.150:8091/',
             changeOrigin: true
         },
         '/dsp': {
