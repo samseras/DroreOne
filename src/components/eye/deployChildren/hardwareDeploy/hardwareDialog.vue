@@ -1,40 +1,40 @@
 <template>
     <div class="hardwareDialog">
         <el-dialog
-            title="添加摄像头信息"
+            :title="title"
             :visible="visible"
             :before-close="closeDialog"
             width="25%"
             class="dialog echatDialog"
             center>
             <div class="card">
-
-                <div class="cameraCard popCard">
+                <!--摄像头-->
+                <div class="cameraCard popCard" v-if="route.includes('camera')">
                     <p class="type">类&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  型：
-                        <select name="" v-model="type">
+                        <select name="" v-model="camera.type">
                             <option value="室内">室内</option>
                             <option value="室外">室外</option>
                         </select>
                     </p>
-                    <!--<div class="chart">-->
-                        <!--<img src="../../../../../static/img/camera.png" alt="">-->
-                    <!--</div>-->
-                    <p class="name">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  称：<input type="text" v-model="name"> </p>
-                    <p class="home">厂&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  家：
-                        <select name="" v-model="home">
+                    <p class="name">名&nbsp;&nbsp;&nbsp;称：<input type="text" v-model="camera.name"> </p>
+                    <p class="home">厂&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;家：
+                        <select name="" v-model="camera.home">
                             <option value="海康">海康</option>
                             <option value="卓锐">卓锐</option>
                         </select>
                     </p>
-                    <p class="IP">I P 地 址：<input type="text" v-model="IP"></p>
-                    <p class="host">端&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  口：<input type="text" v-model="host"></p>
-                    <p class="place">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  置：<input type="text" v-model="place"></p>
-                    <p class="area">所属片区：<input type="text" v-model="area"></p>
+                    <p class="IP">I P 地 址：<input type="text" v-model="camera.IP"></p>
+                    <p class="host">端&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  口：<input type="text" v-model="camera.host"></p>
+                    <p class="place">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  置：<input type="text" v-model="camera.place"></p>
+                    <p class="area">所属片区：<input type="text" v-model="camera.area"></p>
                     <p class="describe">描&nbsp; 述：
-                        <textarea v-model="describe" cols="40" rows="8">
+                        <textarea v-model="camera.describe" cols="40" rows="8">
 
                         </textarea>
                     </p>
+                    <!--<div class="chart">-->
+                        <!--<img src="../../../../../static/img/camera.png" alt="">-->
+                    <!--</div>-->
                 </div>
             </div>
             <div slot="footer" class="dialog-footer cardFooter">
@@ -47,58 +47,49 @@
 
 <script>
    export default{
-       props:['visible','personInfo','isDisabled'],
+       props:['visible','Info','title','isDisabled'],
        data(){
            return{
-               name:'',
-               type:'',
-               area:'',
-               home:'',
-               IP:'',
-               host:'',
-               place:'',
-               describe:''
-
+              camera:{
+                  name:'',
+                  type:'',
+                  area:'',
+                  home:'',
+                  IP:'',
+                  host:'',
+                  place:'',
+                  describe:'',
+                  route:''
+              },
+               route:''
            }
        },
        methods:{
-           select(){
-
-           },
            closeDialog(){
                this.$emit('closeInfoDialog')
            },
            addNewInfo(){
-               let newInfo={
-                   name:this.name,
-                   type:this.type,
-                   area:this.area,
-                   home:this.home,
-                   IP:this.IP,
-                   host:this.host,
-                   place:this.place,
-                   describe:this.describe,
-                   status: true,
-                    checked: false
+               let newInfo={ }
+               if(this.route.includes('camera')){
+                   newInfo=this.camera
                }
-               if(this.personInfo.id){
-                   newInfo.id=this.personInfo.id
+               newInfo.status=true
+               newInfo.checked=false
+
+               if(this.Info.id){
+                   newInfo.id=this.Info.id
                    this.$emit('fixInfo',newInfo)
                }else{
-                   this.$emit('addNewPerson',newInfo)
+                   this.$emit('addNewInfo',newInfo)
                }
                this.closeDialog()
            }
        },
        created(){
-           this.name=this.personInfo.name
-           this.type=this.personInfo.type
-           this.area=this.personInfo.area
-           this.home=this.personInfo.home
-           this.IP=this.personInfo.IP
-           this.host=this.personInfo.host
-           this.place=this.personInfo.place
-           this.describe=this.personInfo.describe
+           this.route=this.$route.path
+           if(this.route.includes('camera')){
+               this.camera=this.Info
+           }
        }
    }
 
@@ -153,17 +144,7 @@
                 width: 100%;
                 height: 100%;
                 position: relative;
-                /*.chart{*/
-                    /*position: absolute;*/
-                    /*width:rem(20);*/
-                    /*height:rem(20);*/
-                    /*top:rem(5);*/
-                    /*right:rem(20);*/
-                    /*img{*/
-                        /*border:1px solid #9c9c9c;*/
-                        /*border-radius: 50%;*/
-                    /*}*/
-                /*}*/
+
                 p{
                     margin-top: rem(5);
                     border-bottom: 1px solid #ccc;

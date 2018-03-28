@@ -7,10 +7,10 @@
             <div class="conTitle">
                 <Header @addNewInfo="addNewInfo"
                         @deletInfo="deletInfo"
-                        @selectedAll="selectedAll">
-                        <!--@fixedInfo="fixInfo">-->
+                        @selectedAll="selectedAll"
+                        @fixedInfo="fixedInfo"
+                        @choseType="choseType">
                         <!--@toggleList="toggleList"-->
-                        <!--@choseType="choseType"-->
                 </Header>
             </div>
 
@@ -34,11 +34,12 @@
                     </div>
                 </ScrollContainer>
                 <HardWare v-if="visible"
-                        :visible="visible"
-                         :personInfo="personInfo"
+                          :visible="visible"
+                         :Info="personInfo"
+                          :title="title"
                           :isDisabled="isDisabled"
                           @closeInfoDialog="visible=false"
-                           @addNewPerson="addNewPerson"
+                           @addNewInfo="addNewPerson"
                             @fixInfo="fixInfo">
 
                 </HardWare>
@@ -66,22 +67,24 @@
                     {id:6,type:'室外',area:'A-片区',describe:'摄像头介绍'}
                 ],
                 checkList:[],
-//                isSelected:false,
+                isSelected:false,
                 personInfo:{},
                 choseInfoId:[],
                 choseList:[],
                 isDisabled:true,
-                filterList: []
+                filterList: [],
+                title:''
             }
         },
         methods:{
             addNewInfo(){
-               this.showPersonDetail({})
+               this.showPersonDetail({},'添加摄像头信息')
                 this.isDisabled=false
-                this.visible = true
             },
-            showPersonDetail(info){
+            showPersonDetail(info,title){
               this.personInfo=info
+                this.visible=true
+                this.title=title
 
             },
             fixInfo(info){
@@ -92,6 +95,19 @@
                     }
                 }
                 this.choseList=this.camera
+            },
+            fixedInfo(){
+                if(this.choseInfoId.length>0){
+                    this.camera.map((item)=>{
+                        if(item.id === this.choseInfoId[0]){
+                            this.personInfo=item
+                        }
+                    })
+                    this.showPersonDetail(this.personInfo,'修改人员信息')
+                    this.isDisabled=false
+                }else{
+                    this.$message.error('请选择要修改的人员')
+                }
             },
             deletInfo(){
                 console.log(122)
@@ -118,6 +134,25 @@
                     })
                 }else{
                     this.choseInfoId.push(id)
+                }
+            },
+            choseType(type){
+                console.log(type)
+                if(type.length===0){
+                    this.choseList=this.camera.filter((item)=>{
+                        item.status=true
+                        return item.status === true
+                    })
+                }else{
+                    this.choseList=this.camera.filter((item,index)=>{
+                        if(type.includes(item.type)){
+                            item.status=true
+                        }else if(!type.includes(item.type)){
+                            item.status=false
+                            console.log(item.type)
+                        }
+                        return item.status===true
+                    })
                 }
             },
             selectedAll(state){

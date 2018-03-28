@@ -12,11 +12,11 @@
             <el-button size="mini" plain>导入</el-button>
             <el-button size="mini" plain>导出</el-button>
             <el-button size="mini"plain @click="deleteCard"><i class="el-icon-delete"></i>删除</el-button>
-            <el-button size="mini"plain ><i class="el-icon-edit-outline"></i>修改</el-button>
+            <el-button size="mini"plain @click="fixCard"><i class="el-icon-edit-outline"></i>修改</el-button>
         </div>
-        <div class="titleCheck" v-if="isShowJobType" >
-            <el-checkbox-group v-model="checkList" >
-                <el-checkbox v-for="item in typeList" :label="item.type"></el-checkbox>
+        <div class="titleCheck" v-if="route.includes('camera')" >
+            <el-checkbox-group v-model="filterList" @change="choseType">
+                <el-checkbox v-for="item in cameraList" :label="item.type"></el-checkbox>
             </el-checkbox-group>
         </div>
         <div class="titlePage">
@@ -33,11 +33,12 @@
     export default{
         data(){
             return{
-                checkList:[],
-                typeList:[
-                {type:'室内'},
-                {type:'室外'}
+                filterList:[],
+                cameraList:[
+                    {type:'室内'},
+                    {type:'室外'}
                 ],
+                route:'',
                 isSelected:false,
                 isShowJobType:true
             }
@@ -53,16 +54,27 @@
 //            toggleList(type){
 //                this.$emit('toggleList',type)
 //            },
-//            choseType(){
-//                this.$emit('choseType',this.checkList)
-//            },
+            choseType(){
+                this.$emit('choseType',this.filterList)
+            },
             selectedAll(){
                 console.log(this.isSelected)
                 this.$emit('selectedAll',this.isSelected)
             },
-//            fixCard(){
-//                this.$emit('fixedInfo')
-//            }
+            fixCard(){
+                this.$emit('fixedInfo')
+            },
+            showPersonJob(){
+                this.route=this.$route.path
+            }
+        },
+        watch:{
+            '$route' (){
+                this.showPersonJob()
+            }
+        },
+        created(){
+            this.showPersonJob()
         }
     }
 </script>
