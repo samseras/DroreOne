@@ -1,7 +1,7 @@
 <template>
     <div class="wifiList">
         <div class="title">
-            广播信息
+            WIFI信息
         </div>
         <div class="cameraContent">
             <div class="conTitle">

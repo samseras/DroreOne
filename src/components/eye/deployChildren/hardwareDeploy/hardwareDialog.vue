@@ -98,6 +98,7 @@
                     <p class="name">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称：<input type="text" v-model="wifi.name"> </p>
                     <p class="version">型&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;号：<input type="text" v-model="wifi.version"></p>
                     <p class="IP">设备I P ：<input type="text" v-model="wifi.ip"></p>
+                    <p class="mac">M a c：<input type="text" v-model="wifi.Mac"></p>
                     <p class="host">设备编号：<input type="text" v-model="wifi.host"></p>
                     <p class="place">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  置：<input type="text" v-model="wifi.place"></p>
                     <p class="area">所属片区：<input type="text" v-model="wifi.area"></p>
@@ -110,7 +111,85 @@
                     <!--<img src="../../../../../static/img/camera.png" alt="">-->
                     <!--</div>-->
                 </div>
+                <!--传感器-->
+                <div class="cameraCard popCard" v-if="route.includes('monitors')">
+                    <p class="type">类&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  型：
+                        <select name="" v-model="monitors.type">
+                            <option value="室内">空气</option>
+                            <option value="室外">天气</option>
+                        </select>
+                    </p>
+                    <p class="name">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称：<input type="text" v-model="monitors.name"> </p>
+                    <p class="version">厂&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;家：
+                        <select name="" v-model="monitors.home">
+                            <option value="卓锐">卓锐</option>
+                            <option value="室外">天气</option>
+                        </select>
+                    </p >
+                    <p class="IP">设备I P ：<input type="text" v-model="monitors.ip"></p>
+                    <p class="host">设备编号：<input type="text" v-model="monitors.host"></p>
+                    <p class="area">所属片区：<input type="text" v-model="monitors.area"></p>
+                    <p class="describe">描&nbsp; 述：
+                        <textarea v-model="monitors.describe" cols="40" rows="8">
+
+                        </textarea>
+                    </p>
+                    <!--<div class="chart">-->
+                    <!--<img src="../../../../../static/img/camera.png" alt="">-->
+                    <!--</div>-->
+                </div>
+                <!--灯光-->
+                <div class="cameraCard popCard" v-if="route.includes('Light')">
+                    <p class="status">状&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;态:<input type="text" v-model="Light.status"></p>
+                    <p class="name">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称：<input type="text" v-model="Light.name"> </p>
+                    <p class="home">厂&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  家：
+                        <select name="" v-model="Light.home">
+                            <option value="室内">室内</option>
+                            <option value="室外">室外</option>
+                        </select>
+                    </p>
+                    <p class="num">路灯编号：<input type="text" v-model="Light.num"></p>
+                    <p class="version">型&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;号：<input type="text" v-model="Light.version"></p>
+                    <p class="place">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  置：<input type="text" v-model="Light.place"></p>
+                    <p class="area">所属片区：<input type="text" v-model="Light.area"></p>
+                    <p class="describe">描&nbsp; 述：
+                        <textarea v-model="Light.describe" cols="40" rows="8">
+
+                        </textarea>
+                    </p>
+                    <!--<div class="chart">-->
+                    <!--<img src="../../../../../static/img/camera.png" alt="">-->
+                    <!--</div>-->
+                </div>
+
+                <!--闸机-->
+                <div class="cameraCard popCard" v-if="route.includes('gate')">
+                    <p class="type">类&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  型：
+                        <select name="" v-model="gate.type">
+                            <option value="室内">室内</option>
+                            <option value="室外">室外</option>
+                        </select>
+                    </p>
+                    <p class="name">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称：<input type="text" v-model="gate.name"> </p>
+                    <p class="version">型&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;号：<input type="text" v-model="gate.version"></p>
+                    <p class="IP">设备I P ：<input type="text" v-model="gate.ip"></p>
+                    <p class="host">型&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;号：<input type="text" v-model="gate.host"></p>
+
+                    <p class="num">设备编号：<input type="text" v-model="gate.num"></p>
+                    <p class="place">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  置：<input type="text" v-model="gate.place"></p>
+                    <p class="area">所属片区：<input type="text" v-model="gate.area"></p>
+                    <p class="describe">描&nbsp; 述：
+                        <textarea v-model="gate.describe" cols="40" rows="8">
+
+                        </textarea>
+                    </p>
+                    <!--<div class="chart">-->
+                    <!--<img src="../../../../../static/img/camera.png" alt="">-->
+                    <!--</div>-->
+                </div>
+
             </div>
+
             <div slot="footer" class="dialog-footer cardFooter">
                 <el-button size="mini" @click="addNewInfo" :disabled="isDisabled">保存</el-button>
                 <el-button size="mini" type="primary" @click="closeDialog" :disabled="isDisabled">取消</el-button>
@@ -159,7 +238,38 @@
                    name:'',
                    version:'',
                    ip:'',
+                   host:'',
+                   Mac:'',
+                   area:'',
+                   describe:''
+               },
+               monitors:{
+                   type:'',
+                   name:'',
+                   home:'',
+                   ip:'',
+                   host:'',
+                   place:'',
+                   area:'',
+                   describe:''
+               },
+               Light:{
+                   status:'',
+                   name:'',
+                   home:'',
                    num:'',
+                   version:'',
+                   place:'',
+                   area:'',
+                   describe:''
+               },
+               gate:{
+                   type:'',
+                   name:'',
+                   version:'',
+                   num:'',
+                   ip:'',
+                   host:'',
                    place:'',
                    area:'',
                    describe:''
@@ -181,6 +291,12 @@
                    newInfo = this.led
                }else if(this.route.includes('wifi')) {
                    newInfo = this.wifi
+               }else if(this.route.includes('monitors')) {
+                   newInfo = this.monitors
+               }else if(this.route.includes('Light')) {
+                   newInfo = this.Light
+               }else if(this.route.includes('gate')) {
+                   newInfo = this.gate
                }
                newInfo.status=true
                newInfo.checked=false
@@ -204,6 +320,12 @@
                this.led=this.Info
            }else if(this.route.includes('wifi')){
                this.wifi=this.Info
+           }else if(this.route.includes('monitors')){
+               this.monitors=this.Info
+           }else if(this.route.includes('Light')){
+               this.Light=this.Info
+           }else if(this.route.includes('gate')){
+               this.gate=this.Info
            }
        }
    }
