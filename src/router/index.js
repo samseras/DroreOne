@@ -25,8 +25,8 @@ import Environment from '@/components/eye/controlChildren/environment'
 
 import Analyze from '@/components/analyze'
 import Passenger from '@/components/eye/analyze/passengerFlow'
-import Origin from '@/components/eye/analyze/passengerOrigin'
-import Ticket from '@/components/eye/analyze/ticketBusiness'
+// import Origin from '@/components/eye/analyze/passengerOrigin'
+// import Ticket from '@/components/eye/analyze/ticketBusiness'
 
 import Facility from '@/components/facility'
 import Toilet from "@/components/eye/facilityChildren/toiletFacility"
@@ -114,12 +114,12 @@ const routes = [
             {
                 path: '/analyze',
                 name: 'analyze',
-                redirect: '/analyze/passenger',
+                redirect: '/analyze/:id',
                 component: Analyze,
                 children: [
-                    {path: '/analyze/passenger',name: 'Passenger', component:Passenger},
-                    {path: '/analyze/origin',name: 'Origin', component:Origin},
-                    {path: '/analyze/ticket',name: 'Ticket', component:Ticket}
+                    {path: '/analyze/:id',name: 'Passenger', component:Passenger},
+                    // {path: '/analyze/origin',name: 'Origin', component:Origin},
+                    // {path: '/analyze/ticket',name: 'Ticket', component:Ticket}
                 ]
             },
             {
