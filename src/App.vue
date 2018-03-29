@@ -16,7 +16,7 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" type="text/scss">
     @import "style/func.scss";
     @import "style/common.scss";
 	*{margin: 0;padding: 0;}

@@ -2,18 +2,18 @@
     <el-container>
         <el-header>
             <el-row :gutter="10" class="alleye">
-                <el-col :xs="6" :sm="7" :md="7" :lg="5" :xl="1">
+                <el-col :xs="6" :sm="7" :md="7" :lg="5" :xl="4">
                     <img src="../../static/img/eye.png"/>Workbench
                 </el-col>
-                <el-col :xs="6" :sm="6" :md="7" :lg="9" :xl="11" class="control">
+                <el-col :xs="6" :sm="6" :md="7" :lg="11" :xl="12" class="control">
                     <div v-for="(item,index) in manage" @click="goModule(item,index)"
                          :class="activeIndex === index? 'active':''">{{item}}
                     </div>
                 </el-col>
-                <el-col :xs="5" :sm="5" :md="5" :lg="5" :xl="11" id="getTime">
+                <el-col :xs="5" :sm="5" :md="5" :lg="5" :xl="6" id="getTime">
                     {{currTime | timeFiler}} ({{currTime | weekFiler}})
                 </el-col>
-                <el-col :xs="7" :sm="6" :md="5" :lg="5" :xl="1">
+                <el-col :xs="7" :sm="6" :md="5" :lg="3" :xl="2">
                     <div v-for="item in title">
                         <a href="#">
                             <i v-html="item"></i>

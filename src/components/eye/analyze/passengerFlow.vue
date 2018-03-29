@@ -554,7 +554,7 @@
         height: 100%;
         padding: rem(20) rem(30);
         box-sizing: border-box;
-        background:  #174984;
+        /*background:  #174984;*/
         .content{
             width: 100%;
             /*height: 100%;*/
