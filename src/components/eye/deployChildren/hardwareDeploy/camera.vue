@@ -19,12 +19,28 @@
                 <el-checkbox v-for="item in cameraList" :label="item.type"></el-checkbox>
             </el-checkbox-group>
         </div>
+        <div class="titleCheck" v-if="route.includes('broadcast')" >
+            <el-checkbox-group v-model="filterList" @change="choseType">
+                <el-checkbox v-for="item in cameraList" :label="item.type"></el-checkbox>
+            </el-checkbox-group>
+        </div>
+         <div class="titleCheck" v-if="route.includes('led')" >
+                <el-checkbox-group v-model="filterList" @change="choseType">
+                    <el-checkbox v-for="item in cameraList" :label="item.type"></el-checkbox>
+                </el-checkbox-group>
+        </div>
+        <div class="titleCheck" v-if="route.includes('wifi')" >
+            <el-checkbox-group v-model="filterList" @change="choseType">
+                <el-checkbox v-for="item in cameraList" :label="item.type"></el-checkbox>
+            </el-checkbox-group>
+        </div>
+
         <div class="titlePage">
             <span>当前第1页/共8页</span>
             <span class="upPage"><</span>
             <span class="downPage">></span>
-            <span class="listForm" ><i class="el-icon-tickets"></i></span>
-            <span class="cardForm" ><i class="el-icon-menu"></i></span>
+            <span class="listForm" @click="toggleList('list')" ><i class="el-icon-tickets"></i></span>
+            <span class="cardForm" @click="toggleList('card')"><i class="el-icon-menu"></i></span>
         </div>
     </div>
 </template>
@@ -51,9 +67,9 @@
             deleteCard(){
                 this.$emit('deletInfo')
             },
-//            toggleList(type){
-//                this.$emit('toggleList',type)
-//            },
+            toggleList(type){
+                this.$emit('toggleList',type)
+            },
             choseType(){
                 this.$emit('choseType',this.filterList)
             },

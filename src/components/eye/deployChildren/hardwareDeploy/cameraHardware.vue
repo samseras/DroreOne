@@ -9,13 +9,45 @@
                         @deletInfo="deletInfo"
                         @selectedAll="selectedAll"
                         @fixedInfo="fixedInfo"
-                        @choseType="choseType">
-                        <!--@toggleList="toggleList"-->
+                        @choseType="choseType"
+                        @toggleList="toggleList">
                 </Header>
             </div>
 
             <div class="cameraList">
                 <ScrollContainer>
+                    <el-table
+                        v-if="!isShowPersonCard"
+                        ref="multipleTable"
+                        :data="camera"
+                        tooltip-effect="dark"
+                        style="width: 100%"
+                        @selection-change="handleSelectionChange">
+                        <el-table-column
+                            type="selection"
+                            width="55">
+                        </el-table-column>
+
+                        <el-table-column
+                            prop="type"
+                            label="状态">
+                        </el-table-column>
+
+                        <el-table-column
+                            prop="area"
+                            label="所属片区">
+                        </el-table-column>
+                        <el-table-column
+                            prop="describe"
+                            label="摄像头介绍">
+                        </el-table-column>
+                        <el-table-column>
+                            <template slot-scope="scope">
+                                <span @click="showPersonDetail(scope.row, '摄像头信息')">编辑</span>
+                            </template>
+                        </el-table-column>
+                    </el-table>
+
                     <div class="personInfo" v-for="item in choseList" v-if="isShowPersonCard && item.status">
                         <div class="checkBox">
                             <input type="checkbox" :checked="item.checked" class="checkBtn" @change="checked(item.id)">
@@ -77,6 +109,9 @@
             }
         },
         methods:{
+            handleSelectionChange(val){
+                this.multipleSelection = val;
+            },
             addNewInfo(){
                this.showPersonDetail({},'添加摄像头信息')
                 this.isDisabled=false
@@ -125,6 +160,13 @@
                 info.id=new Date().getTime()
                 this.camera.push(info)
                 this.choseList=this.camera
+            },
+            toggleList (type){
+                if(type==='list'){
+                    this.isShowPersonCard=false
+                }else{
+                    this.isShowPersonCard=true
+                }
             },
             checked(id){
                 console.log(id)

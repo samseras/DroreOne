@@ -11,8 +11,8 @@ module.exports = {
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
     proxyTable: {//做跨域配置
-        '/analysis': {
-            target: 'http://192.168.0.150:8091/',
+        '/drore': {
+            target: 'http://192.168.0.162:8080/',
             changeOrigin: true
         },
         '/dsp': {

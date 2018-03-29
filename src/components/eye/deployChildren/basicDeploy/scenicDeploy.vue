@@ -13,7 +13,7 @@
                         @fixedInfo = 'fixedInfo'>
                 </Header>
             </div>
-            <div class="personList">
+            <div class="personList" v-loading="isShowLoading">
                 <ScrollContainer>
                     <el-table
                         v-if="!isShowScenicCard"
@@ -57,7 +57,7 @@
                             </template>
                         </el-table-column>
                     </el-table>
-                    <div class="personInfo" v-for="item in choseList" v-if="isShowScenicCard && item.status">
+                    <div class="personInfo" v-for="item in scenicList" v-if="isShowScenicCard && item.status">
                         <div class="checkBox">
                             <input type="checkbox" :checked='item.checked' class="checkBtn" @change="checked(item.id)">
                         </div>
@@ -93,6 +93,7 @@
     import ScrollContainer from '@/components/ScrollContainer'
     import Header from './funHeader'
     import PersonDetail from './detailDialog'
+    import api from '@/api'
     export default {
         name: "scenic-deploy",
         data () {
@@ -112,7 +113,8 @@
                 choseInfoId: [],
                 choseList: [],
                 isDisabled: true,
-                title: ''
+                title: '',
+                isShowLoading: false
             }
         },
         methods: {
@@ -129,13 +131,15 @@
                 for (let i = 0; i < this.choseInfoId.length; i++) {
                     this.scenicList = this.scenicList.filter((item, index) => {
                         if (item.id === this.choseInfoId[i]){
-                            this.choseList[index].checked = false
+                            this.scenicList[index].checked = false
+                            api.scenic.deleteScenic({id:this.choseInfoId[i]}).then(res => {
+                                console.log(res, '删除成功')
+                            })
                         }
                         return item.id !== this.choseInfoId[i]
                     })
                 }
-                this.choseList = this.scenicList
-
+                // this.choseList = this.scenicList
             },
             toggleList (type) {
                 if (type === 'list') {
@@ -216,14 +220,25 @@
                 } else {
                     this.$message.error('请选择要修改的人员')
                 }
+            },
+            async getAllScenic () {
+                this.isShowLoading = true
+                await api.scenic.getAllScenic().then((res) => {
+                    console.log(res, '这是请求回来的所有数据')
+                    this.isShowLoading = false
+                    this.scenicList = res
+                    for (let i = 0; i < this.scenicList.length; i++) {
+                        this.scenicList[i].checked = false
+                        this.scenicList[i].status = true
+                    }
+                }).catch((err)=> {
+                    console.log(err)
+                })
             }
         },
         created () {
-            for (let i = 0; i < this.scenicList.length; i++) {
-                this.scenicList[i].checked = false
-                this.scenicList[i].status = true
-            }
-            this.choseList = this.scenicList
+            this.getAllScenic()
+            // this.choseList = this.scenicList
         },
         components: {
             ScrollContainer,

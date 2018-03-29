@@ -16,7 +16,7 @@
                             <option value="室外">室外</option>
                         </select>
                     </p>
-                    <p class="name">名&nbsp;&nbsp;&nbsp;称：<input type="text" v-model="camera.name"> </p>
+                    <p class="name">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称：<input type="text" v-model="camera.name"> </p>
                     <p class="home">厂&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;家：
                         <select name="" v-model="camera.home">
                             <option value="海康">海康</option>
@@ -34,6 +34,80 @@
                     </p>
                     <!--<div class="chart">-->
                         <!--<img src="../../../../../static/img/camera.png" alt="">-->
+                    <!--</div>-->
+                </div>
+                <!--广播-->
+                <div class="cameraCard popCard" v-if="route.includes('broadcast')">
+                    <p class="type">类&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  型：
+                        <select name="" v-model="broadCast.type">
+                            <option value="室内">室内</option>
+                            <option value="室外">室外</option>
+                        </select>
+                    </p>
+                    <p class="name">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称：<input type="text" v-model="broadCast.name"> </p>
+                    <p class="home">厂&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;家：
+                        <select name="" v-model="broadCast.home">
+                            <option value="海康">海康</option>
+                            <option value="卓锐">卓锐</option>
+                        </select>
+                    </p>
+                    <p class="IP">I P 地 址：<input type="text" v-model="broadCast.ip"></p>
+                    <p class="host">端&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  口：<input type="text" v-model="broadCast.host"></p>
+                    <p class="place">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  置：<input type="text" v-model="broadCast.place"></p>
+                    <p class="area">所属片区：<input type="text" v-model="broadCast.area"></p>
+                    <p class="describe">描&nbsp; 述：
+                        <textarea v-model="broadCast.describe" cols="40" rows="8">
+
+                        </textarea>
+                    </p>
+                    <!--<div class="chart">-->
+                    <!--<img src="../../../../../static/img/camera.png" alt="">-->
+                    <!--</div>-->
+                </div>
+                <!--LED-->
+                <div class="cameraCard popCard" v-if="route.includes('led')">
+                    <p class="type">类&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  型：
+                        <select name="" v-model="led.type">
+                            <option value="室内">室内</option>
+                            <option value="室外">室外</option>
+                        </select>
+                    </p>
+                    <p class="name">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称：<input type="text" v-model="led.name"> </p>
+                    <p class="width">屏幕宽高：<input type="text" v-model="led.width"></p>
+                    <p class="IP">I P 地 址：<input type="text" v-model="led.ip"></p>
+                    <p class="host">端&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  口：<input type="text" v-model="led.host"></p>
+                    <p class="place">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  置：<input type="text" v-model="led.place"></p>
+                    <p class="area">所属片区：<input type="text" v-model="led.area"></p>
+                    <p class="describe">描&nbsp; 述：
+                        <textarea v-model="led.describe" cols="40" rows="8">
+
+                        </textarea>
+                    </p>
+                    <!--<div class="chart">-->
+                    <!--<img src="../../../../../static/img/camera.png" alt="">-->
+                    <!--</div>-->
+                </div>
+                <!--Wifi-->
+                <div class="cameraCard popCard" v-if="route.includes('wifi')">
+                    <p class="type">类&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  型：
+                        <select name="" v-model="wifi.type">
+                            <option value="室内">室内</option>
+                            <option value="室外">室外</option>
+                        </select>
+                    </p>
+                    <p class="name">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称：<input type="text" v-model="wifi.name"> </p>
+                    <p class="version">型&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;号：<input type="text" v-model="wifi.version"></p>
+                    <p class="IP">设备I P ：<input type="text" v-model="wifi.ip"></p>
+                    <p class="host">设备编号：<input type="text" v-model="wifi.host"></p>
+                    <p class="place">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  置：<input type="text" v-model="wifi.place"></p>
+                    <p class="area">所属片区：<input type="text" v-model="wifi.area"></p>
+                    <p class="describe">描&nbsp; 述：
+                        <textarea v-model="wifi.describe" cols="40" rows="8">
+
+                        </textarea>
+                    </p>
+                    <!--<div class="chart">-->
+                    <!--<img src="../../../../../static/img/camera.png" alt="">-->
                     <!--</div>-->
                 </div>
             </div>
@@ -59,8 +133,37 @@
                   host:'',
                   place:'',
                   describe:'',
-                  route:''
               },
+               broadCast:{
+                    type:'',
+                   name:'',
+                   home:'',
+                   ip:'',
+                   host:'',
+                   place:'',
+                   area:'',
+                   describe:''
+               },
+               led:{
+                   type:'',
+                   name:'',
+                   width:'',
+                   ip:'',
+                   num:'',
+                   place:'',
+                   area:'',
+                   describe:''
+               },
+               wifi:{
+                   type:'',
+                   name:'',
+                   version:'',
+                   ip:'',
+                   num:'',
+                   place:'',
+                   area:'',
+                   describe:''
+               },
                route:''
            }
        },
@@ -72,6 +175,12 @@
                let newInfo={ }
                if(this.route.includes('camera')){
                    newInfo=this.camera
+               }else if(this.route.includes('broadcast')){
+                   newInfo=this.broadCast
+               }else if(this.route.includes('led')) {
+                   newInfo = this.led
+               }else if(this.route.includes('wifi')) {
+                   newInfo = this.wifi
                }
                newInfo.status=true
                newInfo.checked=false
@@ -89,6 +198,12 @@
            this.route=this.$route.path
            if(this.route.includes('camera')){
                this.camera=this.Info
+           }else if(this.route.includes('broadcast')){
+               this.broadCast=this.Info
+           }else if(this.route.includes('led')){
+               this.led=this.Info
+           }else if(this.route.includes('wifi')){
+               this.wifi=this.Info
            }
        }
    }
@@ -140,7 +255,7 @@
         .card{
             width: 100%;
             height: 100%;
-            .popCard {
+            .cameraCard , .popCard{
                 width: 100%;
                 height: 100%;
                 position: relative;
