@@ -58,7 +58,7 @@
                             <input type="checkbox" :checked="item.checked" class="checkBtn" @change="checked(item.id)">
                         </div>
                         <div class="personType" @click.stop="showBroadDetail(item,'广播信息')">
-                            <img src="../../../../../static/img/camera.png" alt="">
+                            <img src="../../../../../static/img/cameras.png" alt="">
                             <span class="name">
                                   {{item.name}}
                                 </span>

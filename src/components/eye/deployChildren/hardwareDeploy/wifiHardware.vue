@@ -57,8 +57,8 @@
                         <div class="checkBox">
                             <input type="checkbox" :checked="item.checked" class="checkBtn" @change="checked(item.id)">
                         </div>
-                        <div class="personType" @click.stop="showWifiDetail(item,'广播信息')">
-                            <img src="../../../../../static/img/camera.png" alt="">
+                        <div class="personType" @click.stop="showWifiDetail(item,'WIFI信息')">
+                            <img src="../../../../../static/img/cameras.png" alt="">
                             <span class="name">
                                   {{item.name}}
                                 </span>
@@ -114,7 +114,7 @@
         },
         methods:{
             addNewInfo(){
-                this.showWifiDetail({},'添加广播信息')
+                this.showWifiDetail({},'添加WIFI信息')
                 this.isDisabled=false
             },
             showWifiDetail(info,title){
@@ -139,10 +139,10 @@
                             this.wifiInfo=item
                         }
                     })
-                    this.showWifiDetail(this.wifiInfo,'修改LED信息')
+                    this.showWifiDetail(this.wifiInfo,'修改WIFI信息')
                     this.isDisabled=false
                 }else{
-                    this.$message.error('请选择要修改的LED')
+                    this.$message.error('请选择要修改的WIFI')
                 }
             },
             deletInfo(){

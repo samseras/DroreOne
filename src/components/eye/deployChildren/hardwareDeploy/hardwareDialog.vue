@@ -32,9 +32,9 @@
 
                         </textarea>
                     </p>
-                    <!--<div class="chart">-->
-                        <!--<img src="../../../../../static/img/camera.png" alt="">-->
-                    <!--</div>-->
+                    <div class="img">
+                        <img src="../../../../../static/img/cameras.png" alt="">
+                    </div>
                 </div>
                 <!--广播-->
                 <div class="cameraCard popCard" v-if="route.includes('broadcast')">
@@ -383,13 +383,14 @@
                 position: relative;
 
                 p{
-                    margin-top: rem(5);
+                    margin-top: rem(8);
                     border-bottom: 1px solid #ccc;
-                    font-size: rem(14);
+                    font-size: rem(12);
                     input{
                         border: none;
                         list-style: none;
                         outline: none;
+                        font-size:rem(12)
                     }
                     select{
                         border: none;
@@ -408,23 +409,36 @@
 
                         }
                     }
-                }
-                .img{
-                    width: rem(100);
-                    height: rem(60);
-                    position: absolute;
-                    top: rem(0);
-                    right: rem(0);
-                    background: #fff;
-                    img{
-                        width: rem(55);
-                        height: rem(55);
+                    img {
                         display: inline-block;
-                        background: red;
+                        width: rem(20);
+                        height: rem(20);
                         border-radius: 50%;
-                        margin-left: rem(25);
+                        vertical-align: middle;
+                    }
+                    textarea{
+                        resize: none;
+                        outline: none;
+                        padding: rem(3);
+                        box-sizing: border-box;
                     }
                 }
+                .img{
+                        width: rem(100);
+                        height: rem(60);
+                        position: absolute;
+                        top: rem(0);
+                        right: rem(0);
+                        background: #fff;
+                        img{
+                            width: rem(55);
+                            height: rem(55);
+                            border:1px solid #988E83;
+                            display: inline-block;
+                            border-radius: 50%;
+                            margin-left: rem(25);
+                        }
+                    }
             }
             .cardFooter {
                 width: 100%;

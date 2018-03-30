@@ -52,8 +52,8 @@
                         <div class="checkBox">
                             <input type="checkbox" :checked="item.checked" class="checkBtn" @change="checked(item.id)">
                         </div>
-                        <div class="personType" @click.stop="showLightDetail(item)">
-                            <img src="../../../../../static/img/camera.png" alt="">
+                        <div class="personType" @click.stop="showLightDetail(item,'路灯信息')">
+                            <img src="../../../../../static/img/cameras.png" alt="">
                             <span class="type">
                                   {{item.name}}
                                 </span>
@@ -92,11 +92,11 @@
                 isShowLightDetail:true,
                 visible:false,
                 lightList:[
-                    {id:1,name:'路灯编号',type:'已通电',area:'A-片区',describe:'摄像头介绍'},
-                    {id:2,name:'路灯编号',type:'已通电',area:'A-片区',describe:'摄像头介绍'},
-                    {id:4,name:'路灯编号',type:'已通电',area:'A-片区',describe:'摄像头介绍'},
-                    {id:5,name:'路灯编号',type:'已通电',area:'A-片区',describe:'摄像头介绍'},
-                    {id:6,name:'路灯编号',type:'已通电',area:'A-片区',describe:'摄像头介绍'}
+                    {id:1,name:'路灯编号',type:'已通电',area:'A-片区',describe:'路灯介绍'},
+                    {id:2,name:'路灯编号',type:'已通电',area:'A-片区',describe:'路灯介绍'},
+                    {id:4,name:'路灯编号',type:'已通电',area:'A-片区',describe:'路灯介绍'},
+                    {id:5,name:'路灯编号',type:'已通电',area:'A-片区',describe:'路灯介绍'},
+                    {id:6,name:'路灯编号',type:'已通电',area:'A-片区',describe:'路灯介绍'}
                 ],
                 checkList:[],
                 isSelected:false,
@@ -113,7 +113,7 @@
                 this.multipleSelection = val;
             },
             addNewInfo(){
-                this.showLightDetail({},'添加摄像头信息')
+                this.showLightDetail({},'添加路灯信息')
                 this.isDisabled=false
             },
             showLightDetail(info,title){
@@ -141,7 +141,7 @@
                     this.showLightDetail(this.lightInfo,'修改路灯信息')
                     this.isDisabled=false
                 }else{
-                    this.$message.error('请选择要修改的人员')
+                    this.$message.error('请选择要修改的路灯')
                 }
             },
             deletInfo(){

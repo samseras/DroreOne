@@ -1,7 +1,7 @@
 <template>
     <div class="ledList">
         <div class="title">
-            广播信息
+            LED信息
         </div>
         <div class="cameraContent">
             <div class="conTitle">
@@ -48,7 +48,7 @@
                         </el-table-column>
                         <el-table-column>
                             <template slot-scope="scope">
-                                <span @click="showLedDetail(scope.row, '广播信息')">编辑</span>
+                                <span @click="showLedDetail(scope.row, 'LED大屏信息')">编辑</span>
                             </template>
                         </el-table-column>
                     </el-table>
@@ -57,8 +57,8 @@
                         <div class="checkBox">
                             <input type="checkbox" :checked="item.checked" class="checkBtn" @change="checked(item.id)">
                         </div>
-                        <div class="personType" @click.stop="showLedDetail(item,'广播信息')">
-                            <img src="../../../../../static/img/camera.png" alt="">
+                        <div class="personType" @click.stop="showLedDetail(item,'LED信息')">
+                            <img src="../../../../../static/img/cameras.png" alt="">
                             <span class="name">
                                   {{item.name}}
                                 </span>
@@ -114,7 +114,7 @@
         },
         methods:{
             addNewInfo(){
-                this.showLedDetail({},'添加广播信息')
+                this.showLedDetail({},'添加LED大屏信息')
                 this.isDisabled=false
             },
             showLedDetail(info,title){

@@ -52,8 +52,8 @@
                         <div class="checkBox">
                             <input type="checkbox" :checked="item.checked" class="checkBtn" @change="checked(item.id)">
                         </div>
-                        <div class="personType" @click.stop="showGateDetail(item)">
-                            <img src="../../../../../static/img/camera.png" alt="">
+                        <div class="personType" @click.stop="showGateDetail(item,'闸机信息')">
+                            <img src="../../../../../static/img/cameras.png" alt="">
                             <span class="name">
                                   {{item.name}}
                                 </span>
@@ -115,7 +115,7 @@
                 this.multipleSelection = val;
             },
             addNewInfo(){
-                this.showGateDetail({},'添加摄像头信息')
+                this.showGateDetail({},'添加闸机信息')
                 this.isDisabled=false
             },
             showGateDetail(info,title){
@@ -140,10 +140,10 @@
                             this.gateInfo=item
                         }
                     })
-                    this.showGateDetail(this.gateInfo,'修改WIFI信息')
+                    this.showGateDetail(this.gateInfo,'修改闸机信息')
                     this.isDisabled=false
                 }else{
-                    this.$message.error('请选择要修改的wifi')
+                    this.$message.error('请选择要修改的闸机')
                 }
             },
             deletInfo(){

@@ -52,8 +52,8 @@
                         <div class="checkBox">
                             <input type="checkbox" :checked="item.checked" class="checkBtn" @change="checked(item.id)">
                         </div>
-                        <div class="personType" @click.stop="showPersonDetail(item)">
-                            <img src="../../../../../static/img/camera.png" alt="">
+                        <div class="personType" @click.stop="showPersonDetail(item,'摄像头信息')">
+                            <img src="../../../../../static/img/cameras.png" alt="">
                             <span class="type">
                                   {{item.type}}
                                 </span>
@@ -138,10 +138,10 @@
                             this.personInfo=item
                         }
                     })
-                    this.showPersonDetail(this.personInfo,'修改人员信息')
+                    this.showPersonDetail(this.personInfo,'修改摄像头信息')
                     this.isDisabled=false
                 }else{
-                    this.$message.error('请选择要修改的人员')
+                    this.$message.error('请选择要修改的摄像头')
                 }
             },
             deletInfo(){

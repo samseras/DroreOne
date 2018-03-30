@@ -43,7 +43,7 @@
                         </el-table-column>
                         <el-table-column>
                             <template slot-scope="scope">
-                                <span @click="showPersonDetail(scope.row, '摄像头信息')">编辑</span>
+                                <span @click="showPersonDetail(scope.row, '传感器信息')">编辑</span>
                             </template>
                         </el-table-column>
                     </el-table>
@@ -52,8 +52,8 @@
                         <div class="checkBox">
                             <input type="checkbox" :checked="item.checked" class="checkBtn" @change="checked(item.id)">
                         </div>
-                        <div class="personType" @click.stop="showMonitorDetail(item)">
-                            <img src="../../../../../static/img/camera.png" alt="">
+                        <div class="personType" @click.stop="showMonitorDetail(item,'传感器信息')">
+                            <img src="../../../../../static/img/cameras.png" alt="">
                             <span class="type">
                                   {{item.type}}
                                 </span>
@@ -114,7 +114,7 @@
                 this.multipleSelection = val;
             },
             addNewInfo(){
-                this.showMonitorDetail({},'添加摄像头信息')
+                this.showMonitorDetail({},'添加传感器信息')
                 this.isDisabled=false
             },
             showMonitorDetail(info,title){
@@ -139,10 +139,10 @@
                             this.monitorInfo=item
                         }
                     })
-                    this.showMonitorDetail(this.monitorInfo,'修改人员信息')
+                    this.showMonitorDetail(this.monitorInfo,'修改传感器信息')
                     this.isDisabled=false
                 }else{
-                    this.$message.error('请选择要修改的人员')
+                    this.$message.error('请选择要修改的传感器')
                 }
             },
             deletInfo(){
