@@ -221,9 +221,9 @@
                     this.$message.error('请选择要修改的人员')
                 }
             },
-            async getAllScenic (baseUrl) {
+            async getAllScenic () {
                 this.isShowLoading = true
-                await api.scenic.getAllScenic(baseUrl).then((res) => {
+                await api.scenic.getAllScenic().then((res) => {
                     console.log(res, '这是请求回来的所有数据')
                     this.isShowLoading = false
                     this.scenicList = res
@@ -237,7 +237,7 @@
             }
         },
         created () {
-            this.getAllScenic(baseUrl)
+            this.getAllScenic()
             // this.choseList = this.scenicList
         },
         components: {

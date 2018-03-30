@@ -1,37 +1,37 @@
 /*
-景点配置模块api
+这是商圈接口api
 * */
 import axios from '@/http'
 
 
 
-const scenic = {
-    getAllScenic () {
+const shop = {
+    getAllShop () {
         return axios ({
             method: 'GET',
-            url: '/droreone/scenicspot'
+            url: '/droreone/shop'
         })
 
     },
-    updateScenic (params) {
+    updateShop  (params) {
         return axios ({
             method: 'PUT',
-            url: '/droreone/scenicspot ',
+            url: '/droreone/shop',
             params
         })
     },
-    createScenic (params) {
+    createShop  (params) {
         return axios ({
             method: 'POST',
-            url: '/droreone/scenicspot',
+            url: '/droreone/shop',
             params
         })
     },
-    deleteScenic (par) {
+    deleteShop (par) {
         console.log(par, '这是传递的id')
         return axios ({
             method: 'DELETE',
-            url: '/droreone/scenicspot',
+            url: '/droreone/shop',
             data:{
                 id: par.id
             }
@@ -39,4 +39,4 @@ const scenic = {
     }
 }
 
-export default scenic
+export default shop

@@ -3,9 +3,19 @@
 * */
 import analyze from './analyze'
 import scenic from './scenic'
+import toilet from './toilet'
+import dustbin from './dustbin'
+import park from './parking'
+import indicator from './indicator'
+import shop from './shop'
 
 
 export default {
     analyze,
-    scenic
+    scenic,
+    toilet,
+    park,
+    dustbin,
+    indicator,
+    shop
 }

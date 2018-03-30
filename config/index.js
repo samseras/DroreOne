@@ -11,11 +11,11 @@ module.exports = {
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
     proxyTable: {//做跨域配置
-        '/api': {
+        '/droreone': {
             target: 'http://192.168.0.135:8080/',
             changeOrigin: true,
             pathRewrite: {
-                '^/api': '/'//需要rewrite重写
+                '^/droreone': '/'//需要rewrite重写
             }
         },
         '/dsp': {

@@ -1,37 +1,37 @@
 /*
-景点配置模块api
+这是停车场接口api
 * */
 import axios from '@/http'
 
 
 
-const scenic = {
-    getAllScenic () {
+const park = {
+    getAllPark () {
         return axios ({
             method: 'GET',
-            url: '/droreone/scenicspot'
+            url: '/droreone/parking'
         })
 
     },
-    updateScenic (params) {
+    updatePark  (params) {
         return axios ({
             method: 'PUT',
-            url: '/droreone/scenicspot ',
+            url: '/droreone/parking',
             params
         })
     },
-    createScenic (params) {
+    createPark  (params) {
         return axios ({
             method: 'POST',
-            url: '/droreone/scenicspot',
+            url: '/droreone/parking',
             params
         })
     },
-    deleteScenic (par) {
+    deletePark (par) {
         console.log(par, '这是传递的id')
         return axios ({
             method: 'DELETE',
-            url: '/droreone/scenicspot',
+            url: '/droreone/parking',
             data:{
                 id: par.id
             }
@@ -39,4 +39,4 @@ const scenic = {
     }
 }
 
-export default scenic
+export default park

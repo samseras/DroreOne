@@ -1,37 +1,37 @@
 /*
-景点配置模块api
+这是垃圾桶接口api
 * */
 import axios from '@/http'
 
 
 
-const scenic = {
-    getAllScenic () {
+const dustbin = {
+    getAllDustbin () {
         return axios ({
             method: 'GET',
-            url: '/droreone/scenicspot'
+            url: '/droreone/dustbin'
         })
 
     },
-    updateScenic (params) {
+    updateDustbin  (params) {
         return axios ({
             method: 'PUT',
-            url: '/droreone/scenicspot ',
+            url: '/droreone/dustbin',
             params
         })
     },
-    createScenic (params) {
+    createDustbin  (params) {
         return axios ({
             method: 'POST',
-            url: '/droreone/scenicspot',
+            url: '/droreone/dustbin',
             params
         })
     },
-    deleteScenic (par) {
+    deleteDustbin  (par) {
         console.log(par, '这是传递的id')
         return axios ({
             method: 'DELETE',
-            url: '/droreone/scenicspot',
+            url: '/droreone/dustbin',
             data:{
                 id: par.id
             }
@@ -39,4 +39,4 @@ const scenic = {
     }
 }
 
-export default scenic
+export default dustbin

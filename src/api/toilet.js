@@ -1,37 +1,37 @@
 /*
-景点配置模块api
+这是洗手间接口api
 * */
 import axios from '@/http'
 
 
 
-const scenic = {
-    getAllScenic () {
+const toilet = {
+    getAllToilet () {
         return axios ({
             method: 'GET',
-            url: '/droreone/scenicspot'
+            url: '/droreone/toilet'
         })
 
     },
-    updateScenic (params) {
+    updateToilet  (params) {
         return axios ({
             method: 'PUT',
-            url: '/droreone/scenicspot ',
+            url: '/droreone/toilet',
             params
         })
     },
-    createScenic (params) {
+    createToilet  (params) {
         return axios ({
             method: 'POST',
-            url: '/droreone/scenicspot',
+            url: '/droreone/toilet',
             params
         })
     },
-    deleteScenic (par) {
+    deleteToilet  (par) {
         console.log(par, '这是传递的id')
         return axios ({
             method: 'DELETE',
-            url: '/droreone/scenicspot',
+            url: '/droreone/toilet',
             data:{
                 id: par.id
             }
@@ -39,4 +39,4 @@ const scenic = {
     }
 }
 
-export default scenic
+export default toilet
