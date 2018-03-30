@@ -5,11 +5,11 @@ import Router from 'vue-router'
 
 import '../../static/js/echarts.min.js'
 // import HelloWorld from '@/components/HelloWorld'
-import MicServiceManagementSystem from '@/pages/MicroService/MicroServiceManagementSystem'
-import Index from '@/pages/index'
-import login from '@/pages/login'
+import MicServiceManagementSystem from '@/components/pages/MicroService/MicroServiceManagementSystem'
+import Index from '@/components/pages/index'
+import login from '@/components/pages/login'
 
-import eye from '@/pages/eye'
+import eye from '@/components/pages/eye'
 import Controler from '@/components/controler'
 import Broad from '@/components/eye/controlChildren/broadcast'
 import Person from '@/components/eye/controlChildren/securityperson'
@@ -25,8 +25,8 @@ import Environment from '@/components/eye/controlChildren/environment'
 
 import Analyze from '@/components/analyze'
 import Passenger from '@/components/eye/analyze/passengerFlow'
-import Origin from '@/components/eye/analyze/passengerOrigin'
-import Ticket from '@/components/eye/analyze/ticketBusiness'
+// import Origin from '@/components/eye/analyze/passengerOrigin'
+// import Ticket from '@/components/eye/analyze/ticketBusiness'
 
 import Facility from '@/components/facility'
 import Toilet from "@/components/eye/facilityChildren/toiletFacility"
@@ -114,12 +114,12 @@ const routes = [
             {
                 path: '/analyze',
                 name: 'analyze',
-                redirect: '/analyze/passenger',
+                redirect: '/analyze/:id',
                 component: Analyze,
                 children: [
-                    {path: '/analyze/passenger',name: 'Passenger', component:Passenger},
-                    {path: '/analyze/origin',name: 'Origin', component:Origin},
-                    {path: '/analyze/ticket',name: 'Ticket', component:Ticket}
+                    {path: '/analyze/:id',name: 'Passenger', component:Passenger},
+                    // {path: '/analyze/origin',name: 'Origin', component:Origin},
+                    // {path: '/analyze/ticket',name: 'Ticket', component:Ticket}
                 ]
             },
             {

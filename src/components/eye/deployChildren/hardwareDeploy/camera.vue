@@ -34,6 +34,11 @@
                 <el-checkbox v-for="item in cameraList" :label="item.type"></el-checkbox>
             </el-checkbox-group>
         </div>
+        <div class="titleCheck" v-if="route.includes('gate')" >
+            <el-checkbox-group v-model="filterList" @change="choseType">
+                <el-checkbox v-for="item in gateList" :label="item.type"></el-checkbox>
+            </el-checkbox-group>
+        </div>
 
         <div class="titlePage">
             <span>当前第1页/共8页</span>
@@ -53,6 +58,12 @@
                 cameraList:[
                     {type:'室内'},
                     {type:'室外'}
+                ],
+                gateList:[
+                    {type:'翼闸'},
+                    {type:'摆闸'},
+                    {type:'三角闸'},
+                    {type:'评议闸'}
                 ],
                 route:'',
                 isSelected:false,

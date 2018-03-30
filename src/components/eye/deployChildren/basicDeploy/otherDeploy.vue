@@ -1,13 +1,9 @@
 <template>
     <div class="example-avatar">
-        <!--<div v-show="$refs.upload && $refs.upload.dropActive" class="drop-active">-->
-            <!--<h3>Drop files to upload</h3>-->
-        <!--</div>-->
         <div class="avatar-upload"  v-show="!edit">
             <div class="text-center p-2">
                 <label for="avatar">
                     <img :src="files.length ? files[0].url : 'https://www.gravatar.com/avatar/default?s=200&r=pg&d=mm'"  class="rounded-circle" />
-                    <!--<h4 class="pt-2">or<br/>Drop files anywhere to upload</h4>-->
                 </label>
             </div>
             <div class="text-center p-2">
@@ -34,19 +30,13 @@
                 <button type="submit" class="btn btn-primary" @click.prevent="editSave">保存</button>
             </div>
         </div>
-        <!--<div class="pt-5">-->
-            <!--Source code: <a href="https://github.com/lian-yue/vue-upload-component/blob/master/docs/views/examples/Avatar.vue">/docs/views/examples/Avatar.vue</a>-->
-        <!--</div>-->
         <!--<input type="file" @change="fi">-->
-        这世上{{src}}
     </div>
 </template>
-
-
-
 <script>
     import Cropper from 'cropperjs'
     import FileUpload from 'vue-upload-component'
+    import api from '@/api'
     export default {
         components: {
             FileUpload,
@@ -81,9 +71,6 @@
             }
         },
         methods: {
-            fi (e) {
-                console.log(e, '[][][][][][')
-            },
             editSave() {
                 this.edit = false
                 let oldFile = this.files[0]
@@ -106,17 +93,14 @@
                 reader.readAsDataURL(file);
                 this.src = reader.onload = function(event){
                   let txt = event.target.result;
-                  // console.log(txt, 'wertyuio')
-                  // that.src = txt
-                  // console.log(that.src, '这是便宜后的')
-                    return txt
+                  that.src = txt
                 }
-                console.log(this.src, '9090909090909090909')
             },
             alert(message) {
                 alert(message)
             },
             inputFile(newFile, oldFile, prevent) {
+                debugger
                 if (newFile && !oldFile) {
                     this.$nextTick(function () {
                         this.edit = true
@@ -127,6 +111,7 @@
                 }
             },
             inputFilter(newFile, oldFile, prevent) {
+                debugger
                 if (newFile && !oldFile) {
                     if (!/\.(gif|jpg|jpeg|png|webp)$/i.test(newFile.name)) {
                         this.alert('Your choice is not a picture')
@@ -141,6 +126,11 @@
                     }
                 }
             }
+        },
+        created () {
+            api.scenic.getAll().then( res =>{
+                console.log(res, 'jcguysdgcsdgcsdgcjgsd')
+            })
         }
     }
 </script>

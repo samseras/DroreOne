@@ -5,29 +5,29 @@
 			<div id="top" class="entrence-cont">
              	<ul>
              	 	<li class="one">
-             	 		<div class="change"><a href="/MicServiceManagementSystem">大数据分析>><img src="../../static/img/bagData.png"/></a></div>
-             	 		<div class="change"><a href="">第三方应用>><img src="../../static/img/threeSoft.png"/></a></div>
+             	 		<div class="change"><a href="/MicServiceManagementSystem">大数据分析>><img src="../../../static/img/bagData.png"/></a></div>
+             	 		<div class="change"><a href="">第三方应用>><img src="../../../static/img/threeSoft.png"/></a></div>
              	 	</li>
              	 	<li class="two change" id="eye">
-                        <router-link to="/eye">全视之眼>><img src="../../static/img/eye.png"/></router-link>
+                        <router-link to="/eye">全视之眼>><img src="../../../static/img/eye.png"/></router-link>
                     </li>
              	 	<li class="three">
-             	 		<div class="dataCenter change" id="dataCenter"><a href="">数据中心>><img src="../../static/img/dataCenter.png"/></a></div>
+             	 		<div class="dataCenter change" id="dataCenter"><a href="">数据中心>><img src="../../../static/img/dataCenter.png"/></a></div>
              	 		<div class="deploy" id="deploy">
-             	 			<div class="change"><a href="">系统配置>><img src="../../static/img/settion.png"/></a></div>
-             	 			<div class="change"><a href="">舆情分析>><img src="../../static/img/sentiment.png"/></a></div>
+             	 			<div class="change"><a href="">系统配置>><img src="../../../static/img/settion.png"/></a></div>
+             	 			<div class="change"><a href="">舆情分析>><img src="../../../static/img/sentiment.png"/></a></div>
              	 		</div>
              	 	</li>
-             	 	<li class="change" id="bee"><a href="">物联网>><img src="../../static/img/ZigBee.png"/></a></li>
+             	 	<li class="change" id="bee"><a href="">物联网>><img src="../../../static/img/ZigBee.png"/></a></li>
              	</ul>
             </div>
             <div id="bottom" class="entrence-cont">
              	<ul>
-             	 	<li class="change" id="GIS"><a href="/login">GIS地图>><img src="../../static/img/GIS.png"/></a></li>
-             	 	<li class="change"><a href="/login">官网门户>><img src="../../static/img/home.png"/></a></li>
-             	 	<li class="change"><a href="/login">电子票务>><img src="../../static/img/elecTicket.png"/></a></li>
-             	 	<li class="change"><a href="/login">电子商圈>><img src="../../static/img/elecBusiness.png"/></a></li>
-             	 	<li class="change"><a href="/login">微信公众号>><img src="../../static/img/weixin.png"/></a></li>
+             	 	<li class="change" id="GIS"><a href="/login">GIS地图>><img src="../../../static/img/GIS.png"/></a></li>
+             	 	<li class="change"><a href="/login">官网门户>><img src="../../../static/img/home.png"/></a></li>
+             	 	<li class="change"><a href="/login">电子票务>><img src="../../../static/img/elecTicket.png"/></a></li>
+             	 	<li class="change"><a href="/login">电子商圈>><img src="../../../static/img/elecBusiness.png"/></a></li>
+             	 	<li class="change"><a href="/login">微信公众号>><img src="../../../static/img/weixin.png"/></a></li>
              	</ul>
             </div>
 		</div>
@@ -49,7 +49,7 @@
 	*{margin: 0;padding:0;box-sizing: border-box;}
 	li{list-style: none;}
 	a{text-decoration: none;color: #fff;}
-	#entrence{width: 100%;height:100%;position:relative;background: url('../../static/img/index-bg.png') no-repeat;background-size:cover;}
+	#entrence{width: 100%;height:100%;position:relative;background: url('../../../static/img/index-bg.png') no-repeat;background-size:cover;}
     .main{position:absolute;width: 80%;height: 80%;left: 50%;top: 10%;margin-left: -40%;}
 
     .entrence-cont{width: 96.7%;margin:15px;}
