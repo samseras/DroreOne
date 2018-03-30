@@ -161,7 +161,8 @@
         .titleCheck{
             margin-left:rem(50);
             .el-checkbox{
-                margin-left:rem(10)
+                margin-left:rem(10);
+                margin-bottom: rem(2);
             }
         }
         .titlePage{
