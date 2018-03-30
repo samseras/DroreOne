@@ -113,7 +113,7 @@
 </template>
 
 <script>
-    import analyzeData from "../../../../API/entrance.js"
+    // import analyzeData from "../../../../API/entrance.js"
     import ScrollContainer from '@/components/ScrollContainer'
     import EchatsCard from '@/components/eye/analyze/echats'
 

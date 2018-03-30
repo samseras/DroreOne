@@ -36,7 +36,13 @@ const scenic = {
                 id: par.id
             }
         })
-    }
+    },
+    getAll () {
+        return axios ({
+            method: 'GET',
+            url: `/api/scenicspot`
+        })
+    },
 }
 
 export default scenic
