@@ -2,26 +2,27 @@
 摄像头模块api
 * */
 import axios from '@/http'
+import {getUrl} from "./path";
 
 
 const camera={
     getAllCamera(){
         return axios({
             method:'GET',
-            url:'/droreone/device?deviceType=2'
+            url:getUrl('/device?deviceType=2')
         })
     },
     updateCamera(params){
         return axios({
             methods:'PUT',
-            url:'/droreone/device?deviceType=2',
+            url:getUrl('/device?deviceType=2'),
             params
         })
     },
     createCamera(params){
         return axios({
             methods:'POST',
-            url:'/droreone/device?deviceType=2',
+            url:getUrl('/device?deviceType=2'),
             params
         })
     },
@@ -29,7 +30,7 @@ const camera={
         console.log(par,'传递的id')
         return axios({
             methods:'DELETE',
-            url:'/droreone/device?deviceType=2',
+            url:getUrl('/device?deviceType=2'),
             data:{
                 id:par.id
             }

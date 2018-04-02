@@ -3,25 +3,26 @@
 * */
 
 import axios from '@/http'
+import {getUrl} from "./path";
 
 const monitor={
     getAllMonitor(){
         return axios({
             method:'GET',
-            url:'/droreone/device?deviceType=6'
+            url:getUrl('/device?deviceType=6')
         })
     },
     updateMonitor(params){
         return axios({
             methods:'PUT',
-            url:'/droreone/device?deviceType=6',
+            url:getUrl('/device?deviceType=6'),
             params
         })
     },
     createMonitors(params){
         return axios({
             methods:'POST',
-            url:'/droreone/device?deviceType=6',
+            url:getUrl('/device?deviceType=6'),
             params
         })
     },
@@ -29,7 +30,7 @@ const monitor={
         console.log(par,'传递的id')
         return axios({
             methods:'DELETE',
-            url:'/droreone/device?deviceType=6',
+            url:getUrl('/device?deviceType=6'),
             data:{
                 id:par.id
             }
