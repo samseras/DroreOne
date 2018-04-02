@@ -2,28 +2,28 @@
 这是停车场接口api
 * */
 import axios from '@/http'
-
+import {getUrl} from './path'
 
 
 const park = {
     getAllPark () {
         return axios ({
             method: 'GET',
-            url: '/droreone/parking'
+            url: getUrl('/parking')
         })
 
     },
     updatePark  (params) {
         return axios ({
             method: 'PUT',
-            url: '/droreone/parking',
+            url: getUrl('/parking'),
             params
         })
     },
     createPark  (params) {
         return axios ({
             method: 'POST',
-            url: '/droreone/parking',
+            url: getUrl('/parking'),
             params
         })
     },
@@ -31,9 +31,9 @@ const park = {
         console.log(par, '这是传递的id')
         return axios ({
             method: 'DELETE',
-            url: '/droreone/parking',
+            url: getUrl('/parking'),
             data:{
-                id: par.id
+                id: par
             }
         })
     }

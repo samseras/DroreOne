@@ -2,6 +2,7 @@
 景点配置模块api
 * */
 import axios from '@/http'
+import {getUrl} from './path'
 
 
 
@@ -9,21 +10,21 @@ const scenic = {
     getAllScenic () {
         return axios ({
             method: 'GET',
-            url: '/droreone/scenicspot'
+            url: getUrl('/scenicspot')
         })
 
     },
     updateScenic (params) {
         return axios ({
             method: 'PUT',
-            url: '/droreone/scenicspot ',
+            url: getUrl('/scenicspot '),
             params
         })
     },
     createScenic (params) {
         return axios ({
             method: 'POST',
-            url: '/droreone/scenicspot',
+            url: getUrl('/scenicspot'),
             params
         })
     },
@@ -31,9 +32,9 @@ const scenic = {
         console.log(par, '这是传递的id')
         return axios ({
             method: 'DELETE',
-            url: '/droreone/scenicspot',
+            url: getUrl('/scenicspot'),
             data:{
-                id: par.id
+                id: par
             }
         })
     }

@@ -13,8 +13,8 @@
                     <p class="name">姓&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;名：<input type="text"v-model="person.name"></p>
                     <p class="sex">性&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;别：<input type="text"v-model="person.sex"></p>
                     <p class="type">
-                        人员角色： <select name="" v-model="person.type">
-                        <option v-for="item in options" :value="item.type">{{item.type}}</option>
+                        人员角色： <select name="" v-model="person.jobName">
+                        <option v-for="item in options" :value="item.jobId">{{item.jobName}}</option>
                         </select>
                     </p>
                     <p class="idNum">身份证号：<input type="text"v-model="person.idNum"></p>
@@ -65,15 +65,20 @@
                 </div>
                 <!--垃圾桶-->
                 <div class="personCardContent boatCardContent" v-if="route.includes('trash')">
-                    <p class="name">类&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;型：<input type="text"v-model="trash.type"></p>
+                    <p class="name">类&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;型：
+                        <select name="" v-model="trash.type">
+                            <option  value="充裕">充裕</option>
+                            <option  value="已满">已满</option>
+                        </select>
+                    </p>
                     <p class="sex">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称：<input type="text"v-model="trash.name"></p>
                     <p class="type">
-                        状&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;态： <select name="" v-model="trash.state">
+                        状&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;态： <select name="" v-model="trash.status">
                         <option  value="充裕">充裕</option>
                         <option  value="已满">已满</option>
                     </select>
                     </p>
-                    <p class="idNum">个&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;数：<input type="text"v-model="trash.number"></p>
+                    <p class="idNum">个&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;数：<input type="text"v-model="trash.dustbinCount"></p>
                     <p class="phoneNum">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置：<input type="text"v-model="trash.location"><img src="" alt="" @click="showMapDialog"></p>
                     <p class="phoneNum">所属片区：<input type="text"v-model="trash.area"></p>
                     <div class="img">
@@ -105,7 +110,11 @@
                 </div>
                 <!--商圈-->
                 <div class="personCardContent boatCardContent" v-if="route.includes('shop')">
-                    <p class="name">类&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;型：<input type="text"v-model="shop.type"></p>
+                    <p class="name">类&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;型：
+                        <select name="" v-model="shop.type">
+                            <option  v-for="item in businesstype" :value="item.type"></option>
+                        </select>
+                    </p>
                     <p class="sex">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称：<input type="text"v-model="shop.name"></p>
                     <p class="type">
                         状&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;态： <select name="" v-model="shop.state">
@@ -115,9 +124,13 @@
                     </p>
                     <p class="idNum">容&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;量：<input type="text"v-model="shop.capacity"></p>
 
-                    <p class="phoneNum">当前人数：<input type="text"v-model="shop.nowPeopleNum"></p>
+                    <p class="phoneNum">当前人数：<input type="text"v-model="shop.currentNum"></p>
                     <p class="phoneNum">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置：<input type="text"v-model="shop.location"><img src="" alt="" @click="showMapDialog"></p>
-                    <p class="phoneNum">所属片区：<input type="text"v-model="shop.area"></p>
+                    <p class="phoneNum">所属片区：
+                        <select name="" v-model="shop.area">
+                            <option  v-for="item in regions" :value="item.id">{{item.name}}</option>
+                        </select>
+                    </p>
                     <div class="img">
                         <label for="avatar">
                             <img :src="files.length ? files[0].url : 'https://www.gravatar.com/avatar/default?s=200&r=pg&d=mm'"  class="rounded-circle" />
@@ -139,7 +152,11 @@
 
                     <p class="phoneNum">车位总数：<input type="text"v-model="park.allPark"></p>
                     <p class="phoneNum">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置：<input type="text"v-model="park.location"><img src="" alt="" @click="showMapDialog"></p>
-                    <p class="phoneNum">所属片区：<input type="text"v-model="park.area"></p>
+                    <p class="phoneNum">所属片区：
+                        <select name="" v-model="park.area">
+                            <option  v-for="item in regions" :value="item.id">{{item.name}}</option>
+                        </select>
+                    </p>
                     <div class="img">
                         <label for="avatar">
                             <img :src="files.length ? files[0].url : 'https://www.gravatar.com/avatar/default?s=200&r=pg&d=mm'"  class="rounded-circle" />
@@ -149,7 +166,11 @@
                 <!--洗手间-->
                 <div class="personCardContent boatCardContent" v-if="route.includes('toilet')">
                     <p class="sex">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称：<input type="text"v-model="toilet.name"></p>
-                    <p class="phoneNum">所属片区：<input type="text"v-model="toilet.area"></p>
+                    <p class="phoneNum">所属片区：
+                        <select name="" v-model="toilet.area">
+                            <option  v-for="item in regions" :value="item.id">{{item.name}}</option>
+                        </select>
+                    </p>
                     <p class="type">
                         状&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;态： <select name="" v-model="toilet.state">
                         <option  value="正常">正常</option>
@@ -229,6 +250,7 @@
     import MapDialog from './mapDialog'
     import Cropper from 'cropperjs'
     import FileUpload from 'vue-upload-component'
+    import api from '@/api'
     export default {
         name: "person-detail",
         props: ['visible', 'Info','isDisabled','title'],
@@ -242,10 +264,12 @@
                 mapVisible: false,
                 person: {
                     name:'',
-                    sex:'',
+                    gender:'',
                     idNum:'',
-                    type: '',
-                    phone:''
+                    jobId: '',
+                    jobName: '',
+                    phone:'',
+                    picAddress: ''
                 },
                 boatCar: {
                     type: '',
@@ -256,20 +280,23 @@
                     safeTime: '',
                     driver: '',
                     phone: '',
-                    facilityNum:''
+                    facilityNum:'',
+                    picAddress: ''
                 },
                 trash: {
                     type: '',
                     name: '',
                     state: '',
-                    number: '',
+                    dustbinCount: '',
                     location: '',
                     area: '',
+                    picAddress: ''
                 },
                 indicator: {
                     type: '',
                     area: '',
-                    location: ''
+                    location: '',
+                    picAddress: ''
                 },
                 scenic: {
                     name: '',
@@ -277,16 +304,18 @@
                     state: '',
                     capacity: '',
                     nowPeopleNum: '',
-                    location: ''
+                    location: '',
+                    picAddress: ''
                 },
                 shop: {
                     type: '',
                     name: '',
                     state: '',
                     capacity: '',
-                    nowPeopleNum: '',
+                    currentNum: '',
                     location: '',
                     area: '',
+                    picAddress: ''
                 },
                 park: {
                     type:'',
@@ -296,35 +325,35 @@
                     allPark:'',
                     location:'',
                     area:'',
+                    picAddress: ''
                 },
                 toilet: {
                     name:'',
                     area:'',
                     state:'',
                     location:'',
+                    picAddress: ''
                 },
                 area: {
                     name: '',
                     placeScenic: '',//所在景区
                     location: '',
-                    describe: ''
+                    describe: '',
+                    picAddress: ''
                 },
                 roat: {
                     name: '',
                     placeScenic: '',//所在景区
                     location: '',
-                    describe: ''
+                    describe: '',
+                    picAddress: ''
                 },
-                options: [
-                    {type: '安保'},
-                    {type: '售票'},
-                    {type: '保洁'},
-                    {type: '司机'},
-                    {type: '船夫'},
-                    {type: '检票'}
-                ],
+                options: [],
                 route: '',
-                file: {}
+                file: {},
+                src:'',
+                businesstype: [],
+                regions: []
             }
         },
         methods: {
@@ -338,6 +367,7 @@
                 console.log(this.type, 'klklkl')
             },
             closeDialog () {
+                console.log(this.src)
                 this.$emit('closeInfoDialog')
             },
             addNewInfo () {
@@ -401,6 +431,7 @@
                 reader.readAsDataURL(file);
                 this.src = reader.onload = function(event){
                     let txt = event.target.result;
+                    console.log(txt, 'opopoppo')
                     that.src = txt
                 }
             },
@@ -434,9 +465,17 @@
             }
         },
         created () {
+            api.area.getAllRegion().then(res => {
+                console.log(res, '所有片区')
+                this.regions = res
+            })
             this.route = this.$route.path
             console.log(this.Info,'  opopop')
             if (this.route.includes('person')) {
+                api.person.getJob().then(res => {
+                    console.log(res, '所有工种')
+                    this.options = res
+                })
                 this.person = this.Info
             } else if(this.route.includes('boat')) {
                 this.boatCar = this.Info
@@ -447,6 +486,10 @@
             } else if(this.route.includes('scenic')) {
                 this.scenic = this.Info
             } else if(this.route.includes('shop')) {
+                api.shop.getBusinesstype().then(res => {
+                    console.log(res, '所有商铺类型')
+                    this.businesstype = res
+                })
                 this.shop = this.Info
             } else if(this.route.includes('park')) {
                 this.park = this.Info
@@ -483,6 +526,10 @@
                 }
             }
         },
+        mounted () {
+            console.log(document.getElementsByClassName('card'), 'p[p[p[p[p[')
+            // console.log(this.$refs.test)
+        }
     }
 </script>
 <style lang="scss">

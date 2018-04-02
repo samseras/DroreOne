@@ -13,7 +13,7 @@
                         @fixedInfo = 'fixedInfo'>
                 </Header>
             </div>
-            <div class="personList">
+            <div class="personList" v-loading="isShowLoading">
                 <ScrollContainer>
                     <el-table
                         v-if="!isShowPersonCard"
@@ -53,7 +53,7 @@
                             </template>
                         </el-table-column>
                     </el-table>
-                    <div class="personInfo" v-for="item in choseList" v-if="isShowPersonCard && item.status">
+                    <div class="personInfo" v-for="item in personList" v-if="isShowPersonCard && item.status">
                         <div class="checkBox">
                             <input type="checkbox" :checked='item.checked' class="checkBtn" @change="checked(item.id)">
                         </div>
@@ -89,6 +89,7 @@
     import ScrollContainer from '@/components/ScrollContainer'
     import Header from './funHeader'
     import PersonDetail from './detailDialog'
+    import api from '@/api'
     export default {
         name: 'person-deploy',
         data(){
@@ -96,19 +97,14 @@
                 isShowPersonCard: true,
                 checkList: [],
                 filterList: [],
-                personList: [
-                    {id:1,name: '小明',type: '售票',sex: '男',idNum: '123456789',phone: '13674565455'},
-                    {id:2,name: '小红',type: '保洁',sex: '男',idNum: '123456789',phone: '13674565455'},
-                    {id:3,name: '小明',type: '安保',sex: '男',idNum: '123456789',phone: '13674565455'},
-                    {id:8,name: '小明',type: '司机',sex: '男',idNum: '123456789',phone: '13674565455'},
-                    {id:9,name: '小明',type: '船夫',sex: '男',idNum: '123456789',phone: '13674565455'}
-                ],
+                personList: [],
                 visible: false,
                 personInfo: {},
                 choseInfoId: [],
                 choseList: [],
                 isDisabled: true,
-                title: ''
+                title: '',
+                isShowLoading: false
             }
         },
         methods: {
@@ -125,16 +121,19 @@
                 this.isDisabled = false
             },
             deletInfo () {
-                for (let i = 0; i < this.choseInfoId.length; i++) {
-                    this.personList = this.personList.filter((item, index) => {
-                        if (item.id === this.choseInfoId[i]){
-                            this.choseList[index].checked = false
-                        }
-                        return item.id !== this.choseInfoId[i]
-                    })
-                }
-                this.choseList = this.personList
-
+                api.person.deletePerson(this.choseInfoId).then(res => {
+                    console.log(res, '删除成功')
+                    for (let i = 0; i < this.choseInfoId.length; i++) {
+                        this.personList = this.personList.filter((item, index) => {
+                            if (item.id === this.choseInfoId[i]){
+                                this.personList[index].checked = false
+                            }
+                            return item.id !== this.choseInfoId[i]
+                        })
+                    }
+                }).catch(err => {
+                    console.log(err)
+                })
             },
             toggleList (type) {
                 if (type === 'list') {
@@ -215,14 +214,25 @@
                 } else {
                     this.$message.error('请选择要修改的人员')
                 }
+            },
+            async getAllPerson () {
+                this.isShowLoading = true
+                await api.person.getAllPerson().then(res => {
+                    console.log(res, '这是请求回来的')
+                    this.isShowLoading = false
+                    this.personList = res
+                    for (let i = 0; i < this.personList.length; i++) {
+                        this.personList[i].checked = false
+                        this.personList[i].status = true
+                    }
+                }).catch(err => {
+                    console.log(err)
+                    this.isShowLoading = false
+                })
             }
         },
         created () {
-            for (let i = 0; i < this.personList.length; i++) {
-                this.personList[i].checked = false
-                this.personList[i].status = true
-            }
-            this.choseList = this.personList
+            this.getAllPerson()
         },
         components: {
             ScrollContainer,
@@ -322,6 +332,9 @@
                         p{
                             margin-left: rem(10);
                             line-height: rem(22);
+                            overflow:hidden;
+                            text-overflow:ellipsis;
+                            white-space:nowrap;
                         }
                     }
                 }

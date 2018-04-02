@@ -1,42 +1,48 @@
 /*
-这是指示牌接口api
+这是人员接口api
 * */
 import axios from '@/http'
 import {getUrl} from './path'
 
 
-const indicator = {
-    getAllIndicator () {
+const person = {
+    getAllPerson () {
         return axios ({
             method: 'GET',
-            url: getUrl('/signboard')
+            url: getUrl('/person')
         })
 
     },
-    updateIndicator  (params) {
+    updatePerson  (params) {
         return axios ({
             method: 'PUT',
-            url: getUrl('/signboard'),
+            url: getUrl('/person'),
             params
         })
     },
-    createIndicator  (params) {
+    createPerson  (params) {
         return axios ({
             method: 'POST',
-            url: getUrl('/signboard'),
+            url: getUrl('/person'),
             params
         })
     },
-    deleteIndicator (par) {
+    deletePerson (par) {
         console.log(par, '这是传递的id')
         return axios ({
             method: 'DELETE',
-            url: getUrl('/signboard'),
+            url: getUrl('/person'),
             data:{
                 id: par
             }
         })
+    },
+    getJob () {
+        return axios({
+            method: 'GET',
+            url: getUrl('/job')
+        })
     }
 }
 
-export default indicator
+export default person

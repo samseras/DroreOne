@@ -13,7 +13,7 @@
                         @fixedInfo = 'fixedInfo'>
                 </Header>
             </div>
-            <div class="personList">
+            <div class="personList" v-loading="isShowLoading">
                 <ScrollContainer>
                     <el-table
                         v-if="!isShowAreaCard"
@@ -45,7 +45,7 @@
                             </template>
                         </el-table-column>
                     </el-table>
-                    <div class="personInfo" v-for="item in choseList" v-if="isShowAreaCard && item.status">
+                    <div class="personInfo" v-for="item in areaList" v-if="isShowAreaCard && item.status">
                         <div class="checkBox">
                             <input type="checkbox" :checked='item.checked' class="checkBtn" @change="checked(item.id)">
                         </div>
@@ -79,6 +79,7 @@
     import ScrollContainer from '@/components/ScrollContainer'
     import Header from './funHeader'
     import PersonDetail from './detailDialog'
+    import api from '@/api'
     export default {
         name: 'area-deploy',
         data(){
@@ -86,19 +87,14 @@
                 isShowAreaCard: true,
                 checkList: [],
                 filterList: [],
-                areaList: [
-                    {id:1,name: 'A-片区',placeScenic: '百里杜鹃',location: '23456789',describe: '该片区景点介绍'},
-                    {id:2,name: 'A-片区',placeScenic: '百里杜鹃',location: '23456789',describe: '该片区景点介绍'},
-                    {id:3,name: 'A-片区',placeScenic: '百里杜鹃',location: '23456789',describe: '该片区景点介绍'},
-                    {id:8,name: 'A-片区',placeScenic: '百里杜鹃',location: '23456789',describe: '该片区景点介绍'},
-                    {id:9,name: 'A-片区',placeScenic: '百里杜鹃',location: '23456789',describe: '该片区景点介绍'}
-                ],
+                areaList: [],
                 visible: false,
                 areaInfo: {},
                 choseInfoId: [],
                 choseList: [],
                 isDisabled: true,
-                title: ''
+                title: '',
+                isShowLoading : false
             }
         },
         methods: {
@@ -115,16 +111,25 @@
                 this.isDisabled = false
             },
             deletInfo () {
-                for (let i = 0; i < this.choseInfoId.length; i++) {
-                    this.areaList = this.areaList.filter((item, index) => {
-                        if (item.id === this.choseInfoId[i]){
-                            this.choseList[index].checked = false
+                if (this.choseInfoId.length > 0) {
+                    api.area.deleteRegion(this.choseInfoId).then(res => {
+                        console.log(res, '删除成功')
+                        this.message.success('删除成功')
+                        for (let i = 0; i < this.choseInfoId.length; i++) {
+                            this.areaList = this.areaList.filter((item, index) => {
+                                if (item.id === this.choseInfoId[i]){
+                                    this.areaList[index].checked = false
+                                }
+                                return item.id !== this.choseInfoId[i]
+                            })
                         }
-                        return item.id !== this.choseInfoId[i]
+                    }).catch(err => {
+                        console.log(err)
                     })
+                } else {
+                    this.message.error('请选择要删除的信息')
+                    return
                 }
-                this.choseList = this.areaList
-
             },
             toggleList (type) {
                 if (type === 'list') {
@@ -205,14 +210,24 @@
                 } else {
                     this.$message.error('请选择要修改的人员')
                 }
+            },
+            async getAllArea () {
+                this.isShowLoading = true
+                await api.area.getAllRegion().then(res => {
+                    console.log(res, '这是请求回来的片区')
+                    this.isShowLoading = false
+                    this.areaList = res
+                    for (let i = 0; i < this.areaList.length; i++) {
+                        this.areaList[i].checked = false
+                        this.areaList[i].status = true
+                    }
+                }).catch(err => {
+                    console.log(err, '失败')
+                })
             }
         },
         created () {
-            for (let i = 0; i < this.areaList.length; i++) {
-                this.areaList[i].checked = false
-                this.areaList[i].status = true
-            }
-            this.choseList = this.areaList
+           this.getAllArea()
         },
         components: {
             ScrollContainer,
