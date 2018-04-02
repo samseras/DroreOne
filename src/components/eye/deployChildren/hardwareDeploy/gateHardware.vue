@@ -14,7 +14,7 @@
                 </Header>
             </div>
 
-            <div class="cameraList">
+            <div class="cameraList" v-loading="isShowLoading">
                 <ScrollContainer>
                     <el-table
                         v-if="!isShowGateCard"
@@ -48,7 +48,7 @@
                         </el-table-column>
                     </el-table>
 
-                    <div class="personInfo" v-for="item in choseList" v-if="isShowGateCard && item.status">
+                    <div class="personInfo" v-for="item in gateList" v-if="isShowGateCard && item.status">
                         <div class="checkBox">
                             <input type="checkbox" :checked="item.checked" class="checkBtn" @change="checked(item.id)">
                         </div>
@@ -85,6 +85,7 @@
     import ScrollContainer from '@/components/ScrollContainer'
     import Header from './camera.vue'
     import HardWare from './hardwareDialog.vue'
+    import api from '@/api'
 
     export default{
         data(){
@@ -107,7 +108,8 @@
                 choseList:[],
                 isDisabled:true,
                 filterList: [],
-                title:''
+                title:'',
+                isShowLoading:false
             }
         },
         methods:{
@@ -213,14 +215,26 @@
                     }
                 })
                 console.log(this.choseInfoId)
+            },
+            async getAllGate(){
+                this.isShowLoading=true
+                await api.gate.getAllGate().then((res)=>{
+                    console.log(res,'这是拿到的数据')
+                    this.isShowLoading=false
+                    this.gateList=res.devices
+                    for (let i=0;i<this.gateList.length;i++){
+                        this.gateList[i].checked=false
+                        this.gateList[i].status=true
+                    }
+                }).catch((err)=>{
+                    console.log(err)
+                })
             }
+
         },
         created (){
-            for (let i=0;i<this.gateList.length;i++){
-                this.gateList[i].checked=false
-                this.gateList[i].status=true
-            }
-            this.choseList=this.gateList
+            this.getAllGate()
+//            this.choseList=this.gateList
         },
         components:{
             ScrollContainer,

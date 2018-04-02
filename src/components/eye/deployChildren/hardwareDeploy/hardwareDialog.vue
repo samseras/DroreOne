@@ -10,26 +10,26 @@
             <div class="card">
                 <!--摄像头-->
                 <div class="cameraCard popCard" v-if="route.includes('camera')">
-                    <p class="type">类&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  型：
-                        <select name="" v-model="camera.type">
+                    <p class="cameraType">类&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  型：
+                        <select name="" v-model="camera.cameraType">
                             <option value="室内">室内</option>
                             <option value="室外">室外</option>
                         </select>
                     </p>
                     <p class="name">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称：<input type="text" v-model="camera.name"> </p>
-                    <p class="home">厂&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;家：
-                        <select name="" v-model="camera.home">
+                    <p class="manufacturer">厂&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;家：
+                        <select name="" v-model="camera.manufacturer">
                             <option value="海康">海康</option>
                             <option value="卓锐">卓锐</option>
                         </select>
                     </p>
-                    <p class="IP">I P 地 址：<input type="text" v-model="camera.IP"></p>
-                    <p class="host">端&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  口：<input type="text" v-model="camera.host"></p>
-                    <p class="place">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  置：<input type="text" v-model="camera.place"></p>
-                    <p class="area">所属片区：<input type="text" v-model="camera.area"></p>
-                    <p class="describe">描&nbsp; 述：
-                        <textarea v-model="camera.describe" cols="40" rows="8">
-
+                    <p class="IP">I P 地 址：<input type="text" v-model="camera.ip"></p>
+                    <p class="port">端&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  口：<input type="text" v-model="camera.port"></p>
+                    <p class="place">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  置：<input type="text" v-model="camera.longitude"></p>
+                    <p class="area">所属片区：<input type="text" v-model="camera.regionId"></p>
+                    <p class="description">描&nbsp; 述：
+                        <textarea v-model="camera.description" cols="40" rows="8">
+                                {{camera.description}}
                         </textarea>
                     </p>
                     <div class="img">
@@ -205,13 +205,14 @@
            return{
               camera:{
                   name:'',
-                  type:'',
-                  area:'',
-                  home:'',
+                  cameraType:'',
+                  regionId:'',
+                  manufacturer:'',
+                  port:'',
                   IP:'',
                   host:'',
                   place:'',
-                  describe:'',
+                  description:'',
               },
                broadCast:{
                     type:'',

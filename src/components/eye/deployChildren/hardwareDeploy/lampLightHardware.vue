@@ -14,7 +14,7 @@
                 </Header>
             </div>
 
-            <div class="cameraList">
+            <div class="cameraList" v-loading="isShowLoading">
                 <ScrollContainer>
                     <el-table
                         v-if="!isShowLightDetail"
@@ -48,7 +48,7 @@
                         </el-table-column>
                     </el-table>
 
-                    <div class="personInfo" v-for="item in choseList" v-if="isShowLightDetail && item.status">
+                    <div class="personInfo" v-for="item in lightList" v-if="isShowLightDetail && item.status">
                         <div class="checkBox">
                             <input type="checkbox" :checked="item.checked" class="checkBtn" @change="checked(item.id)">
                         </div>
@@ -85,6 +85,7 @@
     import ScrollContainer from '@/components/ScrollContainer'
     import Header from './camera.vue'
     import HardWare from './hardwareDialog.vue'
+    import api from '@/api'
 
     export default{
         data(){
@@ -105,7 +106,8 @@
                 choseList:[],
                 isDisabled:true,
                 filterList: [],
-                title:''
+                title:'',
+                isShowLoading:false
             }
         },
         methods:{
@@ -211,15 +213,31 @@
                     }
                 })
                 console.log(this.choseInfoId)
+            },
+            async getAllLight(){
+                this.isShowLoading=true
+                await api.light.getAllLight().then((res)=>{
+                    console.log(res,'这是请求的数据')
+                    this.isShowLoading=false
+                    this.lightList=res.devices
+                    for (let i=0;i<this.lightList.length;i++){
+                        this.lightList[i].checked=false
+                        this.lightList[i].status=true
+                    }
+                }).catch((err)=>{
+                    console.log(err)
+                })
             }
         },
         created (){
-            for (let i=0;i<this.lightList.length;i++){
-                this.lightList[i].checked=false
-                this.lightList[i].status=true
-            }
-            this.choseList=this.lightList
-        },
+            this.getAllLight()
+//            for (let i=0;i<this.lightList.length;i++){
+//                this.lightList[i].checked=false
+//                this.lightList[i].status=true
+//            }
+//            this.choseList=this.lightList
+       },
+
         components:{
             ScrollContainer,
             Header,

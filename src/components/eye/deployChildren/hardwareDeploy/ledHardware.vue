@@ -14,7 +14,7 @@
                 </Header>
             </div>
 
-            <div class="cameraList">
+            <div class="cameraList" v-loading="isShowLoading">
                 <ScrollContainer>
                     <el-table
                         v-if="!isShowLedCard"
@@ -53,7 +53,7 @@
                         </el-table-column>
                     </el-table>
 
-                    <div class="personInfo" v-for="item in choseList" v-if="isShowLedCard && item.status">
+                    <div class="personInfo" v-for="item in ledList" v-if="isShowLedCard && item.status">
                         <div class="checkBox">
                             <input type="checkbox" :checked="item.checked" class="checkBtn" @change="checked(item.id)">
                         </div>
@@ -90,6 +90,7 @@
     import ScrollContainer from '@/components/ScrollContainer'
     import Header from './camera.vue'
     import HardWare from './hardwareDialog.vue'
+    import api from '@/api'
 
     export default{
         data(){
@@ -109,7 +110,8 @@
                 choseList:[],
                 isDisabled:true,
                 filterList: [],
-                title:''
+                title:'',
+                isShowLoading:false
             }
         },
         methods:{
@@ -212,14 +214,29 @@
                     }
                 })
                 console.log(this.choseInfoId)
+            },
+            async getAllLed(){
+                this.isShowLoading=true
+                await api.led.getAllLed().then((res)=>{
+                    console.log(res,'这是请求的数据')
+                    this.isShowLoading=false
+                    this.ledList=res.devices
+                    for (let i=0;i<this.ledList.length;i++){
+                        this.ledList[i].checked=false
+                        this.ledList[i].status=true
+                    }
+                }).catch((err)=>{
+                    console.log(err)
+                })
             }
         },
         created (){
-            for (let i=0;i<this.ledList.length;i++){
-                this.ledList[i].checked=false
-                this.ledList[i].status=true
-            }
-            this.choseList=this.ledList
+//            for (let i=0;i<this.ledList.length;i++){
+//                this.ledList[i].checked=false
+//                this.ledList[i].status=true
+//            }
+//            this.choseList=this.ledList
+            this.getAllLed()
         },
         components:{
             ScrollContainer,

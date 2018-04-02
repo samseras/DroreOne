@@ -14,12 +14,12 @@
                 </Header>
             </div>
 
-            <div class="cameraList">
+            <div class="cameraList" v-loading="isShowLoading">
                 <ScrollContainer>
                     <el-table
                         v-if="!isShowPersonCard"
                         ref="multipleTable"
-                        :data="camera"
+                        :data="cameraList"
                         tooltip-effect="dark"
                         style="width: 100%"
                         @selection-change="handleSelectionChange">
@@ -48,19 +48,19 @@
                         </el-table-column>
                     </el-table>
 
-                    <div class="personInfo" v-for="item in choseList" v-if="isShowPersonCard && item.status">
+                    <div class="personInfo" v-for="item in cameraList" v-if="isShowPersonCard && item.status">
                         <div class="checkBox">
                             <input type="checkbox" :checked="item.checked" class="checkBtn" @change="checked(item.id)">
                         </div>
                         <div class="personType" @click.stop="showPersonDetail(item,'摄像头信息')">
                             <img src="../../../../../static/img/cameras.png" alt="">
                             <span class="type">
-                                  {{item.type}}
+                                  {{item.name}}
                                 </span>
                         </div>
                         <div class="specificInfo" >
-                            <p class="name">所属区域：<span>{{item.area}}</span></p>
-                            <p class="sex">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：<span>{{item.describe}}</span></p>
+                            <p class="name">所属区域：<span>{{item.regionId}}</span></p>
+                            <p class="sex">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：<span>{{item.description}}</span></p>
 
                         </div>
                     </div>
@@ -84,19 +84,20 @@
     import ScrollContainer from '@/components/ScrollContainer'
     import Header from './camera.vue'
     import HardWare from './hardwareDialog.vue'
+    import api from '@/api'
 
     export default{
         data(){
             return{
                 isShowPersonCard:true,
                 visible:false,
-                camera:[
-                    {id:1,type:'室内',area:'A-片区',describe:'摄像头介绍'},
-                    {id:2,type:'室内',area:'A-片区',describe:'摄像头介绍'},
-                    {id:3,type:'室外',area:'A-片区',describe:'摄像头介绍'},
-                    {id:4,type:'室外',area:'A-片区',describe:'摄像头介绍'},
-                    {id:5,type:'室外',area:'A-片区',describe:'摄像头介绍'},
-                    {id:6,type:'室外',area:'A-片区',describe:'摄像头介绍'}
+                cameraList:[
+//                    {id:1,name:'室内',area:'A-片区',describe:'摄像头介绍'},
+//                    {id:2,name:'室内',area:'A-片区',describe:'摄像头介绍'},
+//                    {id:3,name:'室外',area:'A-片区',describe:'摄像头介绍'},
+//                    {id:4,name:'室外',area:'A-片区',describe:'摄像头介绍'},
+//                    {id:5,name:'室外',area:'A-片区',describe:'摄像头介绍'},
+//                    {id:6,name:'室外',area:'A-片区',describe:'摄像头介绍'}
                 ],
                 checkList:[],
                 isSelected:false,
@@ -105,7 +106,8 @@
                 choseList:[],
                 isDisabled:true,
                 filterList: [],
-                title:''
+                title:'',
+                isShowLoading: false
             }
         },
         methods:{
@@ -123,17 +125,17 @@
 
             },
             fixInfo(info){
-                let list=this.camera
+                let list=this.cameraList
                 for(let i=0;i<list.length;i++){
                     if(info.id===list[i].id){
-                        this.camera[i]=info
+                        this.cameraList[i]=info
                     }
                 }
-                this.choseList=this.camera
+                this.choseList=this.cameraList
             },
             fixedInfo(){
                 if(this.choseInfoId.length>0){
-                    this.camera.map((item)=>{
+                    this.cameraList.map((item)=>{
                         if(item.id === this.choseInfoId[0]){
                             this.personInfo=item
                         }
@@ -147,19 +149,19 @@
             deletInfo(){
                 console.log(122)
                 for(let i=0;i<this.choseInfoId.length;i++){
-                    this.camera=this.camera.filter((item,index)=>{
+                    this.cameraList=this.cameraList.filter((item,index)=>{
                         if(item.id === this.choseInfoId[i]){
-                            this.choseList[index].checked=false
+                            this.cameraList[index].checked=false
                         }
                         return item.id!==this.choseInfoId[i]
                     })
                 }
-                this.choseList=this.camera
+                this.choseList=this.cameraList
             },
             addNewPerson(info){
                 info.id=new Date().getTime()
-                this.camera.push(info)
-                this.choseList=this.camera
+                this.cameraList.push(info)
+                this.choseList=this.cameraList
             },
             toggleList (type){
                 if(type==='list'){
@@ -181,12 +183,12 @@
             choseType(type){
                 console.log(type)
                 if(type.length===0){
-                    this.choseList=this.camera.filter((item)=>{
+                    this.choseList=this.cameraList.filter((item)=>{
                         item.status=true
                         return item.status === true
                     })
                 }else{
-                    this.choseList=this.camera.filter((item,index)=>{
+                    this.choseList=this.cameraList.filter((item,index)=>{
                         if(type.includes(item.type)){
                             item.status=true
                         }else if(!type.includes(item.type)){
@@ -198,7 +200,7 @@
                 }
             },
             selectedAll(state){
-                this.choseList=this.camera.filter((item)=>{
+                this.choseList=this.cameraList.filter((item)=>{
                     if(state==true){
                         item.checked=true
                         this.choseInfoId.push(item.id)
@@ -211,14 +213,25 @@
                     }
                 })
                 console.log(this.choseInfoId)
+            },
+            async getAllCamera () {
+                this.isShowLoading = true
+                await api.camera.getAllCamera().then((res) => {
+                    console.log(res, '这是请求回来的所有数据')
+                    this.isShowLoading = false
+                    this.cameraList = res.devices
+                    for (let i = 0; i < this.cameraList.length; i++) {
+                        this.cameraList[i].checked = false
+                        this.cameraList[i].status = true
+                    }
+                }).catch((err)=> {
+                    console.log(err)
+                })
             }
         },
         created (){
-          for (let i=0;i<this.camera.length;i++){
-              this.camera[i].checked=false
-              this.camera[i].status=true
-          }
-          this.choseList=this.camera
+//          this.choseList=this.camera
+          this.getAllCamera()
         },
         components:{
             ScrollContainer,

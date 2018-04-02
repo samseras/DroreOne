@@ -14,7 +14,7 @@
                 </Header>
             </div>
 
-            <div class="cameraList">
+            <div class="cameraList" v-loading="isShowLoading">
                 <ScrollContainer>
                     <el-table
                         v-if="!isShowBroadCard"
@@ -53,7 +53,7 @@
                         </el-table-column>
                     </el-table>
 
-                    <div class="personInfo" v-for="item in choseList" v-if="isShowBroadCard && item.status">
+                    <div class="personInfo" v-for="item in broadList" v-if="isShowBroadCard && item.status">
                         <div class="checkBox">
                             <input type="checkbox" :checked="item.checked" class="checkBtn" @change="checked(item.id)">
                         </div>
@@ -64,9 +64,9 @@
                                 </span>
                         </div>
                         <div class="specificInfo" >
-                            <p class="area">所属区域：<span>{{item.area}}</span></p>
+                            <p class="area">所属区域：<span>{{item.longitude}}</span></p>
                             <p class="type">广播类型：<span>{{item.type}}</span></p>
-                            <p class="describe">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：<span>{{item.describe}}</span></p>
+                            <p class="describe">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：<span>{{item.description}}</span></p>
 
                         </div>
                     </div>
@@ -90,6 +90,7 @@
     import ScrollContainer from '@/components/ScrollContainer'
     import Header from './camera.vue'
     import HardWare from './hardwareDialog.vue'
+    import api from '@/api'
 
     export default{
         data(){
@@ -109,7 +110,8 @@
                 choseList:[],
                 isDisabled:true,
                 filterList: [],
-                title:''
+                title:'',
+                isShowLoading:false
             }
         },
         methods:{
@@ -212,14 +214,25 @@
                     }
                 })
                 console.log(this.choseInfoId)
+            },
+            async getAllBroadcast(){
+                this.isShowLoading=true
+                await api.broadcast.getAllBroadcast().then((res)=>{
+                    console.log(res,'这是请求回来的数据')
+                    this.isShowLoading=false
+                    this.broadList=res.devices
+                    for (let i=0;i<this.broadList.length;i++) {
+                        this.broadList[i].checked = false
+                        this.broadList[i].status = true
+                    }
+                }).catch((err)=>{
+                    console.log(err)
+                })
             }
         },
         created (){
-            for (let i=0;i<this.broadList.length;i++){
-                this.broadList[i].checked=false
-                this.broadList[i].status=true
-            }
-            this.choseList=this.broadList
+            this.getAllBroadcast()
+//            this.choseList=this.broadList
         },
         components:{
             ScrollContainer,

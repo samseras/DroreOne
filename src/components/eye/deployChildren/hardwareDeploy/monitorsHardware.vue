@@ -14,7 +14,7 @@
                 </Header>
             </div>
 
-            <div class="cameraList">
+            <div class="cameraList" v-loading="isShowLoading">
                 <ScrollContainer>
                     <el-table
                         v-if="!isShowMonitorsCard"
@@ -48,14 +48,14 @@
                         </el-table-column>
                     </el-table>
 
-                    <div class="personInfo" v-for="item in choseList" v-if="isShowMonitorsCard && item.status">
+                    <div class="personInfo" v-for="item in monitorsList" v-if="isShowMonitorsCard && item.status">
                         <div class="checkBox">
                             <input type="checkbox" :checked="item.checked" class="checkBtn" @change="checked(item.id)">
                         </div>
                         <div class="personType" @click.stop="showMonitorDetail(item,'传感器信息')">
                             <img src="../../../../../static/img/cameras.png" alt="">
                             <span class="type">
-                                  {{item.type}}
+                                  {{item.name}}
                                 </span>
                         </div>
                         <div class="specificInfo" >
@@ -84,6 +84,7 @@
     import ScrollContainer from '@/components/ScrollContainer'
     import Header from './camera.vue'
     import HardWare from './hardwareDialog.vue'
+    import api from '@/api'
 
     export default{
         data(){
@@ -106,7 +107,8 @@
                 choseList:[],
                 isDisabled:true,
                 filterList: [],
-                title:''
+                title:'',
+                isShowLoading:false
             }
         },
         methods:{
@@ -212,14 +214,24 @@
                     }
                 })
                 console.log(this.choseInfoId)
+            },
+            async getAllMonitor(){
+                this.isShowLoading=true
+                await api.monitor.getAllMonitor().then((res)=>{
+                    console.log(res,'这是请求')
+                    this.isShowLoading=false
+                    this.monitorsList=res.devices
+                    for (let i=0;i<this.monitorsList.length;i++){
+                       this.monitorsList[i].checked=false
+                        this.monitorsList[i].status=true
+                    }
+                }).catch((err)=>{
+                    console.log(err)
+                })
             }
         },
         created (){
-            for (let i=0;i<this.monitorsList.length;i++){
-                this.monitorsList[i].checked=false
-                this.monitorsList[i].status=true
-            }
-            this.choseList=this.monitorsList
+            this.getAllMonitor()
         },
         components:{
             ScrollContainer,

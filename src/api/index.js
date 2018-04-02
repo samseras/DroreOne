@@ -10,6 +10,13 @@ import indicator from './indicator'
 import shop from './shop'
 import person from './person'
 import area from './area'
+import camera from './camera'
+import broadcast from './broadcast'
+import monitor from './monitor'
+import wifi from './wifi'
+import led from './led'
+import gate from './gate'
+import light from './light'
 
 
 export default {
@@ -21,5 +28,12 @@ export default {
     indicator,
     shop,
     person,
-    area
+    area,
+    camera,
+    broadcast,
+    monitor,
+    wifi,
+    led,
+    gate,
+    light
 }
