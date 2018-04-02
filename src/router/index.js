@@ -62,6 +62,10 @@ import MonitorsHware from '@/components/eye/deployChildren/hardwareDeploy/monito
 import WifiHware from '@/components/eye/deployChildren/hardwareDeploy/wifiHardware'
 import VoiceHware from '@/components/eye/deployChildren/hardwareDeploy/voiceHardware'
 
+import hardwareDmis from '@/components/eye/deployChildren/dispatchDeploy/hardwareDmis' //硬件调度
+import personnelDmis from '@/components/eye/deployChildren/dispatchDeploy/personnelDmis' //人员调度
+import statDmis from '@/components/eye/deployChildren/dispatchDeploy/statDmis' //调度统计
+
 Vue.use(Router)
 const routes = [
     {
@@ -163,7 +167,11 @@ const routes = [
                     {path:'/deploy/led-Hware',name:'LedHware',component:LedHware},
                     {path:'/deploy/wifi-Hware',name:'WifiHware',component:WifiHware},
                     {path:'/deploy/voice-Hware',name:'VoiceHware',component:VoiceHware},
-                    {path:'/deploy/monitors-Hware',name:'MonitorsHware',component:MonitorsHware}
+                    {path:'/deploy/monitors-Hware',name:'MonitorsHware',component:MonitorsHware},
+
+                    {path:'/deploy/hardware-Dmis',name:'boatcartDmis',component:hardwareDmis},
+                    {path:'/deploy/personnel-Dmis',name:'boatcartDmis',component:personnelDmis},
+                    {path:'/deploy/stat-Dmis',name:'boatcartDmis',component:statDmis}
                 ]
             }
         ]
