@@ -13,7 +13,7 @@
                         @fixedInfo = 'fixedInfo'>
                 </Header>
             </div>
-            <div class="personList">
+            <div class="personList" v-loading="isShowLoading">
                 <ScrollContainer>
                     <el-table
                         v-if="!isShowIndicatorCard"
@@ -45,7 +45,7 @@
                             </template>
                         </el-table-column>
                     </el-table>
-                    <div class="personInfo" v-for="item in choseList" v-if="isShowIndicatorCard && item.status">
+                    <div class="personInfo" v-for="item in indicatorList" v-if="isShowIndicatorCard && item.status">
                         <div class="checkBox">
                             <input type="checkbox" :checked='item.checked' class="checkBtn" @change="checked(item.id)">
                         </div>
@@ -79,6 +79,7 @@
     import ScrollContainer from '@/components/ScrollContainer'
     import Header from './funHeader'
     import DetailDialog from './detailDialog'
+    import api from '@/api'
     export default {
         name: "indicator-deploy",
         data () {
@@ -86,19 +87,14 @@
                 isShowIndicatorCard: true,
                 checkList: [],
                 filterList: [],
-                indicatorList: [
-                    {id:1,type: '设施类',area: 'A-片区',location: '123456789'},
-                    {id:2,type: '路线类',area: 'B-片区',location: '123456789'},
-                    {id:3,type: '标语类',area: 'C-片区',location: '123456789'},
-                    {id:8,type: '设施类',area: 'A-片区',location: '123456789'},
-                    {id:9,type: '路线类',area: 'A-片区',location: '123456789'}
-                ],
+                indicatorList: [],
                 visible: false,
                 indicatorInfo: {},
                 choseInfoId: [],
                 choseList: [],
                 isDisabled: true,
-                title: ''
+                title: '',
+                isShowLoading: false
             }
         },
         methods: {
@@ -112,15 +108,21 @@
                 this.isDisabled = false
             },
             deletInfo () {
-                for (let i = 0; i < this.choseInfoId.length; i++) {
-                    this.indicatorList = this.indicatorList.filter((item, index) => {
-                        if (item.id === this.choseInfoId[i]){
-                            this.choseList[index].checked = false
-                        }
-                        return item.id !== this.choseInfoId[i]
-                    })
-                }
-                this.choseList = this.indicatorList
+                api.indicator.deleteIndicator(this.choseInfoId).then(res => {
+                    console.log(res, '删除成功')
+                    for (let i = 0; i < this.choseInfoId.length; i++) {
+                        this.indicatorList = this.indicatorList.filter((item, index) => {
+                            if (item.id === this.choseInfoId[i]){
+                                this.indicatorList[index].checked = false
+                            }
+                            return item.id !== this.choseInfoId[i]
+                        })
+                    }
+                    this.$message.success('删除成功')
+                }).catch(err => {
+                    console.log(err,'删除失败')
+                })
+
 
             },
             toggleList (type) {
@@ -200,14 +202,25 @@
                 } else {
                     this.$message.error('请选择要修改的人员')
                 }
+            },
+            async getAllIndicator () {
+                this.isShowLoading = true
+                await api.indicator.getAllIndicator().then(res => {
+                    console.log(res, '这是数据')
+                    this.isShowLoading = false
+                    this.indicatorList = res
+                    for (let i = 0; i < this.indicatorList.length; i++) {
+                        this.indicatorList[i].checked = false
+                        this.indicatorList[i].status = true
+                    }
+                }).catch(err => {
+                    console.log(err)
+                    this.isShowLoading = false
+                })
             }
         },
         created () {
-            for (let i = 0; i < this.indicatorList.length; i++) {
-                this.indicatorList[i].checked = false
-                this.indicatorList[i].status = true
-            }
-            this.choseList = this.indicatorList
+            this.getAllIndicator()
         },
         components: {
             ScrollContainer,

@@ -13,12 +13,12 @@
                         @fixedInfo = 'fixedInfo'>
                 </Header>
             </div>
-            <div class="personList">
+            <div class="personList" v-loading="isShowLoading">
                 <ScrollContainer>
                     <el-table
-                        v-if="!isShowPersonCard"
+                        v-if="!isShowShopCard"
                         ref="multipleTable"
-                        :data="personList"
+                        :data="shopList"
                         tooltip-effect="dark"
                         style="width: 100%"
                         @selection-change="handleSelectionChange">
@@ -61,9 +61,9 @@
                             </template>
                         </el-table-column>
                     </el-table>
-                    <div class="personInfo" v-for="item in choseList" v-if="isShowPersonCard && item.status">
+                    <div class="personInfo" v-for="item in shopList" v-if="isShowShopCard && item.status">
                         <div class="checkBox">
-                            <input type="checkbox" :checked='item.checked' class="checkBtn" @change="checked(item.id)">
+                            <input type="checkbox" :checked='item.checked' class="checkBtn" @change="checked(item.bean.id)">
                         </div>
                         <div class="personType" @click.stop="showPersonDetail(item, '商圈信息')">
                             <img src="" alt="">
@@ -81,7 +81,7 @@
                 </ScrollContainer>
                 <PersonDetail v-if="visible"
                               :visible="visible"
-                              :Info="personInfo"
+                              :Info="shopInfo"
                               :isDisabled="isDisabled"
                               :title="title"
                               @closeInfoDialog ="visible = false"
@@ -97,26 +97,22 @@
     import ScrollContainer from '@/components/ScrollContainer'
     import Header from './funHeader'
     import PersonDetail from './detailDialog'
+    import api from '@/api'
     export default {
         name: "shop-deploy",
         data () {
             return {
-                isShowPersonCard: true,
+                isShowShopCard: true,
                 checkList: [],
                 filterList: [],
-                personList: [
-                    {id:1,name: '肯德基',type: '零售',state: '充裕',capacity: '300人',nowPeopleNum: '200人',area: 'A-片区',location: '234567'},
-                    {id:2,name: '肯德基',type: '零售',state: '充裕',capacity: '300人',nowPeopleNum: '200人',area: 'A-片区',location: '234567'},
-                    {id:3,name: '肯德基',type: '餐饮',state: '充裕',capacity: '300人',nowPeopleNum: '200人',area: 'A-片区',location: '234567'},
-                    {id:8,name: '肯德基',type: '零售',state: '充裕',capacity: '300人',nowPeopleNum: '200人',area: 'A-片区',location: '234567'},
-                    {id:9,name: '肯德基',type: '游乐',state: '充裕',capacity: '300人',nowPeopleNum: '200人',area: 'A-片区',location: '234567'}
-                ],
+                shopList: [],
                 visible: false,
-                personInfo: {},
+                shopInfo: {},
                 choseInfoId: [],
                 choseList: [],
                 isDisabled: true,
-                title: ''
+                title: '',
+                isShowLoading: false
             }
         },
         methods: {
@@ -124,7 +120,7 @@
                 this.multipleSelection = val;
             },
             showPersonDetail (info,title) {
-                this.personInfo = info
+                this.shopInfo = info
                 this.visible = true
                 this.title = title
             },
@@ -133,22 +129,25 @@
                 this.isDisabled = false
             },
             deletInfo () {
-                for (let i = 0; i < this.choseInfoId.length; i++) {
-                    this.personList = this.personList.filter((item, index) => {
-                        if (item.id === this.choseInfoId[i]){
-                            this.choseList[index].checked = false
-                        }
-                        return item.id !== this.choseInfoId[i]
-                    })
-                }
-                this.choseList = this.personList
-
+                api.shop.deleteShop(this.choseInfoId).then(res => {
+                    console.log(res, '删除成功')
+                    for (let i = 0; i < this.choseInfoId.length; i++) {
+                        this.personList = this.personList.filter((item, index) => {
+                            if (item.id === this.choseInfoId[i]){
+                                this.choseList[index].checked = false
+                            }
+                            return item.id !== this.choseInfoId[i]
+                        })
+                    }
+                }).catch(err => {
+                    console,log(err)
+                })
             },
             toggleList (type) {
                 if (type === 'list') {
-                    this.isShowPersonCard = false
+                    this.isShowShopCard = false
                 }else {
-                    this.isShowPersonCard = true
+                    this.isShowShopCard = true
                 }
             },
             checked (id) {
@@ -215,22 +214,33 @@
                 if (this.choseInfoId.length > 0) {
                     this.personList.map((item) => {
                         if (item.id === this.choseInfoId[0]){
-                            this.personInfo = item
+                            this.shopInfo = item
                         }
                     })
-                    this.showPersonDetail(this.personInfo, '修改商圈信息')
+                    this.showPersonDetail(this.shopInfo, '修改商圈信息')
                     this.isDisabled = false
                 } else {
                     this.$message.error('请选择要修改的人员')
                 }
+            },
+            async getAllShop () {
+                this.isShowLoading = true
+                await api.shop.getAllShop().then(res => {
+                    console.log(res, '这是所有商铺')
+                    this.isShowLoading = false
+                    this.shopList = res
+                    for (let i = 0; i < this.shopList.length; i++) {
+                        this.shopList[i].checked = false
+                        this.shopList[i].status = true
+                    }
+                }).catch(err => {
+                    console.log(err)
+                    this.isShowLoading = false
+                })
             }
         },
         created () {
-            for (let i = 0; i < this.personList.length; i++) {
-                this.personList[i].checked = false
-                this.personList[i].status = true
-            }
-            this.choseList = this.personList
+            this.getAllShop()
         },
         components: {
             ScrollContainer,

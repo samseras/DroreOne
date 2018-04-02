@@ -13,7 +13,7 @@
                         @fixedInfo = 'fixedInfo'>
                 </Header>
             </div>
-            <div class="personList">
+            <div class="personList" v-loading="isShowLoading">
                 <ScrollContainer>
                     <el-table
                         v-if="!isShowParkCard"
@@ -61,7 +61,7 @@
                             </template>
                         </el-table-column>
                     </el-table>
-                    <div class="personInfo" v-for="item in choseList" v-if="isShowParkCard && item.status">
+                    <div class="personInfo" v-for="item in parkList" v-if="isShowParkCard && item.status">
                         <div class="checkBox">
                             <input type="checkbox" :checked='item.checked' class="checkBtn" @change="checked(item.id)">
                         </div>
@@ -97,6 +97,7 @@
     import ScrollContainer from '@/components/ScrollContainer'
     import Header from './funHeader'
     import PersonDetail from './detailDialog'
+    import api from '@/api'
     export default {
         name: "park-deploy",
         data(){
@@ -104,19 +105,14 @@
                 isShowParkCard: true,
                 checkList: [],
                 filterList: [],
-                parkList: [
-                    {id:1,name: '停车场名称',type: '室内',state: '充裕',residuePark: '140个',allPark: '300个',location:'1234562345',area: 'A-片区'},
-                    {id:2,name: '停车场名称',type: '室内',state: '紧张',residuePark: '140个',allPark: '300个',location:'1234562345',area: 'A-片区'},
-                    {id:3,name: '停车场名称',type: '室内',state: '充裕',residuePark: '140个',allPark: '300个',location:'1234562345',area: 'A-片区'},
-                    {id:8,name: '停车场名称',type: '室内',state: '已满',residuePark: '140个',allPark: '300个',location:'1234562345',area: 'A-片区'},
-                    {id:9,name: '停车场名称',type: '室内',state: '充裕',residuePark: '140个',allPark: '300个',location:'1234562345',area: 'A-片区'}
-                ],
+                parkList: [],
                 visible: false,
                 parkInfo: {},
                 choseInfoId: [],
                 choseList: [],
                 isDisabled: true,
-                title: ''
+                title: '',
+                isShowLoading: false
             }
         },
         methods: {
@@ -133,15 +129,20 @@
                 this.isDisabled = false
             },
             deletInfo () {
-                for (let i = 0; i < this.choseInfoId.length; i++) {
-                    this.parkList = this.parkList.filter((item, index) => {
-                        if (item.id === this.choseInfoId[i]){
-                            this.choseList[index].checked = false
-                        }
-                        return item.id !== this.choseInfoId[i]
-                    })
-                }
-                this.choseList = this.parkList
+                api.park.deletePark(this.choseInfoId).then(res => {
+                    console.log(res, '删除成功')
+                    this.$message.success('删除成功')
+                    for (let i = 0; i < this.choseInfoId.length; i++) {
+                        this.parkList = this.parkList.filter((item, index) => {
+                            if (item.id === this.parkList[i]){
+                                this.parkList[index].checked = false
+                            }
+                            return item.id !== this.choseInfoId[i]
+                        })
+                    }
+                }).catch(err => {
+                    console.log(err)
+                })
 
             },
             toggleList (type) {
@@ -223,14 +224,25 @@
                 } else {
                     this.$message.error('请选择要修改的人员')
                 }
+            },
+            async getAllPark () {
+                this.isShowLoading = true
+                await api.park.getAllPark().then(res => {
+                    console.log(res, '这是数据')
+                    this.isShowLoading = false
+                    this.parkList = res
+                    for (let i = 0; i < this.parkList.length; i++) {
+                        this.parkList[i].checked = false
+                        this.parkList[i].status = true
+                    }
+                }).catch(err => {
+                    console.log(err)
+                    this.isShowLoading = false
+                })
             }
         },
         created () {
-            for (let i = 0; i < this.parkList.length; i++) {
-                this.parkList[i].checked = false
-                this.parkList[i].status = true
-            }
-            this.choseList = this.parkList
+            this.getAllPark()
         },
         components: {
             ScrollContainer,

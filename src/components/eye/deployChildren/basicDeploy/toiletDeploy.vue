@@ -13,7 +13,7 @@
                         @fixedInfo = 'fixedInfo'>
                 </Header>
             </div>
-            <div class="personList">
+            <div class="personList" v-loading="isShowLoading">
                 <ScrollContainer>
                     <el-table
                         v-if="!isShowToiletCard"
@@ -49,7 +49,7 @@
                             </template>
                         </el-table-column>
                     </el-table>
-                    <div class="personInfo" v-for="item in choseList" v-if="isShowToiletCard && item.status">
+                    <div class="personInfo" v-for="item in toiletList" v-if="isShowToiletCard && item.status">
                         <div class="checkBox">
                             <input type="checkbox" :checked='item.checked' class="checkBtn" @change="checked(item.id)">
                         </div>
@@ -84,6 +84,7 @@
     import ScrollContainer from '@/components/ScrollContainer'
     import Header from './funHeader'
     import PersonDetail from './detailDialog'
+    import api from '@/api'
     export default {
         name: "toilet-deploy",
         data(){
@@ -91,19 +92,14 @@
                 isShowToiletCard: true,
                 checkList: [],
                 filterList: [],
-                toiletList: [
-                    {id:1,name: 'wc名称',area: 'A-片区',state: '紧张',location: '123456789'},
-                    {id:2,name: 'wc名称',area: 'A-片区',state: '紧张',location: '123456789'},
-                    {id:3,name: 'wc名称',area: 'A-片区',state: '紧张',location: '123456789'},
-                    {id:8,name: 'wc名称',area: 'A-片区',state: '紧张',location: '123456789'},
-                    {id:9,name: 'wc名称',area: 'A-片区',state: '紧张',location: '123456789'}
-                ],
+                toiletList: [],
                 visible: false,
                 toiletInfo: {},
                 choseInfoId: [],
                 choseList: [],
                 isDisabled: true,
-                title: ''
+                title: '',
+                isShowLoading: false
             }
         },
         methods: {
@@ -120,15 +116,18 @@
                 this.isDisabled = false
             },
             deletInfo () {
+                api.toilet.deleteToilet(this.choseInfoId).then(res => {
+                    console.log(res, '删除成功')
+
+                })
                 for (let i = 0; i < this.choseInfoId.length; i++) {
                     this.toiletList = this.toiletList.filter((item, index) => {
                         if (item.id === this.choseInfoId[i]){
-                            this.choseList[index].checked = false
+                            this.toiletList[index].checked = false
                         }
                         return item.id !== this.choseInfoId[i]
                     })
                 }
-                this.choseList = this.toiletList
 
             },
             toggleList (type) {
@@ -210,14 +209,30 @@
                 } else {
                     this.$message.error('请选择要修改的人员')
                 }
+            },
+            async getAllToilet () {
+                this.isShowLoading = true
+                await api.toilet.getAllToilet().then(res => {
+                    console.log(res, '这是请求回来的所有')
+                    this.isShowLoading = false
+                    this.toiletList = res
+                    for (let i = 0; i < this.toiletList.length; i++) {
+                        this.toiletList[i].checked = false
+                        this.toiletList[i].status = true
+                    }
+                }).catch(err => {
+                    console.log(err, '请求失败')
+                    this.isShowLoading = false
+                })
             }
         },
         created () {
-            for (let i = 0; i < this.toiletList.length; i++) {
-                this.toiletList[i].checked = false
-                this.toiletList[i].status = true
-            }
-            this.choseList = this.toiletList
+            // for (let i = 0; i < this.toiletList.length; i++) {
+            //     this.toiletList[i].checked = false
+            //     this.toiletList[i].status = true
+            // }
+            // this.choseList = this.toiletList
+            this.getAllToilet()
         },
         components: {
             ScrollContainer,

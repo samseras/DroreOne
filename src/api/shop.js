@@ -2,28 +2,28 @@
 这是商圈接口api
 * */
 import axios from '@/http'
-
+import {getUrl} from './path'
 
 
 const shop = {
     getAllShop () {
         return axios ({
             method: 'GET',
-            url: '/droreone/shop'
+            url: getUrl('/business')
         })
 
     },
     updateShop  (params) {
         return axios ({
             method: 'PUT',
-            url: '/droreone/shop',
+            url: getUrl('/business'),
             params
         })
     },
     createShop  (params) {
         return axios ({
             method: 'POST',
-            url: '/droreone/shop',
+            url: getUrl('/business'),
             params
         })
     },
@@ -31,10 +31,16 @@ const shop = {
         console.log(par, '这是传递的id')
         return axios ({
             method: 'DELETE',
-            url: '/droreone/shop',
+            url: getUrl('/business'),
             data:{
-                id: par.id
+                id: par
             }
+        })
+    },
+    getBusinesstype () {
+        return axios({
+            methods:'GET',
+            url: getUrl('/businesstype')
         })
     }
 }

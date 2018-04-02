@@ -128,18 +128,19 @@
                 this.isDisabled = false
             },
             deletInfo () {
-                for (let i = 0; i < this.choseInfoId.length; i++) {
-                    this.scenicList = this.scenicList.filter((item, index) => {
-                        if (item.id === this.choseInfoId[i]){
-                            this.scenicList[index].checked = false
-                            api.scenic.deleteScenic({id:this.choseInfoId[i]}).then(res => {
-                                console.log(res, '删除成功')
-                            })
-                        }
-                        return item.id !== this.choseInfoId[i]
-                    })
-                }
-                // this.choseList = this.scenicList
+                api.scenic.deleteScenic(this.choseInfoId).then(res => {
+                    console.log(res, '删除成功')
+                    for (let i = 0; i < this.choseInfoId.length; i++) {
+                        this.scenicList = this.scenicList.filter((item, index) => {
+                            if (item.id === this.choseInfoId[i]){
+                                this.scenicList[index].checked = false
+                            }
+                            return item.id !== this.choseInfoId[i]
+                        })
+                    }
+                    this.$message.success('删除成功')
+                })
+
             },
             toggleList (type) {
                 if (type === 'list') {
@@ -233,6 +234,7 @@
                     }
                 }).catch((err)=> {
                     console.log(err)
+                    this.isShowLoading = false
                 })
             }
         },

@@ -1,37 +1,37 @@
 /*
-这是指示牌接口api
+这是片区接口api
 * */
 import axios from '@/http'
-import {getUrl} from './path'
+import {getUrl} from "./path";
 
 
-const indicator = {
-    getAllIndicator () {
+const area = {
+    getAllRegion () {
         return axios ({
             method: 'GET',
-            url: getUrl('/signboard')
+            url: getUrl('/region')
         })
 
     },
-    updateIndicator  (params) {
+    updateRegion  (params) {
         return axios ({
             method: 'PUT',
-            url: getUrl('/signboard'),
+            url: getUrl('/region'),
             params
         })
     },
-    createIndicator  (params) {
+    createRegion  (params) {
         return axios ({
             method: 'POST',
-            url: getUrl('/signboard'),
+            url: getUrl('/region'),
             params
         })
     },
-    deleteIndicator (par) {
+    deleteRegion  (par) {
         console.log(par, '这是传递的id')
         return axios ({
             method: 'DELETE',
-            url: getUrl('/signboard'),
+            url: getUrl('/region'),
             data:{
                 id: par
             }
@@ -39,4 +39,4 @@ const indicator = {
     }
 }
 
-export default indicator
+export default area

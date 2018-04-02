@@ -13,7 +13,7 @@
                         @fixedInfo = 'fixedInfo'>
                 </Header>
             </div>
-            <div class="personList">
+            <div class="personList" v-loading="isShowLoading">
                 <ScrollContainer>
                     <el-table
                         v-if="!isShowTrashCard"
@@ -53,7 +53,7 @@
                             </template>
                         </el-table-column>
                     </el-table>
-                    <div class="personInfo" v-for="item in choseList" v-if="isShowTrashCard && item.status">
+                    <div class="personInfo" v-for="item in trashList" v-if="isShowTrashCard && item.status">
                         <div class="checkBox">
                             <input type="checkbox" :checked='item.checked' class="checkBtn" @change="checked(item.id)">
                         </div>
@@ -88,6 +88,7 @@
     import ScrollContainer from '@/components/ScrollContainer'
     import Header from './funHeader'
     import PersonDetail from './detailDialog'
+    import api from '@/api'
     export default {
         name: "trash-deploy",
         data (){
@@ -95,19 +96,14 @@
                 isShowTrashCard: true,
                 checkList: [],
                 filterList: [],
-                trashList: [
-                    {id:1,type: '临时',name:'临时垃圾桶',state: '已满',number: '4个',location: '13674565455',area: 'A-片区'},
-                    {id:2,type: '临时',name:'临时垃圾桶',state: '已满',number: '4个',location: '13674565455',area: 'A-片区'},
-                    {id:3,type: '临时',name:'临时垃圾桶',state: '已满',number: '4个',location: '13674565455',area: 'A-片区'},
-                    {id:8,type: '临时',name:'临时垃圾桶',state: '已满',number: '4个',location: '13674565455',area: 'A-片区'},
-                    {id:9,type: '临时',name:'临时垃圾桶',state: '已满',number: '4个',location: '13674565455',area: 'A-片区'}
-                ],
+                trashList: [],
                 visible: false,
                 trashInfo: {},
                 choseInfoId: [],
                 choseList: [],
                 isDisabled: true,
-                title: ''
+                title: '',
+                isShowLoading: false
             }
         },
         methods : {
@@ -121,15 +117,19 @@
                 this.isDisabled = false
             },
             deletInfo () {
-                for (let i = 0; i < this.choseInfoId.length; i++) {
-                    this.trashList = this.trashList.filter((item, index) => {
-                        if (item.id === this.choseInfoId[i]){
-                            this.choseList[index].checked = false
-                        }
-                        return item.id !== this.choseInfoId[i]
-                    })
-                }
-                this.choseList = this.trashList
+                api.dustbin.deleteDustbin(this.choseInfoId).then(res => {
+                    console.log(res, '删除成功')
+                    for (let i = 0; i < this.choseInfoId.length; i++) {
+                        this.trashList = this.trashList.filter((item, index) => {
+                            if (item.id === this.choseInfoId[i]){
+                                this.trashList[index].checked = false
+                            }
+                            return item.id !== this.choseInfoId[i]
+                        })
+                    }
+                }).catch(err => {
+                    console.log(err)
+                })
 
             },
             toggleList (type) {
@@ -211,14 +211,25 @@
                 } else {
                     this.$message.error('请选择要修改的人员')
                 }
+            },
+            async getAllTrash () {
+                this.isShowLoading = true
+                await api.dustbin.getAllDustbin().then(res => {
+                    console.log(res, '这是请求回来的数据')
+                    this.isShowLoading = false
+                    this.trashList = res
+                    for (let i = 0; i < this.trashList.length; i++) {
+                        this.trashList[i].checked = false
+                        this.trashList[i].status = true
+                    }
+                }).catch(err => {
+                    console.log(err)
+                    this.isShowLoading = false
+                })
             }
         },
         created () {
-            for (let i = 0; i < this.trashList.length; i++) {
-                this.trashList[i].checked = false
-                this.trashList[i].status = true
-            }
-            this.choseList = this.trashList
+           this.getAllTrash()
         },
         components: {
             ScrollContainer,
