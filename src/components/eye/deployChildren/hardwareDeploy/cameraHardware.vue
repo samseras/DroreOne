@@ -106,9 +106,7 @@
             }
         },
         methods:{
-            handleSelectionChange(val){
-                this.multipleSelection = val;
-            },
+
             addNewInfo(){
                this.showPersonDetail({},'添加摄像头信息')
                 this.isDisabled=false
@@ -142,16 +140,29 @@
                 }
             },
             deletInfo(){
-                console.log(122)
-                for(let i=0;i<this.choseInfoId.length;i++){
-                    this.cameraList=this.cameraList.filter((item,index)=>{
-                        if(item.id === this.choseInfoId[i]){
-                            this.cameraList[index].checked=false
-                        }
-                        return item.id!==this.choseInfoId[i]
-                    })
-                }
-                this.choseList=this.cameraList
+                api.camera.deleteCamera(this.choseInfoId).then(res=>{
+                    console.log(res,'删除成功')
+                    for(let i=0;i<this.choseInfoId.length;i++){
+                        this.cameraList=this.cameraList.filter((item,index)=>{
+                            if(item.id===this.choseInfoId[i]){
+                                this.cameraList[index].checked=false
+                            }
+                            return item.id !== this.choseInfoId[i]
+                        })
+                    }
+                }).catch(err=>{
+                    console.log(err)
+                })
+//                console.log(122)
+//                for(let i=0;i<this.choseInfoId.length;i++){
+//                    this.cameraList=this.cameraList.filter((item,index)=>{
+//                        if(item.id === this.choseInfoId[i]){
+//                            this.cameraList[index].checked=false
+//                        }
+//                        return item.id!==this.choseInfoId[i]
+//                    })
+//                }
+//                this.choseList=this.cameraList
             },
             addNewPerson(info){
                 info.id=new Date().getTime()

@@ -14,14 +14,14 @@ const monitor={
     },
     updateMonitor(params){
         return axios({
-            methods:'PUT',
+            method:'PUT',
             url:getUrl('/device?deviceType=6'),
             params
         })
     },
     createMonitors(params){
         return axios({
-            methods:'POST',
+            method:'POST',
             url:getUrl('/device?deviceType=6'),
             params
         })
@@ -29,7 +29,7 @@ const monitor={
     deleteMonitors(par){
         console.log(par,'传递的id')
         return axios({
-            methods:'DELETE',
+            method:'DELETE',
             url:getUrl('/device?deviceType=6'),
             data:{
                 id:par.id

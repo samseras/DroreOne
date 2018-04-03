@@ -8,27 +8,27 @@ import {getUrl} from "./path";
 const gate={
     getAllGate(){
         return axios({
-            methods:'GET',
+            method:'GET',
             url:getUrl('/device?deviceType=3')
         })
     },
     updateGate(params){
         return axios({
-            methods:'PUT',
+            method:'PUT',
             url:getUrl('/device?deviceType=3'),
             params
         })
     },
     createGate(params){
         return axios({
-            methods:'POST',
+            method:'POST',
             url:getUrl('/device?deviceType=3'),
             params
         })
     },
     deleteGate(par){
         return axios({
-            methods:'DELETE',
+            method:'DELETE',
             url:getUrl('/device?deviceType=3'),
             par
         })

@@ -9,28 +9,28 @@ import {getUrl} from "./path";
 const broadcast={
     getAllBroadcast(){
         return axios({
-            methods:'GET',
+            method:'GET',
             url:getUrl('/device?deviceType=1')
         })
     },
 
     updateBroadcast(params){
         return axios({
-            methods:'PUT',
+            method:'PUT',
             url:getUrl('/device?deviceType=1'),
             params
         })
     },
     createBroadcast(params){
         return axios({
-            methods:'POST',
+            method:'POST',
             url:getUrl('/device?deviceType=1'),
             params
         })
     },
     deleteBroadcast(par){
         return axios({
-            methods:'DELETE',
+            method:'DELETE',
             url:getUrl('/device?deviceType=1'),
             data:{
                 id:par.id()

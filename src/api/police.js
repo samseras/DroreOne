@@ -8,26 +8,26 @@ import {getUrl} from "./path";
 const police={
     getAllPolice(){
         return axios({
-            methods:'GET',
+            method:'GET',
             url:getUrl('/device?deviceType=8')
         })
     },
     updatePolice(params){
         return axios({
-            methods:'PUT',
+            method:'PUT',
             url:getUrl('/device?deviceType=8')
         })
     },
     createLight(params){
         return axios({
-            methods:'POST',
+            method:'POST',
             url:getUrl('/device?deviceType=5'),
             params
         })
     },
     deleteLight(par){
         return axios({
-            methos:'DELETE',
+            method:'DELETE',
             url:getUrl('/device?deviceType=5'),
             par
         })

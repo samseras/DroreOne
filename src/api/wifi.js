@@ -8,20 +8,20 @@ import {getUrl} from "./path";
 const wifi={
     getAllWifi(){
         return axios({
-            methods:'GET',
+            method:'GET',
             url: getUrl('/device?deviceType=7')
         })
     },
     updateWifi(params){
         return axios({
-            methods:'PUT',
+            method:'PUT',
             url: getUrl('/device?deviceType=7'),
             params
         })
     },
     createWifi(params){
       return axios({
-          methods:'POST',
+          method:'POST',
           url: getUrl('/device?deviceType=7'),
           params
       })
@@ -29,7 +29,7 @@ const wifi={
     deleteWifi(par){
         console.log(par,'传递的id')
         return axios({
-            methods:'DELETE',
+            method:'DELETE',
             url: getUrl('/device?deviceType=7'),
             data:{
                 id:par.id
