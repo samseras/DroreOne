@@ -92,12 +92,7 @@
                 isShowPersonCard:true,
                 visible:false,
                 cameraList:[
-//                    {id:1,name:'室内',area:'A-片区',describe:'摄像头介绍'},
-//                    {id:2,name:'室内',area:'A-片区',describe:'摄像头介绍'},
-//                    {id:3,name:'室外',area:'A-片区',describe:'摄像头介绍'},
-//                    {id:4,name:'室外',area:'A-片区',describe:'摄像头介绍'},
-//                    {id:5,name:'室外',area:'A-片区',describe:'摄像头介绍'},
-//                    {id:6,name:'室外',area:'A-片区',describe:'摄像头介绍'}
+
                 ],
                 checkList:[],
                 isSelected:false,

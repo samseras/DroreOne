@@ -64,8 +64,8 @@
                                 </span>
                         </div>
                         <div class="specificInfo" >
-                            <p class="area">所属区域：<span>{{item.longitude}}</span></p>
-                            <p class="type">广播类型：<span>{{item.type}}</span></p>
+                            <p class="area">所属区域：<span>{{item.regionId}}</span></p>
+                            <p class="type">广播类型：<span>{{item.positionType}}</span></p>
                             <p class="describe">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：<span>{{item.description}}</span></p>
 
                         </div>
@@ -98,10 +98,7 @@
                 isShowBroadCard:true,
                 visible:false,
                 broadList:[
-                    {id:1,name:'卓锐',type:'室内',area:'A-片区',describe:'广播描述'},
-                    {id:2,name:'海康威视',type:'室外',area:'A-片区',describe:'广播描述'},
-                    {id:3,name:'卓锐',type:'室内',area:'B片区',describe:'广播描述'},
-                    {id:4,name:'海康威视',type:'室外',area:'A-片区',describe:'广播描述'},
+
                 ],
                 checkList:[],
                 isSelected:false,

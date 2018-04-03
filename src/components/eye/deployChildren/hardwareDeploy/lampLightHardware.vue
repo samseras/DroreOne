@@ -59,9 +59,9 @@
                                 </span>
                         </div>
                         <div class="specificInfo" >
-                            <p class="area">所属区域：<span>{{item.area}}</span></p>
-                            <p class="type">所属区域：<span>{{item.type}}</span></p>
-                            <p class="sex">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：<span>{{item.describe}}</span></p>
+                            <p class="area">所属区域：<span>{{item.regionId}}</span></p>
+                            <p class="type">状态：<span>{{item.type}}</span></p>
+                            <p class="sex">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：<span>{{item.description}}</span></p>
 
                         </div>
                     </div>

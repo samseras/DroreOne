@@ -59,9 +59,10 @@
                                 </span>
                         </div>
                         <div class="specificInfo" >
-                            <p class="name">所属区域：<span>{{item.area}}</span></p>
-                            <p class="sex">类&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;型：<span>{{item.type}}</span></p>
-                            <p class="sex">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：<span>{{item.describe}}</span></p>
+                            <p class="name">所属区域：<span>{{item.regionId}}</span></p>
+                            <p class="sex">类&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;型：<span>{{item.sensorType
+}}</span></p>
+                            <p class="sex">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：<span>{{item.description}}</span></p>
 
                         </div>
                     </div>
@@ -93,8 +94,7 @@
                 isShowPoliceCard:true,
                 visible:false,
                 policeList:[
-                    {id:1,name:'报警柱',type:'报警',area:'A-片区',describe:'报警介绍'},
-                    {id:2,name:'越界',type:'越界',area:'A-片区',describe:'报警介绍'},
+
                 ],
                 checkList:[],
                 isSelected:false,

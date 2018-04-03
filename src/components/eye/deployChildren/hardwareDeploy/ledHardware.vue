@@ -64,9 +64,9 @@
                                 </span>
                         </div>
                         <div class="specificInfo" >
-                            <p class="area">所属区域：<span>{{item.area}}</span></p>
-                            <p class="type">广播类型：<span>{{item.type}}</span></p>
-                            <p class="describe">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：<span>{{item.describe}}</span></p>
+                            <p class="area">所属区域：<span>{{item.regionId}}</span></p>
+                            <p class="type">广播类型：<span>{{item.positionType}}</span></p>
+                            <p class="describe">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：<span>{{item.description}}</span></p>
 
                         </div>
                     </div>
