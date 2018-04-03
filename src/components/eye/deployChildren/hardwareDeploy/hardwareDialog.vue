@@ -187,7 +187,30 @@
                     <!--<img src="../../../../../static/img/camera.png" alt="">-->
                     <!--</div>-->
                 </div>
+                <!--报警柱-->
+                <div class="cameraCard popCard" v-if="route.includes('police')">
+                    <p class="type">类&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  型：
+                        <select name="" v-model="police.type">
+                            <option value="室内">室内</option>
+                            <option value="室外">室外</option>
+                        </select>
+                    </p>
+                    <p class="name">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称：<input type="text" v-model="police.name"> </p>
+                    <p class="version">型&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;号：<input type="text" v-model="police.version"></p>
+                    <p class="IP">设备I P ：<input type="text" v-model="police.ip"></p>
+                    <p class="mac">M a c：<input type="text" v-model="police.Mac"></p>
+                    <p class="host">设备编号：<input type="text" v-model="police.host"></p>
+                    <p class="place">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  置：<input type="text" v-model="police.place"></p>
+                    <p class="area">所属片区：<input type="text" v-model="police.area"></p>
+                    <p class="describe">描&nbsp; 述：
+                        <textarea v-model="police.describe" cols="40" rows="8">
 
+                        </textarea>
+                    </p>
+                    <!--<div class="chart">-->
+                    <!--<img src="../../../../../static/img/camera.png" alt="">-->
+                    <!--</div>-->
+                </div>
             </div>
 
             <div slot="footer" class="dialog-footer cardFooter">
@@ -275,6 +298,17 @@
                    area:'',
                    describe:''
                },
+               police:{
+                   type:'',
+                   name:'',
+                   version:'',
+                   ip:'',
+                   host:'',
+                   Mac:'',
+                   area:'',
+                   describe:''
+               },
+
                route:''
            }
        },
@@ -298,6 +332,8 @@
                    newInfo = this.Light
                }else if(this.route.includes('gate')) {
                    newInfo = this.gate
+               }else if(this.route.includes('police')) {
+                   newInfo = this.police
                }
                newInfo.status=true
                newInfo.checked=false
@@ -327,6 +363,8 @@
                this.Light=this.Info
            }else if(this.route.includes('gate')){
                this.gate=this.Info
+           }else if(this.route.includes('police')){
+               this.police=this.Info
            }
        }
    }

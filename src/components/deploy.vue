@@ -103,6 +103,10 @@
                                 title: '环境监测传感器'
                             },
                             {
+                                index: '/deploy/police-Hware',
+                                title: '报警柱传感器'
+                            },
+                            {
                                 index: '/deploy/led-Hware',
                                 title: 'LED大屏'
                             },

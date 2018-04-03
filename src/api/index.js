@@ -17,6 +17,7 @@ import wifi from './wifi'
 import led from './led'
 import gate from './gate'
 import light from './light'
+import police from './police'
 
 
 export default {
@@ -35,5 +36,6 @@ export default {
     wifi,
     led,
     gate,
-    light
+    light,
+    police
 }
