@@ -5,18 +5,7 @@
             <i class="el-icon-d-arrow-right" v-show = "isSetOut" @click="setOut"></i>
             <i class="el-icon-d-arrow-left" v-show = "isPackUp" @click="packUp"></i>
             <div class="content" id="content">
-                <!--<div class="contentTitle">-->
-                    <!--<p class="passengerAnalyze">-->
-                        <!--客流分析-->
-                    <!--</p>-->
-                   <!---->
-                    <!--&lt;!&ndash;<p class="formConfig">&ndash;&gt;-->
-                        <!--&lt;!&ndash;<img src="" alt="">&ndash;&gt;-->
-                        <!--&lt;!&ndash;图表配置&ndash;&gt;-->
-                    <!--&lt;!&ndash;</p>&ndash;&gt;-->
-                <!--</div>-->
-                <i class="el-icon-rank" @click = "fullscreen" v-show="!isBigScreen"></i>
-                <!--<i class="el-icon-renk" v-show="isBigScreen" @click="showList"></i>-->
+                <i class="el-icon-rank rankBtn" @click = "fullscreen" v-show="!isBigScreen"></i>
                 <div class = "contentForm" ref="content" >
                     <div class = "echatsForm" v-for = "(item,index) in echatList" :style = "{width:item.pos_width+'%',height:item.pos_height+'%',left:item.pos_left+'%',top:item.pos_top+'%'}"
                          v-dragging = "{ item: item, list: echatList, group: 'item' }"
@@ -34,21 +23,9 @@
                         <div class="echatsContent" :id="item.scenario_id" ref="chartHeight">
 
                         </div>
-                        <!--<div class="echatsBox" v-if="isShowIcon">-->
-                            <!---->
-                        <!--</div>-->
-
                     </div>
                 </div>
             </div>
-            <!--<EchatsCard-->
-                <!--v-if="visible"-->
-                <!--:visible="visible"-->
-                <!--:echatData="echatData"-->
-                <!--:kind="kind"-->
-                <!--@closeEchatsDialog ="visible = false"-->
-            <!--&gt;-->
-            <!--</EchatsCard>-->
         </ScrollContainer>
     </div>
 </template>
@@ -852,6 +829,11 @@
     }
 </script>
 
+<style>
+    .passengerFlow .scroll-inner{
+        display: flex;
+    }
+</style>
 <style lang="scss" scoped type="text/scss">
     .passengerFlow{
         width: 100%;
@@ -865,7 +847,6 @@
             height: 100%;
             font-size: rem(24);
             color: #999;
-
         }
         .content{
             flex: 1;
@@ -874,6 +855,17 @@
             /*display: flex;*/
             min-height: rem(557);
             /*flex-direction: column;*/
+            .rankBtn{
+                position: absolute;
+                top:rem(0);
+                right: rem(0);
+                width: rem(25);
+                height: rem(25);
+                padding: 0;
+                font-weight: 600;
+                color: #999;
+                font-size: rem(22);
+            }
             .contentTitle{
                 width: 100%;
                 border: 1px solid #ccc;
@@ -889,8 +881,9 @@
                 }
                 i{
                     width: rem(25);
+                    height: rem(25);
                     padding: 0;
-                    float: right;
+                    /*float: right;*/
                     font-weight: 600;
                     color: #999;
                     font-size: rem(22);
@@ -968,16 +961,5 @@
                 }
             }
         }
-    }
-    .content>i{
-        position: absolute;
-        top:rem(0);
-        right: rem(0);
-        width: rem(25);
-        padding: 0;
-        float: right;
-        font-weight: 600;
-        color: #999;
-        font-size: rem(22);
     }
 </style>
