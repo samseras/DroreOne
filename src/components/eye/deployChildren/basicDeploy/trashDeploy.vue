@@ -55,18 +55,18 @@
                     </el-table>
                     <div class="personInfo" v-for="item in trashList" v-if="isShowTrashCard && item.status">
                         <div class="checkBox">
-                            <input type="checkbox" :checked='item.checked' class="checkBtn" @change="checked(item.id)">
+                            <input type="checkbox" :checked='item.checked' class="checkBtn" @change="checked(item.dustbinBean.id)">
                         </div>
                         <div class="personType" @click.stop="showTrashDetail(item, '垃圾桶信息')">
                             <img src="" alt="">
                             <span class="type">
-                                  {{item.type}}垃圾桶
+                                  {{item.dustbinBean.type | typeFilter}}垃圾桶
                                 </span>
                         </div>
                         <div class="specificInfo">
-                            <p class="name">所属区域：<span>{{item.area}}</span></p>
-                            <p class="sex">状&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;态：<span>{{item.state}}</span></p>
-                            <p class="phoneNum">垃圾筒数：<span>{{item.number}}</span></p>
+                            <p class="name">所属区域：<span>{{item.regionName}}</span></p>
+                            <p class="sex" v-if="false">状&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;态：<span>{{item.dustbinBean.status}}</span></p>
+                            <p class="phoneNum">垃圾筒数：<span>{{item.dustbinBean.dustbinCount}}</span></p>
                         </div>
                     </div>
                 </ScrollContainer>
@@ -113,23 +113,32 @@
                 this.title = title
             },
             addNewInfo () {
-                this.showTrashDetail({}, '添加垃圾桶信息')
+                this.showTrashDetail({dustbinBean:{}}, '添加垃圾桶信息')
                 this.isDisabled = false
             },
             deletInfo () {
-                api.dustbin.deleteDustbin(this.choseInfoId).then(res => {
-                    console.log(res, '删除成功')
-                    for (let i = 0; i < this.choseInfoId.length; i++) {
-                        this.trashList = this.trashList.filter((item, index) => {
-                            if (item.id === this.choseInfoId[i]){
-                                this.trashList[index].checked = false
-                            }
-                            return item.id !== this.choseInfoId[i]
-                        })
-                    }
-                }).catch(err => {
-                    console.log(err)
-                })
+                if (this.choseInfoId.length > 0) {
+                    api.dustbin.deleteDustbin(this.choseInfoId).then(res => {
+                        console.log(res, '删除成功')
+                        for (let i = 0; i < this.choseInfoId.length; i++) {
+                            this.trashList = this.trashList.filter((item, index) => {
+                                if (item.dustbinBean.id === this.choseInfoId[i]){
+                                    this.trashList[index].checked = false
+                                    this.trashList[index].status = false
+                                }
+                                return item.status === true
+                            })
+                        }
+                        this.$message.success('删除成功')
+                        this.choseInfoId = []
+                    }).catch(err => {
+                        console.log(err)
+                        this.$message.error('删除失败，请稍后重试')
+                        this.choseInfoId = []
+                    })
+                }else {
+                    this.$message.error('请选择要删除的选项')
+                }
 
             },
             toggleList (type) {
@@ -151,25 +160,30 @@
             choseType (type) {
                 console.log(type)
                 if (type.length === 0){
-                    this.choseList = this.trashList.filter((item) => {
+                    this.trashList = this.trashList.filter((item) => {
                         item.status = true
-                        return item.status === true
+                        return item
                     })
                 } else {
-                    this.choseList = this.trashList.filter((item,index) => {
-                        if (type.includes(item.type)){
+                    this.trashList = this.trashList.filter((item,index) => {
+                        if (item.dustbinBean.type){
+                            item.dustbinBean.typeName = '固定'
+                        } else {
+                            item.dustbinBean.typeName = '临时'
+                        }
+                        if (type.includes(item.dustbinBean.typeName)){
                             item.status = true
-                        } else if(!type.includes(item.type)){
+                        } else if(!type.includes(item.dustbinBean.typeName)){
                             item.status = false
                             console.log(item.type, 'p[p[p[');
                         }
-                        return item.status === true
+                        return item
                     })
                 }
             },
             selectedAll (state) {
                 console.log(state, 'opopopopop')
-                this.choseList = this.trashList.filter((item) => {
+                this.trashList = this.trashList.filter((item) => {
                     if (state === true) {
                         item.checked = true
                         this.choseInfoId.push(item.id)
@@ -184,32 +198,56 @@
                 console.log(this.choseInfoId, 'opopop')
             },
             fixInfo (info) {
-                console.log(info, 'wertyuio')
-                let list = this.trashList
-                for(let i = 0;i< list.length; i++){
-                    if (info.id === list[i].id) {
-                        this.trashList[i] = info
-
-                    }
+                let index = info.location.includes(',')?info.location.indexOf(','):info.location.indexOf('，')
+                let latitude = info.location.substring(0, index)
+                let longitude = info.location.substring(index + 1)
+                let trashObj = {
+                    id: info.dustbinBean.id,
+                    name: info.dustbinBean.name,
+                    dustbinCount: info.dustbinBean.dustbinCount,
+                    type: info.dustbinBean.type,
+                    regionId: info.regionName,
+                    picAddress: info.imgUrl,
+                    latitude: latitude,
+                    longitude: longitude
                 }
-                this.choseList = this.trashList
+                api.dustbin.updateDustbin(JSON.stringify(trashObj)).then(res => {
+                    console.log('修改成功')
+                    this.$message.success('修改成功')
+                    this.choseInfoId = []
+                    this.getAllTrash()
+                })
             },
             addNewTrash (info) {
-                info.id = new Date().getTime()
-                this.trashList.push(info)
-                this.choseList = this.trashList
+                let index = info.location.includes(',')?info.location.indexOf(','):info.location.indexOf('，')
+                let latitude = info.location.substring(0, index)
+                let longitude = info.location.substring(index + 1)
+                let trashObj = {
+                    name: info.dustbinBean.name,
+                    dustbinCount: info.dustbinBean.dustbinCount,
+                    type: info.dustbinBean.type,
+                    regionId: info.regionName,
+                    picAddress: info.imgUrl,
+                    latitude: latitude,
+                    longitude: longitude
+                }
+                console.log(trashObj, 'this is trashObj')
+                api.dustbin.createDustbin(JSON.stringify(trashObj)).then(res => {
+                    console.log('增加成功')
+                    this.getAllTrash()
+                })
             },
             fixedInfo () {
                 if (this.choseInfoId.length > 0) {
                     this.trashList.map((item) => {
-                        if (item.id === this.choseInfoId[0]){
+                        if (item.dustbinBean.id === this.choseInfoId[0]){
                             this.trashInfo = item
                         }
                     })
                     this.showTrashDetail(this.trashInfo, '修改垃圾桶信息')
                     this.isDisabled = false
                 } else {
-                    this.$message.error('请选择要修改的人员')
+                    this.$message.error('请选择要修改的垃圾桶')
                 }
             },
             async getAllTrash () {
@@ -219,13 +257,25 @@
                     this.isShowLoading = false
                     this.trashList = res
                     for (let i = 0; i < this.trashList.length; i++) {
+                        this.trashList[i].location = `${this.trashList[i].latitude},${this.trashList[i].longitude}`
                         this.trashList[i].checked = false
                         this.trashList[i].status = true
+                        this.trashList[i].id = this.trashList[i].dustbinBean.id
                     }
                 }).catch(err => {
                     console.log(err)
                     this.isShowLoading = false
                 })
+            }
+        },
+        filters: {
+            typeFilter (item) {
+                console.log(item, '9099090909090')
+                if (item) {
+                    return "临时"
+                } else {
+                    return "固定"
+                }
             }
         },
         created () {

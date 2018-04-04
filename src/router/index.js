@@ -61,6 +61,7 @@ import LedHware from '@/components/eye/deployChildren/hardwareDeploy/ledHardware
 import MonitorsHware from '@/components/eye/deployChildren/hardwareDeploy/monitorsHardware'
 import WifiHware from '@/components/eye/deployChildren/hardwareDeploy/wifiHardware'
 import VoiceHware from '@/components/eye/deployChildren/hardwareDeploy/voiceHardware'
+import PoliceHware from '@/components/eye/deployChildren/hardwareDeploy/policeHardware'
 
 import hardwareDmis from '@/components/eye/deployChildren/dispatchDeploy/hardwareDmis' //硬件调度
 import personnelDmis from '@/components/eye/deployChildren/dispatchDeploy/personnelDmis' //人员调度
@@ -118,12 +119,10 @@ const routes = [
             {
                 path: '/analyze',
                 name: 'analyze',
-                redirect: '/analyze/:id',
+                // redirect: '/analyze/:id',
                 component: Analyze,
                 children: [
-                    {path: '/analyze/:id',name: 'Passenger', component:Passenger},
-                    // {path: '/analyze/origin',name: 'Origin', component:Origin},
-                    // {path: '/analyze/ticket',name: 'Ticket', component:Ticket}
+                    {path: '/analyze/:id',name: 'Passenger', component:Passenger}
                 ]
             },
             {
@@ -167,6 +166,7 @@ const routes = [
                     {path:'/deploy/led-Hware',name:'LedHware',component:LedHware},
                     {path:'/deploy/wifi-Hware',name:'WifiHware',component:WifiHware},
                     {path:'/deploy/voice-Hware',name:'VoiceHware',component:VoiceHware},
+                    {path:'/deploy/police-Hware',name:'PoliceHware',component:PoliceHware},
                     {path:'/deploy/monitors-Hware',name:'MonitorsHware',component:MonitorsHware},
 
                     {path:'/deploy/hardware-Dmis',name:'boatcartDmis',component:hardwareDmis},

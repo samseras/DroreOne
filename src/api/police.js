@@ -1,38 +1,37 @@
 /*
-* 监测传感器api
+* 报警柱模块api
 * */
 
 import axios from '@/http'
 import {getUrl} from "./path";
 
-const monitor={
-    getAllMonitor(){
+const police={
+    getAllPolice(){
         return axios({
             method:'GET',
-            url:getUrl('/device?deviceType=6')
+            url:getUrl('/device?deviceType=8')
         })
     },
-    updateMonitor(params){
+    updatePolice(params){
         return axios({
             method:'PUT',
-            url:getUrl('/device?deviceType=6'),
+            url:getUrl('/device?deviceType=8'),
             data:params
         })
     },
-    createMonitors(params){
+    createLight(params){
         return axios({
             method:'POST',
-            url:getUrl('/device?deviceType=6'),
+            url:getUrl('/device?deviceType=8'),
             data:params
         })
     },
-    deleteMonitors(par){
-        console.log(par,'传递的id')
+    deleteLight(par){
         return axios({
             method:'DELETE',
-            url:getUrl('/device?deviceType=6'),
+            url:getUrl('/device?deviceType=8'),
             data:{
-                type:6,
+                type:8,
                 ids:par
             }
         })
@@ -40,6 +39,4 @@ const monitor={
 
 }
 
-export default monitor
-
-
+export default police

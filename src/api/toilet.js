@@ -17,14 +17,14 @@ const toilet = {
         return axios ({
             method: 'PUT',
             url: getUrl('/toilet'),
-            params
+            data: params
         })
     },
     createToilet  (params) {
         return axios ({
             method: 'POST',
             url: getUrl('/toilet'),
-            params
+            data: params
         })
     },
     deleteToilet  (par) {

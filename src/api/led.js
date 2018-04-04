@@ -8,29 +8,32 @@ import {getUrl} from "./path";
 const led={
     getAllLed(){
         return axios({
-            methods:'GET',
+            method:'GET',
             url:getUrl('/device?deviceType=4')
         })
     },
     updateLed(params){
         return axios({
-            methods:'PUT',
+            method:'PUT',
             url:getUrl('/device?deviceType=4'),
-            params
+            data:params
         })
     },
     createLed(params){
         return axios({
-            methods:'POST',
+            method:'POST',
             url:getUrl('/device?deviceType=4'),
-            params
+            data:params
         })
     },
     deleteLed(par){
         return axios({
-            methods:'DELETE',
+            method:'DELETE',
             url:getUrl('/device?deviceType=4'),
-            par
+            data:{
+                type:4,
+                ids:par
+            }
         })
     }
 

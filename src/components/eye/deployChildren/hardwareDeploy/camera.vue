@@ -39,6 +39,11 @@
                 <el-checkbox v-for="item in gateList" :label="item.type"></el-checkbox>
             </el-checkbox-group>
         </div>
+        <div class="titleCheck" v-if="route.includes('police')" >
+            <el-checkbox-group v-model="filterList" @change="choseType">
+                <el-checkbox v-for="item in policeList" :label="item.type"></el-checkbox>
+            </el-checkbox-group>
+        </div>
 
         <div class="titlePage">
             <span>当前第1页/共8页</span>
@@ -64,6 +69,10 @@
                     {type:'摆闸'},
                     {type:'三角闸'},
                     {type:'评议闸'}
+                ],
+                policeList:[
+                    {type:'报警柱'},
+                    {type:'越界'}
                 ],
                 route:'',
                 isSelected:false,

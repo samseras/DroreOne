@@ -119,6 +119,7 @@
     input:-moz-placeholder { /* Mozilla Firefox 4 to 18 */ color: #cad4d6;font-size: 12px;}
     input::-moz-placeholder { /* Mozilla Firefox 19+ */ color: #cad4d6;font-size: 12px; }
     input:-ms-input-placeholder { /* Internet Explorer 10+ */ color:#cad4d6;font-size: 12px;}
+
     #Code{position:absolute;border: 1px solid #e9eef2;height: 35px;width: 100px;left:158px;top: 130px;text-indent: 0;text-align: center;font-size: 18px;outline:none;}
     #submit{margin-top: 35px;width: 200px;height: 40px;border-radius: 20px;background: #80cbc4;color: #fffffd;border: none;margin-left: 40px;font-size: 16px;text-indent: 0;}
     #Code:focus{outline: none;}
@@ -150,5 +151,39 @@
 	 /*.login-left img{margin-left: 60px;margin-top: 80px;}*/
 	 /*input{width: 100%;}*/
 	/*}*/
+
+    #Code{position:absolute;border: 1px solid #e9eef2;height: 40px;width: 120px;right: 0;top: 130px;text-indent: 0;text-align: center;}
+
+    #submit{margin-top: 50px;width: 200px;height: 40px;border-radius: 20px;background: #80cbc4;color: #fffffd;border: none;margin-left: 60px;font-size: 16px;text-indent: 0;}
+
+    @media screen and (min-width:1200px) and (max-width:1300px){
+	 .top{padding-top:80px;}
+	 .mian-con{margin-top: 0;}
+	 form{margin-top: 20px;margin-right: 0;}
+	 input{width: 100%;}
+
+	}
+	@media screen and (min-width:1100px) and (max-width:1200px){
+	 .top{padding-top:100px;width: 70%;}
+	 .mian-con{margin-top: 0;width: 75%;}
+	 form{margin-top: 20px;margin-right:30px;margin-left: 20px;}
+	 .login-left img{margin-left: 60px;margin-top: 80px;}
+	 input{width: 100%;}
+	}
+	@media screen and (min-width:980px) and (max-width:1100px){
+	 .top{padding-top:100px;width: 75%;}
+	 .mian-con{margin-top: 0;width: 82%;}
+	 form{margin-top: 20px;margin-right:30px;margin-left: 20px;}
+	 .login-left img{margin-left: 60px;margin-top: 80px;}
+	 input{width: 100%;}
+	}
+	@media screen and (min-width:900px) and (max-width:980px){
+	 .top{padding-top:100px;width: 75%;}
+	 .mian-con{margin-top: 0;width: 82%;}
+	 form{margin-top: 20px;margin-right:30px;margin-left: 20px;}
+	 .login-left img{margin-left: 60px;margin-top: 80px;}
+	 input{width: 100%;}
+	}
+
 
 </style>

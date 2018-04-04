@@ -56,8 +56,8 @@
                                 </span>
                         </div>
                         <div class="specificInfo">
-                            <p class="name">所在景区：<span>{{item.placeScenic}}</span></p>
-                            <p class="sex">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：<span>{{item.describe}}</span></p>
+                            <p class="name" v-if="false">所在景区：<span>{{item.placeScenic}}</span></p>
+                            <p class="sex">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：<span>{{item.description}}</span></p>
                         </div>
                     </div>
                 </ScrollContainer>
@@ -114,17 +114,21 @@
                 if (this.choseInfoId.length > 0) {
                     api.area.deleteRegion(this.choseInfoId).then(res => {
                         console.log(res, '删除成功')
-                        this.message.success('删除成功')
+                        this.$message.success('删除成功')
                         for (let i = 0; i < this.choseInfoId.length; i++) {
                             this.areaList = this.areaList.filter((item, index) => {
                                 if (item.id === this.choseInfoId[i]){
                                     this.areaList[index].checked = false
+                                    this.areaList[index].status = false
                                 }
-                                return item.id !== this.choseInfoId[i]
+                                return item
                             })
                         }
+                        this.choseInfoId = []
                     }).catch(err => {
+                        this.$message.error('删除失败，请稍后重试')
                         console.log(err)
+                        this.choseInfoId = []
                     })
                 } else {
                     this.message.error('请选择要删除的信息')
@@ -150,7 +154,7 @@
             choseType (type) {
                 console.log(type)
                 if (type.length === 0){
-                    this.choseList = this.areaList.filter((item) => {
+                    this.areaList = this.areaList.filter((item) => {
                         item.status = true
                         return item.status === true
                     })
@@ -168,7 +172,7 @@
             },
             selectedAll (state) {
                 console.log(state, 'opopopopop')
-                this.choseList = this.areaList.filter((item) => {
+                this.areaList = this.areaList.filter((item) => {
                     if (state === true) {
                         item.checked = true
                         this.choseInfoId.push(item.id)
@@ -183,20 +187,28 @@
                 console.log(this.choseInfoId, 'opopop')
             },
             fixInfo (info) {
-                console.log(info, 'wertyuio')
-                let list = this.areaList
-                for(let i = 0;i< list.length; i++){
-                    if (info.id === list[i].id) {
-                        this.areaList[i] = info
-
-                    }
+                let aresObj = {
+                    id: info.id,
+                    name: info.name,
+                    description: info.description
                 }
-                this.choseList = this.areaList
+                api.area.updateRegion(JSON.stringify(aresObj)).then(res => {
+                    console.log(res, '创建成功')
+                    this.$message.success('修改成功')
+                    this.choseInfoId = []
+                    this.getAllArea()
+                })
             },
             addNewPerson (info) {
-                info.id = new Date().getTime()
-                this.areaList.push(info)
-                this.choseList = this.areaList
+                let aresObj = {
+                    name: info.name,
+                    description: info.description
+                }
+                api.area.createRegion(JSON.stringify(aresObj)).then(res => {
+                    console.log(res, '创建成功')
+                    this.$message.success('创建成功')
+                    this.getAllArea()
+                })
             },
             fixedInfo () {
                 if (this.choseInfoId.length > 0) {
@@ -208,7 +220,7 @@
                     this.showPersonDetail(this.areaInfo, '修改人员信息')
                     this.isDisabled = false
                 } else {
-                    this.$message.error('请选择要修改的人员')
+                    this.$message.error('请选择要修改的片区')
                 }
             },
             async getAllArea () {

@@ -1,36 +1,38 @@
 /*
 * 闸机模块API
 * */
-
 import axios from '@/http'
 import {getUrl} from "./path";
 
 const gate={
     getAllGate(){
         return axios({
-            methods:'GET',
+            method:'GET',
             url:getUrl('/device?deviceType=3')
         })
     },
     updateGate(params){
         return axios({
-            methods:'PUT',
+            method:'PUT',
             url:getUrl('/device?deviceType=3'),
-            params
+            data:params
         })
     },
     createGate(params){
         return axios({
-            methods:'POST',
+            method:'POST',
             url:getUrl('/device?deviceType=3'),
-            params
+            data:params
         })
     },
     deleteGate(par){
         return axios({
-            methods:'DELETE',
-            url:getUrl('/device?deviceType=3'),
-            par
+            method:'DELETE',
+            url:getUrl('/device'),
+            data:{
+                type:3,
+                ids:par
+            }
         })
     }
 }

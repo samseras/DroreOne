@@ -6,14 +6,32 @@ import axios from '@/http'
 
 
 const analyze = {
-    getControlData (params) {
+    getDashboradList () {
         return axios ({
             method: 'GET',
-            url: '/dsp/service/v1/dashboard/scenarioMaps/1',
-            params
+            url: '/analysis/service/v1/dashboard/all'
         })
 
-    }
+    },
+    getStreamDataById (id) {
+        return axios ({
+            method: 'GET',
+            url: `/analysis/service/v1/dashboardScenarioMap/byDashboardId/${id}`
+        })
+    },
+    getChartDashboardName (id) {
+        return axios ({
+            method: 'GET',
+            url: `/analysis/service/v1/scenario/${id}/chart4dashboard`
+        })
+    },
+    getScenarioMapData (id) {
+        return axios ({
+            method: 'GET',
+            url: `/analysis/service/v1/scenario/${id}/result4dashboard`
+        })
+    },
+
 }
 
 export default analyze

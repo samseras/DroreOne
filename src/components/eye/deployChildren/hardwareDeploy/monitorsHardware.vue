@@ -59,8 +59,8 @@
                                 </span>
                         </div>
                         <div class="specificInfo" >
-                            <p class="name">所属区域：<span>{{item.area}}</span></p>
-                            <p class="sex">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：<span>{{item.describe}}</span></p>
+                            <p class="name">所属区域：<span>{{item.regionId}}</span></p>
+                            <p class="sex">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：<span>{{item.description}}</span></p>
 
                         </div>
                     </div>
@@ -91,14 +91,8 @@
             return{
                 isShowMonitorsCard:true,
                 visible:false,
-                monitorsList
-                    :[
-                    {id:1,name:'传感器名称',type:'空气监测',area:'A-片区',describe:'摄像头介绍'},
-                    {id:2,name:'传感器名称',type:'空气监测',area:'A-片区',describe:'摄像头介绍'},
-                    {id:3,name:'传感器名称',type:'空气监测',area:'A-片区',describe:'摄像头介绍'},
-                    {id:4,name:'传感器名称',type:'空气监测',area:'A-片区',describe:'摄像头介绍'},
-                    {id:5,name:'传感器名称',type:'空气监测',area:'A-片区',describe:'摄像头介绍'},
-                    {id:6,name:'传感器名称',type:'空气监测',area:'A-片区',describe:'摄像头介绍'}
+                monitorsList:[
+
                 ],
                 checkList:[],
                 isSelected:false,

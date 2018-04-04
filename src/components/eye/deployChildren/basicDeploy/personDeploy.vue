@@ -36,7 +36,7 @@
                             label="人员角色">
                         </el-table-column>
                         <el-table-column
-                            prop="sex"
+                            prop="gender"
                             label="性别">
                         </el-table-column>
                         <el-table-column
@@ -60,14 +60,14 @@
                         <div class="personType" @click.stop="showPersonDetail(item, '人员信息')">
                             <img src="" alt="">
                             <span class="type">
-                                  {{item.type}}
+                                  {{item.jobName}}
                                 </span>
                         </div>
                         <div class="specificInfo">
-                            <p class="name">姓&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;名：<span>{{item.name}}</span></p>
-                            <p class="sex">性&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;别：<span>{{item.sex}}</span></p>
-                            <p class="idNum">身份证号：<span>{{item.idNum}}</span></p>
-                            <p class="phoneNum">电&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;话：<span>{{item.phone}}</span></p>
+                            <p class="name">姓&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;名：<span>{{item.personBean.name}}</span></p>
+                            <p class="sex">性&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;别：<span>{{item.personBean.gender | sexFilter}}</span></p>
+                            <p class="idNum">身份证号：<span>{{item.personBean.idNum}}</span></p>
+                            <p class="phoneNum">电&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;话：<span>{{item.personBean.phone}}</span></p>
                         </div>
                     </div>
                 </ScrollContainer>
@@ -84,7 +84,6 @@
         </div>
     </div>
 </template>
-
 <script>
     import ScrollContainer from '@/components/ScrollContainer'
     import Header from './funHeader'
@@ -117,23 +116,31 @@
                 this.title = title
             },
             addNewInfo () {
-                this.showPersonDetail({}, '添加人员信息')
+                this.showPersonDetail({personBean:{}}, '添加人员信息')
                 this.isDisabled = false
             },
             deletInfo () {
-                api.person.deletePerson(this.choseInfoId).then(res => {
-                    console.log(res, '删除成功')
-                    for (let i = 0; i < this.choseInfoId.length; i++) {
-                        this.personList = this.personList.filter((item, index) => {
-                            if (item.id === this.choseInfoId[i]){
-                                this.personList[index].checked = false
-                            }
-                            return item.id !== this.choseInfoId[i]
-                        })
-                    }
-                }).catch(err => {
-                    console.log(err)
-                })
+                if (this.choseInfoId.length > 0) {
+                    api.person.deletePerson(this.choseInfoId).then(res => {
+                        console.log(res, '删除成功')
+                        for (let i = 0; i < this.choseInfoId.length; i++) {
+                            this.personList = this.personList.filter((item, index) => {
+                                if (item.id === this.choseInfoId[i]){
+                                    this.personList[index].checked = false
+                                }
+                                return item.id !== this.choseInfoId[i]
+                            })
+                        }
+                        this.$message.success('删除成功')
+                        this.choseInfoId = []
+                    }).catch(err => {
+                        console.log(err)
+                        this.$message.error('删除失败，请稍后重试')
+                    })
+                } else {
+                    this.$message.error('请选择要删除的选项')
+                }
+
             },
             toggleList (type) {
                 if (type === 'list') {
@@ -154,25 +161,25 @@
             choseType (type) {
                 console.log(type)
                 if (type.length === 0){
-                    this.choseList = this.personList.filter((item) => {
+                    this.personList = this.personList.filter((item) => {
                         item.status = true
-                        return item.status === true
+                        return item
                     })
                 } else {
-                        this.choseList = this.personList.filter((item,index) => {
-                            if (type.includes(item.type)){
+                        this.personList = this.personList.filter((item,index) => {
+                            if (type.includes(item.jobName)){
                                 item.status = true
-                            } else if(!type.includes(item.type)){
+                            } else if(!type.includes(item.jobName)){
                                 item.status = false
                                 console.log(item.type, 'p[p[p[');
                             }
-                            return item.status === true
+                            return item
                         })
                     }
             },
             selectedAll (state) {
                 console.log(state, 'opopopopop')
-                this.choseList = this.personList.filter((item) => {
+                this.personList = this.personList.filter((item) => {
                     if (state === true) {
                         item.checked = true
                         this.choseInfoId.push(item.id)
@@ -187,20 +194,44 @@
                 console.log(this.choseInfoId, 'opopop')
             },
             fixInfo (info) {
-                console.log(info, 'wertyuio')
-                let list = this.personList
-                for(let i = 0;i< list.length; i++){
-                    if (info.id === list[i].id) {
-                        this.personList[i] = info
-
-                    }
+                let personObj = {
+                    id: info.personBean.id,
+                    name: info.personBean.name,
+                    picAddress: info.imgUrl,
+                    gender: info.personBean.gender,
+                    idNum: info.personBean.idNum,
+                    phone: info.personBean.phone,
+                    jobId: info.jobName
                 }
-                this.choseList = this.personList
+                console.log(personObj, 'this is trashObj')
+                api.person.updatePerson(JSON.stringify(personObj)).then(res => {
+                    this.$message.success('添加成功')
+                    console.log('增加成功')
+                    this.choseInfoId = []
+                    this.getAllPerson()
+                }).catch(err => {
+                    console.log(err, '更新失败')
+                    this.$message.error('更新失败，请稍后重试')
+                })
             },
             addNewPerson (info) {
-                info.id = new Date().getTime()
-                this.personList.push(info)
-                this.choseList = this.personList
+                let personObj = {
+                    name: info.personBean.name,
+                    picAddress: info.imgUrl,
+                    gender: info.personBean.gender,
+                    idNum: info.personBean.idNum,
+                    phone: info.personBean.phone,
+                    jobId: info.jobName
+                }
+                console.log(personObj, 'this is trashObj')
+                api.person.createPerson(JSON.stringify(personObj)).then(res => {
+                    this.$message.success('添加成功')
+                    console.log('增加成功')
+                    this.getAllPerson()
+                }).catch(err => {
+                    console.log(err, '添加失败')
+                    this.$message.error('添加失败，请稍后重试')
+                })
             },
             fixedInfo () {
                 if (this.choseInfoId.length > 0) {
@@ -224,11 +255,21 @@
                     for (let i = 0; i < this.personList.length; i++) {
                         this.personList[i].checked = false
                         this.personList[i].status = true
+                        this.personList[i].id = this.personList[i].personBean.id
                     }
                 }).catch(err => {
                     console.log(err)
                     this.isShowLoading = false
                 })
+            }
+        },
+        filters: {
+            sexFilter (item) {
+                if (item) {
+                    return '男'
+                } else {
+                    return '女'
+                }
             }
         },
         created () {
@@ -240,7 +281,6 @@
             PersonDetail
         }
     }
-
 </script>
 
 <style lang="scss" scoped type="text/scss">

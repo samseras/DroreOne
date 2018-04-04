@@ -18,14 +18,14 @@ const dustbin = {
         return axios ({
             method: 'PUT',
             url: getUrl('/dustbin'),
-            params
+            data: params
         })
     },
     createDustbin  (params) {
         return axios ({
             method: 'POST',
             url: getUrl('/dustbin'),
-            params
+            data: params
         })
     },
     deleteDustbin  (par) {

@@ -17,14 +17,14 @@ const person = {
         return axios ({
             method: 'PUT',
             url: getUrl('/person'),
-            params
+            data: params
         })
     },
     createPerson  (params) {
         return axios ({
             method: 'POST',
             url: getUrl('/person'),
-            params
+            data: params
         })
     },
     deletePerson (par) {

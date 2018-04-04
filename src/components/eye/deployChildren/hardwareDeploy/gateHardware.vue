@@ -59,9 +59,9 @@
                                 </span>
                         </div>
                         <div class="specificInfo" >
-                            <p class="area">所属区域：<span>{{item.area}}</span></p>
-                            <p class="type">所属区域：<span>{{item.type}}</span></p>
-                            <p class="sex">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：<span>{{item.describe}}</span></p>
+                            <p class="area">所属区域：<span>{{item.regionId}}</span></p>
+                            <p class="type">类&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;型：<span>{{item.type}}</span></p>
+                            <p class="sex">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：<span>{{item.description}}</span></p>
 
                         </div>
                     </div>
@@ -94,12 +94,7 @@
                 visible:false,
                 gateList
                     :[
-                    {id:1,name:'闸机名称',type:'摆闸',area:'A-片区',describe:'闸机介绍'},
-                    {id:2,name:'闸机名称',type:'摆闸',area:'A-片区',describe:'闸机介绍'},
-                    {id:3,name:'闸机名称',type:'摆闸',area:'A-片区',describe:'闸机介绍'},
-                    {id:4,name:'闸机名称',type:'摆闸',area:'A-片区',describe:'闸机介绍'},
-                    {id:5,name:'闸机名称',type:'翼闸',area:'A-片区',describe:'闸机介绍'},
-                    {id:6,name:'闸机名称',type:'翼闸',area:'A-片区',describe:'闸机介绍'}
+
                 ],
                 checkList:[],
                 isSelected:false,

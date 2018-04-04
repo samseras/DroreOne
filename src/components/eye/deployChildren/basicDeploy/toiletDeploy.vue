@@ -51,16 +51,16 @@
                     </el-table>
                     <div class="personInfo" v-for="item in toiletList" v-if="isShowToiletCard && item.status">
                         <div class="checkBox">
-                            <input type="checkbox" :checked='item.checked' class="checkBtn" @change="checked(item.id)">
+                            <input type="checkbox" :checked='item.checked' class="checkBtn" @change="checked(item.toiletBean.id)">
                         </div>
                         <div class="personType" @click.stop="showPersonDetail(item, '卫生间信息')">
                             <img src="" alt="">
                             <span class="type">
-                                  {{item.name}}
+                                  {{item.toiletBean.name}}
                                 </span>
                         </div>
                         <div class="specificInfo">
-                            <p class="name">所属区域：<span>{{item.area}}</span></p>
+                            <p class="name">所属区域：<span>{{item.regionName}}</span></p>
                             <p class="sex">状&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;态：<span>{{item.state}}</span></p>
                             <p class="phoneNum">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置：<span>{{item.location}}</span></p>
                         </div>
@@ -73,7 +73,7 @@
                               :title="title"
                               @closeInfoDialog ="visible = false"
                               @fixInfo = "fixInfo"
-                              @addNewInfo="addNewPerson">
+                              @addNewInfo="addNewToilet">
                 </PersonDetail>
             </div>
         </div>
@@ -112,23 +112,31 @@
                 this.title = title
             },
             addNewInfo () {
-                this.showPersonDetail({}, '添加卫生间信息')
+                this.showPersonDetail({toiletBean:{}}, '添加卫生间信息')
                 this.isDisabled = false
             },
             deletInfo () {
-                api.toilet.deleteToilet(this.choseInfoId).then(res => {
-                    console.log(res, '删除成功')
-
-                })
-                for (let i = 0; i < this.choseInfoId.length; i++) {
-                    this.toiletList = this.toiletList.filter((item, index) => {
-                        if (item.id === this.choseInfoId[i]){
-                            this.toiletList[index].checked = false
+                if (this.choseInfoId.length > 0) {
+                    api.toilet.deleteToilet(this.choseInfoId).then(res => {
+                        console.log(res, '删除成功')
+                        for (let i = 0; i < this.choseInfoId.length; i++) {
+                            this.toiletList = this.toiletList.filter((item, index) => {
+                                if (item.toiletBean.id === this.choseInfoId[i]){
+                                    this.toiletList[index].checked = false
+                                }
+                                return item.toiletBean.id !== this.choseInfoId[i]
+                            })
                         }
-                        return item.id !== this.choseInfoId[i]
+                        this.$message.success('删除成功')
+                        this.choseInfoId = []
+                    }).catch(err => {
+                        console.log('删除失败')
+                        this.$message.error('删除失败，请稍后重试')
+                        this.choseInfoId = []
                     })
+                } else {
+                    this.$message.error('请选择要删除的选项')
                 }
-
             },
             toggleList (type) {
                 if (type === 'list') {
@@ -167,7 +175,7 @@
             },
             selectedAll (state) {
                 console.log(state, 'opopopopop')
-                this.choseList = this.toiletList.filter((item) => {
+                this.toiletList = this.toiletList.filter((item) => {
                     if (state === true) {
                         item.checked = true
                         this.choseInfoId.push(item.id)
@@ -182,20 +190,40 @@
                 console.log(this.choseInfoId, 'opopop')
             },
             fixInfo (info) {
-                console.log(info, 'wertyuio')
-                let list = this.toiletList
-                for(let i = 0;i< list.length; i++){
-                    if (info.id === list[i].id) {
-                        this.toiletList[i] = info
-
-                    }
+                let index = info.location.includes(',')?info.location.indexOf(','):info.location.indexOf('，')
+                let latitude = info.location.substring(0, index)
+                let longitude = info.location.substring(index + 1)
+                let toiletObj = {
+                    id: info.toiletBean.id,
+                    name: info.toiletBean.name,
+                    regionId: info.regionName,
+                    latitude: latitude,
+                    picAddress: info.imgUrl,
+                    longitude: longitude
                 }
-                this.choseList = this.toiletList
+                api.toilet.updateToilet(JSON.stringify(toiletObj)).then(res => {
+                    console.log(res, '修改成功')
+                    this.$message.success('修改成功')
+                    this.choseInfoId = []
+                    this.getAllToilet()
+                })
             },
-            addNewPerson (info) {
-                info.id = new Date().getTime()
-                this.toiletList.push(info)
-                this.choseList = this.toiletList
+            addNewToilet (info) {
+                let index = info.location.includes(',')?info.location.indexOf(','):info.location.indexOf('，')
+                let latitude = info.location.substring(0, index)
+                let longitude = info.location.substring(index + 1)
+                let toiletObj = {
+                    name: info.toiletBean.name,
+                    regionId: info.regionName,
+                    latitude: latitude,
+                    picAddress: info.imgUrl,
+                    longitude: longitude
+                }
+                api.toilet.createToilet(JSON.stringify(toiletObj)).then(res => {
+                    console.log(res, '添加成功')
+                    this.getAllToilet()
+                })
+
             },
             fixedInfo () {
                 if (this.choseInfoId.length > 0) {
@@ -207,7 +235,7 @@
                     this.showPersonDetail(this.toiletInfo, '修改卫生间信息')
                     this.isDisabled = false
                 } else {
-                    this.$message.error('请选择要修改的人员')
+                    this.$message.error('请选择要修改的洗手间')
                 }
             },
             async getAllToilet () {
@@ -219,6 +247,8 @@
                     for (let i = 0; i < this.toiletList.length; i++) {
                         this.toiletList[i].checked = false
                         this.toiletList[i].status = true
+                        this.toiletList[i].location = `${this.toiletList[i].latitude},${this.toiletList[i].longitude}`
+                        this.toiletList[i].id = this.toiletList[i].toiletBean.id
                     }
                 }).catch(err => {
                     console.log(err, '请求失败')

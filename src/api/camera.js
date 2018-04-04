@@ -4,7 +4,6 @@
 import axios from '@/http'
 import {getUrl} from "./path";
 
-
 const camera={
     getAllCamera(){
         return axios({
@@ -14,25 +13,29 @@ const camera={
     },
     updateCamera(params){
         return axios({
-            methods:'PUT',
+            method:'PUT',
             url:getUrl('/device?deviceType=2'),
-            params
+            data: params
         })
     },
     createCamera(params){
         return axios({
-            methods:'POST',
-            url:getUrl('/device?deviceType=2'),
-            params
+            method:'POST',
+            url:getUrl('/device'),
+            data: {
+                type:2,
+                devices:params
+            }
         })
     },
     deleteCamera(par){
         console.log(par,'传递的id')
         return axios({
-            methods:'DELETE',
-            url:getUrl('/device?deviceType=2'),
+            method:'DELETE',
+            url:getUrl('/device'),
             data:{
-                id:par.id
+                // type: 2,
+                ids: par
             }
         })
     }
