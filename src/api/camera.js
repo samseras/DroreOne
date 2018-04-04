@@ -4,7 +4,6 @@
 import axios from '@/http'
 import {getUrl} from "./path";
 
-
 const camera={
     getAllCamera(){
         return axios({
@@ -22,8 +21,11 @@ const camera={
     createCamera(params){
         return axios({
             method:'POST',
-            url:getUrl('/device?deviceType=2'),
-            data: params
+            url:getUrl('/device'),
+            data: {
+                type:2,
+                devices:params
+            }
         })
     },
     deleteCamera(par){

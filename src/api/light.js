@@ -17,21 +17,24 @@ const light={
         return axios({
             method:'PUT',
             url:getUrl('/device?deviceType=5'),
-            params
+            data:params
         })
     },
     createLight(params){
         return axios({
             method:'POST',
             url:getUrl('/device?deviceType=5'),
-            params
+            data:params
         })
     },
     deleteLight(par){
         return axios({
             method:'DELETE',
             url:getUrl('/device?deviceType=5'),
-            par
+            data:{
+                type:5,
+                ids:par
+            }
         })
     }
 }

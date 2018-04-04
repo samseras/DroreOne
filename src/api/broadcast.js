@@ -1,7 +1,6 @@
 /*
  广播模块api
  * */
-
 import axios from '@/http'
 import {getUrl} from "./path";
 
@@ -18,22 +17,23 @@ const broadcast={
         return axios({
             method:'PUT',
             url:getUrl('/device?deviceType=1'),
-            params
+            data:params
         })
     },
     createBroadcast(params){
         return axios({
             method:'POST',
             url:getUrl('/device?deviceType=1'),
-            params
+            data:params
         })
     },
     deleteBroadcast(par){
         return axios({
             method:'DELETE',
-            url:getUrl('/device?deviceType=1'),
+            url:getUrl('/device'),
             data:{
-                id:par.id()
+                type:1,
+                ids:par
             }
         })
     }

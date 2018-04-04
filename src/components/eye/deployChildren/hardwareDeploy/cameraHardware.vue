@@ -67,12 +67,12 @@
                 </ScrollContainer>
                 <HardWare v-if="visible"
                           :visible="visible"
-                         :Info="personInfo"
+                          :Info="personInfo"
                           :title="title"
                           :isDisabled="isDisabled"
                           @closeInfoDialog="visible=false"
-                           @addNewInfo="addNewPerson"
-                            @fixInfo="fixInfo">
+                          @addNewInfo="addNewPerson"
+                          @fixInfo="fixInfo">
 
                 </HardWare>
             </div>
@@ -108,11 +108,11 @@
         methods:{
 
             addNewInfo(){
-               this.showPersonDetail({},'添加摄像头信息')
+                this.showPersonDetail({},'添加摄像头信息')
                 this.isDisabled=false
             },
             showPersonDetail(info,title){
-              this.personInfo=info
+                this.personInfo=info
                 this.visible=true
                 this.title=title
 
@@ -153,21 +153,17 @@
                 }).catch(err=>{
                     console.log(err)
                 })
-//                console.log(122)
-//                for(let i=0;i<this.choseInfoId.length;i++){
-//                    this.cameraList=this.cameraList.filter((item,index)=>{
-//                        if(item.id === this.choseInfoId[i]){
-//                            this.cameraList[index].checked=false
-//                        }
-//                        return item.id!==this.choseInfoId[i]
-//                    })
-//                }
-//                this.choseList=this.cameraList
             },
             addNewPerson(info){
                 info.id=new Date().getTime()
                 this.cameraList.push(info)
                 this.choseList=this.cameraList
+//                api.camera.createCamera().then(res=>{
+//                    console.log(res,'添加成功')
+//                    this.cameraList
+//                }).catch(err=>{
+//                    console.log(err)
+//                })
             },
             toggleList (type){
                 if(type==='list'){
@@ -237,7 +233,7 @@
         },
         created (){
 //          this.choseList=this.camera
-          this.getAllCamera()
+            this.getAllCamera()
         },
         components:{
             ScrollContainer,

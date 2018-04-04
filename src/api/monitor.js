@@ -16,14 +16,14 @@ const monitor={
         return axios({
             method:'PUT',
             url:getUrl('/device?deviceType=6'),
-            params
+            data:params
         })
     },
     createMonitors(params){
         return axios({
             method:'POST',
             url:getUrl('/device?deviceType=6'),
-            params
+            data:params
         })
     },
     deleteMonitors(par){
@@ -32,7 +32,8 @@ const monitor={
             method:'DELETE',
             url:getUrl('/device?deviceType=6'),
             data:{
-                id:par.id
+                type:6,
+                ids:par
             }
         })
     }

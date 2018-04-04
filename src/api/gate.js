@@ -1,7 +1,6 @@
 /*
 * 闸机模块API
 * */
-
 import axios from '@/http'
 import {getUrl} from "./path";
 
@@ -16,21 +15,24 @@ const gate={
         return axios({
             method:'PUT',
             url:getUrl('/device?deviceType=3'),
-            params
+            data:params
         })
     },
     createGate(params){
         return axios({
             method:'POST',
             url:getUrl('/device?deviceType=3'),
-            params
+            data:params
         })
     },
     deleteGate(par){
         return axios({
             method:'DELETE',
-            url:getUrl('/device?deviceType=3'),
-            par
+            url:getUrl('/device'),
+            data:{
+                type:3,
+                ids:par
+            }
         })
     }
 }

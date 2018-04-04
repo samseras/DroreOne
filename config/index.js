@@ -12,7 +12,7 @@ module.exports = {
     assetsPublicPath: '/',
     proxyTable: {//做跨域配置
         '/droreone': {
-            target: 'http://192.168.0.150:8081/',
+            target: 'http://192.168.0.150:8050/',
             changeOrigin: true,
             pathRewrite: {
                 '^/droreone': '/'//需要rewrite重写

@@ -16,21 +16,24 @@ const led={
         return axios({
             method:'PUT',
             url:getUrl('/device?deviceType=4'),
-            params
+            data:params
         })
     },
     createLed(params){
         return axios({
             method:'POST',
             url:getUrl('/device?deviceType=4'),
-            params
+            data:params
         })
     },
     deleteLed(par){
         return axios({
             method:'DELETE',
             url:getUrl('/device?deviceType=4'),
-            par
+            data:{
+                type:4,
+                ids:par
+            }
         })
     }
 

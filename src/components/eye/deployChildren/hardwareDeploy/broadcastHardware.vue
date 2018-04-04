@@ -145,16 +145,29 @@
                 }
             },
             deletInfo(){
-                console.log(122)
-                for(let i=0;i<this.choseInfoId.length;i++){
-                    this.broadList=this.broadList.filter((item,index)=>{
-                        if(item.id === this.choseInfoId[i]){
-                            this.choseList[index].checked=false
-                        }
-                        return item.id!==this.choseInfoId[i]
-                    })
-                }
-                this.choseList=this.broadList
+                api.broadcast.deleteBroadcast(this.choseInfoId).then(res=>{
+                    console.log(res,'删除成功')
+                    for(let i=0;i<this.choseInfoId.length;i++){
+                        this.broadList=this.broadList.filter((item,index)=>{
+                            if(item.id===this.choseInfoId[i]){
+                                this.broadList[index].checked=false
+                            }
+                            return item.id !== this.choseInfoId
+                        })
+                    }
+                }).catch(err=>{
+                    console.log(err)
+                })
+//                console.log(122)
+//                for(let i=0;i<this.choseInfoId.length;i++){
+//                    this.broadList=this.broadList.filter((item,index)=>{
+//                        if(item.id === this.choseInfoId[i]){
+//                            this.choseList[index].checked=false
+//                        }
+//                        return item.id!==this.choseInfoId[i]
+//                    })
+//                }
+//                this.choseList=this.broadList
             },
             addBroad (info){
                 info.id=new Date().getTime()

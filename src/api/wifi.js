@@ -16,14 +16,14 @@ const wifi={
         return axios({
             method:'PUT',
             url: getUrl('/device?deviceType=7'),
-            params
+            data:params
         })
     },
     createWifi(params){
       return axios({
           method:'POST',
           url: getUrl('/device?deviceType=7'),
-          params
+          data:params
       })
     },
     deleteWifi(par){
@@ -32,7 +32,8 @@ const wifi={
             method:'DELETE',
             url: getUrl('/device?deviceType=7'),
             data:{
-                id:par.id
+                type:7,
+                ids:par
             }
         })
     }
