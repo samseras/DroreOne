@@ -34,7 +34,7 @@
 
 </template>
 <script>
-       import shopingData from "../../../../API/shop.json"
+       // import shopingData from "../../../../API/shop.json"
 
 
 //    const park=[

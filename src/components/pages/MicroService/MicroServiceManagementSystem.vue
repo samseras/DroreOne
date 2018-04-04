@@ -49,10 +49,9 @@
 	</el-container>
 </template>
 <script>
-	import tableDatas from "../../../API/entrance.json"
-	import asideLeft from "../../components/microservice/asideLeft.vue"
-	import micMenu from "../../components/microservice/micMenu.vue"
-	import domTable from "../../components/microservice/domTable.vue"
+	import asideLeft from "../../microservice/asideLeft.vue"
+	import micMenu from "../../microservice/micMenu.vue"
+	import domTable from "../../microservice/domTable.vue"
 
 	export default {
 		data() {

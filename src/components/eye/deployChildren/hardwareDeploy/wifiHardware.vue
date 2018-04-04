@@ -1,7 +1,7 @@
 <template>
     <div class="wifiList">
         <div class="title">
-            广播信息
+            WIFI信息
         </div>
         <div class="cameraContent">
             <div class="conTitle">
@@ -14,7 +14,7 @@
                 </Header>
             </div>
 
-            <div class="cameraList">
+            <div class="cameraList" v-loading="isShowLoading">
                 <ScrollContainer>
                     <el-table
                         v-if="!isShowWifiCard"
@@ -53,20 +53,20 @@
                         </el-table-column>
                     </el-table>
 
-                    <div class="personInfo" v-for="item in choseList" v-if="isShowWifiCard && item.status">
+                    <div class="personInfo" v-for="item in wifiList" v-if="isShowWifiCard && item.status">
                         <div class="checkBox">
                             <input type="checkbox" :checked="item.checked" class="checkBtn" @change="checked(item.id)">
                         </div>
-                        <div class="personType" @click.stop="showWifiDetail(item,'广播信息')">
-                            <img src="../../../../../static/img/camera.png" alt="">
+                        <div class="personType" @click.stop="showWifiDetail(item,'WIFI信息')">
+                            <img src="../../../../../static/img/cameras.png" alt="">
                             <span class="name">
                                   {{item.name}}
                                 </span>
                         </div>
                         <div class="specificInfo" >
-                            <p class="area">所属区域：<span>{{item.area}}</span></p>
-                            <p class="type">类&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;型：<span>{{item.type}}</span></p>
-                            <p class="describe">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：<span>{{item.describe}}</span></p>
+                            <p class="area">所属区域：<span>{{item.regionId}}</span></p>
+                            <p class="type">类&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;型：<span>{{item.positionType}}</span></p>
+                            <p class="describe">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：<span>{{item.description}}</span></p>
 
                         </div>
                     </div>
@@ -90,6 +90,7 @@
     import ScrollContainer from '@/components/ScrollContainer'
     import Header from './camera.vue'
     import HardWare from './hardwareDialog.vue'
+    import api from '@/api'
 
     export default{
         data(){
@@ -109,12 +110,13 @@
                 choseList:[],
                 isDisabled:true,
                 filterList: [],
-                title:''
+                title:'',
+                isShowLoading:false
             }
         },
         methods:{
             addNewInfo(){
-                this.showWifiDetail({},'添加广播信息')
+                this.showWifiDetail({},'添加WIFI信息')
                 this.isDisabled=false
             },
             showWifiDetail(info,title){
@@ -139,10 +141,10 @@
                             this.wifiInfo=item
                         }
                     })
-                    this.showWifiDetail(this.wifiInfo,'修改LED信息')
+                    this.showWifiDetail(this.wifiInfo,'修改WIFI信息')
                     this.isDisabled=false
                 }else{
-                    this.$message.error('请选择要修改的LED')
+                    this.$message.error('请选择要修改的WIFI')
                 }
             },
             deletInfo(){
@@ -212,14 +214,31 @@
                     }
                 })
                 console.log(this.choseInfoId)
+            },
+            async getAllWifi(){
+                this.isShowLoading=true
+                await api.wifi.getAllWifi().then((res)=>{
+                    console.log(res,'这是请求回来的数据')
+                    this.isShowLoading=false
+                    this.wifiList=res.devices
+                    for(let i=0;i<this.wifiList.length;i++){
+                        this.wifiList[i].checked=false
+                        this.wifiList[i].status=true
+                    }
+                }).catch((err)=>{
+                    console.log(err)
+                })
+
             }
         },
         created (){
-            for (let i=0;i<this.wifiList.length;i++){
-                this.wifiList[i].checked=false
-                this.wifiList[i].status=true
-            }
-            this.choseList=this.wifiList
+//            for (let i=0;i<this.wifiList.length;i++){
+//                this.wifiList[i].checked=false
+//                this.wifiList[i].status=true
+//            }
+//            this.choseList=this.wifiList
+            this.getAllWifi()
+
         },
         components:{
             ScrollContainer,

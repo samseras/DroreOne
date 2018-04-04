@@ -1,38 +1,37 @@
 /*
-景点配置模块api
+这是指示牌接口api
 * */
 import axios from '@/http'
 import {getUrl} from './path'
 
 
-
-const scenic = {
-    getAllScenic () {
+const indicator = {
+    getAllIndicator () {
         return axios ({
             method: 'GET',
-            url: getUrl('/scenicspot')
+            url: getUrl('/signboard')
         })
 
     },
-    updateScenic (params) {
+    updateIndicator  (params) {
         return axios ({
             method: 'PUT',
-            url: getUrl('/scenicspot '),
+            url: getUrl('/signboard'),
             data:params
         })
     },
-    createScenic (params) {
+    createIndicator  (params) {
         return axios ({
             method: 'POST',
-            url: getUrl('/scenicspot'),
+            url: getUrl('/signboard'),
             data:params
         })
     },
-    deleteScenic (par) {
+    deleteIndicator (par) {
         console.log(par, '这是传递的id')
         return axios ({
             method: 'DELETE',
-            url: getUrl('/scenicspot'),
+            url: getUrl('/signboard'),
             data:{
                 id: par
             }
@@ -40,4 +39,4 @@ const scenic = {
     }
 }
 
-export default scenic
+export default indicator

@@ -30,11 +30,13 @@
                 <button type="submit" class="btn btn-primary" @click.prevent="editSave">保存</button>
             </div>
         </div>
+        <!--<input type="file" @change="fi">-->
     </div>
 </template>
 <script>
     import Cropper from 'cropperjs'
     import FileUpload from 'vue-upload-component'
+    import api from '@/api'
     export default {
         components: {
             FileUpload,
@@ -98,6 +100,7 @@
                 alert(message)
             },
             inputFile(newFile, oldFile, prevent) {
+                debugger
                 if (newFile && !oldFile) {
                     this.$nextTick(function () {
                         this.edit = true
@@ -108,6 +111,7 @@
                 }
             },
             inputFilter(newFile, oldFile, prevent) {
+                debugger
                 if (newFile && !oldFile) {
                     if (!/\.(gif|jpg|jpeg|png|webp)$/i.test(newFile.name)) {
                         this.alert('Your choice is not a picture')
@@ -122,6 +126,11 @@
                     }
                 }
             }
+        },
+        created () {
+            api.scenic.getAll().then( res =>{
+                console.log(res, 'jcguysdgcsdgcsdgcjgsd')
+            })
         }
     }
 </script>

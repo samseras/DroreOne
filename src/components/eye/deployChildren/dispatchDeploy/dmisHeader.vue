@@ -6,15 +6,15 @@
         </div>
         <div class="funcBtn">
             <el-button size="mini"plain @click="addNewInfo"><i class="el-icon-circle-plus"></i>添加</el-button>
-            <el-button size="mini"plain class='selectedAll' ><el-checkbox v-model="isSelected" @change="selectedAll"></el-checkbox>全选</el-button>
-            <el-button size="mini"plain>导入</el-button>
-            <el-button size="mini"plain>导出</el-button>
+            <el-checkbox v-model="isSelected" @change="selectedAll"  class='selectedAll' >全选</el-checkbox>
+            <!--<el-button size="mini"plain>导入</el-button>-->
+            <!--<el-button size="mini"plain>导出</el-button>-->
             <el-button size="mini"plain @click="deleteCard"><i class="el-icon-delete"></i>删除</el-button>
-            <el-button size="mini"plain @click="fixCard"><i class="el-icon-delete"></i>修改</el-button>
+            <el-button size="mini"plain @click="fixCard"><i class="el-icon-edit"></i>修改</el-button>
         </div>
         <div class="filite" v-if="route.includes('person')">
             <el-checkbox-group v-model="filterList" @change="choseType">
-                <el-checkbox v-for="item in personTypeList" :label="item.name"></el-checkbox>
+                <el-checkbox v-for="item in personTypeList" :label="item.type"></el-checkbox>
             </el-checkbox-group>
         </div>
         <div class="filite" v-if="route.includes('indicator')">
@@ -29,48 +29,46 @@
         </div>
         <div class="filite" v-if="route.includes('shop')">
             <el-checkbox-group v-model="filterList" @change="choseType">
-                <el-checkbox v-for="item in shopType" :label="item.name"></el-checkbox>
+                <el-checkbox v-for="item in shopType" :label="item.type"></el-checkbox>
             </el-checkbox-group>
         </div>
         <div class="filite" v-if="route.includes('park')">
             <el-checkbox-group v-model="filterList" @change="choseType">
-                <el-checkbox v-for="item in parkType" :label="item.type | packFilter"></el-checkbox>
+                <el-checkbox v-for="item in parkType" :label="item.type"></el-checkbox>
             </el-checkbox-group>
         </div>
         <div class="page">
             <span>当前第1页/共8页</span>
             <span class="upPage"><</span>
             <span class="downPage">></span>
-            <span class="listForm" @click="toggleList('list')"><i class="el-icon-tickets"></i></span>
-            <span class="cardForm" @click="toggleList('card')"><i class="el-icon-menu"></i></span>
+            <!--<span class="listForm" @click="toggleList('list')"><i class="el-icon-tickets"></i></span>-->
+            <!--<span class="cardForm" @click="toggleList('card')"><i class="el-icon-menu"></i></span>-->
         </div>
     </div>
 </template>
 
 <script>
-    import api from '@/api'
     export default {
         name: "fun-header",
         data () {
             return {
                 filterList: [],
-                personTypeList: [],
+                personTypeList: [
+                    {type: '安保'},
+                    {type: '售票'},
+                    {type: '保洁'},
+                    {type: '检票'}
+                ],
                 indicatorType: [
-                    {type: '设施'},
-                    {type: '路线'},
-                    {type: '标语'}
-                ],
-                trashType: [
-                    {type: '临时'},
-                    {type: '固定'}
-                ],
-                shopType: [],
-                parkType: [
-                    {type: '0'},
-                    {type: '1'}
+                    {type: '广播'},
+                    {type: '路灯'},
+                    {type: 'LED'}
                 ],
                 route: '',
                 isSelected: false,
+                isShowJobType: true,
+                isShowIndicatorType: true,
+                isShowTrashType: true
             }
         },
         methods: {
@@ -85,7 +83,6 @@
                 this.$emit('toggleList',type)
             },
             choseType () {
-                console.log(this.filterList, 'opopopopopo')
                 this.$emit('choseType',this.filterList)
             },
             selectedAll () {
@@ -96,39 +93,28 @@
             fixCard () {
                 this.$emit('fixedInfo')
             },
-            async showType () {
+            showPersonJob () {
                 this.route = this.$route.path
-                if (this.route.includes('shop')) {
-                    await api.shop.getBusinesstype().then(res => {
-                        console.log(res, '这是请求回来的shop')
-                        this.shopType = res
-                    })
-                } else if (this.route.includes('person')) {
-                    await api.person.getJob().then(res => {
-                        console.log(res, '这是请求回来的')
-                        this.personTypeList = res
-                    })
-                } else if (this.route.includes('indicator')) {
-                    console.log('这是指示牌')
-                }
-            }
-        },
-        filters: {
-            packFilter (item) {
-                if (item === '0') {
-                    return '室外'
-                } else{
-                    return '室内'
-                }
+                // if (route.includes('person')){
+                //     this.isShowJobType = true
+                //     this.isShowIndicatorType = false
+                //     this.isShowTrashType = false
+                // } else if (route.includes('indicator')){
+                //     this.isShowJobType = false
+                //     this.isShowIndicatorType = true
+                // } else {
+                //     this.isShowJobType = false
+                //     this.isShowIndicatorType = false
+                // }
             }
         },
         watch: {
             '$route' () {
-                this.showType()
+                this.showPersonJob()
             }
         },
         created () {
-            this.showType()
+            this.showPersonJob()
         }
     }
 </script>
@@ -179,6 +165,9 @@
             }
             .el-button.selectedAll{
                 padding-bottom: rem(0);
+                .el-checkbox__inner{
+                    margin-top: rem(0);
+                }
             }
             .el-button {
                 padding: rem(5) rem(5);

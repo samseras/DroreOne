@@ -1,7 +1,7 @@
 <template>
-    <div class="personDeploy">
+    <div class="areaDeploy">
         <div class="title">
-            人员信息
+            调度管理
         </div>
         <div class="personContent">
             <div class="funcTitle">
@@ -13,12 +13,12 @@
                         @fixedInfo = 'fixedInfo'>
                 </Header>
             </div>
-            <div class="personList" v-loading="isShowLoading">
+            <div class="personList">
                 <ScrollContainer>
                     <el-table
-                        v-if="!isShowPersonCard"
+                        v-if="!isShowAreaCard"
                         ref="multipleTable"
-                        :data="personList"
+                        :data="areaList"
                         tooltip-effect="dark"
                         style="width: 100%"
                         @selection-change="handleSelectionChange">
@@ -28,52 +28,42 @@
                         </el-table-column>
                         <el-table-column
                             prop="name"
-                            label="姓名"
+                            label="片区名称"
                             width="120">
                         </el-table-column>
                         <el-table-column
-                            prop="type"
-                            label="人员角色">
+                            prop="placeScenic"
+                            label="所在景区">
                         </el-table-column>
                         <el-table-column
-                            prop="gender"
-                            label="性别">
-                        </el-table-column>
-                        <el-table-column
-                            prop="idNum"
-                            label="身份证号">
-                        </el-table-column>
-                        <el-table-column
-                            prop="phone"
-                            label="电话号码">
+                            prop="location"
+                            label="位置范围">
                         </el-table-column>
                         <el-table-column>
                             <template slot-scope="scope">
-                                <span @click="showPersonDetail(scope.row)">编辑</span>
+                                <span @click="showPersonDetail(scope.row,'片区信息')">编辑</span>
                             </template>
                         </el-table-column>
                     </el-table>
-                    <div class="personInfo" v-for="item in personList" v-if="isShowPersonCard && item.status">
+                    <div class="personInfo" v-for="item in choseList" v-if="isShowAreaCard && item.status">
                         <div class="checkBox">
                             <input type="checkbox" :checked='item.checked' class="checkBtn" @change="checked(item.id)">
                         </div>
-                        <div class="personType" @click.stop="showPersonDetail(item, '人员信息')">
+                        <div class="personType" @click.stop="showPersonDetail(item, '片区信息')">
                             <img src="" alt="">
                             <span class="type">
-                                  {{item.jobName}}
+                                  {{item.name}}
                                 </span>
                         </div>
                         <div class="specificInfo">
-                            <p class="name">姓&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;名：<span>{{item.personBean.name}}</span></p>
-                            <p class="sex">性&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;别：<span>{{item.personBean.gender | sexFilter}}</span></p>
-                            <p class="idNum">身份证号：<span>{{item.personBean.idNum}}</span></p>
-                            <p class="phoneNum">电&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;话：<span>{{item.personBean.phone}}</span></p>
+                            <p class="name">所在景区：<span>{{item.placeScenic}}</span></p>
+                            <p class="sex">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：<span>{{item.describe}}</span></p>
                         </div>
                     </div>
                 </ScrollContainer>
                 <PersonDetail v-if="visible"
                               :visible="visible"
-                              :Info="personInfo"
+                              :Info="areaInfo"
                               :isDisabled="isDisabled"
                               :title="title"
                               @closeInfoDialog ="visible = false"
@@ -84,26 +74,31 @@
         </div>
     </div>
 </template>
+
 <script>
     import ScrollContainer from '@/components/ScrollContainer'
-    import Header from './funHeader'
-    import PersonDetail from './detailDialog'
-    import api from '@/api'
+    import Header from './dmisHeader'
+    import PersonDetail from './dmisDialog'
     export default {
-        name: 'person-deploy',
+        name: 'area-deploy',
         data(){
             return{
-                isShowPersonCard: true,
+                isShowAreaCard: true,
                 checkList: [],
                 filterList: [],
-                personList: [],
+                areaList: [
+                    {id:1,name: 'A-片区',placeScenic: '百里杜鹃',location: '23456789',describe: '该片区景点介绍'},
+                    {id:2,name: 'A-片区',placeScenic: '百里杜鹃',location: '23456789',describe: '该片区景点介绍'},
+                    {id:3,name: 'A-片区',placeScenic: '百里杜鹃',location: '23456789',describe: '该片区景点介绍'},
+                    {id:8,name: 'A-片区',placeScenic: '百里杜鹃',location: '23456789',describe: '该片区景点介绍'},
+                    {id:9,name: 'A-片区',placeScenic: '百里杜鹃',location: '23456789',describe: '该片区景点介绍'}
+                ],
                 visible: false,
-                personInfo: {},
+                areaInfo: {},
                 choseInfoId: [],
                 choseList: [],
                 isDisabled: true,
-                title: '',
-                isShowLoading: false
+                title: ''
             }
         },
         methods: {
@@ -111,42 +106,31 @@
                 this.multipleSelection = val;
             },
             showPersonDetail (info,title) {
-                this.personInfo = info
+                this.areaInfo = info
                 this.visible = true
                 this.title = title
             },
             addNewInfo () {
-                this.showPersonDetail({personBean:{}}, '添加人员信息')
+                this.showPersonDetail({}, '添加人员信息')
                 this.isDisabled = false
             },
             deletInfo () {
-                if (this.choseInfoId.length > 0) {
-                    api.person.deletePerson(this.choseInfoId).then(res => {
-                        console.log(res, '删除成功')
-                        for (let i = 0; i < this.choseInfoId.length; i++) {
-                            this.personList = this.personList.filter((item, index) => {
-                                if (item.id === this.choseInfoId[i]){
-                                    this.personList[index].checked = false
-                                }
-                                return item.id !== this.choseInfoId[i]
-                            })
+                for (let i = 0; i < this.choseInfoId.length; i++) {
+                    this.areaList = this.areaList.filter((item, index) => {
+                        if (item.id === this.choseInfoId[i]){
+                            this.choseList[index].checked = false
                         }
-                        this.$message.success('删除成功')
-                        this.choseInfoId = []
-                    }).catch(err => {
-                        console.log(err)
-                        this.$message.error('删除失败，请稍后重试')
+                        return item.id !== this.choseInfoId[i]
                     })
-                } else {
-                    this.$message.error('请选择要删除的选项')
                 }
+                this.choseList = this.areaList
 
             },
             toggleList (type) {
                 if (type === 'list') {
-                    this.isShowPersonCard = false
+                    this.isShowAreaCard = false
                 }else {
-                    this.isShowPersonCard = true
+                    this.isShowAreaCard = true
                 }
             },
             checked (id) {
@@ -161,25 +145,25 @@
             choseType (type) {
                 console.log(type)
                 if (type.length === 0){
-                    this.personList = this.personList.filter((item) => {
+                    this.choseList = this.areaList.filter((item) => {
                         item.status = true
-                        return item
+                        return item.status === true
                     })
                 } else {
-                        this.personList = this.personList.filter((item,index) => {
-                            if (type.includes(item.jobName)){
-                                item.status = true
-                            } else if(!type.includes(item.jobName)){
-                                item.status = false
-                                console.log(item.type, 'p[p[p[');
-                            }
-                            return item
-                        })
-                    }
+                    this.choseList = this.areaList.filter((item,index) => {
+                        if (type.includes(item.type)){
+                            item.status = true
+                        } else if(!type.includes(item.type)){
+                            item.status = false
+                            console.log(item.type, 'p[p[p[');
+                        }
+                        return item.status === true
+                    })
+                }
             },
             selectedAll (state) {
                 console.log(state, 'opopopopop')
-                this.personList = this.personList.filter((item) => {
+                this.choseList = this.areaList.filter((item) => {
                     if (state === true) {
                         item.checked = true
                         this.choseInfoId.push(item.id)
@@ -194,86 +178,41 @@
                 console.log(this.choseInfoId, 'opopop')
             },
             fixInfo (info) {
-                let personObj = {
-                    id: info.personBean.id,
-                    name: info.personBean.name,
-                    picAddress: info.imgUrl,
-                    gender: info.personBean.gender,
-                    idNum: info.personBean.idNum,
-                    phone: info.personBean.phone,
-                    jobId: info.jobName
+                console.log(info, 'wertyuio')
+                let list = this.areaList
+                for(let i = 0;i< list.length; i++){
+                    if (info.id === list[i].id) {
+                        this.areaList[i] = info
+
+                    }
                 }
-                console.log(personObj, 'this is trashObj')
-                api.person.updatePerson(JSON.stringify(personObj)).then(res => {
-                    this.$message.success('添加成功')
-                    console.log('增加成功')
-                    this.choseInfoId = []
-                    this.getAllPerson()
-                }).catch(err => {
-                    console.log(err, '更新失败')
-                    this.$message.error('更新失败，请稍后重试')
-                })
+                this.choseList = this.areaList
             },
             addNewPerson (info) {
-                let personObj = {
-                    name: info.personBean.name,
-                    picAddress: info.imgUrl,
-                    gender: info.personBean.gender,
-                    idNum: info.personBean.idNum,
-                    phone: info.personBean.phone,
-                    jobId: info.jobName
-                }
-                console.log(personObj, 'this is trashObj')
-                api.person.createPerson(JSON.stringify(personObj)).then(res => {
-                    this.$message.success('添加成功')
-                    console.log('增加成功')
-                    this.getAllPerson()
-                }).catch(err => {
-                    console.log(err, '添加失败')
-                    this.$message.error('添加失败，请稍后重试')
-                })
+                info.id = new Date().getTime()
+                this.areaList.push(info)
+                this.choseList = this.areaList
             },
             fixedInfo () {
                 if (this.choseInfoId.length > 0) {
-                    this.personList.map((item) => {
+                    this.areaList.map((item) => {
                         if (item.id === this.choseInfoId[0]){
-                            this.personInfo = item
+                            this.areaInfo = item
                         }
                     })
-                    this.showPersonDetail(this.personInfo, '修改人员信息')
+                    this.showPersonDetail(this.areaInfo, '修改人员信息')
                     this.isDisabled = false
                 } else {
                     this.$message.error('请选择要修改的人员')
                 }
-            },
-            async getAllPerson () {
-                this.isShowLoading = true
-                await api.person.getAllPerson().then(res => {
-                    console.log(res, '这是请求回来的')
-                    this.isShowLoading = false
-                    this.personList = res
-                    for (let i = 0; i < this.personList.length; i++) {
-                        this.personList[i].checked = false
-                        this.personList[i].status = true
-                        this.personList[i].id = this.personList[i].personBean.id
-                    }
-                }).catch(err => {
-                    console.log(err)
-                    this.isShowLoading = false
-                })
-            }
-        },
-        filters: {
-            sexFilter (item) {
-                if (item) {
-                    return '男'
-                } else {
-                    return '女'
-                }
             }
         },
         created () {
-            this.getAllPerson()
+            for (let i = 0; i < this.areaList.length; i++) {
+                this.areaList[i].checked = false
+                this.areaList[i].status = true
+            }
+            this.choseList = this.areaList
         },
         components: {
             ScrollContainer,
@@ -281,10 +220,11 @@
             PersonDetail
         }
     }
+
 </script>
 
 <style lang="scss" scoped type="text/scss">
-    .personDeploy{
+    .areaDeploy{
         width: 100%;
         height: 100%;
         display: flex;
@@ -367,14 +307,11 @@
                         }
                     }
                     .specificInfo{
-                        margin-top: rem(5);
+                        margin-top: rem(10);
                         font-size: rem(12);
                         p{
                             margin-left: rem(10);
                             line-height: rem(22);
-                            overflow:hidden;
-                            text-overflow:ellipsis;
-                            white-space:nowrap;
                         }
                     }
                 }
@@ -383,4 +320,3 @@
     }
 
 </style>
-

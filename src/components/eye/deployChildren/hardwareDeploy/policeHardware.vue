@@ -1,7 +1,7 @@
 <template>
-    <div class="broadHard">
+    <div class="cameraHard">
         <div class="title">
-            广播信息
+            报警柱传感信息
         </div>
         <div class="cameraContent">
             <div class="conTitle">
@@ -17,9 +17,9 @@
             <div class="cameraList" v-loading="isShowLoading">
                 <ScrollContainer>
                     <el-table
-                        v-if="!isShowBroadCard"
+                        v-if="!isShowPoliceCard"
                         ref="multipleTable"
-                        :data="broadList"
+                        :data="policeList"
                         tooltip-effect="dark"
                         style="width: 100%"
                         @selection-change="handleSelectionChange">
@@ -27,57 +27,53 @@
                             type="selection"
                             width="55">
                         </el-table-column>
-                        <el-table-column
-                            prop="name"
-                            label="名称"
-                            width="120">
-                        </el-table-column>
+
                         <el-table-column
                             prop="type"
-                            label="类型">
+                            label="状态">
                         </el-table-column>
 
                         <el-table-column
                             prop="area"
                             label="所属片区">
                         </el-table-column>
-
                         <el-table-column
                             prop="describe"
-                            label="描述">
+                            label="摄像头介绍">
                         </el-table-column>
                         <el-table-column>
                             <template slot-scope="scope">
-                                <span @click="showBroadDetail(scope.row, '广播信息')">编辑</span>
+                                <span @click="showPoliceDetail(scope.row, '摄像头信息')">编辑</span>
                             </template>
                         </el-table-column>
                     </el-table>
 
-                    <div class="personInfo" v-for="item in broadList" v-if="isShowBroadCard && item.status">
+                    <div class="personInfo" v-for="item in policeList" v-if="isShowPoliceCard && item.status">
                         <div class="checkBox">
                             <input type="checkbox" :checked="item.checked" class="checkBtn" @change="checked(item.id)">
                         </div>
-                        <div class="personType" @click.stop="showBroadDetail(item,'广播信息')">
+                        <div class="personType" @click.stop="showPoliceDetail(item)">
                             <img src="../../../../../static/img/cameras.png" alt="">
-                            <span class="name">
+                            <span class="type">
                                   {{item.name}}
                                 </span>
                         </div>
                         <div class="specificInfo" >
-                            <p class="area">所属区域：<span>{{item.regionId}}</span></p>
-                            <p class="type">广播类型：<span>{{item.positionType}}</span></p>
-                            <p class="describe">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：<span>{{item.description}}</span></p>
+                            <p class="name">所属区域：<span>{{item.regionId}}</span></p>
+                            <p class="sex">类&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;型：<span>{{item.sensorType
+}}</span></p>
+                            <p class="sex">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：<span>{{item.description}}</span></p>
 
                         </div>
                     </div>
                 </ScrollContainer>
                 <HardWare v-if="visible"
                           :visible="visible"
-                          :Info="broadInfo"
+                          :Info="policeInfo"
                           :title="title"
                           :isDisabled="isDisabled"
                           @closeInfoDialog="visible=false"
-                          @addNewInfo="addBroad"
+                          @addNewInfo="addPolice"
                           @fixInfo="fixInfo">
 
                 </HardWare>
@@ -95,14 +91,14 @@
     export default{
         data(){
             return{
-                isShowBroadCard:true,
+                isShowPoliceCard:true,
                 visible:false,
-                broadList:[
+                policeList:[
 
                 ],
                 checkList:[],
                 isSelected:false,
-                broadInfo:{},
+                policeInfo:{},
                 choseInfoId:[],
                 choseList:[],
                 isDisabled:true,
@@ -112,73 +108,63 @@
             }
         },
         methods:{
+            handleSelectionChange(val){
+                this.multipleSelection = val;
+            },
             addNewInfo(){
-                this.showBroadDetail({},'添加广播信息')
+                this.showPoliceDetail({},'添加报警柱信息')
                 this.isDisabled=false
             },
-            showBroadDetail(info,title){
-                this.broadInfo=info
+            showPoliceDetail(info,title){
+                this.policeInfo=info
                 this.visible=true
                 this.title=title
 
             },
             fixInfo(info){
-                let list=this.broadList
+                let list=this.policeList
                 for(let i=0;i<list.length;i++){
                     if(info.id===list[i].id){
-                        this.broadList[i]=info
+                        this.policeList[i]=info
                     }
                 }
-                this.choseList=this.broadList
+                this.choseList=this.policeList
             },
             fixedInfo(){
                 if(this.choseInfoId.length>0){
-                    this.broadList.map((item)=>{
+                    this.policeList.map((item)=>{
                         if(item.id === this.choseInfoId[0]){
-                            this.broadInfo=item
+                            this.policeInfo=item
                         }
                     })
-                    this.showBroadDetail(this.broadInfo,'修改广播信息')
+                    this.showPoliceDetail(this.policeInfo,'修改报警柱信息')
                     this.isDisabled=false
                 }else{
-                    this.$message.error('请选择要修改的人员')
+                    this.$message.error('请选择要修改的报警柱')
                 }
             },
             deletInfo(){
-                api.broadcast.deleteBroadcast(this.choseInfoId).then(res=>{
-                    console.log(res,'删除成功')
-                    for(let i=0;i<this.choseInfoId.length;i++){
-                        this.broadList=this.broadList.filter((item,index)=>{
-                            if(item.id===this.choseInfoId[i]){
-                                this.broadList[index].checked=false
-                            }
-                            return item.id !== this.choseInfoId
-                        })
-                    }
-                }).catch(err=>{
-                    console.log(err)
-                })
-//                console.log(122)
-//                for(let i=0;i<this.choseInfoId.length;i++){
-//                    this.broadList=this.broadList.filter((item,index)=>{
-//                        if(item.id === this.choseInfoId[i]){
-//                            this.choseList[index].checked=false
-//                        }
-//                        return item.id!==this.choseInfoId[i]
-//                    })
-//                }
-//                this.choseList=this.broadList
+                console.log(122)
+                for(let i=0;i<this.choseInfoId.length;i++){
+                    this.policeList=this.policeList.filter((item,index)=>{
+                        if(item.id === this.choseInfoId[i]){
+                            this.choseList[index].checked=false
+                        }
+                        return item.id!==this.choseInfoId[i]
+                    })
+                }
+                this.choseList=this.policeList
             },
-            addBroad (info){
+            addPolice(info){
                 info.id=new Date().getTime()
-                this.broadList.push(info)
-                this.choseList=this.broadList
+                this.policeList.push(info)
+                this.choseList=this.policeList
             },
-            toggleList(type){
-                if (type === 'list') {
-                    this.isShowBroadCard = false
-                }else {
-                    this.isShowBroadCard = true
+            toggleList (type){
+                if(type==='list'){
+                    this.isShowPoliceCard=false
+                }else{
+                    this.isShowPoliceCard=true
                 }
             },
             checked(id){
@@ -194,12 +180,12 @@
             choseType(type){
                 console.log(type)
                 if(type.length===0){
-                    this.choseList=this.broadList.filter((item)=>{
+                    this.choseList=this.policeList.filter((item)=>{
                         item.status=true
                         return item.status === true
                     })
                 }else{
-                    this.choseList=this.broadList.filter((item,index)=>{
+                    this.choseList=this.policeList.filter((item,index)=>{
                         if(type.includes(item.type)){
                             item.status=true
                         }else if(!type.includes(item.type)){
@@ -211,7 +197,7 @@
                 }
             },
             selectedAll(state){
-                this.choseList=this.broadList.filter((item)=>{
+                this.choseList=this.policeList.filter((item)=>{
                     if(state==true){
                         item.checked=true
                         this.choseInfoId.push(item.id)
@@ -225,24 +211,29 @@
                 })
                 console.log(this.choseInfoId)
             },
-            async getAllBroadcast(){
+            async getAllPolice(){
                 this.isShowLoading=true
-                await api.broadcast.getAllBroadcast().then((res)=>{
-                    console.log(res,'这是请求回来的数据')
+                await api.police.getAllPolice().then((res)=>{
+                    console.log(res,'这是请求的数据')
                     this.isShowLoading=false
-                    this.broadList=res.devices
-                    for (let i=0;i<this.broadList.length;i++) {
-                        this.broadList[i].checked = false
-                        this.broadList[i].status = true
+                    this.policeList=res.devices
+                    for (let i=0;i<this.policeList.length;i++){
+                        this.policeList[i].checked=false
+                        this.policeList[i].status=true
                     }
                 }).catch((err)=>{
                     console.log(err)
                 })
+
             }
         },
         created (){
-            this.getAllBroadcast()
-//            this.choseList=this.broadList
+//            for (let i=0;i<this.policeList.length;i++){
+//                this.policeList[i].checked=false
+//                this.policeList[i].status=true
+//            }
+//            this.choseList=this.policeList
+            this.getAllPolice()
         },
         components:{
             ScrollContainer,
@@ -265,7 +256,7 @@
 </style>
 
 <style lang="scss" type="text/scss" scoped>
-    .broadHard{
+    .cameraHard{
         width:100%;
         height:100%;
         display:flex;

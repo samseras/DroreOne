@@ -13,12 +13,12 @@
                         @fixedInfo = 'fixedInfo'>
                 </Header>
             </div>
-            <div class="personList">
+            <div class="personList" v-loading="isShowLoading">
                 <ScrollContainer>
                     <el-table
-                        v-if="!isShowPersonCard"
+                        v-if="!isShowShopCard"
                         ref="multipleTable"
-                        :data="personList"
+                        :data="shopList"
                         tooltip-effect="dark"
                         style="width: 100%"
                         @selection-change="handleSelectionChange">
@@ -61,27 +61,27 @@
                             </template>
                         </el-table-column>
                     </el-table>
-                    <div class="personInfo" v-for="item in choseList" v-if="isShowPersonCard && item.status">
+                    <div class="personInfo" v-for="item in shopList" v-if="isShowShopCard && item.status">
                         <div class="checkBox">
                             <input type="checkbox" :checked='item.checked' class="checkBtn" @change="checked(item.id)">
                         </div>
                         <div class="personType" @click.stop="showPersonDetail(item, '商圈信息')">
                             <img src="" alt="">
                             <span class="type">
-                                  {{item.name}}
+                                  {{item.businessBean.name}}
                                 </span>
                         </div>
                         <div class="specificInfo">
-                            <p class="name">所属区域：<span>{{item.area}}</span></p>
-                            <p class="sex">状&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;态：<span>{{item.state}}</span></p>
-                            <p class="idNum">当前人数：<span>{{item.nowPeopleNum}}</span></p>
-                            <p class="phoneNum">最大容量：<span>{{item.capacity}}</span></p>
+                            <p class="name">所属区域：<span>{{item.regionName}}</span></p>
+                            <p class="sex">状&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;态：<span>{{item.businessBean.state}}</span></p>
+                            <p class="idNum">当前人数：<span>{{item.businessBean.currentNum}}</span></p>
+                            <p class="phoneNum">最大容量：<span>{{item.businessBean.capacity}}</span></p>
                         </div>
                     </div>
                 </ScrollContainer>
                 <PersonDetail v-if="visible"
                               :visible="visible"
-                              :Info="personInfo"
+                              :Info="shopInfo"
                               :isDisabled="isDisabled"
                               :title="title"
                               @closeInfoDialog ="visible = false"
@@ -97,26 +97,22 @@
     import ScrollContainer from '@/components/ScrollContainer'
     import Header from './funHeader'
     import PersonDetail from './detailDialog'
+    import api from '@/api'
     export default {
         name: "shop-deploy",
         data () {
             return {
-                isShowPersonCard: true,
+                isShowShopCard: true,
                 checkList: [],
                 filterList: [],
-                personList: [
-                    {id:1,name: '肯德基',type: '零售',state: '充裕',capacity: '300人',nowPeopleNum: '200人',area: 'A-片区',location: '234567'},
-                    {id:2,name: '肯德基',type: '零售',state: '充裕',capacity: '300人',nowPeopleNum: '200人',area: 'A-片区',location: '234567'},
-                    {id:3,name: '肯德基',type: '餐饮',state: '充裕',capacity: '300人',nowPeopleNum: '200人',area: 'A-片区',location: '234567'},
-                    {id:8,name: '肯德基',type: '零售',state: '充裕',capacity: '300人',nowPeopleNum: '200人',area: 'A-片区',location: '234567'},
-                    {id:9,name: '肯德基',type: '游乐',state: '充裕',capacity: '300人',nowPeopleNum: '200人',area: 'A-片区',location: '234567'}
-                ],
+                shopList: [],
                 visible: false,
-                personInfo: {},
+                shopInfo: {},
                 choseInfoId: [],
                 choseList: [],
                 isDisabled: true,
-                title: ''
+                title: '',
+                isShowLoading: false
             }
         },
         methods: {
@@ -124,31 +120,41 @@
                 this.multipleSelection = val;
             },
             showPersonDetail (info,title) {
-                this.personInfo = info
+                this.shopInfo = info
                 this.visible = true
                 this.title = title
             },
             addNewInfo () {
-                this.showPersonDetail({}, '添加商圈信息')
+                this.showPersonDetail({businessBean:{}}, '添加商圈信息')
                 this.isDisabled = false
             },
             deletInfo () {
-                for (let i = 0; i < this.choseInfoId.length; i++) {
-                    this.personList = this.personList.filter((item, index) => {
-                        if (item.id === this.choseInfoId[i]){
-                            this.choseList[index].checked = false
+                if (this.choseInfoId.length > 0) {
+                    api.shop.deleteShop(this.choseInfoId).then(res => {
+                        console.log(res, '删除成功')
+                        for (let i = 0; i < this.choseInfoId.length; i++) {
+                            this.shopList = this.shopList.filter((item, index) => {
+                                if (item.id === this.choseInfoId[i]){
+                                    this.choseList[index].checked = false
+                                }
+                                return item.id !== this.choseInfoId[i]
+                            })
                         }
-                        return item.id !== this.choseInfoId[i]
+                        this.$message.success('删除成功')
+                        this.choseInfoId = []
+                    }).catch(err => {
+                        console.log(err)
+                        this.$message.error('删除失败，请稍后重试')
                     })
+                } else {
+                    this.$message.error('请选择要删除的选项')
                 }
-                this.choseList = this.personList
-
             },
             toggleList (type) {
                 if (type === 'list') {
-                    this.isShowPersonCard = false
+                    this.isShowShopCard = false
                 }else {
-                    this.isShowPersonCard = true
+                    this.isShowShopCard = true
                 }
             },
             checked (id) {
@@ -163,25 +169,24 @@
             choseType (type) {
                 console.log(type)
                 if (type.length === 0){
-                    this.choseList = this.personList.filter((item) => {
+                    this.shopList = this.shopList.filter((item) => {
                         item.status = true
-                        return item.status === true
+                        return item
                     })
                 } else {
-                    this.choseList = this.personList.filter((item,index) => {
-                        if (type.includes(item.type)){
+                    this.shopList = this.shopList.filter((item,index) => {
+                        if (type.includes(item.businessTypeName)){
                             item.status = true
-                        } else if(!type.includes(item.type)){
+                        } else if(!type.includes(item.businessTypeName)){
                             item.status = false
-                            console.log(item.type, 'p[p[p[');
                         }
-                        return item.status === true
+                        return item
                     })
                 }
             },
             selectedAll (state) {
                 console.log(state, 'opopopopop')
-                this.choseList = this.personList.filter((item) => {
+                this.shopList = this.shopList.filter((item) => {
                     if (state === true) {
                         item.checked = true
                         this.choseInfoId.push(item.id)
@@ -196,41 +201,88 @@
                 console.log(this.choseInfoId, 'opopop')
             },
             fixInfo (info) {
-                console.log(info, 'wertyuio')
-                let list = this.personList
-                for(let i = 0;i< list.length; i++){
-                    if (info.id === list[i].id) {
-                        this.personList[i] = info
-
-                    }
+                let index = info.location.includes(',')?info.location.indexOf(','):info.location.indexOf('，')
+                let latitude = info.location.substring(0, index)
+                let longitude = info.location.substring(index + 1)
+                let shopObj = {
+                    id: info.businessBean.id,
+                    name: info.businessBean.name,
+                    capacity: info.businessBean.capacity,
+                    currentNum: info.businessBean.currentNum,
+                    regionId: info.regionName,
+                    picAddress: info.imgUrl,
+                    businessTypeId: info.businessBean.businessTypeId,
+                    latitude: latitude,
+                    longitude: longitude
                 }
-                this.choseList = this.personList
+                console.log(shopObj, 'this is trashObj')
+                api.shop.updateShop(JSON.stringify(shopObj)).then(res => {
+                    console.log('修改成功')
+                    this.$message.success('修改成功')
+                    this.choseInfoId = []
+                    this.getAllShop()
+                }).catch(err => {
+                    console.log(err, '更新失败')
+                    this.$message.error('更新失败，请稍后重试')
+                })
             },
             addNewPerson (info) {
-                info.id = new Date().getTime()
-                this.personList.push(info)
-                this.choseList = this.personList
+                let index = info.location.includes(',')?info.location.indexOf(','):info.location.indexOf('，')
+                let latitude = info.location.substring(0, index)
+                let longitude = info.location.substring(index + 1)
+                let shopObj = {
+                    name: info.businessBean.name,
+                    capacity: info.businessBean.capacity,
+                    currentNum: info.businessBean.currentNum,
+                    regionId: info.regionName,
+                    picAddress: info.imgUrl,
+                    businessTypeId: info.businessBean.businessTypeId,
+                    latitude: latitude,
+                    longitude: longitude
+                }
+                console.log(shopObj, 'this is trashObj')
+                api.shop.createShop(JSON.stringify(shopObj)).then(res => {
+                    this.$message.success('添加成功')
+                    console.log('增加成功')
+                    this.getAllShop()
+                }).catch(err => {
+                    console.log(err, '添加失败')
+                    this.$message.error('添加失败，请稍后重试')
+                })
             },
             fixedInfo () {
                 if (this.choseInfoId.length > 0) {
-                    this.personList.map((item) => {
+                    this.shopList.map((item) => {
                         if (item.id === this.choseInfoId[0]){
-                            this.personInfo = item
+                            this.shopInfo = item
                         }
                     })
-                    this.showPersonDetail(this.personInfo, '修改商圈信息')
+                    this.showPersonDetail(this.shopInfo, '修改商圈信息')
                     this.isDisabled = false
                 } else {
-                    this.$message.error('请选择要修改的人员')
+                    this.$message.error('请选择要修改的商铺')
                 }
+            },
+            async getAllShop () {
+                this.isShowLoading = true
+                await api.shop.getAllShop().then(res => {
+                    console.log(res, '这是所有商铺')
+                    this.isShowLoading = false
+                    this.shopList = res
+                    for (let i = 0; i < this.shopList.length; i++) {
+                        this.shopList[i].checked = false
+                        this.shopList[i].status = true
+                        this.shopList[i].id = this.shopList[i].businessBean.id
+                        this.shopList[i].location = `${this.shopList[i].latitude},${this.shopList[i].longitude}`
+                    }
+                }).catch(err => {
+                    console.log(err)
+                    this.isShowLoading = false
+                })
             }
         },
         created () {
-            for (let i = 0; i < this.personList.length; i++) {
-                this.personList[i].checked = false
-                this.personList[i].status = true
-            }
-            this.choseList = this.personList
+            this.getAllShop()
         },
         components: {
             ScrollContainer,

@@ -3,13 +3,13 @@
  	<div class="login">
  		<div class="login-content">
  			<header class="top">
- 	    		<img src="../../static/img/logo.png"/>
+ 	    		<img src="../../../static/img/logo.png"/>
  	    		<span style="padding-right: 10px;">Drore One</span>
  	    		<span>智慧旅游 · 云</span>
  	    	</header>
  	    	<section class="mian-con">
  	    		<aside class="login-left">
- 	    			 <img src="../../static/img/20180125143202.png"/>
+ 	    			 <img src="../../../static/img/20180125143202.png"/>
  	    		</aside>
 
  	    		<aside class="login-right">
@@ -28,8 +28,8 @@
 </template>
 
 <script>
-	import tableDatas from "../../API/entrance.js"
-	import users from "../../API/user.json"
+	// import tableDatas from "../../../API/entrance.js"
+	// import users from "../../../API/user.json"
 	export default {
 		data() {
 	        return {
@@ -97,8 +97,8 @@
 </script>
 <style scoped>
 	*{margin: 0;padding:0;}
-	.login{min-width: 980px;width: 100%;height:100%;position:relative;background: url('../../static/img/1.png') no-repeat;background-size:cover;}
-    .login-content{display: flex;flex-direction:column;position:absolute;width: 80%;height: 80%;left: 50%;top: 10%;margin-left: -40%;background: url('../../static/img/2.png') no-repeat;background-size:cover;background-position: center;}
+	.login{min-width: 980px;width: 100%;height:100%;position:relative;background: url('../../../static/img/1.png') no-repeat;background-size:cover;}
+    .login-content{display: flex;flex-direction:column;position:absolute;width: 80%;height: 80%;left: 50%;top: 10%;margin-left: -40%;background: url('../../../static/img/2.png') no-repeat;background-size:cover;background-position: center;}
 
 	.top{width: 68%;height: 40px;display: flex;margin: 0 auto;padding-top: 35px;}
 	.top img{width: 60px;height:38px;margin-right: 15px;}
@@ -114,8 +114,8 @@
     form{margin-top: 50px;margin-left: 30px; position: relative;margin-right: 50px;}
     input:focus { outline: none; }
     input{border: none;border-bottom: 1px solid #e9eef2;width: 350px;height: 60px;text-indent:50px;background: none;font-size: 24px;}
-    #userid{background: url(../../static/img/person.png) no-repeat;background-position: 15px 25px;}
-    #userpass{background: url(../../static/img/lock.png) no-repeat;background-position: 15px 23px;}
+    #userid{background: url(../../../static/img/person.png) no-repeat;background-position: 15px 25px;}
+    #userpass{background: url(../../../static/img/lock.png) no-repeat;background-position: 15px 23px;}
     input::-webkit-input-placeholder { /* WebKit browsers */ color: #cad4d6;font-size: 12px; }
     input:-moz-placeholder { /* Mozilla Firefox 4 to 18 */ color: #cad4d6;font-size: 12px;}
     input::-moz-placeholder { /* Mozilla Firefox 19+ */ color: #cad4d6;font-size: 12px; }

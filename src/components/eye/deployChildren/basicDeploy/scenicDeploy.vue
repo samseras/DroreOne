@@ -64,14 +64,14 @@
                         <div class="personType" @click.stop="showPersonDetail(item, '景点信息')">
                             <img src="" alt="">
                             <span class="type">
-                                  {{item.name}}
+                                  {{item.scenicspotBean.name}}
                                 </span>
                         </div>
                         <div class="specificInfo">
-                            <p class="name">所属区域：<span>{{item.area}}</span></p>
+                            <p class="name">所属区域：<span>{{item.regionName}}</span></p>
                             <p class="sex">状&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;态：<span>{{item.state}}</span></p>
-                            <p class="idNum">当前人数：<span>{{item.nowPeopleNum}}</span></p>
-                            <p class="phoneNum">最大容量：<span>{{item.capacity}}</span></p>
+                            <p class="idNum">当前人数：<span>{{item.scenicspotBean.currentNum}}</span></p>
+                            <p class="phoneNum">最大容量：<span>{{item.scenicspotBean.capacity}}</span></p>
                         </div>
                     </div>
                 </ScrollContainer>
@@ -101,13 +101,7 @@
                 isShowScenicCard: true,
                 checkList: [],
                 filterList: [],
-                scenicList: [
-                    {id:1,name: '兵马俑',area: 'A-片区',state: '充裕',capacity: '300人',nowPeopleNum: '150人',location: '23456789'},
-                    {id:2,name: '兵马俑',area: 'A-片区',state: '充裕',capacity: '300人',nowPeopleNum: '150人',location: '23456789'},
-                    {id:3,name: '兵马俑',area: 'A-片区',state: '充裕',capacity: '300人',nowPeopleNum: '150人',location: '23456789'},
-                    {id:8,name: '兵马俑',area: 'A-片区',state: '充裕',capacity: '300人',nowPeopleNum: '150人',location: '23456789'},
-                    {id:9,name: '兵马俑',area: 'A-片区',state: '充裕',capacity: '300人',nowPeopleNum: '150人',location: '23456789'}
-                ],
+                scenicList: [],
                 visible: false,
                 personInfo: {},
                 choseInfoId: [],
@@ -124,22 +118,32 @@
                 this.title = title
             },
             addNewInfo () {
-                this.showPersonDetail({}, '添加景点信息')
+                this.showPersonDetail({scenicspotBean:{}}, '添加景点信息')
                 this.isDisabled = false
             },
             deletInfo () {
-                for (let i = 0; i < this.choseInfoId.length; i++) {
-                    this.scenicList = this.scenicList.filter((item, index) => {
-                        if (item.id === this.choseInfoId[i]){
-                            this.scenicList[index].checked = false
-                            api.scenic.deleteScenic({id:this.choseInfoId[i]}).then(res => {
-                                console.log(res, '删除成功')
+                if (this.choseInfoId.length > 0) {
+                    api.scenic.deleteScenic(this.choseInfoId).then(res => {
+                        console.log(res, '删除成功')
+                        for (let i = 0; i < this.choseInfoId.length; i++) {
+                            this.scenicList = this.scenicList.filter((item, index) => {
+                                if (item.id === this.choseInfoId[i]){
+                                    this.scenicList[index].checked = false
+                                }
+                                return item.id !== this.choseInfoId[i]
                             })
                         }
-                        return item.id !== this.choseInfoId[i]
+                        this.$message.success('删除成功')
+                        this.choseInfoId = []
+                    }).catch(err => {
+                        console.log('删除失败')
+                        this.$message.error('删除失败，请稍后重试')
+                        this.choseInfoId = []
                     })
+                }else {
+                    this.$message.error('请选择要删除的选项')
                 }
-                // this.choseList = this.scenicList
+
             },
             toggleList (type) {
                 if (type === 'list') {
@@ -178,7 +182,7 @@
             },
             selectedAll (state) {
                 console.log(state, 'opopopopop')
-                this.choseList = this.scenicList.filter((item) => {
+                this.scenicList = this.scenicList.filter((item) => {
                     if (state === true) {
                         item.checked = true
                         this.choseInfoId.push(item.id)
@@ -193,20 +197,45 @@
                 console.log(this.choseInfoId, 'opopop')
             },
             fixInfo (info) {
-                console.log(info, 'wertyuio')
-                let list = this.scenicList
-                for(let i = 0;i< list.length; i++){
-                    if (info.id === list[i].id) {
-                        this.scenicList[i] = info
-
-                    }
+                let index = info.location.includes(',')?info.location.indexOf(','):info.location.indexOf('，')
+                let latitude = info.location.substring(0, index)
+                let longitude = info.location.substring(index + 1)
+                let scenicObj = {
+                    id: info.scenicspotBean.id,
+                    name: info.scenicspotBean.name,
+                    capacity: info.scenicspotBean.capacity,
+                    currentNum: info.scenicspotBean.currentNum,
+                    regionId: info.regionName,
+                    picAddress: info.imgUrl,
+                    latitude: latitude,
+                    longitude: longitude
                 }
-                this.choseList = this.scenicList
+                console.log(scenicObj, 'this is trashObj')
+                api.scenic.updateScenic(JSON.stringify(scenicObj)).then(res => {
+                    console.log('增加成功')
+                    this.$message.success('修改成功')
+                    this.choseInfoId = []
+                    this.getAllScenic()
+                })
             },
             addNewPerson (info) {
-                info.id = new Date().getTime()
-                this.scenicList.push(info)
-                this.choseList = this.scenicList
+                let index = info.location.includes(',')?info.location.indexOf(','):info.location.indexOf('，')
+                let latitude = info.location.substring(0, index)
+                let longitude = info.location.substring(index + 1)
+                let scenicObj = {
+                    name: info.scenicspotBean.name,
+                    capacity: info.scenicspotBean.capacity,
+                    currentNum: info.scenicspotBean.currentNum,
+                    regionId: info.regionName,
+                    picAddress: info.imgUrl,
+                    latitude: latitude,
+                    longitude: longitude
+                }
+                console.log(scenicObj, 'this is trashObj')
+                api.scenic.createScenic(JSON.stringify(scenicObj)).then(res => {
+                    console.log('增加成功')
+                    this.getAllScenic()
+                })
             },
             fixedInfo () {
                 if (this.choseInfoId.length > 0) {
@@ -218,7 +247,7 @@
                     this.showPersonDetail(this.personInfo, '修改')
                     this.isDisabled = false
                 } else {
-                    this.$message.error('请选择要修改的人员')
+                    this.$message.error('请选择要修改的景点')
                 }
             },
             async getAllScenic () {
@@ -230,9 +259,12 @@
                     for (let i = 0; i < this.scenicList.length; i++) {
                         this.scenicList[i].checked = false
                         this.scenicList[i].status = true
+                        this.scenicList[i].id = this.scenicList[i].scenicspotBean.id
+                        this.scenicList[i].location = `${this.scenicList[i].latitude},${this.scenicList[i].longitude}`
                     }
                 }).catch((err)=> {
                     console.log(err)
+                    this.isShowLoading = false
                 })
             }
         },

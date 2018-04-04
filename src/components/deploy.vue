@@ -103,6 +103,10 @@
                                 title: '环境监测传感器'
                             },
                             {
+                                index: '/deploy/police-Hware',
+                                title: '报警柱传感器'
+                            },
+                            {
                                 index: '/deploy/led-Hware',
                                 title: 'LED大屏'
                             },
@@ -131,12 +135,16 @@
                         title: '调度管理',
                         subs: [
                             {
-                                index: '/deploy/boatcart',
-                                title: '车船管理'
+                                index: '/deploy/hardware-Dmis',
+                                title: '硬件调度'
                             },
                             {
-                                index: '/deploy/watch',
-                                title: '巡更管理'
+                                index: '/deploy/personnel-Dmis',
+                                title: '人员调度'
+                            },
+                            {
+                                index: '/deploy/stat-Dmis',
+                                title: '调度统计'
                             }
                         ]
                     },

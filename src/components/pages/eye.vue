@@ -3,7 +3,7 @@
         <el-header  v-show = "isshowHead">
             <el-row :gutter="10" class="alleye">
                 <el-col :xs="6" :sm="7" :md="7" :lg="5" :xl="4">
-                    <img src="../../static/img/eye.png"/>Workbench
+                    <img src="../../../static/img/eye.png"/>Workbench
                 </el-col>
                 <el-col :xs="6" :sm="6" :md="7" :lg="11" :xl="12" class="control">
                     <div v-for="(item,index) in manage" @click="goModule(item,index)"
@@ -93,7 +93,7 @@
 </script>
 
 <style lang="scss">
-    .el-container,.is-vertical{
+    .el-container{
         width: 100%;
         height: 100%;
         min-width: rem(1120);

@@ -1,38 +1,37 @@
 /*
-景点配置模块api
+这是片区接口api
 * */
 import axios from '@/http'
-import {getUrl} from './path'
+import {getUrl} from "./path";
 
 
-
-const scenic = {
-    getAllScenic () {
+const area = {
+    getAllRegion () {
         return axios ({
             method: 'GET',
-            url: getUrl('/scenicspot')
+            url: getUrl('/region')
         })
 
     },
-    updateScenic (params) {
+    updateRegion  (params) {
         return axios ({
             method: 'PUT',
-            url: getUrl('/scenicspot '),
-            data:params
+            url: getUrl('/region'),
+            data: params
         })
     },
-    createScenic (params) {
+    createRegion  (params) {
         return axios ({
             method: 'POST',
-            url: getUrl('/scenicspot'),
-            data:params
+            url: getUrl('/region'),
+            data: params
         })
     },
-    deleteScenic (par) {
+    deleteRegion  (par) {
         console.log(par, '这是传递的id')
         return axios ({
             method: 'DELETE',
-            url: getUrl('/scenicspot'),
+            url: getUrl('/region'),
             data:{
                 id: par
             }
@@ -40,4 +39,4 @@ const scenic = {
     }
 }
 
-export default scenic
+export default area

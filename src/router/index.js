@@ -5,11 +5,11 @@ import Router from 'vue-router'
 
 import '../../static/js/echarts.min.js'
 // import HelloWorld from '@/components/HelloWorld'
-import MicServiceManagementSystem from '@/pages/MicroService/MicroServiceManagementSystem'
-import Index from '@/pages/index'
-import login from '@/pages/login'
+import MicServiceManagementSystem from '@/components/pages/MicroService/MicroServiceManagementSystem'
+import Index from '@/components/pages/index'
+import login from '@/components/pages/login'
 
-import eye from '@/pages/eye'
+import eye from '@/components/pages/eye'
 import Controler from '@/components/controler'
 import Broad from '@/components/eye/controlChildren/broadcast'
 import Person from '@/components/eye/controlChildren/securityperson'
@@ -61,6 +61,11 @@ import LedHware from '@/components/eye/deployChildren/hardwareDeploy/ledHardware
 import MonitorsHware from '@/components/eye/deployChildren/hardwareDeploy/monitorsHardware'
 import WifiHware from '@/components/eye/deployChildren/hardwareDeploy/wifiHardware'
 import VoiceHware from '@/components/eye/deployChildren/hardwareDeploy/voiceHardware'
+import PoliceHware from '@/components/eye/deployChildren/hardwareDeploy/policeHardware'
+
+import hardwareDmis from '@/components/eye/deployChildren/dispatchDeploy/hardwareDmis' //硬件调度
+import personnelDmis from '@/components/eye/deployChildren/dispatchDeploy/personnelDmis' //人员调度
+import statDmis from '@/components/eye/deployChildren/dispatchDeploy/statDmis' //调度统计
 
 Vue.use(Router)
 const routes = [
@@ -161,7 +166,12 @@ const routes = [
                     {path:'/deploy/led-Hware',name:'LedHware',component:LedHware},
                     {path:'/deploy/wifi-Hware',name:'WifiHware',component:WifiHware},
                     {path:'/deploy/voice-Hware',name:'VoiceHware',component:VoiceHware},
-                    {path:'/deploy/monitors-Hware',name:'MonitorsHware',component:MonitorsHware}
+                    {path:'/deploy/police-Hware',name:'PoliceHware',component:PoliceHware},
+                    {path:'/deploy/monitors-Hware',name:'MonitorsHware',component:MonitorsHware},
+
+                    {path:'/deploy/hardware-Dmis',name:'boatcartDmis',component:hardwareDmis},
+                    {path:'/deploy/personnel-Dmis',name:'boatcartDmis',component:personnelDmis},
+                    {path:'/deploy/stat-Dmis',name:'boatcartDmis',component:statDmis}
                 ]
             }
         ]
