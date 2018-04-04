@@ -18,6 +18,10 @@ module.exports = {
         '/dsp': {
             target: 'http://192.168.0.110:8090/',
             changeOrigin: true
+        },
+        '/analysis': {
+            target: 'http://192.168.0.121:8033/',
+            changeOrigin: true
         }
     },
 

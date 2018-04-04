@@ -125,7 +125,7 @@
     #submit{margin-top: 50px;width: 200px;height: 40px;border-radius: 20px;background: #80cbc4;color: #fffffd;border: none;margin-left: 60px;font-size: 16px;text-indent: 0;}
 
     @media screen and (min-width:1200px) and (max-width:1300px){
-	 .top{padding-top:90px;}
+	 .top{padding-top:80px;}
 	 .mian-con{margin-top: 0;}
 	 form{margin-top: 20px;margin-right: 0;}
 	 input{width: 100%;}

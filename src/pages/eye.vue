@@ -1,6 +1,6 @@
 <template>
     <el-container>
-        <el-header>
+        <el-header  v-show = "isshowHead">
             <el-row :gutter="10" class="alleye">
                 <el-col :xs="6" :sm="7" :md="7" :lg="5" :xl="4">
                     <img src="../../static/img/eye.png"/>Workbench
@@ -23,7 +23,7 @@
             </el-row>
         </el-header>
         <el-main>
-            <router-view/>
+            <router-view @hideHead = "hideData"/>
         </el-main>
 
     </el-container>
@@ -40,7 +40,8 @@
                 manage: ['主页', '管控', '设施', '分析', '配置'],
                 currTime: new Date(),   //当前时间
                 title: ["&#xe8c0;", "&#xe627;", "&#xe647;"],
-                activeIndex: 1
+                activeIndex: 1,
+                isshowHead:true
             }
         },
         // created () {
@@ -50,7 +51,7 @@
         // },
         filters: {
             timeFiler(item) {
-                console.log(item, '9090')
+                // console.log(item, '9090')
                 return moment(item).format('YYYY年MM月DD日')
             },
             weekFiler(item) {
@@ -63,6 +64,9 @@
             }
         },
         methods: {
+            hideData(hideData){
+                 this.isshowHead = hideData;
+            },
             goModule(item, index) {
                 this.activeIndex = index
                 switch (item) {

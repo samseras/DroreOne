@@ -33,21 +33,6 @@ export default  class Conn {
         })
     }
 
-    //获取登录用户信息
-     static findUser(obj,func){
-     	var url = "./user.json"
-        /*var url = "http://10.35.171.84:3000/getActByType";*/
-        $.ajax({
-            url:url,
-            type:'post',
-            data:obj,
-            dataType:'json',
-            success:function(data){
-                func(data);
-            }
-        })
-    }
-
    //获取管控页面数据
    static getControlData(func){
      	var url = "http://192.168.0.110:9090/xubin/getDataAll"

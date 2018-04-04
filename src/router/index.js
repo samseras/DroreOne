@@ -114,12 +114,10 @@ const routes = [
             {
                 path: '/analyze',
                 name: 'analyze',
-                redirect: '/analyze/:id',
+                // redirect: '/analyze/:id',
                 component: Analyze,
                 children: [
-                    {path: '/analyze/:id',name: 'Passenger', component:Passenger},
-                    // {path: '/analyze/origin',name: 'Origin', component:Origin},
-                    // {path: '/analyze/ticket',name: 'Ticket', component:Ticket}
+                    {path: '/analyze/:id',name: 'Passenger', component:Passenger}
                 ]
             },
             {

@@ -1,14 +1,14 @@
 <template>
   <div class="analyze">
-      <div class="analyzeMenu">
+      <div class="analyzeMenu" v-if="hideList">
           <ul>
-              <li v-for="(item,index) in sidebarList" @click="isShowAnalyze(item.route,index)" :class="activeIndex === index?'active':''">
-                  <img :src="item.imgUrl" alt="">{{item.name}}
+              <li v-for="(item,index) in sidebarList" @click="isShowAnalyze(item.dashboard_id,index)" :class="activeIndex === index?'active':''" :id="item.id" :listName = "item.name" >
+                  {{item.name}}
               </li>
           </ul>
       </div>
       <div class="analyzeContent">
-          <router-view></router-view>
+          <router-view @hideList = "hideLists"></router-view>
       </div>
   </div>
 </template>
@@ -16,41 +16,41 @@
 <script>
   import echarts from "../../static/js/echarts.min.js"
   import passengerFlow from "./eye/analyze/passengerFlow.vue"
+  import api from "@/api"
   export default {
   	data(){
   		return{
   			isShow:[false,true,false],
   			Analyzedata:[],
-            sidebarList:[
-                {
-                    name: '票务分析',
-                    imgUrl: '',
-                    route: '/analyze/ticket'
-                },
-                {
-                    name: '客流分析',
-                    imgUrl: '',
-                    route: '/analyze/passenger'
-                },
-                {
-                    name: '电商客源地分析',
-                    imgUrl: '',
-                    route: '/analyze/origin'
-                }
-            ],
-            activeIndex : 1
+            dashboradList:[],
+            sidebarList:[],
+            activeIndex : 0,
+            hideList:true
   		}
   	},
-    created () {
-  	  this.$router.push({path:'/analyze/passenger'})
+    async created () {
+  	  await this.getDashboradList()
+      this.$router.push({path:`/analyze/${this.sidebarList[0].dashboard_id}`});
     },
   	components:{
   		passengerFlow
   	},
     methods:{
-        isShowAnalyze (route,index) {
-	          this.$router.push({path: route});
+        hideLists(data){
+              this.hideList = !data.list;
+              let hideData = !data.head;
+            this.$emit('hideHead',hideData);
+        },
+        isShowAnalyze (id,index) {
+	          this.$router.push({path: `/analyze/${id}`});
 	          this.activeIndex = index;
+        },
+        async getDashboradList(){
+           // debugger
+           await api.analyze.getDashboradList().then(res => {
+         //       console.log(res, 'opopopopopopop')
+                this.sidebarList = res.result
+            })
         }
 
       },
