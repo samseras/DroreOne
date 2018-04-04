@@ -3,75 +3,25 @@
         <div class="title">
             调度管理
         </div>
-        <div class="personContent">
-            <div class="funcTitle">
-                <Header @addNewInfo = "addNewInfo"
-                        @deletInfo = "deletInfo"
-                        @toggleList = "toggleList"
-                        @choseType = 'choseType'
-                        @selectedAll = 'selectedAll'
-                        @fixedInfo = 'fixedInfo'>
-                </Header>
-            </div>
-            <div class="personList">
-                <ScrollContainer>
-                    <el-table
-                        v-if="!isShowAreaCard"
-                        ref="multipleTable"
-                        :data="areaList"
-                        tooltip-effect="dark"
-                        style="width: 100%"
-                        @selection-change="handleSelectionChange">
-                        <el-table-column
-                            type="selection"
-                            width="55">
-                        </el-table-column>
-                        <el-table-column
-                            prop="name"
-                            label="片区名称"
-                            width="120">
-                        </el-table-column>
-                        <el-table-column
-                            prop="placeScenic"
-                            label="所在景区">
-                        </el-table-column>
-                        <el-table-column
-                            prop="location"
-                            label="位置范围">
-                        </el-table-column>
-                        <el-table-column>
-                            <template slot-scope="scope">
-                                <span @click="showPersonDetail(scope.row,'片区信息')">编辑</span>
-                            </template>
-                        </el-table-column>
-                    </el-table>
-                    <div class="personInfo" v-for="item in choseList" v-if="isShowAreaCard && item.status">
-                        <div class="checkBox">
-                            <input type="checkbox" :checked='item.checked' class="checkBtn" @change="checked(item.id)">
-                        </div>
-                        <div class="personType" @click.stop="showPersonDetail(item, '片区信息')">
-                            <img src="" alt="">
-                            <span class="type">
-                                  {{item.name}}
-                                </span>
-                        </div>
-                        <div class="specificInfo">
-                            <p class="name">所在景区：<span>{{item.placeScenic}}</span></p>
-                            <p class="sex">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：<span>{{item.describe}}</span></p>
-                        </div>
-                    </div>
-                </ScrollContainer>
-                <PersonDetail v-if="visible"
-                              :visible="visible"
-                              :Info="areaInfo"
-                              :isDisabled="isDisabled"
-                              :title="title"
-                              @closeInfoDialog ="visible = false"
-                              @fixInfo = "fixInfo"
-                              @addNewInfo="addNewPerson">
-                </PersonDetail>
-            </div>
-        </div>
+        <!--<div class="personContent">-->
+            <!--<div class="funcTitle">-->
+                <!--<Header @addNewInfo = "addNewInfo"-->
+                        <!--@deletInfo = "deletInfo"-->
+                        <!--@choseType = 'choseType'-->
+                        <!--@selectedAll = 'selectedAll'-->
+                        <!--@fixedInfo = 'fixedInfo'>-->
+                <!--</Header>-->
+            <!--</div>-->
+        <!--</div>-->
+
+        <el-select v-model="value" placeholder="请选择">
+            <el-option
+                v-for="item in options"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value">
+            </el-option>
+        </el-select>
     </div>
 </template>
 
@@ -126,13 +76,13 @@
                 this.choseList = this.areaList
 
             },
-            toggleList (type) {
-                if (type === 'list') {
-                    this.isShowAreaCard = false
-                }else {
-                    this.isShowAreaCard = true
-                }
-            },
+            // toggleList (type) {
+            //     if (type === 'list') {
+            //         this.isShowAreaCard = false
+            //     }else {
+            //         this.isShowAreaCard = true
+            //     }
+            // },
             checked (id) {
                 if (this.choseInfoId.includes(id)) {
                     this.choseInfoId = this.choseInfoId.filter((item) =>{

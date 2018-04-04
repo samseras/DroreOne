@@ -26,7 +26,7 @@
                             width="50">
                         </el-table-column>
                         <el-table-column
-                            prop="person"
+                            prop="type"
                             label="调度人员"
                             sortable
                             width="120">
@@ -50,7 +50,9 @@
                         </el-table-column>
                         <el-table-column label="操作">
                             <template slot-scope="scope">
-                                <span @click="showPersonDetail(scope.row,'片区信息')">编辑</span>
+                                <span @click="fixedInfo(scope.row,'片区信息')" class="edit">编辑</span> |
+                                <span @click="showPersonDetail(scope.row,'片区信息')">查看</span> |
+                                <span @click="deletInfo(scope.row,'片区信息')">删除</span>
                             </template>
                         </el-table-column>
                     </el-table>
@@ -96,11 +98,11 @@
                 checkList: [],
                 filterList: [],
                 areaList: [
-                    {id:1,name: '长江~黄河巡更',person: '售票',classes: '早班，午班，晚班',number: '10个',line: '起点（123，12312）、中间（123，12312）、终点（123，12312）'},
-                    {id:2,name: '长江~黄河巡更',person: '安保',classes: '早班，午班，晚班',number: '10个',line: '起点（123，12312）、中间（123，12312）、终点（123，12312）'},
-                    {id:3,name: '长江~黄河巡更',person: '保洁',classes: '早班，午班，晚班',number: '10个',line: '起点（123，12312）、中间（123，12312）、终点（123，12312）'},
-                    {id:8,name: '长江~黄河巡更',person: '售票',classes: '早班，午班，晚班',number: '10个',line: '起点（123，12312）、中间（123，12312）、终点（123，12312）'},
-                    {id:9,name: '长江~黄河巡更',person: '检票',classes: '早班，午班，晚班',number: '10个',line: '起点（123，12312）、中间（123，12312）、终点（123，12312）'},
+                    {id:1,name: '长江~黄河巡更',type: '售票',classes: '早班，午班，晚班',number: '10个',line: '起点（123，12312）、中间（123，12312）、终点（123，12312）'},
+                    {id:2,name: '长江~黄河巡更',type: '安保',classes: '早班，午班，晚班',number: '10个',line: '起点（123，12312）、中间（123，12312）、终点（123，12312）'},
+                    {id:3,name: '长江~黄河巡更',type: '保洁',classes: '早班，午班，晚班',number: '10个',line: '起点（123，12312）、中间（123，12312）、终点（123，12312）'},
+                    {id:8,name: '长江~黄河巡更',type: '售票',classes: '早班，午班，晚班',number: '10个',line: '起点（123，12312）、中间（123，12312）、终点（123，12312）'},
+                    {id:9,name: '长江~黄河巡更',type: '检票',classes: '早班，午班，晚班',number: '10个',line: '起点（123，12312）、中间（123，12312）、终点（123，12312）'},
                 ],
                 visible: false,
                 areaInfo: {},
@@ -120,7 +122,7 @@
                 this.title = title
             },
             addNewInfo () {
-                this.showPersonDetail({}, '添加人员信息')
+                this.showPersonDetail({}, '添加人员调度')
                 this.isDisabled = false
             },
             deletInfo () {
@@ -170,22 +172,31 @@
                     })
                 }
             },
-            selectedAll (state) {
-                console.log(state, 'opopopopop')
-                this.choseList = this.areaList.filter((item) => {
-                    if (state === true) {
-                        item.checked = true
-                        this.choseInfoId.push(item.id)
-                        return item.checked === true
-                    } else {
-                        console.log('进入这个判断吗')
-                        item.checked = false
-                        this.choseInfoId = []
-                        return item.checked === false
-                    }
-                })
-                console.log(this.choseInfoId, 'opopop')
+            selectedAll(state){
+                if (state) {
+                    state.forEach(row => {
+                        this.$refs.multipleTable.toggleRowSelection(row);
+                    });
+                } else {
+                    this.$refs.multipleTable.clearSelection();
+                }
             },
+            // selectedAll (state) {
+            //     console.log(state, 'opopopopop')
+            //     this.choseList = this.areaList.filter((item) => {
+            //         if (state === true) {
+            //             item.checked = true
+            //             this.choseInfoId.push(item.id)
+            //             return item.checked === true
+            //         } else {
+            //             console.log('进入这个判断吗')
+            //             item.checked = false
+            //             this.choseInfoId = []
+            //             return item.checked === false
+            //         }
+            //     })
+            //     console.log(this.choseInfoId, 'opopop')
+            // },
             fixInfo (info) {
                 console.log(info, 'wertyuio')
                 let list = this.areaList
@@ -323,11 +334,39 @@
                             line-height: rem(22);
                         }
                     }
+
                 }
             }
         }
     }
-    .el-table{
-        font-size: rem(14);
+</style>
+<style lang="scss">
+    .personList{
+        .el-table{
+            font-size: rem(14);
+            table{
+                th{
+                    background: #f3f3f3;
+                    .cell{
+                        font-size: rem(14);
+                    }
+                }
+            }
+            td,th{
+                padding: 5px 0;
+            }
+            .el-table-column--selection{
+                .cell{
+                    position: relative;
+                    top: 4px;
+                }
+            }
+            .cell{
+                font-size: rem(12);
+                .edit{
+                    color: #54c5f2;
+                }
+            }
+        }
     }
 </style>

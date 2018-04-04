@@ -7,7 +7,6 @@
             <div class="funcTitle">
                 <Header @addNewInfo = "addNewInfo"
                         @deletInfo = "deletInfo"
-                        @toggleList = "toggleList"
                         @choseType = 'choseType'
                         @selectedAll = 'selectedAll'
                         @fixedInfo = 'fixedInfo'>
@@ -16,7 +15,7 @@
             <div class="personList">
                 <ScrollContainer>
                     <el-table
-                        v-if="!isShowAreaCard"
+                        v-if="isShowAreaCard"
                         ref="multipleTable"
                         :data="areaList"
                         tooltip-effect="dark"
@@ -24,42 +23,43 @@
                         @selection-change="handleSelectionChange">
                         <el-table-column
                             type="selection"
-                            width="55">
+                            width="50">
                         </el-table-column>
                         <el-table-column
-                            prop="name"
-                            label="片区名称"
+                            prop="type"
+                            label="调度硬件"
+                            sortable
                             width="120">
                         </el-table-column>
                         <el-table-column
-                            prop="placeScenic"
-                            label="所在景区">
+                            prop="name"
+                            label="名称">
                         </el-table-column>
                         <el-table-column
-                            prop="location"
-                            label="位置范围">
+                            prop="number"
+                            label="硬件总数">
                         </el-table-column>
-                        <el-table-column>
+                        <el-table-column
+                            prop="time"
+                            label="时间">
+                        </el-table-column>
+                        <el-table-column
+                            prop="executetime"
+                            label="执行时间">
+                        </el-table-column>
+                        <el-table-column
+                            prop="repetition"
+                            label="重复调度"
+                            sortable>
+                        </el-table-column>
+                        <el-table-column label="操作">
                             <template slot-scope="scope">
-                                <span @click="showPersonDetail(scope.row,'片区信息')">编辑</span>
+                                <span @click="fixedInfo(scope.row,'片区信息')" class="edit">编辑</span> |
+                                <span @click="showPersonDetail(scope.row,'片区信息')">查看</span> |
+                                <span @click="deletInfo">删除</span>
                             </template>
                         </el-table-column>
                     </el-table>
-                    <div class="personInfo" v-for="item in choseList" v-if="isShowAreaCard && item.status">
-                        <div class="checkBox">
-                            <input type="checkbox" :checked='item.checked' class="checkBtn" @change="checked(item.id)">
-                        </div>
-                        <div class="personType" @click.stop="showPersonDetail(item, '片区信息')">
-                            <img src="" alt="">
-                            <span class="type">
-                                  {{item.name}}
-                                </span>
-                        </div>
-                        <div class="specificInfo">
-                            <p class="name">所在景区：<span>{{item.placeScenic}}</span></p>
-                            <p class="sex">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：<span>{{item.describe}}</span></p>
-                        </div>
-                    </div>
                 </ScrollContainer>
                 <PersonDetail v-if="visible"
                               :visible="visible"
@@ -87,11 +87,11 @@
                 checkList: [],
                 filterList: [],
                 areaList: [
-                    {id:1,name: 'A-片区',placeScenic: '百里杜鹃',location: '23456789',describe: '该片区景点介绍'},
-                    {id:2,name: 'A-片区',placeScenic: '百里杜鹃',location: '23456789',describe: '该片区景点介绍'},
-                    {id:3,name: 'A-片区',placeScenic: '百里杜鹃',location: '23456789',describe: '该片区景点介绍'},
-                    {id:8,name: 'A-片区',placeScenic: '百里杜鹃',location: '23456789',describe: '该片区景点介绍'},
-                    {id:9,name: 'A-片区',placeScenic: '百里杜鹃',location: '23456789',describe: '该片区景点介绍'}
+                    {id:1,name: '下午下班音乐提示',type: '广播',number: '10个',time: '2018.02.03~2018.03.11',executetime: '18:00:00~18:10:00',repetition:'是'},
+                    {id:2,name: '上班提示',type: '广播',number: '10个',time: '2018.02.03~2018.03.11',executetime: '18:00:00~18:10:00',repetition:'是'},
+                    {id:3,name: '夜间照明',type: '路灯',number: '10个',time: '2018.02.03~2018.03.11',executetime: '18:00:00~18:10:00',repetition:'否'},
+                    {id:8,name: '室内照明',type: '路灯',number: '10个',time: '2018.02.03~2018.03.11',executetime: '18:00:00~18:10:00',repetition:'否'},
+                    {id:9,name: '节日提示',type: 'LED大屏',number: '10个',time: '2018.02.03~2018.03.11',executetime: '18:00:00~18:10:00',repetition:'是'},
                 ],
                 visible: false,
                 areaInfo: {},
@@ -111,7 +111,7 @@
                 this.title = title
             },
             addNewInfo () {
-                this.showPersonDetail({}, '添加人员信息')
+                this.showPersonDetail({}, '添加硬件调度')
                 this.isDisabled = false
             },
             deletInfo () {
@@ -126,13 +126,13 @@
                 this.choseList = this.areaList
 
             },
-            toggleList (type) {
-                if (type === 'list') {
-                    this.isShowAreaCard = false
-                }else {
-                    this.isShowAreaCard = true
-                }
-            },
+            // toggleList (type) {
+            //     if (type === 'list') {
+            //         this.isShowAreaCard = false
+            //     }else {
+            //         this.isShowAreaCard = true
+            //     }
+            // },
             checked (id) {
                 if (this.choseInfoId.includes(id)) {
                     this.choseInfoId = this.choseInfoId.filter((item) =>{
@@ -319,4 +319,34 @@
         }
     }
 
+</style>
+<style lang="scss">
+    .personList{
+        .el-table{
+            font-size: rem(14);
+            table{
+                th{
+                    background: #f3f3f3;
+                    .cell{
+                        font-size: rem(14);
+                    }
+                }
+            }
+            td,th{
+                padding: 5px 0;
+            }
+            .el-table-column--selection{
+                .cell{
+                    position: relative;
+                    top: 4px;
+                }
+            }
+            .cell{
+                font-size: rem(12);
+                .edit{
+                    color: #54c5f2;
+                }
+            }
+        }
+    }
 </style>

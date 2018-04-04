@@ -4,194 +4,62 @@
             :title="title"
             :visible="visible"
             :before-close="closeDialog"
-            width="23%"
+            width="600px"
             class="dialog echatDialog"
             center>
             <div class="card">
-                <!--人员-->
+                <!--人员调度-->
                 <div class="personCardContent" v-if="route.includes('person')">
-                    <p class="name">姓&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;名：<input type="text"v-model="person.name"></p>
-                    <p class="sex">性&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;别：<input type="text"v-model="person.sex"></p>
-                    <p class="type">
-                        人员角色： <select name="" v-model="person.type">
-                        <option v-for="item in options" :value="item.type">{{item.type}}</option>
-                        </select>
-                    </p>
-                    <p class="idNum">身份证号：<input type="text"v-model="person.idNum"></p>
-                    <p class="phoneNum">电话号码：<input type="text"v-model="person.phone"></p>
-                    <div class="img">
-                        <label for="avatar">
-                            <img :src="files.length ? files[0].url : 'https://www.gravatar.com/avatar/default?s=200&r=pg&d=mm'"  class="rounded-circle" />
-                        </label>
-                    </div>
-                </div>
-                <!--车船-->
-                <div class="personCardContent boatCardContent" v-if="route.includes('boat')">
-                    <p class="name">类&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;型：
-                        <select name="" v-model="boatCar.type">
-                            <option  value="船只">船只</option>
-                            <option  value="车辆">车辆</option>
-                        </select>
-                    </p>
-                    <p class="sex">编&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;号：<input type="text"v-model="boatCar.serNum"></p>
-                    <p class="type">
-                        维护状态： <select name="" v-model="boatCar.safeStatus">
-                        <option  value="正常">正常</option>
-                        <option  value="异常">异常</option>
-                    </select>
-                    </p>
-                    <p class="idNum">核载人数：<input type="text"v-model="boatCar.loadNum"></p>
-                    <p class="phoneNum">购买时间：<input type="text"v-model="boatCar.buyTime"></p>
-                    <p class="phoneNum">维护时间：<input type="text"v-model="boatCar.safeTime"></p>
-                    <p class="phoneNum">驾驶人员：<input type="text"v-model="boatCar.driver"></p>
-                    <p class="phoneNum">联系电话：<input type="text"v-model="boatCar.phone"></p>
-                    <p class="phoneNum">设备号码：<input type="text"v-model="boatCar.facilityNum"></p>
-                    <div class="img">
-                        <label for="avatar">
-                            <img :src="files.length ? files[0].url : 'https://www.gravatar.com/avatar/default?s=200&r=pg&d=mm'"  class="rounded-circle" />
-                        </label>
-                    </div>
-                </div>
-                <!--指示牌-->
-                <div class="personCardContent boatCardContent" v-if="route.includes('indicator')">
-                    <p class="name">类&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;型：<input type="text"v-model="indicator.type"></p>
-                    <p class="phoneNum">所属片区：<input type="text"v-model="indicator.area"></p>
-                    <p class="phoneNum">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置：<input type="text"v-model="indicator.location"><img src="" alt="" @click="showMapDialog"></p>
-                    <div class="img">
-                        <label for="avatar">
-                            <img :src="files.length ? files[0].url : 'https://www.gravatar.com/avatar/default?s=200&r=pg&d=mm'"  class="rounded-circle" />
-                        </label>
-                    </div>
-                </div>
-                <!--垃圾桶-->
-                <div class="personCardContent boatCardContent" v-if="route.includes('trash')">
-                    <p class="name">类&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;型：<input type="text"v-model="trash.type"></p>
-                    <p class="sex">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称：<input type="text"v-model="trash.name"></p>
-                    <p class="type">
-                        状&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;态： <select name="" v-model="trash.state">
-                        <option  value="充裕">充裕</option>
-                        <option  value="已满">已满</option>
-                    </select>
-                    </p>
-                    <p class="idNum">个&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;数：<input type="text"v-model="trash.number"></p>
-                    <p class="phoneNum">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置：<input type="text"v-model="trash.location"><img src="" alt="" @click="showMapDialog"></p>
-                    <p class="phoneNum">所属片区：<input type="text"v-model="trash.area"></p>
-                    <div class="img">
-                        <!--<img src="" alt="">-->
-                        <label for="avatar">
-                            <img :src="files.length ? files[0].url : 'https://www.gravatar.com/avatar/default?s=200&r=pg&d=mm'"  class="rounded-circle" />
-                        </label>
-                    </div>
-                </div>
-                <!--景点-->
-                <div class="personCardContent boatCardContent" v-if="route.includes('scenic')">
-                    <p class="name">景点名称：<input type="text"v-model="scenic.name"></p>
-                    <p class="sex">所属片区：<input type="text"v-model="scenic.area"></p>
-                    <p class="type">
-                        状&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;态： <select name="" v-model="scenic.state">
-                        <option  value="正常">充裕</option>
-                        <option  value="异常">已满</option>
-                    </select>
-                    </p>
-                    <p class="idNum">容&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;量：<input type="text"v-model="scenic.capacity"></p>
+                    <p class="name">调&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 度：
+                    <el-select v-model="person.type" size="mini" placeholder="请选择">
+                        <el-option
+                            v-for="item in options"
+                            :key="item.value"
+                            :label="item.type"
+                            :value="item.value">
+                        </el-option>
+                    </el-select>
 
-                    <p class="phoneNum">当前人数：<input type="text"v-model="trash.nowPeopleNum"></p>
-                    <p class="phoneNum">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置：<input type="text"v-model="scenic.location"><img src="" alt="" @click="showMapDialog"></p>
-                    <div class="img">
-                        <label for="avatar">
-                            <img :src="files.length ? files[0].url : 'https://www.gravatar.com/avatar/default?s=200&r=pg&d=mm'"  class="rounded-circle" />
-                        </label>
-                    </div>
-                </div>
-                <!--商圈-->
-                <div class="personCardContent boatCardContent" v-if="route.includes('shop')">
-                    <p class="name">类&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;型：<input type="text"v-model="shop.type"></p>
-                    <p class="sex">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称：<input type="text"v-model="shop.name"></p>
-                    <p class="type">
-                        状&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;态： <select name="" v-model="shop.state">
-                        <option  value="充裕">充裕</option>
-                        <option  value="已满">已满</option>
-                    </select>
                     </p>
-                    <p class="idNum">容&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;量：<input type="text"v-model="shop.capacity"></p>
+                    <p class="sex">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 称：<input type="text"v-model="person.sex"></p>
+                    <p class="time">时&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 间：
+                        <el-checkbox label="周一"></el-checkbox>
+                        <el-checkbox label="周二"></el-checkbox>
+                        <el-checkbox label="周三"></el-checkbox>
+                        <el-checkbox label="周四"></el-checkbox>
+                        <el-checkbox label="周五"></el-checkbox>
+                        <el-checkbox label="周六"></el-checkbox>
+                        <el-checkbox label="周日"></el-checkbox>
+                        <el-checkbox label="自定义"></el-checkbox>
+                    </p>
+                    <p class="time">选择时间：
+                        <el-date-picker
+                            v-model="value6"
+                            size ="mini"
+                            type="daterange"
+                            range-separator="至"
+                            start-placeholder="开始日期"
+                            end-placeholder="结束日期">
+                        </el-date-picker>
+                    </p>
+                    <p class="time">班&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 次：
+                        <el-checkbox label="早班"></el-checkbox>
+                        <el-checkbox label="中班"></el-checkbox>
+                        <el-checkbox label="晚班"></el-checkbox>
+                        <el-checkbox label="自定义"></el-checkbox>
+                    </p>
+                    <p class="name">人&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 员：
 
-                    <p class="phoneNum">当前人数：<input type="text"v-model="shop.nowPeopleNum"></p>
-                    <p class="phoneNum">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置：<input type="text"v-model="shop.location"><img src="" alt="" @click="showMapDialog"></p>
-                    <p class="phoneNum">所属片区：<input type="text"v-model="shop.area"></p>
-                    <div class="img">
-                        <label for="avatar">
-                            <img :src="files.length ? files[0].url : 'https://www.gravatar.com/avatar/default?s=200&r=pg&d=mm'"  class="rounded-circle" />
-                        </label>
-                    </div>
-                </div>
-                <!--停车场-->
-                <div class="personCardContent boatCardContent" v-if="route.includes('park')">
-                    <p class="name">类&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;型：<input type="text"v-model="park.type"></p>
-                    <p class="sex">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称：<input type="text"v-model="park.name"></p>
-                    <p class="type">
-                        状&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;态： <select name="" v-model="park.state">
-                        <option  value="充裕">充裕</option>
-                        <option  value="已满">已满</option>
-                        <option  value="紧张">紧张</option>
-                    </select>
                     </p>
-                    <p class="idNum">空余车位：<input type="text"v-model="park.residuePark"></p>
-
-                    <p class="phoneNum">车位总数：<input type="text"v-model="park.allPark"></p>
-                    <p class="phoneNum">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置：<input type="text"v-model="park.location"><img src="" alt="" @click="showMapDialog"></p>
-                    <p class="phoneNum">所属片区：<input type="text"v-model="park.area"></p>
-                    <div class="img">
-                        <label for="avatar">
-                            <img :src="files.length ? files[0].url : 'https://www.gravatar.com/avatar/default?s=200&r=pg&d=mm'"  class="rounded-circle" />
-                        </label>
-                    </div>
-                </div>
-                <!--洗手间-->
-                <div class="personCardContent boatCardContent" v-if="route.includes('toilet')">
-                    <p class="sex">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称：<input type="text"v-model="toilet.name"></p>
-                    <p class="phoneNum">所属片区：<input type="text"v-model="toilet.area"></p>
-                    <p class="type">
-                        状&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;态： <select name="" v-model="toilet.state">
-                        <option  value="正常">正常</option>
-                        <option  value="紧张">紧张</option>
-                    </select>
+                    <p class="idNum">重复调度：
+                        <el-radio v-model="radio" label="1">是</el-radio>
+                        <el-radio v-model="radio" label="0">否</el-radio>
                     </p>
-                    <p class="phoneNum">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置：<input type="text"v-model="toilet.location"><img src="" alt="" @click="showMapDialog"></p>
-                    <div class="img">
-                        <label for="avatar">
-                            <img :src="files.length ? files[0].url : 'https://www.gravatar.com/avatar/default?s=200&r=pg&d=mm'"  class="rounded-circle" />
-                        </label>
-                    </div>
-                </div>
-                <!--片区-->
-                <div class="personCardContent boatCardContent" v-if="route.includes('area')">
-                    <p class="sex">片区名称：<input type="text"v-model="area.name"></p>
-                    <p class="phoneNum">所在景区：<input type="text"v-model="area.placeScenic"></p>
-                    <p class="phoneNum">位置范围：<input type="text"v-model="area.location"><img src="" alt="" @click="showMapDialog"></p>
+                    <p class="phoneNum">位置范围：<input type="text"v-model="person.location"><img src="" alt="" @click="showMapDialog"></p>
                     <p class="type">
-                        描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：<textarea name="" v-model="area.describe" cols="30"
+                        描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：<textarea name="" v-model="person.describe" cols="30"
                                                                                rows="5" placeholder="请输入描述信息"></textarea>
                     </p>
-                    <div class="img">
-                        <label for="avatar">
-                            <img :src="files.length ? files[0].url : 'https://www.gravatar.com/avatar/default?s=200&r=pg&d=mm'"  class="rounded-circle" />
-                        </label>
-                    </div>
-                </div>
-                <!--路网-->
-                <div class="personCardContent boatCardContent" v-if="route.includes('roat')">
-                    <p class="sex">路线名称：<input type="text"v-model="roat.name"></p>
-                    <p class="phoneNum">所在景区：<input type="text"v-model="roat.placeScenic"></p>
-                    <p class="phoneNum">位置范围：<input type="text"v-model="roat.location"><img src="" alt="" @click="showMapDialog"></p>
-                    <p class="type">
-                        描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：<textarea name=""v-model="roat.describe" cols="30"
-                                                                               rows="5" placeholder="请输入描述信息"></textarea>
-                    </p>
-                    <div class="img">
-                        <label for="avatar">
-                            <img :src="files.length ? files[0].url : 'https://www.gravatar.com/avatar/default?s=200&r=pg&d=mm'"  class="rounded-circle" />
-                        </label>
-                    </div>
                 </div>
                 <div class="text-center p-2">
                     <file-upload
@@ -205,15 +73,6 @@
                         @input-file="inputFile"
                         ref="upload">
                     </file-upload>
-                </div>
-                <div class="avatar-edit" v-show="files.length && edit">
-                    <div class="avatar-edit-image" v-if="files.length">
-                        <img ref="editImage" :src="files[0].url" />
-                    </div>
-                    <div class="text-center p-4">
-                        <button type="button" class="btn btn-secondary" @click.prevent="$refs.upload.clear">取消</button>
-                        <button type="submit" class="btn btn-primary" @click.prevent="editSave">保存</button>
-                    </div>
                 </div>
             </div>
             <div class=""slot="footer" class="dialog-footer cardFooter">
@@ -238,6 +97,8 @@
                 edit: false,
                 cropper: false,
                 src: '',
+                value6: '',
+                radio: '1',
                 isShowMapDialog: false,
                 mapVisible: false,
                 person: {
@@ -245,83 +106,13 @@
                     sex:'',
                     idNum:'',
                     type: '',
-                    phone:''
-                },
-                boatCar: {
-                    type: '',
-                    serNum: '',
-                    safeStatus: '',
-                    loadNum: '',
-                    buyTime: '',
-                    safeTime: '',
-                    driver: '',
-                    phone: '',
-                    facilityNum:''
-                },
-                trash: {
-                    type: '',
-                    name: '',
-                    state: '',
-                    number: '',
-                    location: '',
-                    area: '',
-                },
-                indicator: {
-                    type: '',
-                    area: '',
-                    location: ''
-                },
-                scenic: {
-                    name: '',
-                    area: '',
-                    state: '',
-                    capacity: '',
-                    nowPeopleNum: '',
-                    location: ''
-                },
-                shop: {
-                    type: '',
-                    name: '',
-                    state: '',
-                    capacity: '',
-                    nowPeopleNum: '',
-                    location: '',
-                    area: '',
-                },
-                park: {
-                    type:'',
-                    name:'',
-                    state:'',
-                    residuePark:'',
-                    allPark:'',
-                    location:'',
-                    area:'',
-                },
-                toilet: {
-                    name:'',
-                    area:'',
-                    state:'',
-                    location:'',
-                },
-                area: {
-                    name: '',
-                    placeScenic: '',//所在景区
-                    location: '',
-                    describe: ''
-                },
-                roat: {
-                    name: '',
-                    placeScenic: '',//所在景区
-                    location: '',
-                    describe: ''
+                    phone:'',
                 },
                 options: [
-                    {type: '安保'},
-                    {type: '售票'},
-                    {type: '保洁'},
-                    {type: '司机'},
-                    {type: '船夫'},
-                    {type: '检票'}
+                    { value: '选项1',type: '安保'},
+                    { value: '选项2',type: '售票'},
+                    { value: '选项3',type: '保洁'},
+                    { value: '选项4',type: '检票'}
                 ],
                 route: '',
                 file: {}
@@ -942,5 +733,13 @@
             width: rem(400);
             height: rem(400);
         }
+    }
+</style>
+<style lang="scss">
+    .el-checkbox__label{
+        font-size: rem(12);
+    }
+    .el-checkbox+.el-checkbox{
+        margin-left: rem(10);
     }
 </style>

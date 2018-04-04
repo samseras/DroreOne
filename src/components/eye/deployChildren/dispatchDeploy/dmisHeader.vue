@@ -17,31 +17,16 @@
                 <el-checkbox v-for="item in personTypeList" :label="item.type"></el-checkbox>
             </el-checkbox-group>
         </div>
-        <div class="filite" v-if="route.includes('indicator')">
+        <div class="filite" v-if="route.includes('hardware')">
             <el-checkbox-group v-model="filterList" @change="choseType">
                 <el-checkbox v-for="item in indicatorType" :label="item.type"></el-checkbox>
-            </el-checkbox-group>
-        </div>
-        <div class="filite" v-if="route.includes('trash')">
-            <el-checkbox-group v-model="filterList" @change="choseType">
-                <el-checkbox v-for="item in trashType" :label="item.type"></el-checkbox>
-            </el-checkbox-group>
-        </div>
-        <div class="filite" v-if="route.includes('shop')">
-            <el-checkbox-group v-model="filterList" @change="choseType">
-                <el-checkbox v-for="item in shopType" :label="item.type"></el-checkbox>
-            </el-checkbox-group>
-        </div>
-        <div class="filite" v-if="route.includes('park')">
-            <el-checkbox-group v-model="filterList" @change="choseType">
-                <el-checkbox v-for="item in parkType" :label="item.type"></el-checkbox>
             </el-checkbox-group>
         </div>
         <div class="page">
             <span>当前第1页/共8页</span>
             <span class="upPage"><</span>
             <span class="downPage">></span>
-            <!--<span class="listForm" @click="toggleList('list')"><i class="el-icon-tickets"></i></span>-->
+            <span class="listForm"><i class="el-icon-tickets"></i></span>
             <!--<span class="cardForm" @click="toggleList('card')"><i class="el-icon-menu"></i></span>-->
         </div>
     </div>
@@ -74,14 +59,15 @@
         methods: {
             addNewInfo () {
                 // console.log(this.$route.path, 'opop')
+
                 this.$emit('addNewInfo')
             },
             deleteCard () {
                 this.$emit('deletInfo')
             },
-            toggleList (type) {
-                this.$emit('toggleList',type)
-            },
+            // toggleList (type) {
+            //     this.$emit('toggleList',type)
+            // },
             choseType () {
                 this.$emit('choseType',this.filterList)
             },
@@ -175,7 +161,7 @@
             }
         }
         .filite{
-            margin-left: rem(50);
+            margin-left: rem(150);
             .el-checkbox{
                 margin-left: rem(10);
             }

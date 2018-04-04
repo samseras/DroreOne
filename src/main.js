@@ -11,6 +11,7 @@ import VueDND from 'awe-dnd'
 
 
 
+
 Vue.use(ElementUI)
 Vue.prototype.$echarts = echarts
 Vue.use(VueDND)
