@@ -18,7 +18,7 @@
                         </select>
                     </p>
                     <p class="type">
-                        人员角色： <select name="" v-model="person.jobName">
+                        人员角色： <select name="" v-model="person.jobId">
                         <option v-for="item in options" :value="item.id">{{item.name}}</option>
                         </select>
                     </p>
@@ -67,7 +67,7 @@
                         </select>
                     </p>
                     <p class="phoneNum">所属片区：
-                        <select name="" v-model="indicator.regionName">
+                        <select name="" v-model="indicator.regionId">
                             <option  v-for="item in regions" :value="item.id">{{item.name}}</option>
                         </select>
                     </p>
@@ -96,7 +96,7 @@
                     <p class="idNum">个&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;数：<input type="text"v-model="trash.dustbinBean.dustbinCount"></p>
                     <p class="phoneNum">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置：<input type="text"v-model="trash.location"><img src="" alt="" @click="showMapDialog"></p>
                     <p class="phoneNum">所属片区：
-                        <select name="" v-model="trash.regionName">
+                        <select name="" v-model="trash.regionId">
                             <option  v-for="item in regions" :value="item.id">{{item.name}}</option>
                         </select>
                     </p>
@@ -111,7 +111,7 @@
                 <div class="personCardContent boatCardContent" v-if="route.includes('scenic')">
                     <p class="name">景点名称：<input type="text"v-model="scenic.scenicspotBean.name"></p>
                     <p class="sex">所属片区：
-                        <select name="" v-model="scenic.regionName">
+                        <select name="" v-model="scenic.regionId">
                             <option  v-for="item in regions" :value="item.id">{{item.name}}</option>
                         </select>
                     </p>
@@ -150,7 +150,7 @@
                     <p class="phoneNum">当前人数：<input type="text"v-model="shop.businessBean.currentNum"></p>
                     <p class="phoneNum">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置：<input type="text"v-model="shop.location"><img src="" alt="" @click="showMapDialog"></p>
                     <p class="phoneNum">所属片区：
-                        <select name="" v-model="shop.regionName">
+                        <select name="" v-model="shop.regionId">
                             <option  v-for="item in regions" :value="item.id">{{item.name}}</option>
                         </select>
                     </p>
@@ -180,7 +180,7 @@
                     <p class="phoneNum">车位总数：<input type="text"v-model="park.parkingBean.capacity"></p>
                     <p class="phoneNum">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置：<input type="text"v-model="park.location"><img src="" alt="" @click="showMapDialog"></p>
                     <p class="phoneNum">所属片区：
-                        <select name="" v-model="park.regionName">
+                        <select name="" v-model="park.regionId">
                             <option  v-for="item in regions" :value="item.id">{{item.name}}</option>
                         </select>
                     </p>
@@ -194,7 +194,7 @@
                 <div class="personCardContent boatCardContent" v-if="route.includes('toilet')">
                     <p class="sex">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称：<input type="text"v-model="toilet.toiletBean.name"></p>
                     <p class="phoneNum">所属片区：
-                        <select name="" v-model="toilet.regionName">
+                        <select name="" v-model="toilet.regionId">
                             <option  v-for="item in regions" :value="item.id">{{item.name}}</option>
                         </select>
                     </p>
@@ -213,7 +213,7 @@
                 </div>
                 <!--片区-->
                 <div class="personCardContent boatCardContent" v-if="route.includes('area')">
-                    <p class="sex">片区名称：<input type="text"v-model="area.name"></p>
+                    <p class="sex">片区名称：<input type="text" v-model="area.name" required="required"></p>
                     <p class="phoneNum" v-if="false">所在景区：<input type="text"v-model="area.placeScenic"></p>
                     <p class="phoneNum">位置范围：<input type="text"v-model="area.location"><img src="" alt="" @click="showMapDialog"></p>
                     <p class="type">
@@ -297,7 +297,7 @@
                         phone:'',
                         picAddress: ''
                     },
-                    jobName: '',
+                    jobId: '',
                 },
                 boatCar: {
                     type: '',
@@ -320,14 +320,14 @@
                         picAddress: ''
                     },
                     location: '',
-                    regionName: ''
+                    regionId: ''
                 },
                 indicator: {
                     signboardBean: {
                         picAddress: '',
                         type: '',
                     },
-                    regionName: '',
+                    regionId: '',
                     location: '',
                 },
                 scenic: {
@@ -337,7 +337,7 @@
                         name: '',
                         picAddress: ''
                     },
-                    regionName: '',
+                    regionId: '',
                     state: '',
                     location: '',
                 },
@@ -351,7 +351,7 @@
                         businessTypeId: ''
                     },
                     location: '',
-                    regionName: ''
+                    regionId: ''
                 },
                 park: {
                     parkingBean: {
@@ -364,7 +364,7 @@
                         picAddress: ''
                     },
                     location: '',
-                    regionName: '',
+                    regionId: '',
                 },
                 toilet: {
                     toiletBean: {
@@ -373,7 +373,7 @@
                     },
                     state:'',
                     location:'',
-                    regionName: ''
+                    regionId: ''
                 },
                 area: {
                     name: '',
@@ -398,15 +398,6 @@
             }
         },
         methods: {
-            addfile() {
-                this.$refs.fileUpload.click()
-            },
-            fi (e) {
-                this.file = e.target.files[0]
-            },
-            select () {
-                console.log(this.type, 'klklkl')
-            },
             closeDialog () {
                 console.log(this.src)
                 this.$emit('closeInfoDialog')
@@ -417,7 +408,7 @@
                     newInfo = this.person
                     let  myreg = /^[1][3,4,5,6,7,8][0-9]{9}$/
                     let idReg = /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/
-                    if (newInfo.personBean.name === '' || newInfo.personBean.gender === '' || newInfo.jobName === '') {
+                    if (newInfo.personBean.name.trim() === '' || newInfo.personBean.gender === '' || newInfo.jobId === '') {
                         this.$message.error('请填写完整信息')
                         return
                     }
@@ -433,20 +424,56 @@
                     newInfo = this.boatCar
                 } else if(this.route.includes('trash')) {
                     newInfo = this.trash
-                    if (newInfo.location === '' || newInfo.regionName === '') {
+                    if (newInfo.location === '' || newInfo.regionId === '') {
+                        this.$message.error('请输入完整信息')
+                        return
+                    }
+                    if (newInfo.dustbinBean.type === ''|| newInfo.dustbinBean.name.trim() === '' || newInfo.dustbinBean.dustbinCount.trim() === '') {
                         this.$message.error('请输入完整信息')
                         return
                     }
                 } else if(this.route.includes('indicator')) {
                     newInfo = this.indicator
+                    if (newInfo.signboardBean.type === '' || newInfo.regionId ==='' || newInfo.location === ''){
+                        this.$message.error('请输入完整信息')
+                        return
+                    }
                 } else if(this.route.includes('scenic')) {
                     newInfo = this.scenic
+                    if (newInfo.scenicspotBean.capacity.trim() === '' || newInfo.scenicspotBean.currentNum.trim() === '' || newInfo.scenicspotBean.name.trim() === '') {
+                        this.$message.error('请输入完整信息')
+                        return
+                    }
+                    if (newInfo.regionId === '' || newInfo.location === '') {
+                        this.$message.error('请输入完整信息')
+                        return
+                    }
                 } else if(this.route.includes('shop')) {
                     newInfo = this.shop
+                    if (newInfo.businessBean.capacity.trim() === '' || newInfo.businessBean.currentNum.trim() === '' || newInfo.businessBean.name.trim() === '' || newInfo.businessBean.businessTypeId === '') {
+                        this.$message.error('请输入完整信息')
+                        return
+                    }
+                    if (newInfo.location === ''|| newInfo.regionId === '') {
+                        this.$message.error('请输入完整信息')
+                        return
+                    }
                 } else if(this.route.includes('park')) {
                     newInfo = this.park
+                    if (newInfo.parkingBean.type === '' || newInfo.parkingBean.name.trim() === ''|| newInfo.parkingBean.surplusNum.trim() === ''|| newInfo.parkingBean.capacity.trim() === '') {
+                        this.$message.error('请输入完整信息')
+                        return
+                    }
+                    if (newInfo.location === '' || newInfo.regionId === '') {
+                        this.$message.error('请输入完整信息')
+                        return
+                    }
                 } else if(this.route.includes('toilet')) {
                     newInfo = this.toilet
+                    if (newInfo.toiletBean.name.trim() === ''|| newInfo.location === ''||newInfo.regionId === ''){
+                        this.$message.error('请输入完整信息')
+                        return
+                    }
                 } else if(this.route.includes('area')) {
                     newInfo = this.area
                 } else if (this.route.includes('roat')) {
@@ -454,7 +481,12 @@
                 }
                 newInfo.status = true
                 newInfo.checked = false
-                newInfo.imgUrl = this.src
+                if (this.src.trim() === '') {
+                    newInfo.imgUrl = ''
+                }else {
+                    newInfo.imgUrl = this.src
+                }
+
                 if (this.Info.id) {
                     newInfo.id = this.Info.id
                     this.$emit('fixInfo', newInfo)

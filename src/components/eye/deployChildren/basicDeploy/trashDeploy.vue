@@ -206,7 +206,7 @@
                     name: info.dustbinBean.name,
                     dustbinCount: info.dustbinBean.dustbinCount,
                     type: info.dustbinBean.type,
-                    regionId: info.regionName,
+                    regionId: info.regionId,
                     picAddress: info.imgUrl,
                     latitude: latitude,
                     longitude: longitude
@@ -226,7 +226,7 @@
                     name: info.dustbinBean.name,
                     dustbinCount: info.dustbinBean.dustbinCount,
                     type: info.dustbinBean.type,
-                    regionId: info.regionName,
+                    regionId: info.regionId,
                     picAddress: info.imgUrl,
                     latitude: latitude,
                     longitude: longitude

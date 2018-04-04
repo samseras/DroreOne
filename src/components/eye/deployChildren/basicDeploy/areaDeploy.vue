@@ -178,7 +178,6 @@
                         this.choseInfoId.push(item.id)
                         return item.checked === true
                     } else {
-                        console.log('进入这个判断吗')
                         item.checked = false
                         this.choseInfoId = []
                         return item.checked === false

@@ -205,7 +205,7 @@
                     name: info.scenicspotBean.name,
                     capacity: info.scenicspotBean.capacity,
                     currentNum: info.scenicspotBean.currentNum,
-                    regionId: info.regionName,
+                    regionId: info.regionId,
                     picAddress: info.imgUrl,
                     latitude: latitude,
                     longitude: longitude
@@ -226,7 +226,7 @@
                     name: info.scenicspotBean.name,
                     capacity: info.scenicspotBean.capacity,
                     currentNum: info.scenicspotBean.currentNum,
-                    regionId: info.regionName,
+                    regionId: info.regionId,
                     picAddress: info.imgUrl,
                     latitude: latitude,
                     longitude: longitude

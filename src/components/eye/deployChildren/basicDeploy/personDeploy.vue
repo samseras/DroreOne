@@ -201,7 +201,7 @@
                     gender: info.personBean.gender,
                     idNum: info.personBean.idNum,
                     phone: info.personBean.phone,
-                    jobId: info.jobName
+                    jobId: info.jobId
                 }
                 console.log(personObj, 'this is trashObj')
                 api.person.updatePerson(JSON.stringify(personObj)).then(res => {
@@ -221,7 +221,7 @@
                     gender: info.personBean.gender,
                     idNum: info.personBean.idNum,
                     phone: info.personBean.phone,
-                    jobId: info.jobName
+                    jobId: info.jobId
                 }
                 console.log(personObj, 'this is trashObj')
                 api.person.createPerson(JSON.stringify(personObj)).then(res => {

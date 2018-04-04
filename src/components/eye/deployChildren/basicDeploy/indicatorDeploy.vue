@@ -186,7 +186,7 @@
                 let indicatorObj = {
                     id: info.signboardBean.id,
                     type: info.signboardBean.type,
-                    regionId: info.regionName,
+                    regionId: info.regionId,
                     picAddress: info.imgUrl,
                     latitude: latitude,
                     longitude: longitude
@@ -205,7 +205,7 @@
                 let longitude = info.location.substring(index + 1)
                 let indicatorObj = {
                     type: info.signboardBean.type,
-                    regionId: info.regionName,
+                    regionId: info.regionId,
                     picAddress: info.imgUrl,
                     latitude: latitude,
                     longitude: longitude

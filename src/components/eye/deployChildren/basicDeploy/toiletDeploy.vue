@@ -196,7 +196,7 @@
                 let toiletObj = {
                     id: info.toiletBean.id,
                     name: info.toiletBean.name,
-                    regionId: info.regionName,
+                    regionId: info.regionId,
                     latitude: latitude,
                     picAddress: info.imgUrl,
                     longitude: longitude
@@ -214,7 +214,7 @@
                 let longitude = info.location.substring(index + 1)
                 let toiletObj = {
                     name: info.toiletBean.name,
-                    regionId: info.regionName,
+                    regionId: info.regionId,
                     latitude: latitude,
                     picAddress: info.imgUrl,
                     longitude: longitude
