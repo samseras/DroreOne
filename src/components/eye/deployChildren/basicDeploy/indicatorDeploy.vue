@@ -52,11 +52,11 @@
                         <div class="personType" @click.stop="showPersonDetail(item, '指示牌信息')">
                             <img src="" alt="">
                             <span class="type">
-                                {{item.type}}
+                                {{item.signboardBean.type | typeFilter}}
                             </span>
                         </div>
                         <div class="specificInfo">
-                            <p class="name">所属区域：<span>{{item.area}}</span></p>
+                            <p class="name">所属区域：<span>{{item.regionName}}</span></p>
                             <p class="sex">位置信息：<span>{{item.location}}</span></p>
                         </div>
                     </div>
@@ -104,26 +104,31 @@
                 this.title = title
             },
             addNewInfo () {
-                this.showPersonDetail({}, '添加指示牌信息')
+                this.showPersonDetail({signboardBean:{}}, '添加指示牌信息')
                 this.isDisabled = false
             },
             deletInfo () {
-                api.indicator.deleteIndicator(this.choseInfoId).then(res => {
-                    console.log(res, '删除成功')
-                    for (let i = 0; i < this.choseInfoId.length; i++) {
-                        this.indicatorList = this.indicatorList.filter((item, index) => {
-                            if (item.id === this.choseInfoId[i]){
-                                this.indicatorList[index].checked = false
-                            }
-                            return item.id !== this.choseInfoId[i]
-                        })
-                    }
-                    this.$message.success('删除成功')
-                }).catch(err => {
-                    console.log(err,'删除失败')
-                })
-
-
+                if (this.choseInfoId.length > 0) {
+                    api.indicator.deleteIndicator(this.choseInfoId).then(res => {
+                        console.log(res, '删除成功')
+                        for (let i = 0; i < this.choseInfoId.length; i++) {
+                            this.indicatorList = this.indicatorList.filter((item, index) => {
+                                if (item.id === this.choseInfoId[i]){
+                                    this.indicatorList[index].checked = false
+                                }
+                                return item.id !== this.choseInfoId[i]
+                            })
+                        }
+                        this.$message.success('删除成功')
+                        this.choseInfoId = []
+                    }).catch(err => {
+                        console.log(err,'删除失败')
+                        this.$message.error('删除失败，请稍后重试')
+                        this.choseInfoId = []
+                    })
+                }else {
+                    this.$message.error('请选择要删除的选项')
+                }
             },
             toggleList (type) {
                 if (type === 'list') {
@@ -161,7 +166,7 @@
                 }
             },
             selectedAll (state) {
-                this.choseList = this.indicatorList.filter((item) => {
+                this.indicatorList = this.indicatorList.filter((item) => {
                     if (state === true) {
                         item.checked = true
                         this.choseInfoId.push(item.id)
@@ -175,20 +180,40 @@
                 console.log(this.choseInfoId, 'opopop')
             },
             fixInfo (info) {
-                console.log(info, 'wertyuio')
-                let list = this.indicatorList
-                for(let i = 0;i< list.length; i++){
-                    if (info.id === list[i].id) {
-                        this.indicatorList[i] = info
-
-                    }
+                let index = info.location.includes(',')?info.location.indexOf(','):info.location.indexOf('，')
+                let latitude = info.location.substring(0, index)
+                let longitude = info.location.substring(index + 1)
+                let indicatorObj = {
+                    id: info.signboardBean.id,
+                    type: info.signboardBean.type,
+                    regionId: info.regionName,
+                    picAddress: info.imgUrl,
+                    latitude: latitude,
+                    longitude: longitude
                 }
-                this.choseList = this.indicatorList
+                console.log(indicatorObj, 'this is trashObj')
+                api.indicator.updateIndicator(JSON.stringify(indicatorObj)).then(res => {
+                    console.log('修改成功')
+                    this.$message.success('修改成功')
+                    this.choseInfoId = []
+                    this.getAllIndicator()
+                })
             },
             addNewIndicator (info) {
-                info.id = new Date().getTime()
-                this.indicatorList.push(info)
-                this.choseList = this.indicatorList
+                let index = info.location.includes(',')?info.location.indexOf(','):info.location.indexOf('，')
+                let latitude = info.location.substring(0, index)
+                let longitude = info.location.substring(index + 1)
+                let indicatorObj = {
+                    type: info.signboardBean.type,
+                    regionId: info.regionName,
+                    picAddress: info.imgUrl,
+                    latitude: latitude,
+                    longitude: longitude
+                }
+                api.indicator.createIndicator(JSON.stringify(indicatorObj)).then(res => {
+                    console.log('增加成功')
+                    this.getAllIndicator()
+                })
             },
             fixedInfo () {
                 if (this.choseInfoId.length > 0) {
@@ -200,7 +225,7 @@
                     this.showPersonDetail(this.indicatorInfo, '修改指示牌信息')
                     this.isDisabled = false
                 } else {
-                    this.$message.error('请选择要修改的人员')
+                    this.$message.error('请选择要修改的指示牌')
                 }
             },
             async getAllIndicator () {
@@ -212,11 +237,24 @@
                     for (let i = 0; i < this.indicatorList.length; i++) {
                         this.indicatorList[i].checked = false
                         this.indicatorList[i].status = true
+                        this.indicatorList[i].id = this.indicatorList[i].signboardBean.id
+                        this.indicatorList[i].location = `${this.indicatorList[i].latitude},${this.indicatorList[i].longitude}`
                     }
                 }).catch(err => {
                     console.log(err)
                     this.isShowLoading = false
                 })
+            }
+        },
+        filters: {
+            typeFilter (item) {
+                if (item == 0) {
+                    return '标语提示'
+                }else if (item == 1) {
+                    return '路线提示'
+                } else{
+                    return '设施提示'
+                }
             }
         },
         created () {

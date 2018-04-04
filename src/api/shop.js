@@ -17,14 +17,14 @@ const shop = {
         return axios ({
             method: 'PUT',
             url: getUrl('/business'),
-            params
+            data: params
         })
     },
     createShop  (params) {
         return axios ({
             method: 'POST',
             url: getUrl('/business'),
-            params
+            data: params
         })
     },
     deleteShop (par) {

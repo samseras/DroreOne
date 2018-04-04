@@ -18,14 +18,14 @@ const scenic = {
         return axios ({
             method: 'PUT',
             url: getUrl('/scenicspot '),
-            params
+            data:params
         })
     },
     createScenic (params) {
         return axios ({
             method: 'POST',
             url: getUrl('/scenicspot'),
-            params
+            data:params
         })
     },
     deleteScenic (par) {

@@ -17,14 +17,14 @@ const park = {
         return axios ({
             method: 'PUT',
             url: getUrl('/parking'),
-            params
+            data:params
         })
     },
     createPark  (params) {
         return axios ({
             method: 'POST',
             url: getUrl('/parking'),
-            params
+            data:params
         })
     },
     deletePark (par) {

@@ -17,14 +17,14 @@ const indicator = {
         return axios ({
             method: 'PUT',
             url: getUrl('/signboard'),
-            params
+            data:params
         })
     },
     createIndicator  (params) {
         return axios ({
             method: 'POST',
             url: getUrl('/signboard'),
-            params
+            data:params
         })
     },
     deleteIndicator (par) {

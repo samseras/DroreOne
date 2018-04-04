@@ -17,14 +17,14 @@ const area = {
         return axios ({
             method: 'PUT',
             url: getUrl('/region'),
-            params
+            data: params
         })
     },
     createRegion  (params) {
         return axios ({
             method: 'POST',
             url: getUrl('/region'),
-            params
+            data: params
         })
     },
     deleteRegion  (par) {

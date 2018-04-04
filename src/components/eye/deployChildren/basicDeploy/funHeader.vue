@@ -14,7 +14,7 @@
         </div>
         <div class="filite" v-if="route.includes('person')">
             <el-checkbox-group v-model="filterList" @change="choseType">
-                <el-checkbox v-for="item in personTypeList" :label="item.type"></el-checkbox>
+                <el-checkbox v-for="item in personTypeList" :label="item.name"></el-checkbox>
             </el-checkbox-group>
         </div>
         <div class="filite" v-if="route.includes('indicator')">
@@ -29,12 +29,12 @@
         </div>
         <div class="filite" v-if="route.includes('shop')">
             <el-checkbox-group v-model="filterList" @change="choseType">
-                <el-checkbox v-for="item in shopType" :label="item.type"></el-checkbox>
+                <el-checkbox v-for="item in shopType" :label="item.name"></el-checkbox>
             </el-checkbox-group>
         </div>
         <div class="filite" v-if="route.includes('park')">
             <el-checkbox-group v-model="filterList" @change="choseType">
-                <el-checkbox v-for="item in parkType" :label="item.type"></el-checkbox>
+                <el-checkbox v-for="item in parkType" :label="item.type | packFilter"></el-checkbox>
             </el-checkbox-group>
         </div>
         <div class="page">
@@ -48,19 +48,13 @@
 </template>
 
 <script>
+    import api from '@/api'
     export default {
         name: "fun-header",
         data () {
             return {
                 filterList: [],
-                personTypeList: [
-                    {type: '安保'},
-                    {type: '售票'},
-                    {type: '保洁'},
-                    {type: '司机'},
-                    {type: '船夫'},
-                    {type: '检票'}
-                ],
+                personTypeList: [],
                 indicatorType: [
                     {type: '设施'},
                     {type: '路线'},
@@ -70,21 +64,13 @@
                     {type: '临时'},
                     {type: '固定'}
                 ],
-                shopType: [
-                    {type: '零售'},
-                    {type: '餐饮'},
-                    {type: '游乐'},
-                    {type: '其他'}
-                ],
+                shopType: [],
                 parkType: [
-                    {type: '室内'},
-                    {type: '室外'}
+                    {type: '0'},
+                    {type: '1'}
                 ],
                 route: '',
                 isSelected: false,
-                isShowJobType: true,
-                isShowIndicatorType: true,
-                isShowTrashType: true
             }
         },
         methods: {
@@ -99,6 +85,7 @@
                 this.$emit('toggleList',type)
             },
             choseType () {
+                console.log(this.filterList, 'opopopopopo')
                 this.$emit('choseType',this.filterList)
             },
             selectedAll () {
@@ -109,28 +96,39 @@
             fixCard () {
                 this.$emit('fixedInfo')
             },
-            showPersonJob () {
+            async showType () {
                 this.route = this.$route.path
-                // if (route.includes('person')){
-                //     this.isShowJobType = true
-                //     this.isShowIndicatorType = false
-                //     this.isShowTrashType = false
-                // } else if (route.includes('indicator')){
-                //     this.isShowJobType = false
-                //     this.isShowIndicatorType = true
-                // } else {
-                //     this.isShowJobType = false
-                //     this.isShowIndicatorType = false
-                // }
+                if (this.route.includes('shop')) {
+                    await api.shop.getBusinesstype().then(res => {
+                        console.log(res, '这是请求回来的shop')
+                        this.shopType = res
+                    })
+                } else if (this.route.includes('person')) {
+                    await api.person.getJob().then(res => {
+                        console.log(res, '这是请求回来的')
+                        this.personTypeList = res
+                    })
+                } else if (this.route.includes('indicator')) {
+                    console.log('这是指示牌')
+                }
+            }
+        },
+        filters: {
+            packFilter (item) {
+                if (item === '0') {
+                    return '室外'
+                } else{
+                    return '室内'
+                }
             }
         },
         watch: {
             '$route' () {
-                this.showPersonJob()
+                this.showType()
             }
         },
         created () {
-            this.showPersonJob()
+            this.showType()
         }
     }
 </script>

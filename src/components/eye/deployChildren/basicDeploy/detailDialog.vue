@@ -10,15 +10,20 @@
             <div class="card">
                 <!--人员-->
                 <div class="personCardContent" v-if="route.includes('person')">
-                    <p class="name">姓&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;名：<input type="text"v-model="person.name"></p>
-                    <p class="sex">性&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;别：<input type="text"v-model="person.sex"></p>
-                    <p class="type">
-                        人员角色： <select name="" v-model="person.jobName">
-                        <option v-for="item in options" :value="item.jobId">{{item.jobName}}</option>
+                    <p class="name">姓&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;名：<input type="text"v-model="person.personBean.name"></p>
+                    <p class="sex">性&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;别：
+                        <select name="" v-model="person.personBean.gender">
+                            <option  value= true>男</option>
+                            <option  value= false>女</option>
                         </select>
                     </p>
-                    <p class="idNum">身份证号：<input type="text"v-model="person.idNum"></p>
-                    <p class="phoneNum">电话号码：<input type="text"v-model="person.phone"></p>
+                    <p class="type">
+                        人员角色： <select name="" v-model="person.jobName">
+                        <option v-for="item in options" :value="item.id">{{item.name}}</option>
+                        </select>
+                    </p>
+                    <p class="idNum">身份证号：<input type="text"v-model="person.personBean.idNum"></p>
+                    <p class="phoneNum">电话号码：<input type="text"v-model="person.personBean.phone"></p>
                     <div class="img">
                         <label for="avatar">
                             <img :src="files.length ? files[0].url : 'https://www.gravatar.com/avatar/default?s=200&r=pg&d=mm'"  class="rounded-circle" />
@@ -54,8 +59,18 @@
                 </div>
                 <!--指示牌-->
                 <div class="personCardContent boatCardContent" v-if="route.includes('indicator')">
-                    <p class="name">类&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;型：<input type="text"v-model="indicator.type"></p>
-                    <p class="phoneNum">所属片区：<input type="text"v-model="indicator.area"></p>
+                    <p class="name">类&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;型：
+                        <select name="" v-model="indicator.signboardBean.type">
+                            <option  value= 0>标语类</option>
+                            <option  value= 1>路线类</option>
+                            <option  value= 2>设施类</option>
+                        </select>
+                    </p>
+                    <p class="phoneNum">所属片区：
+                        <select name="" v-model="indicator.regionName">
+                            <option  v-for="item in regions" :value="item.id">{{item.name}}</option>
+                        </select>
+                    </p>
                     <p class="phoneNum">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置：<input type="text"v-model="indicator.location"><img src="" alt="" @click="showMapDialog"></p>
                     <div class="img">
                         <label for="avatar">
@@ -66,21 +81,25 @@
                 <!--垃圾桶-->
                 <div class="personCardContent boatCardContent" v-if="route.includes('trash')">
                     <p class="name">类&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;型：
-                        <select name="" v-model="trash.type">
-                            <option  value="充裕">充裕</option>
-                            <option  value="已满">已满</option>
+                        <select name="" v-model="trash.dustbinBean.type">
+                            <option  value="true">临时</option>
+                            <option  value="false">固定</option>
                         </select>
                     </p>
-                    <p class="sex">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称：<input type="text"v-model="trash.name"></p>
-                    <p class="type">
+                    <p class="sex">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称：<input type="text"v-model="trash.dustbinBean.name"></p>
+                    <p class="type" v-if="false">
                         状&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;态： <select name="" v-model="trash.status">
                         <option  value="充裕">充裕</option>
                         <option  value="已满">已满</option>
                     </select>
                     </p>
-                    <p class="idNum">个&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;数：<input type="text"v-model="trash.dustbinCount"></p>
+                    <p class="idNum">个&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;数：<input type="text"v-model="trash.dustbinBean.dustbinCount"></p>
                     <p class="phoneNum">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置：<input type="text"v-model="trash.location"><img src="" alt="" @click="showMapDialog"></p>
-                    <p class="phoneNum">所属片区：<input type="text"v-model="trash.area"></p>
+                    <p class="phoneNum">所属片区：
+                        <select name="" v-model="trash.regionName">
+                            <option  v-for="item in regions" :value="item.id">{{item.name}}</option>
+                        </select>
+                    </p>
                     <div class="img">
                         <!--<img src="" alt="">-->
                         <label for="avatar">
@@ -90,17 +109,21 @@
                 </div>
                 <!--景点-->
                 <div class="personCardContent boatCardContent" v-if="route.includes('scenic')">
-                    <p class="name">景点名称：<input type="text"v-model="scenic.name"></p>
-                    <p class="sex">所属片区：<input type="text"v-model="scenic.area"></p>
+                    <p class="name">景点名称：<input type="text"v-model="scenic.scenicspotBean.name"></p>
+                    <p class="sex">所属片区：
+                        <select name="" v-model="scenic.regionName">
+                            <option  v-for="item in regions" :value="item.id">{{item.name}}</option>
+                        </select>
+                    </p>
                     <p class="type">
-                        状&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;态： <select name="" v-model="scenic.state">
+                        状&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;态： <select name="" v-model="scenic.scenicspotBean.state">
                         <option  value="正常">充裕</option>
                         <option  value="异常">已满</option>
                     </select>
                     </p>
-                    <p class="idNum">容&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;量：<input type="text"v-model="scenic.capacity"></p>
+                    <p class="idNum">容&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;量：<input type="text"v-model="scenic.scenicspotBean.capacity"></p>
 
-                    <p class="phoneNum">当前人数：<input type="text"v-model="trash.nowPeopleNum"></p>
+                    <p class="phoneNum">当前人数：<input type="text"v-model="scenic.scenicspotBean.currentNum"></p>
                     <p class="phoneNum">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置：<input type="text"v-model="scenic.location"><img src="" alt="" @click="showMapDialog"></p>
                     <div class="img">
                         <label for="avatar">
@@ -111,23 +134,23 @@
                 <!--商圈-->
                 <div class="personCardContent boatCardContent" v-if="route.includes('shop')">
                     <p class="name">类&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;型：
-                        <select name="" v-model="shop.type">
-                            <option  v-for="item in businesstype" :value="item.type"></option>
+                        <select name="" v-model="shop.businessBean.businessTypeId">
+                            <option  v-for="item in businesstype" :value="item.id">{{item.name}}</option>
                         </select>
                     </p>
-                    <p class="sex">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称：<input type="text"v-model="shop.name"></p>
+                    <p class="sex">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称：<input type="text"v-model="shop.businessBean.name"></p>
                     <p class="type">
-                        状&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;态： <select name="" v-model="shop.state">
+                        状&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;态： <select name="" v-model="shop.businessBean.state">
                         <option  value="充裕">充裕</option>
                         <option  value="已满">已满</option>
                     </select>
                     </p>
-                    <p class="idNum">容&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;量：<input type="text"v-model="shop.capacity"></p>
+                    <p class="idNum">容&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;量：<input type="text"v-model="shop.businessBean.capacity"></p>
 
-                    <p class="phoneNum">当前人数：<input type="text"v-model="shop.currentNum"></p>
+                    <p class="phoneNum">当前人数：<input type="text"v-model="shop.businessBean.currentNum"></p>
                     <p class="phoneNum">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置：<input type="text"v-model="shop.location"><img src="" alt="" @click="showMapDialog"></p>
                     <p class="phoneNum">所属片区：
-                        <select name="" v-model="shop.area">
+                        <select name="" v-model="shop.regionName">
                             <option  v-for="item in regions" :value="item.id">{{item.name}}</option>
                         </select>
                     </p>
@@ -139,21 +162,25 @@
                 </div>
                 <!--停车场-->
                 <div class="personCardContent boatCardContent" v-if="route.includes('park')">
-                    <p class="name">类&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;型：<input type="text"v-model="park.type"></p>
-                    <p class="sex">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称：<input type="text"v-model="park.name"></p>
+                    <p class="name">类&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;型：
+                        <select name="" v-model="park.parkingBean.type">
+                            <option  value = 0>室外</option>
+                            <option  value = 1>室内</option>
+                        </select>
+                    </p>
+                    <p class="sex">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称：<input type="text"v-model="park.parkingBean.name"></p>
                     <p class="type">
-                        状&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;态： <select name="" v-model="park.state">
+                        状&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;态： <select name="" v-model="park.parkingBean.state">
                         <option  value="充裕">充裕</option>
                         <option  value="已满">已满</option>
                         <option  value="紧张">紧张</option>
                     </select>
                     </p>
-                    <p class="idNum">空余车位：<input type="text"v-model="park.residuePark"></p>
-
-                    <p class="phoneNum">车位总数：<input type="text"v-model="park.allPark"></p>
+                    <p class="idNum">空余车位：<input type="text"v-model="park.parkingBean.surplusNum"></p>
+                    <p class="phoneNum">车位总数：<input type="text"v-model="park.parkingBean.capacity"></p>
                     <p class="phoneNum">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置：<input type="text"v-model="park.location"><img src="" alt="" @click="showMapDialog"></p>
                     <p class="phoneNum">所属片区：
-                        <select name="" v-model="park.area">
+                        <select name="" v-model="park.regionName">
                             <option  v-for="item in regions" :value="item.id">{{item.name}}</option>
                         </select>
                     </p>
@@ -165,9 +192,9 @@
                 </div>
                 <!--洗手间-->
                 <div class="personCardContent boatCardContent" v-if="route.includes('toilet')">
-                    <p class="sex">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称：<input type="text"v-model="toilet.name"></p>
+                    <p class="sex">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称：<input type="text"v-model="toilet.toiletBean.name"></p>
                     <p class="phoneNum">所属片区：
-                        <select name="" v-model="toilet.area">
+                        <select name="" v-model="toilet.regionName">
                             <option  v-for="item in regions" :value="item.id">{{item.name}}</option>
                         </select>
                     </p>
@@ -187,10 +214,10 @@
                 <!--片区-->
                 <div class="personCardContent boatCardContent" v-if="route.includes('area')">
                     <p class="sex">片区名称：<input type="text"v-model="area.name"></p>
-                    <p class="phoneNum">所在景区：<input type="text"v-model="area.placeScenic"></p>
+                    <p class="phoneNum" v-if="false">所在景区：<input type="text"v-model="area.placeScenic"></p>
                     <p class="phoneNum">位置范围：<input type="text"v-model="area.location"><img src="" alt="" @click="showMapDialog"></p>
                     <p class="type">
-                        描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：<textarea name="" v-model="area.describe" cols="30"
+                        描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：<textarea name="" v-model="area.description" cols="30"
                                                                                rows="5" placeholder="请输入描述信息"></textarea>
                     </p>
                     <div class="img">
@@ -205,7 +232,7 @@
                     <p class="phoneNum">所在景区：<input type="text"v-model="roat.placeScenic"></p>
                     <p class="phoneNum">位置范围：<input type="text"v-model="roat.location"><img src="" alt="" @click="showMapDialog"></p>
                     <p class="type">
-                        描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：<textarea name=""v-model="roat.describe" cols="30"
+                        描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：<textarea name=""v-model="roat.description" cols="30"
                                                                                rows="5" placeholder="请输入描述信息"></textarea>
                     </p>
                     <div class="img">
@@ -263,13 +290,14 @@
                 isShowMapDialog: false,
                 mapVisible: false,
                 person: {
-                    name:'',
-                    gender:'',
-                    idNum:'',
-                    jobId: '',
+                    personBean: {
+                        name:'',
+                        gender:'',
+                        idNum:'',
+                        phone:'',
+                        picAddress: ''
+                    },
                     jobName: '',
-                    phone:'',
-                    picAddress: ''
                 },
                 boatCar: {
                     type: '',
@@ -284,68 +312,81 @@
                     picAddress: ''
                 },
                 trash: {
-                    type: '',
-                    name: '',
-                    state: '',
-                    dustbinCount: '',
+                    dustbinBean: {
+                        type: '',
+                        name: '',
+                        state: '',
+                        dustbinCount: '',
+                        picAddress: ''
+                    },
                     location: '',
-                    area: '',
-                    picAddress: ''
+                    regionName: ''
                 },
                 indicator: {
-                    type: '',
-                    area: '',
+                    signboardBean: {
+                        picAddress: '',
+                        type: '',
+                    },
+                    regionName: '',
                     location: '',
-                    picAddress: ''
                 },
                 scenic: {
-                    name: '',
-                    area: '',
+                    scenicspotBean: {
+                        capacity: '',
+                        currentNum: '',
+                        name: '',
+                        picAddress: ''
+                    },
+                    regionName: '',
                     state: '',
-                    capacity: '',
-                    nowPeopleNum: '',
                     location: '',
-                    picAddress: ''
                 },
                 shop: {
-                    type: '',
-                    name: '',
-                    state: '',
-                    capacity: '',
-                    currentNum: '',
+                    businessBean: {
+                        capacity: '',
+                        currentNum: '',
+                        picAddress: '',
+                        name: '',
+                        state: '',
+                        businessTypeId: ''
+                    },
                     location: '',
-                    area: '',
-                    picAddress: ''
+                    regionName: ''
                 },
                 park: {
-                    type:'',
-                    name:'',
-                    state:'',
-                    residuePark:'',
-                    allPark:'',
-                    location:'',
-                    area:'',
-                    picAddress: ''
+                    parkingBean: {
+                        type: '',
+                        name: '',
+                        state: '',
+                        currentNum: '',
+                        surplusNum: '',
+                        capacity: '',
+                        picAddress: ''
+                    },
+                    location: '',
+                    regionName: '',
                 },
                 toilet: {
-                    name:'',
-                    area:'',
+                    toiletBean: {
+                        name:'',
+                        picAddress: '',
+                    },
                     state:'',
                     location:'',
-                    picAddress: ''
+                    regionName: ''
                 },
                 area: {
                     name: '',
                     placeScenic: '',//所在景区
                     location: '',
-                    describe: '',
+                    description: '',
                     picAddress: ''
                 },
                 roat: {
                     name: '',
                     placeScenic: '',//所在景区
                     location: '',
-                    describe: '',
+                    description: '',
                     picAddress: ''
                 },
                 options: [],
@@ -374,10 +415,28 @@
                 let newInfo = {}
                 if (this.route.includes('person')) {
                     newInfo = this.person
+                    let  myreg = /^[1][3,4,5,6,7,8][0-9]{9}$/
+                    let idReg = /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/
+                    if (newInfo.personBean.name === '' || newInfo.personBean.gender === '' || newInfo.jobName === '') {
+                        this.$message.error('请填写完整信息')
+                        return
+                    }
+                    if (newInfo.personBean.phone === '' || !myreg.test(newInfo.personBean.phone)) {
+                        this.$message.error('请填写正确的电话号码')
+                        return
+                    }
+                    if (newInfo.personBean.idNum === '' || !idReg.test(newInfo.personBean.idNum)) {
+                        this.$message.error('请填写正确的身份证号码')
+                        return
+                    }
                 } else if(this.route.includes('boat')) {
                     newInfo = this.boatCar
                 } else if(this.route.includes('trash')) {
                     newInfo = this.trash
+                    if (newInfo.location === '' || newInfo.regionName === '') {
+                        this.$message.error('请输入完整信息')
+                        return
+                    }
                 } else if(this.route.includes('indicator')) {
                     newInfo = this.indicator
                 } else if(this.route.includes('scenic')) {
@@ -395,6 +454,7 @@
                 }
                 newInfo.status = true
                 newInfo.checked = false
+                newInfo.imgUrl = this.src
                 if (this.Info.id) {
                     newInfo.id = this.Info.id
                     this.$emit('fixInfo', newInfo)
@@ -480,6 +540,7 @@
             } else if(this.route.includes('boat')) {
                 this.boatCar = this.Info
             } else if(this.route.includes('trash')) {
+                console.log(this.Info, '909090909090')
                 this.trash = this.Info
             } else if(this.route.includes('indicator')) {
                 this.indicator = this.Info
@@ -523,6 +584,15 @@
                         this.cropper.destroy()
                         this.cropper = false
                     }
+                }
+            }
+        },
+        filters: {
+            sexFilter (item) {
+                if (item) {
+                    return '男'
+                } else {
+                    return '女'
                 }
             }
         },

@@ -89,7 +89,7 @@
 </script>
 
 <style lang="scss">
-    .el-container,.is-vertical{
+    .el-container{
         width: 100%;
         height: 100%;
         min-width: rem(1120);
