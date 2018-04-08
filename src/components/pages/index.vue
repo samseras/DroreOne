@@ -46,10 +46,10 @@
                     </div>
                 </el-carousel-item>
                 <el-carousel-item>
-                    2
+                    <div class="conversion"></div>
                 </el-carousel-item>
                 <el-carousel-item>
-                  3
+                    <div class="conversion"></div>
                 </el-carousel-item>
             </el-carousel>
 		</div>
@@ -86,14 +86,14 @@
 	*{margin: 0;padding:0;box-sizing: border-box;}
 	li{list-style: none;}
 	a{text-decoration: none;color: #fff;font-size: 12px;}
-	#entrence{width: 100%;height:100%;min-width:1450px;min-height:740px;position:relative;background: url('../../../static/img/index-bg.png') no-repeat;background-size:cover;display: flex;flex-direction: column;}
+	#entrence{width: 100%;height:100%;min-width:1450px;min-height:650px;position:relative;background: url('../../../static/img/index-bg.png') no-repeat;background-size:cover;display: flex;flex-direction: column;}
     header{width:100%;height: 50px;font-size: 20px;color: #fff;background: url('../../../static/img/index-top.png') no-repeat;}
     header p{width: 200px;line-height: 50px;margin-left: 150px;float: left;}
     #getTime{line-height: 50px;font-size: 12px;float: left;margin-left: 740px;}
     header .user{float: left;width: 100px;line-height: 50px;background: url(../../../static/img/user.png) no-repeat;background-size:14px;background-position: 0 15px;margin-left: 30px;text-indent: 20px;font-size: 14px;}
     header .indexExit{width: 20px;height:35px;background: url(../../../static/img/exit.png) no-repeat;background-size:14px;background-position: 0 15px;line-height: 35px;float: left;}
     footer{width:100%;height: 35px;background: rgba(0,0,0,0.1);text-align: center;font-size: 12px;line-height: 35px;color: #fff;}
-    .main{width: 800px;flex:1;margin:150px auto; min-height: 358px;}
+    .main{width: 800px;flex:1;margin:120px auto; min-height: 268px;}
     .search{width:500px;height: 40px;margin: -50px auto 0;background: rgba(0,0,0,0.1);}
     .search input{width:400px;height: 20px;margin: 10px 0px 10px 10px;border: none;text-indent: 10px;font-size: 12px;}
     .search button{width:80px;height: 20px;margin: 10px 0px;border:none;background: #f6b75a;color: #fff;font-size: 12px;}
@@ -144,4 +144,12 @@
    .change:hover{transform: scale(1.1);transition-duration: 1.5s;z-index: 10;box-shadow: 0px 3px 30px 2px rgba(0,0,0,0.8);}
     input:focus{outline: none;}
     button:focus{outline: none;}
+
+
+    .conversion{
+        background: red;
+        width: 100%;
+        height: 100%;
+        margin-top: 30px;
+    }
 </style>
