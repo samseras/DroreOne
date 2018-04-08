@@ -2,7 +2,7 @@
   <div class="analyze">
       <div class="analyzeMenu" v-if="hideList">
           <ul>
-              <li v-for="(item,index) in sidebarList" @click="isShowAnalyze(item.dashboard_id,index)" :class="activeIndex === index?'active':''" :id="item.id" :listName = "item.name" >
+              <li v-for="(item,index) in sidebarList" @click="isShowAnalyze(item.dashboard_id,index,item.refreshData)"  :class="activeIndex === index?'active':''" :id="item.id" :listName = "item.name" >
                   {{item.name}}
               </li>
           </ul>
@@ -17,6 +17,7 @@
   // import echarts from "../../static/js/echarts.min.js"
   import passengerFlow from "./eye/analyze/passengerFlow.vue"
   import api from "@/api"
+  import { mapMutations } from 'vuex'
   export default {
   	data(){
   		return{
@@ -25,31 +26,39 @@
             dashboradList:[],
             sidebarList:[],
             activeIndex : 0,
-            hideList:true
+            hideList:true,
   		}
   	},
     async created () {
   	  await this.getDashboradList()
       this.$router.push({path:`/analyze/${this.sidebarList[0].dashboard_id}`});
+      this.$store.commit('REFRESH_DATA_TYPE', this.sidebarList[0].refreshData)
     },
   	components:{
   		passengerFlow
   	},
     methods:{
+        ...mapMutations(['REFRESH_DATA_TYPE']),
         hideLists(data){
               this.hideList = !data.list;
               let hideData = !data.head;
-            this.$emit('hideHead',hideData);
+              this.$emit('hideHead',hideData);
         },
-        isShowAnalyze (id,index) {
+        isShowAnalyze (id,index,refresh) {
 	          this.$router.push({path: `/analyze/${id}`});
 	          this.activeIndex = index;
+              this.$store.commit('REFRESH_DATA_TYPE', refresh)
+
         },
         async getDashboradList(){
            // debugger
            await api.analyze.getDashboradList().then(res => {
-         //       console.log(res, 'opopopopopopop')
                 this.sidebarList = res.result
+               this.sidebarList = this.sidebarList.map(item => {
+                   item.refreshData = 20000
+                   return item
+               })
+               // console.log(this.sidebarList,"11111111111")
             })
         }
 
