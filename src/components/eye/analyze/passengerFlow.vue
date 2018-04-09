@@ -66,8 +66,7 @@
                 lineDom:null,
                 gaugeDom:null,
                 funnelDom:null,
-                isAllScreen:false,
-                refreshTime:null
+                isAllScreen:false
             }
         },
         props:['listName'],
@@ -167,10 +166,11 @@
                 this.moveChart();
             },
             getEchats () {
-                console.log('nimade ')
+                console.log(this.getRefresh)
                 this.isShowLoading = true
                 let id = this.$route.params.id;
                 api.analyze.getStreamDataById(id).then(res=> {
+                    console.log('nimeide ')
                     this.isShowloading = false;
                     this.echatList = res.result;
                     let scenarioId,chartId,chartDomH;
@@ -568,7 +568,7 @@
                 let line0ption,lineResult;
                 api.analyze.getScenarioMapData(scenarioId).then(res=>{
                     this.echatData = res.result;
-                    console.log(res,"这是返回的line数据");
+                   // console.log(res,"这是返回的line数据");
                     lineResult = JSON.parse(res.result);
                     $("#"+scenarioId).prev().find(".title").text(lineResult.title);
                     this.lineDom = this.$echarts.init(document.getElementById(scenarioId));
@@ -761,7 +761,7 @@
                 let gauge0ption,gaugeResult;
                 api.analyze.getScenarioMapData(scenarioId).then(res=>{
                     this.echatData = res.result;
-                    console.log(res,"这是返回的gauge数据");
+                  //  console.log(res,"这是返回的gauge数据");
                     gaugeResult = JSON.parse(res.result);
                     $("#"+scenarioId).prev().find(".title").text(gaugeResult.title);
                     this.gaugeDom = this.$echarts.init(document.getElementById(scenarioId));
@@ -818,7 +818,7 @@
                 let radar0ption,radarResult;
                 api.analyze.getScenarioMapData(scenarioId).then(res=>{
                     this.echatData = res.result;
-                    console.log(res,"这是返回的radar数据");
+                   // console.log(res,"这是返回的radar数据");
                     radarResult = JSON.parse(res.result);
                     $("#"+scenarioId).prev().find(".title").text(radarResult.title);
                     this.radarDom = this.$echarts.init(document.getElementById(scenarioId));
@@ -854,6 +854,9 @@
                 })
             },
             getRefreshTime () {
+                if (this.getRefresh == 0) {
+                    return
+                }
                 if (localStorage.getItem('REFRESHTIME')){
                     let time = localStorage.getItem('REFRESHTIME')
                     if (new Date().getTime() - time > this.getRefresh * 10){
@@ -893,8 +896,7 @@
         components: {
             ScrollContainer,
             EchatsCard
-        },
-        props:['refresh']
+        }
 
     }
 </script>

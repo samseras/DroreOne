@@ -2,7 +2,7 @@
   <div class="analyze">
       <div class="analyzeMenu" v-if="hideList">
           <ul>
-              <li v-for="(item,index) in sidebarList" @click="isShowAnalyze(item.dashboard_id,index,item.refreshData)"  :class="activeIndex === index?'active':''" :id="item.id" :listName = "item.name" >
+              <li v-for="(item,index) in sidebarList" @click="isShowAnalyze(item.dashboard_id,index,item.refresh_interval)"  :class="activeIndex === index?'active':''" :id="item.id" :listName = "item.name" >
                   {{item.name}}
               </li>
           </ul>
@@ -32,7 +32,7 @@
     async created () {
   	  await this.getDashboradList()
       this.$router.push({path:`/analyze/${this.sidebarList[0].dashboard_id}`});
-      this.$store.commit('REFRESH_DATA_TYPE', this.sidebarList[0].refreshData)
+      this.$store.commit('REFRESH_DATA_TYPE', this.sidebarList[0].refresh_interval)
     },
   	components:{
   		passengerFlow
@@ -48,16 +48,15 @@
 	          this.$router.push({path: `/analyze/${id}`});
 	          this.activeIndex = index;
               this.$store.commit('REFRESH_DATA_TYPE', refresh)
-
         },
         async getDashboradList(){
            // debugger
            await api.analyze.getDashboradList().then(res => {
                 this.sidebarList = res.result
-               this.sidebarList = this.sidebarList.map(item => {
-                   item.refreshData = 20000
-                   return item
-               })
+               //  this.sidebarList = this.sidebarList.map(item => {
+               //     item.refreshData = 20000
+               //     return item
+               // })
                // console.log(this.sidebarList,"11111111111")
             })
         }
