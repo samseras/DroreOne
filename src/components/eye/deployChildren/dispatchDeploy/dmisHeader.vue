@@ -6,7 +6,7 @@
         </div>
         <div class="funcBtn">
             <el-button size="mini"plain @click="addNewInfo"><i class="el-icon-circle-plus"></i>添加</el-button>
-            <!--<el-checkbox v-model="isSelected" @change="selectedAll"  class='selectedAll' >全选</el-checkbox>-->
+            <el-checkbox v-model="isSelected" @change="selectedAll"  class='selectedAll' >全选</el-checkbox>
             <!--<el-button size="mini"plain>导入</el-button>-->
             <!--<el-button size="mini"plain>导出</el-button>-->
             <el-button size="mini"plain @click="deleteCard"><i class="el-icon-delete"></i>删除</el-button>
@@ -139,8 +139,9 @@
             }
             .cell{
                 font-size: rem(12);
-                .edit{
+                span:hover{
                     color: #54c5f2;
+                    cursor:pointer;
                 }
             }
         }

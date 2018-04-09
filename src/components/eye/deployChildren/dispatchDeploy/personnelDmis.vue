@@ -15,7 +15,6 @@
             <div class="personList">
                 <ScrollContainer>
                     <el-table
-                        v-if="isShowAreaCard"
                         ref="multipleTable"
                         :data="areaList"
                         tooltip-effect="dark"
@@ -50,7 +49,7 @@
                         </el-table-column>
                         <el-table-column label="操作">
                             <template slot-scope="scope">
-                                <span @click="fixedInfo(scope.row,'片区信息')" class="edit">编辑</span> |
+                                <span @click="fixedInfo(scope.row,'片区信息')">编辑</span> |
                                 <span @click="showPersonDetail(scope.row,'片区信息')">查看</span> |
                                 <span @click="delet(scope.row,'片区信息')">删除</span>
                             </template>
@@ -188,31 +187,31 @@
                     })
                 }
             },
-            selectedAll(state){
-                if (state) {
-                    state.forEach(row => {
-                        this.$refs.multipleTable.toggleRowSelection(row);
-                    });
-                } else {
-                    this.$refs.multipleTable.clearSelection();
-                }
-            },
-            // selectedAll (state) {
-            //     console.log(state, 'opopopopop')
-            //     this.choseList = this.areaList.filter((item) => {
-            //         if (state === true) {
-            //             item.checked = true
-            //             this.choseInfoId.push(item.id)
-            //             return item.checked === true
-            //         } else {
-            //             console.log('进入这个判断吗')
-            //             item.checked = false
-            //             this.choseInfoId = []
-            //             return item.checked === false
-            //         }
-            //     })
-            //     console.log(this.choseInfoId, 'opopop')
+            // selectedAll(state){
+            //     if (state) {
+            //         state.forEach(row => {
+            //             this.$refs.multipleTable.toggleRowSelection(row);
+            //         });
+            //     } else {
+            //         this.$refs.multipleTable.clearSelection();
+            //     }
             // },
+            selectedAll (state) {
+                console.log(state, 'opopopopop')
+                this.choseList = this.areaList.filter((item) => {
+                    if (state === true) {
+                        item.checked = true
+                        this.choseInfoId.push(item.id)
+                        return item.checked === true
+                    } else {
+                        console.log('进入这个判断吗')
+                        item.checked = false
+                        this.choseInfoId = []
+                        return item.checked === false
+                    }
+                })
+                console.log(this.choseInfoId, 'opopop')
+            },
             fixInfo (info) {
                 console.log(info, 'wertyuio')
                 let list = this.areaList

@@ -96,8 +96,8 @@
 <style scoped>
 	*{margin: 0;padding:0;}
 	.login{min-width: 1380px;width: 100%;height:100%;min-height: 650px;background: url('../../../static/img/1.png') no-repeat;background-size:cover;}
-    .login-content{display: flex;flex-direction:column;width: 100%;height: 100%;box-sizing:border-box;margin:0 auto;background: url('../../../static/img/2.png') no-repeat;background-size:65%;background-position: center;}
-	.top{width: 42%;height: 26px;display: flex;margin: 0 auto;padding-top: 140px;}
+    .login-content{display: flex;flex-direction:column;box-sizing:border-box;margin:0 auto;background: url('../../../static/img/2.png') no-repeat;background-size:960px;background-position:center 50px;padding-top: 150px;padding-bottom: 100px;}
+	.top{width: 42%;height: 26px;display: flex;margin: 0 auto;padding-top: 20px;}
 	.top img{width: 40px;height:26px;margin-right: 15px;}
 	.top span{display: block;line-height: 26px; font-size: 18px;color: #607d8b;border-right: 1px solid #a1b3bb;}
     .top span:last-child{padding-left: 10px;border:none;}

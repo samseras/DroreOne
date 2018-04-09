@@ -20,7 +20,7 @@
                         </el-option>
                     </el-select>
                     </p>
-                    <p class="sex">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 称：<input type="text"v-model="person.sex"></p>
+                    <p class="sex">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 称：<input type="text"v-model="person.sex"class="inputText"></p>
                     <p class="time">时&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 间：
                         <el-checkbox-group v-model="week">
                             <el-checkbox-group v-model="filterList" @change="weekDay">
@@ -78,16 +78,17 @@
                 <!--硬件调度-->
                 <div class="personCardContent" v-if="route.includes('hardware')">
                     <p class="name">调&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 度：
-                        <el-select v-model="hardware.type" size="mini" placeholder="请选择">
+                        <el-select v-model="hardware.type" size="mini" placeholder="请选择" @change="hardwareType">
                             <el-option
                                 v-for="item in indicatorType"
                                 :key="item.type"
                                 :label="item.type"
-                                :value="item.type">
+                                :value="item.type"
+                                >
                             </el-option>
                         </el-select>
                     </p>
-                    <p class="sex">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 称：<input type="text"v-model="hardware.sex"></p>
+                    <p class="sex">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 称：<input type="text"v-model="hardware.sex" class="inputText"></p>
                     <p class="time">时&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 间：
                         <el-checkbox-group v-model="week">
                             <el-checkbox-group v-model="filterList" @change="weekDay">
@@ -115,10 +116,38 @@
                                         placeholder="选择时间范围">
                         </el-time-picker>
                     </p>
-                    <p class="name">关联广播：
-                        <el-select v-model="hardware.people" size="mini" multiple placeholder="请选择">
+                    <p class="name" v-if="associatedRadio">关联广播：
+                        <el-select v-model="hardware.associatedradio" size="mini" multiple placeholder="请选择">
                             <el-option
                                 v-for="item in broadcast"
+                                :key="item.type"
+                                :label="item.type"
+                                :value="item.type">
+                            </el-option>
+                        </el-select>
+                    </p>
+                    <p class="name" v-if="associatedScreen">关联大屏：
+                        <el-select v-model="hardware.associatedscreen" size="mini" multiple placeholder="请选择">
+                            <el-option
+                                v-for="item in screen"
+                                :key="item.type"
+                                :label="item.type"
+                                :value="item.type">
+                            </el-option>
+                        </el-select>
+                    </p>
+                    <p class="name" v-if="associatedStreet">关联路灯：
+                        <!--<el-select v-model="hardware.associatedStreet" size="mini" multiple placeholder="请选择">-->
+                            <!--<el-option-->
+                                <!--v-for="item in lamppost"-->
+                                <!--:key="item.type"-->
+                                <!--:label="item.type"-->
+                                <!--:value="item.type">-->
+                            <!--</el-option>-->
+                        <!--</el-select>-->
+                        <el-select v-model="hardware.associatedstreet" size="mini" multiple placeholder="请选择">
+                            <el-option
+                                v-for="item in lamppost"
                                 :key="item.type"
                                 :label="item.type"
                                 :value="item.type">
@@ -128,6 +157,20 @@
                     <p class="idNum">重复调度：
                         <el-radio v-model="radio" label="1">是</el-radio>
                         <el-radio v-model="radio" label="0">否</el-radio>
+                    </p>
+                    <p class="upload" v-if="upload">定义曲风：
+                        <el-upload
+                            class="upload-demo"
+                            ref="upload"
+                            :limit="2"
+                            :action="importFileUrl"
+                            :file-list="fileList"
+                            :auto-upload="false">
+                            <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
+                        </el-upload>
+                    </p>
+                    <p class="uploadText" v-if="uploadText">定义内容：
+                        <input type="text"v-model="hardware.uploadText" class="inputText">
                     </p>
                     <p class="type">
                         描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：<textarea name="" v-model="hardware.describe" cols="30"
@@ -173,6 +216,9 @@
                     sex:'',
                     idNum:'',
                     type: '广播',
+                    associatedradio:[],
+                    associatedscreen:[],
+                    associatedstreet:[],
                     phone:'',
                     people:'',
                 },
@@ -184,9 +230,10 @@
                 ],
                 indicatorType: [
                     {type: '广播'},
-                    {type: '路灯'},
-                    {type: 'LED'}
+                    {type: 'LED'},
+                    {type: '路灯'}
                 ],
+                associatedRadio:true,
                 broadcast: [
                     {type: 'A-GB001'},
                     {type: 'A-GB002'},
@@ -194,6 +241,24 @@
                     {type: 'A-GB004'},
                     {type: 'A-GB005'},
                     {type: 'A-GB006'}
+                ],
+                associatedScreen:false,
+                screen: [
+                    {type: 'A-DP001'},
+                    {type: 'A-DP002'},
+                    {type: 'A-DP003'},
+                    {type: 'A-DP004'},
+                    {type: 'A-DP005'},
+                    {type: 'A-DP006'}
+                ],
+                associatedStreet:false,
+                lamppost: [
+                    {type: 'A-LD001'},
+                    {type: 'A-LD002'},
+                    {type: 'A-LD003'},
+                    {type: 'A-LD004'},
+                    {type: 'A-LD005'},
+                    {type: 'A-LD006'}
                 ],
                 route: '',
                 file: {},
@@ -219,8 +284,10 @@
                 ],
                 daycustom:false,
                 definedTime:'',
-
-
+                upload:true,
+                importFileUrl: 'http:dtc.com/cpy/add',
+                fileList:[],
+                uploadText:false,
             }
         },
         methods: {
@@ -350,6 +417,27 @@
                     if (URL && URL.createObjectURL) {
                         newFile.url = URL.createObjectURL(newFile.file)
                     }
+                }
+            },
+            hardwareType(vId){
+                if(vId === '广播'){
+                    this.upload = true;
+                    this.uploadText = false;
+                    this.associatedRadio = true;
+                    this.associatedScreen = false;
+                    this.associatedStreet = false;
+                }else if(vId === 'LED'){
+                    this.upload = false;
+                    this.uploadText = true;
+                    this.associatedRadio = false;
+                    this.associatedScreen = true;
+                    this.associatedStreet = false;
+                }else if(vId === '路灯'){
+                    this.upload = false;
+                    this.uploadText = false;
+                    this.associatedRadio = false;
+                    this.associatedScreen = false;
+                    this.associatedStreet = true;
                 }
             }
         },
@@ -495,6 +583,38 @@
             .el-tag--mini{
                 line-height: rem(21);
 
+            }
+            .inputText{
+                width: rem(470);
+            }
+            .upload-demo{
+                display: inline-block;
+                width: rem(470);
+                height: rem(22);
+                line-height: rem(22);
+                overflow: hidden;
+                .el-upload{
+                    float: right;
+                    .el-button--small, .el-button--small.is-round{
+                        padding: rem(4) rem(10);
+                    }
+                }
+                .el-upload-list{
+                    display: inline-block;
+                    height: rem(24);
+                    line-height: rem(24);
+                    .el-upload-list__item{
+                        margin-top: 0;
+                        display: inline-block;
+                        width: inherit;
+                        margin-right: rem(10);
+                        height: rem(24);
+                        line-height: rem(24);
+                        .el-upload-list__item-name{
+                            font-size: rem(12);
+                        }
+                    }
+                }
             }
         }
         .el-dialog__footer{

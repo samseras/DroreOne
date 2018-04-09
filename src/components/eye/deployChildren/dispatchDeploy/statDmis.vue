@@ -1,7 +1,7 @@
 <template>
     <div class="areaDeploy">
         <div class="title">
-            调度管理
+            调度统计
         </div>
         <!--<div class="personContent">-->
             <!--<div class="funcTitle">-->

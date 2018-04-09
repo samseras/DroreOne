@@ -11,7 +11,7 @@
         </header>
 		<div class="main">
             <div class="search"><input type="text" placeholder="请输入关键字"><button>搜索</button></div>
-            <el-carousel indicator-position="outside" trigger="click">
+            <el-carousel indicator-position="outside" trigger="click" class="" height="430px" :autoplay="false" arrow="never">
                 <el-carousel-item>
                     <div id="top" class="entrence-cont">
                         <ul>
