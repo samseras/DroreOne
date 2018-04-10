@@ -22,10 +22,8 @@
                     </p>
                     <p class="sex">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 称：<input type="text"v-model="person.sex"class="inputText"></p>
                     <p class="time">时&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 间：
-                        <el-checkbox-group v-model="week">
-                            <el-checkbox-group v-model="filterList" @change="weekDay">
-                                <el-checkbox v-for="item in week" :label="item.type"></el-checkbox>
-                            </el-checkbox-group>
+                        <el-checkbox-group v-model="filterList" @change="weekDay">
+                            <el-checkbox v-for="item in week" :label="item.type"></el-checkbox>
                         </el-checkbox-group>
                         <el-checkbox label="自定义" @change="weekCustom" v-model="weekcustom"></el-checkbox>
                     </p>
@@ -40,10 +38,8 @@
                         </el-date-picker>
                     </p>
                     <p class="time">班&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 次：
-                        <el-checkbox-group v-model="classes">
-                            <el-checkbox-group v-model="classesList" @change="classesDay">
-                                <el-checkbox v-for="item in classes" :label="item.type"></el-checkbox>
-                            </el-checkbox-group>
+                        <el-checkbox-group v-model="classesList" @change="classesDay">
+                            <el-checkbox v-for="item in classes" :label="item.type"></el-checkbox>
                         </el-checkbox-group>
                         <el-checkbox label="自定义" @change="dayCustom" v-model="daycustom"></el-checkbox>
                         <el-time-picker v-if="dayTime"
@@ -90,10 +86,8 @@
                     </p>
                     <p class="sex">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 称：<input type="text"v-model="hardware.sex" class="inputText"></p>
                     <p class="time">时&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 间：
-                        <el-checkbox-group v-model="week">
-                            <el-checkbox-group v-model="filterList" @change="weekDay">
-                                <el-checkbox v-for="item in week" :label="item.type"></el-checkbox>
-                            </el-checkbox-group>
+                        <el-checkbox-group v-model="filterList" @change="weekDay">
+                            <el-checkbox v-for="item in week" :label="item.type"></el-checkbox>
                         </el-checkbox-group>
                         <el-checkbox label="自定义" @change="weekCustom" v-model="weekcustom"></el-checkbox>
                     </p>
@@ -543,10 +537,6 @@
                     line-height: rem(24);
                 }
             }
-            .el-checkbox__inner{
-                position: relative;
-                top:rem(2);
-            }
             .el-date-editor--timerange{
                 border: none;
                 float: right;
@@ -569,8 +559,6 @@
             }
             .el-radio{
                 .el-radio__input{
-                    position: relative;
-                    top:rem(2);
                     /*.el-radio__inner{*/
                         /*width: rem(12);*/
                         /*height: rem(12);*/

@@ -145,6 +145,33 @@
                             {
                                 index: '/deploy/stat-Dmis',
                                 title: '调度统计'
+                            },
+                            {
+                                index: '/deploy/stat-Dmis',
+                                title: '调度统计'
+                            },
+                            {
+                                index: '/deploy/stat-Dmis',
+                                title: '调度统计'
+                            },
+                            {
+                                index: '/deploy/stat-Dmis',
+                                title: '调度统计'
+                            },
+                            {
+                                index: '/deploy/stat-Dmis',
+                                title: '调度统计'
+                            }
+                        ]
+                    },
+                    {
+                        icon: 'el-icon-document',
+                        index: '4',
+                        title: '调度管理',
+                        subs: [
+                            {
+                                index: '/deploy/stat-Dmis',
+                                title: '调度统计'
                             }
                         ]
                     },

@@ -1,5 +1,5 @@
 <template>
-    <div class="funHeader">
+    <div class="dmisHeader">
         <div class="searchInfo">
             <input type="text" placeholder="Search Anything">
             <i class="el-icon-search"></i>
@@ -106,13 +106,14 @@
 </script>
 
 <style lang="scss">
-    .funHeader{
+    .dmisHeader{
         .el-checkbox__label{
             padding-left: rem(5);
             font-size: rem(12);
         }
         .el-checkbox__inner{
-            margin-top: rem(5);
+            margin-top: rem(2);
+            margin-right: rem(2);
         }
     }
     .personList{
@@ -131,12 +132,6 @@
             td,th{
                 padding: 5px 0;
             }
-            .el-table-column--selection{
-                .cell{
-                    position: relative;
-                    top: 4px;
-                }
-            }
             .cell{
                 font-size: rem(12);
                 span:hover{
@@ -149,7 +144,7 @@
 </style>
 
 <style lang="scss" scoped type="text/scss">
-    .funHeader{
+    .dmisHeader{
         width: 100%;
         height: 100%;
         div{
