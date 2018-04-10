@@ -13,7 +13,7 @@
                         @fixedInfo = 'fixedInfo'>
                 </Header>
             </div>
-            <div class="personList">
+            <div class="personList" v-loading="isShowLoading">
                 <ScrollContainer>
                     <el-table
                         v-if="!isShowBoatCard"
@@ -21,22 +21,34 @@
                         :data="boatCarList"
                         tooltip-effect="dark"
                         style="width: 100%"
+                        @select-all="selectAll"
                         @selection-change="handleSelectionChange">
                         <el-table-column
-                            type="selection"
                             width="55">
+                            <template slot-scope="scope">
+                                <!--<input type="checkbox" :checked='scope.row.checked' class="checkBoxBtn" @change="checked(scope.row.id)">-->
+                                <el-checkbox v-model="scope.row.checked" @change="getChecked(scope.row.id)" class="checkBoxBtn"></el-checkbox>
+                            </template>
                         </el-table-column>
                         <el-table-column
-                            prop="driver"
+                            prop="driverName"
                             label="驾驶人员"
                             width="120">
                         </el-table-column>
                         <el-table-column
-                            prop="safeStatus"
-                            label="维护状态">
+                            label="类型">
+                            <template slot-scope="scope">
+                                <span>{{scope.row.vehicle.type | boatFilter}}</span>
+                            </template>
                         </el-table-column>
                         <el-table-column
-                            prop="loadNum"
+                            label="维护状态">
+                            <template slot-scope="scope">
+                                <span>{{scope.row.vehicle.maintenanceStatus | statusFilter}}</span>
+                            </template>
+                        </el-table-column>
+                        <el-table-column
+                            prop="vehicle.capacity"
                             label="核载人数">
                         </el-table-column>
                         <el-table-column
@@ -44,33 +56,39 @@
                             label="电话号码">
                         </el-table-column>
                         <el-table-column
-                            prop="facilityNum"
+                            prop="vehicle.model"
                             label="设备号码">
                         </el-table-column>
                         <el-table-column
-                            prop="safeTime"
+                            prop="vehicle.maintenanceDate"
                             label="维护时间">
                         </el-table-column>
-                        <el-table-column>
+                        <el-table-column
+                            label="操作">
                             <template slot-scope="scope">
-                                <span @click="showPersonDetail(scope.row, '车船信息')">编辑</span>
+                                <span class="formBtn" @click="showPersonDetail(scope.row, '车船信息')">编辑</span>
+                                <span class="line">|</span>
+                                <span class="formBtn" @click="fixedInfo(scope.row, '修改车船信息')">查看</span>
+                                <span class="line">|</span>
+                                <span class="formBtn" @click="deletInfo([scope.row.id])">删除</span>
                             </template>
                         </el-table-column>
                     </el-table>
-                    <div class="personInfo" v-for="item in choseList" v-if="isShowBoatCard && item.status">
+                    <div class="personInfo" v-for="item in boatCarList" v-if="isShowBoatCard && item.status">
                         <div class="checkBox">
-                            <input type="checkbox" :checked='item.checked' class="checkBtn" @change="checked(item.id)">
+                            <!--<input type="checkbox" :checked='' class="checkBtn" >-->
+                            <el-checkbox v-model="item.checked" @change="getChecked(item.id)" class="checkBtn"></el-checkbox>
                         </div>
                         <div class="personType" :class="item.type === '车辆'? 'carInfo':''" @click.stop="showPersonDetail(item ,'车船信息')">
                             <img src="" alt="">
                             <span class="type">
-                                  {{item.type}}
+                                  {{item.vehicle.type | boatFilter}}信息
                                 </span>
                         </div>
                         <div class="specificInfo">
-                            <p class="name">驾驶人员：<span>{{item.driver}}</span></p>
-                            <p class="sex">状&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;态：<span>{{item.safeStatus}}</span></p>
-                            <p class="idNum">核载人数：<span>{{item.loadNum}}</span></p>
+                            <p class="name">驾驶人员：<span>{{item.driverName}}</span></p>
+                            <p class="sex">状&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;态：<span>{{item.vehicle.maintenanceStatus | statusFilter}}</span></p>
+                            <p class="idNum">核载人数：<span>{{item.vehicle.capacity}}</span></p>
                             <p class="phoneNum">电&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;话：<span>{{item.phone}}</span></p>
                         </div>
                     </div>
@@ -93,6 +111,7 @@
     import ScrollContainer from '@/components/ScrollContainer'
     import Header from './funHeader'
     import PersonDetail from './detailDialog'
+    import api from '@/api'
     export default {
         name: 'boatCar-deploy',
         data () {
@@ -100,41 +119,67 @@
                 isShowBoatCard: true,
                 checkList: [],
                 filterList: [],
-                boatCarList: [
-                    {id:1,type: '船只',serNum:'che-002',safeStatus: '正常',loadNum: 15,buyTime:'2018-1-2',safeTime:'2018-3-2',driver:'张三',phone: '13674565455',facilityNum:'IISO-0001'},
-                    {id:2,type: '车辆',serNum:'che-002',safeStatus: '正常',loadNum: 15,buyTime:'2018-1-2',safeTime:'2018-3-2',driver:'张三',phone: '13674565455',facilityNum:'IISO-0001'},
-                    {id:3,type: '船只',serNum:'che-002',safeStatus: '正常',loadNum: 15,buyTime:'2018-1-2',safeTime:'2018-3-2',driver:'张三',phone: '13674565455',facilityNum:'IISO-0001'},
-                    {id:8,type: '车辆',serNum:'che-002',safeStatus: '正常',loadNum: 15,buyTime:'2018-1-2',safeTime:'2018-3-2',driver:'张三',phone: '13674565455',facilityNum:'IISO-0001'},
-                    {id:9,type: '车辆',serNum:'che-002',safeStatus: '正常',loadNum: 15,buyTime:'2018-1-2',safeTime:'2018-3-2',driver:'张三',phone: '13674565455',facilityNum:'IISO-0001'}
-                ],
+                boatCarList: [],
                 visible: false,
                 boatCarInfo: {},
                 choseInfoId: [],
                 choseList: [],
                 isDisabled: true,
-                title: ''
+                title: '',
+                isShowLoading: false,
+                selection: []
             }
         },
         methods: {
+            handleSelectionChange (selection) {
+               this.choseInfoId = selection.map(item => {
+                   return item.id
+               })
+            },
+            selectAll (selection) {
+                console.log(selection,'这是全选的数据')
+            },
             showPersonDetail (info, title) {
                 this.boatCarInfo = info
                 this.visible = true
                 this.title = title
             },
             addNewInfo () {
-                this.showPersonDetail({},'添加车船信息')
+                this.showPersonDetail({vehicle: {}},'添加车船信息')
                 this.isDisabled = false
             },
-            deletInfo () {
-                for (let i = 0; i < this.choseInfoId.length; i++) {
-                    this.boatCarList = this.boatCarList.filter((item, index) => {
-                        if (item.id === this.choseInfoId[i]){
-                            this.choseList[index].checked = false
+            deletInfo (id) {
+                if (id) {
+                    api.boat.deleteBoat(id).then(res => {
+                        console.log(res, '删除成功')
+                        this.boatCarList = this.boatCarList.filter(item => {
+                            return item.id !== id[0]
+                        })
+                        this.$message.success('删除成功')
+                    }).catch(err => {
+                        console.log(err, '删除失败')
+                        this.$message.error('删除失败，请稍后重试')
+                    })
+                } else {
+                    api.boat.deleteBoat(this.choseInfoId).then(res => {
+                        console.log(res, '删除成功')
+                        for (let i = 0; i < this.choseInfoId.length; i++) {
+                            this.boatCarList = this.boatCarList.filter((item, index) => {
+                                if (item.id === this.choseInfoId[i]){
+                                    this.boatCarList[index].checked = false
+                                }
+                                return item.id !== this.choseInfoId[i]
+                            })
                         }
-                        return item.id !== this.choseInfoId[i]
+                        this.$message.success('删除成功')
+                        this.choseInfoId = []
+                    }).catch(err => {
+                        console.log(err, '删除失败')
+                        this.$message.error('删除失败，请稍后重试')
                     })
                 }
-                this.choseList = this.boatCarList
+
+
 
             },
             toggleList (type) {
@@ -144,7 +189,14 @@
                     this.isShowBoatCard = true
                 }
             },
-            checked (id) {
+            getChecked (id) {
+                this.boatCarList = this.boatCarList.filter(item => {
+                    if (item.id === id) {
+                        item.checked = item.checked
+                    }
+                    return item
+                })
+                console.log(this.boatCarList, '车穿刺想你想')
                 if (this.choseInfoId.includes(id)) {
                     this.choseInfoId = this.choseInfoId.filter((item) =>{
                         return item !== id
@@ -174,7 +226,7 @@
             },
             selectedAll (state) {
                 console.log(state, 'opopopopop')
-                this.choseList = this.boatCarList.filter((item) => {
+                this.boatCarList = this.boatCarList.filter((item) => {
                     if (state === true) {
                         item.checked = true
                         this.choseInfoId.push(item.id)
@@ -187,44 +239,104 @@
                     }
                 })
                 console.log(this.choseInfoId, 'opopop')
+                this.selectAll(this.choseInfoId)
             },
             fixInfo (info) {
-                console.log(info, 'wertyuio')
-                let list = this.boatCarList
-                for(let i = 0;i< list.length; i++){
-                    if (info.id === list[i].id) {
-                        this.boatCarList[i] = info
-
-                    }
+                let boatObj = {
+                    id: info.id,
+                    serialNum: info.vehicle.serialNum,
+                    capacity: info.vehicle.capacity,
+                    type: info.vehicle.type,
+                    model: info.vehicle.model,
+                    driverId: info.driverId,
+                    maintenanceStatus: 0,
+                    maintenanceDate: info.vehicle.maintenanceDate,
+                    purchaseDate: info.vehicle.purchaseDate
                 }
-                this.choseList = this.boatCarList
+                console.log(boatObj, 'this is trashObj')
+                api.boat.updateBoat(JSON.stringify(boatObj)).then(res => {
+                    console.log(res ,'增加成功')
+                    this.$message.success('修改成功')
+                    this.getAllBoat()
+                }).catch(err => {
+                    console.log(err, '添加失败')
+                    this.$message.error('修改失败，请稍后重试')
+                })
             },
             addNewBoatCar (info) {
-                info.id = new Date().getTime()
-                this.boatCarList.push(info)
-                this.choseList = this.boatCarList
+                let boatObj = {
+                    serialNum: info.vehicle.serialNum,
+                    capacity: info.vehicle.capacity,
+                    type: info.vehicle.type,
+                    model: info.vehicle.model,
+                    driverId: info.driverId,
+                    maintenanceStatus: 0,
+                    maintenanceDate: info.vehicle.maintenanceDate,
+                    purchaseDate: info.vehicle.purchaseDate
+                }
+                console.log(boatObj, 'this is trashObj')
+                api.boat.createBoat(JSON.stringify(boatObj)).then(res => {
+                    console.log(res ,'增加成功')
+                    this.$message.success('添加成功')
+                    this.getAllBoat()
+                }).catch(err => {
+                    console.log(err, '添加失败')
+                    this.$message.error('添加失败，请稍后重试')
+                })
             },
-            fixedInfo () {
-                if (this.choseInfoId.length > 0) {
-                    this.boatCarList.map((item) => {
-                        if (item.id === this.choseInfoId[0]){
-                            this.boatCarInfo = item
-                        }
-                    })
+            fixedInfo (info) {
+                if (info) {
                     this.showPersonDetail(this.boatCarInfo,'修改车船信息')
                     this.isDisabled = false
                 } else {
-                    this.$message.error('请选择要修改的车船')
+                    if (this.choseInfoId.length > 0) {
+                        this.boatCarList.map((item) => {
+                            if (item.id === this.choseInfoId[0]){
+                                this.boatCarInfo = item
+                            }
+                        })
+                        this.showPersonDetail(this.boatCarInfo,'修改车船信息')
+                        this.isDisabled = false
+                    } else {
+                        this.$message.error('请选择要修改的车船')
+                    }
                 }
+            },
+            async getAllBoat (){
+                this.isShowLoading = true
+                await api.boat.getAllBoat().then(res => {
+                    this.isShowLoading = false
+                    this.boatCarList = res
+                    console.log(res, '这是请求回来的')
+                    for (let i = 0; i < this.boatCarList.length; i++) {
+                        this.boatCarList[i].checked = false
+                        this.boatCarList[i].status = true
+                        this.boatCarList[i].id = this.boatCarList[i].vehicle.id
+                    }
+                }).catch(err => {
+                    console.log(err, '请求失败')
+                })
             }
 
         },
-        created () {
-            for (let i = 0; i < this.boatCarList.length; i++) {
-                this.boatCarList[i].checked = false
-                this.boatCarList[i].status = true
+        filters: {
+            boatFilter (type) {
+                if (type == 0) {
+                    return '车辆'
+                } else {
+                    return '船只'
+                }
+            },
+            statusFilter (item) {
+                if (item == 0) {
+                    return "正常"
+                } else {
+                    return "维修"
+                }
             }
-            this.choseList = this.boatCarList
+        },
+        created () {
+            this.getAllBoat()
         },
         components:{
             ScrollContainer,
@@ -234,6 +346,15 @@
     }
 </script>
 
+<style lang="scss">
+    .boatCars .el-table__header-wrapper{
+        font-size: rem(14);
+        font-weight: normal;
+    }
+    .boatCars .el-table__body-wrapper,.boatCars .is-scrolling-none{
+        font-size: rem(14);
+    }
+</style>
 <style lang="scss" scoped type="text/scss">
     .boatCars{
         width: 100%;
@@ -291,7 +412,7 @@
                             /*background: none;*/
                             position: absolute;
                             right: rem(5);
-                            top: rem(3);
+                            top: rem(0);
                             cursor: pointer;
                         }
                     }
@@ -330,6 +451,15 @@
                     }
                 }
             }
+        }
+        .checkBoxBtn{
+            width: rem(15);
+            height: rem(15);
+            margin-top: rem(5);
+        }
+        .formBtn{
+            cursor: pointer;
+            font-size: rem(13);
         }
     }
 </style>

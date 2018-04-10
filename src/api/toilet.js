@@ -33,7 +33,7 @@ const toilet = {
             method: 'DELETE',
             url: getUrl('/toilet'),
             data:{
-                id: par
+                ids: par
             }
         })
     }

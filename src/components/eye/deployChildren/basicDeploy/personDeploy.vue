@@ -23,39 +23,49 @@
                         style="width: 100%"
                         @selection-change="handleSelectionChange">
                         <el-table-column
-                            type="selection"
                             width="55">
+                            <template slot-scope="scope">
+                                <!--<input type="checkbox" :checked='scope.row.checked' class="checkBoxBtn" @change="checked(scope.row.id)">-->
+                                <el-checkbox v-model="scope.row.checked" @change="getChecked(scope.row.id)" class="checkBoxBtn"></el-checkbox>
+                            </template>
                         </el-table-column>
                         <el-table-column
-                            prop="name"
+                            prop="personBean.name"
                             label="姓名"
                             width="120">
                         </el-table-column>
                         <el-table-column
-                            prop="type"
+                            prop="jobName"
                             label="人员角色">
                         </el-table-column>
                         <el-table-column
-                            prop="gender"
+                            prop="personBean.gender"
                             label="性别">
+                            <template slot-scope="scope">
+                                <span>{{scope.row.personBean.gender | sexFilter}}</span>
+                            </template>
                         </el-table-column>
                         <el-table-column
-                            prop="idNum"
+                            prop="personBean.idNum"
                             label="身份证号">
                         </el-table-column>
                         <el-table-column
-                            prop="phone"
+                            prop="personBean.phone"
                             label="电话号码">
                         </el-table-column>
-                        <el-table-column>
+                        <el-table-column
+                            label="操作">
                             <template slot-scope="scope">
                                 <span @click="showPersonDetail(scope.row)">编辑</span>
+                                <span @click="showPersonDetail(scope.row)">查看</span>
+                                <span @click="deletInfo([scope.row.id])">删除</span>
                             </template>
                         </el-table-column>
                     </el-table>
                     <div class="personInfo" v-for="item in personList" v-if="isShowPersonCard && item.status">
                         <div class="checkBox">
-                            <input type="checkbox" :checked='item.checked' class="checkBtn" @change="checked(item.id)">
+                            <!--<input type="checkbox" :checked='item.checked' class="checkBtn" @change="checked(item.id)">-->
+                            <el-checkbox v-model="item.checked" @change="checked(item.id)" class="checkBtn"></el-checkbox>
                         </div>
                         <div class="personType" @click.stop="showPersonDetail(item, '人员信息')">
                             <img src="" alt="">
@@ -119,28 +129,40 @@
                 this.showPersonDetail({personBean:{}}, '添加人员信息')
                 this.isDisabled = false
             },
-            deletInfo () {
-                if (this.choseInfoId.length > 0) {
-                    api.person.deletePerson(this.choseInfoId).then(res => {
+            deletInfo (id) {
+                if (id) {
+                    api.person.deletePerson(id).then(res => {
                         console.log(res, '删除成功')
-                        for (let i = 0; i < this.choseInfoId.length; i++) {
-                            this.personList = this.personList.filter((item, index) => {
-                                if (item.id === this.choseInfoId[i]){
-                                    this.personList[index].checked = false
-                                }
-                                return item.id !== this.choseInfoId[i]
-                            })
-                        }
+                        this.personList = this.personList.filter(item => {
+                            return item.id !== id[0]
+                        })
                         this.$message.success('删除成功')
-                        this.choseInfoId = []
                     }).catch(err => {
-                        console.log(err)
+                        console.log(err, '删除失败')
                         this.$message.error('删除失败，请稍后重试')
                     })
                 } else {
-                    this.$message.error('请选择要删除的选项')
+                    if (this.choseInfoId.length > 0) {
+                        api.person.deletePerson(this.choseInfoId).then(res => {
+                            console.log(res, '删除成功')
+                            for (let i = 0; i < this.choseInfoId.length; i++) {
+                                this.personList = this.personList.filter((item, index) => {
+                                    if (item.id === this.choseInfoId[i]){
+                                        this.personList[index].checked = false
+                                    }
+                                    return item.id !== this.choseInfoId[i]
+                                })
+                            }
+                            this.$message.success('删除成功')
+                            this.choseInfoId = []
+                        }).catch(err => {
+                            console.log(err)
+                            this.$message.error('删除失败，请稍后重试')
+                        })
+                    } else {
+                        this.$message.error('请选择要删除的选项')
+                    }
                 }
-
             },
             toggleList (type) {
                 if (type === 'list') {
@@ -150,6 +172,12 @@
                 }
             },
             checked (id) {
+                this.personList = this.personList.filter(item => {
+                    if (item.id === id) {
+                        item.checked = item.checked
+                    }
+                    return item
+                })
                 if (this.choseInfoId.includes(id)) {
                     this.choseInfoId = this.choseInfoId.filter((item) =>{
                         return item !== id
@@ -178,7 +206,6 @@
                     }
             },
             selectedAll (state) {
-                console.log(state, 'opopopopop')
                 this.personList = this.personList.filter((item) => {
                     if (state === true) {
                         item.checked = true
@@ -215,15 +242,20 @@
                 })
             },
             addNewPerson (info) {
+                console.log(info, 'opopopopopo')
                 let personObj = {
                     name: info.personBean.name,
-                    picAddress: info.imgUrl,
+                    // picAddress: info.imgUrl,
                     gender: info.personBean.gender,
                     idNum: info.personBean.idNum,
                     phone: info.personBean.phone,
                     jobId: info.jobId
                 }
                 console.log(personObj, 'this is trashObj')
+                api.person.updataAvatar(info.imgUrl).then(res => {
+                    debugger
+                    console.log(res, '上传成功')
+                })
                 api.person.createPerson(JSON.stringify(personObj)).then(res => {
                     this.$message.success('添加成功')
                     console.log('增加成功')
@@ -265,11 +297,14 @@
         },
         filters: {
             sexFilter (item) {
-                if (item) {
+                if (item == 1) {
                     return '男'
                 } else {
                     return '女'
                 }
+            },
+            idNumFilter (id) {
+
             }
         },
         created () {
@@ -340,7 +375,7 @@
                             /*background: none;*/
                             position: absolute;
                             right: rem(5);
-                            top: rem(3);
+                            top: rem(0);
                             cursor: pointer;
                         }
                     }

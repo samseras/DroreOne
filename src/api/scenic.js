@@ -34,7 +34,7 @@ const scenic = {
             method: 'DELETE',
             url: getUrl('/scenicspot'),
             data:{
-                id: par
+                ids: par
             }
         })
     }
