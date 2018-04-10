@@ -56,7 +56,7 @@
                             <template slot-scope="scope">
                                 <span @click="fixedInfo(scope.row,'片区信息')" class="edit">编辑</span> |
                                 <span @click="showPersonDetail(scope.row,'片区信息')">查看</span> |
-                                <span @click="deletInfo">删除</span>
+                                <span @click="delet(scope.row,'片区信息')">删除</span>
                             </template>
                         </el-table-column>
                     </el-table>
@@ -319,34 +319,4 @@
         }
     }
 
-</style>
-<style lang="scss">
-    .personList{
-        .el-table{
-            font-size: rem(14);
-            table{
-                th{
-                    background: #f3f3f3;
-                    .cell{
-                        font-size: rem(14);
-                    }
-                }
-            }
-            td,th{
-                padding: 5px 0;
-            }
-            .el-table-column--selection{
-                .cell{
-                    position: relative;
-                    top: 4px;
-                }
-            }
-            .cell{
-                font-size: rem(12);
-                .edit{
-                    color: #54c5f2;
-                }
-            }
-        }
-    }
 </style>

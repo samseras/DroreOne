@@ -91,15 +91,13 @@
 			this.changeCheckCode()
 			this.users.push(users);
 		}
-
-
 	}
 </script>
 <style scoped>
 	*{margin: 0;padding:0;}
-	.login{min-width: 1450px;width: 100%;height:100%;min-height: 740px;background: url('../../../static/img/1.png') no-repeat;background-size:cover;}
-    .login-content{display: flex;flex-direction:column;width: 100%;height: 100%;box-sizing:border-box;margin:0 auto;background: url('../../../static/img/2.png') no-repeat;background-size:65%;background-position: center;}
-	.top{width: 42%;height: 26px;display: flex;margin: 0 auto;padding-top: 170px;}
+	.login{min-width: 1380px;width: 100%;height:100%;min-height: 650px;background: url('../../../static/img/1.png') no-repeat;background-size:cover;}
+    .login-content{display: flex;flex-direction:column;box-sizing:border-box;margin:0 auto;background: url('../../../static/img/2.png') no-repeat;background-size:960px;background-position:center 50px;padding-top: 150px;padding-bottom: 100px;}
+	.top{width: 42%;height: 26px;display: flex;margin: 0 auto;padding-top: 20px;}
 	.top img{width: 40px;height:26px;margin-right: 15px;}
 	.top span{display: block;line-height: 26px; font-size: 18px;color: #607d8b;border-right: 1px solid #a1b3bb;}
     .top span:last-child{padding-left: 10px;border:none;}
@@ -108,7 +106,7 @@
     .mian-con .login-left{width: 50%;box-sizing: border-box;}
     .login-left img{width: 250px;height: 240px; margin-left: 50px;margin-top: 75px;}
     .mian-con .login-right{float: left;width: 50%;height: 72%;background: none;}
-    .login-right p{width: 100%;color: #93d2cc;font-size: 18px;text-align: center;margin-top: 55px;}
+    .login-right p{width: 100%;color: #93d2cc;font-size: 18px;text-align: center;margin-top: 50px;}
 
     form{margin-top: 15px;margin-left: 30px; position: relative;margin-right: 50px;}
     input:focus { outline: none; }
@@ -121,10 +119,14 @@
     input:-ms-input-placeholder { /* Internet Explorer 10+ */ color:#cad4d6;font-size: 12px;}
 
     #Code{position:absolute;border: 1px solid #e9eef2;height: 35px;width: 100px;left:158px;top: 130px;text-indent: 0;text-align: center;font-size: 18px;outline:none;}
-    #submit{margin-top: 35px;width: 200px;height: 40px;border-radius: 20px;background: #80cbc4;color: #fffffd;border: none;margin-left: 40px;font-size: 16px;text-indent: 0;}
     #Code:focus{outline: none;}
+
+    #Code{position:absolute;border: 1px solid #e9eef2;height: 40px;width: 120px;right: 0;top: 130px;text-indent: 0;text-align: center;}
+
+    #submit{margin-top: 35px;width: 200px;height: 40px;border-radius: 20px;background: #80cbc4;color: #fffffd;border: none;margin-left: 40px;font-size: 16px;text-indent: 0;}
+
     /*@media screen and (min-width:1200px) and (max-width:1300px){*/
-	 /*.top{padding-top:90px;}*/
+	 /*.top{padding-top:80px;}*/
 	 /*.mian-con{margin-top: 0;}*/
 	 /*form{margin-top: 20px;margin-right: 0;}*/
 	 /*input{width: 100%;}*/
@@ -151,39 +153,6 @@
 	 /*.login-left img{margin-left: 60px;margin-top: 80px;}*/
 	 /*input{width: 100%;}*/
 	/*}*/
-
-    #Code{position:absolute;border: 1px solid #e9eef2;height: 40px;width: 120px;right: 0;top: 130px;text-indent: 0;text-align: center;}
-
-    #submit{margin-top: 50px;width: 200px;height: 40px;border-radius: 20px;background: #80cbc4;color: #fffffd;border: none;margin-left: 60px;font-size: 16px;text-indent: 0;}
-
-    @media screen and (min-width:1200px) and (max-width:1300px){
-	 .top{padding-top:80px;}
-	 .mian-con{margin-top: 0;}
-	 form{margin-top: 20px;margin-right: 0;}
-	 input{width: 100%;}
-
-	}
-	@media screen and (min-width:1100px) and (max-width:1200px){
-	 .top{padding-top:100px;width: 70%;}
-	 .mian-con{margin-top: 0;width: 75%;}
-	 form{margin-top: 20px;margin-right:30px;margin-left: 20px;}
-	 .login-left img{margin-left: 60px;margin-top: 80px;}
-	 input{width: 100%;}
-	}
-	@media screen and (min-width:980px) and (max-width:1100px){
-	 .top{padding-top:100px;width: 75%;}
-	 .mian-con{margin-top: 0;width: 82%;}
-	 form{margin-top: 20px;margin-right:30px;margin-left: 20px;}
-	 .login-left img{margin-left: 60px;margin-top: 80px;}
-	 input{width: 100%;}
-	}
-	@media screen and (min-width:900px) and (max-width:980px){
-	 .top{padding-top:100px;width: 75%;}
-	 .mian-con{margin-top: 0;width: 82%;}
-	 form{margin-top: 20px;margin-right:30px;margin-left: 20px;}
-	 .login-left img{margin-left: 60px;margin-top: 80px;}
-	 input{width: 100%;}
-	}
 
 
 </style>

@@ -15,7 +15,6 @@
             <div class="personList">
                 <ScrollContainer>
                     <el-table
-                        v-if="isShowAreaCard"
                         ref="multipleTable"
                         :data="areaList"
                         tooltip-effect="dark"
@@ -50,9 +49,9 @@
                         </el-table-column>
                         <el-table-column label="操作">
                             <template slot-scope="scope">
-                                <span @click="fixedInfo(scope.row,'片区信息')" class="edit">编辑</span> |
+                                <span @click="fixedInfo(scope.row,'片区信息')">编辑</span> |
                                 <span @click="showPersonDetail(scope.row,'片区信息')">查看</span> |
-                                <span @click="deletInfo(scope.row,'片区信息')">删除</span>
+                                <span @click="delet(scope.row,'片区信息')">删除</span>
                             </template>
                         </el-table-column>
                     </el-table>
@@ -126,6 +125,23 @@
                 this.isDisabled = false
             },
             deletInfo () {
+                if(this.choseInfoId.length>0){
+                    for (let i = 0; i < this.choseInfoId.length; i++) {
+                        this.areaList = this.areaList.filter((item, index) => {
+                            if (item.id === this.choseInfoId[i]){
+                                this.choseList[index].checked = false
+                            }
+                            return item.id !== this.choseInfoId[i]
+                        })
+                    }
+                    this.choseList = this.areaList
+                }
+            else {
+                    this.$message.error('请选择要删除的人员')
+                }
+
+            },
+            delet () {
                 for (let i = 0; i < this.choseInfoId.length; i++) {
                     this.areaList = this.areaList.filter((item, index) => {
                         if (item.id === this.choseInfoId[i]){
@@ -135,7 +151,6 @@
                     })
                 }
                 this.choseList = this.areaList
-
             },
             // toggleList (type) {
             //     if (type === 'list') {
@@ -172,31 +187,31 @@
                     })
                 }
             },
-            selectedAll(state){
-                if (state) {
-                    state.forEach(row => {
-                        this.$refs.multipleTable.toggleRowSelection(row);
-                    });
-                } else {
-                    this.$refs.multipleTable.clearSelection();
-                }
-            },
-            // selectedAll (state) {
-            //     console.log(state, 'opopopopop')
-            //     this.choseList = this.areaList.filter((item) => {
-            //         if (state === true) {
-            //             item.checked = true
-            //             this.choseInfoId.push(item.id)
-            //             return item.checked === true
-            //         } else {
-            //             console.log('进入这个判断吗')
-            //             item.checked = false
-            //             this.choseInfoId = []
-            //             return item.checked === false
-            //         }
-            //     })
-            //     console.log(this.choseInfoId, 'opopop')
+            // selectedAll(state){
+            //     if (state) {
+            //         state.forEach(row => {
+            //             this.$refs.multipleTable.toggleRowSelection(row);
+            //         });
+            //     } else {
+            //         this.$refs.multipleTable.clearSelection();
+            //     }
             // },
+            selectedAll (state) {
+                console.log(state, 'opopopopop')
+                this.choseList = this.areaList.filter((item) => {
+                    if (state === true) {
+                        item.checked = true
+                        this.choseInfoId.push(item.id)
+                        return item.checked === true
+                    } else {
+                        console.log('进入这个判断吗')
+                        item.checked = false
+                        this.choseInfoId = []
+                        return item.checked === false
+                    }
+                })
+                console.log(this.choseInfoId, 'opopop')
+            },
             fixInfo (info) {
                 console.log(info, 'wertyuio')
                 let list = this.areaList
@@ -214,17 +229,13 @@
                 this.choseList = this.areaList
             },
             fixedInfo () {
-                if (this.choseInfoId.length > 0) {
-                    this.areaList.map((item) => {
-                        if (item.id === this.choseInfoId[0]){
-                            this.areaInfo = item
-                        }
-                    })
-                    this.showPersonDetail(this.areaInfo, '修改人员信息')
-                    this.isDisabled = false
-                } else {
-                    this.$message.error('请选择要修改的人员')
-                }
+                this.areaList.map((item) => {
+                    if (item.id === this.choseInfoId[0]){
+                        this.areaInfo = item
+                    }
+                })
+                this.showPersonDetail(this.areaInfo, '修改人员信息')
+                this.isDisabled = false
             }
         },
         created () {
@@ -340,33 +351,4 @@
         }
     }
 </style>
-<style lang="scss">
-    .personList{
-        .el-table{
-            font-size: rem(14);
-            table{
-                th{
-                    background: #f3f3f3;
-                    .cell{
-                        font-size: rem(14);
-                    }
-                }
-            }
-            td,th{
-                padding: 5px 0;
-            }
-            .el-table-column--selection{
-                .cell{
-                    position: relative;
-                    top: 4px;
-                }
-            }
-            .cell{
-                font-size: rem(12);
-                .edit{
-                    color: #54c5f2;
-                }
-            }
-        }
-    }
-</style>
+
