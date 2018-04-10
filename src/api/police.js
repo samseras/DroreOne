@@ -15,21 +15,27 @@ const police={
     updatePolice(params){
         return axios({
             method:'PUT',
-            url:getUrl('/device?deviceType=8'),
-            data:params
+            url:getUrl('/device'),
+            data:{
+                type:8,
+                devices:params
+            }
         })
     },
-    createLight(params){
+    createPolice(params){
         return axios({
             method:'POST',
-            url:getUrl('/device?deviceType=8'),
-            data:params
+            url:getUrl('/device'),
+            data:{
+                type:8,
+                devices:params
+            }
         })
     },
-    deleteLight(par){
+    deletePolice(par){
         return axios({
             method:'DELETE',
-            url:getUrl('/device?deviceType=8'),
+            url:getUrl('/device'),
             data:{
                 type:8,
                 ids:par

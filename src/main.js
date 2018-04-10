@@ -8,7 +8,7 @@ import 'element-ui/lib/theme-chalk/index.css'
 import '../static/css/font.css'
 import echarts from 'echarts'
 import VueDND from 'awe-dnd'
-
+import '@/filter'
 
 
 

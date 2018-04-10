@@ -16,21 +16,27 @@ const light={
     updateLight(params){
         return axios({
             method:'PUT',
-            url:getUrl('/device?deviceType=5'),
-            data:params
+            url:getUrl('/device'),
+            data:{
+                type:5,
+                devices:params
+            }
         })
     },
     createLight(params){
         return axios({
             method:'POST',
-            url:getUrl('/device?deviceType=5'),
-            data:params
+            url:getUrl('/device'),
+            data:{
+                type:5,
+                devices:params
+            }
         })
     },
     deleteLight(par){
         return axios({
             method:'DELETE',
-            url:getUrl('/device?deviceType=5'),
+            url:getUrl('/device'),
             data:{
                 type:5,
                 ids:par

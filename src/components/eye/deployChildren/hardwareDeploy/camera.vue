@@ -68,7 +68,7 @@
                     {type:'翼闸'},
                     {type:'摆闸'},
                     {type:'三角闸'},
-                    {type:'评议闸'}
+                    {type:'平移闸'}
                 ],
                 policeList:[
                     {type:'报警柱'},

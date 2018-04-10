@@ -33,19 +33,20 @@
                             width="120">
                         </el-table-column>
                         <el-table-column
-                            prop="type"
+                            prop="positionType"
                             label="类型">
                         </el-table-column>
 
                         <el-table-column
-                            prop="area"
+                            prop="regionId"
                             label="所属片区">
                         </el-table-column>
 
                         <el-table-column
-                            prop="describe"
+                            prop="description"
                             label="描述">
                         </el-table-column>
+
                         <el-table-column>
                             <template slot-scope="scope">
                                 <span @click="showBroadDetail(scope.row, '广播信息')">编辑</span>
@@ -65,7 +66,7 @@
                         </div>
                         <div class="specificInfo" >
                             <p class="area">所属区域：<span>{{item.regionId}}</span></p>
-                            <p class="type">广播类型：<span>{{item.positionType}}</span></p>
+                            <p class="type">广播类型：<span>{{item.positionType|changeFilter}}</span></p>
                             <p class="describe">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：<span>{{item.description}}</span></p>
 
                         </div>
@@ -123,13 +124,28 @@
 
             },
             fixInfo(info){
-                let list=this.broadList
-                for(let i=0;i<list.length;i++){
-                    if(info.id===list[i].id){
-                        this.broadList[i]=info
-                    }
-                }
-                this.choseList=this.broadList
+                let index = info.location.includes(',')?info.location.indexOf(','):info.location.indexOf('，')
+                let latitude = info.location.substring(0, index)
+                let longitude = info.location.substring(index + 1)
+                let broadObj=[{
+                    id:info.id,
+                    positionType:info.positionType,
+                    name:info.name,
+                    manufactor:info.manufactor,
+                    ip:info.ip,
+                    port:info.port,
+                    regionId:info.regionId,
+                    description:info.description,
+                    latitude:latitude,
+                    longitude:longitude
+                }]
+                api.broadcast.updateBroadcast(broadObj).then(res =>{
+                    this.$message.success('修改成功')
+                    this.choseInfoId=[]
+                    this.getAllBroadcast()
+                }).catch(err =>{
+                    this.$message.error('修改失败,请稍后再试')
+                })
             },
             fixedInfo(){
                 if(this.choseInfoId.length>0){
@@ -145,34 +161,42 @@
                 }
             },
             deletInfo(){
-                api.broadcast.deleteBroadcast(this.choseInfoId).then(res=>{
-                    console.log(res,'删除成功')
+                api.broadcast.deleteBroadcast(this.choseInfoId).then(res =>{
                     for(let i=0;i<this.choseInfoId.length;i++){
                         this.broadList=this.broadList.filter((item,index)=>{
                             if(item.id===this.choseInfoId[i]){
                                 this.broadList[index].checked=false
                             }
-                            return item.id !== this.choseInfoId
+                            return item.id !== this.choseInfoId[i]
                         })
                     }
-                }).catch(err=>{
-                    console.log(err)
+                    this.$message.success('删除成功')
+                    this.choseInfoId=[]
+                }).catch(err =>{
+                    this.$message.error('删除失败,请稍后重试')
                 })
-//                console.log(122)
-//                for(let i=0;i<this.choseInfoId.length;i++){
-//                    this.broadList=this.broadList.filter((item,index)=>{
-//                        if(item.id === this.choseInfoId[i]){
-//                            this.choseList[index].checked=false
-//                        }
-//                        return item.id!==this.choseInfoId[i]
-//                    })
-//                }
-//                this.choseList=this.broadList
             },
             addBroad (info){
-                info.id=new Date().getTime()
-                this.broadList.push(info)
-                this.choseList=this.broadList
+                let index = info.location.includes(',')?info.location.indexOf(','):info.location.indexOf('，')
+                let latitude = info.location.substring(0, index)
+                let longitude = info.location.substring(index + 1)
+                let broadObj=[{
+                    positionType:info.positionType,
+                    name:info.name,
+                    manufactor:info.manufactor,
+                    ip:info.ip,
+                    port:info.port,
+                    regionId:info.regionId,
+                    description:info.description,
+                    latitude:latitude,
+                    longitude:longitude
+                }]
+                api.broadcast.createBroadcast(broadObj).then(res =>{
+                    this.$message.success('添加成功')
+                    this.getAllBroadcast()
+                }).catch(err =>{
+                    this.$message.error('添加失败,请稍后再试')
+                })
             },
             toggleList(type){
                 if (type === 'list') {
@@ -211,7 +235,7 @@
                 }
             },
             selectedAll(state){
-                this.choseList=this.broadList.filter((item)=>{
+                this.broadList=this.broadList.filter((item)=>{
                     if(state==true){
                         item.checked=true
                         this.choseInfoId.push(item.id)
@@ -234,6 +258,8 @@
                     for (let i=0;i<this.broadList.length;i++) {
                         this.broadList[i].checked = false
                         this.broadList[i].status = true
+                        this.broadList[i].id=this.broadList[i].id
+                        this.broadList[i].location=`${this.broadList[i].latitude},${this.broadList[i].longitude}`
                     }
                 }).catch((err)=>{
                     console.log(err)
@@ -242,7 +268,15 @@
         },
         created (){
             this.getAllBroadcast()
-//            this.choseList=this.broadList
+        },
+        filters:{
+          changeStatus(item){
+              if(item==0){
+                  return '室内'
+              }else{
+                  return '室外'
+              }
+          }
         },
         components:{
             ScrollContainer,

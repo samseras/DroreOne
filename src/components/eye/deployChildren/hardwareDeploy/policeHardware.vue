@@ -29,17 +29,21 @@
                         </el-table-column>
 
                         <el-table-column
-                            prop="type"
-                            label="状态">
+                            prop="sensorType"
+                            label="类型">
                         </el-table-column>
+                        <el-tserialNumable-column
+                            prop="serialNum"
+                            label="设备编号">
+                        </el-tserialNumable-column>
 
                         <el-table-column
-                            prop="area"
-                            label="所属片区">
+                            prop="name"
+                            label="名称">
                         </el-table-column>
                         <el-table-column
-                            prop="describe"
-                            label="摄像头介绍">
+                            prop="description"
+                            label="描述">
                         </el-table-column>
                         <el-table-column>
                             <template slot-scope="scope">
@@ -60,7 +64,7 @@
                         </div>
                         <div class="specificInfo" >
                             <p class="name">所属区域：<span>{{item.regionId}}</span></p>
-                            <p class="sex">类&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;型：<span>{{item.sensorType
+                            <p class="sex">类&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;型：<span>{{item.sensorType | changeStatus
 }}</span></p>
                             <p class="sex">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：<span>{{item.description}}</span></p>
 
@@ -94,7 +98,6 @@
                 isShowPoliceCard:true,
                 visible:false,
                 policeList:[
-
                 ],
                 checkList:[],
                 isSelected:false,
@@ -122,13 +125,28 @@
 
             },
             fixInfo(info){
-                let list=this.policeList
-                for(let i=0;i<list.length;i++){
-                    if(info.id===list[i].id){
-                        this.policeList[i]=info
-                    }
-                }
-                this.choseList=this.policeList
+                let index = info.location.includes(',')?info.location.indexOf(','):info.location.indexOf('，')
+                let latitude = info.location.substring(0, index)
+                let longitude = info.location.substring(index + 1)
+                let policeObj=[{
+                    id:info.id,
+                    sensorType:info.sensorType,
+                    name:info.name,
+                    manufactor:info.manufactor,
+                    serialNum:info.serialNum,
+                    ip:info.ip,
+                    regionId:info.regionId,
+                    description:info.description,
+                    latitude:latitude,
+                    longitude:longitude
+                }]
+                api.police.updatePolice(policeObj).then(res =>{
+                  this.$message.success('修改成功')
+                  this.choseInfoId = []
+                  this.getAllPolice()
+                }).catch(err =>{
+                    this.$message.error('修改失败,请稍后再试')
+                })
             },
             fixedInfo(){
                 if(this.choseInfoId.length>0){
@@ -144,21 +162,42 @@
                 }
             },
             deletInfo(){
-                console.log(122)
-                for(let i=0;i<this.choseInfoId.length;i++){
-                    this.policeList=this.policeList.filter((item,index)=>{
-                        if(item.id === this.choseInfoId[i]){
-                            this.choseList[index].checked=false
-                        }
-                        return item.id!==this.choseInfoId[i]
-                    })
-                }
-                this.choseList=this.policeList
+                api.police.deletePolice(this.choseInfoId).then(res =>{
+                    for(let i=0;i<this.choseInfoId.length;i++){
+                        this.policeList=this.policeList.filter((item,index) =>{
+                            if(item.id===this.choseInfoId[i]){
+                                this.policeList[index].checked=false
+                            }
+                            return item.id!==this.choseInfoId[i]
+                        })
+                    }
+                    this.$message.success('删除成功')
+                    this.choseInfoId=[]
+                }).catch(err =>{
+                    this.$message.error('删除失败,请稍后重试')
+                })
             },
             addPolice(info){
-                info.id=new Date().getTime()
-                this.policeList.push(info)
-                this.choseList=this.policeList
+                let index = info.location.includes(',')?info.location.indexOf(','):info.location.indexOf('，')
+                let latitude = info.location.substring(0, index)
+                let longitude = info.location.substring(index + 1)
+                let policeObj=[{
+                    sensorType:info.sensorType,
+                    name:info.name,
+                    manufactor:info.manufactor,
+                    serialNum:info.serialNum,
+                    ip:info.ip,
+                    regionId:info.regionId,
+                    description:info.description,
+                    latitude:latitude,
+                    longitude:longitude
+                }]
+                api.police.createPolice(policeObj).then(res =>{
+                    this.$message.success('添加成功')
+                    this.getAllPolice()
+                }).catch(err =>{
+                    this.$message.error('添加失败，请稍后重试')
+                })
             },
             toggleList (type){
                 if(type==='list'){
@@ -197,8 +236,8 @@
                 }
             },
             selectedAll(state){
-                this.choseList=this.policeList.filter((item)=>{
-                    if(state==true){
+                this.policeList=this.policeList.filter((item)=>{
+                    if(state == true){
                         item.checked=true
                         this.choseInfoId.push(item.id)
                         return item.checked == true
@@ -220,6 +259,8 @@
                     for (let i=0;i<this.policeList.length;i++){
                         this.policeList[i].checked=false
                         this.policeList[i].status=true
+                        this.policeList[i].id=this.policeList[i].id
+                        this.policeList[i].location=`${this.policeList[i].latitude},${this.policeList[i].longitude}`
                     }
                 }).catch((err)=>{
                     console.log(err)
@@ -228,12 +269,16 @@
             }
         },
         created (){
-//            for (let i=0;i<this.policeList.length;i++){
-//                this.policeList[i].checked=false
-//                this.policeList[i].status=true
-//            }
-//            this.choseList=this.policeList
             this.getAllPolice()
+        },
+        filters:{
+          changeStatus(item){
+              if(item ==10){
+                  return '报警柱'
+              }else{
+                  return '越界'
+              }
+          }
         },
         components:{
             ScrollContainer,

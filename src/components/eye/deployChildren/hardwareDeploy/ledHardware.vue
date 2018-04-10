@@ -33,17 +33,17 @@
                             width="120">
                         </el-table-column>
                         <el-table-column
-                            prop="type"
+                            prop="positionType"
                             label="类型">
                         </el-table-column>
 
                         <el-table-column
-                            prop="area"
+                            prop="regionId"
                             label="所属片区">
                         </el-table-column>
 
                         <el-table-column
-                            prop="describe"
+                            prop="description"
                             label="描述">
                         </el-table-column>
                         <el-table-column>
@@ -65,7 +65,7 @@
                         </div>
                         <div class="specificInfo" >
                             <p class="area">所属区域：<span>{{item.regionId}}</span></p>
-                            <p class="type">广播类型：<span>{{item.positionType}}</span></p>
+                            <p class="type">LED类型：<span>{{item.positionType | changeFilter}}</span></p>
                             <p class="describe">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：<span>{{item.description}}</span></p>
 
                         </div>
@@ -98,10 +98,7 @@
                 isShowLedCard:true,
                 visible:false,
                 ledList:[
-                    {id:1,name:'大屏名称',type:'室内',area:'A-片区',describe:'广播描述'},
-                    {id:2,name:'大屏名称',type:'室外',area:'A-片区',describe:'广播描述'},
-                    {id:3,name:'大屏名称',type:'室内',area:'B片区',describe:'广播描述'},
-                    {id:4,name:'大屏名称',type:'室外',area:'A-片区',describe:'广播描述'},
+
                 ],
                 checkList:[],
                 isSelected:false,
@@ -126,13 +123,32 @@
 
             },
             fixInfo(info){
-                let list=this.ledList
-                for(let i=0;i<list.length;i++){
-                    if(info.id===list[i].id){
-                        this.ledList[i]=info
-                    }
-                }
-                this.choseList=this.ledList
+                let index = info.location.includes(',')?info.location.indexOf(','):info.location.indexOf('，')
+                let latitude = info.location.substring(0,index)
+                let longitude = info.location.substring(index+1)
+                let item = info.area.includes(',')?info.area.indexOf(','):info.area.indexOf('，')
+                let screenWidth=info.area.substring(0,item)
+                let screenHeight = info.area.substring(item + 1)
+                let ledObj=[{
+                    id:info.id,
+                    positionType:info.positionType,
+                    name:info.name,
+                    ip:info.ip,
+                    serialNum:info.serialNum,
+                    regionId:info.regionId,
+                    description:info.description,
+                    latitude:latitude,
+                    longitude:longitude,
+                    screenWidth:screenWidth,
+                    screenHeight:screenHeight
+                }]
+                api.led.updateLed(ledObj).then(res =>{
+                    this.$message.success('修改成功')
+                    this.choseInfoId=[]
+                    this.getAllLed()
+                }).catch(err =>{
+                    this.$message.error('修改失败,请稍后再试')
+                })
             },
             fixedInfo(){
                 if(this.choseInfoId.length>0){
@@ -148,21 +164,46 @@
                 }
             },
             deletInfo(){
-                console.log(122)
-                for(let i=0;i<this.choseInfoId.length;i++){
-                    this.ledList=this.ledList.filter((item,index)=>{
-                        if(item.id === this.choseInfoId[i]){
-                            this.choseList[index].checked=false
-                        }
-                        return item.id!==this.choseInfoId[i]
-                    })
-                }
-                this.choseList=this.ledList
+                api.led.deleteLed(this.choseInfoId).then(res =>{
+                    for(let i=0;i<this.choseInfoId.length;i++){
+                        this.ledList=this.ledList.filter((item,index)=>{
+                            if(item.id ===this.choseInfoId[i]){
+                                this.ledList[index].checked=false
+                            }
+                            return item.id!==this.choseInfoId[i]
+                        })
+                    }
+                    this.$message.success('删除成功')
+                    this.choseInfoId=[]
+                }).catch(err=>{
+                    this.$message.error('删除失败，请稍后再试')
+                })
             },
             addLed (info){
-                info.id=new Date().getTime()
-                this.ledList.push(info)
-                this.choseList=this.ledList
+                let index = info.location.includes(',')?info.location.indexOf(','):info.location.indexOf('，')
+                let latitude = info.location.substring(0, index)
+                let longitude = info.location.substring(index + 1)
+                let item = info.area.includes(',')?info.area.indexOf(','):info.area.indexOf('，')
+                let screenWidth=info.area.substring(0,item)
+                let screenHeight = info.area.substring(item + 1)
+                let ledObj=[{
+                    positionType:info.positionType,
+                    name:info.name,
+                    ip:info.ip,
+                    serialNum:info.serialNum,
+                    regionId:info.regionId,
+                    description:info.description,
+                    latitude:latitude,
+                    longitude:longitude,
+                    screenWidth:screenWidth,
+                    screenHeight:screenHeight
+                }]
+                api.led.createLed(ledObj).then(res =>{
+                    this.$message.success('添加成功')
+                    this.getAllLed()
+                }).catch(err =>{
+                    this.$message.error('添加失败，请稍后再试')
+                })
             },
             toggleList(type){
                 if (type === 'list') {
@@ -201,7 +242,7 @@
                 }
             },
             selectedAll(state){
-                this.choseList=this.ledList.filter((item)=>{
+                this.ledList=this.ledList.filter((item)=>{
                     if(state==true){
                         item.checked=true
                         this.choseInfoId.push(item.id)
@@ -224,6 +265,9 @@
                     for (let i=0;i<this.ledList.length;i++){
                         this.ledList[i].checked=false
                         this.ledList[i].status=true
+                        this.ledList[i].id = this.ledList[i].id
+                        this.ledList[i].location=`${this.ledList[i].latitude},${this.ledList[i].longitude}`
+                        this.ledList[i].area=`${this.ledList[i].screenWidth},${this.ledList[i].screenHeight}`
                     }
                 }).catch((err)=>{
                     console.log(err)
@@ -231,11 +275,6 @@
             }
         },
         created (){
-//            for (let i=0;i<this.ledList.length;i++){
-//                this.ledList[i].checked=false
-//                this.ledList[i].status=true
-//            }
-//            this.choseList=this.ledList
             this.getAllLed()
         },
         components:{

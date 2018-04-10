@@ -14,15 +14,21 @@ const gate={
     updateGate(params){
         return axios({
             method:'PUT',
-            url:getUrl('/device?deviceType=3'),
-            data:params
+            url:getUrl('/device'),
+            data:{
+                type:3,
+                devices:params
+            }
         })
     },
     createGate(params){
         return axios({
             method:'POST',
-            url:getUrl('/device?deviceType=3'),
-            data:params
+            url:getUrl('/device'),
+            data:{
+                type:3,
+                devices:params
+            }
         })
     },
     deleteGate(par){

@@ -56,7 +56,7 @@
                             <img src="../../../../../static/img/cameras.png" alt="">
                             <span class="type">
                                   {{item.name}}
-                                </span>
+                            </span>
                         </div>
                         <div class="specificInfo" >
                             <p class="name">所属区域：<span>{{item.regionId}}</span></p>
@@ -91,9 +91,7 @@
             return{
                 isShowPersonCard:true,
                 visible:false,
-                cameraList:[
-
-                ],
+                cameraList:[],
                 checkList:[],
                 isSelected:false,
                 personInfo:{},
@@ -118,13 +116,29 @@
 
             },
             fixInfo(info){
-                let list=this.cameraList
-                for(let i=0;i<list.length;i++){
-                    if(info.id===list[i].id){
-                        this.cameraList[i]=info
-                    }
-                }
-                this.choseList=this.cameraList
+                let index = info.location.includes(',')?info.location.indexOf(','):info.location.indexOf('，')
+                let latitude = info.location.substring(0, index)
+                let longitude = info.location.substring(index + 1)
+                let cameraObj=[{
+                    id:info.id,
+                    name:info.name,
+                    positionType:info.positionType,
+                    regionId:info.regionId,
+                    manufactor:info.manufactor,
+                    port:info.port,
+                    ip:info.ip,
+                    description:info.description,
+                    latitude:latitude,
+                    longitude:longitude
+                }]
+                console.log(cameraObj)
+                api.camera.updateCamera(cameraObj).then(res=>{
+                    this.$message.success('修改成功')
+                    this.choseInfoId=[]
+                    this.getAllCamera()
+                }).catch(err=>{
+                    this.$message.error('修改失败，请稍后再试')
+                })
             },
             fixedInfo(){
                 if(this.choseInfoId.length>0){
@@ -150,20 +164,36 @@
                             return item.id !== this.choseInfoId[i]
                         })
                     }
+                    this.$message.success('删除成功')
+                    this.choseInfoId=[]
                 }).catch(err=>{
                     console.log(err)
+                    this.$message.error('删除失败，请稍后重试')
                 })
             },
             addNewPerson(info){
-                info.id=new Date().getTime()
-                this.cameraList.push(info)
-                this.choseList=this.cameraList
-//                api.camera.createCamera().then(res=>{
-//                    console.log(res,'添加成功')
-//                    this.cameraList
-//                }).catch(err=>{
-//                    console.log(err)
-//                })
+                let index = info.location.includes(',')?info.location.indexOf(','):info.location.indexOf('，')
+                let latitude = info.location.substring(0, index)
+                let longitude = info.location.substring(index + 1)
+                let cameraObj=[{
+                    name:info.name,
+                    positionType:info.positionType,
+                    regionId:info.regionId,
+                    manufactor:info.manufactor,
+                    port:info.port,
+                    ip:info.ip,
+                    description:info.description,
+                    latitude:latitude,
+                    longitude:longitude
+                }]
+                console.log(cameraObj)
+                api.camera.createCamera(cameraObj).then(res=>{
+                    this.$message.success('添加成功')
+                    console.log('增加成功')
+                    this.getAllCamera()
+                }).catch(err =>{
+                    this.$message.error('添加失败，请稍后重试')
+                })
             },
             toggleList (type){
                 if(type==='list'){
@@ -202,7 +232,7 @@
                 }
             },
             selectedAll(state){
-                this.choseList=this.cameraList.filter((item)=>{
+                this.cameraList=this.cameraList.filter((item)=>{
                     if(state==true){
                         item.checked=true
                         this.choseInfoId.push(item.id)
@@ -222,9 +252,11 @@
                     console.log(res, '这是请求回来的所有数据')
                     this.isShowLoading = false
                     this.cameraList = res.devices
-                    for (let i = 0; i < this.cameraList.length; i++) {
+                    for (let i=0; i < this.cameraList.length; i++) {
                         this.cameraList[i].checked = false
                         this.cameraList[i].status = true
+                        this.cameraList[i].id=this.cameraList[i].id
+                        this.cameraList[i].location = `${this.cameraList[i].latitude},${this.cameraList[i].longitude}`
                     }
                 }).catch((err)=> {
                     console.log(err)

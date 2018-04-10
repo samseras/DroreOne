@@ -60,7 +60,7 @@
                         </div>
                         <div class="specificInfo" >
                             <p class="area">所属区域：<span>{{item.regionId}}</span></p>
-                            <p class="type">类&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;型：<span>{{item.type}}</span></p>
+                            <p class="type">类&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;型：<span>{{item.gateType | changeType}}</span></p>
                             <p class="sex">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：<span>{{item.description}}</span></p>
 
                         </div>
@@ -122,13 +122,29 @@
 
             },
             fixInfo(info){
-                let list=this.gateList
-                for(let i=0;i<list.length;i++){
-                    if(info.id===list[i].id){
-                        this.gateList[i]=info
-                    }
-                }
-                this.choseList=this.gateList
+                let index = info.location.includes(',')?info.location.indexOf(','):info.location.indexOf('，')
+                let latitude = info.location.substring(0, index)
+                let longitude = info.location.substring(index + 1)
+                let gateObj=[{
+                    id:info.id,
+                    gateType:info.gateType,
+                    name:info.name,
+                    model:info.model,
+                    ip:info.ip,
+                    serialNum:info.serialNum,
+                    port:info.port,
+                    regionId:info.regionId,
+                    description:info.description,
+                    latitude:latitude,
+                    longitude:longitude
+                }]
+                api.gate.updateGate(gateObj).then(res =>{
+                    this.$message.success('修改成功')
+                    this.choseInfoId=[]
+                    this.getAllGate()
+                }).catch(err =>{
+                    this.$message.error('修改失败，请稍后再试')
+                })
             },
             fixedInfo(){
                 if(this.choseInfoId.length>0){
@@ -144,21 +160,44 @@
                 }
             },
             deletInfo(){
-                console.log(122)
-                for(let i=0;i<this.choseInfoId.length;i++){
-                    this.gateList=this.gateList.filter((item,index)=>{
-                        if(item.id === this.choseInfoId[i]){
-                            this.choseList[index].checked=false
-                        }
-                        return item.id!==this.choseInfoId[i]
-                    })
-                }
-                this.choseList=this.gateList
+                api.gate.deleteGate(this.choseInfoId).then(res=>{
+                    for(let i=0;i<this.choseInfoId.length;i++){
+                        this.gateList=this.gateList.filter((item,index)=>{
+                            if(item.id===this.choseInfoId[i]){
+                                this.gateList[index].checked=false
+                            }
+                            return item.id!==this.choseInfoId[i]
+                        })
+                    }
+                    this.$message.success('删除成功')
+                    this.choseInfoId=[]
+                }).catch(err=>{
+                    this.$message.err('删除失败，请稍后重试')
+                })
+
             },
             addGate(info){
-                info.id=new Date().getTime()
-                this.gateList.push(info)
-                this.choseList=this.gateList
+                let index = info.location.includes(',')?info.location.indexOf(','):info.location.indexOf('，')
+                let latitude = info.location.substring(0, index)
+                let longitude = info.location.substring(index + 1)
+                let gateObj=[{
+                    gateType:info.gateType,
+                    name:info.name,
+                    model:info.model,
+                    ip:info.ip,
+                    serialNum:info.serialNum,
+                    port:info.port,
+                    regionId:info.regionId,
+                    description:info.description,
+                    latitude:latitude,
+                    longitude:longitude
+                }]
+                api.gate.createGate(gateObj).then(res =>{
+                    this.$message.success('添加成功')
+                    this.getAllGate()
+                }).catch(err =>{
+                    this.$message.error('添加失败，请稍后重试')
+                })
             },
             toggleList (type){
                 if(type==='list'){
@@ -197,7 +236,7 @@
                 }
             },
             selectedAll(state){
-                this.choseList=this.gateList.filter((item)=>{
+                this.gateList=this.gateList.filter((item)=>{
                     if(state==true){
                         item.checked=true
                         this.choseInfoId.push(item.id)
@@ -220,6 +259,7 @@
                     for (let i=0;i<this.gateList.length;i++){
                         this.gateList[i].checked=false
                         this.gateList[i].status=true
+                        this.gateList[i].location=`${this.gateList[i].latitude},${this.gateList[i].longitude}`
                     }
                 }).catch((err)=>{
                     console.log(err)
@@ -229,7 +269,19 @@
         },
         created (){
             this.getAllGate()
-//            this.choseList=this.gateList
+        },
+        filters:{
+            changeType(item){
+                if(item == 1){
+                    return '翼闸'
+                }else if(item == 2){
+                    return '摆闸'
+                }else if(item == 3){
+                    return '三锟闸'
+                }else if(item == 4){
+                    return '平移闸'
+                }
+            }
         },
         components:{
             ScrollContainer,

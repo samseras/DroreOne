@@ -65,7 +65,7 @@
                         </div>
                         <div class="specificInfo" >
                             <p class="area">所属区域：<span>{{item.regionId}}</span></p>
-                            <p class="type">类&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;型：<span>{{item.positionType}}</span></p>
+                            <p class="type">类&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;型：<span>{{item.positionType | changeFilter}}</span></p>
                             <p class="describe">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：<span>{{item.description}}</span></p>
 
                         </div>
@@ -98,10 +98,7 @@
                 isShowWifiCard:true,
                 visible:false,
                 wifiList:[
-                    {id:1,name:'Wifi名称',type:'室内',area:'A-片区',describe:'广播描述'},
-                    {id:2,name:'Wifi名称',type:'室外',area:'A-片区',describe:'广播描述'},
-                    {id:3,name:'Wifi名称',type:'室内',area:'B片区',describe:'广播描述'},
-                    {id:4,name:'Wifi名称',type:'室外',area:'A-片区',describe:'广播描述'},
+
                 ],
                 checkList:[],
                 isSelected:false,
@@ -126,13 +123,30 @@
 
             },
             fixInfo(info){
-                let list=this.wifiList
-                for(let i=0;i<list.length;i++){
-                    if(info.id===list[i].id){
-                        this.wifiList[i]=info
-                    }
-                }
-                this.choseList=this.wifiList
+                let index = info.location.includes(',')?info.location.indexOf(','):info.location.indexOf('，')
+                let latitude = info.location.substring(0, index)
+                let longitude = info.location.substring(index + 1)
+                let wifiObj=[{
+                    id:info.id,
+                    positionType:info.positionType,
+                    name:info.name,
+                    model:info.model,
+                    ip:info.ip,
+                    serialNum:info.serialNum,
+                    mac:info.mac,
+                    regionId:info.regionId,
+                    description:info.description,
+                    latitude:latitude,
+                    longitude:longitude
+                }]
+                console.log(wifiObj)
+                api.wifi.updateWifi(wifiObj).then(res =>{
+                    this.$message.success('修改成功')
+                    this.choseInfoId=[]
+                    this.getAllWifi()
+                }).catch(err =>{
+                    this.$message.error('修改失败，请稍后再试')
+                })
             },
             fixedInfo(){
                 if(this.choseInfoId.length>0){
@@ -148,21 +162,43 @@
                 }
             },
             deletInfo(){
-                console.log(122)
-                for(let i=0;i<this.choseInfoId.length;i++){
-                    this.wifiList=this.wifiList.filter((item,index)=>{
-                        if(item.id === this.choseInfoId[i]){
-                            this.choseList[index].checked=false
-                        }
-                        return item.id!==this.choseInfoId[i]
-                    })
-                }
-                this.choseList=this.wifiList
+               api.wifi.deleteWifi(this.choseInfoId).then(res=>{
+                   for(let i=0;i<this.choseInfoId.length;i++){
+                       this.wifiList=this.wifiList.filter((item,index)=>{
+                           if(item.id === this.choseInfoId[i]){
+                               this.wifiList[index].checked=false
+                           }
+                           return item.id!==this.choseInfoId[i]
+                       })
+                   }
+                   this.$message.success('删除成功')
+                   this.choseInfoId=[]
+               }).catch(err=>{
+                      this.$message.error('删除失败，请稍后重试')
+               })
             },
             addWifi (info){
-                info.id=new Date().getTime()
-                this.wifiList.push(info)
-                this.choseList=this.wifiList
+                let index = info.location.includes(',')?info.location.indexOf(','):info.location.indexOf('，')
+                let latitude = info.location.substring(0, index)
+                let longitude = info.location.substring(index + 1)
+                let wifiObj=[{
+                    positionType:info.positionType,
+                    name:info.name,
+                    model:info.model,
+                    ip:info.ip,
+                    serialNum:info.serialNum,
+                    mac:info.mac,
+                    regionId:info.regionId,
+                    description:info.description,
+                    latitude:latitude,
+                    longitude:longitude
+                }]
+                api.wifi.createWifi(wifiObj).then(res => {
+                    this.$message.success('添加成功')
+                    this.getAllWifi()
+                }).catch(err => {
+                    this.$message.error('添加失败，请稍后再试')
+                })
             },
             toggleList(type){
                 if (type === 'list') {
@@ -201,7 +237,7 @@
                 }
             },
             selectedAll(state){
-                this.choseList=this.wifiList.filter((item)=>{
+                this.wifiList=this.wifiList.filter((item)=>{
                     if(state==true){
                         item.checked=true
                         this.choseInfoId.push(item.id)
@@ -224,6 +260,8 @@
                     for(let i=0;i<this.wifiList.length;i++){
                         this.wifiList[i].checked=false
                         this.wifiList[i].status=true
+                        this.wifiList[i].id=this.wifiList[i].id
+                        this.wifiList[i].location=`${this.wifiList[i].latitude},${this.wifiList[i].longitude}`
                     }
                 }).catch((err)=>{
                     console.log(err)
@@ -232,13 +270,17 @@
             }
         },
         created (){
-//            for (let i=0;i<this.wifiList.length;i++){
-//                this.wifiList[i].checked=false
-//                this.wifiList[i].status=true
-//            }
-//            this.choseList=this.wifiList
             this.getAllWifi()
 
+        },
+        filters:{
+            changeStatus(item){
+                if(item == 0){
+                    return '室内'
+                }else{
+                    return '室外'
+                }
+            }
         },
         components:{
             ScrollContainer,

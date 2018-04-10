@@ -15,22 +15,28 @@ const wifi={
     updateWifi(params){
         return axios({
             method:'PUT',
-            url: getUrl('/device?deviceType=7'),
-            data:params
+            url: getUrl('/device'),
+            data:{
+                type:7,
+                devices:params
+            }
         })
     },
     createWifi(params){
       return axios({
           method:'POST',
-          url: getUrl('/device?deviceType=7'),
-          data:params
+          url: getUrl('/device'),
+          data:{
+              type:7,
+              devices:params
+          }
       })
     },
     deleteWifi(par){
         console.log(par,'传递的id')
         return axios({
             method:'DELETE',
-            url: getUrl('/device?deviceType=7'),
+            url: getUrl('/device'),
             data:{
                 type:7,
                 ids:par
