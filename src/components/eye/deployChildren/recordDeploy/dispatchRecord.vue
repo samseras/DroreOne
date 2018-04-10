@@ -1,95 +1,25 @@
 <template>
     <div class="areaDeploy">
         <div class="title">
-            人员调度
+            调度统计
         </div>
-        <div class="personContent">
-            <div class="funcTitle">
-                <Header @addNewInfo = "addNewInfo"
-                        @deletInfo = "deletInfo"
-                        @choseType = 'choseType'
-                        @selectedAll = 'selectedAll'
-                        @fixedInfo = 'fixedInfo'>
-                </Header>
-            </div>
-            <div class="personList">
-                <ScrollContainer>
-                    <el-table
-                        v-if="isShowAreaCard"
-                        ref="multipleTable"
-                        :data="areaList"
-                        tooltip-effect="dark"
-                        style="width: 100%"
-                        @selection-change="handleSelectionChange">
-                        <el-table-column
-                            type="selection"
-                            width="50">
-                        </el-table-column>
-                        <el-table-column
-                            prop="type"
-                            label="调度人员"
-                            sortable
-                            width="120">
-                        </el-table-column>
-                        <el-table-column
-                            prop="name"
-                            label="名称">
-                        </el-table-column>
-                        <el-table-column
-                            prop="number"
-                            label="人员数量">
-                        </el-table-column>
-                        <el-table-column
-                            prop="classes"
-                            label="班次">
-                        </el-table-column>
-                        <el-table-column
-                            prop="line"
-                            label="线路"
-                            width="500">
-                        </el-table-column>
-                        <el-table-column label="操作">
-                            <template slot-scope="scope">
-                                <span @click="fixedInfo(scope.row,'片区信息')" class="edit">编辑</span> |
-                                <span @click="showPersonDetail(scope.row,'片区信息')">查看</span> |
-                                <span @click="deletInfo(scope.row,'片区信息')">删除</span>
-                            </template>
-                        </el-table-column>
-                    </el-table>
-                    <!--<div class="personInfo" v-for="item in choseList" v-if="isShowAreaCard && item.status">-->
-                        <!--<div class="checkBox">-->
-                            <!--<input type="checkbox" :checked='item.checked' class="checkBtn" @change="checked(item.id)">-->
-                        <!--</div>-->
-                        <!--<div class="personType" @click.stop="showPersonDetail(item, '片区信息')">-->
-                            <!--<img src="" alt="">-->
-                            <!--<span class="type">-->
-                                  <!--{{item.name}}-->
-                                <!--</span>-->
-                        <!--</div>-->
-                        <!--<div class="specificInfo">-->
-                            <!--<p class="name">所在景区：<span>{{item.idNum}}</span></p>-->
-                            <!--<p class="sex">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：<span>{{item.phone}}</span></p>-->
-                        <!--</div>-->
-                    <!--</div>-->
-                </ScrollContainer>
-                <PersonDetail v-if="visible"
-                              :visible="visible"
-                              :Info="areaInfo"
-                              :isDisabled="isDisabled"
-                              :title="title"
-                              @closeInfoDialog ="visible = false"
-                              @fixInfo = "fixInfo"
-                              @addNewInfo="addNewPerson">
-                </PersonDetail>
-            </div>
-        </div>
+        <!--<div class="personContent">-->
+            <!--<div class="funcTitle">-->
+                <!--<Header @addNewInfo = "addNewInfo"-->
+                        <!--@deletInfo = "deletInfo"-->
+                        <!--@choseType = 'choseType'-->
+                        <!--@selectedAll = 'selectedAll'-->
+                        <!--@fixedInfo = 'fixedInfo'>-->
+                <!--</Header>-->
+            <!--</div>-->
+        <!--</div>-->
     </div>
 </template>
 
 <script>
     import ScrollContainer from '@/components/ScrollContainer'
-    import Header from './dmisHeader'
-    import PersonDetail from './dmisDialog'
+    // import Header from './dmisHeader'
+    // import PersonDetail from './dmisDialog'
     export default {
         name: 'area-deploy',
         data(){
@@ -98,11 +28,11 @@
                 checkList: [],
                 filterList: [],
                 areaList: [
-                    {id:1,name: '长江~黄河巡更',type: '售票',classes: '早班，午班，晚班',number: '10个',line: '起点（123，12312）、中间（123，12312）、终点（123，12312）'},
-                    {id:2,name: '长江~黄河巡更',type: '安保',classes: '早班，午班，晚班',number: '10个',line: '起点（123，12312）、中间（123，12312）、终点（123，12312）'},
-                    {id:3,name: '长江~黄河巡更',type: '保洁',classes: '早班，午班，晚班',number: '10个',line: '起点（123，12312）、中间（123，12312）、终点（123，12312）'},
-                    {id:8,name: '长江~黄河巡更',type: '售票',classes: '早班，午班，晚班',number: '10个',line: '起点（123，12312）、中间（123，12312）、终点（123，12312）'},
-                    {id:9,name: '长江~黄河巡更',type: '检票',classes: '早班，午班，晚班',number: '10个',line: '起点（123，12312）、中间（123，12312）、终点（123，12312）'},
+                    {id:1,name: 'A-片区',placeScenic: '百里杜鹃',location: '23456789',describe: '该片区景点介绍'},
+                    {id:2,name: 'A-片区',placeScenic: '百里杜鹃',location: '23456789',describe: '该片区景点介绍'},
+                    {id:3,name: 'A-片区',placeScenic: '百里杜鹃',location: '23456789',describe: '该片区景点介绍'},
+                    {id:8,name: 'A-片区',placeScenic: '百里杜鹃',location: '23456789',describe: '该片区景点介绍'},
+                    {id:9,name: 'A-片区',placeScenic: '百里杜鹃',location: '23456789',describe: '该片区景点介绍'}
                 ],
                 visible: false,
                 areaInfo: {},
@@ -122,7 +52,7 @@
                 this.title = title
             },
             addNewInfo () {
-                this.showPersonDetail({}, '添加人员调度')
+                this.showPersonDetail({}, '添加人员信息')
                 this.isDisabled = false
             },
             deletInfo () {
@@ -172,31 +102,22 @@
                     })
                 }
             },
-            selectedAll(state){
-                if (state) {
-                    state.forEach(row => {
-                        this.$refs.multipleTable.toggleRowSelection(row);
-                    });
-                } else {
-                    this.$refs.multipleTable.clearSelection();
-                }
+            selectedAll (state) {
+                console.log(state, 'opopopopop')
+                this.choseList = this.areaList.filter((item) => {
+                    if (state === true) {
+                        item.checked = true
+                        this.choseInfoId.push(item.id)
+                        return item.checked === true
+                    } else {
+                        console.log('进入这个判断吗')
+                        item.checked = false
+                        this.choseInfoId = []
+                        return item.checked === false
+                    }
+                })
+                console.log(this.choseInfoId, 'opopop')
             },
-            // selectedAll (state) {
-            //     console.log(state, 'opopopopop')
-            //     this.choseList = this.areaList.filter((item) => {
-            //         if (state === true) {
-            //             item.checked = true
-            //             this.choseInfoId.push(item.id)
-            //             return item.checked === true
-            //         } else {
-            //             console.log('进入这个判断吗')
-            //             item.checked = false
-            //             this.choseInfoId = []
-            //             return item.checked === false
-            //         }
-            //     })
-            //     console.log(this.choseInfoId, 'opopop')
-            // },
             fixInfo (info) {
                 console.log(info, 'wertyuio')
                 let list = this.areaList
@@ -236,8 +157,8 @@
         },
         components: {
             ScrollContainer,
-            Header,
-            PersonDetail
+            // Header,
+            // PersonDetail
         }
     }
 
@@ -334,39 +255,9 @@
                             line-height: rem(22);
                         }
                     }
+                }
+            }
+        }
+    }
 
-                }
-            }
-        }
-    }
-</style>
-<style lang="scss">
-    .personList{
-        .el-table{
-            font-size: rem(14);
-            table{
-                th{
-                    background: #f3f3f3;
-                    .cell{
-                        font-size: rem(14);
-                    }
-                }
-            }
-            td,th{
-                padding: 5px 0;
-            }
-            .el-table-column--selection{
-                .cell{
-                    position: relative;
-                    top: 4px;
-                }
-            }
-            .cell{
-                font-size: rem(12);
-                .edit{
-                    color: #54c5f2;
-                }
-            }
-        }
-    }
 </style>

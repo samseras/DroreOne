@@ -23,8 +23,11 @@
                         style="width: 100%"
                         @selection-change="handleSelectionChange">
                         <el-table-column
-                            type="selection"
                             width="55">
+                            <template slot-scope="scope">
+                                <!--<input type="checkbox" :checked='scope.row.checked' class="checkBoxBtn" @change="checked(scope.row.id)">-->
+                                <el-checkbox v-model="scope.row.checked" @change="getChecked(scope.row.id)" class="checkBoxBtn"></el-checkbox>
+                            </template>
                         </el-table-column>
                         <el-table-column
                             prop="name"
@@ -51,7 +54,8 @@
                             prop="location"
                             label="位置">
                         </el-table-column>
-                        <el-table-column>
+                        <el-table-column
+                            label="操作">
                             <template slot-scope="scope">
                                 <span @click="showPersonDetail(scope.row, '景点信息')">编辑</span>
                             </template>
@@ -59,7 +63,8 @@
                     </el-table>
                     <div class="personInfo" v-for="item in scenicList" v-if="isShowScenicCard && item.status">
                         <div class="checkBox">
-                            <input type="checkbox" :checked='item.checked' class="checkBtn" @change="checked(item.id)">
+                            <!--<input type="checkbox" :checked='item.checked' class="checkBtn" @change="checked(item.id)">-->
+                            <el-checkbox v-model="item.checked" @change="checked(item.id)" class="checkBtn"></el-checkbox>
                         </div>
                         <div class="personType" @click.stop="showPersonDetail(item, '景点信息')">
                             <img src="" alt="">
@@ -153,6 +158,12 @@
                 }
             },
             checked (id) {
+                this.scenicList = this.scenicList.filter(item => {
+                    if (item.id === id) {
+                        item.checked = item.checked
+                    }
+                    return item
+                })
                 if (this.choseInfoId.includes(id)) {
                     this.choseInfoId = this.choseInfoId.filter((item) =>{
                         return item !== id
@@ -337,7 +348,7 @@
                             /*background: none;*/
                             position: absolute;
                             right: rem(5);
-                            top: rem(3);
+                            top: rem(0);
                             cursor: pointer;
                         }
                     }

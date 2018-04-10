@@ -14,7 +14,7 @@
                          :scenario_id = "item.scenario_id" :class="isActive === index?'active':''">
                         <div class = "echatsTitle">
                             <p class = "title"></p>
-                            <div class = "echatsBtn">
+                            <div class = "echatsBtn" v-show="!isBigScreen">
                                 <i class="el-icon-rank" @click="showBigEchat(index,item,item.scenario_id)" v-if="isShowIcon"></i>
                                 <img src="../../../../static/img/out.png" alt="">
                                 <i class="el-icon-close" v-if="!isShowIcon" @click = "closeBigChart(item)"></i>
@@ -35,6 +35,7 @@
     import EchatsCard from '@/components/eye/analyze/echats'
     import api from '@/api'
     import vue from 'vue'
+    import {mapGetters} from 'vuex'
     export default {
         data() {
             return {
@@ -51,11 +52,29 @@
                 isActive: -1,
                 isBigScreen:false,
                 isPackUp:false,
-                isSetOut:false
+                isSetOut:false,
+                fullHeight:null,
+                fullWidth:null,
+                barDom:null,
+                pieDom:null,
+                roseDom:null,
+                candlestickDom:null,
+                radarDom:null,
+                relativebarDom:null,
+                RingDom:null,
+                scatterDom:null,
+                lineDom:null,
+                gaugeDom:null,
+                funnelDom:null,
+                isAllScreen:false
             }
         },
         props:['listName'],
         methods: {
+            getscreen(){
+                 this.fullHeight = window.innerHeight;
+                 this.fullWidth = window.innerWidth;
+            },
             fullscreen(){
                 this.isBigScreen = !this.isBigScreen;
                 this.isSetOut = !this.isSetOut;
@@ -66,16 +85,29 @@
                 let chartId;
                 this.$emit('hideList',data);//fullscreen事件触发后，自动触发hideList事件 var docElm = document.documentElement;
                 this.requestFullScreen();
-                this.moveChart()
+                let changeH,changeW;
+                for(let i=0;i<this.echatList.length;i++){
+                    changeH = this.echatList[i].pos_height/100;
+                    changeW = this.echatList[i].pos_width/100;
+                    $($(".echatsContent")[i]).css({"height":this.fullHeight*changeH-20+"px","width":this.fullWidth*changeW-50+"px"});
+                };
+                this.moveChart();
             },
             showList(){
                 if(!this.checkFull()){
                     let that = this;
+                    this.isAllScreen = false;
                     this.isBigScreen = !this.isBigScreen;
                     this.isSetOut = false;
                     this.isPackUp = false;
                     let data = false;
+                    let changeH,changeW;
                     that.$emit('hideList',data);//fullscreen事件触发后，自动触发hideList事件 var docElm = document.documentElement;
+                    for(let i=0;i<this.echatList.length;i++){
+                        changeH = this.echatList[i].pos_height/100;
+                        changeW = this.echatList[i].pos_width/100;
+                        $($(".echatsContent")[i]).css({"height":this.chartH*changeH-32+"px","width":this.chartW*changeW+"px"});
+                    };
                     this.moveChart();
                 }
             },
@@ -101,6 +133,7 @@
                 }
             },
             setOut(){
+                this.isAllScreen = true;
                 this.isSetOut = !this.isSetOut;
                 this.isPackUp = !this.isPackUp;
                 let data = {
@@ -108,6 +141,13 @@
                     head:true
                 };
                 this.$emit('hideList',data);//fullscreen事件触发后，自动触发hideList事件 var docElm = document.documentElement;
+                let changeH,changeW;
+                for(let i=0;i<this.echatList.length;i++){
+                    changeH = this.echatList[i].pos_height/100;
+                    changeW = this.echatList[i].pos_width/100;
+                    $($(".echatsContent")[i]).css({"width":this.fullWidth*changeW-150+"px"});
+                };
+                this.moveChart();
             },
             packUp(){
                 this.isSetOut = !this.isSetOut;
@@ -117,11 +157,20 @@
                     head:true
                 };
                 this.$emit('hideList',data);//fullscreen事件触发后，自动触发hideList事件 var docElm = document.documentElement;
+                let changeH,changeW;
+                for(let i=0;i<this.echatList.length;i++){
+                    changeH = this.echatList[i].pos_height/100;
+                    changeW = this.echatList[i].pos_width/100;
+                    $($(".echatsContent")[i]).css({"width":this.fullWidth*changeW-50+"px"});
+                };
+                this.moveChart();
             },
             getEchats () {
+                console.log(this.getRefresh)
                 this.isShowLoading = true
                 let id = this.$route.params.id;
                 api.analyze.getStreamDataById(id).then(res=> {
+                    console.log('nimeide ')
                     this.isShowloading = false;
                     this.echatList = res.result;
                     let scenarioId,chartId,chartDomH;
@@ -148,7 +197,6 @@
                 charDom.resize();
             },
             closeBigChart(item){
-               // this.isActive = -1
                  this.isShowIcon = !this.isShowIcon;
                  let smallChart = $("#"+item.scenario_id);
                  let smallDom = $("#"+item.scenario_id).parent(".echatsForm");
@@ -161,50 +209,53 @@
                  this.isShowIcon = true;
                   smallChart.css({width:smallW,height:smallH,zIndex:0});
                   smallCharDom.resize();
-
             },
             moveChart(){
                 if(this.barDom!=undefined){
-                    barDom.resize();
+                    this.barDom.resize();
                 };
                 if(this.pieDom!=undefined){
-                    pieDom.resize();
+                    this.pieDom.resize();
                 };
                 if(this.candlestickDom!=undefined){
-                    candlestickDom.resize();
+                    this.candlestickDom.resize();
                 };
                 if(this.radarDom!=undefined){
-                    radarDom.resize();
+                    this.radarDom.resize();
                 };
                 if(this.gaugeDom!=undefined){
-                    gaugeDom.resize();
+                    this.gaugeDom.resize();
                 };
                 if(this.funnelDom!=undefined){
-                    funnelDom.resize();
+                    this.funnelDom.resize();
                 };
                 if(this.roseDom!=undefined){
-                    roseDom.resize();
+                    this.roseDom.resize();
                 };
                 if(this.relativebarDom!=undefined){
-                    relativebarDom.resize();
+                    this.relativebarDom.resize();
                 };
                 if(this.RingDom!=undefined){
-                    RingDom.resize();
+                    this.RingDom.resize();
                 };
                 if(this.scatterDom!=undefined){
-                    scatterDom.resize();
+                    this.scatterDom.resize();
                 };
                 if(this.lineDom!=undefined){
-                    lineDom.resize();
+                    this.lineDom.resize();
                 };
             },
             getchartKind(scenarioId,chartDomH){
                 api.analyze.getChartDashboardName(scenarioId).then(res=>{
+                    let chartDomHpx;
                     this.kind = res.result;
                      let kindName = res.result;
-                     let chartDomHpx = this.chartH*chartDomH-32+"px";
+                     if(this.isAllScreen){
+                          chartDomHpx = this.fullHeight*chartDomH-10+"px";
+                     }else {
+                          chartDomHpx = this.chartH*chartDomH-32+"px";
+                     }
                     $("#"+scenarioId).css("height",chartDomHpx);
-                   console.log(kindName,"这是返回的图表类型");
                     switch(kindName) {
                         case "component_sink_bar":
                             this.getBarData(scenarioId);
@@ -243,13 +294,13 @@
                 })
             },
             getBarData(scenarioId){
-                let barDom,bar0ption,barResult,bigDom;
+                let bar0ption,barResult,bigDom;
                 api.analyze.getScenarioMapData(scenarioId).then(res=>{
                     this.echatData = res.result;
                     barResult = JSON.parse(res.result);
-                    console.log(res,"这是返回的bar数据");
+                    // console.log(res,"这是返回的bar数据");
                     $("#"+scenarioId).prev().find(".title").text(barResult.title);
-                    barDom = this.$echarts.init(document.getElementById(scenarioId));
+                    this.barDom = this.$echarts.init(document.getElementById(scenarioId));
                     bar0ption={
                         title:{
                             text:'',
@@ -321,17 +372,17 @@
                             }
                             ]
                     };
-                    barDom.setOption(bar0ption);
+                    this.barDom.setOption(bar0ption);
                 })
             },
             getPieData(scenarioId){
-                let pieDom,pie0ption,pieResult;
+                let pie0ption,pieResult;
                 api.analyze.getScenarioMapData(scenarioId).then(res=>{
                     this.echatData = res.result;
                     pieResult = JSON.parse(res.result);
                 //    console.log(res,"这是返回的pie数据");
                     $("#"+scenarioId).prev().find(".title").text(pieResult.title);
-                    pieDom = this.$echarts.init(document.getElementById(scenarioId));
+                    this.pieDom = this.$echarts.init(document.getElementById(scenarioId));
                     pie0ption = {
                         title:{
                             text:"",
@@ -384,17 +435,17 @@
                         ],
                         color:['#68c6e0','#9acc5d','#f98860','#ffcc79','#f8bfdf']
                     };
-                    pieDom.setOption(pie0ption);
+                    this.pieDom.setOption(pie0ption);
                 })
             },
             getRoseData(scenarioId){
-                let roseDom,rose0ption,roseResult;
+                let rose0ption,roseResult;
                 api.analyze.getScenarioMapData(scenarioId).then(res=>{
                     this.echatData = res.result;
                     roseResult = JSON.parse(res.result);
                  //   console.log(res,"这是返回的rose数据");
                     $("#"+scenarioId).prev().find(".title").text(roseResult.title);
-                    roseDom = this.$echarts.init(document.getElementById(scenarioId));
+                    this.roseDom = this.$echarts.init(document.getElementById(scenarioId));
                     rose0ption={
                         title : {
                             text: '',
@@ -439,17 +490,17 @@
 
                         ]
                     };
-                    roseDom.setOption(rose0ption);
+                    this.roseDom.setOption(rose0ption);
                 })
             },
             getFunnelData(scenarioId){
-                let funnelDom,funnel0ption,funnelResult;
+                let funnel0ption,funnelResult;
                 api.analyze.getScenarioMapData(scenarioId).then(res=>{
                     this.echatData = res.result;
                     funnelResult = JSON.parse(res.result);
                 //    console.log(res,"这是返回的funnel数据");
                     $("#"+scenarioId).prev().find(".title").text(funnelResult.title);
-                    funnelDom = this.$echarts.init(document.getElementById(scenarioId));
+                    this.funnelDom = this.$echarts.init(document.getElementById(scenarioId));
                     funnel0ption = {
                         title: {
                             text: ''
@@ -510,17 +561,17 @@
                         ],
                         color:['#68c6e0','#9acc5d','#f98860','#ffcc79','#f8bfdf']
                     };
-                    funnelDom.setOption(funnel0ption);
+                    this.funnelDom.setOption(funnel0ption);
                 })
             },
             getLineData(scenarioId){
-                let lineDom,line0ption,lineResult;
+                let line0ption,lineResult;
                 api.analyze.getScenarioMapData(scenarioId).then(res=>{
                     this.echatData = res.result;
-                  //  console.log(res,"这是返回的line数据");
+                   // console.log(res,"这是返回的line数据");
                     lineResult = JSON.parse(res.result);
                     $("#"+scenarioId).prev().find(".title").text(lineResult.title);
-                    lineDom = this.$echarts.init(document.getElementById(scenarioId));
+                    this.lineDom = this.$echarts.init(document.getElementById(scenarioId));
                     line0ption = {
                         grid: {
                             left: '5%',
@@ -548,17 +599,17 @@
                             }
                         }]
                     };
-                    lineDom.setOption(line0ption);
+                    this.lineDom.setOption(line0ption);
                 })
             },
             getScatterData(scenarioId){
-                let scatterDom,scatter0ption,scatterResult;
+                let scatter0ption,scatterResult;
                 api.analyze.getScenarioMapData(scenarioId).then(res=>{
                     this.echatData = res.result;
                 //    console.log(res,"这是返scatter回的scatter数据");
                     scatterResult = JSON.parse(res.result);
                     $("#"+scenarioId).prev().find(".title").text(scatterResult.title);
-                    scatterDom = this.$echarts.init(document.getElementById(scenarioId));
+                    this.scatterDom = this.$echarts.init(document.getElementById(scenarioId));
                     scatter0ption = {
                         grid: {
                             left: '3%',
@@ -575,17 +626,17 @@
                             data:scatterResult.value,
                         }]
                     };
-                    scatterDom.setOption(scatter0ption);
+                    this.scatterDom.setOption(scatter0ption);
                 })
             },
             getRingData(scenarioId){
-                let ringDom,ring0ption,ringResult;
+                let ring0ption,ringResult;
                 api.analyze.getScenarioMapData(scenarioId).then(res=>{
                     this.echatData = res.result;
                  //   console.log(res,"这是返回的ring数据");
                     ringResult = JSON.parse(res.result);
                     $("#"+scenarioId).prev().find(".title").text(ringResult.title);
-                    ringDom = this.$echarts.init(document.getElementById(scenarioId));
+                    this.ringDom = this.$echarts.init(document.getElementById(scenarioId));
                     ring0ption = {
                         tooltip: {
                             trigger: 'item',
@@ -626,17 +677,17 @@
                         ],
                         color:['yellowgreen','cornflowerblue','darkgoldenrod','blueviolet','hotpink']
                     };
-                    ringDom.setOption(ring0ption);
+                    this.ringDom.setOption(ring0ption);
                 })
             },
             getRelativebarData(scenarioId){
-                let relativebarDom,relativebar0ption,relativebarResult;
+                let relativebar0ption,relativebarResult;
                 api.analyze.getScenarioMapData(scenarioId).then(res=>{
                     this.echatData = res.result;
                   //  console.log(res,"这是返回的relativebar数据");
                     relativebarResult = JSON.parse(res.result);
                     $("#"+scenarioId).prev().find(".title").text(relativebarResult.title);
-                    relativebarDom = this.$echarts.init(document.getElementById(scenarioId));
+                    this.relativebarDom = this.$echarts.init(document.getElementById(scenarioId));
                     relativebar0ption = {
                         tooltip : {
                             trigger: 'axis',
@@ -703,18 +754,18 @@
                             }
                         ]
                     };
-                    relativebarDom.setOption(relativebar0ption);
+                    this.relativebarDom.setOption(relativebar0ption);
                 })
             },
             getGaugeData(scenarioId){
-                let gaugeDom,gauge0ption,gaugeResult;
+                let gauge0ption,gaugeResult;
                 api.analyze.getScenarioMapData(scenarioId).then(res=>{
                     this.echatData = res.result;
-                    console.log(res,"这是返回的gauge数据");
+                  //  console.log(res,"这是返回的gauge数据");
                     gaugeResult = JSON.parse(res.result);
                     $("#"+scenarioId).prev().find(".title").text(gaugeResult.title);
-                    gaugeDom = this.$echarts.init(document.getElementById(scenarioId));
-                    gaugeResult = {
+                    this.gaugeDom = this.$echarts.init(document.getElementById(scenarioId));
+                    gauge0ption = {
                         tooltip : {
                             formatter: "{a} <br/>{b} : {c}%"
                         },
@@ -728,21 +779,21 @@
                             }
                         ]
                     };
-                    setInterval(function () {
-                        gaugeResult.series[0].data[0].value = (Math.random() * 100).toFixed(2) - 0;
-                        gaugeDom.setOption(gaugeResult, true);
-                    },2000);
-                    gaugeDom.setOption(gauge0ption);
+                    // setInterval(function () {
+                    //     gaugeResult.series[0].data[0].value = (Math.random() * 100).toFixed(2) - 0;
+                    //     this.gaugeDom.setOption(gauge0ption, true);
+                    // },2000);
+                     this.gaugeDom.setOption(gauge0ption);
                 })
             },
             getCandlestickData(scenarioId){
-                let candlestickDom,candlestick0ption,candlestickResult;
+                let candlestick0ption,candlestickResult;
                 api.analyze.getScenarioMapData(scenarioId).then(res=>{
                     this.echatData = res.result;
                 //    console.log(res,"这是返回的candlestick数据");
                     candlestickResult = JSON.parse(res.result);
                     $("#"+scenarioId).prev().find(".title").text(candlestickResult.title);
-                    candlestickDom = this.$echarts.init(document.getElementById(scenarioId));
+                    this.candlestickDom = this.$echarts.init(document.getElementById(scenarioId));
                     candlestick0ption = {
                         grid: {
                             left: '5%',
@@ -760,17 +811,17 @@
                             data: candlestickResult.value
                         }]
                     };
-                    candlestickDom.setOption(candlestick0ption);
+                    this.candlestickDom.setOption(candlestick0ption);
                 })
             },
             getRadarData(scenarioId){
-                let radarDom,radar0ption,radarResult;
+                let radar0ption,radarResult;
                 api.analyze.getScenarioMapData(scenarioId).then(res=>{
                     this.echatData = res.result;
-                    console.log(res,"这是返回的radar数据");
+                   // console.log(res,"这是返回的radar数据");
                     radarResult = JSON.parse(res.result);
                     $("#"+scenarioId).prev().find(".title").text(radarResult.title);
-                    radarDom = this.$echarts.init(document.getElementById(scenarioId));
+                    this.radarDom = this.$echarts.init(document.getElementById(scenarioId));
                     radar0ption = {
                         title: {
                             text: ''
@@ -799,33 +850,54 @@
                         }],
                         color:['#68c6e0','#9acc5d']
                     };
-                    radarDom.setOption(radar0ption);
+                    this.radarDom.setOption(radar0ption);
                 })
-            }
+            },
+            getRefreshTime () {
+                if (this.getRefresh == 0) {
+                    return
+                }
+                if (localStorage.getItem('REFRESHTIME')){
+                    let time = localStorage.getItem('REFRESHTIME')
+                    if (new Date().getTime() - time > this.getRefresh * 10){
+                        this.getEchats()
+                        localStorage.setItem('REFRESHTIME',new Date().getTime())
+                    }
+                } else {
+                    localStorage.setItem('REFRESHTIME',new Date().getTime())
+                    this.getEchats()
+                }
+            },
         },
         watch: {
           '$route' () {
               this.echatList = []  //清空dom 内容
               this.getEchats()
+              this.getRefreshTime()
           },
         },
         created () {
             this.echatList = []
             this.getEchats();
+            this.getscreen();
+        },
+        computed: {
+            ...mapGetters(['getRefresh'])
         },
         mounted: function () {
+            setInterval(this.getRefreshTime,10000)
             this.chartH = this.$refs.content.getBoundingClientRect().height;
             this.chartW = this.$refs.content.getBoundingClientRect().width;
             let that=this
             window.onresize = function(){
                 that.showList();
             };
-
         },
         components: {
             ScrollContainer,
             EchatsCard
         }
+
     }
 </script>
 
@@ -851,9 +923,9 @@
         .content{
             flex: 1;
             position: relative;
-            height: 100%;
+            height: 96%;
             /*display: flex;*/
-            min-height: rem(557);
+            min-height: rem(545);
             /*flex-direction: column;*/
             .rankBtn{
                 position: absolute;
@@ -894,21 +966,20 @@
             }
             .contentForm{
                 width: 100%;
-                /*height: 100%;*/
              //   flex: 1;
                 height: 100%;
                 position: relative;
                 margin-top: rem(20);
                 cursor: pointer;
-                .active{
-                    position: fixed !important;
-                    width: 80% !important;
-                    height: 80% !important;
-                    left: 10% !important;
-                    top: 10% !important;
-                    background:#fff !important;
-                    z-index: 999 !important;
-                }
+                /*.active{*/
+                    /*position: fixed !important;*/
+                    /*width: 80% !important;*/
+                    /*height: 80% !important;*/
+                    /*left: 10% !important;*/
+                    /*top: 10% !important;*/
+                    /*background:#fff !important;*/
+                    /*z-index: 999 !important;*/
+                /*}*/
                 .echatsForm{
                     position: absolute;
                     border: 1px solid #ccc;

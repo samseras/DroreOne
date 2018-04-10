@@ -14,27 +14,22 @@
                     <el-select v-model="person.type" size="mini" placeholder="请选择">
                         <el-option
                             v-for="item in options"
-                            :key="item.value"
+                            :key="item.type"
                             :label="item.type"
-                            :value="item.value">
+                            :value="item.type">
                         </el-option>
                     </el-select>
-
                     </p>
-                    <p class="sex">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 称：<input type="text"v-model="person.sex"></p>
+                    <p class="sex">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 称：<input type="text"v-model="person.sex"class="inputText"></p>
                     <p class="time">时&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 间：
-                        <el-checkbox label="周一"></el-checkbox>
-                        <el-checkbox label="周二"></el-checkbox>
-                        <el-checkbox label="周三"></el-checkbox>
-                        <el-checkbox label="周四"></el-checkbox>
-                        <el-checkbox label="周五"></el-checkbox>
-                        <el-checkbox label="周六"></el-checkbox>
-                        <el-checkbox label="周日"></el-checkbox>
-                        <el-checkbox label="自定义"></el-checkbox>
+                        <el-checkbox-group v-model="filterList" @change="weekDay">
+                            <el-checkbox v-for="item in week" :label="item.type"></el-checkbox>
+                        </el-checkbox-group>
+                        <el-checkbox label="自定义" @change="weekCustom" v-model="weekcustom"></el-checkbox>
                     </p>
-                    <p class="time">选择时间：
+                    <p class="time" v-if="weekTime">选择时间：
                         <el-date-picker
-                            v-model="value6"
+                            v-model="definedDay"
                             size ="mini"
                             type="daterange"
                             range-separator="至"
@@ -43,36 +38,138 @@
                         </el-date-picker>
                     </p>
                     <p class="time">班&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 次：
-                        <el-checkbox label="早班"></el-checkbox>
-                        <el-checkbox label="中班"></el-checkbox>
-                        <el-checkbox label="晚班"></el-checkbox>
-                        <el-checkbox label="自定义"></el-checkbox>
+                        <el-checkbox-group v-model="classesList" @change="classesDay">
+                            <el-checkbox v-for="item in classes" :label="item.type"></el-checkbox>
+                        </el-checkbox-group>
+                        <el-checkbox label="自定义" @change="dayCustom" v-model="daycustom"></el-checkbox>
+                        <el-time-picker v-if="dayTime"
+                            is-range
+                            v-model="definedTime"
+                            range-separator="至"
+                            start-placeholder="开始时间"
+                            end-placeholder="结束时间"
+                            placeholder="选择时间范围">
+                        </el-time-picker>
                     </p>
                     <p class="name">人&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 员：
-
+                        <el-select v-model="person.people" size="mini" class="" multiple placeholder="请选择">
+                            <el-option
+                                v-for="item in options"
+                                :key="item.type"
+                                :label="item.type"
+                                :value="item.type">
+                            </el-option>
+                        </el-select>
                     </p>
                     <p class="idNum">重复调度：
                         <el-radio v-model="radio" label="1">是</el-radio>
                         <el-radio v-model="radio" label="0">否</el-radio>
                     </p>
-                    <p class="phoneNum">位置范围：<input type="text"v-model="person.location"><img src="" alt="" @click="showMapDialog"></p>
+                    <p class="phoneNum">位置范围：<input type="text"v-model="hardware.location" class="location" @click="showMapDialog"><img src="" alt="" @click="showMapDialog"></p>
                     <p class="type">
                         描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：<textarea name="" v-model="person.describe" cols="30"
                                                                                rows="5" placeholder="请输入描述信息"></textarea>
                     </p>
                 </div>
-                <div class="text-center p-2">
-                    <file-upload
-                        extensions="gif,jpg,jpeg,png,webp"
-                        accept="image/png,image/gif,image/jpeg,image/webp"
-                        name="avatar"
-                        class="btn btn-primary"
-                        :drop="!edit"
-                        v-model="files"
-                        @input-filter="inputFilter"
-                        @input-file="inputFile"
-                        ref="upload">
-                    </file-upload>
+                <!--硬件调度-->
+                <div class="personCardContent" v-if="route.includes('hardware')">
+                    <p class="name">调&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 度：
+                        <el-select v-model="hardware.type" size="mini" placeholder="请选择" @change="hardwareType">
+                            <el-option
+                                v-for="item in indicatorType"
+                                :key="item.type"
+                                :label="item.type"
+                                :value="item.type"
+                                >
+                            </el-option>
+                        </el-select>
+                    </p>
+                    <p class="sex">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 称：<input type="text"v-model="hardware.sex" class="inputText"></p>
+                    <p class="time">时&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 间：
+                        <el-checkbox-group v-model="filterList" @change="weekDay">
+                            <el-checkbox v-for="item in week" :label="item.type"></el-checkbox>
+                        </el-checkbox-group>
+                        <el-checkbox label="自定义" @change="weekCustom" v-model="weekcustom"></el-checkbox>
+                    </p>
+                    <p class="time" v-if="weekTime">选择时间：
+                        <el-date-picker
+                            v-model="definedDay"
+                            size ="mini"
+                            type="daterange"
+                            range-separator="至"
+                            start-placeholder="开始日期"
+                            end-placeholder="结束日期">
+                        </el-date-picker>
+                    </p>
+                    <p class="Hardware">执行时间：
+                        <el-time-picker is-range
+                                        v-model="definedTime"
+                                        range-separator="至"
+                                        start-placeholder="开始时间"
+                                        end-placeholder="结束时间"
+                                        placeholder="选择时间范围">
+                        </el-time-picker>
+                    </p>
+                    <p class="name" v-if="associatedRadio">关联广播：
+                        <el-select v-model="hardware.associatedradio" size="mini" multiple placeholder="请选择">
+                            <el-option
+                                v-for="item in broadcast"
+                                :key="item.type"
+                                :label="item.type"
+                                :value="item.type">
+                            </el-option>
+                        </el-select>
+                    </p>
+                    <p class="name" v-if="associatedScreen">关联大屏：
+                        <el-select v-model="hardware.associatedscreen" size="mini" multiple placeholder="请选择">
+                            <el-option
+                                v-for="item in screen"
+                                :key="item.type"
+                                :label="item.type"
+                                :value="item.type">
+                            </el-option>
+                        </el-select>
+                    </p>
+                    <p class="name" v-if="associatedStreet">关联路灯：
+                        <!--<el-select v-model="hardware.associatedStreet" size="mini" multiple placeholder="请选择">-->
+                            <!--<el-option-->
+                                <!--v-for="item in lamppost"-->
+                                <!--:key="item.type"-->
+                                <!--:label="item.type"-->
+                                <!--:value="item.type">-->
+                            <!--</el-option>-->
+                        <!--</el-select>-->
+                        <el-select v-model="hardware.associatedstreet" size="mini" multiple placeholder="请选择">
+                            <el-option
+                                v-for="item in lamppost"
+                                :key="item.type"
+                                :label="item.type"
+                                :value="item.type">
+                            </el-option>
+                        </el-select>
+                    </p>
+                    <p class="idNum">重复调度：
+                        <el-radio v-model="radio" label="1">是</el-radio>
+                        <el-radio v-model="radio" label="0">否</el-radio>
+                    </p>
+                    <p class="upload" v-if="upload">定义曲风：
+                        <el-upload
+                            class="upload-demo"
+                            ref="upload"
+                            :limit="2"
+                            :action="importFileUrl"
+                            :file-list="fileList"
+                            :auto-upload="false">
+                            <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
+                        </el-upload>
+                    </p>
+                    <p class="uploadText" v-if="uploadText">定义内容：
+                        <input type="text"v-model="hardware.uploadText" class="inputText">
+                    </p>
+                    <p class="type">
+                        描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：<textarea name="" v-model="hardware.describe" cols="30"
+                                                                               rows="5" placeholder="请输入描述信息"></textarea>
+                    </p>
                 </div>
             </div>
             <div class=""slot="footer" class="dialog-footer cardFooter">
@@ -97,7 +194,6 @@
                 edit: false,
                 cropper: false,
                 src: '',
-                value6: '',
                 radio: '1',
                 isShowMapDialog: false,
                 mapVisible: false,
@@ -107,15 +203,85 @@
                     idNum:'',
                     type: '',
                     phone:'',
+                    people:'',
+                },
+                hardware: {
+                    name:'',
+                    sex:'',
+                    idNum:'',
+                    type: '广播',
+                    associatedradio:[],
+                    associatedscreen:[],
+                    associatedstreet:[],
+                    phone:'',
+                    people:'',
                 },
                 options: [
-                    { value: '选项1',type: '安保'},
-                    { value: '选项2',type: '售票'},
-                    { value: '选项3',type: '保洁'},
-                    { value: '选项4',type: '检票'}
+                    { type: '安保'},
+                    { type: '售票'},
+                    { type: '保洁'},
+                    { type: '检票'}
+                ],
+                indicatorType: [
+                    {type: '广播'},
+                    {type: 'LED'},
+                    {type: '路灯'}
+                ],
+                associatedRadio:true,
+                broadcast: [
+                    {type: 'A-GB001'},
+                    {type: 'A-GB002'},
+                    {type: 'A-GB003'},
+                    {type: 'A-GB004'},
+                    {type: 'A-GB005'},
+                    {type: 'A-GB006'}
+                ],
+                associatedScreen:false,
+                screen: [
+                    {type: 'A-DP001'},
+                    {type: 'A-DP002'},
+                    {type: 'A-DP003'},
+                    {type: 'A-DP004'},
+                    {type: 'A-DP005'},
+                    {type: 'A-DP006'}
+                ],
+                associatedStreet:false,
+                lamppost: [
+                    {type: 'A-LD001'},
+                    {type: 'A-LD002'},
+                    {type: 'A-LD003'},
+                    {type: 'A-LD004'},
+                    {type: 'A-LD005'},
+                    {type: 'A-LD006'}
                 ],
                 route: '',
-                file: {}
+                file: {},
+                definedDay: '',
+                weekcustom:false,
+                weekTime:false,
+                filterList:[],
+                week: [
+                    {type: '周一'},
+                    {type: '周二'},
+                    {type: '周三'},
+                    {type: '周四'},
+                    {type: '周五'},
+                    {type: '周六'},
+                    {type: '周日'}
+                ],
+                dayTime:false,
+                classesList:[],
+                classes: [
+                    {type: '早班'},
+                    {type: '中班'},
+                    {type: '晚班'}
+                ],
+                daycustom:false,
+                definedTime:'',
+                upload:true,
+                importFileUrl: 'http:dtc.com/cpy/add',
+                fileList:[],
+                uploadText:false,
             }
         },
         methods: {
@@ -163,6 +329,30 @@
                     this.$emit('addNewInfo', newInfo)
                 }
                 this.closeDialog()
+            },
+            weekCustom(){
+                if(this.weekTime === true){
+                    this.weekTime  = false;
+                }else {
+                    this.weekTime  = true;
+                    this.filterList = [];
+                }
+            },
+            weekDay(){
+                this.weekTime  = false;
+                this.weekcustom =false;
+            },
+            dayCustom(){
+                if(this.dayTime === true){
+                    this.dayTime  = false;
+                }else {
+                    this.dayTime  = true;
+                    this.classesList = [];
+                }
+            },
+            classesDay(){
+                this.dayTime  = false;
+                this.daycustom =false;
             },
             showMapDialog () {
                 this.mapVisible  = true
@@ -221,6 +411,27 @@
                     if (URL && URL.createObjectURL) {
                         newFile.url = URL.createObjectURL(newFile.file)
                     }
+                }
+            },
+            hardwareType(vId){
+                if(vId === '广播'){
+                    this.upload = true;
+                    this.uploadText = false;
+                    this.associatedRadio = true;
+                    this.associatedScreen = false;
+                    this.associatedStreet = false;
+                }else if(vId === 'LED'){
+                    this.upload = false;
+                    this.uploadText = true;
+                    this.associatedRadio = false;
+                    this.associatedScreen = true;
+                    this.associatedStreet = false;
+                }else if(vId === '路灯'){
+                    this.upload = false;
+                    this.uploadText = false;
+                    this.associatedRadio = false;
+                    this.associatedScreen = false;
+                    this.associatedStreet = true;
                 }
             }
         },
@@ -288,7 +499,7 @@
             /*height: rem(300);*/
         }
         .el-dialog__header{
-            padding: rem(5) 0 0 rem(5);
+            padding: rem(10) 0 rem(5) rem(20);
             text-align: left;
             border-bottom: 1px solid #ccc;
         }
@@ -296,13 +507,103 @@
             font-size: rem(14);
         }
         .el-dialog__headerbtn {
-            top: rem(7);
+            top: rem(12);
         }
         .el-dialog__body{
             padding: rem(10) rem(20) 0 rem(20);
             box-sizing: border-box;
             font-size: rem(12);
             min-height: rem(150);
+            .el-select{
+                width:rem(475);
+                .el-input--suffix .el-input__inner{
+                    border: none;
+                }
+                .el-tag__close.el-icon-close{
+                    top:rem(1);
+                }
+            }
+            .el-checkbox-group{
+                display: inline-block;
+                padding-right: rem(10);
+            }
+            .el-range-editor--mini.el-input__inner{
+                width: rem(475);
+                border: none;
+                padding: 0 rem(10);
+                height: rem(24);
+                line-height: rem(24);
+                .el-range-separator{
+                    line-height: rem(24);
+                }
+            }
+            .el-date-editor--timerange{
+                border: none;
+                float: right;
+                width: rem(250);
+                padding: 0 rem(10);
+                height: rem(24);
+                line-height: rem(24);
+            }
+            .Hardware .el-date-editor--timerange{
+                float: inherit;
+            }
+            .el-date-editor{
+                .el-range-input,.el-range-separator{
+                    font-size: rem(12);
+                }
+                .el-range__icon,.el-range-separator{
+                    height: rem(24);
+                    line-height: rem(24);
+                }
+            }
+            .el-radio{
+                .el-radio__input{
+                    /*.el-radio__inner{*/
+                        /*width: rem(12);*/
+                        /*height: rem(12);*/
+                    /*}*/
+                }
+                .el-radio__label{
+                    font-size: rem(12);
+                }
+            }
+            .el-tag--mini{
+                line-height: rem(21);
+
+            }
+            .inputText{
+                width: rem(470);
+            }
+            .upload-demo{
+                display: inline-block;
+                width: rem(470);
+                height: rem(22);
+                line-height: rem(22);
+                overflow: hidden;
+                .el-upload{
+                    float: right;
+                    .el-button--small, .el-button--small.is-round{
+                        padding: rem(4) rem(10);
+                    }
+                }
+                .el-upload-list{
+                    display: inline-block;
+                    height: rem(24);
+                    line-height: rem(24);
+                    .el-upload-list__item{
+                        margin-top: 0;
+                        display: inline-block;
+                        width: inherit;
+                        margin-right: rem(10);
+                        height: rem(24);
+                        line-height: rem(24);
+                        .el-upload-list__item-name{
+                            font-size: rem(12);
+                        }
+                    }
+                }
+            }
         }
         .el-dialog__footer{
             padding: 0;
@@ -314,6 +615,9 @@
             border-top: 1px solid #ccc;
             margin-top: rem(15);
         }
+    }
+    .el-select-dropdown__item span{
+        font-size: rem(12);
     }
 </style>
 <style>
@@ -693,11 +997,18 @@
                         background: red;
                         vertical-align: middle;
                     }
+                    .location{
+                        width: rem(470);
+                    }
                     textarea{
                         resize: none;
                         outline: none;
                         padding: rem(3);
                         box-sizing: border-box;
+                        border-radius: rem(5);
+                        border: 1px solid #ccc;
+                        line-height: rem(28);
+                        width: rem(490);
                     }
                 }
                 .img{
@@ -738,6 +1049,7 @@
 <style lang="scss">
     .el-checkbox__label{
         font-size: rem(12);
+        padding-left: rem(7);
     }
     .el-checkbox+.el-checkbox{
         margin-left: rem(10);

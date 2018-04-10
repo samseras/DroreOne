@@ -12,11 +12,15 @@ module.exports = {
     assetsPublicPath: '/',
     proxyTable: {//做跨域配置
         '/droreone': {
-            target: 'http://192.168.0.150:8050/',
+            target: 'http://192.168.123.80:8080/',
             changeOrigin: true,
             pathRewrite: {
                 '^/droreone': '/'//需要rewrite重写
             }
+        },
+        '/multipart-upload': {
+            target: 'http://192.168.0.150:7081/',
+            changeOrigin: true
         },
         '/dsp': {
             target: 'http://192.168.0.110:8090/',

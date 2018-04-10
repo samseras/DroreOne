@@ -23,8 +23,11 @@
                         style="width: 100%"
                         @selection-change="handleSelectionChange">
                         <el-table-column
-                            type="selection"
                             width="55">
+                            <template slot-scope="scope">
+                                <!--<input type="checkbox" :checked='scope.row.checked' class="checkBoxBtn" @change="checked(scope.row.id)">-->
+                                <el-checkbox v-model="scope.row.checked" @change="getChecked(scope.row.id)" class="checkBoxBtn"></el-checkbox>
+                            </template>
                         </el-table-column>
                         <el-table-column
                             prop="name"
@@ -55,7 +58,8 @@
                             prop="area"
                             label="所属片区">
                         </el-table-column>
-                        <el-table-column>
+                        <el-table-column
+                            label="操作">
                             <template slot-scope="scope">
                                 <span @click="showParkDetail(scope.row, '停车场信息')">编辑</span>
                             </template>
@@ -63,7 +67,8 @@
                     </el-table>
                     <div class="personInfo" v-for="item in parkList" v-if="isShowParkCard && item.status">
                         <div class="checkBox">
-                            <input type="checkbox" :checked='item.checked' class="checkBtn" @change="checked(item.parkingBean.id)">
+                            <!--<input type="checkbox" :checked='item.checked' class="checkBtn" @change="checked(item.parkingBean.id)">-->
+                            <el-checkbox v-model="item.checked" @change="checked(item.id)" class="checkBtn"></el-checkbox>
                         </div>
                         <div class="personType" @click.stop="showParkDetail(item, '停车场信息')">
                             <img src="" alt="">
@@ -348,7 +353,7 @@
                             /*background: none;*/
                             position: absolute;
                             right: rem(5);
-                            top: rem(3);
+                            top: rem(0);
                             cursor: pointer;
                         }
                     }

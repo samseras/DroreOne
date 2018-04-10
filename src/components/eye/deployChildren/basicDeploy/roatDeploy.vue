@@ -23,8 +23,11 @@
                         style="width: 100%"
                         @selection-change="handleSelectionChange">
                         <el-table-column
-                            type="selection"
                             width="55">
+                            <template slot-scope="scope">
+                                <!--<input type="checkbox" :checked='scope.row.checked' class="checkBoxBtn" @change="checked(scope.row.id)">-->
+                                <el-checkbox v-model="scope.row.checked" @change="getChecked(scope.row.id)" class="checkBoxBtn"></el-checkbox>
+                            </template>
                         </el-table-column>
                         <el-table-column
                             prop="name"
@@ -43,7 +46,8 @@
                             prop="describe"
                             label="描述">
                         </el-table-column>
-                        <el-table-column>
+                        <el-table-column
+                            label="操作">
                             <template slot-scope="scope">
                                 <span @click="showPersonDetail(scope.row,'路网信息')">编辑</span>
                             </template>
@@ -51,7 +55,8 @@
                     </el-table>
                     <div class="personInfo" v-for="item in choseList" v-if="isShowRoatCard && item.status">
                         <div class="checkBox">
-                            <input type="checkbox" :checked='item.checked' class="checkBtn" @change="checked(item.id)">
+                            <!--<input type="checkbox" :checked='item.checked' class="checkBtn" @change="checked(item.id)">-->
+                            <el-checkbox v-model="item.checked" @change="checked(item.id)" class="checkBtn"></el-checkbox>
                         </div>
                         <div class="personType" @click.stop="showPersonDetail(item, '路网信息')">
                             <img src="" alt="">
@@ -283,7 +288,7 @@
                             /*background: none;*/
                             position: absolute;
                             right: rem(5);
-                            top: rem(3);
+                            top: rem(0);
                             cursor: pointer;
                         }
                     }

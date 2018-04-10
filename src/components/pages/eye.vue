@@ -100,7 +100,7 @@
     }
     .el-header {
         width: 100%;
-        height: rem(70) !important;
+        height: rem(60) !important;
     }
     .el-row{
         width: 100%;
@@ -137,7 +137,7 @@
 
     .el-col {
         height: 100%;
-        line-height: 70px;
+        line-height: 60px;
         display: flex;
     }
 
@@ -148,32 +148,34 @@
 
     .alleye .el-col:first-child img {
         margin-top: 15px;
-        width: 65px;
-        height: 40px;
+        width: 60px;
+        height: 30px;
         padding-right: 10px;
         vertical-align: middle;
     }
-
+    .alleye .el-col:nth-child(2) div{
+        padding:0 rem(7);
+    }
     .control div {
         margin: 0 5px;
-        line-height: 70px;
+        line-height: 60px;
         cursor: pointer;
     }
 
     #getTime {
-        line-height: 70px;
+        line-height: 60px;
         font-size: 16px;
         text-align: center;
     }
 
     .alleye > .el-col:last-child div {
-        line-height: 70px;
+        line-height: 60px;
         margin: 0 10px;
     }
 
     .alleye > .el-col:last-child div a {
         display: block;
-        line-height: 70px;
+        line-height: 60px;
     }
 
     .el-main {
@@ -185,6 +187,7 @@
         height: 100%;
     }
     .active{
-        color: #0086b3;
+        /*color: #0086b3;*/
+        background: rgba(115,108,108,0.5);
     }
 </style>

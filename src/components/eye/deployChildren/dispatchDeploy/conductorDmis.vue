@@ -1,7 +1,7 @@
 <template>
     <div class="areaDeploy">
         <div class="title">
-            硬件调度
+            售票排版调度
         </div>
         <div class="personContent">
             <div class="funcTitle">
@@ -15,7 +15,6 @@
             <div class="personList">
                 <ScrollContainer>
                     <el-table
-                        v-if="isShowAreaCard"
                         ref="multipleTable"
                         :data="areaList"
                         tooltip-effect="dark"
@@ -27,7 +26,7 @@
                         </el-table-column>
                         <el-table-column
                             prop="type"
-                            label="调度硬件"
+                            label="调度人员"
                             sortable
                             width="120">
                         </el-table-column>
@@ -37,29 +36,40 @@
                         </el-table-column>
                         <el-table-column
                             prop="number"
-                            label="硬件总数">
+                            label="人员数量">
                         </el-table-column>
                         <el-table-column
-                            prop="time"
-                            label="时间">
+                            prop="classes"
+                            label="班次">
                         </el-table-column>
                         <el-table-column
-                            prop="executetime"
-                            label="执行时间">
-                        </el-table-column>
-                        <el-table-column
-                            prop="repetition"
-                            label="重复调度"
-                            sortable>
+                            prop="line"
+                            label="线路"
+                            width="500">
                         </el-table-column>
                         <el-table-column label="操作">
                             <template slot-scope="scope">
-                                <span @click="fixedInfo(scope.row,'片区信息')" class="edit">编辑</span> |
+                                <span @click="fixedInfo(scope.row,'片区信息')">编辑</span> |
                                 <span @click="showPersonDetail(scope.row,'片区信息')">查看</span> |
-                                <span @click="deletInfo">删除</span>
+                                <span @click="delet(scope.row,'片区信息')">删除</span>
                             </template>
                         </el-table-column>
                     </el-table>
+                    <!--<div class="personInfo" v-for="item in choseList" v-if="isShowAreaCard && item.status">-->
+                        <!--<div class="checkBox">-->
+                            <!--<input type="checkbox" :checked='item.checked' class="checkBtn" @change="checked(item.id)">-->
+                        <!--</div>-->
+                        <!--<div class="personType" @click.stop="showPersonDetail(item, '片区信息')">-->
+                            <!--<img src="" alt="">-->
+                            <!--<span class="type">-->
+                                  <!--{{item.name}}-->
+                                <!--</span>-->
+                        <!--</div>-->
+                        <!--<div class="specificInfo">-->
+                            <!--<p class="name">所在景区：<span>{{item.idNum}}</span></p>-->
+                            <!--<p class="sex">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：<span>{{item.phone}}</span></p>-->
+                        <!--</div>-->
+                    <!--</div>-->
                 </ScrollContainer>
                 <PersonDetail v-if="visible"
                               :visible="visible"
@@ -87,11 +97,11 @@
                 checkList: [],
                 filterList: [],
                 areaList: [
-                    {id:1,name: '下午下班音乐提示',type: '广播',number: '10个',time: '2018.02.03~2018.03.11',executetime: '18:00:00~18:10:00',repetition:'是'},
-                    {id:2,name: '上班提示',type: '广播',number: '10个',time: '2018.02.03~2018.03.11',executetime: '18:00:00~18:10:00',repetition:'是'},
-                    {id:3,name: '夜间照明',type: '路灯',number: '10个',time: '2018.02.03~2018.03.11',executetime: '18:00:00~18:10:00',repetition:'否'},
-                    {id:8,name: '室内照明',type: '路灯',number: '10个',time: '2018.02.03~2018.03.11',executetime: '18:00:00~18:10:00',repetition:'否'},
-                    {id:9,name: '节日提示',type: 'LED大屏',number: '10个',time: '2018.02.03~2018.03.11',executetime: '18:00:00~18:10:00',repetition:'是'},
+                    {id:1,name: '长江~黄河巡更',type: '售票',classes: '早班，午班，晚班',number: '10个',line: '起点（123，12312）、中间（123，12312）、终点（123，12312）'},
+                    {id:2,name: '长江~黄河巡更',type: '安保',classes: '早班，午班，晚班',number: '10个',line: '起点（123，12312）、中间（123，12312）、终点（123，12312）'},
+                    {id:3,name: '长江~黄河巡更',type: '保洁',classes: '早班，午班，晚班',number: '10个',line: '起点（123，12312）、中间（123，12312）、终点（123，12312）'},
+                    {id:8,name: '长江~黄河巡更',type: '售票',classes: '早班，午班，晚班',number: '10个',line: '起点（123，12312）、中间（123，12312）、终点（123，12312）'},
+                    {id:9,name: '长江~黄河巡更',type: '检票',classes: '早班，午班，晚班',number: '10个',line: '起点（123，12312）、中间（123，12312）、终点（123，12312）'},
                 ],
                 visible: false,
                 areaInfo: {},
@@ -111,10 +121,27 @@
                 this.title = title
             },
             addNewInfo () {
-                this.showPersonDetail({}, '添加硬件调度')
+                this.showPersonDetail({}, '添加人员调度')
                 this.isDisabled = false
             },
             deletInfo () {
+                if(this.choseInfoId.length>0){
+                    for (let i = 0; i < this.choseInfoId.length; i++) {
+                        this.areaList = this.areaList.filter((item, index) => {
+                            if (item.id === this.choseInfoId[i]){
+                                this.choseList[index].checked = false
+                            }
+                            return item.id !== this.choseInfoId[i]
+                        })
+                    }
+                    this.choseList = this.areaList
+                }
+            else {
+                    this.$message.error('请选择要删除的人员')
+                }
+
+            },
+            delet () {
                 for (let i = 0; i < this.choseInfoId.length; i++) {
                     this.areaList = this.areaList.filter((item, index) => {
                         if (item.id === this.choseInfoId[i]){
@@ -124,7 +151,6 @@
                     })
                 }
                 this.choseList = this.areaList
-
             },
             // toggleList (type) {
             //     if (type === 'list') {
@@ -161,6 +187,15 @@
                     })
                 }
             },
+            // selectedAll(state){
+            //     if (state) {
+            //         state.forEach(row => {
+            //             this.$refs.multipleTable.toggleRowSelection(row);
+            //         });
+            //     } else {
+            //         this.$refs.multipleTable.clearSelection();
+            //     }
+            // },
             selectedAll (state) {
                 console.log(state, 'opopopopop')
                 this.choseList = this.areaList.filter((item) => {
@@ -194,17 +229,13 @@
                 this.choseList = this.areaList
             },
             fixedInfo () {
-                if (this.choseInfoId.length > 0) {
-                    this.areaList.map((item) => {
-                        if (item.id === this.choseInfoId[0]){
-                            this.areaInfo = item
-                        }
-                    })
-                    this.showPersonDetail(this.areaInfo, '修改人员信息')
-                    this.isDisabled = false
-                } else {
-                    this.$message.error('请选择要修改的人员')
-                }
+                this.areaList.map((item) => {
+                    if (item.id === this.choseInfoId[0]){
+                        this.areaInfo = item
+                    }
+                })
+                this.showPersonDetail(this.areaInfo, '修改人员信息')
+                this.isDisabled = false
             }
         },
         created () {
@@ -314,39 +345,10 @@
                             line-height: rem(22);
                         }
                     }
-                }
-            }
-        }
-    }
 
-</style>
-<style lang="scss">
-    .personList{
-        .el-table{
-            font-size: rem(14);
-            table{
-                th{
-                    background: #f3f3f3;
-                    .cell{
-                        font-size: rem(14);
-                    }
-                }
-            }
-            td,th{
-                padding: 5px 0;
-            }
-            .el-table-column--selection{
-                .cell{
-                    position: relative;
-                    top: 4px;
-                }
-            }
-            .cell{
-                font-size: rem(12);
-                .edit{
-                    color: #54c5f2;
                 }
             }
         }
     }
 </style>
+

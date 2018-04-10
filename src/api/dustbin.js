@@ -34,7 +34,7 @@ const dustbin = {
             method: 'DELETE',
             url: getUrl('/dustbin'),
             data:{
-                id: par
+                ids: par
             }
         })
     }

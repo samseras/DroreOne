@@ -1,27 +1,77 @@
 <template>
     <div class="areaDeploy">
         <div class="title">
-            调度管理
+            大屏播放调度
         </div>
-        <!--<div class="personContent">-->
-            <!--<div class="funcTitle">-->
-                <!--<Header @addNewInfo = "addNewInfo"-->
-                        <!--@deletInfo = "deletInfo"-->
-                        <!--@choseType = 'choseType'-->
-                        <!--@selectedAll = 'selectedAll'-->
-                        <!--@fixedInfo = 'fixedInfo'>-->
-                <!--</Header>-->
-            <!--</div>-->
-        <!--</div>-->
-
-        <el-select v-model="value" placeholder="请选择">
-            <el-option
-                v-for="item in options"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value">
-            </el-option>
-        </el-select>
+        <div class="personContent">
+            <div class="funcTitle">
+                <Header @addNewInfo = "addNewInfo"
+                        @deletInfo = "deletInfo"
+                        @choseType = 'choseType'
+                        @selectedAll = 'selectedAll'
+                        @fixedInfo = 'fixedInfo'>
+                </Header>
+            </div>
+            <div class="personList">
+                <ScrollContainer>
+                    <el-table
+                        v-if="isShowAreaCard"
+                        ref="multipleTable"
+                        :data="areaList"
+                        tooltip-effect="dark"
+                        style="width: 100%"
+                        @selection-change="handleSelectionChange">
+                        <el-table-column
+                            type="selection"
+                            width="50">
+                        </el-table-column>
+                        <el-table-column
+                            prop="type"
+                            label="调度硬件"
+                            sortable
+                            width="120">
+                        </el-table-column>
+                        <el-table-column
+                            prop="name"
+                            label="名称">
+                        </el-table-column>
+                        <el-table-column
+                            prop="number"
+                            label="硬件总数">
+                        </el-table-column>
+                        <el-table-column
+                            prop="time"
+                            label="时间">
+                        </el-table-column>
+                        <el-table-column
+                            prop="executetime"
+                            label="执行时间">
+                        </el-table-column>
+                        <el-table-column
+                            prop="repetition"
+                            label="重复调度"
+                            sortable>
+                        </el-table-column>
+                        <el-table-column label="操作">
+                            <template slot-scope="scope">
+                                <span @click="fixedInfo(scope.row,'片区信息')" class="edit">编辑</span> |
+                                <span @click="showPersonDetail(scope.row,'片区信息')">查看</span> |
+                                <span @click="delet(scope.row,'片区信息')">删除</span>
+                            </template>
+                        </el-table-column>
+                    </el-table>
+                </ScrollContainer>
+                <PersonDetail v-if="visible"
+                              :visible="visible"
+                              :Info="areaInfo"
+                              :isDisabled="isDisabled"
+                              :title="title"
+                              @closeInfoDialog ="visible = false"
+                              @fixInfo = "fixInfo"
+                              @addNewInfo="addNewPerson">
+                </PersonDetail>
+            </div>
+        </div>
     </div>
 </template>
 
@@ -37,11 +87,11 @@
                 checkList: [],
                 filterList: [],
                 areaList: [
-                    {id:1,name: 'A-片区',placeScenic: '百里杜鹃',location: '23456789',describe: '该片区景点介绍'},
-                    {id:2,name: 'A-片区',placeScenic: '百里杜鹃',location: '23456789',describe: '该片区景点介绍'},
-                    {id:3,name: 'A-片区',placeScenic: '百里杜鹃',location: '23456789',describe: '该片区景点介绍'},
-                    {id:8,name: 'A-片区',placeScenic: '百里杜鹃',location: '23456789',describe: '该片区景点介绍'},
-                    {id:9,name: 'A-片区',placeScenic: '百里杜鹃',location: '23456789',describe: '该片区景点介绍'}
+                    {id:1,name: '下午下班音乐提示',type: '广播',number: '10个',time: '2018.02.03~2018.03.11',executetime: '18:00:00~18:10:00',repetition:'是'},
+                    {id:2,name: '上班提示',type: '广播',number: '10个',time: '2018.02.03~2018.03.11',executetime: '18:00:00~18:10:00',repetition:'是'},
+                    {id:3,name: '夜间照明',type: '路灯',number: '10个',time: '2018.02.03~2018.03.11',executetime: '18:00:00~18:10:00',repetition:'否'},
+                    {id:8,name: '室内照明',type: '路灯',number: '10个',time: '2018.02.03~2018.03.11',executetime: '18:00:00~18:10:00',repetition:'否'},
+                    {id:9,name: '节日提示',type: 'LED大屏',number: '10个',time: '2018.02.03~2018.03.11',executetime: '18:00:00~18:10:00',repetition:'是'},
                 ],
                 visible: false,
                 areaInfo: {},
@@ -61,7 +111,7 @@
                 this.title = title
             },
             addNewInfo () {
-                this.showPersonDetail({}, '添加人员信息')
+                this.showPersonDetail({}, '添加硬件调度')
                 this.isDisabled = false
             },
             deletInfo () {
