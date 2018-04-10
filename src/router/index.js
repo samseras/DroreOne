@@ -63,9 +63,15 @@ import WifiHware from '@/components/eye/deployChildren/hardwareDeploy/wifiHardwa
 import VoiceHware from '@/components/eye/deployChildren/hardwareDeploy/voiceHardware'
 import PoliceHware from '@/components/eye/deployChildren/hardwareDeploy/policeHardware'
 
-import hardwareDmis from '@/components/eye/deployChildren/dispatchDeploy/hardwareDmis' //硬件调度
-import personnelDmis from '@/components/eye/deployChildren/dispatchDeploy/personnelDmis' //人员调度
-import statDmis from '@/components/eye/deployChildren/dispatchDeploy/statDmis' //调度统计
+import broadcastDmis from '@/components/eye/deployChildren/dispatchDeploy/broadcastDmis' //广播播放
+import lamppostDmis from '@/components/eye/deployChildren/dispatchDeploy/lamppostDmis' //路灯照明
+import screenDmis from '@/components/eye/deployChildren/dispatchDeploy/screenDmis' //大屏播放
+import securityDmis from '@/components/eye/deployChildren/dispatchDeploy/securityDmis' //巡更巡检
+import purifierDmis from '@/components/eye/deployChildren/dispatchDeploy/purifierDmis' //保洁排版
+import conductorDmis from '@/components/eye/deployChildren/dispatchDeploy/conductorDmis' //售票排版
+import tellersDmis from '@/components/eye/deployChildren/dispatchDeploy/tellersDmis' //检票排版
+
+import dispatchRecord from '@/components/eye/deployChildren/recordDeploy/dispatchRecord' //调度统计
 
 Vue.use(Router)
 const routes = [
@@ -169,9 +175,15 @@ const routes = [
                     {path:'/deploy/police-Hware',name:'PoliceHware',component:PoliceHware},
                     {path:'/deploy/monitors-Hware',name:'MonitorsHware',component:MonitorsHware},
 
-                    {path:'/deploy/hardware-Dmis',name:'boatcartDmis',component:hardwareDmis},
-                    {path:'/deploy/personnel-Dmis',name:'boatcartDmis',component:personnelDmis},
-                    {path:'/deploy/stat-Dmis',name:'boatcartDmis',component:statDmis}
+                    {path:'/deploy/broadcast-Dmis',name:'boatcartDmis',component:broadcastDmis},
+                    {path:'/deploy/lamppost-Dmis',name:'lamppostDmis',component:lamppostDmis},
+                    {path:'/deploy/screen-Dmis',name:'screenDmis',component:screenDmis},
+                    {path:'/deploy/security-Dmis',name:'securityDmis',component:securityDmis},
+                    {path:'/deploy/purifier-Dmis',name:'purifierDmis',component:purifierDmis},
+                    {path:'/deploy/conductor-Dmis',name:'conductorDmis',component:conductorDmis},
+                    {path:'/deploy/tellers-Dmis',name:'tellersDmis',component:tellersDmis},
+
+                    {path:'/deploy/dispatch-Record',name:'dispatchRecord',component:dispatchRecord}
                 ]
             }
         ]
