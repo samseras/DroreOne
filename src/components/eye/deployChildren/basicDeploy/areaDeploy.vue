@@ -119,7 +119,7 @@
                 this.title = title
             },
             addNewInfo () {
-                this.showPersonDetail({}, '添加人员信息')
+                this.showPersonDetail({}, '添加片区信息')
                 this.isDisabled = false
             },
             deletInfo (id) {
@@ -127,26 +127,34 @@
                     this.choseInfoId.push(id)
                 }
                 if (this.choseInfoId.length > 0) {
-                    api.area.deleteRegion(this.choseInfoId).then(res => {
-                        console.log(res, '删除成功')
-                        this.$message.success('删除成功')
-                        for (let i = 0; i < this.choseInfoId.length; i++) {
-                            this.areaList = this.areaList.filter((item, index) => {
-                                if (item.id === this.choseInfoId[i]){
-                                    this.areaList[index].checked = false
-                                    this.areaList[index].status = false
-                                }
-                                return item
-                            })
-                        }
-                        this.choseInfoId = []
-                    }).catch(err => {
-                        this.$message.error('删除失败，请稍后重试')
-                        console.log(err)
-                        this.choseInfoId = []
+                    this.$confirm('此操作将永久删除该数据, 是否继续?', '提示', {
+                        confirmButtonText: '确定',
+                        cancelButtonText: '取消',
+                        type: 'warning'
+                    }).then(() => {
+                        api.area.deleteRegion(this.choseInfoId).then(res => {
+                            console.log(res, '删除成功')
+                            this.$message.success('删除成功')
+                            for (let i = 0; i < this.choseInfoId.length; i++) {
+                                this.areaList = this.areaList.filter((item, index) => {
+                                    if (item.id === this.choseInfoId[i]){
+                                        this.areaList[index].checked = false
+                                        this.areaList[index].status = false
+                                    }
+                                    return item
+                                })
+                            }
+                            this.choseInfoId = []
+                        }).catch(err => {
+                            this.$message.error('删除失败，请稍后重试')
+                            console.log(err)
+                            this.choseInfoId = []
+                        })
+                    }).catch(() => {
+                        this.$message.info('取消删除')
                     })
                 } else {
-                    this.message.error('请选择要删除的信息')
+                    this.$message.error('请选择要删除的数据')
                     return
                 }
             },
@@ -217,6 +225,8 @@
                     this.$message.success('修改成功')
                     this.choseInfoId = []
                     this.getAllArea()
+                }).catch(err => {
+                    this.$message.error('修改失败，请稍后重试')
                 })
             },
             addNewPerson (info) {
@@ -228,6 +238,8 @@
                     console.log(res, '创建成功')
                     this.$message.success('创建成功')
                     this.getAllArea()
+                }).catch(err => {
+                    this.$message.error('创建失败，请稍后重试')
                 })
             },
             fixedInfo (id) {
@@ -240,7 +252,7 @@
                             this.areaInfo = item
                         }
                     })
-                    this.showPersonDetail(this.areaInfo, '修改人员信息')
+                    this.showPersonDetail(this.areaInfo, '修改片区信息')
                     this.isDisabled = false
                 } else {
                     this.$message.error('请选择要修改的片区')
@@ -258,6 +270,7 @@
                     }
                 }).catch(err => {
                     console.log(err, '失败')
+                    this.isShowLoading = false
                 })
             }
         },
