@@ -152,22 +152,35 @@
                 if (id) {
                     this.choseInfoId.push(id)
                 }
-                api.boat.deleteBoat(this.choseInfoId).then(res => {
-                    console.log(res, '删除成功')
-                    for (let i = 0; i < this.choseInfoId.length; i++) {
-                        this.boatCarList = this.boatCarList.filter((item, index) => {
-                            if (item.id === this.choseInfoId[i]){
-                                this.boatCarList[index].checked = false
+                if (this.choseInfoId.length > 0) {
+                    this.$confirm('此操作将永久删除该数据, 是否继续?', '提示', {
+                        confirmButtonText: '确定',
+                        cancelButtonText: '取消',
+                        type: 'warning'
+                    }).then(() => {
+                        api.boat.deleteBoat(this.choseInfoId).then(res => {
+                            console.log(res, '删除成功')
+                            for (let i = 0; i < this.choseInfoId.length; i++) {
+                                this.boatCarList = this.boatCarList.filter((item, index) => {
+                                    if (item.id === this.choseInfoId[i]){
+                                        this.boatCarList[index].checked = false
+                                    }
+                                    return item.id !== this.choseInfoId[i]
+                                })
                             }
-                            return item.id !== this.choseInfoId[i]
+                            this.$message.success('删除成功')
+                            this.choseInfoId = []
+                        }).catch(err => {
+                            console.log(err, '删除失败')
+                            this.$message.error('删除失败，请稍后重试')
                         })
-                    }
-                    this.$message.success('删除成功')
-                    this.choseInfoId = []
-                }).catch(err => {
-                    console.log(err, '删除失败')
-                    this.$message.error('删除失败，请稍后重试')
-                })
+                    }).catch(() => {
+                        this.$message.info('取消删除')
+                    })
+                } else {
+                    this.$message.error('请选择要删除的车船数据')
+                }
+
 
             },
             toggleList (type) {
@@ -276,6 +289,9 @@
                 if (id) {
                     this.choseInfoId.push(id)
                 }
+                if (this.choseInfoId.length > 1) {
+                    this.$message.warning('至多选择一个数据修改')
+                }
                  if (this.choseInfoId.length > 0) {
                      this.boatCarList.map((item) => {
                          if (item.id === this.choseInfoId[0]){
@@ -302,6 +318,7 @@
                     }
                 }).catch(err => {
                     console.log(err, '请求失败')
+                    this.isShowLoading = false
                 })
             }
 

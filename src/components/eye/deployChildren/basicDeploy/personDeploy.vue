@@ -140,24 +140,33 @@
                     this.choseInfoId.push(id)
                 }
                 if (this.choseInfoId.length > 0) {
-                    api.person.deletePerson(this.choseInfoId).then(res => {
-                        console.log(res, '删除成功')
-                        for (let i = 0; i < this.choseInfoId.length; i++) {
-                            this.personList = this.personList.filter((item, index) => {
-                                if (item.id === this.choseInfoId[i]) {
-                                    this.personList[index].checked = false
-                                }
-                                return item.id !== this.choseInfoId[i]
-                            })
-                        }
-                        this.$message.success('删除成功')
-                        this.choseInfoId = []
-                    }).catch(err => {
-                        console.log(err)
-                        this.$message.error('删除失败，请稍后重试')
+                    this.$confirm('此操作将永久删除该数据, 是否继续?', '提示', {
+                        confirmButtonText: '确定',
+                        cancelButtonText: '取消',
+                        type: 'warning'
+                    }).then(() => {
+                        api.person.deletePerson(this.choseInfoId).then(res => {
+                            console.log(res, '删除成功')
+                            for (let i = 0; i < this.choseInfoId.length; i++) {
+                                this.personList = this.personList.filter((item, index) => {
+                                    if (item.id === this.choseInfoId[i]) {
+                                        this.personList[index].checked = false
+                                    }
+                                    return item.id !== this.choseInfoId[i]
+                                })
+                            }
+                            this.$message.success('删除成功')
+                            this.choseInfoId = []
+                        }).catch(err => {
+                            console.log(err)
+                            this.$message.error('删除失败，请稍后重试')
+                        })
+                    }).catch(() => {
+                        this.$message.info('取消删除')
                     })
+
                 } else {
-                    this.$message.error('请选择要删除的选项')
+                    this.$message.error('请选择要删除的人选信息')
                 }
             },
             toggleList(type) {
@@ -263,6 +272,9 @@
             fixedInfo(id) {
                 if (id) {
                     this.choseInfoId.push(id)
+                }
+                if (this.choseInfoId.length > 1) {
+                    this.$message.warning('至多选择一个数据修改')
                 }
                 if (this.choseInfoId.length > 0) {
                     this.personList.map((item) => {

@@ -33,7 +33,7 @@ const park = {
             method: 'DELETE',
             url: getUrl('/parking'),
             data:{
-                id: pars
+                ids: par
             }
         })
     }

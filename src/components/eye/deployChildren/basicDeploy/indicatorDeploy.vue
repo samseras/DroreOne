@@ -124,25 +124,33 @@
                     this.choseInfoId.push(id)
                 }
                 if (this.choseInfoId.length > 0) {
-                    api.indicator.deleteIndicator(this.choseInfoId).then(res => {
-                        console.log(res, '删除成功')
-                        for (let i = 0; i < this.choseInfoId.length; i++) {
-                            this.indicatorList = this.indicatorList.filter((item, index) => {
-                                if (item.id === this.choseInfoId[i]){
-                                    this.indicatorList[index].checked = false
-                                }
-                                return item.id !== this.choseInfoId[i]
-                            })
-                        }
-                        this.$message.success('删除成功')
-                        this.choseInfoId = []
-                    }).catch(err => {
-                        console.log(err,'删除失败')
-                        this.$message.error('删除失败，请稍后重试')
-                        this.choseInfoId = []
+                    this.$confirm('此操作将永久删除该数据, 是否继续?', '提示', {
+                        confirmButtonText: '确定',
+                        cancelButtonText: '取消',
+                        type: 'warning'
+                    }).then(() => {
+                        api.indicator.deleteIndicator(this.choseInfoId).then(res => {
+                            console.log(res, '删除成功')
+                            for (let i = 0; i < this.choseInfoId.length; i++) {
+                                this.indicatorList = this.indicatorList.filter((item, index) => {
+                                    if (item.id === this.choseInfoId[i]){
+                                        this.indicatorList[index].checked = false
+                                    }
+                                    return item.id !== this.choseInfoId[i]
+                                })
+                            }
+                            this.$message.success('删除成功')
+                            this.choseInfoId = []
+                        }).catch(err => {
+                            console.log(err,'删除失败')
+                            this.$message.error('删除失败，请稍后重试')
+                            this.choseInfoId = []
+                        })
+                    }).catch(() => {
+                        this.$message.info('取消删除')
                     })
                 }else {
-                    this.$message.error('请选择要删除的选项')
+                    this.$message.error('请选择要删除的指示牌数据')
                 }
             },
             toggleList (type) {
@@ -225,6 +233,8 @@
                     this.$message.success('修改成功')
                     this.choseInfoId = []
                     this.getAllIndicator()
+                }).catch(err => {
+                    this.$message.error('修改失败，请稍后重试')
                 })
             },
             addNewIndicator (info) {
@@ -240,12 +250,19 @@
                 }
                 api.indicator.createIndicator(JSON.stringify(indicatorObj)).then(res => {
                     console.log('增加成功')
+                    this.$message.success('创建成功')
                     this.getAllIndicator()
+                }).catch(err => {
+                    console.log(err, '失败')
+                    this.$message.error('创建失败，请稍后重试')
                 })
             },
             fixedInfo (id) {
                 if (id) {
                     this.choseInfoId.push(id)
+                }
+                if (this.choseInfoId.length > 1) {
+                    this.$message.warning('至多选择一个数据修改')
                 }
                 if (this.choseInfoId.length > 0) {
                     this.indicatorList.map((item) => {
