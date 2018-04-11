@@ -30,12 +30,14 @@
                             </template>
                         </el-table-column>
                         <el-table-column
-                            prop="type"
                             label="类型"
                             width="120">
+                            <template slot-scope="scope">
+                               <span>{{scope.row.signboardBean.type | typeFilter}}</span>
+                            </template>
                         </el-table-column>
                         <el-table-column
-                            prop="area"
+                            prop="regionName"
                             label="所属片区">
                         </el-table-column>
                         <el-table-column
@@ -45,7 +47,9 @@
                         <el-table-column
                             label="操作">
                             <template slot-scope="scope">
-                                <span @click="showPersonDetail(scope.row, '指示牌信息')">编辑</span>
+                                <span @click="showPersonDetail(scope.row, '指示牌信息')">查看</span>
+                                <span @click="fixedInfo(scope.row.id )">编辑</span>
+                                <span @click="deletInfo(scope.row.id)">删除</span>
                             </template>
                         </el-table-column>
                     </el-table>
@@ -103,6 +107,9 @@
             }
         },
         methods: {
+            handleSelectionChange(val) {
+                this.multipleSelection = val;
+            },
             showPersonDetail (info, title) {
                 this.indicatorInfo = info
                 this.visible = true
@@ -112,7 +119,10 @@
                 this.showPersonDetail({signboardBean:{}}, '添加指示牌信息')
                 this.isDisabled = false
             },
-            deletInfo () {
+            deletInfo (id) {
+                if (id) {
+                    this.choseInfoId.push(id)
+                }
                 if (this.choseInfoId.length > 0) {
                     api.indicator.deleteIndicator(this.choseInfoId).then(res => {
                         console.log(res, '删除成功')
@@ -166,13 +176,20 @@
                     })
                 } else {
                     this.indicatorList = this.indicatorList.filter((item,index) => {
+                        if (item.signboardBean.type == 0){
+                            item.type = '标语'
+                        } else if (item.signboardBean.type == 1){
+                            item.type = '路线'
+                        } else{
+                            item.type = '设施'
+                        }
                         if (type.includes(item.type)){
                             item.status = true
                         } else if(!type.includes(item.type)){
                             item.status = false
                             console.log(item.type, 'p[p[p[');
                         }
-                        return item.status === true
+                        return item
                     })
                 }
             },
@@ -226,7 +243,10 @@
                     this.getAllIndicator()
                 })
             },
-            fixedInfo () {
+            fixedInfo (id) {
+                if (id) {
+                    this.choseInfoId.push(id)
+                }
                 if (this.choseInfoId.length > 0) {
                     this.indicatorList.map((item) => {
                         if (item.id === this.choseInfoId[0]){
@@ -235,6 +255,7 @@
                     })
                     this.showPersonDetail(this.indicatorInfo, '修改指示牌信息')
                     this.isDisabled = false
+                    this.choseInfoId = []
                 } else {
                     this.$message.error('请选择要修改的指示牌')
                 }

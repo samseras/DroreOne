@@ -33,7 +33,7 @@
                 <!--车船-->
                 <div class="personCardContent boatCardContent" v-if="route.includes('boat')">
                     <p class="name">类&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;型：
-                        <select name="" v-model="boatCar.vehicle.type" @change="selectePerson">
+                        <select name="" v-model="boatCar.vehicle.type" @change="selectePerson(boatCar.vehicle.type)">
                             <option  value=1>船只</option>
                             <option  value=0>车辆</option>
                         </select>
@@ -55,7 +55,6 @@
                         </el-date-picker>
                     </p>
                     <p class="phoneNum">维护时间：
-                        <!--<input type="text"v-model="boatCar.vehicle.maintenanceDate">-->
                         <el-date-picker
                             v-model="boatCar.vehicle.maintenanceDate"
                             type="date"
@@ -64,10 +63,10 @@
                     </p>
                     <p class="phoneNum">驾驶人员：
                         <select name="" v-model="boatCar.driverId">
-                            <option v-for="item in driverList" :value="item.personBean.id">{{item.personBean.name}}</option>
+                            <option v-for="item in driverList" :value="item.id">{{item.name}}</option>
                         </select>
                     </p>
-                    <p class="phoneNum">联系电话：<input type="text"v-model="boatCar.phone"></p>
+                    <p class="phoneNum" v-if="isDisabled">联系电话：<input type="text"v-model="boatCar.phone"></p>
                     <p class="phoneNum">设备号码：<input type="text"v-model="boatCar.vehicle.model"></p>
                     <div class="img">
                         <label for="avatar">
@@ -100,8 +99,8 @@
                 <div class="personCardContent boatCardContent" v-if="route.includes('trash')">
                     <p class="name">类&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;型：
                         <select name="" v-model="trash.dustbinBean.type">
-                            <option  value="true">临时</option>
-                            <option  value="false">固定</option>
+                            <option  value="1">临时</option>
+                            <option  value="0">固定</option>
                         </select>
                     </p>
                     <p class="sex">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称：<input type="text"v-model="trash.dustbinBean.name"></p>
@@ -462,7 +461,7 @@
                     }
                 } else if(this.route.includes('scenic')) {
                     newInfo = this.scenic
-                    if (newInfo.scenicspotBean.capacity.trim() === '' || newInfo.scenicspotBean.currentNum.trim() === '' || newInfo.scenicspotBean.name.trim() === '') {
+                    if (newInfo.scenicspotBean.capacity.trim() === '' || newInfo.scenicspotBean.name.trim() === '') {
                         this.$message.error('请输入完整信息')
                         return
                     }
@@ -573,13 +572,16 @@
                     }
                 }
             },
-            selectePerson () {
-                api.person.getAllPerson().then(res => {
+            selectePerson (type) {
+                let jobId
+                if (type == 0){
+                    jobId = 1
+                } else {
+                    jobId = 2
+                }
+                api.person.getJobPerson(jobId).then(res => {
                     console.log(res, '成功')
-                    this.driverList = res.filter(item => {
-                        return item.jobId == this.boatCar.vehicle.type
-                    })
-                    console.log(this.driverList, '司机列表')
+                    this.driverList = res
                 }).catch(err => {
                     console.log(err, '失败')
                 })
@@ -599,11 +601,20 @@
                 })
                 this.person = this.Info
             } else if(this.route.includes('boat')) {
-                api.person.getAllPerson().then(res => {
-                    this.driverList = res.filter(item => {
-                        return item
+                let jobId
+                if (this.Info.vehicle) {
+                    if (this.Info.vehicle.type == 0){
+                        jobId = 1
+                    }else {
+                        jobId = 2
+                    }
+                    api.person.getJobPerson(jobId).then(res => {
+                        console.log(res, '成功')
+                        this.driverList = res
+                    }).catch(err => {
+                        console.log(err, '失败')
                     })
-                })
+                }
                 this.boatCar = this.Info
             } else if(this.route.includes('trash')) {
                 console.log(this.Info, '909090909090')

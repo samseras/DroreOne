@@ -30,12 +30,12 @@
                             </template>
                         </el-table-column>
                         <el-table-column
-                            prop="name"
+                            prop="scenicspotBean.name"
                             label="景点名称"
                             width="120">
                         </el-table-column>
                         <el-table-column
-                            prop="area"
+                            prop="regionName"
                             label="所属片区">
                         </el-table-column>
                         <el-table-column
@@ -43,11 +43,11 @@
                             label="状态">
                         </el-table-column>
                         <el-table-column
-                            prop="capacity"
+                            prop="scenicspotBean.capacity"
                             label="容量">
                         </el-table-column>
                         <el-table-column
-                            prop="nowPeopleNum"
+                            prop="scenicspotBean.currentNum"
                             label="当前人数">
                         </el-table-column>
                         <el-table-column
@@ -57,7 +57,9 @@
                         <el-table-column
                             label="操作">
                             <template slot-scope="scope">
-                                <span @click="showPersonDetail(scope.row, '景点信息')">编辑</span>
+                                <span @click="showPersonDetail(scope.row, '人员信息')">查看</span>
+                                <span @click="fixedInfo(scope.row.id )">编辑</span>
+                                <span @click="deletInfo(scope.row.id)">删除</span>
                             </template>
                         </el-table-column>
                     </el-table>
@@ -113,10 +115,14 @@
                 choseList: [],
                 isDisabled: true,
                 title: '',
-                isShowLoading: false
+                isShowLoading: false,
+                currentNum: 50
             }
         },
         methods: {
+            handleSelectionChange(val) {
+                this.multipleSelection = val;
+            },
             showPersonDetail (info, title) {
                 this.personInfo = info
                 this.visible = true
@@ -126,7 +132,10 @@
                 this.showPersonDetail({scenicspotBean:{}}, '添加景点信息')
                 this.isDisabled = false
             },
-            deletInfo () {
+            deletInfo (id) {
+                if (id) {
+                    this.choseInfoId.push(id)
+                }
                 if (this.choseInfoId.length > 0) {
                     api.scenic.deleteScenic(this.choseInfoId).then(res => {
                         console.log(res, '删除成功')
@@ -215,7 +224,6 @@
                     id: info.scenicspotBean.id,
                     name: info.scenicspotBean.name,
                     capacity: info.scenicspotBean.capacity,
-                    currentNum: info.scenicspotBean.currentNum,
                     regionId: info.regionId,
                     picAddress: info.imgUrl,
                     latitude: latitude,
@@ -236,7 +244,6 @@
                 let scenicObj = {
                     name: info.scenicspotBean.name,
                     capacity: info.scenicspotBean.capacity,
-                    currentNum: info.scenicspotBean.currentNum,
                     regionId: info.regionId,
                     picAddress: info.imgUrl,
                     latitude: latitude,
@@ -248,15 +255,19 @@
                     this.getAllScenic()
                 })
             },
-            fixedInfo () {
+            fixedInfo (id) {
+                if (id) {
+                    this.choseInfoId.push(id)
+                }
                 if (this.choseInfoId.length > 0) {
                     this.scenicList.map((item) => {
                         if (item.id === this.choseInfoId[0]){
                             this.personInfo = item
                         }
                     })
-                    this.showPersonDetail(this.personInfo, '修改')
+                    this.showPersonDetail(this.personInfo, '修改景点信息')
                     this.isDisabled = false
+                    this.choseInfoId = []
                 } else {
                     this.$message.error('请选择要修改的景点')
                 }
@@ -272,6 +283,7 @@
                         this.scenicList[i].status = true
                         this.scenicList[i].id = this.scenicList[i].scenicspotBean.id
                         this.scenicList[i].location = `${this.scenicList[i].latitude},${this.scenicList[i].longitude}`
+                        this.scenicList[i].scenicspotBean.currentNum = this.currentNum
                     }
                 }).catch((err)=> {
                     console.log(err)

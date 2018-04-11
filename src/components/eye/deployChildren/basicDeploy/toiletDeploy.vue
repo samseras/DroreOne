@@ -30,12 +30,12 @@
                             </template>
                         </el-table-column>
                         <el-table-column
-                            prop="name"
-                            label="姓名"
+                            prop="toiletBean.name"
+                            label="名称"
                             width="120">
                         </el-table-column>
                         <el-table-column
-                            prop="area"
+                            prop="regionName"
                             label="所属片区">
                         </el-table-column>
                         <el-table-column
@@ -49,7 +49,9 @@
                         <el-table-column
                             label="操作">
                             <template slot-scope="scope">
-                                <span @click="showPersonDetail(scope.row, '卫生间信息')">编辑</span>
+                                <span @click="showPersonDetail(scope.row, '卫生间信息')">查看</span>
+                                <span @click="fixedInfo(scope.row.id )">编辑</span>
+                                <span @click="deletInfo(scope.row.id)">删除</span>
                             </template>
                         </el-table-column>
                     </el-table>
@@ -120,7 +122,10 @@
                 this.showPersonDetail({toiletBean:{}}, '添加卫生间信息')
                 this.isDisabled = false
             },
-            deletInfo () {
+            deletInfo (id) {
+                if (id) {
+                    this.choseInfoId.push(id)
+                }
                 if (this.choseInfoId.length > 0) {
                     api.toilet.deleteToilet(this.choseInfoId).then(res => {
                         console.log(res, '删除成功')
@@ -236,7 +241,10 @@
                 })
 
             },
-            fixedInfo () {
+            fixedInfo (id) {
+                if (id) {
+                    this.choseInfoId.push(id)
+                }
                 if (this.choseInfoId.length > 0) {
                     this.toiletList.map((item) => {
                         if (item.id === this.choseInfoId[0]){
@@ -245,6 +253,7 @@
                     })
                     this.showPersonDetail(this.toiletInfo, '修改卫生间信息')
                     this.isDisabled = false
+                    this.choseInfoId = []
                 } else {
                     this.$message.error('请选择要修改的洗手间')
                 }

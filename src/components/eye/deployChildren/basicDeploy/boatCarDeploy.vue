@@ -66,11 +66,11 @@
                         <el-table-column
                             label="操作">
                             <template slot-scope="scope">
-                                <span class="formBtn" @click="showPersonDetail(scope.row, '车船信息')">编辑</span>
+                                <span class="formBtn" @click="showPersonDetail(scope.row, '车船信息')">查看</span>
                                 <span class="line">|</span>
-                                <span class="formBtn" @click="fixedInfo(scope.row, '修改车船信息')">查看</span>
+                                <span class="formBtn" @click="fixedInfo(scope.row.id)">编辑</span>
                                 <span class="line">|</span>
-                                <span class="formBtn" @click="deletInfo([scope.row.id])">删除</span>
+                                <span class="formBtn" @click="deletInfo(scope.row.id)">删除</span>
                             </template>
                         </el-table-column>
                     </el-table>
@@ -150,36 +150,24 @@
             },
             deletInfo (id) {
                 if (id) {
-                    api.boat.deleteBoat(id).then(res => {
-                        console.log(res, '删除成功')
-                        this.boatCarList = this.boatCarList.filter(item => {
-                            return item.id !== id[0]
-                        })
-                        this.$message.success('删除成功')
-                    }).catch(err => {
-                        console.log(err, '删除失败')
-                        this.$message.error('删除失败，请稍后重试')
-                    })
-                } else {
-                    api.boat.deleteBoat(this.choseInfoId).then(res => {
-                        console.log(res, '删除成功')
-                        for (let i = 0; i < this.choseInfoId.length; i++) {
-                            this.boatCarList = this.boatCarList.filter((item, index) => {
-                                if (item.id === this.choseInfoId[i]){
-                                    this.boatCarList[index].checked = false
-                                }
-                                return item.id !== this.choseInfoId[i]
-                            })
-                        }
-                        this.$message.success('删除成功')
-                        this.choseInfoId = []
-                    }).catch(err => {
-                        console.log(err, '删除失败')
-                        this.$message.error('删除失败，请稍后重试')
-                    })
+                    this.choseInfoId.push(id)
                 }
-
-
+                api.boat.deleteBoat(this.choseInfoId).then(res => {
+                    console.log(res, '删除成功')
+                    for (let i = 0; i < this.choseInfoId.length; i++) {
+                        this.boatCarList = this.boatCarList.filter((item, index) => {
+                            if (item.id === this.choseInfoId[i]){
+                                this.boatCarList[index].checked = false
+                            }
+                            return item.id !== this.choseInfoId[i]
+                        })
+                    }
+                    this.$message.success('删除成功')
+                    this.choseInfoId = []
+                }).catch(err => {
+                    console.log(err, '删除失败')
+                    this.$message.error('删除失败，请稍后重试')
+                })
 
             },
             toggleList (type) {
@@ -284,23 +272,22 @@
                     this.$message.error('添加失败，请稍后重试')
                 })
             },
-            fixedInfo (info) {
-                if (info) {
-                    this.showPersonDetail(this.boatCarInfo,'修改车船信息')
-                    this.isDisabled = false
-                } else {
-                    if (this.choseInfoId.length > 0) {
-                        this.boatCarList.map((item) => {
-                            if (item.id === this.choseInfoId[0]){
-                                this.boatCarInfo = item
-                            }
-                        })
-                        this.showPersonDetail(this.boatCarInfo,'修改车船信息')
-                        this.isDisabled = false
-                    } else {
-                        this.$message.error('请选择要修改的车船')
-                    }
+            fixedInfo (id) {
+                if (id) {
+                    this.choseInfoId.push(id)
                 }
+                 if (this.choseInfoId.length > 0) {
+                     this.boatCarList.map((item) => {
+                         if (item.id === this.choseInfoId[0]){
+                             this.boatCarInfo = item
+                         }
+                     })
+                     this.showPersonDetail(this.boatCarInfo,'修改车船信息')
+                     this.isDisabled = false
+                     this.choseInfoId = []
+                 } else {
+                     this.$message.error('请选择要修改的车船')
+                 }
             },
             async getAllBoat (){
                 this.isShowLoading = true

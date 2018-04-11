@@ -43,9 +43,16 @@
                             label="位置范围">
                         </el-table-column>
                         <el-table-column
+                            prop="description"
+                            label="描述"
+                            width="240">
+                        </el-table-column>
+                        <el-table-column
                             label="操作">
                             <template slot-scope="scope">
-                                <span @click="showPersonDetail(scope.row,'片区信息')">编辑</span>
+                                <span @click="showPersonDetail(scope.row,'片区信息')">查看</span>
+                                <span @click="fixedInfo(scope.row.id )">编辑</span>
+                                <span @click="deletInfo(scope.row.id)">删除</span>
                             </template>
                         </el-table-column>
                     </el-table>
@@ -115,7 +122,10 @@
                 this.showPersonDetail({}, '添加人员信息')
                 this.isDisabled = false
             },
-            deletInfo () {
+            deletInfo (id) {
+                if (id) {
+                    this.choseInfoId.push(id)
+                }
                 if (this.choseInfoId.length > 0) {
                     api.area.deleteRegion(this.choseInfoId).then(res => {
                         console.log(res, '删除成功')
@@ -220,7 +230,10 @@
                     this.getAllArea()
                 })
             },
-            fixedInfo () {
+            fixedInfo (id) {
+                if (id) {
+                    this.choseInfoId.push(id)
+                }
                 if (this.choseInfoId.length > 0) {
                     this.areaList.map((item) => {
                         if (item.id === this.choseInfoId[0]){
