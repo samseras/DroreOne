@@ -18,8 +18,8 @@
 
 <script>
     import ScrollContainer from '@/components/ScrollContainer'
-    import Header from './dmisHeader'
-    import PersonDetail from './dmisDialog'
+    // import Header from './dmisHeader'
+    // import PersonDetail from './dmisDialog'
     export default {
         name: 'area-deploy',
         data(){
@@ -157,8 +157,8 @@
         },
         components: {
             ScrollContainer,
-            Header,
-            PersonDetail
+            // Header,
+            // PersonDetail
         }
     }
 

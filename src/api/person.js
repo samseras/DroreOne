@@ -33,7 +33,7 @@ const person = {
             method: 'DELETE',
             url: getUrl('/person'),
             data:{
-                id: par
+                ids: par
             }
         })
     },
@@ -41,6 +41,22 @@ const person = {
         return axios({
             method: 'GET',
             url: getUrl('/job')
+        })
+    },
+    updataAvatar (params) {
+        console.log(params, 'formdata')
+        return axios({
+            method: 'POST',
+            url: '/multipart-upload/haha',
+            processData : false,
+            contentType : false,
+            data:params,
+        })
+    },
+    getJobPerson (params) {
+        return axios({
+            method: 'GET',
+            url: getUrl(`/person/jobid?jobId=${params}`),
         })
     }
 }

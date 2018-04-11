@@ -14,8 +14,11 @@ const camera={
     updateCamera(params){
         return axios({
             method:'PUT',
-            url:getUrl('/device?deviceType=2'),
-            data: params
+            url:getUrl('/device'),
+            data: {
+                type:2,
+                devices:params
+            }
         })
     },
     createCamera(params){

@@ -16,15 +16,21 @@ const broadcast={
     updateBroadcast(params){
         return axios({
             method:'PUT',
-            url:getUrl('/device?deviceType=1'),
-            data:params
+            url:getUrl('/device'),
+            data:{
+                type:1,
+                devices:params
+            }
         })
     },
     createBroadcast(params){
         return axios({
             method:'POST',
-            url:getUrl('/device?deviceType=1'),
-            data:params
+            url:getUrl('/device'),
+            data:{
+                type:1,
+                devices:params
+            }
         })
     },
     deleteBroadcast(par){

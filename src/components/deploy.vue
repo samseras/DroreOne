@@ -135,15 +135,42 @@
                         title: '调度管理',
                         subs: [
                             {
-                                index: '/deploy/hardware-Dmis',
-                                title: '硬件调度'
+                                index: '/deploy/broadcast-Dmis',
+                                title: '广播播放'
                             },
                             {
-                                index: '/deploy/personnel-Dmis',
-                                title: '人员调度'
+                                index: '/deploy/lamppost-Dmis',
+                                title: '路灯照明'
                             },
                             {
-                                index: '/deploy/stat-Dmis',
+                                index: '/deploy/screen-Dmis',
+                                title: '大屏播放'
+                            },
+                            {
+                                index: '/deploy/security-Dmis',
+                                title: '巡更巡检'
+                            },
+                            {
+                                index: '/deploy/purifier-Dmis',
+                                title: '保洁排版'
+                            },
+                            {
+                                index: '/deploy/conductor-Dmis',
+                                title: '售票排版'
+                            },
+                            {
+                                index: '/deploy/tellers-Dmis',
+                                title: '检票排版'
+                            }
+                        ]
+                    },
+                    {
+                        icon: 'el-icon-document',
+                        index: '4',
+                        title: '调度记录',
+                        subs: [
+                            {
+                                index: '/deploy/dispatch-Record',
                                 title: '调度统计'
                             }
                         ]

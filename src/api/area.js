@@ -33,7 +33,7 @@ const area = {
             method: 'DELETE',
             url: getUrl('/region'),
             data:{
-                id: par
+                ids: par
             }
         })
     }

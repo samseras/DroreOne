@@ -18,6 +18,7 @@ import led from './led'
 import gate from './gate'
 import light from './light'
 import police from './police'
+import boat from './boatCar'
 
 
 export default {
@@ -37,5 +38,6 @@ export default {
     led,
     gate,
     light,
-    police
+    police,
+    boat
 }

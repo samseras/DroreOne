@@ -29,17 +29,25 @@
                         </el-table-column>
 
                         <el-table-column
-                            prop="type"
-                            label="状态">
+                            prop="sensorType"
+                            label="类型">
+                        </el-table-column>
+                        <el-table-column
+                            prop="name"
+                            label="名称">
+                        </el-table-column>
+                        <el-table-column
+                            prop="serialNum"
+                            label="设备编号">
                         </el-table-column>
 
                         <el-table-column
-                            prop="area"
+                            prop="regionId"
                             label="所属片区">
                         </el-table-column>
                         <el-table-column
-                            prop="describe"
-                            label="摄像头介绍">
+                            prop="description"
+                            label="描述">
                         </el-table-column>
                         <el-table-column>
                             <template slot-scope="scope">
@@ -120,13 +128,28 @@
 
             },
             fixInfo(info){
-                let list=this.monitorsList
-                for(let i=0;i<list.length;i++){
-                    if(info.id===list[i].id){
-                        this.monitorsList[i]=info
-                    }
-                }
-                this.choseList=this.monitorsList
+                let index = info.location.includes(',')?info.location.indexOf(','):info.location.indexOf('，')
+                let latitude = info.location.substring(0, index)
+                let longitude = info.location.substring(index + 1)
+                let monitorsObj =[{
+                    id:info.id,
+                    sensorType:info.sensorType,
+                    name:info.name,
+                    manufactor:info.manufactor,
+                    ip:info.ip,
+                    serialNum:info.serialNum,
+                    regionId:info.regionId,
+                    description:info.description,
+                    latitude:latitude,
+                    longitude:longitude
+                }]
+                api.monitor.updateMonitor(monitorsObj).then(res =>{
+                    this.$message.success('修改成功')
+                    this.choseInfoId=[]
+                    this.getAllMonitor()
+                }).catch(err =>{
+                    this.$message.error('修改失败,请稍后再试')
+                })
             },
             fixedInfo(){
                 if(this.choseInfoId.length>0){
@@ -142,21 +165,42 @@
                 }
             },
             deletInfo(){
-                console.log(122)
-                for(let i=0;i<this.choseInfoId.length;i++){
-                    this.monitorsList=this.monitorsList.filter((item,index)=>{
-                        if(item.id === this.choseInfoId[i]){
-                            this.choseList[index].checked=false
-                        }
-                        return item.id!==this.choseInfoId[i]
-                    })
-                }
-                this.choseList=this.monitorsList
+                api.monitor.deleteMonitor(this.choseInfoId).then(res=>{
+                    for(let i=0;i<this.choseInfoId.length;i++){
+                        this.monitorsList=this.monitorsList.filter((item,index)=>{
+                            if(item.id === this.choseInfoId[i]){
+                                this.monitorsList[index].checked=false
+                            }
+                            return item.id!==this.choseInfoId[i]
+                        })
+                    }
+                    this.$message.success('删除成功')
+                    this.choseInfoId = []
+                }).catch(err =>{
+                    this.$message.error('删除失败,请稍后重试')
+                })
             },
             addMonitors(info){
-                info.id=new Date().getTime()
-                this.monitorsList.push(info)
-                this.choseList=this.monitorsList
+                let index = info.location.includes(',')?info.location.indexOf(','):info.location.indexOf('，')
+                let latitude = info.location.substring(0, index)
+                let longitude = info.location.substring(index + 1)
+                let monitorsObj =[{
+                    sensorType:info.sensorType,
+                    name:info.name,
+                    manufactor:info.manufactor,
+                    ip:info.ip,
+                    serialNum:info.serialNum,
+                    regionId:info.regionId,
+                    description:info.description,
+                    latitude:latitude,
+                    longitude:longitude
+                }]
+                api.monitor.createMonitor(monitorsObj).then(res =>{
+                    this.$message.success('添加成功')
+                    this.getAllMonitor()
+                }).catch(err =>{
+                    this.$message.error('添加失败,请稍后再试')
+                })
             },
             toggleList (type){
                 if(type==='list'){
@@ -195,7 +239,7 @@
                 }
             },
             selectedAll(state){
-                this.choseList=this.monitorsList.filter((item)=>{
+                this.monitorsList=this.monitorsList.filter((item)=>{
                     if(state==true){
                         item.checked=true
                         this.choseInfoId.push(item.id)
@@ -216,8 +260,10 @@
                     this.isShowLoading=false
                     this.monitorsList=res.devices
                     for (let i=0;i<this.monitorsList.length;i++){
-                       this.monitorsList[i].checked=false
+                        this.monitorsList[i].checked=false
                         this.monitorsList[i].status=true
+                        this.monitorsList[i].id=this.monitorsList[i].id
+                        this.monitorsList[i].location=`${this.monitorsList[i].latitude},${this.monitorsList[i].longitude}`
                     }
                 }).catch((err)=>{
                     console.log(err)

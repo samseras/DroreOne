@@ -1,77 +1,65 @@
 <template>
     <div class="areaDeploy">
         <div class="title">
-            片区信息
+            路灯照明调度
         </div>
         <div class="personContent">
             <div class="funcTitle">
                 <Header @addNewInfo = "addNewInfo"
                         @deletInfo = "deletInfo"
-                        @toggleList = "toggleList"
                         @choseType = 'choseType'
                         @selectedAll = 'selectedAll'
                         @fixedInfo = 'fixedInfo'>
                 </Header>
             </div>
-            <div class="personList" v-loading="isShowLoading">
+            <div class="personList">
                 <ScrollContainer>
                     <el-table
-                        v-if="!isShowAreaCard"
+                        v-if="isShowAreaCard"
                         ref="multipleTable"
                         :data="areaList"
                         tooltip-effect="dark"
                         style="width: 100%"
                         @selection-change="handleSelectionChange">
                         <el-table-column
-                            width="55">
-                            <template slot-scope="scope">
-                                <!--<input type="checkbox" :checked='scope.row.checked' class="checkBoxBtn" @change="checked(scope.row.id)">-->
-                                <el-checkbox v-model="scope.row.checked" @change="getChecked(scope.row.id)" class="checkBoxBtn"></el-checkbox>
-                            </template>
+                            type="selection"
+                            width="50">
                         </el-table-column>
                         <el-table-column
-                            prop="name"
-                            label="片区名称"
+                            prop="type"
+                            label="调度硬件"
+                            sortable
                             width="120">
                         </el-table-column>
                         <el-table-column
-                            prop="placeScenic"
-                            label="所在景区">
+                            prop="name"
+                            label="名称">
                         </el-table-column>
                         <el-table-column
-                            prop="location"
-                            label="位置范围">
+                            prop="number"
+                            label="硬件总数">
                         </el-table-column>
                         <el-table-column
-                            prop="description"
-                            label="描述"
-                            width="240">
+                            prop="time"
+                            label="时间">
                         </el-table-column>
                         <el-table-column
-                            label="操作">
+                            prop="executetime"
+                            label="执行时间">
+                        </el-table-column>
+                        <el-table-column
+                            prop="repetition"
+                            label="重复调度"
+                            sortable>
+                        </el-table-column>
+                        <el-table-column label="操作">
                             <template slot-scope="scope">
-                                <span @click="showPersonDetail(scope.row,'片区信息')">查看</span>
-                                <span @click="fixedInfo(scope.row.id )">编辑</span>
-                                <span @click="deletInfo(scope.row.id)">删除</span>
+                                <span @click="fixedInfo(scope.row,'片区信息')" class="edit">编辑</span> |
+                                <span @click="showPersonDetail(scope.row,'片区信息')">查看</span> |
+                                <span @click="delet(scope.row,'片区信息')">删除</span>
                             </template>
                         </el-table-column>
                     </el-table>
-                    <div class="personInfo" v-for="item in areaList" v-if="isShowAreaCard && item.status">
-                        <div class="checkBox">
-                            <!--<input type="checkbox" :checked='item.checked' class="checkBtn" @change="checked(item.id)">-->
-                            <el-checkbox v-model="item.checked" @change="checked(item.id)" class="checkBtn"></el-checkbox>
-                        </div>
-                        <div class="personType" @click.stop="showPersonDetail(item, '片区信息')">
-                            <img src="" alt="">
-                            <span class="type">
-                                  {{item.name}}
-                                </span>
-                        </div>
-                        <div class="specificInfo">
-                            <p class="name" v-if="false">所在景区：<span>{{item.placeScenic}}</span></p>
-                            <p class="sex">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：<span>{{item.description}}</span></p>
-                        </div>
-                    </div>
                 </ScrollContainer>
                 <PersonDetail v-if="visible"
                               :visible="visible"
@@ -89,9 +77,8 @@
 
 <script>
     import ScrollContainer from '@/components/ScrollContainer'
-    import Header from './funHeader'
-    import PersonDetail from './detailDialog'
-    import api from '@/api'
+    import Header from './dmisHeader'
+    import PersonDetail from './dmisDialog'
     export default {
         name: 'area-deploy',
         data(){
@@ -99,14 +86,19 @@
                 isShowAreaCard: true,
                 checkList: [],
                 filterList: [],
-                areaList: [],
+                areaList: [
+                    {id:1,name: '下午下班音乐提示',type: '广播',number: '10个',time: '2018.02.03~2018.03.11',executetime: '18:00:00~18:10:00',repetition:'是'},
+                    {id:2,name: '上班提示',type: '广播',number: '10个',time: '2018.02.03~2018.03.11',executetime: '18:00:00~18:10:00',repetition:'是'},
+                    {id:3,name: '夜间照明',type: '路灯',number: '10个',time: '2018.02.03~2018.03.11',executetime: '18:00:00~18:10:00',repetition:'否'},
+                    {id:8,name: '室内照明',type: '路灯',number: '10个',time: '2018.02.03~2018.03.11',executetime: '18:00:00~18:10:00',repetition:'否'},
+                    {id:9,name: '节日提示',type: 'LED大屏',number: '10个',time: '2018.02.03~2018.03.11',executetime: '18:00:00~18:10:00',repetition:'是'},
+                ],
                 visible: false,
                 areaInfo: {},
                 choseInfoId: [],
                 choseList: [],
                 isDisabled: true,
-                title: '',
-                isShowLoading : false
+                title: ''
             }
         },
         methods: {
@@ -119,51 +111,29 @@
                 this.title = title
             },
             addNewInfo () {
-                this.showPersonDetail({}, '添加人员信息')
+                this.showPersonDetail({}, '添加硬件调度')
                 this.isDisabled = false
             },
-            deletInfo (id) {
-                if (id) {
-                    this.choseInfoId.push(id)
-                }
-                if (this.choseInfoId.length > 0) {
-                    api.area.deleteRegion(this.choseInfoId).then(res => {
-                        console.log(res, '删除成功')
-                        this.$message.success('删除成功')
-                        for (let i = 0; i < this.choseInfoId.length; i++) {
-                            this.areaList = this.areaList.filter((item, index) => {
-                                if (item.id === this.choseInfoId[i]){
-                                    this.areaList[index].checked = false
-                                    this.areaList[index].status = false
-                                }
-                                return item
-                            })
+            deletInfo () {
+                for (let i = 0; i < this.choseInfoId.length; i++) {
+                    this.areaList = this.areaList.filter((item, index) => {
+                        if (item.id === this.choseInfoId[i]){
+                            this.choseList[index].checked = false
                         }
-                        this.choseInfoId = []
-                    }).catch(err => {
-                        this.$message.error('删除失败，请稍后重试')
-                        console.log(err)
-                        this.choseInfoId = []
+                        return item.id !== this.choseInfoId[i]
                     })
-                } else {
-                    this.message.error('请选择要删除的信息')
-                    return
                 }
+                this.choseList = this.areaList
+
             },
-            toggleList (type) {
-                if (type === 'list') {
-                    this.isShowAreaCard = false
-                }else {
-                    this.isShowAreaCard = true
-                }
-            },
+            // toggleList (type) {
+            //     if (type === 'list') {
+            //         this.isShowAreaCard = false
+            //     }else {
+            //         this.isShowAreaCard = true
+            //     }
+            // },
             checked (id) {
-                this.areaList = this.areaList.filter(item => {
-                    if (item.id === id) {
-                        item.checked = item.checked
-                    }
-                    return item
-                })
                 if (this.choseInfoId.includes(id)) {
                     this.choseInfoId = this.choseInfoId.filter((item) =>{
                         return item !== id
@@ -175,7 +145,7 @@
             choseType (type) {
                 console.log(type)
                 if (type.length === 0){
-                    this.areaList = this.areaList.filter((item) => {
+                    this.choseList = this.areaList.filter((item) => {
                         item.status = true
                         return item.status === true
                     })
@@ -193,12 +163,13 @@
             },
             selectedAll (state) {
                 console.log(state, 'opopopopop')
-                this.areaList = this.areaList.filter((item) => {
+                this.choseList = this.areaList.filter((item) => {
                     if (state === true) {
                         item.checked = true
                         this.choseInfoId.push(item.id)
                         return item.checked === true
                     } else {
+                        console.log('进入这个判断吗')
                         item.checked = false
                         this.choseInfoId = []
                         return item.checked === false
@@ -207,33 +178,22 @@
                 console.log(this.choseInfoId, 'opopop')
             },
             fixInfo (info) {
-                let aresObj = {
-                    id: info.id,
-                    name: info.name,
-                    description: info.description
+                console.log(info, 'wertyuio')
+                let list = this.areaList
+                for(let i = 0;i< list.length; i++){
+                    if (info.id === list[i].id) {
+                        this.areaList[i] = info
+
+                    }
                 }
-                api.area.updateRegion(JSON.stringify(aresObj)).then(res => {
-                    console.log(res, '创建成功')
-                    this.$message.success('修改成功')
-                    this.choseInfoId = []
-                    this.getAllArea()
-                })
+                this.choseList = this.areaList
             },
             addNewPerson (info) {
-                let aresObj = {
-                    name: info.name,
-                    description: info.description
-                }
-                api.area.createRegion(JSON.stringify(aresObj)).then(res => {
-                    console.log(res, '创建成功')
-                    this.$message.success('创建成功')
-                    this.getAllArea()
-                })
+                info.id = new Date().getTime()
+                this.areaList.push(info)
+                this.choseList = this.areaList
             },
-            fixedInfo (id) {
-                if (id) {
-                    this.choseInfoId.push(id)
-                }
+            fixedInfo () {
                 if (this.choseInfoId.length > 0) {
                     this.areaList.map((item) => {
                         if (item.id === this.choseInfoId[0]){
@@ -243,26 +203,16 @@
                     this.showPersonDetail(this.areaInfo, '修改人员信息')
                     this.isDisabled = false
                 } else {
-                    this.$message.error('请选择要修改的片区')
+                    this.$message.error('请选择要修改的人员')
                 }
-            },
-            async getAllArea () {
-                this.isShowLoading = true
-                await api.area.getAllRegion().then(res => {
-                    console.log(res, '这是请求回来的片区')
-                    this.isShowLoading = false
-                    this.areaList = res
-                    for (let i = 0; i < this.areaList.length; i++) {
-                        this.areaList[i].checked = false
-                        this.areaList[i].status = true
-                    }
-                }).catch(err => {
-                    console.log(err, '失败')
-                })
             }
         },
         created () {
-           this.getAllArea()
+            for (let i = 0; i < this.areaList.length; i++) {
+                this.areaList[i].checked = false
+                this.areaList[i].status = true
+            }
+            this.choseList = this.areaList
         },
         components: {
             ScrollContainer,
@@ -330,7 +280,7 @@
                             /*background: none;*/
                             position: absolute;
                             right: rem(5);
-                            top: rem(0);
+                            top: rem(3);
                             cursor: pointer;
                         }
                     }

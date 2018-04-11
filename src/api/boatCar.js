@@ -1,37 +1,38 @@
 /*
-这是指示牌接口api
+这是车船接口api
 * */
 import axios from '@/http'
 import {getUrl} from './path'
 
 
-const indicator = {
-    getAllIndicator () {
+
+const boat = {
+    getAllBoat () {
         return axios ({
             method: 'GET',
-            url: getUrl('/signboard')
+            url: getUrl('/vehicle')
         })
 
     },
-    updateIndicator  (params) {
+    updateBoat  (params) {
         return axios ({
             method: 'PUT',
-            url: getUrl('/signboard'),
-            data:params
+            url: getUrl('/vehicle'),
+            data: params
         })
     },
-    createIndicator  (params) {
+    createBoat  (params) {
         return axios ({
             method: 'POST',
-            url: getUrl('/signboard'),
-            data:params
+            url: getUrl('/vehicle'),
+            data: params
         })
     },
-    deleteIndicator (par) {
+    deleteBoat  (par) {
         console.log(par, '这是传递的id')
         return axios ({
             method: 'DELETE',
-            url: getUrl('/signboard'),
+            url: getUrl('/vehicle'),
             data:{
                 ids: par
             }
@@ -39,4 +40,4 @@ const indicator = {
     }
 }
 
-export default indicator
+export default boat

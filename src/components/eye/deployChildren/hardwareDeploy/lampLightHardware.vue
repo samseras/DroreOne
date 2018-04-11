@@ -29,17 +29,27 @@
                         </el-table-column>
 
                         <el-table-column
-                            prop="type"
+                            prop="name"
+                            label="名称">
+                        </el-table-column>
+
+                        <el-table-column
+                            prop="lightStatus"
                             label="状态">
                         </el-table-column>
 
                         <el-table-column
-                            prop="area"
+                            prop="manufactor"
+                            label="厂家">
+                        </el-table-column>
+
+                        <el-table-column
+                            prop="regionId"
                             label="所属片区">
                         </el-table-column>
                         <el-table-column
-                            prop="describe"
-                            label="摄像头介绍">
+                            prop="description"
+                            label="描述">
                         </el-table-column>
                         <el-table-column>
                             <template slot-scope="scope">
@@ -60,7 +70,7 @@
                         </div>
                         <div class="specificInfo" >
                             <p class="area">所属区域：<span>{{item.regionId}}</span></p>
-                            <p class="type">状态：<span>{{item.type}}</span></p>
+                            <p class="type">状态：<span>{{item.lightStatus | changeFilter}}</span></p>
                             <p class="sex">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：<span>{{item.description}}</span></p>
 
                         </div>
@@ -159,9 +169,26 @@
                 this.choseList=this.lightList
             },
             addLight(info){
-                info.id=new Date().getTime()
-                this.lightList.push(info)
-                this.choseList=this.lightList
+                let index = info.location.includes(',')?info.location.indexOf(','):info.location.indexOf('，')
+                let latitude = info.location.substring(0, index)
+                let longitude = info.location.substring(index + 1)
+                let lightObj=[{
+                    lightStatus:info.lightStatus,
+                    name:info.name,
+                    manufactor:info.manufactor,
+                    serialNum:info.serialNum,
+                    model:info.model,
+                    regionId:info.regionId,
+                    description:info.description,
+                    latitude:latitude,
+                    longitude:longitude
+                }]
+                api.light.createLight(lightObj).then(res =>{
+                    this.$message.success('添加成功')
+                    this.getAllLight()
+                }).catch(err =>{
+                    this.$message.error('添加失败，请稍后重试')
+                })
             },
             toggleList (type){
                 if(type==='list'){
@@ -221,8 +248,11 @@
                     this.isShowLoading=false
                     this.lightList=res.devices
                     for (let i=0;i<this.lightList.length;i++){
+
                         this.lightList[i].checked=false
                         this.lightList[i].status=true
+
+                        this.lightList[i].location=`${this.lightList[i].latitude},${this.lightList[i].longitude}`
                     }
                 }).catch((err)=>{
                     console.log(err)
@@ -231,13 +261,18 @@
         },
         created (){
             this.getAllLight()
-//            for (let i=0;i<this.lightList.length;i++){
-//                this.lightList[i].checked=false
-//                this.lightList[i].status=true
-//            }
-//            this.choseList=this.lightList
-       },
 
+       },
+       filters:{
+            changeFilter(item){
+                  if(item){
+                      return '通电'
+                  }else{
+                      return '断电'
+                  }
+            }
+
+       },
         components:{
             ScrollContainer,
             Header,

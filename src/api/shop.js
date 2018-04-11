@@ -33,7 +33,7 @@ const shop = {
             method: 'DELETE',
             url: getUrl('/business'),
             data:{
-                id: par
+                ids: par
             }
         })
     },

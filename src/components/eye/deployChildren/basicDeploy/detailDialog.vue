@@ -13,8 +13,8 @@
                     <p class="name">姓&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;名：<input type="text"v-model="person.personBean.name"></p>
                     <p class="sex">性&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;别：
                         <select name="" v-model="person.personBean.gender">
-                            <option  value= true>男</option>
-                            <option  value= false>女</option>
+                            <option  value= 1>男</option>
+                            <option  value= 0>女</option>
                         </select>
                     </p>
                     <p class="type">
@@ -33,24 +33,41 @@
                 <!--车船-->
                 <div class="personCardContent boatCardContent" v-if="route.includes('boat')">
                     <p class="name">类&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;型：
-                        <select name="" v-model="boatCar.type">
-                            <option  value="船只">船只</option>
-                            <option  value="车辆">车辆</option>
+                        <select name="" v-model="boatCar.vehicle.type" @change="selectePerson(boatCar.vehicle.type)">
+                            <option  value=1>船只</option>
+                            <option  value=0>车辆</option>
                         </select>
                     </p>
-                    <p class="sex">编&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;号：<input type="text"v-model="boatCar.serNum"></p>
+                    <p class="sex">编&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;号：<input type="text"v-model="boatCar.vehicle.serialNum"></p>
                     <p class="type">
-                        维护状态： <select name="" v-model="boatCar.safeStatus">
-                        <option  value="正常">正常</option>
-                        <option  value="异常">异常</option>
+                        维护状态： <select name="" v-model="boatCar.vehicle.maintenanceStatus">
+                        <option  value=0>正常</option>
+                        <option  value=1>异常</option>
                     </select>
                     </p>
-                    <p class="idNum">核载人数：<input type="text"v-model="boatCar.loadNum"></p>
-                    <p class="phoneNum">购买时间：<input type="text"v-model="boatCar.buyTime"></p>
-                    <p class="phoneNum">维护时间：<input type="text"v-model="boatCar.safeTime"></p>
-                    <p class="phoneNum">驾驶人员：<input type="text"v-model="boatCar.driver"></p>
-                    <p class="phoneNum">联系电话：<input type="text"v-model="boatCar.phone"></p>
-                    <p class="phoneNum">设备号码：<input type="text"v-model="boatCar.facilityNum"></p>
+                    <p class="idNum">核载人数：<input type="text"v-model="boatCar.vehicle.capacity"></p>
+                    <p class="phoneNum">购买时间：
+                        <!--<input type="text"v-model="boatCar.vehicle.purchaseDate">-->
+                        <el-date-picker
+                            v-model="boatCar.vehicle.purchaseDate"
+                            type="date"
+                            placeholder="选择日期">
+                        </el-date-picker>
+                    </p>
+                    <p class="phoneNum">维护时间：
+                        <el-date-picker
+                            v-model="boatCar.vehicle.maintenanceDate"
+                            type="date"
+                            placeholder="选择日期">
+                        </el-date-picker>
+                    </p>
+                    <p class="phoneNum">驾驶人员：
+                        <select name="" v-model="boatCar.driverId">
+                            <option v-for="item in driverList" :value="item.id">{{item.name}}</option>
+                        </select>
+                    </p>
+                    <p class="phoneNum" v-if="isDisabled">联系电话：<input type="text"v-model="boatCar.phone"></p>
+                    <p class="phoneNum">设备号码：<input type="text"v-model="boatCar.vehicle.model"></p>
                     <div class="img">
                         <label for="avatar">
                             <img :src="files.length ? files[0].url : 'https://www.gravatar.com/avatar/default?s=200&r=pg&d=mm'"  class="rounded-circle" />
@@ -82,8 +99,8 @@
                 <div class="personCardContent boatCardContent" v-if="route.includes('trash')">
                     <p class="name">类&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;型：
                         <select name="" v-model="trash.dustbinBean.type">
-                            <option  value="true">临时</option>
-                            <option  value="false">固定</option>
+                            <option  value="1">临时</option>
+                            <option  value="0">固定</option>
                         </select>
                     </p>
                     <p class="sex">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称：<input type="text"v-model="trash.dustbinBean.name"></p>
@@ -284,9 +301,10 @@
         data () {
             return {
                 files: [],
+                driverList: [],
                 edit: false,
                 cropper: false,
-                src: '',
+                src: {},
                 isShowMapDialog: false,
                 mapVisible: false,
                 person: {
@@ -300,16 +318,19 @@
                     jobId: '',
                 },
                 boatCar: {
-                    type: '',
-                    serNum: '',
-                    safeStatus: '',
-                    loadNum: '',
-                    buyTime: '',
-                    safeTime: '',
-                    driver: '',
-                    phone: '',
-                    facilityNum:'',
-                    picAddress: ''
+                    driverId: '',
+                    vehicle: {
+                        capacity:'',
+                        driverId: "",
+                        gpsDeviceId: "",
+                        maintenanceDate:"",
+                        maintenanceStatus:'',
+                        model: "",
+                        picAddress:"",
+                        purchaseDate:"",
+                        serialNum:"",
+                        type: '',
+                    },
                 },
                 trash: {
                     dustbinBean: {
@@ -440,7 +461,7 @@
                     }
                 } else if(this.route.includes('scenic')) {
                     newInfo = this.scenic
-                    if (newInfo.scenicspotBean.capacity.trim() === '' || newInfo.scenicspotBean.currentNum.trim() === '' || newInfo.scenicspotBean.name.trim() === '') {
+                    if (newInfo.scenicspotBean.capacity.trim() === '' || newInfo.scenicspotBean.name.trim() === '') {
                         this.$message.error('请输入完整信息')
                         return
                     }
@@ -481,11 +502,12 @@
                 }
                 newInfo.status = true
                 newInfo.checked = false
-                if (this.src.trim() === '') {
-                    newInfo.imgUrl = ''
-                }else {
-                    newInfo.imgUrl = this.src
-                }
+                newInfo.imgUrl = this.src
+                // if (this.src.trim() === '') {
+                //     newInfo.imgUrl = ''
+                // }else {
+                //     newInfo.imgUrl = this.src
+                // }
 
                 if (this.Info.id) {
                     newInfo.id = this.Info.id
@@ -518,14 +540,9 @@
                     active: true,
                 })
                 console.log(file, '这是截取后的图片')
-                let that = this
-                let reader = new FileReader();
-                reader.readAsDataURL(file);
-                this.src = reader.onload = function(event){
-                    let txt = event.target.result;
-                    console.log(txt, 'opopoppo')
-                    that.src = txt
-                }
+                var form = new FormData();
+                form.append('f1',file);
+                this.src = form
             },
             alert(message) {
                 alert(message)
@@ -554,6 +571,20 @@
                         newFile.url = URL.createObjectURL(newFile.file)
                     }
                 }
+            },
+            selectePerson (type) {
+                let jobId
+                if (type == 0){
+                    jobId = 1
+                } else {
+                    jobId = 2
+                }
+                api.person.getJobPerson(jobId).then(res => {
+                    console.log(res, '成功')
+                    this.driverList = res
+                }).catch(err => {
+                    console.log(err, '失败')
+                })
             }
         },
         created () {
@@ -570,6 +601,20 @@
                 })
                 this.person = this.Info
             } else if(this.route.includes('boat')) {
+                let jobId
+                if (this.Info.vehicle) {
+                    if (this.Info.vehicle.type == 0){
+                        jobId = 1
+                    }else {
+                        jobId = 2
+                    }
+                    api.person.getJobPerson(jobId).then(res => {
+                        console.log(res, '成功')
+                        this.driverList = res
+                    }).catch(err => {
+                        console.log(err, '失败')
+                    })
+                }
                 this.boatCar = this.Info
             } else if(this.route.includes('trash')) {
                 console.log(this.Info, '909090909090')
@@ -671,6 +716,17 @@
             padding-right: rem(15);
             border-top: 1px solid #ccc;
             margin-top: rem(15);
+        }
+        .el-date-editor,.el-input,.el-input--prefix,.el-input--suffix,.el-date-editor--date{
+            margin-top: rem(-2);
+        }
+        .el-date-editor,.el-input,.el-input--prefix,.el-input--suffix,.el-date-editor--date .el-input__inner{
+            border: none;
+            height: rem(30);
+            line-height: rem(30);
+        }
+        .el-date-editor,.el-input,.el-input--prefix,.el-input--suffix,.el-date-editor--date .el-input__icon{
+            line-height: rem(30);
         }
     }
 </style>
