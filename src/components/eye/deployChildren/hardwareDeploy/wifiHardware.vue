@@ -24,8 +24,10 @@
                         style="width: 100%"
                         @selection-change="handleSelectionChange">
                         <el-table-column
-                            type="selection"
                             width="55">
+                            <template slot-scope="scope">
+                                <el-checkbox v-model="scope.row.checked" @change="checked(scope.row.id)" class="checkBoxBtn"></el-checkbox>
+                            </template>
                         </el-table-column>
                         <el-table-column
                             prop="name"
@@ -33,29 +35,33 @@
                             width="120">
                         </el-table-column>
                         <el-table-column
-                            prop="type"
                             label="类型">
+                            <template slot-scope="scope">
+                                <span>{{scope.row.positionType | changeFilter}}</span>
+                            </template>
                         </el-table-column>
 
                         <el-table-column
-                            prop="area"
+                            prop="regionName"
                             label="所属片区">
                         </el-table-column>
 
                         <el-table-column
-                            prop="describe"
+                            prop="description"
                             label="描述">
                         </el-table-column>
                         <el-table-column>
                             <template slot-scope="scope">
-                                <span @click="showWifiDetail(scope.row, 'Wifi信息')">编辑</span>
+                                <span @click="showWifiDetail(scope.row, 'Wifi信息')">查看</span>
+                                <span @click="fixedInfo(scope.row.id )">编辑</span>
+                                <span @click="deletInfo(scope.row.id)">删除</span>
                             </template>
                         </el-table-column>
                     </el-table>
 
                     <div class="personInfo" v-for="item in wifiList" v-if="isShowWifiCard && item.status">
                         <div class="checkBox">
-                            <input type="checkbox" :checked="item.checked" class="checkBtn" @change="checked(item.id)">
+                            <el-checkbox v-model="item.checked" @change="checked(item.id)" class="checkBtn"></el-checkbox>
                         </div>
                         <div class="personType" @click.stop="showWifiDetail(item,'WIFI信息')">
                             <img src="../../../../../static/img/cameras.png" alt="">
@@ -64,7 +70,7 @@
                                 </span>
                         </div>
                         <div class="specificInfo" >
-                            <p class="area">所属区域：<span>{{item.regionId}}</span></p>
+                            <p class="area">所属区域：<span>{{item.regionName}}</span></p>
                             <p class="type">类&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;型：<span>{{item.positionType | changeFilter}}</span></p>
                             <p class="describe">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：<span>{{item.description}}</span></p>
 
@@ -112,6 +118,9 @@
             }
         },
         methods:{
+            handleSelectionChange(val) {
+                this.multipleSelection = val;
+            },
             addNewInfo(){
                 this.showWifiDetail({},'添加WIFI信息')
                 this.isDisabled=false
@@ -127,6 +136,7 @@
                 let latitude = info.location.substring(0, index)
                 let longitude = info.location.substring(index + 1)
                 let wifiObj=[{
+                    typeId: 7,
                     id:info.id,
                     positionType:info.positionType,
                     name:info.name,
@@ -148,7 +158,14 @@
                     this.$message.error('修改失败，请稍后再试')
                 })
             },
-            fixedInfo(){
+            fixedInfo(id){
+                if (id) {
+                    this.choseInfoId.push(id)
+                }
+                if(this.choseInfoId.length > 1) {
+                    this.$message.warning('至多选择一条数据')
+                    return
+                }
                 if(this.choseInfoId.length>0){
                     this.wifiList.map((item)=>{
                         if(item.id === this.choseInfoId[0]){
@@ -161,27 +178,43 @@
                     this.$message.error('请选择要修改的WIFI')
                 }
             },
-            deletInfo(){
-               api.wifi.deleteWifi(this.choseInfoId).then(res=>{
-                   for(let i=0;i<this.choseInfoId.length;i++){
-                       this.wifiList=this.wifiList.filter((item,index)=>{
-                           if(item.id === this.choseInfoId[i]){
-                               this.wifiList[index].checked=false
-                           }
-                           return item.id!==this.choseInfoId[i]
-                       })
-                   }
-                   this.$message.success('删除成功')
-                   this.choseInfoId=[]
-               }).catch(err=>{
-                      this.$message.error('删除失败，请稍后重试')
-               })
+            deletInfo(id){
+                if (id) {
+                    this.choseInfoId.push(id)
+                }
+                if (this.choseInfoId.length > 0) {
+                    this.$confirm('此操作将永久删除该数据, 是否继续?', '提示', {
+                        confirmButtonText: '确定',
+                        cancelButtonText: '取消',
+                        type: 'warning'
+                    }).then(() => {
+                        api.wifi.deleteWifi(this.choseInfoId).then(res=>{
+                            for(let i=0;i<this.choseInfoId.length;i++){
+                                this.wifiList=this.wifiList.filter((item,index)=>{
+                                    if(item.id === this.choseInfoId[i]){
+                                        this.wifiList[index].checked=false
+                                    }
+                                    return item.id!==this.choseInfoId[i]
+                                })
+                            }
+                            this.$message.success('删除成功')
+                            this.choseInfoId=[]
+                        }).catch(err=>{
+                            this.$message.error('删除失败，请稍后重试')
+                        })
+                    }).catch(() => {
+                        this.$message.info('取消删除')
+                    })
+                } else {
+                    this.$message.error('请选择要删除的数据')
+                }
             },
             addWifi (info){
                 let index = info.location.includes(',')?info.location.indexOf(','):info.location.indexOf('，')
                 let latitude = info.location.substring(0, index)
                 let longitude = info.location.substring(index + 1)
                 let wifiObj=[{
+                    typeId: 7,
                     positionType:info.positionType,
                     name:info.name,
                     model:info.model,
@@ -208,6 +241,12 @@
                 }
             },
             checked(id){
+                this.wifiList = this.wifiList.filter(item => {
+                    if (item.id === id) {
+                        item.checked = item.checked
+                    }
+                    return item
+                })
                 console.log(id)
                 if(this.choseInfoId.includes(id)){
                     this.choseInfoId = this.choseInfoId.filter((item)=>{
@@ -353,7 +392,7 @@
                         .checkBtn{
                             position:absolute;
                             right:rem(5);
-                            top:rem(3);
+                            top:rem(-2);
                             cursor:pointer;
                         }
                     }

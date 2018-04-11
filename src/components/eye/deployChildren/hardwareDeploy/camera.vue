@@ -6,10 +6,10 @@
         </div>
         <div class="titleBtn">
             <el-button size="mini" plain @click="addNewInfo"><i class="el-icon-circle-plus"></i>添加</el-button>
-            <el-button size="mini" plain class="selectedAll">
-                <el-checkbox v-model="isSelected" @change="selectedAll" ></el-checkbox>全选
-            </el-button>
-
+            <!--<el-button size="mini" plain class="selectedAll">-->
+                <!--<el-checkbox v-model="isSelected" @change="selectedAll" ></el-checkbox>全选-->
+            <!--</el-button>-->
+            <el-checkbox v-model="isSelected" @change="selectedAll"  class='selectedAll' >全选</el-checkbox>
             <el-button size="mini" plain>导入</el-button>
             <el-button size="mini" plain>导出</el-button>
             <el-button size="mini"plain @click="deleteCard"><i class="el-icon-delete"></i>删除</el-button>
@@ -141,11 +141,11 @@
                 border:none;
                 outline:medium;
                 border-bottom:1px solid #ccc;
-                font-size:rem(12);
+                font-size:rem(13);
                 padding:rem(3) rem(4);
             }
             i{
-                font-size:rem(12);
+                font-size:rem(13);
                 margin-left:rem(-20);
                 cursor: pointer;
             }
@@ -156,11 +156,12 @@
             button{
                 border:none;
                 margin-right:rem(-5);
+                font-weight: 500;
                 i{
                     margin-right:rem(3);
                 }
             }
-            .el-button.selectedAll{
+            .el-button .selectedAll{
                padding-bottom:rem(0);
             }
             .el-button{
@@ -172,6 +173,7 @@
             margin-left:rem(50);
             .el-checkbox{
                 margin-left:rem(10);
+                margin-bottom: rem(2);
             }
         }
         .titlePage{

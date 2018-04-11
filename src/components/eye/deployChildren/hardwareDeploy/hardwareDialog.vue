@@ -25,7 +25,9 @@
                     </p>
                     <p class="IP">I P 地 址：<input type="text" v-model="camera.ip"></p>
                     <p class="port">端&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  口：<input type="text" v-model="camera.port"></p>
-                    <p class="place">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  置：<input type="text" v-model="camera.location"></p>
+                    <p class="place">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  置：<input type="text" v-model="camera.location">
+                        <img src="" alt="" @click="showMapDialog">
+                    </p>
                     <p class="area">所属片区：<input type="text" v-model="camera.regionId"></p>
                     <p class="description">描&nbsp; 述：
                         <textarea v-model="camera.description" cols="40" rows="8">
@@ -53,16 +55,18 @@
                     </p>
                     <p class="IP">I P 地 址：<input type="text" v-model="broadCast.ip"></p>
                     <p class="host">端&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  口：<input type="text" v-model="broadCast.port"></p>
-                    <p class="place">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  置：<input type="text" v-model="broadCast.location"></p>
+                    <p class="place">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  置：<input type="text" v-model="broadCast.location">
+                        <img src="" alt="" @click="showMapDialog">
+                    </p>
                     <p class="area">所属区域：<input type="text" v-model="broadCast.regionId"></p>
                     <p class="describe">描&nbsp; 述：
                         <textarea v-model="broadCast.description" cols="40" rows="8">
 
                         </textarea>
                     </p>
-                    <!--<div class="chart">-->
-                    <!--<img src="../../../../../static/img/camera.png" alt="">-->
-                    <!--</div>-->
+                    <div class="img">
+                        <img src="../../../../../static/img/cameras.png" alt="">
+                    </div>
                 </div>
                 <!--LED-->
                 <div class="cameraCard popCard" v-if="route.includes('led')">
@@ -76,16 +80,18 @@
                     <p class="width">屏幕宽高：<input type="text" v-model="led.area"></p>
                     <p class="IP">I P 地 址：<input type="text" v-model="led.ip"></p>
                     <p class="host">设备编号：<input type="text" v-model="led.serialNum"></p>
-                    <p class="place">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  置：<input type="text" v-model="led.location"></p>
+                    <p class="place">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  置：<input type="text" v-model="led.location">
+                        <img src="" alt="" @click="showMapDialog">
+                    </p>
                     <p class="area">所属片区：<input type="text" v-model="led.regionId"></p>
                     <p class="describe">描&nbsp;&nbsp;&nbsp;述：
                         <textarea v-model="led.description" cols="40" rows="8">
 
                         </textarea>
                     </p>
-                    <!--<div class="chart">-->
-                    <!--<img src="../../../../../static/img/camera.png" alt="">-->
-                    <!--</div>-->
+                    <div class="img">
+                        <img src="../../../../../static/img/cameras.png" alt="">
+                    </div>
                 </div>
                 <!--Wifi-->
                 <div class="cameraCard popCard" v-if="route.includes('wifi')">
@@ -100,16 +106,18 @@
                     <p class="IP">设备I P ：<input type="text" v-model="wifi.ip"></p>
                     <p class="mac">M a c：<input type="text" v-model="wifi.mac"></p>
                     <p class="host">设备编号：<input type="text" v-model="wifi.serialNum"></p>
-                    <p class="place">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  置：<input type="text" v-model="wifi.location"></p>
+                    <p class="place">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  置：<input type="text" v-model="wifi.location">
+                        <img src="" alt="" @click="showMapDialog">
+                    </p>
                     <p class="area">所属片区：<input type="text" v-model="wifi.regionId"></p>
                     <p class="describe">描&nbsp; 述：
                         <textarea v-model="wifi.description" cols="40" rows="8">
 
                         </textarea>
                     </p>
-                    <!--<div class="chart">-->
-                    <!--<img src="../../../../../static/img/camera.png" alt="">-->
-                    <!--</div>-->
+                    <div class="img">
+                        <img src="../../../../../static/img/cameras.png" alt="">
+                    </div>
                 </div>
                 <!--传感器-->
                 <div class="cameraCard popCard" v-if="route.includes('monitors')">
@@ -128,44 +136,49 @@
                     </p >
                     <p class="IP">设备I P ：<input type="text" v-model="monitors.ip"></p>
                     <p class="host">设备编号：<input type="text" v-model="monitors.serialNum"></p>
-                    <p class="place">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  置：<input type="text" v-model="monitors.location"></p>
+                    <p class="place">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  置：<input type="text" v-model="monitors.location">
+                        <img src="" alt="" @click="showMapDialog">
+                    </p>
                     <p class="area">所属片区：<input type="text" v-model="monitors.regionId"></p>
                     <p class="describe">描&nbsp; 述：
                         <textarea v-model="monitors.description" cols="40" rows="8">
 
                         </textarea>
                     </p>
-                    <!--<div class="chart">-->
-                    <!--<img src="../../../../../static/img/camera.png" alt="">-->
-                    <!--</div>-->
+                    <div class="img">
+                        <img src="../../../../../static/img/cameras.png" alt="">
+                    </div>
                 </div>
                 <!--灯光-->
                 <div class="cameraCard popCard" v-if="route.includes('Light')">
-                    <p class="status">状&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;态:
+                    <p class="status">状&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;态:
                         <select name="" v-model="Light.lightStatus">
                             <option value="true">通电</option>
                             <option value="false">断电</option>
                         </select>
                     </p>
-                    <p class="name">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称：<input type="text" v-model="Light.name"> </p>
-                    <p class="home">厂&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  家：
+                    <p class="name">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称：<input type="text" v-model="Light.name"> </p>
+                    <p class="home">厂&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;家：
                         <select name="" v-model="Light.manufactor">
                             <option value="0">卓锐</option>
                             <option value="1">西安</option>
                         </select>
                     </p>
                     <p class="num">路灯编号：<input type="text" v-model="Light.serialNum"></p>
-                    <p class="version">型&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;号：<input type="text" v-model="Light.model"></p>
-                    <p class="place">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  置：<input type="text" v-model="Light.location"></p>
+                    <p class="version">型&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;号：<input type="text" v-model="Light.model">
+                    </p>
+                    <p class="place">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置：<input type="text" v-model="Light.location">
+                        <img src="" alt="" @click="showMapDialog">
+                    </p>
                     <p class="area">所属片区：<input type="text" v-model="Light.regionId"></p>
-                    <p class="describe">描&nbsp; 述：
+                    <p class="describe">描&nbsp; &nbsp;&nbsp;&nbsp;述：
                         <textarea v-model="Light.description" cols="40" rows="8">
 
                         </textarea>
                     </p>
-                    <!--<div class="chart">-->
-                    <!--<img src="../../../../../static/img/camera.png" alt="">-->
-                    <!--</div>-->
+                    <div class="img">
+                        <img src="../../../../../static/img/cameras.png" alt="">
+                    </div>
                 </div>
                 <!--闸机-->
                 <div class="cameraCard popCard" v-if="route.includes('gate')">
@@ -182,16 +195,18 @@
                     <p class="IP">设备I P ：<input type="text" v-model="gate.ip"></p>
                     <p class="num">设备编号：<input type="text" v-model="gate.serialNum"></p>
                     <p class="name">端&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;口：<input type="text" v-model="gate.port"> </p>
-                    <p class="place">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  置：<input type="text" v-model="gate.location"></p>
+                    <p class="place">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  置：<input type="text" v-model="gate.location">
+                        <img src="" alt="" @click="showMapDialog">
+                    </p>
                     <p class="area">所属片区：<input type="text" v-model="gate.regionId"></p>
                     <p class="describe">描&nbsp;&nbsp;&nbsp;&nbsp; 述：
                         <textarea v-model="gate.description" cols="40" rows="8">
 
                         </textarea>
                     </p>
-                    <!--<div class="chart">-->
-                    <!--<img src="../../../../../static/img/camera.png" alt="">-->
-                    <!--</div>-->
+                    <div class="img">
+                        <img src="../../../../../static/img/cameras.png" alt="">
+                    </div>
                 </div>
                 <!--报警柱-->
                 <div class="cameraCard popCard" v-if="route.includes('police')">
@@ -211,16 +226,18 @@
                     <p class="host">设备编号：<input type="text" v-model="police.serialNum"></p>
                     <p class="IP">设备I P ：<input type="text" v-model="police.ip"></p>
 
-                    <p class="place">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  置：<input type="text" v-model="police.location"></p>
+                    <p class="place">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  置：<input type="text" v-model="police.location">
+                        <img src="" alt="" @click="showMapDialog">
+                    </p>
                     <p class="area">所属片区：<input type="text" v-model="police.regionId"></p>
                     <p class="describe">描&nbsp; 述：
                         <textarea v-model="police.description" cols="40" rows="8">
 
                         </textarea>
                     </p>
-                    <!--<div class="chart">-->
-                    <!--<img src="../../../../../static/img/camera.png" alt="">-->
-                    <!--</div>-->
+                    <div class="img">
+                        <img src="../../../../../static/img/cameras.png" alt="">
+                    </div>
                 </div>
             </div>
 
@@ -229,14 +246,20 @@
                 <el-button size="mini" type="primary" @click="closeDialog" :disabled="isDisabled">取消</el-button>
             </div>
         </el-dialog>
+        <MapDialog v-if="mapVisible" :visible="mapVisible" class="map" @closeMapDialog="closeMapDialog"></MapDialog>
     </div>
 </template>
 
 <script>
+    import MapDialog from './mapDialog.vue'
+
    export default{
        props:['visible','Info','title','isDisabled'],
        data(){
            return{
+
+               isShowMapDialog:false,
+               mapVisible:false,
               camera:{
                   positionType:'',
                   name:'',
@@ -356,6 +379,12 @@
                    this.$emit('addNewInfo',newInfo)
                }
                this.closeDialog()
+           },
+           showMapDialog(){
+               this.mapVisible=true;
+           },
+           closeMapDialog(){
+               this.mapVisible=false
            }
        },
        created(){
@@ -377,7 +406,10 @@
            }else if(this.route.includes('police')){
                this.police=this.Info
            }
-       }
+       },
+       components:{
+           MapDialog
+       },
    }
 
 </script>
@@ -464,6 +496,7 @@
                         width: rem(20);
                         height: rem(20);
                         border-radius: 50%;
+                        background:red;
                         vertical-align: middle;
                     }
                     textarea{
@@ -474,7 +507,7 @@
                     }
                 }
                 .img{
-                        width: rem(100);
+                        width: rem(150);
                         height: rem(60);
                         position: absolute;
                         top: rem(0);
@@ -485,8 +518,9 @@
                             height: rem(55);
                             border:1px solid #988E83;
                             display: inline-block;
+                            background:red;
                             border-radius: 50%;
-                            margin-left: rem(25);
+                            margin-left: rem(40);
                         }
                     }
             }
@@ -501,6 +535,10 @@
                 }
             }
 
+        }
+        .map{
+            width:rem(400);
+            height:rem(400);
         }
     }
 

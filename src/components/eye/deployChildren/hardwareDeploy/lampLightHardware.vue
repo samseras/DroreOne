@@ -24,8 +24,10 @@
                         style="width: 100%"
                         @selection-change="handleSelectionChange">
                         <el-table-column
-                            type="selection"
                             width="55">
+                            <template slot-scope="scope">
+                                <el-checkbox v-model="scope.row.checked" @change="checked(scope.row.id)" class="checkBoxBtn"></el-checkbox>
+                            </template>
                         </el-table-column>
 
                         <el-table-column
@@ -53,14 +55,16 @@
                         </el-table-column>
                         <el-table-column>
                             <template slot-scope="scope">
-                                <span @click="showLightDetail(scope.row, '路灯信息')">编辑</span>
+                                <span @click="showLightDetail(scope.row, '路灯信息')">查看</span>
+                                <span @click="fixedInfo(scope.row.id )">编辑</span>
+                                <span @click="deletInfo(scope.row.id)">删除</span>
                             </template>
                         </el-table-column>
                     </el-table>
 
                     <div class="personInfo" v-for="item in lightList" v-if="isShowLightDetail && item.status">
                         <div class="checkBox">
-                            <input type="checkbox" :checked="item.checked" class="checkBtn" @change="checked(item.id)">
+                            <el-checkbox v-model="item.checked" @change="checked(item.id)" class="checkBtn"></el-checkbox>
                         </div>
                         <div class="personType" @click.stop="showLightDetail(item,'路灯信息')">
                             <img src="../../../../../static/img/cameras.png" alt="">
@@ -69,7 +73,7 @@
                                 </span>
                         </div>
                         <div class="specificInfo" >
-                            <p class="area">所属区域：<span>{{item.regionId}}</span></p>
+                            <p class="area">所属区域：<span>{{item.regionName}}</span></p>
                             <p class="type">状态：<span>{{item.lightStatus | changeFilter}}</span></p>
                             <p class="sex">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：<span>{{item.description}}</span></p>
 
@@ -135,15 +139,38 @@
 
             },
             fixInfo(info){
-                let list=this.lightList
-                for(let i=0;i<list.length;i++){
-                    if(info.id===list[i].id){
-                        this.lightList[i]=info
-                    }
-                }
-                this.choseList=this.lightList
+                let index = info.location.includes(',')?info.location.indexOf(','):info.location.indexOf('，')
+                let latitude = info.location.substring(0, index)
+                let longitude = info.location.substring(index + 1)
+                let lightObj=[{
+                    typeId: 5,
+                    id:info.id,
+                    lightStatus:info.lightStatus,
+                    name:info.name,
+                    manufactor:info.manufactor,
+                    serialNum:info.serialNum,
+                    model:info.model,
+                    regionId:info.regionId,
+                    description:info.description,
+                    latitude:latitude,
+                    longitude:longitude
+                }]
+                api.light.updateLight(lightObj).then(res =>{
+                    this.$message.success('修改成功')
+                    this.choseInfoId=[]
+                    this.getAllLight()
+                }).catch(err =>{
+                    this.$message.error('修改失败，请稍后再试')
+                })
             },
-            fixedInfo(){
+            fixedInfo(id){
+                if (id) {
+                    this.choseInfoId.push(id)
+                }
+                if(this.choseInfoId.length > 1) {
+                    this.$message.warning('至多选择一条数据')
+                    return
+                }
                 if(this.choseInfoId.length>0){
                     this.lightList.map((item)=>{
                         if(item.id === this.choseInfoId[0]){
@@ -156,23 +183,45 @@
                     this.$message.error('请选择要修改的路灯')
                 }
             },
-            deletInfo(){
-                console.log(122)
-                for(let i=0;i<this.choseInfoId.length;i++){
-                    this.lightList=this.lightList.filter((item,index)=>{
-                        if(item.id === this.choseInfoId[i]){
-                            this.choseList[index].checked=false
-                        }
-                        return item.id!==this.choseInfoId[i]
-                    })
+            deletInfo(id){
+                if (id) {
+                    this.choseInfoId.push(id)
                 }
-                this.choseList=this.lightList
+                if (this.choseInfoId.length > 0) {
+                    this.$confirm('此操作将永久删除该数据, 是否继续?', '提示', {
+                        confirmButtonText: '确定',
+                        cancelButtonText: '取消',
+                        type: 'warning'
+                    }).then(() => {
+                        api.light.deleteLight(this.choseInfoId).then(res =>{
+                            for(let i=0;i<this.choseInfoId.length;i++){
+                                this.lightList=this.lightList.filter((item,index) =>{
+                                    if(item.id===this.choseInfoId[i]){
+                                        this.lightList[index].checked=false
+                                    }
+                                    return item.id !== this.choseInfoId[i]
+                                })
+                            }
+                            this.$message.success('删除成功')
+                            this.choseInfoId=[]
+                        }).catch(err =>{
+                            this.$message.error('删除失败')
+                        })
+                    }).catch(() => {
+                        this.$message.info('取消删除')
+                    })
+                } else {
+                    this.$message.error('请选择要删除的数据')
+                }
+
             },
+
             addLight(info){
                 let index = info.location.includes(',')?info.location.indexOf(','):info.location.indexOf('，')
                 let latitude = info.location.substring(0, index)
                 let longitude = info.location.substring(index + 1)
                 let lightObj=[{
+                    typeId: 5,
                     lightStatus:info.lightStatus,
                     name:info.name,
                     manufactor:info.manufactor,
@@ -198,6 +247,12 @@
                 }
             },
             checked(id){
+                this.lightList = this.lightList.filter(item => {
+                    if (item.id === id) {
+                        item.checked = item.checked
+                    }
+                    return item
+                })
                 console.log(id)
                 if(this.choseInfoId.includes(id)){
                     this.choseInfoId = this.choseInfoId.filter((item)=>{
@@ -344,7 +399,7 @@
                         .checkBtn{
                             position:absolute;
                             right:rem(5);
-                            top:rem(3);
+                            top:rem(-2);
                             cursor:pointer;
                         }
                     }

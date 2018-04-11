@@ -24,9 +24,12 @@
                         style="width: 100%"
                         @selection-change="handleSelectionChange">
                         <el-table-column
-                            type="selection"
                             width="55">
+                            <template slot-scope="scope">
+                                <el-checkbox v-model="scope.row.checked" @change="checked(scope.row.id)" class="checkBoxBtn"></el-checkbox>
+                            </template>
                         </el-table-column>
+
                         <el-table-column
                             prop="name"
                             label="名称"
@@ -35,10 +38,12 @@
                         <el-table-column
                             prop="positionType"
                             label="类型">
+                            <template slot-scope="scope">
+                                <span>{{scope.row.positionType | changeFilter}}</span>
+                            </template>
                         </el-table-column>
-
                         <el-table-column
-                            prop="regionId"
+                            prop="regionName"
                             label="所属片区">
                         </el-table-column>
 
@@ -47,16 +52,20 @@
                             label="描述">
                         </el-table-column>
 
-                        <el-table-column>
+                        <el-table-column
+                            label="操作">
                             <template slot-scope="scope">
-                                <span @click="showBroadDetail(scope.row, '广播信息')">编辑</span>
+                                <span @click="showBroadDetail(scope.row, '广播信息')">查看</span>
+                                <span @click="fixedInfo(scope.row.id )">编辑</span>
+                                <span @click="deletInfo(scope.row.id)">删除</span>
                             </template>
                         </el-table-column>
                     </el-table>
 
                     <div class="personInfo" v-for="item in broadList" v-if="isShowBroadCard && item.status">
                         <div class="checkBox">
-                            <input type="checkbox" :checked="item.checked" class="checkBtn" @change="checked(item.id)">
+                            <!--<input type="checkbox" :checked="item.checked" class="checkBtn" @change="checked(item.id)">-->
+                            <el-checkbox v-model="item.checked" @change="checked(item.id)" class="checkBtn"></el-checkbox>
                         </div>
                         <div class="personType" @click.stop="showBroadDetail(item,'广播信息')">
                             <img src="../../../../../static/img/cameras.png" alt="">
@@ -65,7 +74,7 @@
                                 </span>
                         </div>
                         <div class="specificInfo" >
-                            <p class="area">所属区域：<span>{{item.regionId}}</span></p>
+                            <p class="area">所属区域：<span>{{item.regionName}}</span></p>
                             <p class="type">广播类型：<span>{{item.positionType|changeFilter}}</span></p>
                             <p class="describe">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：<span>{{item.description}}</span></p>
 
@@ -113,6 +122,9 @@
             }
         },
         methods:{
+            handleSelectionChange(val) {
+                this.multipleSelection = val;
+            },
             addNewInfo(){
                 this.showBroadDetail({},'添加广播信息')
                 this.isDisabled=false
@@ -128,6 +140,7 @@
                 let latitude = info.location.substring(0, index)
                 let longitude = info.location.substring(index + 1)
                 let broadObj=[{
+                    typeId: 1,
                     id:info.id,
                     positionType:info.positionType,
                     name:info.name,
@@ -147,9 +160,16 @@
                     this.$message.error('修改失败,请稍后再试')
                 })
             },
-            fixedInfo(){
-                if(this.choseInfoId.length>0){
-                    this.broadList.map((item)=>{
+            fixedInfo(id){
+                if (id) {
+                    this.choseInfoId.push(id)
+                }
+                if(this.choseInfoId.length > 1) {
+                    this.$message.warning('至多选择一条数据')
+                    return
+                }
+                if(this.choseInfoId.length > 0){
+                    this.broadList.map((item) => {
                         if(item.id === this.choseInfoId[0]){
                             this.broadInfo=item
                         }
@@ -157,30 +177,47 @@
                     this.showBroadDetail(this.broadInfo,'修改广播信息')
                     this.isDisabled=false
                 }else{
-                    this.$message.error('请选择要修改的人员')
+                    this.$message.error('请选择要修改的广播信息')
                 }
             },
-            deletInfo(){
-                api.broadcast.deleteBroadcast(this.choseInfoId).then(res =>{
-                    for(let i=0;i<this.choseInfoId.length;i++){
-                        this.broadList=this.broadList.filter((item,index)=>{
-                            if(item.id===this.choseInfoId[i]){
-                                this.broadList[index].checked=false
+            deletInfo(id){
+                if (id) {
+                    this.choseInfoId.push(id)
+                }
+                if (this.choseInfoId.length > 0) {
+                    this.$confirm('此操作将永久删除该数据, 是否继续?', '提示', {
+                        confirmButtonText: '确定',
+                        cancelButtonText: '取消',
+                        type: 'warning'
+                    }).then(() => {
+                        api.broadcast.deleteBroadcast(this.choseInfoId).then(res =>{
+                            for(let i=0;i<this.choseInfoId.length;i++){
+                                this.broadList=this.broadList.filter((item,index)=>{
+                                    if(item.id===this.choseInfoId[i]){
+                                        this.broadList[index].checked=false
+                                    }
+                                    return item.id !== this.choseInfoId[i]
+                                })
                             }
-                            return item.id !== this.choseInfoId[i]
+                            this.$message.success('删除成功')
+                            this.choseInfoId=[]
+                        }).catch(err =>{
+                            this.$message.error('删除失败,请稍后重试')
                         })
-                    }
-                    this.$message.success('删除成功')
-                    this.choseInfoId=[]
-                }).catch(err =>{
-                    this.$message.error('删除失败,请稍后重试')
-                })
+                    }).catch(() => {
+                        this.$message.info('取消删除')
+                    })
+                } else {
+                    this.$message.error('请选择要删除的数据')
+                }
+
             },
             addBroad (info){
                 let index = info.location.includes(',')?info.location.indexOf(','):info.location.indexOf('，')
                 let latitude = info.location.substring(0, index)
                 let longitude = info.location.substring(index + 1)
                 let broadObj=[{
+                    typeId: 2,
                     positionType:info.positionType,
                     name:info.name,
                     manufactor:info.manufactor,
@@ -206,6 +243,12 @@
                 }
             },
             checked(id){
+                this.broadList = this.broadList.filter(item => {
+                    if (item.id === id) {
+                        item.checked = item.checked
+                    }
+                    return item
+                })
                 console.log(id)
                 if(this.choseInfoId.includes(id)){
                     this.choseInfoId = this.choseInfoId.filter((item)=>{
@@ -218,19 +261,24 @@
             choseType(type){
                 console.log(type)
                 if(type.length===0){
-                    this.choseList=this.broadList.filter((item)=>{
+                    this.broadList=this.broadList.filter((item)=>{
                         item.status=true
-                        return item.status === true
+                        return item
                     })
                 }else{
-                    this.choseList=this.broadList.filter((item,index)=>{
+                    this.broadList=this.broadList.filter((item,index)=>{
+                        if (item.positionType == 0) {
+                            item.type = '室内'
+                        } else{
+                            item.type = '室外'
+                        }
                         if(type.includes(item.type)){
                             item.status=true
                         }else if(!type.includes(item.type)){
                             item.status=false
                             console.log(item.type)
                         }
-                        return item.status===true
+                        return item
                     })
                 }
             },
@@ -263,6 +311,7 @@
                     }
                 }).catch((err)=>{
                     console.log(err)
+                    this.isShowLoading=false
                 })
             }
         },
@@ -349,7 +398,7 @@
                         .checkBtn{
                             position:absolute;
                             right:rem(5);
-                            top:rem(3);
+                            top:rem(-2);
                             cursor:pointer;
                         }
                     }
