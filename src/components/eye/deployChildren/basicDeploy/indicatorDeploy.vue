@@ -261,6 +261,9 @@
                 if (id) {
                     this.choseInfoId.push(id)
                 }
+                if (this.choseInfoId.length > 1) {
+                    this.$message.warning('至多选择一个数据修改')
+                }
                 if (this.choseInfoId.length > 0) {
                     this.indicatorList.map((item) => {
                         if (item.id === this.choseInfoId[0]){
