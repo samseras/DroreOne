@@ -67,7 +67,7 @@
                             <el-checkbox v-model="item.checked" @change="checked(item.id)" class="checkBtn"></el-checkbox>
                         </div>
                         <div class="personType" @click.stop="showLightDetail(item,'路灯信息')">
-                            <img src="../../../../../static/img/cameras.png" alt="">
+                            <img src="../../../../static/img/cameras.png" alt="">
                             <span class="type">
                                   {{item.name}}
                                 </span>

@@ -35,7 +35,7 @@
                         </textarea>
                     </p>
                     <div class="img">
-                        <img src="../../../../../static/img/cameras.png" alt="">
+                        <img src="../../../../static/img/cameras.png" alt="">
                     </div>
                 </div>
                 <!--广播-->
@@ -65,7 +65,7 @@
                         </textarea>
                     </p>
                     <div class="img">
-                        <img src="../../../../../static/img/cameras.png" alt="">
+                        <img src="../../../../static/img/cameras.png" alt="">
                     </div>
                 </div>
                 <!--LED-->
@@ -90,7 +90,7 @@
                         </textarea>
                     </p>
                     <div class="img">
-                        <img src="../../../../../static/img/cameras.png" alt="">
+                        <img src="../../../../static/img/cameras.png" alt="">
                     </div>
                 </div>
                 <!--Wifi-->
@@ -116,7 +116,7 @@
                         </textarea>
                     </p>
                     <div class="img">
-                        <img src="../../../../../static/img/cameras.png" alt="">
+                        <img src="../../../../static/img/cameras.png" alt="">
                     </div>
                 </div>
                 <!--传感器-->
@@ -146,7 +146,7 @@
                         </textarea>
                     </p>
                     <div class="img">
-                        <img src="../../../../../static/img/cameras.png" alt="">
+                        <img src="../../../../static/img/cameras.png" alt="">
                     </div>
                 </div>
                 <!--灯光-->
@@ -177,7 +177,7 @@
                         </textarea>
                     </p>
                     <div class="img">
-                        <img src="../../../../../static/img/cameras.png" alt="">
+                        <img src="../../../../static/img/cameras.png" alt="">
                     </div>
                 </div>
                 <!--闸机-->
@@ -205,7 +205,7 @@
                         </textarea>
                     </p>
                     <div class="img">
-                        <img src="../../../../../static/img/cameras.png" alt="">
+                        <img src="../../../../static/img/cameras.png" alt="">
                     </div>
                 </div>
                 <!--报警柱-->
@@ -236,7 +236,7 @@
                         </textarea>
                     </p>
                     <div class="img">
-                        <img src="../../../../../static/img/cameras.png" alt="">
+                        <img src="../../../../static/img/cameras.png" alt="">
                     </div>
                 </div>
             </div>

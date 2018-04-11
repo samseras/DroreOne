@@ -1,7 +1,7 @@
 <template>
-    <div class="ledList">
+    <div class="monitorsHard">
         <div class="title">
-            LED信息
+            传感器信息
         </div>
         <div class="cameraContent">
             <div class="conTitle">
@@ -17,9 +17,9 @@
             <div class="cameraList" v-loading="isShowLoading">
                 <ScrollContainer>
                     <el-table
-                        v-if="!isShowLedCard"
+                        v-if="!isShowMonitorsCard"
                         ref="multipleTable"
-                        :data="ledList"
+                        :data="monitorsList"
                         tooltip-effect="dark"
                         style="width: 100%"
                         @selection-change="handleSelectionChange">
@@ -29,61 +29,63 @@
                                 <el-checkbox v-model="scope.row.checked" @change="checked(scope.row.id)" class="checkBoxBtn"></el-checkbox>
                             </template>
                         </el-table-column>
+
+
                         <el-table-column
                             prop="name"
-                            label="名称"
-                            width="120">
+                            label="名称">
                         </el-table-column>
+
                         <el-table-column
-                            label="LED类型">
-                            <template slot-scope="scope">
-                                <span>{{scope.row.positionType | changeFilter}}</span>
-                            </template>
+                            prop="serialNum"
+                            label="设备编号">
                         </el-table-column>
 
                         <el-table-column
                             prop="regionName"
                             label="所属片区">
                         </el-table-column>
-
                         <el-table-column
-                            prop="describe"
+                            prop="description"
                             label="描述">
                         </el-table-column>
-                        <el-table-column>
+
+                        <el-table-column label="操作">
+
                             <template slot-scope="scope">
-                                <span @click="showLedDetail(scope.row, 'LED大屏信息')">查看</span>
+                                <span @click="showMonitorDetail(scope.row, '传感器信息')">查看</span>
                                 <span @click="fixedInfo(scope.row.id )">编辑</span>
                                 <span @click="deletInfo(scope.row.id)">删除</span>
                             </template>
                         </el-table-column>
                     </el-table>
 
-                    <div class="personInfo" v-for="item in ledList" v-if="isShowLedCard && item.status">
+                    <div class="personInfo" v-for="item in monitorsList" v-if="isShowMonitorsCard && item.status">
                         <div class="checkBox">
+                            <!--<input type="checkbox" :checked="item.checked" class="checkBtn" @change="checked(item.id)">-->
                             <el-checkbox v-model="item.checked" @change="checked(item.id)" class="checkBtn"></el-checkbox>
+
                         </div>
-                        <div class="personType" @click.stop="showLedDetail(item,'LED信息')">
-                            <img src="../../../../../static/img/cameras.png" alt="">
-                            <span class="name">
+                        <div class="personType" @click.stop="showMonitorDetail(item,'传感器信息')">
+                            <img src="../../../../static/img/cameras.png" alt="">
+                            <span class="type">
                                   {{item.name}}
                                 </span>
                         </div>
                         <div class="specificInfo" >
-                            <p class="area">所属区域：<span>{{item.regionName}}</span></p>
-                            <p class="type">LED类型：<span>{{item.positionType | changeFilter}}</span></p>
-                            <p class="describe">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：<span>{{item.description}}</span></p>
+                            <p class="name">所属区域：<span>{{item.regionName}}</span></p>
+                            <p class="sex">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：<span>{{item.description}}</span></p>
 
                         </div>
                     </div>
                 </ScrollContainer>
                 <HardWare v-if="visible"
                           :visible="visible"
-                          :Info="ledInfo"
+                          :Info="monitorInfo"
                           :title="title"
                           :isDisabled="isDisabled"
                           @closeInfoDialog="visible=false"
-                          @addNewInfo="addLed"
+                          @addNewInfo="addMonitors"
                           @fixInfo="fixInfo">
 
                 </HardWare>
@@ -101,14 +103,14 @@
     export default{
         data(){
             return{
-                isShowLedCard:true,
+                isShowMonitorsCard:true,
                 visible:false,
-                ledList:[
+                monitorsList:[
 
                 ],
                 checkList:[],
                 isSelected:false,
-                ledInfo:{},
+                monitorInfo:{},
                 choseInfoId:[],
                 choseList:[],
                 isDisabled:true,
@@ -118,66 +120,62 @@
             }
         },
         methods:{
-            handleSelectionChange(val) {
+            handleSelectionChange(val){
                 this.multipleSelection = val;
             },
             addNewInfo(){
-                this.showLedDetail({},'添加LED大屏信息')
+                this.showMonitorDetail({},'添加传感器信息')
                 this.isDisabled=false
             },
-            showLedDetail(info,title){
-                this.ledInfo=info
+            showMonitorDetail(info,title){
+                this.monitorInfo=info
                 this.visible=true
                 this.title=title
 
             },
             fixInfo(info){
                 let index = info.location.includes(',')?info.location.indexOf(','):info.location.indexOf('，')
-                let latitude = info.location.substring(0,index)
-                let longitude = info.location.substring(index+1)
-                let item = info.area.includes(',')?info.area.indexOf(','):info.area.indexOf('，')
-                let screenWidth=info.area.substring(0,item)
-                let screenHeight = info.area.substring(item + 1)
-                let ledObj=[{
-                    typeId: 4,
+                let latitude = info.location.substring(0, index)
+                let longitude = info.location.substring(index + 1)
+                let monitorsObj =[{
+                    typeId: 6,
                     id:info.id,
-                    positionType:info.positionType,
+                    sensorType:info.sensorType,
                     name:info.name,
+                    manufactor:info.manufactor,
                     ip:info.ip,
                     serialNum:info.serialNum,
                     regionId:info.regionId,
                     description:info.description,
                     latitude:latitude,
-                    longitude:longitude,
-                    screenWidth:screenWidth,
-                    screenHeight:screenHeight
+                    longitude:longitude
                 }]
-                api.led.updateLed(ledObj).then(res =>{
+                api.monitor.updateMonitor(monitorsObj).then(res =>{
                     this.$message.success('修改成功')
                     this.choseInfoId=[]
-                    this.getAllLed()
+                    this.getAllMonitor()
                 }).catch(err =>{
                     this.$message.error('修改失败,请稍后再试')
                 })
             },
             fixedInfo(id){
-                if (id) {
+                if(id){
                     this.choseInfoId.push(id)
                 }
-                if(this.choseInfoId.length > 1) {
+                if(this.choseInfoId.length>1){
                     this.$message.warning('至多选择一条数据')
                     return
                 }
                 if(this.choseInfoId.length>0){
-                    this.ledList.map((item)=>{
+                    this.monitorsList.map((item)=>{
                         if(item.id === this.choseInfoId[0]){
-                            this.ledInfo=item
+                            this.monitorInfo=item
                         }
                     })
-                    this.showLedDetail(this.ledInfo,'修改LED信息')
+                    this.showMonitorDetail(this.monitorInfo,'修改传感器信息')
                     this.isDisabled=false
                 }else{
-                    this.$message.error('请选择要修改的LED')
+                    this.$message.error('请选择要修改的传感器')
                 }
             },
             deletInfo(id){
@@ -190,19 +188,19 @@
                         cancelButtonText: '取消',
                         type: 'warning'
                     }).then(() => {
-                        api.led.deleteLed(this.choseInfoId).then(res =>{
+                        api.monitor.deleteMonitor(this.choseInfoId).then(res=>{
                             for(let i=0;i<this.choseInfoId.length;i++){
-                                this.ledList=this.ledList.filter((item,index)=>{
-                                    if(item.id ===this.choseInfoId[i]){
-                                        this.ledList[index].checked=false
+                                this.monitorsList=this.monitorsList.filter((item,index)=>{
+                                    if(item.id === this.choseInfoId[i]){
+                                        this.monitorsList[index].checked=false
                                     }
                                     return item.id!==this.choseInfoId[i]
                                 })
                             }
                             this.$message.success('删除成功')
-                            this.choseInfoId=[]
-                        }).catch(err=>{
-                            this.$message.error('删除失败，请稍后再试')
+                            this.choseInfoId = []
+                        }).catch(err =>{
+                            this.$message.error('删除失败,请稍后重试')
                         })
                     }).catch(() => {
                         this.$message.info('取消删除')
@@ -210,43 +208,40 @@
                 } else {
                     this.$message.error('请选择要删除的数据')
                 }
+
             },
-            addLed (info){
+            addMonitors(info){
                 let index = info.location.includes(',')?info.location.indexOf(','):info.location.indexOf('，')
                 let latitude = info.location.substring(0, index)
                 let longitude = info.location.substring(index + 1)
-                let item = info.area.includes(',')?info.area.indexOf(','):info.area.indexOf('，')
-                let screenWidth=info.area.substring(0,item)
-                let screenHeight = info.area.substring(item + 1)
-                let ledObj=[{
-                    typeId: 4,
-                    positionType:info.positionType,
+                let monitorsObj =[{
+                    typeId: 6,
+                    sensorType:info.sensorType,
                     name:info.name,
+                    manufactor:info.manufactor,
                     ip:info.ip,
                     serialNum:info.serialNum,
                     regionId:info.regionId,
                     description:info.description,
                     latitude:latitude,
-                    longitude:longitude,
-                    screenWidth:screenWidth,
-                    screenHeight:screenHeight
+                    longitude:longitude
                 }]
-                api.led.createLed(ledObj).then(res =>{
+                api.monitor.createMonitor(monitorsObj).then(res =>{
                     this.$message.success('添加成功')
-                    this.getAllLed()
+                    this.getAllMonitor()
                 }).catch(err =>{
-                    this.$message.error('添加失败，请稍后再试')
+                    this.$message.error('添加失败,请稍后再试')
                 })
             },
-            toggleList(type){
-                if (type === 'list') {
-                    this.isShowLedCard = false
-                }else {
-                    this.isShowLedCard = true
+            toggleList (type){
+                if(type==='list'){
+                    this.isShowMonitorsCard=false
+                }else{
+                    this.isShowMonitorsCard=true
                 }
             },
             checked(id){
-                this.ledList = this.ledList.filter(item => {
+                this.monitorsList = this.monitorsList.filter(item => {
                     if (item.id === id) {
                         item.checked = item.checked
                     }
@@ -264,12 +259,12 @@
             choseType(type){
                 console.log(type)
                 if(type.length===0){
-                    this.choseList=this.ledList.filter((item)=>{
+                    this.monitorsList=this.monitorsList.filter((item)=>{
                         item.status=true
                         return item.status === true
                     })
                 }else{
-                    this.choseList=this.ledList.filter((item,index)=>{
+                    this.monitorsList=this.monitorsList.filter((item,index)=>{
                         if(type.includes(item.type)){
                             item.status=true
                         }else if(!type.includes(item.type)){
@@ -281,7 +276,7 @@
                 }
             },
             selectedAll(state){
-                this.ledList=this.ledList.filter((item)=>{
+                this.monitorsList=this.monitorsList.filter((item)=>{
                     if(state==true){
                         item.checked=true
                         this.choseInfoId.push(item.id)
@@ -295,18 +290,17 @@
                 })
                 console.log(this.choseInfoId)
             },
-            async getAllLed(){
+            async getAllMonitor(){
                 this.isShowLoading=true
-                await api.led.getAllLed().then((res)=>{
-                    console.log(res,'这是请求的数据')
+                await api.monitor.getAllMonitor().then((res)=>{
+                    console.log(res,'这是请求')
                     this.isShowLoading=false
-                    this.ledList=res.devices
-                    for (let i=0;i<this.ledList.length;i++){
-                        this.ledList[i].checked=false
-                        this.ledList[i].status=true
-                        this.ledList[i].id = this.ledList[i].id
-                        this.ledList[i].location=`${this.ledList[i].latitude},${this.ledList[i].longitude}`
-                        this.ledList[i].area=`${this.ledList[i].screenWidth},${this.ledList[i].screenHeight}`
+                    this.monitorsList=res.devices
+                    for (let i=0;i<this.monitorsList.length;i++){
+                        this.monitorsList[i].checked=false
+                        this.monitorsList[i].status=true
+                        this.monitorsList[i].id=this.monitorsList[i].id
+                        this.monitorsList[i].location=`${this.monitorsList[i].latitude},${this.monitorsList[i].longitude}`
                     }
                 }).catch((err)=>{
                     console.log(err)
@@ -314,7 +308,7 @@
             }
         },
         created (){
-            this.getAllLed()
+            this.getAllMonitor()
         },
         components:{
             ScrollContainer,
@@ -337,7 +331,7 @@
 </style>
 
 <style lang="scss" type="text/scss" scoped>
-    .ledList{
+    .monitorsHard{
         width:100%;
         height:100%;
         display:flex;
@@ -427,6 +421,5 @@
         }
     }
 </style>
-
 
 

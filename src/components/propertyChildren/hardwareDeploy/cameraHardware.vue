@@ -1,7 +1,7 @@
 <template>
-    <div class="broadHard">
+    <div class="cameraHard">
         <div class="title">
-            广播信息
+            摄像头信息
         </div>
         <div class="cameraContent">
             <div class="conTitle">
@@ -17,9 +17,9 @@
             <div class="cameraList" v-loading="isShowLoading">
                 <ScrollContainer>
                     <el-table
-                        v-if="!isShowBroadCard"
+                        v-if="!isShowPersonCard"
                         ref="multipleTable"
-                        :data="broadList"
+                        :data="cameraList"
                         tooltip-effect="dark"
                         style="width: 100%"
                         @selection-change="handleSelectionChange">
@@ -31,63 +31,51 @@
                         </el-table-column>
 
                         <el-table-column
-                            prop="name"
-                            label="名称"
-                            width="120">
+                            prop="type"
+                            label="状态">
                         </el-table-column>
+
                         <el-table-column
-                            prop="positionType"
-                            label="类型">
-                            <template slot-scope="scope">
-                                <span>{{scope.row.positionType | changeFilter}}</span>
-                            </template>
-                        </el-table-column>
-                        <el-table-column
-                            prop="regionName"
+                            prop="area"
                             label="所属片区">
                         </el-table-column>
-
                         <el-table-column
-                            prop="description"
-                            label="描述">
+                            prop="describe"
+                            label="摄像头介绍">
                         </el-table-column>
-
-                        <el-table-column
-                            label="操作">
+                        <el-table-column>
                             <template slot-scope="scope">
-                                <span @click="showBroadDetail(scope.row, '广播信息')">查看</span>
+                                <span @click="showPersonDetail(scope.row, '摄像头信息')">查看</span>
                                 <span @click="fixedInfo(scope.row.id )">编辑</span>
                                 <span @click="deletInfo(scope.row.id)">删除</span>
                             </template>
                         </el-table-column>
                     </el-table>
 
-                    <div class="personInfo" v-for="item in broadList" v-if="isShowBroadCard && item.status">
+                    <div class="personInfo" v-for="item in cameraList" v-if="isShowPersonCard && item.status">
                         <div class="checkBox">
-                            <!--<input type="checkbox" :checked="item.checked" class="checkBtn" @change="checked(item.id)">-->
-                            <el-checkbox v-model="item.checked" @change="checked(item.id)" class="checkBtn"></el-checkbox>
+                            <input type="checkbox" :checked="item.checked" class="checkBtn" @change="checked(item.id)">
                         </div>
-                        <div class="personType" @click.stop="showBroadDetail(item,'广播信息')">
-                            <img src="../../../../../static/img/cameras.png" alt="">
-                            <span class="name">
+                        <div class="personType" @click.stop="showPersonDetail(item,'摄像头信息')">
+                            <img src="../../../../static/img/cameras.png" alt="">
+                            <span class="type">
                                   {{item.name}}
-                                </span>
+                            </span>
                         </div>
                         <div class="specificInfo" >
-                            <p class="area">所属区域：<span>{{item.regionName}}</span></p>
-                            <p class="type">广播类型：<span>{{item.positionType|changeFilter}}</span></p>
-                            <p class="describe">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：<span>{{item.description}}</span></p>
+                            <p class="name">所属区域：<span>{{item.regionId}}</span></p>
+                            <p class="sex">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：<span>{{item.description}}</span></p>
 
                         </div>
                     </div>
                 </ScrollContainer>
                 <HardWare v-if="visible"
                           :visible="visible"
-                          :Info="broadInfo"
+                          :Info="personInfo"
                           :title="title"
                           :isDisabled="isDisabled"
                           @closeInfoDialog="visible=false"
-                          @addNewInfo="addBroad"
+                          @addNewInfo="addNewPerson"
                           @fixInfo="fixInfo">
 
                 </HardWare>
@@ -105,20 +93,18 @@
     export default{
         data(){
             return{
-                isShowBroadCard:true,
+                isShowPersonCard:true,
                 visible:false,
-                broadList:[
-
-                ],
+                cameraList:[],
                 checkList:[],
                 isSelected:false,
-                broadInfo:{},
+                personInfo:{},
                 choseInfoId:[],
                 choseList:[],
                 isDisabled:true,
                 filterList: [],
                 title:'',
-                isShowLoading:false
+                isShowLoading: false
             }
         },
         methods:{
@@ -126,11 +112,11 @@
                 this.multipleSelection = val;
             },
             addNewInfo(){
-                this.showBroadDetail({},'添加广播信息')
+                this.showPersonDetail({},'添加摄像头信息')
                 this.isDisabled=false
             },
-            showBroadDetail(info,title){
-                this.broadInfo=info
+            showPersonDetail(info,title){
+                this.personInfo=info
                 this.visible=true
                 this.title=title
 
@@ -139,25 +125,26 @@
                 let index = info.location.includes(',')?info.location.indexOf(','):info.location.indexOf('，')
                 let latitude = info.location.substring(0, index)
                 let longitude = info.location.substring(index + 1)
-                let broadObj=[{
-                    typeId: 1,
+                let cameraObj=[{
+                    typeId:2,
                     id:info.id,
-                    positionType:info.positionType,
                     name:info.name,
-                    manufactor:info.manufactor,
-                    ip:info.ip,
-                    port:info.port,
+                    positionType:info.positionType,
                     regionId:info.regionId,
+                    manufactor:info.manufactor,
+                    port:info.port,
+                    ip:info.ip,
                     description:info.description,
                     latitude:latitude,
                     longitude:longitude
                 }]
-                api.broadcast.updateBroadcast(broadObj).then(res =>{
+                console.log(cameraObj)
+                api.camera.updateCamera(cameraObj).then(res=>{
                     this.$message.success('修改成功')
                     this.choseInfoId=[]
-                    this.getAllBroadcast()
-                }).catch(err =>{
-                    this.$message.error('修改失败,请稍后再试')
+                    this.getAllCamera()
+                }).catch(err=>{
+                    this.$message.error('修改失败，请稍后再试')
                 })
             },
             fixedInfo(id){
@@ -168,16 +155,16 @@
                     this.$message.warning('至多选择一条数据')
                     return
                 }
-                if(this.choseInfoId.length > 0){
-                    this.broadList.map((item) => {
+                if(this.choseInfoId.length>0){
+                    this.cameraList.map((item)=>{
                         if(item.id === this.choseInfoId[0]){
-                            this.broadInfo=item
+                            this.personInfo=item
                         }
                     })
-                    this.showBroadDetail(this.broadInfo,'修改广播信息')
+                    this.showPersonDetail(this.personInfo,'修改摄像头信息')
                     this.isDisabled=false
                 }else{
-                    this.$message.error('请选择要修改的广播信息')
+                    this.$message.error('请选择要修改的摄像头')
                 }
             },
             deletInfo(id){
@@ -190,65 +177,64 @@
                         cancelButtonText: '取消',
                         type: 'warning'
                     }).then(() => {
-                        api.broadcast.deleteBroadcast(this.choseInfoId).then(res =>{
+                        api.camera.deleteCamera(this.choseInfoId).then(res=>{
+                            console.log(res,'删除成功')
                             for(let i=0;i<this.choseInfoId.length;i++){
-                                this.broadList=this.broadList.filter((item,index)=>{
+                                this.cameraList=this.cameraList.filter((item,index)=>{
                                     if(item.id===this.choseInfoId[i]){
-                                        this.broadList[index].checked=false
+                                        this.cameraList[index].checked=false
                                     }
                                     return item.id !== this.choseInfoId[i]
                                 })
                             }
                             this.$message.success('删除成功')
                             this.choseInfoId=[]
-                        }).catch(err =>{
-                            this.$message.error('删除失败,请稍后重试')
+                        }).catch(err=>{
+                            console.log(err)
+                            this.$message.error('删除失败，请稍后重试')
                         })
                     }).catch(() => {
                         this.$message.info('取消删除')
                     })
+
                 } else {
                     this.$message.error('请选择要删除的数据')
                 }
 
             },
-            addBroad (info){
+            addNewPerson(info){
                 let index = info.location.includes(',')?info.location.indexOf(','):info.location.indexOf('，')
                 let latitude = info.location.substring(0, index)
                 let longitude = info.location.substring(index + 1)
-                let broadObj=[{
-                    typeId: 2,
-                    positionType:info.positionType,
+                let cameraObj=[{
+                    typeId:2,
                     name:info.name,
-                    manufactor:info.manufactor,
-                    ip:info.ip,
-                    port:info.port,
+                    positionType:info.positionType,
                     regionId:info.regionId,
+                    manufactor:info.manufactor,
+                    port:info.port,
+                    ip:info.ip,
                     description:info.description,
                     latitude:latitude,
                     longitude:longitude
                 }]
-                api.broadcast.createBroadcast(broadObj).then(res =>{
+                console.log(cameraObj)
+                api.camera.createCamera(cameraObj).then(res=>{
                     this.$message.success('添加成功')
-                    this.getAllBroadcast()
+                    console.log('增加成功')
+                    this.getAllCamera()
                 }).catch(err =>{
-                    this.$message.error('添加失败,请稍后再试')
+                    this.$message.error('添加失败，请稍后重试')
                 })
             },
-            toggleList(type){
-                if (type === 'list') {
-                    this.isShowBroadCard = false
-                }else {
-                    this.isShowBroadCard = true
+            toggleList (type){
+                if(type==='list'){
+                    this.isShowPersonCard=false
+                }else{
+                    this.isShowPersonCard=true
                 }
             },
             checked(id){
-                this.broadList = this.broadList.filter(item => {
-                    if (item.id === id) {
-                        item.checked = item.checked
-                    }
-                    return item
-                })
                 console.log(id)
                 if(this.choseInfoId.includes(id)){
                     this.choseInfoId = this.choseInfoId.filter((item)=>{
@@ -261,29 +247,24 @@
             choseType(type){
                 console.log(type)
                 if(type.length===0){
-                    this.broadList=this.broadList.filter((item)=>{
+                    this.choseList=this.cameraList.filter((item)=>{
                         item.status=true
-                        return item
+                        return item.status === true
                     })
                 }else{
-                    this.broadList=this.broadList.filter((item,index)=>{
-                        if (item.positionType == 0) {
-                            item.type = '室内'
-                        } else{
-                            item.type = '室外'
-                        }
+                    this.choseList=this.cameraList.filter((item,index)=>{
                         if(type.includes(item.type)){
                             item.status=true
                         }else if(!type.includes(item.type)){
                             item.status=false
                             console.log(item.type)
                         }
-                        return item
+                        return item.status===true
                     })
                 }
             },
             selectedAll(state){
-                this.broadList=this.broadList.filter((item)=>{
+                this.cameraList=this.cameraList.filter((item)=>{
                     if(state==true){
                         item.checked=true
                         this.choseInfoId.push(item.id)
@@ -297,35 +278,26 @@
                 })
                 console.log(this.choseInfoId)
             },
-            async getAllBroadcast(){
-                this.isShowLoading=true
-                await api.broadcast.getAllBroadcast().then((res)=>{
-                    console.log(res,'这是请求回来的数据')
-                    this.isShowLoading=false
-                    this.broadList=res.devices
-                    for (let i=0;i<this.broadList.length;i++) {
-                        this.broadList[i].checked = false
-                        this.broadList[i].status = true
-                        this.broadList[i].id=this.broadList[i].id
-                        this.broadList[i].location=`${this.broadList[i].latitude},${this.broadList[i].longitude}`
+            async getAllCamera () {
+                this.isShowLoading = true
+                await api.camera.getAllCamera().then((res) => {
+                    console.log(res, '这是请求回来的所有数据')
+                    this.isShowLoading = false
+                    this.cameraList = res.devices
+                    for (let i=0; i < this.cameraList.length; i++) {
+                        this.cameraList[i].checked = false
+                        this.cameraList[i].status = true
+                        this.cameraList[i].id=this.cameraList[i].id
+                        this.cameraList[i].location = `${this.cameraList[i].latitude},${this.cameraList[i].longitude}`
                     }
-                }).catch((err)=>{
+                }).catch((err)=> {
                     console.log(err)
-                    this.isShowLoading=false
                 })
             }
         },
         created (){
-            this.getAllBroadcast()
-        },
-        filters:{
-          changeStatus(item){
-              if(item==0){
-                  return '室内'
-              }else{
-                  return '室外'
-              }
-          }
+//          this.choseList=this.camera
+            this.getAllCamera()
         },
         components:{
             ScrollContainer,
@@ -348,7 +320,7 @@
 </style>
 
 <style lang="scss" type="text/scss" scoped>
-    .broadHard{
+    .cameraHard{
         width:100%;
         height:100%;
         display:flex;
@@ -398,7 +370,7 @@
                         .checkBtn{
                             position:absolute;
                             right:rem(5);
-                            top:rem(-2);
+                            top:rem(3);
                             cursor:pointer;
                         }
                     }
@@ -438,5 +410,4 @@
         }
     }
 </style>
-
 

@@ -1,7 +1,7 @@
 <template>
-    <div class="gateList">
+    <div class="ledList">
         <div class="title">
-            闸机信息
+            LED信息
         </div>
         <div class="cameraContent">
             <div class="conTitle">
@@ -17,9 +17,9 @@
             <div class="cameraList" v-loading="isShowLoading">
                 <ScrollContainer>
                     <el-table
-                        v-if="!isShowGateCard"
+                        v-if="!isShowLedCard"
                         ref="multipleTable"
-                        :data="gateList"
+                        :data="ledList"
                         tooltip-effect="dark"
                         style="width: 100%"
                         @selection-change="handleSelectionChange">
@@ -29,11 +29,15 @@
                                 <el-checkbox v-model="scope.row.checked" @change="checked(scope.row.id)" class="checkBoxBtn"></el-checkbox>
                             </template>
                         </el-table-column>
-
                         <el-table-column
-                            label="状态">
+                            prop="name"
+                            label="名称"
+                            width="120">
+                        </el-table-column>
+                        <el-table-column
+                            label="LED类型">
                             <template slot-scope="scope">
-                                <span>{{scope.row.gateType | changeType}}</span>
+                                <span>{{scope.row.positionType | changeFilter}}</span>
                             </template>
                         </el-table-column>
 
@@ -41,44 +45,45 @@
                             prop="regionName"
                             label="所属片区">
                         </el-table-column>
+
                         <el-table-column
-                            prop="description"
-                            label="摄像头介绍">
+                            prop="describe"
+                            label="描述">
                         </el-table-column>
                         <el-table-column>
                             <template slot-scope="scope">
-                                <span @click="showGateDetail(scope.row, '闸机信息')">查看</span>
+                                <span @click="showLedDetail(scope.row, 'LED大屏信息')">查看</span>
                                 <span @click="fixedInfo(scope.row.id )">编辑</span>
                                 <span @click="deletInfo(scope.row.id)">删除</span>
                             </template>
                         </el-table-column>
                     </el-table>
 
-                    <div class="personInfo" v-for="item in gateList" v-if="isShowGateCard && item.status">
+                    <div class="personInfo" v-for="item in ledList" v-if="isShowLedCard && item.status">
                         <div class="checkBox">
                             <el-checkbox v-model="item.checked" @change="checked(item.id)" class="checkBtn"></el-checkbox>
                         </div>
-                        <div class="personType" @click.stop="showGateDetail(item,'闸机信息')">
-                            <img src="../../../../../static/img/cameras.png" alt="">
+                        <div class="personType" @click.stop="showLedDetail(item,'LED信息')">
+                            <img src="../../../../static/img/cameras.png" alt="">
                             <span class="name">
                                   {{item.name}}
                                 </span>
                         </div>
                         <div class="specificInfo" >
                             <p class="area">所属区域：<span>{{item.regionName}}</span></p>
-                            <p class="type">类&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;型：<span>{{item.gateType | changeType}}</span></p>
-                            <p class="sex">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：<span>{{item.description}}</span></p>
+                            <p class="type">LED类型：<span>{{item.positionType | changeFilter}}</span></p>
+                            <p class="describe">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：<span>{{item.description}}</span></p>
 
                         </div>
                     </div>
                 </ScrollContainer>
                 <HardWare v-if="visible"
                           :visible="visible"
-                          :Info="gateInfo"
+                          :Info="ledInfo"
                           :title="title"
                           :isDisabled="isDisabled"
                           @closeInfoDialog="visible=false"
-                          @addNewInfo="addGate"
+                          @addNewInfo="addLed"
                           @fixInfo="fixInfo">
 
                 </HardWare>
@@ -96,15 +101,14 @@
     export default{
         data(){
             return{
-                isShowGateCard:true,
+                isShowLedCard:true,
                 visible:false,
-                gateList
-                    :[
+                ledList:[
 
                 ],
                 checkList:[],
                 isSelected:false,
-                gateInfo:{},
+                ledInfo:{},
                 choseInfoId:[],
                 choseList:[],
                 isDisabled:true,
@@ -114,43 +118,46 @@
             }
         },
         methods:{
-            handleSelectionChange(val){
+            handleSelectionChange(val) {
                 this.multipleSelection = val;
             },
             addNewInfo(){
-                this.showGateDetail({},'添加闸机信息')
+                this.showLedDetail({},'添加LED大屏信息')
                 this.isDisabled=false
             },
-            showGateDetail(info,title){
-                this.gateInfo=info
+            showLedDetail(info,title){
+                this.ledInfo=info
                 this.visible=true
                 this.title=title
 
             },
             fixInfo(info){
                 let index = info.location.includes(',')?info.location.indexOf(','):info.location.indexOf('，')
-                let latitude = info.location.substring(0, index)
-                let longitude = info.location.substring(index + 1)
-                let gateObj=[{
-                    typeId:3,
+                let latitude = info.location.substring(0,index)
+                let longitude = info.location.substring(index+1)
+                let item = info.area.includes(',')?info.area.indexOf(','):info.area.indexOf('，')
+                let screenWidth=info.area.substring(0,item)
+                let screenHeight = info.area.substring(item + 1)
+                let ledObj=[{
+                    typeId: 4,
                     id:info.id,
-                    gateType:info.gateType,
+                    positionType:info.positionType,
                     name:info.name,
-                    model:info.model,
                     ip:info.ip,
                     serialNum:info.serialNum,
-                    port:info.port,
                     regionId:info.regionId,
                     description:info.description,
                     latitude:latitude,
-                    longitude:longitude
+                    longitude:longitude,
+                    screenWidth:screenWidth,
+                    screenHeight:screenHeight
                 }]
-                api.gate.updateGate(gateObj).then(res =>{
+                api.led.updateLed(ledObj).then(res =>{
                     this.$message.success('修改成功')
                     this.choseInfoId=[]
-                    this.getAllGate()
+                    this.getAllLed()
                 }).catch(err =>{
-                    this.$message.error('修改失败，请稍后再试')
+                    this.$message.error('修改失败,请稍后再试')
                 })
             },
             fixedInfo(id){
@@ -162,15 +169,15 @@
                     return
                 }
                 if(this.choseInfoId.length>0){
-                    this.gateList.map((item)=>{
+                    this.ledList.map((item)=>{
                         if(item.id === this.choseInfoId[0]){
-                            this.gateInfo=item
+                            this.ledInfo=item
                         }
                     })
-                    this.showGateDetail(this.gateInfo,'修改闸机信息')
+                    this.showLedDetail(this.ledInfo,'修改LED信息')
                     this.isDisabled=false
                 }else{
-                    this.$message.error('请选择要修改的闸机')
+                    this.$message.error('请选择要修改的LED')
                 }
             },
             deletInfo(id){
@@ -183,11 +190,11 @@
                         cancelButtonText: '取消',
                         type: 'warning'
                     }).then(() => {
-                        api.gate.deleteGate(this.choseInfoId).then(res=>{
+                        api.led.deleteLed(this.choseInfoId).then(res =>{
                             for(let i=0;i<this.choseInfoId.length;i++){
-                                this.gateList=this.gateList.filter((item,index)=>{
-                                    if(item.id===this.choseInfoId[i]){
-                                        this.gateList[index].checked=false
+                                this.ledList=this.ledList.filter((item,index)=>{
+                                    if(item.id ===this.choseInfoId[i]){
+                                        this.ledList[index].checked=false
                                     }
                                     return item.id!==this.choseInfoId[i]
                                 })
@@ -195,7 +202,7 @@
                             this.$message.success('删除成功')
                             this.choseInfoId=[]
                         }).catch(err=>{
-                            this.$message.err('删除失败，请稍后重试')
+                            this.$message.error('删除失败，请稍后再试')
                         })
                     }).catch(() => {
                         this.$message.info('取消删除')
@@ -203,41 +210,43 @@
                 } else {
                     this.$message.error('请选择要删除的数据')
                 }
-
             },
-            addGate(info){
+            addLed (info){
                 let index = info.location.includes(',')?info.location.indexOf(','):info.location.indexOf('，')
                 let latitude = info.location.substring(0, index)
                 let longitude = info.location.substring(index + 1)
-                let gateObj=[{
-                    typeId:3,
-                    gateType:info.gateType,
+                let item = info.area.includes(',')?info.area.indexOf(','):info.area.indexOf('，')
+                let screenWidth=info.area.substring(0,item)
+                let screenHeight = info.area.substring(item + 1)
+                let ledObj=[{
+                    typeId: 4,
+                    positionType:info.positionType,
                     name:info.name,
-                    model:info.model,
                     ip:info.ip,
                     serialNum:info.serialNum,
-                    port:info.port,
                     regionId:info.regionId,
                     description:info.description,
                     latitude:latitude,
-                    longitude:longitude
+                    longitude:longitude,
+                    screenWidth:screenWidth,
+                    screenHeight:screenHeight
                 }]
-                api.gate.createGate(gateObj).then(res =>{
+                api.led.createLed(ledObj).then(res =>{
                     this.$message.success('添加成功')
-                    this.getAllGate()
+                    this.getAllLed()
                 }).catch(err =>{
-                    this.$message.error('添加失败，请稍后重试')
+                    this.$message.error('添加失败，请稍后再试')
                 })
             },
-            toggleList (type){
-                if(type==='list'){
-                    this.isShowGateCard=false
-                }else{
-                    this.isShowGateCard=true
+            toggleList(type){
+                if (type === 'list') {
+                    this.isShowLedCard = false
+                }else {
+                    this.isShowLedCard = true
                 }
             },
             checked(id){
-                this.gateList = this.gateList.filter(item => {
+                this.ledList = this.ledList.filter(item => {
                     if (item.id === id) {
                         item.checked = item.checked
                     }
@@ -255,12 +264,12 @@
             choseType(type){
                 console.log(type)
                 if(type.length===0){
-                    this.choseList=this.gateList.filter((item)=>{
+                    this.choseList=this.ledList.filter((item)=>{
                         item.status=true
                         return item.status === true
                     })
                 }else{
-                    this.choseList=this.gateList.filter((item,index)=>{
+                    this.choseList=this.ledList.filter((item,index)=>{
                         if(type.includes(item.type)){
                             item.status=true
                         }else if(!type.includes(item.type)){
@@ -272,7 +281,7 @@
                 }
             },
             selectedAll(state){
-                this.gateList=this.gateList.filter((item)=>{
+                this.ledList=this.ledList.filter((item)=>{
                     if(state==true){
                         item.checked=true
                         this.choseInfoId.push(item.id)
@@ -286,38 +295,26 @@
                 })
                 console.log(this.choseInfoId)
             },
-            async getAllGate(){
+            async getAllLed(){
                 this.isShowLoading=true
-                await api.gate.getAllGate().then((res)=>{
-                    console.log(res,'这是拿到的数据')
+                await api.led.getAllLed().then((res)=>{
+                    console.log(res,'这是请求的数据')
                     this.isShowLoading=false
-                    this.gateList=res.devices
-                    for (let i=0;i<this.gateList.length;i++){
-                        this.gateList[i].checked=false
-                        this.gateList[i].status=true
-                        this.gateList[i].location=`${this.gateList[i].latitude},${this.gateList[i].longitude}`
+                    this.ledList=res.devices
+                    for (let i=0;i<this.ledList.length;i++){
+                        this.ledList[i].checked=false
+                        this.ledList[i].status=true
+                        this.ledList[i].id = this.ledList[i].id
+                        this.ledList[i].location=`${this.ledList[i].latitude},${this.ledList[i].longitude}`
+                        this.ledList[i].area=`${this.ledList[i].screenWidth},${this.ledList[i].screenHeight}`
                     }
                 }).catch((err)=>{
                     console.log(err)
                 })
             }
-
         },
         created (){
-            this.getAllGate()
-        },
-        filters:{
-            changeType(item){
-                if(item == 1){
-                    return '翼闸'
-                }else if(item == 2){
-                    return '摆闸'
-                }else if(item == 3){
-                    return '三锟闸'
-                }else if(item == 4){
-                    return '平移闸'
-                }
-            }
+            this.getAllLed()
         },
         components:{
             ScrollContainer,
@@ -340,7 +337,7 @@
 </style>
 
 <style lang="scss" type="text/scss" scoped>
-    .gateList{
+    .ledList{
         width:100%;
         height:100%;
         display:flex;
@@ -430,5 +427,6 @@
         }
     }
 </style>
+
 
 

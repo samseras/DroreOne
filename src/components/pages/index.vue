@@ -46,7 +46,9 @@
                     </div>
                 </el-carousel-item>
                 <el-carousel-item>
-                    <div class="conversion"></div>
+                    <div class="conversion">
+                        <router-link to="/property"  id="property" class="change">资产>><img src="../../../static/img/eye.png"/></router-link>
+                    </div>
                 </el-carousel-item>
                 <el-carousel-item>
                     <div class="conversion"></div>

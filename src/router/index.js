@@ -40,28 +40,30 @@ import Build from "@/components/eye/facilityChildren/buildFacility"
 import HomePage from '@/components/homePage'
 
 import Deploy from '@/components/deploy'
-import AreaDeploy from '@/components/eye/deployChildren/basicDeploy/areaDeploy'       //片区
-import BoatDeploy from '@/components/eye/deployChildren/basicDeploy/boatCarDeploy'       //车船
-import IndicatorDeploy from '@/components/eye/deployChildren/basicDeploy/indicatorDeploy'       //指示牌
-import OtherDeploy from '@/components/eye/deployChildren/basicDeploy/otherDeploy'       //其他
-import ParkDeploy from '@/components/eye/deployChildren/basicDeploy/parkDeploy'       //停车场
-import PersonDeploy from '@/components/eye/deployChildren/basicDeploy/personDeploy'       //人员
-import RoatDeploy from '@/components/eye/deployChildren/basicDeploy/roatDeploy'       //路网
-import ScenicDeploy from '@/components/eye/deployChildren/basicDeploy/scenicDeploy'       //景点
-import ShopDeploy from '@/components/eye/deployChildren/basicDeploy/shopDeploy'       //商圈
-import ToiletDeploy from '@/components/eye/deployChildren/basicDeploy/toiletDeploy'       //洗手间
-import TrashDeploy from '@/components/eye/deployChildren/basicDeploy/trashDeploy'       //垃圾桶
+
+import Property from '@/components/property'
+import AreaDeploy from '@/components/propertyChildren/basicDeploy/areaDeploy'       //片区
+import BoatDeploy from '@/components/propertyChildren/basicDeploy/boatCarDeploy'       //车船
+import IndicatorDeploy from '@/components/propertyChildren/basicDeploy/indicatorDeploy'       //指示牌
+import OtherDeploy from '@/components/propertyChildren/basicDeploy/otherDeploy'       //其他
+import ParkDeploy from '@/components/propertyChildren/basicDeploy/parkDeploy'       //停车场
+import PersonDeploy from '@/components/propertyChildren/basicDeploy/personDeploy'       //人员
+import RoatDeploy from '@/components/propertyChildren/basicDeploy/roatDeploy'       //路网
+import ScenicDeploy from '@/components/propertyChildren/basicDeploy/scenicDeploy'       //景点
+import ShopDeploy from '@/components/propertyChildren/basicDeploy/shopDeploy'       //商圈
+import ToiletDeploy from '@/components/propertyChildren/basicDeploy/toiletDeploy'       //洗手间
+import TrashDeploy from '@/components/propertyChildren/basicDeploy/trashDeploy'       //垃圾桶
 
 
-import CameraHware from '@/components/eye/deployChildren/hardwareDeploy/cameraHardware'
-import BroadcastHware from '@/components/eye/deployChildren/hardwareDeploy/broadcastHardware'
-import GateHware from '@/components/eye/deployChildren/hardwareDeploy/gateHardware'
-import LightHware from '@/components/eye/deployChildren/hardwareDeploy/lampLightHardware'
-import LedHware from '@/components/eye/deployChildren/hardwareDeploy/ledHardware'
-import MonitorsHware from '@/components/eye/deployChildren/hardwareDeploy/monitorsHardware'
-import WifiHware from '@/components/eye/deployChildren/hardwareDeploy/wifiHardware'
-import VoiceHware from '@/components/eye/deployChildren/hardwareDeploy/voiceHardware'
-import PoliceHware from '@/components/eye/deployChildren/hardwareDeploy/policeHardware'
+import CameraHware from '@/components/propertyChildren/hardwareDeploy/cameraHardware'
+import BroadcastHware from '@/components/propertyChildren/hardwareDeploy/broadcastHardware'
+import GateHware from '@/components/propertyChildren/hardwareDeploy/gateHardware'
+import LightHware from '@/components/propertyChildren/hardwareDeploy/lampLightHardware'
+import LedHware from '@/components/propertyChildren/hardwareDeploy/ledHardware'
+import MonitorsHware from '@/components/propertyChildren/hardwareDeploy/monitorsHardware'
+import WifiHware from '@/components/propertyChildren/hardwareDeploy/wifiHardware'
+import VoiceHware from '@/components/propertyChildren/hardwareDeploy/voiceHardware'
+import PoliceHware from '@/components/propertyChildren/hardwareDeploy/policeHardware'
 
 import broadcastDmis from '@/components/eye/deployChildren/dispatchDeploy/broadcastDmis' //广播播放
 import lamppostDmis from '@/components/eye/deployChildren/dispatchDeploy/lamppostDmis' //路灯照明
@@ -149,31 +151,9 @@ const routes = [
             {
                 path: '/deploy',
                 name: 'deploy',
-                redirect: '/deploy/person-deploy',
+                redirect: '/deploy/broadcast-Dmis',
                 component: Deploy,
                 children:[
-                    {path: '/deploy/area-deploy',name: 'AreaDeploy',component: AreaDeploy},
-                    {path: '/deploy/boat-deploy',name: 'BoatDeploy',component: BoatDeploy },
-                    {path: '/deploy/indicator-deploy',name: 'IndicatorDeploy',component: IndicatorDeploy },
-                    {path: '/deploy/other-deploy',name: 'OtherDeploy',component: OtherDeploy },
-                    {path: '/deploy/park-deploy',name: 'ParkDeploy',component: ParkDeploy },
-                    {path: '/deploy/person-deploy',name: 'PersonDeploy',component: PersonDeploy },
-                    {path: '/deploy/roat-deploy',name: 'RoatDeploy',component: RoatDeploy },
-                    {path: '/deploy/scenic-deploy',name: 'ScenicDeploy',component: ScenicDeploy },
-                    {path: '/deploy/shop-deploy',name: 'ShopDeploy',component: ShopDeploy },
-                    {path: '/deploy/toilet-deploy',name: 'ToiletDeploy',component: ToiletDeploy },
-                    {path: '/deploy/trash-deploy',name: 'TrashDeploy',component: TrashDeploy },
-
-                    {path:'/deploy/camera-Hware',name:'CameraHware',component:CameraHware},
-                    {path:'/deploy/broadcast-Hware',name:'BroadcastHware',component:BroadcastHware},
-                    {path:'/deploy/gate-Hware',name:'GateHware',component:GateHware},
-                    {path:'/deploy/lampLight-Hware',name:'LightHware',component:LightHware},
-                    {path:'/deploy/lampLight-Hware',name:'LightHware',component:LightHware},
-                    {path:'/deploy/led-Hware',name:'LedHware',component:LedHware},
-                    {path:'/deploy/wifi-Hware',name:'WifiHware',component:WifiHware},
-                    {path:'/deploy/voice-Hware',name:'VoiceHware',component:VoiceHware},
-                    {path:'/deploy/police-Hware',name:'PoliceHware',component:PoliceHware},
-                    {path:'/deploy/monitors-Hware',name:'MonitorsHware',component:MonitorsHware},
 
                     {path:'/deploy/broadcast-Dmis',name:'boatcartDmis',component:broadcastDmis},
                     {path:'/deploy/lamppost-Dmis',name:'lamppostDmis',component:lamppostDmis},
@@ -186,6 +166,37 @@ const routes = [
                     {path:'/deploy/dispatch-Record',name:'dispatchRecord',component:dispatchRecord}
                 ]
             }
+        ]
+    },
+    //资产
+    {
+        path: '/property',
+        name: 'property',
+        redirect: '/property/person-deploy',
+        component: Property,
+        children: [
+            {path: '/property/area-deploy',name: 'AreaDeploy',component: AreaDeploy},
+            {path: '/property/boat-deploy',name: 'BoatDeploy',component: BoatDeploy },
+            {path: '/property/indicator-deploy',name: 'IndicatorDeploy',component: IndicatorDeploy },
+            {path: '/property/other-deploy',name: 'OtherDeploy',component: OtherDeploy },
+            {path: '/property/park-deploy',name: 'ParkDeploy',component: ParkDeploy },
+            {path: '/property/person-deploy',name: 'PersonDeploy',component: PersonDeploy },
+            {path: '/property/roat-deploy',name: 'RoatDeploy',component: RoatDeploy },
+            {path: '/property/scenic-deploy',name: 'ScenicDeploy',component: ScenicDeploy },
+            {path: '/property/shop-deploy',name: 'ShopDeploy',component: ShopDeploy },
+            {path: '/property/toilet-deploy',name: 'ToiletDeploy',component: ToiletDeploy },
+            {path: '/property/trash-deploy',name: 'TrashDeploy',component: TrashDeploy },
+
+            {path:'/property/camera-Hware',name:'CameraHware',component:CameraHware},
+            {path:'/property/broadcast-Hware',name:'BroadcastHware',component:BroadcastHware},
+            {path:'/property/gate-Hware',name:'GateHware',component:GateHware},
+            {path:'/property/lampLight-Hware',name:'LightHware',component:LightHware},
+            {path:'/property/lampLight-Hware',name:'LightHware',component:LightHware},
+            {path:'/property/led-Hware',name:'LedHware',component:LedHware},
+            {path:'/property/wifi-Hware',name:'WifiHware',component:WifiHware},
+            {path:'/property/voice-Hware',name:'VoiceHware',component:VoiceHware},
+            {path:'/property/police-Hware',name:'PoliceHware',component:PoliceHware},
+            {path:'/property/monitors-Hware',name:'MonitorsHware',component:MonitorsHware},
         ]
     }
   ]

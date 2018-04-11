@@ -1,7 +1,7 @@
 <template>
-    <div class="wifiList">
+    <div class="broadHard">
         <div class="title">
-            WIFI信息
+            广播信息
         </div>
         <div class="cameraContent">
             <div class="conTitle">
@@ -17,9 +17,9 @@
             <div class="cameraList" v-loading="isShowLoading">
                 <ScrollContainer>
                     <el-table
-                        v-if="!isShowWifiCard"
+                        v-if="!isShowBroadCard"
                         ref="multipleTable"
-                        :data="wifiList"
+                        :data="broadList"
                         tooltip-effect="dark"
                         style="width: 100%"
                         @selection-change="handleSelectionChange">
@@ -29,18 +29,19 @@
                                 <el-checkbox v-model="scope.row.checked" @change="checked(scope.row.id)" class="checkBoxBtn"></el-checkbox>
                             </template>
                         </el-table-column>
+
                         <el-table-column
                             prop="name"
                             label="名称"
                             width="120">
                         </el-table-column>
                         <el-table-column
+                            prop="positionType"
                             label="类型">
                             <template slot-scope="scope">
                                 <span>{{scope.row.positionType | changeFilter}}</span>
                             </template>
                         </el-table-column>
-
                         <el-table-column
                             prop="regionName"
                             label="所属片区">
@@ -50,28 +51,31 @@
                             prop="description"
                             label="描述">
                         </el-table-column>
-                        <el-table-column>
+
+                        <el-table-column
+                            label="操作">
                             <template slot-scope="scope">
-                                <span @click="showWifiDetail(scope.row, 'Wifi信息')">查看</span>
+                                <span @click="showBroadDetail(scope.row, '广播信息')">查看</span>
                                 <span @click="fixedInfo(scope.row.id )">编辑</span>
                                 <span @click="deletInfo(scope.row.id)">删除</span>
                             </template>
                         </el-table-column>
                     </el-table>
 
-                    <div class="personInfo" v-for="item in wifiList" v-if="isShowWifiCard && item.status">
+                    <div class="personInfo" v-for="item in broadList" v-if="isShowBroadCard && item.status">
                         <div class="checkBox">
+                            <!--<input type="checkbox" :checked="item.checked" class="checkBtn" @change="checked(item.id)">-->
                             <el-checkbox v-model="item.checked" @change="checked(item.id)" class="checkBtn"></el-checkbox>
                         </div>
-                        <div class="personType" @click.stop="showWifiDetail(item,'WIFI信息')">
-                            <img src="../../../../../static/img/cameras.png" alt="">
+                        <div class="personType" @click.stop="showBroadDetail(item,'广播信息')">
+                            <img src="../../../../static/img/cameras.png" alt="">
                             <span class="name">
                                   {{item.name}}
                                 </span>
                         </div>
                         <div class="specificInfo" >
                             <p class="area">所属区域：<span>{{item.regionName}}</span></p>
-                            <p class="type">类&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;型：<span>{{item.positionType | changeFilter}}</span></p>
+                            <p class="type">广播类型：<span>{{item.positionType|changeFilter}}</span></p>
                             <p class="describe">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：<span>{{item.description}}</span></p>
 
                         </div>
@@ -79,13 +83,12 @@
                 </ScrollContainer>
                 <HardWare v-if="visible"
                           :visible="visible"
-                          :Info="wifiInfo"
+                          :Info="broadInfo"
                           :title="title"
                           :isDisabled="isDisabled"
                           @closeInfoDialog="visible=false"
-                          @addNewInfo="addWifi"
+                          @addNewInfo="addBroad"
                           @fixInfo="fixInfo">
-
                 </HardWare>
             </div>
         </div>
@@ -101,14 +104,14 @@
     export default{
         data(){
             return{
-                isShowWifiCard:true,
+                isShowBroadCard:true,
                 visible:false,
-                wifiList:[
+                broadList:[
 
                 ],
                 checkList:[],
                 isSelected:false,
-                wifiInfo:{},
+                broadInfo:{},
                 choseInfoId:[],
                 choseList:[],
                 isDisabled:true,
@@ -122,11 +125,11 @@
                 this.multipleSelection = val;
             },
             addNewInfo(){
-                this.showWifiDetail({},'添加WIFI信息')
+                this.showBroadDetail({},'添加广播信息')
                 this.isDisabled=false
             },
-            showWifiDetail(info,title){
-                this.wifiInfo=info
+            showBroadDetail(info,title){
+                this.broadInfo=info
                 this.visible=true
                 this.title=title
 
@@ -135,27 +138,25 @@
                 let index = info.location.includes(',')?info.location.indexOf(','):info.location.indexOf('，')
                 let latitude = info.location.substring(0, index)
                 let longitude = info.location.substring(index + 1)
-                let wifiObj=[{
-                    typeId: 7,
+                let broadObj=[{
+                    typeId: 1,
                     id:info.id,
                     positionType:info.positionType,
                     name:info.name,
-                    model:info.model,
+                    manufactor:info.manufactor,
                     ip:info.ip,
-                    serialNum:info.serialNum,
-                    mac:info.mac,
+                    port:info.port,
                     regionId:info.regionId,
                     description:info.description,
                     latitude:latitude,
                     longitude:longitude
                 }]
-                console.log(wifiObj)
-                api.wifi.updateWifi(wifiObj).then(res =>{
+                api.broadcast.updateBroadcast(broadObj).then(res =>{
                     this.$message.success('修改成功')
                     this.choseInfoId=[]
-                    this.getAllWifi()
+                    this.getAllBroadcast()
                 }).catch(err =>{
-                    this.$message.error('修改失败，请稍后再试')
+                    this.$message.error('修改失败,请稍后再试')
                 })
             },
             fixedInfo(id){
@@ -166,16 +167,16 @@
                     this.$message.warning('至多选择一条数据')
                     return
                 }
-                if(this.choseInfoId.length>0){
-                    this.wifiList.map((item)=>{
+                if(this.choseInfoId.length > 0){
+                    this.broadList.map((item) => {
                         if(item.id === this.choseInfoId[0]){
-                            this.wifiInfo=item
+                            this.broadInfo=item
                         }
                     })
-                    this.showWifiDetail(this.wifiInfo,'修改WIFI信息')
+                    this.showBroadDetail(this.broadInfo,'修改广播信息')
                     this.isDisabled=false
                 }else{
-                    this.$message.error('请选择要修改的WIFI')
+                    this.$message.error('请选择要修改的广播信息')
                 }
             },
             deletInfo(id){
@@ -188,19 +189,19 @@
                         cancelButtonText: '取消',
                         type: 'warning'
                     }).then(() => {
-                        api.wifi.deleteWifi(this.choseInfoId).then(res=>{
+                        api.broadcast.deleteBroadcast(this.choseInfoId).then(res =>{
                             for(let i=0;i<this.choseInfoId.length;i++){
-                                this.wifiList=this.wifiList.filter((item,index)=>{
-                                    if(item.id === this.choseInfoId[i]){
-                                        this.wifiList[index].checked=false
+                                this.broadList=this.broadList.filter((item,index)=>{
+                                    if(item.id===this.choseInfoId[i]){
+                                        this.broadList[index].checked=false
                                     }
-                                    return item.id!==this.choseInfoId[i]
+                                    return item.id !== this.choseInfoId[i]
                                 })
                             }
                             this.$message.success('删除成功')
                             this.choseInfoId=[]
-                        }).catch(err=>{
-                            this.$message.error('删除失败，请稍后重试')
+                        }).catch(err =>{
+                            this.$message.error('删除失败,请稍后重试')
                         })
                     }).catch(() => {
                         this.$message.info('取消删除')
@@ -208,40 +209,40 @@
                 } else {
                     this.$message.error('请选择要删除的数据')
                 }
+
             },
-            addWifi (info){
+            addBroad (info){
                 let index = info.location.includes(',')?info.location.indexOf(','):info.location.indexOf('，')
                 let latitude = info.location.substring(0, index)
                 let longitude = info.location.substring(index + 1)
-                let wifiObj=[{
-                    typeId: 7,
+                let broadObj=[{
+                    typeId: 2,
                     positionType:info.positionType,
                     name:info.name,
-                    model:info.model,
+                    manufactor:info.manufactor,
                     ip:info.ip,
-                    serialNum:info.serialNum,
-                    mac:info.mac,
+                    port:info.port,
                     regionId:info.regionId,
                     description:info.description,
                     latitude:latitude,
                     longitude:longitude
                 }]
-                api.wifi.createWifi(wifiObj).then(res => {
+                api.broadcast.createBroadcast(broadObj).then(res =>{
                     this.$message.success('添加成功')
-                    this.getAllWifi()
-                }).catch(err => {
-                    this.$message.error('添加失败，请稍后再试')
+                    this.getAllBroadcast()
+                }).catch(err =>{
+                    this.$message.error('添加失败,请稍后再试')
                 })
             },
             toggleList(type){
                 if (type === 'list') {
-                    this.isShowWifiCard = false
+                    this.isShowBroadCard = false
                 }else {
-                    this.isShowWifiCard = true
+                    this.isShowBroadCard = true
                 }
             },
             checked(id){
-                this.wifiList = this.wifiList.filter(item => {
+                this.broadList = this.broadList.filter(item => {
                     if (item.id === id) {
                         item.checked = item.checked
                     }
@@ -259,24 +260,29 @@
             choseType(type){
                 console.log(type)
                 if(type.length===0){
-                    this.choseList=this.wifiList.filter((item)=>{
+                    this.broadList=this.broadList.filter((item)=>{
                         item.status=true
-                        return item.status === true
+                        return item
                     })
                 }else{
-                    this.choseList=this.wifiList.filter((item,index)=>{
+                    this.broadList=this.broadList.filter((item,index)=>{
+                        if (item.positionType == 0) {
+                            item.type = '室内'
+                        } else{
+                            item.type = '室外'
+                        }
                         if(type.includes(item.type)){
                             item.status=true
                         }else if(!type.includes(item.type)){
                             item.status=false
                             console.log(item.type)
                         }
-                        return item.status===true
+                        return item
                     })
                 }
             },
             selectedAll(state){
-                this.wifiList=this.wifiList.filter((item)=>{
+                this.broadList=this.broadList.filter((item)=>{
                     if(state==true){
                         item.checked=true
                         this.choseInfoId.push(item.id)
@@ -290,36 +296,35 @@
                 })
                 console.log(this.choseInfoId)
             },
-            async getAllWifi(){
+            async getAllBroadcast(){
                 this.isShowLoading=true
-                await api.wifi.getAllWifi().then((res)=>{
+                await api.broadcast.getAllBroadcast().then((res)=>{
                     console.log(res,'这是请求回来的数据')
                     this.isShowLoading=false
-                    this.wifiList=res.devices
-                    for(let i=0;i<this.wifiList.length;i++){
-                        this.wifiList[i].checked=false
-                        this.wifiList[i].status=true
-                        this.wifiList[i].id=this.wifiList[i].id
-                        this.wifiList[i].location=`${this.wifiList[i].latitude},${this.wifiList[i].longitude}`
+                    this.broadList=res.devices
+                    for (let i=0;i<this.broadList.length;i++) {
+                        this.broadList[i].checked = false
+                        this.broadList[i].status = true
+                        this.broadList[i].id=this.broadList[i].id
+                        this.broadList[i].location=`${this.broadList[i].latitude},${this.broadList[i].longitude}`
                     }
                 }).catch((err)=>{
                     console.log(err)
+                    this.isShowLoading=false
                 })
-
             }
         },
         created (){
-            this.getAllWifi()
-
+            this.getAllBroadcast()
         },
         filters:{
-            changeStatus(item){
-                if(item == 0){
-                    return '室内'
-                }else{
-                    return '室外'
-                }
-            }
+          changeStatus(item){
+              if(item==0){
+                  return '室内'
+              }else{
+                  return '室外'
+              }
+          }
         },
         components:{
             ScrollContainer,
@@ -342,7 +347,7 @@
 </style>
 
 <style lang="scss" type="text/scss" scoped>
-    .wifiList{
+    .broadHard{
         width:100%;
         height:100%;
         display:flex;
@@ -432,7 +437,5 @@
         }
     }
 </style>
-
-
 
 

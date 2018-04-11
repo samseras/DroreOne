@@ -1,7 +1,7 @@
 <template>
-    <div class="cameraHard">
+    <div class="gateList">
         <div class="title">
-            报警柱传感信息
+            闸机信息
         </div>
         <div class="cameraContent">
             <div class="conTitle">
@@ -17,9 +17,9 @@
             <div class="cameraList" v-loading="isShowLoading">
                 <ScrollContainer>
                     <el-table
-                        v-if="!isShowPoliceCard"
+                        v-if="!isShowGateCard"
                         ref="multipleTable"
-                        :data="policeList"
+                        :data="gateList"
                         tooltip-effect="dark"
                         style="width: 100%"
                         @selection-change="handleSelectionChange">
@@ -31,47 +31,42 @@
                         </el-table-column>
 
                         <el-table-column
-                            label="类型">
-                            <template>
-                                <span>{{scope.row.sensorType | changeStatus}}</span>
+                            label="状态">
+                            <template slot-scope="scope">
+                                <span>{{scope.row.gateType | changeType}}</span>
                             </template>
-                        </el-table-column>
-                        <el-table-column
-                            prop="serialNum"
-                            label="设备编号">
                         </el-table-column>
 
                         <el-table-column
-                            prop="name"
-                            label="名称">
+                            prop="regionName"
+                            label="所属片区">
                         </el-table-column>
                         <el-table-column
                             prop="description"
-                            label="描述">
+                            label="摄像头介绍">
                         </el-table-column>
                         <el-table-column>
                             <template slot-scope="scope">
-                                <span @click="showPoliceDetail(scope.row, '摄像头信息')">查看</span>
+                                <span @click="showGateDetail(scope.row, '闸机信息')">查看</span>
                                 <span @click="fixedInfo(scope.row.id )">编辑</span>
                                 <span @click="deletInfo(scope.row.id)">删除</span>
                             </template>
                         </el-table-column>
                     </el-table>
 
-                    <div class="personInfo" v-for="item in policeList" v-if="isShowPoliceCard && item.status">
+                    <div class="personInfo" v-for="item in gateList" v-if="isShowGateCard && item.status">
                         <div class="checkBox">
                             <el-checkbox v-model="item.checked" @change="checked(item.id)" class="checkBtn"></el-checkbox>
                         </div>
-                        <div class="personType" @click.stop="showPoliceDetail(item)">
-                            <img src="../../../../../static/img/cameras.png" alt="">
-                            <span class="type">
+                        <div class="personType" @click.stop="showGateDetail(item,'闸机信息')">
+                            <img src="../../../../static/img/cameras.png" alt="">
+                            <span class="name">
                                   {{item.name}}
                                 </span>
                         </div>
                         <div class="specificInfo" >
-                            <p class="name">所属区域：<span>{{item.regionName}}</span></p>
-                            <p class="sex">类&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;型：<span>{{item.sensorType | changeStatus
-}}</span></p>
+                            <p class="area">所属区域：<span>{{item.regionName}}</span></p>
+                            <p class="type">类&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;型：<span>{{item.gateType | changeType}}</span></p>
                             <p class="sex">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：<span>{{item.description}}</span></p>
 
                         </div>
@@ -79,11 +74,11 @@
                 </ScrollContainer>
                 <HardWare v-if="visible"
                           :visible="visible"
-                          :Info="policeInfo"
+                          :Info="gateInfo"
                           :title="title"
                           :isDisabled="isDisabled"
                           @closeInfoDialog="visible=false"
-                          @addNewInfo="addPolice"
+                          @addNewInfo="addGate"
                           @fixInfo="fixInfo">
 
                 </HardWare>
@@ -101,13 +96,15 @@
     export default{
         data(){
             return{
-                isShowPoliceCard:true,
+                isShowGateCard:true,
                 visible:false,
-                policeList:[
+                gateList
+                    :[
+
                 ],
                 checkList:[],
                 isSelected:false,
-                policeInfo:{},
+                gateInfo:{},
                 choseInfoId:[],
                 choseList:[],
                 isDisabled:true,
@@ -121,11 +118,11 @@
                 this.multipleSelection = val;
             },
             addNewInfo(){
-                this.showPoliceDetail({},'添加报警柱信息')
+                this.showGateDetail({},'添加闸机信息')
                 this.isDisabled=false
             },
-            showPoliceDetail(info,title){
-                this.policeInfo=info
+            showGateDetail(info,title){
+                this.gateInfo=info
                 this.visible=true
                 this.title=title
 
@@ -134,25 +131,26 @@
                 let index = info.location.includes(',')?info.location.indexOf(','):info.location.indexOf('，')
                 let latitude = info.location.substring(0, index)
                 let longitude = info.location.substring(index + 1)
-                let policeObj=[{
-                    typeId: 8,
+                let gateObj=[{
+                    typeId:3,
                     id:info.id,
-                    sensorType:info.sensorType,
+                    gateType:info.gateType,
                     name:info.name,
-                    manufactor:info.manufactor,
-                    serialNum:info.serialNum,
+                    model:info.model,
                     ip:info.ip,
+                    serialNum:info.serialNum,
+                    port:info.port,
                     regionId:info.regionId,
                     description:info.description,
                     latitude:latitude,
                     longitude:longitude
                 }]
-                api.police.updatePolice(policeObj).then(res =>{
-                  this.$message.success('修改成功')
-                  this.choseInfoId = []
-                  this.getAllPolice()
+                api.gate.updateGate(gateObj).then(res =>{
+                    this.$message.success('修改成功')
+                    this.choseInfoId=[]
+                    this.getAllGate()
                 }).catch(err =>{
-                    this.$message.error('修改失败,请稍后再试')
+                    this.$message.error('修改失败，请稍后再试')
                 })
             },
             fixedInfo(id){
@@ -164,15 +162,15 @@
                     return
                 }
                 if(this.choseInfoId.length>0){
-                    this.policeList.map((item)=>{
+                    this.gateList.map((item)=>{
                         if(item.id === this.choseInfoId[0]){
-                            this.policeInfo=item
+                            this.gateInfo=item
                         }
                     })
-                    this.showPoliceDetail(this.policeInfo,'修改报警柱信息')
+                    this.showGateDetail(this.gateInfo,'修改闸机信息')
                     this.isDisabled=false
                 }else{
-                    this.$message.error('请选择要修改的报警柱')
+                    this.$message.error('请选择要修改的闸机')
                 }
             },
             deletInfo(id){
@@ -185,19 +183,19 @@
                         cancelButtonText: '取消',
                         type: 'warning'
                     }).then(() => {
-                        api.police.deletePolice(this.choseInfoId).then(res =>{
+                        api.gate.deleteGate(this.choseInfoId).then(res=>{
                             for(let i=0;i<this.choseInfoId.length;i++){
-                                this.policeList=this.policeList.filter((item,index) =>{
+                                this.gateList=this.gateList.filter((item,index)=>{
                                     if(item.id===this.choseInfoId[i]){
-                                        this.policeList[index].checked=false
+                                        this.gateList[index].checked=false
                                     }
                                     return item.id!==this.choseInfoId[i]
                                 })
                             }
                             this.$message.success('删除成功')
                             this.choseInfoId=[]
-                        }).catch(err =>{
-                            this.$message.error('删除失败,请稍后重试')
+                        }).catch(err=>{
+                            this.$message.err('删除失败，请稍后重试')
                         })
                     }).catch(() => {
                         this.$message.info('取消删除')
@@ -205,39 +203,41 @@
                 } else {
                     this.$message.error('请选择要删除的数据')
                 }
+
             },
-            addPolice(info){
+            addGate(info){
                 let index = info.location.includes(',')?info.location.indexOf(','):info.location.indexOf('，')
                 let latitude = info.location.substring(0, index)
                 let longitude = info.location.substring(index + 1)
-                let policeObj=[{
-                    typeId: 8,
-                    sensorType:info.sensorType,
+                let gateObj=[{
+                    typeId:3,
+                    gateType:info.gateType,
                     name:info.name,
-                    manufactor:info.manufactor,
-                    serialNum:info.serialNum,
+                    model:info.model,
                     ip:info.ip,
+                    serialNum:info.serialNum,
+                    port:info.port,
                     regionId:info.regionId,
                     description:info.description,
                     latitude:latitude,
                     longitude:longitude
                 }]
-                api.police.createPolice(policeObj).then(res =>{
+                api.gate.createGate(gateObj).then(res =>{
                     this.$message.success('添加成功')
-                    this.getAllPolice()
+                    this.getAllGate()
                 }).catch(err =>{
                     this.$message.error('添加失败，请稍后重试')
                 })
             },
             toggleList (type){
                 if(type==='list'){
-                    this.isShowPoliceCard=false
+                    this.isShowGateCard=false
                 }else{
-                    this.isShowPoliceCard=true
+                    this.isShowGateCard=true
                 }
             },
             checked(id){
-                this.policeList = this.policeList.filter(item => {
+                this.gateList = this.gateList.filter(item => {
                     if (item.id === id) {
                         item.checked = item.checked
                     }
@@ -255,12 +255,12 @@
             choseType(type){
                 console.log(type)
                 if(type.length===0){
-                    this.choseList=this.policeList.filter((item)=>{
+                    this.choseList=this.gateList.filter((item)=>{
                         item.status=true
                         return item.status === true
                     })
                 }else{
-                    this.choseList=this.policeList.filter((item,index)=>{
+                    this.choseList=this.gateList.filter((item,index)=>{
                         if(type.includes(item.type)){
                             item.status=true
                         }else if(!type.includes(item.type)){
@@ -272,8 +272,8 @@
                 }
             },
             selectedAll(state){
-                this.policeList=this.policeList.filter((item)=>{
-                    if(state == true){
+                this.gateList=this.gateList.filter((item)=>{
+                    if(state==true){
                         item.checked=true
                         this.choseInfoId.push(item.id)
                         return item.checked == true
@@ -286,35 +286,38 @@
                 })
                 console.log(this.choseInfoId)
             },
-            async getAllPolice(){
+            async getAllGate(){
                 this.isShowLoading=true
-                await api.police.getAllPolice().then((res)=>{
-                    console.log(res,'这是请求的数据')
+                await api.gate.getAllGate().then((res)=>{
+                    console.log(res,'这是拿到的数据')
                     this.isShowLoading=false
-                    this.policeList=res.devices
-                    for (let i=0;i<this.policeList.length;i++){
-                        this.policeList[i].checked=false
-                        this.policeList[i].status=true
-                        this.policeList[i].id=this.policeList[i].id
-                        this.policeList[i].location=`${this.policeList[i].latitude},${this.policeList[i].longitude}`
+                    this.gateList=res.devices
+                    for (let i=0;i<this.gateList.length;i++){
+                        this.gateList[i].checked=false
+                        this.gateList[i].status=true
+                        this.gateList[i].location=`${this.gateList[i].latitude},${this.gateList[i].longitude}`
                     }
                 }).catch((err)=>{
                     console.log(err)
                 })
-
             }
+
         },
         created (){
-            this.getAllPolice()
+            this.getAllGate()
         },
         filters:{
-          changeStatus(item){
-              if(item ==10){
-                  return '报警柱'
-              }else{
-                  return '越界'
-              }
-          }
+            changeType(item){
+                if(item == 1){
+                    return '翼闸'
+                }else if(item == 2){
+                    return '摆闸'
+                }else if(item == 3){
+                    return '三锟闸'
+                }else if(item == 4){
+                    return '平移闸'
+                }
+            }
         },
         components:{
             ScrollContainer,
@@ -337,7 +340,7 @@
 </style>
 
 <style lang="scss" type="text/scss" scoped>
-    .cameraHard{
+    .gateList{
         width:100%;
         height:100%;
         display:flex;

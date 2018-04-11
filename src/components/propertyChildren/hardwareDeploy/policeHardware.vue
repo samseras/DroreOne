@@ -1,7 +1,7 @@
 <template>
-    <div class="monitorsHard">
+    <div class="cameraHard">
         <div class="title">
-            传感器信息
+            报警柱传感信息
         </div>
         <div class="cameraContent">
             <div class="conTitle">
@@ -17,9 +17,9 @@
             <div class="cameraList" v-loading="isShowLoading">
                 <ScrollContainer>
                     <el-table
-                        v-if="!isShowMonitorsCard"
+                        v-if="!isShowPoliceCard"
                         ref="multipleTable"
-                        :data="monitorsList"
+                        :data="policeList"
                         tooltip-effect="dark"
                         style="width: 100%"
                         @selection-change="handleSelectionChange">
@@ -30,50 +30,48 @@
                             </template>
                         </el-table-column>
 
-
                         <el-table-column
-                            prop="name"
-                            label="名称">
+                            label="类型">
+                            <template>
+                                <span>{{scope.row.sensorType | changeStatus}}</span>
+                            </template>
                         </el-table-column>
-
                         <el-table-column
                             prop="serialNum"
                             label="设备编号">
                         </el-table-column>
 
                         <el-table-column
-                            prop="regionName"
-                            label="所属片区">
+                            prop="name"
+                            label="名称">
                         </el-table-column>
                         <el-table-column
                             prop="description"
                             label="描述">
                         </el-table-column>
-
-                        <el-table-column label="操作">
-
+                        <el-table-column>
                             <template slot-scope="scope">
-                                <span @click="showMonitorDetail(scope.row, '传感器信息')">查看</span>
+                                <span @click="showPoliceDetail(scope.row, '摄像头信息')">查看</span>
                                 <span @click="fixedInfo(scope.row.id )">编辑</span>
                                 <span @click="deletInfo(scope.row.id)">删除</span>
                             </template>
                         </el-table-column>
                     </el-table>
 
-                    <div class="personInfo" v-for="item in monitorsList" v-if="isShowMonitorsCard && item.status">
+                    <div class="personInfo" v-for="item in policeList" v-if="isShowPoliceCard && item.status">
                         <div class="checkBox">
-                            <!--<input type="checkbox" :checked="item.checked" class="checkBtn" @change="checked(item.id)">-->
                             <el-checkbox v-model="item.checked" @change="checked(item.id)" class="checkBtn"></el-checkbox>
-
                         </div>
-                        <div class="personType" @click.stop="showMonitorDetail(item,'传感器信息')">
-                            <img src="../../../../../static/img/cameras.png" alt="">
+                        <div class="personType" @click.stop="showPoliceDetail(item)">
+                            <img src="../../../../static/img/cameras.png" alt="">
                             <span class="type">
                                   {{item.name}}
                                 </span>
                         </div>
                         <div class="specificInfo" >
                             <p class="name">所属区域：<span>{{item.regionName}}</span></p>
+                            <p class="sex">类&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;型：<span>{{item.sensorType | changeStatus
+}}</span></p>
                             <p class="sex">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：<span>{{item.description}}</span></p>
 
                         </div>
@@ -81,11 +79,11 @@
                 </ScrollContainer>
                 <HardWare v-if="visible"
                           :visible="visible"
-                          :Info="monitorInfo"
+                          :Info="policeInfo"
                           :title="title"
                           :isDisabled="isDisabled"
                           @closeInfoDialog="visible=false"
-                          @addNewInfo="addMonitors"
+                          @addNewInfo="addPolice"
                           @fixInfo="fixInfo">
 
                 </HardWare>
@@ -103,14 +101,13 @@
     export default{
         data(){
             return{
-                isShowMonitorsCard:true,
+                isShowPoliceCard:true,
                 visible:false,
-                monitorsList:[
-
+                policeList:[
                 ],
                 checkList:[],
                 isSelected:false,
-                monitorInfo:{},
+                policeInfo:{},
                 choseInfoId:[],
                 choseList:[],
                 isDisabled:true,
@@ -124,11 +121,11 @@
                 this.multipleSelection = val;
             },
             addNewInfo(){
-                this.showMonitorDetail({},'添加传感器信息')
+                this.showPoliceDetail({},'添加报警柱信息')
                 this.isDisabled=false
             },
-            showMonitorDetail(info,title){
-                this.monitorInfo=info
+            showPoliceDetail(info,title){
+                this.policeInfo=info
                 this.visible=true
                 this.title=title
 
@@ -137,45 +134,45 @@
                 let index = info.location.includes(',')?info.location.indexOf(','):info.location.indexOf('，')
                 let latitude = info.location.substring(0, index)
                 let longitude = info.location.substring(index + 1)
-                let monitorsObj =[{
-                    typeId: 6,
+                let policeObj=[{
+                    typeId: 8,
                     id:info.id,
                     sensorType:info.sensorType,
                     name:info.name,
                     manufactor:info.manufactor,
-                    ip:info.ip,
                     serialNum:info.serialNum,
+                    ip:info.ip,
                     regionId:info.regionId,
                     description:info.description,
                     latitude:latitude,
                     longitude:longitude
                 }]
-                api.monitor.updateMonitor(monitorsObj).then(res =>{
-                    this.$message.success('修改成功')
-                    this.choseInfoId=[]
-                    this.getAllMonitor()
+                api.police.updatePolice(policeObj).then(res =>{
+                  this.$message.success('修改成功')
+                  this.choseInfoId = []
+                  this.getAllPolice()
                 }).catch(err =>{
                     this.$message.error('修改失败,请稍后再试')
                 })
             },
             fixedInfo(id){
-                if(id){
+                if (id) {
                     this.choseInfoId.push(id)
                 }
-                if(this.choseInfoId.length>1){
+                if(this.choseInfoId.length > 1) {
                     this.$message.warning('至多选择一条数据')
                     return
                 }
                 if(this.choseInfoId.length>0){
-                    this.monitorsList.map((item)=>{
+                    this.policeList.map((item)=>{
                         if(item.id === this.choseInfoId[0]){
-                            this.monitorInfo=item
+                            this.policeInfo=item
                         }
                     })
-                    this.showMonitorDetail(this.monitorInfo,'修改传感器信息')
+                    this.showPoliceDetail(this.policeInfo,'修改报警柱信息')
                     this.isDisabled=false
                 }else{
-                    this.$message.error('请选择要修改的传感器')
+                    this.$message.error('请选择要修改的报警柱')
                 }
             },
             deletInfo(id){
@@ -188,17 +185,17 @@
                         cancelButtonText: '取消',
                         type: 'warning'
                     }).then(() => {
-                        api.monitor.deleteMonitor(this.choseInfoId).then(res=>{
+                        api.police.deletePolice(this.choseInfoId).then(res =>{
                             for(let i=0;i<this.choseInfoId.length;i++){
-                                this.monitorsList=this.monitorsList.filter((item,index)=>{
-                                    if(item.id === this.choseInfoId[i]){
-                                        this.monitorsList[index].checked=false
+                                this.policeList=this.policeList.filter((item,index) =>{
+                                    if(item.id===this.choseInfoId[i]){
+                                        this.policeList[index].checked=false
                                     }
                                     return item.id!==this.choseInfoId[i]
                                 })
                             }
                             this.$message.success('删除成功')
-                            this.choseInfoId = []
+                            this.choseInfoId=[]
                         }).catch(err =>{
                             this.$message.error('删除失败,请稍后重试')
                         })
@@ -208,40 +205,39 @@
                 } else {
                     this.$message.error('请选择要删除的数据')
                 }
-
             },
-            addMonitors(info){
+            addPolice(info){
                 let index = info.location.includes(',')?info.location.indexOf(','):info.location.indexOf('，')
                 let latitude = info.location.substring(0, index)
                 let longitude = info.location.substring(index + 1)
-                let monitorsObj =[{
-                    typeId: 6,
+                let policeObj=[{
+                    typeId: 8,
                     sensorType:info.sensorType,
                     name:info.name,
                     manufactor:info.manufactor,
-                    ip:info.ip,
                     serialNum:info.serialNum,
+                    ip:info.ip,
                     regionId:info.regionId,
                     description:info.description,
                     latitude:latitude,
                     longitude:longitude
                 }]
-                api.monitor.createMonitor(monitorsObj).then(res =>{
+                api.police.createPolice(policeObj).then(res =>{
                     this.$message.success('添加成功')
-                    this.getAllMonitor()
+                    this.getAllPolice()
                 }).catch(err =>{
-                    this.$message.error('添加失败,请稍后再试')
+                    this.$message.error('添加失败，请稍后重试')
                 })
             },
             toggleList (type){
                 if(type==='list'){
-                    this.isShowMonitorsCard=false
+                    this.isShowPoliceCard=false
                 }else{
-                    this.isShowMonitorsCard=true
+                    this.isShowPoliceCard=true
                 }
             },
             checked(id){
-                this.monitorsList = this.monitorsList.filter(item => {
+                this.policeList = this.policeList.filter(item => {
                     if (item.id === id) {
                         item.checked = item.checked
                     }
@@ -259,12 +255,12 @@
             choseType(type){
                 console.log(type)
                 if(type.length===0){
-                    this.monitorsList=this.monitorsList.filter((item)=>{
+                    this.choseList=this.policeList.filter((item)=>{
                         item.status=true
                         return item.status === true
                     })
                 }else{
-                    this.monitorsList=this.monitorsList.filter((item,index)=>{
+                    this.choseList=this.policeList.filter((item,index)=>{
                         if(type.includes(item.type)){
                             item.status=true
                         }else if(!type.includes(item.type)){
@@ -276,8 +272,8 @@
                 }
             },
             selectedAll(state){
-                this.monitorsList=this.monitorsList.filter((item)=>{
-                    if(state==true){
+                this.policeList=this.policeList.filter((item)=>{
+                    if(state == true){
                         item.checked=true
                         this.choseInfoId.push(item.id)
                         return item.checked == true
@@ -290,25 +286,35 @@
                 })
                 console.log(this.choseInfoId)
             },
-            async getAllMonitor(){
+            async getAllPolice(){
                 this.isShowLoading=true
-                await api.monitor.getAllMonitor().then((res)=>{
-                    console.log(res,'这是请求')
+                await api.police.getAllPolice().then((res)=>{
+                    console.log(res,'这是请求的数据')
                     this.isShowLoading=false
-                    this.monitorsList=res.devices
-                    for (let i=0;i<this.monitorsList.length;i++){
-                        this.monitorsList[i].checked=false
-                        this.monitorsList[i].status=true
-                        this.monitorsList[i].id=this.monitorsList[i].id
-                        this.monitorsList[i].location=`${this.monitorsList[i].latitude},${this.monitorsList[i].longitude}`
+                    this.policeList=res.devices
+                    for (let i=0;i<this.policeList.length;i++){
+                        this.policeList[i].checked=false
+                        this.policeList[i].status=true
+                        this.policeList[i].id=this.policeList[i].id
+                        this.policeList[i].location=`${this.policeList[i].latitude},${this.policeList[i].longitude}`
                     }
                 }).catch((err)=>{
                     console.log(err)
                 })
+
             }
         },
         created (){
-            this.getAllMonitor()
+            this.getAllPolice()
+        },
+        filters:{
+          changeStatus(item){
+              if(item ==10){
+                  return '报警柱'
+              }else{
+                  return '越界'
+              }
+          }
         },
         components:{
             ScrollContainer,
@@ -331,7 +337,7 @@
 </style>
 
 <style lang="scss" type="text/scss" scoped>
-    .monitorsHard{
+    .cameraHard{
         width:100%;
         height:100%;
         display:flex;
