@@ -33,7 +33,7 @@
                             width="120">
                         </el-table-column>
                         <el-table-column
-                            prop="positionType"
+                            prop="type"
                             label="类型">
                         </el-table-column>
 
@@ -43,7 +43,7 @@
                         </el-table-column>
 
                         <el-table-column
-                            prop="description"
+                            prop="describe"
                             label="描述">
                         </el-table-column>
                         <el-table-column>
