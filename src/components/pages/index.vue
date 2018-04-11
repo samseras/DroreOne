@@ -2,7 +2,7 @@
 <template>
 	<div id="entrence">
         <header>
-            <p>智慧旅游 · 云平台</p>
+            <p>Drore One 智慧旅游 · 云平台</p>
             <div id="getTime">
                 {{currTime | timeFiler}} ({{currTime | weekFiler}})
             </div>
@@ -88,7 +88,7 @@
 	a{text-decoration: none;color: #fff;font-size: 12px;}
 	#entrence{width: 100%;height:100%;min-width:1450px;min-height:650px;position:relative;background: url('../../../static/img/index-bg.png') no-repeat;background-size:cover;display: flex;flex-direction: column;}
     header{width:100%;height: 50px;font-size: 20px;color: #fff;background: url('../../../static/img/index-top.png') no-repeat;}
-    header p{width: 200px;line-height: 50px;margin-left: 150px;float: left;}
+    header p{width: 270px;line-height: 50px;margin-left: 120px;float: left;}
     #getTime{line-height: 50px;font-size: 12px;float: left;margin-left: 740px;}
     header .user{float: left;width: 100px;line-height: 50px;background: url(../../../static/img/user.png) no-repeat;background-size:14px;background-position: 0 15px;margin-left: 30px;text-indent: 20px;font-size: 14px;}
     header .indexExit{width: 20px;height:35px;background: url(../../../static/img/exit.png) no-repeat;background-size:14px;background-position: 0 15px;line-height: 35px;float: left;}

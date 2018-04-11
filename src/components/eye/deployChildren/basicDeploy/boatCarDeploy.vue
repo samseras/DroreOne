@@ -194,7 +194,6 @@
                 for(let i = 0;i< list.length; i++){
                     if (info.id === list[i].id) {
                         this.boatCarList[i] = info
-
                     }
                 }
                 this.choseList = this.boatCarList

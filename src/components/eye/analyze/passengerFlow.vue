@@ -3,7 +3,7 @@
     <div class="passengerFlow"  v-loading="isShowloading">
         <ScrollContainer>
             <i class="el-icon-d-arrow-right" v-show = "isSetOut" @click="setOut"></i>
-            <i class="el-icon-d-arrow-left" v-show = "isPackUp" @click="packUp"></i>
+            <i class="el-icon-d-arrow-left packUp" v-show = "isPackUp" @click="packUp"></i>
             <div class="content" id="content">
                 <i class="el-icon-rank rankBtn" @click = "fullscreen" v-show="!isBigScreen"></i>
                 <div class = "contentForm" ref="content" >
@@ -170,7 +170,7 @@
                 this.isShowLoading = true
                 let id = this.$route.params.id;
                 api.analyze.getStreamDataById(id).then(res=> {
-                    console.log('nimeide ')
+                    console.log(res,'nimeide ')
                     this.isShowloading = false;
                     this.echatList = res.result;
                     let scenarioId,chartId,chartDomH;
@@ -294,10 +294,12 @@
                 })
             },
             getBarData(scenarioId){
+                let that = this
                 let bar0ption,barResult,bigDom;
                 api.analyze.getScenarioMapData(scenarioId).then(res=>{
                     this.echatData = res.result;
                     barResult = JSON.parse(res.result);
+                    console.log(barResult, 'sdsdfhdsfhsdf')
                     // console.log(res,"这是返回的bar数据");
                     $("#"+scenarioId).prev().find(".title").text(barResult.title);
                     this.barDom = this.$echarts.init(document.getElementById(scenarioId));
@@ -919,6 +921,17 @@
             height: 100%;
             font-size: rem(24);
             color: #999;
+        }
+        .packUp{
+            position: fixed;
+            bottom: rem(50);
+            left: rem(70);
+            display: inline-block;
+            height: rem(30);
+            width: rem(50);
+            line-height: rem(30);
+            background: #fff;
+            text-align: center;
         }
         .content{
             flex: 1;
