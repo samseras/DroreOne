@@ -48,13 +48,15 @@ const person = {
         return axios({
             method: 'POST',
             url: '/multipart-upload/haha',
-            // headers:{
-            //     "Accept-Charset": "utf-8",
-            //     'Content-Type':'application/x-www-form-urlencoded',
-            // },
             processData : false,
             contentType : false,
             data:params,
+        })
+    },
+    getJobPerson (params) {
+        return axios({
+            method: 'GET',
+            url: getUrl(`/person/jobid?jobId=${params}`),
         })
     }
 }

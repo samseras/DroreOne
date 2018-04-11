@@ -5,12 +5,12 @@
         </div>
         <div class="personContent">
             <div class="funcTitle">
-                <Header @addNewInfo = "addNewInfo"
-                        @deletInfo = "deletInfo"
-                        @toggleList = "toggleList"
-                        @choseType = 'choseType'
-                        @selectedAll = 'selectedAll'
-                        @fixedInfo = 'fixedInfo'>
+                <Header @addNewInfo="addNewInfo"
+                        @deletInfo="deletInfo"
+                        @toggleList="toggleList"
+                        @choseType='choseType'
+                        @selectedAll='selectedAll'
+                        @fixedInfo='fixedInfo'>
                 </Header>
             </div>
             <div class="personList" v-loading="isShowLoading">
@@ -26,7 +26,8 @@
                             width="55">
                             <template slot-scope="scope">
                                 <!--<input type="checkbox" :checked='scope.row.checked' class="checkBoxBtn" @change="checked(scope.row.id)">-->
-                                <el-checkbox v-model="scope.row.checked" @change="getChecked(scope.row.id)" class="checkBoxBtn"></el-checkbox>
+                                <el-checkbox v-model="scope.row.checked" @change="getChecked(scope.row.id)"
+                                             class="checkBoxBtn"></el-checkbox>
                             </template>
                         </el-table-column>
                         <el-table-column
@@ -56,16 +57,17 @@
                         <el-table-column
                             label="操作">
                             <template slot-scope="scope">
-                                <span @click="showPersonDetail(scope.row)">编辑</span>
-                                <span @click="showPersonDetail(scope.row)">查看</span>
-                                <span @click="deletInfo([scope.row.id])">删除</span>
+                                <span @click="fixedInfo(scope.row.id )">编辑</span>
+                                <span @click="showPersonDetail(scope.row, '人员信息')">查看</span>
+                                <span @click="deletInfo(scope.row.id)">删除</span>
                             </template>
                         </el-table-column>
                     </el-table>
                     <div class="personInfo" v-for="item in personList" v-if="isShowPersonCard && item.status">
                         <div class="checkBox">
                             <!--<input type="checkbox" :checked='item.checked' class="checkBtn" @change="checked(item.id)">-->
-                            <el-checkbox v-model="item.checked" @change="checked(item.id)" class="checkBtn"></el-checkbox>
+                            <el-checkbox v-model="item.checked" @change="checked(item.id)"
+                                         class="checkBtn"></el-checkbox>
                         </div>
                         <div class="personType" @click.stop="showPersonDetail(item, '人员信息')">
                             <img src="" alt="">
@@ -74,10 +76,13 @@
                                 </span>
                         </div>
                         <div class="specificInfo">
-                            <p class="name">姓&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;名：<span>{{item.personBean.name}}</span></p>
-                            <p class="sex">性&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;别：<span>{{item.personBean.gender | sexFilter}}</span></p>
+                            <p class="name">
+                                姓&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;名：<span>{{item.personBean.name}}</span></p>
+                            <p class="sex">性&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;别：<span>{{item.personBean.gender | sexFilter}}</span>
+                            </p>
                             <p class="idNum">身份证号：<span>{{item.personBean.idNum}}</span></p>
-                            <p class="phoneNum">电&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;话：<span>{{item.personBean.phone}}</span></p>
+                            <p class="phoneNum">电&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;话：<span>{{item.personBean.phone}}</span>
+                            </p>
                         </div>
                     </div>
                 </ScrollContainer>
@@ -86,8 +91,8 @@
                               :Info="personInfo"
                               :isDisabled="isDisabled"
                               :title="title"
-                              @closeInfoDialog ="visible = false"
-                              @fixInfo = "fixInfo"
+                              @closeInfoDialog="visible = false"
+                              @fixInfo="fixInfo"
                               @addNewInfo="addNewPerson">
                 </PersonDetail>
             </div>
@@ -99,10 +104,11 @@
     import Header from './funHeader'
     import PersonDetail from './detailDialog'
     import api from '@/api'
+
     export default {
         name: 'person-deploy',
-        data(){
-            return{
+        data() {
+            return {
                 isShowPersonCard: true,
                 checkList: [],
                 filterList: [],
@@ -120,58 +126,48 @@
             handleSelectionChange(val) {
                 this.multipleSelection = val;
             },
-            showPersonDetail (info,title) {
+            showPersonDetail(info, title) {
                 this.personInfo = info
                 this.visible = true
                 this.title = title
             },
-            addNewInfo () {
-                this.showPersonDetail({personBean:{}}, '添加人员信息')
+            addNewInfo() {
+                this.showPersonDetail({personBean: {}}, '添加人员信息')
                 this.isDisabled = false
             },
-            deletInfo (id) {
+            deletInfo(id) {
                 if (id) {
-                    api.person.deletePerson(id).then(res => {
+                    this.choseInfoId.push(id)
+                }
+                if (this.choseInfoId.length > 0) {
+                    api.person.deletePerson(this.choseInfoId).then(res => {
                         console.log(res, '删除成功')
-                        this.personList = this.personList.filter(item => {
-                            return item.id !== id[0]
-                        })
+                        for (let i = 0; i < this.choseInfoId.length; i++) {
+                            this.personList = this.personList.filter((item, index) => {
+                                if (item.id === this.choseInfoId[i]) {
+                                    this.personList[index].checked = false
+                                }
+                                return item.id !== this.choseInfoId[i]
+                            })
+                        }
                         this.$message.success('删除成功')
+                        this.choseInfoId = []
                     }).catch(err => {
-                        console.log(err, '删除失败')
+                        console.log(err)
                         this.$message.error('删除失败，请稍后重试')
                     })
                 } else {
-                    if (this.choseInfoId.length > 0) {
-                        api.person.deletePerson(this.choseInfoId).then(res => {
-                            console.log(res, '删除成功')
-                            for (let i = 0; i < this.choseInfoId.length; i++) {
-                                this.personList = this.personList.filter((item, index) => {
-                                    if (item.id === this.choseInfoId[i]){
-                                        this.personList[index].checked = false
-                                    }
-                                    return item.id !== this.choseInfoId[i]
-                                })
-                            }
-                            this.$message.success('删除成功')
-                            this.choseInfoId = []
-                        }).catch(err => {
-                            console.log(err)
-                            this.$message.error('删除失败，请稍后重试')
-                        })
-                    } else {
-                        this.$message.error('请选择要删除的选项')
-                    }
+                    this.$message.error('请选择要删除的选项')
                 }
             },
-            toggleList (type) {
+            toggleList(type) {
                 if (type === 'list') {
                     this.isShowPersonCard = false
-                }else {
+                } else {
                     this.isShowPersonCard = true
                 }
             },
-            checked (id) {
+            checked(id) {
                 this.personList = this.personList.filter(item => {
                     if (item.id === id) {
                         item.checked = item.checked
@@ -179,33 +175,33 @@
                     return item
                 })
                 if (this.choseInfoId.includes(id)) {
-                    this.choseInfoId = this.choseInfoId.filter((item) =>{
+                    this.choseInfoId = this.choseInfoId.filter((item) => {
                         return item !== id
                     })
                 } else {
                     this.choseInfoId.push(id)
                 }
             },
-            choseType (type) {
+            choseType(type) {
                 console.log(type)
-                if (type.length === 0){
+                if (type.length === 0) {
                     this.personList = this.personList.filter((item) => {
                         item.status = true
                         return item
                     })
                 } else {
-                        this.personList = this.personList.filter((item,index) => {
-                            if (type.includes(item.jobName)){
-                                item.status = true
-                            } else if(!type.includes(item.jobName)){
-                                item.status = false
-                                console.log(item.type, 'p[p[p[');
-                            }
-                            return item
-                        })
-                    }
+                    this.personList = this.personList.filter((item, index) => {
+                        if (type.includes(item.jobName)) {
+                            item.status = true
+                        } else if (!type.includes(item.jobName)) {
+                            item.status = false
+                            console.log(item.type, 'p[p[p[');
+                        }
+                        return item
+                    })
+                }
             },
-            selectedAll (state) {
+            selectedAll(state) {
                 this.personList = this.personList.filter((item) => {
                     if (state === true) {
                         item.checked = true
@@ -220,7 +216,7 @@
                 })
                 console.log(this.choseInfoId, 'opopop')
             },
-            fixInfo (info) {
+            fixInfo(info) {
                 let personObj = {
                     id: info.personBean.id,
                     name: info.personBean.name,
@@ -241,7 +237,7 @@
                     this.$message.error('更新失败，请稍后重试')
                 })
             },
-            addNewPerson (info) {
+            addNewPerson(info) {
                 console.log(info, 'opopopopopo')
                 let personObj = {
                     name: info.personBean.name,
@@ -253,7 +249,6 @@
                 }
                 console.log(personObj, 'this is trashObj')
                 api.person.updataAvatar(info.imgUrl).then(res => {
-                    debugger
                     console.log(res, '上传成功')
                 })
                 api.person.createPerson(JSON.stringify(personObj)).then(res => {
@@ -265,20 +260,24 @@
                     this.$message.error('添加失败，请稍后重试')
                 })
             },
-            fixedInfo () {
+            fixedInfo(id) {
+                if (id) {
+                    this.choseInfoId.push(id)
+                }
                 if (this.choseInfoId.length > 0) {
                     this.personList.map((item) => {
-                        if (item.id === this.choseInfoId[0]){
+                        if (item.id === this.choseInfoId[0]) {
                             this.personInfo = item
                         }
                     })
                     this.showPersonDetail(this.personInfo, '修改人员信息')
                     this.isDisabled = false
+                    this.choseInfoId = []
                 } else {
                     this.$message.error('请选择要修改的人员')
                 }
             },
-            async getAllPerson () {
+            async getAllPerson() {
                 this.isShowLoading = true
                 await api.person.getAllPerson().then(res => {
                     console.log(res, '这是请求回来的')
@@ -296,18 +295,18 @@
             }
         },
         filters: {
-            sexFilter (item) {
+            sexFilter(item) {
                 if (item == 1) {
                     return '男'
                 } else {
                     return '女'
                 }
             },
-            idNumFilter (id) {
+            idNumFilter(id) {
 
             }
         },
-        created () {
+        created() {
             this.getAllPerson()
         },
         components: {
@@ -319,21 +318,21 @@
 </script>
 
 <style lang="scss" scoped type="text/scss">
-    .personDeploy{
+    .personDeploy {
         width: 100%;
         height: 100%;
         display: flex;
         flex-direction: column;
-        .title{
+        .title {
             width: 100%;
             padding: rem(5) 0 rem(5) rem(15);
             box-sizing: border-box;
             font-size: rem(16);
             color: #0086b3;
             font-weight: 600;
-            border-bottom:  1px solid #ccc;
+            border-bottom: 1px solid #ccc;
         }
-        .personContent{
+        .personContent {
             flex: 1;
             width: 100%;
             /*background: red;*/
@@ -347,11 +346,11 @@
                 margin-top: rem(10);
                 border-bottom: 1px solid #a13309;
             }
-            .personList{
+            .personList {
                 width: 100%;
                 flex: 1;
                 margin-top: rem(20);
-                .personInfo{
+                .personInfo {
                     width: rem(210);
                     height: rem(140);
                     border: 1px solid #ccc;
@@ -360,14 +359,14 @@
                     margin-right: rem(5.5);
                     margin-bottom: rem(5);
                     border-radius: rem(5);
-                    .checkBox{
+                    .checkBox {
                         width: 100%;
                         height: rem(20);
                         background: #fff;
                         border-top-left-radius: rem(5);
                         border-top-right-radius: rem(5);
                         position: relative;
-                        .checkBtn{
+                        .checkBtn {
                             /*width: rem(15);*/
                             /*height: rem(15);*/
                             /*outline: none;*/
@@ -379,13 +378,13 @@
                             cursor: pointer;
                         }
                     }
-                    .personType{
+                    .personType {
                         width: 100%;
                         height: rem(20);
                         background: #0086b3;
                         position: relative;
                         font-size: rem(12);
-                        img{
+                        img {
                             width: rem(40);
                             height: rem(40);
                             border-radius: 50%;
@@ -394,22 +393,22 @@
                             top: rem(-10);
                             background: red;
                         }
-                        span{
+                        span {
                             float: right;
                             margin-right: rem(20);
                             line-height: rem(20);
                             color: #fff;
                         }
                     }
-                    .specificInfo{
+                    .specificInfo {
                         margin-top: rem(5);
                         font-size: rem(12);
-                        p{
+                        p {
                             margin-left: rem(10);
                             line-height: rem(22);
-                            overflow:hidden;
-                            text-overflow:ellipsis;
-                            white-space:nowrap;
+                            overflow: hidden;
+                            text-overflow: ellipsis;
+                            white-space: nowrap;
                         }
                     }
                 }

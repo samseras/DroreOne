@@ -30,24 +30,26 @@
                             </template>
                         </el-table-column>
                         <el-table-column
-                            prop="name"
-                            label="姓名"
+                            prop="parkingBean.name"
+                            label="名称"
                             width="120">
                         </el-table-column>
                         <el-table-column
-                            prop="type"
                             label="类型">
+                            <template slot-scope="scope">
+                                <span>{{scope.row.parkingBean.type}}</span>
+                            </template>
                         </el-table-column>
                         <el-table-column
                             prop="state"
                             label="状态">
                         </el-table-column>
                         <el-table-column
-                            prop="residuePark"
+                            prop="parkingBean.surplusNum"
                             label="空余车位">
                         </el-table-column>
                         <el-table-column
-                            prop="allPark"
+                            prop="parkingBean.capacity"
                             label="车位总数">
                         </el-table-column>
                         <el-table-column
@@ -55,13 +57,15 @@
                             label="位置">
                         </el-table-column>
                         <el-table-column
-                            prop="area"
+                            prop="regionName"
                             label="所属片区">
                         </el-table-column>
                         <el-table-column
                             label="操作">
                             <template slot-scope="scope">
-                                <span @click="showParkDetail(scope.row, '停车场信息')">编辑</span>
+                                <span @click="fixedInfo(scope.row.id )">编辑</span>
+                                <span @click="showParkDetail(scope.row, '停车场信息')">查看</span>
+                                <span @click="deletInfo(scope.row.id)">删除</span>
                             </template>
                         </el-table-column>
                     </el-table>
@@ -117,7 +121,8 @@
                 choseList: [],
                 isDisabled: true,
                 title: '',
-                isShowLoading: false
+                isShowLoading: false,
+                currentNum: 50
             }
         },
         methods: {
@@ -133,7 +138,10 @@
                 this.showParkDetail({parkingBean:{}},'添加停车场信息')
                 this.isDisabled = false
             },
-            deletInfo () {
+            deletInfo (id) {
+                if (id){
+                    this.choseInfoId.push(id)
+                }
                 if (this.choseInfoId.length > 0){
                     api.park.deletePark(this.choseInfoId).then(res => {
                         console.log(res, '删除成功')
@@ -222,7 +230,6 @@
                     capacity: info.parkingBean.capacity,
                     type: info.parkingBean.type,
                     regionId: info.regionId,
-                    currentNum: info.parkingBean.capacity - info.parkingBean.surplusNum,
                     picAddress: info.imgUrl,
                     latitude: latitude,
                     longitude: longitude
@@ -243,7 +250,6 @@
                     capacity: info.parkingBean.capacity,
                     type: info.parkingBean.type,
                     regionId: info.regionId,
-                    currentNum: info.parkingBean.capacity - info.parkingBean.surplusNum,
                     picAddress: info.imgUrl,
                     latitude: latitude,
                     longitude: longitude
@@ -253,7 +259,10 @@
                     this.getAllPark()
                 })
             },
-            fixedInfo () {
+            fixedInfo (id) {
+                if (id){
+                    this.choseInfoId.push(id)
+                }
                 if (this.choseInfoId.length > 0) {
                     this.parkList.map((item) => {
                         if (item.id === this.choseInfoId[0]){
@@ -262,6 +271,7 @@
                     })
                     this.showParkDetail(this.parkInfo, '修改停车场信息')
                     this.isDisabled = false
+                    this.choseInfoId = []
                 } else {
                     this.$message.error('请选择要修改的停车场')
                 }
@@ -276,6 +286,7 @@
                         this.parkList[i].checked = false
                         this.parkList[i].status = true
                         this.parkList[i].id = this.parkList[i].parkingBean.id
+                        this.parkList[i].parkingBean.currentNum = this.currentNum
                         this.parkList[i].parkingBean.surplusNum = this.parkList[i].parkingBean.capacity - this.parkList[i].parkingBean.currentNum
                         this.parkList[i].location = `${this.parkList[i].latitude},${this.parkList[i].longitude}`
                     }

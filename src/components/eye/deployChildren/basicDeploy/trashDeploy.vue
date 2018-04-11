@@ -30,16 +30,18 @@
                             </template>
                         </el-table-column>
                         <el-table-column
-                            prop="name"
+                            prop="dustbinBean.name"
                             label="垃圾桶名称"
                             width="120">
                         </el-table-column>
                         <el-table-column
-                            prop="type"
                             label="类型">
+                            <template slot-scope="scope">
+                                <span>{{scope.row.dustbinBean.type | typeFilter}}</span>
+                            </template>
                         </el-table-column>
                         <el-table-column
-                            prop="number"
+                            prop="dustbinBean.dustbinCount"
                             label="个数">
                         </el-table-column>
                         <el-table-column
@@ -47,13 +49,15 @@
                             label="位置">
                         </el-table-column>
                         <el-table-column
-                            prop="area"
+                            prop="regionName"
                             label="所属片区">
                         </el-table-column>
                         <el-table-column
                             label="操作">
                             <template slot-scope="scope">
-                                <span @click="showTrashDetail(scope.row, '垃圾桶信息')">编辑</span>
+                                <span @click="showTrashDetail(scope.row, '垃圾桶信息')">查看</span>
+                                <span @click="fixedInfo(scope.row.id )">编辑</span>
+                                <span @click="deletInfo(scope.row.id)">删除</span>
                             </template>
                         </el-table-column>
                     </el-table>
@@ -112,6 +116,9 @@
             }
         },
         methods : {
+            handleSelectionChange(val) {
+                this.multipleSelection = val;
+            },
             showTrashDetail (info,title) {
                 this.trashInfo = info
                 this.visible = true
@@ -121,7 +128,10 @@
                 this.showTrashDetail({dustbinBean:{}}, '添加垃圾桶信息')
                 this.isDisabled = false
             },
-            deletInfo () {
+            deletInfo (id) {
+                if (id) {
+                    this.choseInfoId.push(id)
+                }
                 if (this.choseInfoId.length > 0) {
                     api.dustbin.deleteDustbin(this.choseInfoId).then(res => {
                         console.log(res, '删除成功')
@@ -248,7 +258,10 @@
                     this.getAllTrash()
                 })
             },
-            fixedInfo () {
+            fixedInfo (id) {
+                if (id) {
+                    this.choseInfoId.push(id)
+                }
                 if (this.choseInfoId.length > 0) {
                     this.trashList.map((item) => {
                         if (item.dustbinBean.id === this.choseInfoId[0]){
@@ -257,6 +270,7 @@
                     })
                     this.showTrashDetail(this.trashInfo, '修改垃圾桶信息')
                     this.isDisabled = false
+                    this.choseInfoId = []
                 } else {
                     this.$message.error('请选择要修改的垃圾桶')
                 }
@@ -282,7 +296,7 @@
         filters: {
             typeFilter (item) {
                 console.log(item, '9099090909090')
-                if (item) {
+                if (item == 1) {
                     return "临时"
                 } else {
                     return "固定"

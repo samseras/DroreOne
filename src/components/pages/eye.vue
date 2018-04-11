@@ -7,12 +7,14 @@
                 </el-col>
                 <el-col :xs="6" :sm="6" :md="7" :lg="11" :xl="12" class="control">
                     <div v-for="(item,index) in manage" @click="goModule(item,index)"
-                         :class="activeIndex === index? 'active':''">{{item}}
+                         :class="activeIndex === index? 'active':''">{{$t(item)}}
                     </div>
                 </el-col>
                 <el-col :xs="5" :sm="5" :md="5" :lg="5" :xl="6" id="getTime">
                     {{currTime | timeFiler}} ({{currTime | weekFiler}})
+                    <div @click="changeLanguage">切换语言</div>
                 </el-col>
+
                 <el-col :xs="7" :sm="6" :md="5" :lg="3" :xl="2">
                     <div v-for="item in title">
                         <a href="#">
@@ -37,7 +39,7 @@
     export default {
         data() {
             return {
-                manage: ['主页', '管控', '设施', '分析', '配置'],
+                manage: ['message.homePage', 'message.control', 'message.facility', 'message.analyze', 'message.deploy'],
                 currTime: new Date(),   //当前时间
                 title: ["&#xe8c0;", "&#xe627;", "&#xe647;"],
                 activeIndex: 1,
@@ -64,25 +66,33 @@
             }
         },
         methods: {
+            changeLanguage () {
+                if (this.$i18n.locale === 'CN'){
+                    this.$i18n.locale = 'EN'
+                } else {
+                    this.$i18n.locale = 'CN'
+                }
+            },
             hideData(hideData){
                  this.isshowHead = hideData;
             },
             goModule(item, index) {
+                console.log(item,'opo')
                 this.activeIndex = index
                 switch (item) {
-                    case '主页':
+                    case 'message.homePage':
                         this.$router.push({path: '/homePage'});
                         break;
-                    case '管控':
+                    case 'message.control':
                         this.$router.push({path: '/controler'});
                         break;
-                    case '设施':
+                    case 'message.facility':
                         this.$router.push({path: '/facility'});
                         break;
-                    case '分析':
+                    case 'message.analyze':
                         this.$router.push({path: '/analyze'});
                         break;
-                    case '配置':
+                    case 'message.deploy':
                         this.$router.push({path: '/deploy'});
                         break;
                 }
