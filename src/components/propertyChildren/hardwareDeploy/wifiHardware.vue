@@ -34,11 +34,22 @@
                             label="名称"
                             width="120">
                         </el-table-column>
+
                         <el-table-column
                             label="类型">
                             <template slot-scope="scope">
                                 <span>{{scope.row.positionType | changeFilter}}</span>
                             </template>
+                        </el-table-column>
+
+                        <el-table-column
+                            prop="ip"
+                            label="设备IP">
+                        </el-table-column>
+
+                        <el-table-column
+                            prop="serialNum"
+                            label="设备编号">
                         </el-table-column>
 
                         <el-table-column
@@ -259,19 +270,24 @@
             choseType(type){
                 console.log(type)
                 if(type.length===0){
-                    this.choseList=this.wifiList.filter((item)=>{
+                    this.wifiList=this.wifiList.filter((item)=>{
                         item.status=true
-                        return item.status === true
+                        return item
                     })
                 }else{
-                    this.choseList=this.wifiList.filter((item,index)=>{
+                    this.wifiList=this.wifiList.filter((item,index)=>{
+                        if (item.positionType == 0) {
+                            item.type = '室内'
+                        } else{
+                            item.type = '室外'
+                        }
                         if(type.includes(item.type)){
                             item.status=true
                         }else if(!type.includes(item.type)){
                             item.status=false
                             console.log(item.type)
                         }
-                        return item.status===true
+                        return item
                     })
                 }
             },

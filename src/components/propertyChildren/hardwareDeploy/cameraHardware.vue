@@ -29,18 +29,29 @@
                                 <el-checkbox v-model="scope.row.checked" @change="checked(scope.row.id)" class="checkBoxBtn"></el-checkbox>
                             </template>
                         </el-table-column>
-
                         <el-table-column
-                            prop="type"
-                            label="状态">
+                            prop="name"
+                            label="名称">
                         </el-table-column>
 
                         <el-table-column
-                            prop="area"
+                            prop="positionType"
+                            label="类型">
+                            <template slot-scope="scope">
+                                <span>{{scope.row.positionType | changeFilter}}</span>
+                            </template>
+                        </el-table-column>
+                        <el-table-column
+                            prop="manufactor"
+                            label="厂家">
+                        </el-table-column>
+
+                        <el-table-column
+                            prop="regionName"
                             label="所属片区">
                         </el-table-column>
                         <el-table-column
-                            prop="describe"
+                            prop="description"
                             label="摄像头介绍">
                         </el-table-column>
                         <el-table-column>
@@ -54,7 +65,7 @@
 
                     <div class="personInfo" v-for="item in cameraList" v-if="isShowPersonCard && item.status">
                         <div class="checkBox">
-                            <input type="checkbox" :checked="item.checked" class="checkBtn" @change="checked(item.id)">
+                            <el-checkbox v-model="item.checked" @change="checked(item.id)" class="checkBtn"></el-checkbox>
                         </div>
                         <div class="personType" @click.stop="showPersonDetail(item,'摄像头信息')">
                             <img src="../../../../static/img/cameras.png" alt="">
@@ -63,7 +74,8 @@
                             </span>
                         </div>
                         <div class="specificInfo" >
-                            <p class="name">所属区域：<span>{{item.regionId}}</span></p>
+                            <p class="name">所属区域：<span>{{item.regionName}}</span></p>
+                            <p class="type">类&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;型：<span>{{item.positionType | changeFilter}}</span></p>
                             <p class="sex">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：<span>{{item.description}}</span></p>
 
                         </div>
@@ -235,6 +247,12 @@
                 }
             },
             checked(id){
+                this.cameraList = this.cameraList.filter(item =>{
+                    if(item.id ===id){
+                        item.checked = item.checked
+                    }
+                    return item
+                })
                 console.log(id)
                 if(this.choseInfoId.includes(id)){
                     this.choseInfoId = this.choseInfoId.filter((item)=>{
@@ -247,19 +265,24 @@
             choseType(type){
                 console.log(type)
                 if(type.length===0){
-                    this.choseList=this.cameraList.filter((item)=>{
+                    this.cameraList=this.cameraList.filter((item)=>{
                         item.status=true
-                        return item.status === true
+                        return item
                     })
                 }else{
-                    this.choseList=this.cameraList.filter((item,index)=>{
+                    this.cameraList=this.cameraList.filter((item,index)=>{
+                        if(item.positionType == 0){
+                            item.type = '室内'
+                        }else {
+                            item.type = '室外'
+                        }
                         if(type.includes(item.type)){
                             item.status=true
                         }else if(!type.includes(item.type)){
                             item.status=false
                             console.log(item.type)
                         }
-                        return item.status===true
+                        return item
                     })
                 }
             },
@@ -370,7 +393,7 @@
                         .checkBtn{
                             position:absolute;
                             right:rem(5);
-                            top:rem(3);
+                            top:rem(-2);
                             cursor:pointer;
                         }
                     }

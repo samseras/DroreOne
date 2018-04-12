@@ -32,7 +32,7 @@
 
                         <el-table-column
                             label="类型">
-                            <template>
+                            <template slot-scope="scope">
                                 <span>{{scope.row.sensorType | changeStatus}}</span>
                             </template>
                         </el-table-column>
@@ -45,13 +45,19 @@
                             prop="name"
                             label="名称">
                         </el-table-column>
+
+                        <el-table-column
+                            prop="regionName"
+                            label="区域">
+                        </el-table-column>
+
                         <el-table-column
                             prop="description"
                             label="描述">
                         </el-table-column>
                         <el-table-column>
                             <template slot-scope="scope">
-                                <span @click="showPoliceDetail(scope.row, '摄像头信息')">查看</span>
+                                <span @click="showPoliceDetail(scope.row, '报警柱信息')">查看</span>
                                 <span @click="fixedInfo(scope.row.id )">编辑</span>
                                 <span @click="deletInfo(scope.row.id)">删除</span>
                             </template>
@@ -255,19 +261,24 @@
             choseType(type){
                 console.log(type)
                 if(type.length===0){
-                    this.choseList=this.policeList.filter((item)=>{
+                    this.policeList=this.policeList.filter((item)=>{
                         item.status=true
-                        return item.status === true
+                        return item
                     })
                 }else{
-                    this.choseList=this.policeList.filter((item,index)=>{
+                    this.policeList=this.policeList.filter((item,index)=>{
+                        if(item.sensorType == 10){
+                            item.type = '报警柱'
+                        }else{
+                            item.type = '越界'
+                        }
                         if(type.includes(item.type)){
                             item.status=true
                         }else if(!type.includes(item.type)){
                             item.status=false
                             console.log(item.type)
                         }
-                        return item.status===true
+                        return item
                     })
                 }
             },
