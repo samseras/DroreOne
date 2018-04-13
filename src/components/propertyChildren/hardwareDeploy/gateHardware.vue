@@ -31,10 +31,20 @@
                         </el-table-column>
 
                         <el-table-column
-                            label="状态">
+                            prop="name"
+                            label="闸机名称">
+                        </el-table-column>
+
+                        <el-table-column
+                            label="闸机类型">
                             <template slot-scope="scope">
                                 <span>{{scope.row.gateType | changeType}}</span>
                             </template>
+                        </el-table-column>
+
+                        <el-table-column
+                            prop="ip"
+                            label="设备IP">
                         </el-table-column>
 
                         <el-table-column
@@ -255,19 +265,28 @@
             choseType(type){
                 console.log(type)
                 if(type.length===0){
-                    this.choseList=this.gateList.filter((item)=>{
+                    this.gateList=this.gateList.filter((item)=>{
                         item.status=true
-                        return item.status === true
+                        return item
                     })
                 }else{
-                    this.choseList=this.gateList.filter((item,index)=>{
+                    this.gateList=this.gateList.filter((item,index)=>{
+                        if(item.gateType == 1){
+                            item.type = '翼闸'
+                        }else if(item.gateType == 2){
+                            item.type = '摆闸'
+                        }else if(item.gateType ==3){
+                            item.type ='三角闸'
+                        }else if(item.gateType ==4){
+                            item.type = '平移闸'
+                        }
                         if(type.includes(item.type)){
                             item.status=true
                         }else if(!type.includes(item.type)){
                             item.status=false
                             console.log(item.type)
                         }
-                        return item.status===true
+                        return item
                     })
                 }
             },

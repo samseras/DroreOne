@@ -50,7 +50,7 @@
         checkAll: false,
         isIndeterminate: true,
         checkedCities1:[""],
-        data1:parkFacility,
+        data1:park,
         isShow:true
       }
     },

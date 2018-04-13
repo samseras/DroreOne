@@ -38,6 +38,12 @@
                         <el-table-column
                             prop="lightStatus"
                             label="状态">
+                            <template slot-scope="scope">
+                                <span>
+                                    {{scope.row.positionType |changeFilter }}
+                                </span>
+                            </template>
+
                         </el-table-column>
 
                         <el-table-column
@@ -46,7 +52,12 @@
                         </el-table-column>
 
                         <el-table-column
-                            prop="regionId"
+                            prop="serialNum"
+                            label="路灯型号">
+                        </el-table-column>
+
+                        <el-table-column
+                            prop="regionName"
                             label="所属片区">
                         </el-table-column>
                         <el-table-column
@@ -74,7 +85,7 @@
                         </div>
                         <div class="specificInfo" >
                             <p class="area">所属区域：<span>{{item.regionName}}</span></p>
-                            <p class="type">状态：<span>{{item.lightStatus | changeFilter}}</span></p>
+                            <p class="type">状&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;态：<span>{{item.lightStatus | changeFilter}}</span></p>
                             <p class="sex">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：<span>{{item.description}}</span></p>
 
                         </div>

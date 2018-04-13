@@ -3,7 +3,7 @@ import Router from 'vue-router'
 // import '../../static/js/jquery-1.8.3.min.js'
 
 
-import '../../static/js/echarts.min.js'
+// import '../../static/js/echarts.min.js'
 // import HelloWorld from '@/components/HelloWorld'
 import MicServiceManagementSystem from '@/components/pages/MicroService/MicroServiceManagementSystem'
 import Index from '@/components/pages/index'

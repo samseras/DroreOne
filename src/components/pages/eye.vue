@@ -78,7 +78,7 @@
             },
             goModule(item, index) {
                 console.log(item,'opo')
-                this.activeIndex = index
+                this.activeIndex = index;
                 switch (item) {
                     case 'message.homePage':
                         this.$router.push({path: '/homePage'});

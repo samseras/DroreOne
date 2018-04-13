@@ -36,6 +36,7 @@
     import api from '@/api'
     import vue from 'vue'
     import {mapGetters} from 'vuex'
+    import $ from 'jquery'
     export default {
         data() {
             return {

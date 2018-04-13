@@ -53,27 +53,27 @@
         data() {
             return {
                 isShow: true,
-                setting: {
-                    check: {
-                        enable: true,
-                        nocheckInherit: false
-                    },
-                    data: {
-                        simpleData: {
-                            enable: true
-                        }
-                    },
-                    callback: {
-                        beforeClick: this.beforeClick,
-                        onClick: this.zTreeOnClick,
-                        onCheck: this.zTreeOnCheck,
-                    },
-                    view: {
-                        showIcon: true,   //是否显示节点的图标。
-                        showLine: false   // 是否显示节点之间的连线。
-
-                    }
-                },
+                // setting: {
+                //     check: {
+                //         enable: true,
+                //         nocheckInherit: false
+                //     },
+                //     data: {
+                //         simpleData: {
+                //             enable: true
+                //         }
+                //     },
+                //     callback: {
+                //         beforeClick: this.beforeClick,
+                //         onClick: this.zTreeOnClick,
+                //         onCheck: this.zTreeOnCheck,
+                //     },
+                //     view: {
+                //         showIcon: true,   //是否显示节点的图标。
+                //         showLine: false   // 是否显示节点之间的连线。
+                //
+                //     }
+                // },
                 value: '',
                 timeFrame: [
                     {value: '选项11', label: '最近一个小时'},
@@ -114,7 +114,7 @@
                                 color: "#7d7d7d"
                             },
                             type: 'pie',
-                            radius: '75%',
+                            radius: '60%',
                             center: ['50%', '50%'],
                             startAngle: 60,
                             label: {            //饼图图形上的文本标签
@@ -162,7 +162,6 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss" scoped>
-    @import '../../../../plugins/ztree/css/zTreeStyle.css';
 
     * {
         margin: 0;
@@ -185,6 +184,7 @@
         height: 100%;
         display: flex;
         flex-direction: column;
+        background: #f2f2f2;
     }
 
     .security-reveal > .top {
@@ -283,7 +283,7 @@
 
     .last {
         width: 100%;
-        height: 180px;
+        height: 210px;
         overflow: hidden;
     }
 
@@ -294,7 +294,7 @@
 
     .last h5 + div {
         width: 100%;
-        height: 140px;
+        height: 170px;
         background: #fff;
     }
 

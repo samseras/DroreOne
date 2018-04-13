@@ -145,26 +145,26 @@
         data() {
             return {
                 isShow: true,
-                setting: {
-                    check: {
-                        enable: true,
-                        nocheckInherit: false
-                    },
-                    data: {
-                        simpleData: {
-                            enable: true
-                        }
-                    },
-                    callback: {
-                        beforeClick: this.beforeClick,
-                        onClick: this.zTreeOnClick,
-                        onCheck: this.zTreeOnCheck,
-                    },
-                    view: {
-                        showLine: false
-                    }
-                },
-                zNodes: [],
+                // setting: {
+                //     check: {
+                //         enable: true,
+                //         nocheckInherit: false
+                //     },
+                //     data: {
+                //         simpleData: {
+                //             enable: true
+                //         }
+                //     },
+                //     callback: {
+                //         beforeClick: this.beforeClick,
+                //         onClick: this.zTreeOnClick,
+                //         onCheck: this.zTreeOnCheck,
+                //     },
+                //     view: {
+                //         showLine: false
+                //     }
+                // },
+                // zNodes: [],
                 options: [
                     {value: '选项1', label: '周一'},
                     {value: '选项2', label: '周二'},
@@ -197,11 +197,11 @@
                 this.isShowBroadCard = true
             },
             newagenda: function () {
-                var treeObj = $.fn.zTree.getZTreeObj("broadcastZtree");
-                var nodes = treeObj.getChangeCheckedNodes(true);  //获取输入框勾选状态被改变的节点集合
-                console.log(nodes);
-                this.zNodes = nodes;
-                console.log(this.zNodes);
+                // var treeObj = $.fn.zTree.getZTreeObj("broadcastZtree");
+                // var nodes = treeObj.getChangeCheckedNodes(true);  //获取输入框勾选状态被改变的节点集合
+                // console.log(nodes);
+                // this.zNodes = nodes;
+                // console.log(this.zNodes);
                 $(".newagenda").show();
 
             },
@@ -232,7 +232,7 @@
                                 color: "#7d7d7d"
                             },
                             type: 'pie',
-                            radius: '75%',
+                            radius: '60%',
                             center: ['50%', '50%'],
                             startAngle: 60,
                             label: {            //饼图图形上的文本标签
@@ -278,14 +278,14 @@
         },
         mounted() {
             this.drawLine();
-            $.fn.zTree.init($("#addagenda"), this.setting, this.zNodes).expandAll(true);
+            // $.fn.zTree.init($("#addagenda"), this.setting, this.zNodes).expandAll(true);
         }
     }
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss" scoped>
-    @import '../../../../plugins/ztree/css/zTreeStyle.css';
+    /*@import '../../../../plugins/ztree/css/zTreeStyle.css';*/
 
     .broadcast {
         width: 100%;
@@ -297,6 +297,7 @@
         height: 100%;
         display: flex;
         flex-direction: column;
+        background: #f2f2f2;
     }
 
     .reveal > .top {
@@ -396,7 +397,7 @@
 
     .last {
         width: 100%;
-        height: 180px;
+        height: 210px;
         overflow: hidden;
     }
 
@@ -407,7 +408,7 @@
 
     .last h5 + div {
         width: 100%;
-        height: 140px;
+        height: 170px;
         background: #fff;
     }
 

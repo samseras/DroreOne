@@ -42,12 +42,17 @@
                         </el-table-column>
 
                         <el-table-column
+                            prop="ip"
+                            label="IP">
+                        </el-table-column>
+
+                        <el-table-column
                             prop="regionName"
                             label="所属片区">
                         </el-table-column>
 
                         <el-table-column
-                            prop="describe"
+                            prop="description"
                             label="描述">
                         </el-table-column>
                         <el-table-column>
@@ -264,19 +269,24 @@
             choseType(type){
                 console.log(type)
                 if(type.length===0){
-                    this.choseList=this.ledList.filter((item)=>{
+                    this.ledList=this.ledList.filter((item)=>{
                         item.status=true
-                        return item.status === true
+                        return item
                     })
                 }else{
-                    this.choseList=this.ledList.filter((item,index)=>{
+                    this.ledList=this.ledList.filter((item,index)=>{
+                        if (item.positionType == 0) {
+                            item.type = '室内'
+                        } else{
+                            item.type = '室外'
+                        }
                         if(type.includes(item.type)){
                             item.status=true
                         }else if(!type.includes(item.type)){
                             item.status=false
                             console.log(item.type)
                         }
-                        return item.status===true
+                        return item
                     })
                 }
             },
