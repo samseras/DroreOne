@@ -85,7 +85,7 @@
                         </div>
                         <div class="specificInfo" >
                             <p class="area">所属区域：<span>{{item.regionName}}</span></p>
-                            <p class="type">状态：<span>{{item.lightStatus | changeFilter}}</span></p>
+                            <p class="type">状&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;态：<span>{{item.lightStatus | changeFilter}}</span></p>
                             <p class="sex">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：<span>{{item.description}}</span></p>
 
                         </div>
