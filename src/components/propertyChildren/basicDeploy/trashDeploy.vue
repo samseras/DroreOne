@@ -26,7 +26,7 @@
                             width="55">
                             <template slot-scope="scope">
                                 <!--<input type="checkbox" :checked='scope.row.checked' class="checkBoxBtn" @change="checked(scope.row.id)">-->
-                                <el-checkbox v-model="scope.row.checked" @change="getChecked(scope.row.id)" class="checkBoxBtn"></el-checkbox>
+                                <el-checkbox v-model="scope.row.checked" @change="checked(scope.row.id)" class="checkBoxBtn"></el-checkbox>
                             </template>
                         </el-table-column>
                         <el-table-column
@@ -56,14 +56,15 @@
                             label="操作">
                             <template slot-scope="scope">
                                 <span @click="showTrashDetail(scope.row, '垃圾桶信息')">查看</span>
+                                <sapn class="line">|</sapn>
                                 <span @click="fixedInfo(scope.row.id )">编辑</span>
+                                <sapn class="line">|</sapn>
                                 <span @click="deletInfo(scope.row.id)">删除</span>
                             </template>
                         </el-table-column>
                     </el-table>
                     <div class="personInfo" v-for="item in trashList" v-if="isShowTrashCard && item.status">
                         <div class="checkBox">
-                            <!--<input type="checkbox" :checked='item.checked' class="checkBtn" @change="checked(item.dustbinBean.id)">-->
                             <el-checkbox v-model="item.checked" @change="checked(item.id)" class="checkBtn"></el-checkbox>
                         </div>
                         <div class="personType" @click.stop="showTrashDetail(item, '垃圾桶信息')">

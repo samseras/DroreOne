@@ -19,7 +19,7 @@ axios.interceptors.request.use(
 //响应拦截器即异常处理
 axios.interceptors.response.use(
     response => {
-        if (response.status === 200 && response.request.status === 200) {//成功判断
+        if ((response.status === 200 && response.request.status === 200) || (response.status === 201 && response.request.status === 201)) {//成功判断
             // console.log(response, 'opoppopopopop')
             // if (response.data) {
                 return response.data
@@ -31,7 +31,7 @@ axios.interceptors.response.use(
         return response
     },
     error => {//失败判断
-        if (error.response.data.code === 401 || error.request.status === 201) {
+        if (error.response.data.code === 401 ) {
             store.dispatch('logout').then(() => location.reload())
         }
         return Promise.reject(error)
