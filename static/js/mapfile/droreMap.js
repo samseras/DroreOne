@@ -1,140 +1,136 @@
-//显示小图标：droreMap.showLayer()-->pool.getLayerById【拿到要显示的layerId】-【layers】->setSeedLayer-->addlayer-->droreMap.addLayer-->ulDisplay()
-
- define(function(require, exports, module) {
- 	// 通过 require 引入依赖 注意 .js 可以省略
-    var $ = require('./jquery-1.11.1');
+define(function(require, exports, module) {
     // 你也可以引入自己的函数依赖
     var ol = require('./ol');
- 	
- 	var droreMap = (function($, ol) {
-	///////****************地图初始化**********************///////
-	var mapData = {
-		_baseMap: {},
-		_mapView: {},
-		InitData: {},
-		addBaseMap: function(source, centerX, centerY, curZoom, minZoom, maxZoom, projection) {
-			var select = new ol.interaction.Select({
-				condition: ol.events.condition.click
-			});
-			var modify = new ol.interaction.Modify({
-				features: select.getFeatures()
-			});
-			//初始化Map
-			var map = new ol.Map({
-				interactions: ol.interaction.defaults({
-					doubleClickZoom: false,
-					pinchRotate: false
-				}),
-				layers: [
-					new ol.layer.Tile({
-						source: source
-					})
-				],
-				view: new ol.View({
-					center: ol.proj.fromLonLat([centerX, centerY]),
-					projection: projection,
-					zoom: curZoom,
-					minZoom: minZoom,
-					maxZoom: maxZoom,
-				}),
-				logo: false,
-				target: 'map'
-			});
-			return map;
-		},
-		setSource: function(baseZoom, leftTopX, leftTopY, projection, urlTemplate) {
-			var source = new ol.source.XYZ({
-				projection: projection,
-				tileUrlFunction: function(tileCoord) {
-					var diff = tileCoord[0] - baseZoom + 1;
-					var url = urlTemplate.replace('{z}', (diff).toString())
-						.replace('{x}', (tileCoord[1] - (leftTopX * Math.pow(2, diff - 1))).toString())
-						.replace('{y}', (-tileCoord[2] - ((leftTopY - 1) * Math.pow(2, diff - 1)) - 1).toString());
-					return url;
-				},
-				tileLoadFunction: function(imageTile, src) {
-					imageTile.getImage().src = src;
-				},
-				wrapX: true
-			});
-			return source;
-		},
-		initMap: function(option) {
-			var attribution = new ol.Attribution({
-				html: 'Copyright:© 2016 Rico'
-			});
-			var projection = ol.proj.get('EPSG:3857'); //墨卡托投影
-			var urlTemplate = option.path; //"./map_sec_sichuan0003/map{z}/{x},{y}.jpg";
-			var baseMapSource = this.setSource(option.minZoom, option.olTileX, option.olTileY, projection, urlTemplate, attribution); //19, 413000, 214585
-			var centerX = option.centerX;
-			var centerY = option.centerY;
+    var Event = require('./static');
+    var droreMap = (function($, ol,Event) {
+        ///////****************地图初始化**********************///////
+        var mapData = {
+            _baseMap: {},
+            _mapView: {},
+            InitData: {},
+            addBaseMap: function(source, centerX, centerY, curZoom, minZoom, maxZoom, projection) {
+                var select = new ol.interaction.Select({
+                    condition: ol.events.condition.click
+                });
+                var modify = new ol.interaction.Modify({
+                    features: select.getFeatures()
+                });
+                //初始化Map
+                var map = new ol.Map({
+                    interactions: ol.interaction.defaults({
+                        doubleClickZoom: false,
+                        pinchRotate: false
+                    }),
+                    layers: [
+                        new ol.layer.Tile({
+                            source: source
+                        })
+                    ],
+                    view: new ol.View({
+                        center: ol.proj.fromLonLat([centerX, centerY]),
+                        projection: projection,
+                        zoom: curZoom,
+                        minZoom: minZoom,
+                        maxZoom: maxZoom,
+                    }),
+                    logo: false,
+                    target: 'map'
+                });
+                return map;
+            },
+            setSource: function(baseZoom, leftTopX, leftTopY, projection, urlTemplate) {
+                var source = new ol.source.XYZ({
+                    projection: projection,
+                    tileUrlFunction: function(tileCoord) {
+                        var diff = tileCoord[0] - baseZoom + 1;
+                        var url = urlTemplate.replace('{z}', (diff).toString())
+                            .replace('{x}', (tileCoord[1] - (leftTopX * Math.pow(2, diff - 1))).toString())
+                            .replace('{y}', (-tileCoord[2] - ((leftTopY - 1) * Math.pow(2, diff - 1)) - 1).toString());
+                        return url;
+                    },
+                    tileLoadFunction: function(imageTile, src) {
+                        imageTile.getImage().src = src;
+                    },
+                    wrapX: true
+                });
+                return source;
+            },
+            initMap: function(option) {
+                var attribution = new ol.Attribution({
+                    html: 'Copyright:© 2016 Rico'
+                });
+                var projection = ol.proj.get('EPSG:3857'); //墨卡托投影
+                var urlTemplate = option.path; //"./map_sec_sichuan0003/map{z}/{x},{y}.jpg";
+                var baseMapSource = this.setSource(option.minZoom, option.olTileX, option.olTileY, projection, urlTemplate, attribution); //19, 413000, 214585
+                var centerX = option.centerX;
+                var centerY = option.centerY;
 
-			var curZoom = option.curZoom;
-			var minZoom = option.minZoom;
-			var maxZoom = option.maxZoom;
-			//添加底图
-			this._baseMap = this.addBaseMap(baseMapSource, centerX, centerY, curZoom, minZoom, maxZoom, projection);
-			this._baseMap.renderSync();
-			this._mapView = this._baseMap.getView();
-			this._mapView.changed();
-			this.InitData = option;
-		},
-		initRectify: function(obj) {
-			dataManager.transGoogle.initData(obj);
-			dataManager.transGoogle.mapData.endMercatorX = dataManager.trandata.transFromPixToLayer(obj.width, obj.height);
-		}
+                var curZoom = option.curZoom;
+                var minZoom = option.minZoom;
+                var maxZoom = option.maxZoom;
+                //添加底图
+                this._baseMap = this.addBaseMap(baseMapSource, centerX, centerY, curZoom, minZoom, maxZoom, projection);
+                this._baseMap.renderSync();
+                this._mapView = this._baseMap.getView();
+                this._mapView.changed();
+                this.InitData = option;
+            },
+            initRectify: function(obj) {
+                dataManager.transGoogle.initData(obj);
+                dataManager.transGoogle.mapData.endMercatorX = dataManager.trandata.transFromPixToLayer(obj.width, obj.height);
+            }
 
-	};
-	/////////////////////地图图层操作///////////////////////////////
-	var mapLayer = {
-		creatLayer: function(url, id) {
-			var vectorSource = new ol.source.Vector({
-				//创建一个空矢量
-			});
-			var iconStyle = new Style.LayerStyle(url);
-			var vectorLayer = new ol.layer.Vector({
-				source: vectorSource,
-				id: id,
-				style: iconStyle
-			});
-			pool.setDefaultStyle(id, iconStyle);
-			return vectorLayer;
-		},
-		addLayer: function(url) {
-			var vectorSource = new ol.source.Vector({
-				//创建一个空矢量
-			});
-			var iconStyle = new Style.LayerStyle(url);
-			var vectorLayer = new ol.layer.Vector({
-				source: vectorSource,
-				style: iconStyle
-			});
-			//			pool.setDefaultStyle(id, iconStyle);
-			return vectorLayer;
-		},
-		addIcon: function(coordinate, obj) {
-			var geo = new ol.geom.Point(coordinate);
-			var iconFeatureX = new ol.Feature({
-				geometry: geo,
-				data: obj,
-			});
-			iconFeatureX.setId(obj.data.id);
-			return iconFeatureX;
-		}
-	};
+        };
+        /////////////////////地图图层操作///////////////////////////////
+        var mapLayer = {
+            creatLayer: function(url, id) {
+                var vectorSource = new ol.source.Vector({
+                    //创建一个空矢量
+                });
+                var iconStyle = new Style.LayerStyle(url);
+                var vectorLayer = new ol.layer.Vector({
+                    source: vectorSource,
+                    id: id,
+                    style: iconStyle
+                });
+                pool.setDefaultStyle(id, iconStyle);
+                return vectorLayer;
+            },
+            addLayer: function(url) {
+                var vectorSource = new ol.source.Vector({
+                    //创建一个空矢量
+                });
+                var iconStyle = new Style.LayerStyle(url);
+                var vectorLayer = new ol.layer.Vector({
+                    source: vectorSource,
+                    style: iconStyle
+                });
+                //			pool.setDefaultStyle(id, iconStyle);
+                return vectorLayer;
+            },
+            addIcon: function(coordinate, obj) {
+                var geo = new ol.geom.Point(coordinate);
+                var iconFeatureX = new ol.Feature({
+                    geometry: geo,
+                    data: obj,
+                });
+                iconFeatureX.setId(obj.data.id);
+                return iconFeatureX;
+            }
+        };
 
-	function getIconStyle(url) {
-		var iconStyle = new ol.style.Style({
-			image: new ol.style.Icon({
-				anchor: [0.5, 0.5],
-				anchorXUnits: 'fraction',
-				anchorYUnits: 'fraction',
-				opacity: 0.8,
-				src: url
-			})
-		});
-		return iconStyle;
-	};
+        function getIconStyle(url) {
+            var iconStyle = new ol.style.Style({
+                image: new ol.style.Icon({
+                    anchor: [0.5, 0.5],
+                    anchorXUnits: 'fraction',
+                    anchorYUnits: 'fraction',
+                    opacity: 0.8,
+                    src: url
+                })
+            });
+            return iconStyle;
+        };
 	/************************样式*************************************/
 	var Style = { //TODO 样式
 		IconStyle: function(url) {
@@ -1643,7 +1639,7 @@
 			//			})
 			//		}
 	});
-	Mediator.prototype.moveInteraction = new ol.interaction.Pointer({ //TODO  geticon
+	Mediator.prototype.moveInteraction = new ol.interaction.Pointer({ //TODO
 		handleMoveEvent: function(event) {
 			if(DragMediator.cursor_) {
 				var map = event.map;
@@ -1688,7 +1684,7 @@
 			}
 		}
 	});
-	Mediator.prototype.dragInteraction = new ol.interaction.Pointer({//geticon
+	Mediator.prototype.dragInteraction = new ol.interaction.Pointer({
 		handleDownEvent: function(event) {
 			var feature = mapData._baseMap.forEachFeatureAtPixel(event.pixel,
 				function(feature, layer) {
@@ -1842,8 +1838,8 @@
 						if(e.data.feature.getId() == self.id) {
 							fn(self)
 						}
-					};
-					cover.clickList[self.id] = selected;
+					}
+					cover.clickList[self.id] = selected
 					CustomEvent.addEvent("click", selected);
 				}
 			};
@@ -1876,7 +1872,7 @@
 				if(_ifShowName) {
 					showName(true);
 				}
-			};
+			}
 			this.setPosition = function(geo) {
 				if(!(geo instanceof Array)) {
 					throw new Error("the type of parameter is wrong!")
@@ -1893,7 +1889,7 @@
 					CustomEvent.removeEvent("click", cover.clickList[self.id]);
 					delete cover.clickList[self.id]
 				}
-			};
+			}
 		},
 		clickList: {},
 		popList: [],
@@ -1987,7 +1983,7 @@
 			var arrayEvent = this._listeners[type];
 			if(typeof type === "string" && arrayEvent instanceof Array) {
 				if(typeof fn === "function") {
-					// 清除当前type类型事件下对应fn方法 
+					// 清除当前type类型事件下对应fn方法
 					for(var i = 0, length = arrayEvent.length; i < length; i += 1) {
 						if(arrayEvent[i] === fn) {
 							this._listeners[type].splice(i, 1);
@@ -2037,66 +2033,66 @@
 		DragMediator.selectInteraction.getFeatures().clear();
 	}
 
-	return { //返回一个对象	
-		init: function(opt, rectifyData) { //初始化地图//***
-			/*			var projection = ol.proj.get('EPSG:3857'); //墨卡托投影
-						var urlTemplate = obj.path; //"./map_sec_sichuan0003/map{z}/{x},{y}.jpg";
-						var baseMapSource = mapData.setSource(obj.minZoom, obj.olTileX, obj.olTileY, projection, urlTemplate); //19, 413000, 214585
-						var centerX = obj.centerX;
-						var centerY = obj.centerY;
+	return { //返回一个对象
+        init: function(opt, rectifyData) { //初始化地图//***
+            /*			var projection = ol.proj.get('EPSG:3857'); //墨卡托投影
+                        var urlTemplate = obj.path; //"./map_sec_sichuan0003/map{z}/{x},{y}.jpg";
+                        var baseMapSource = mapData.setSource(obj.minZoom, obj.olTileX, obj.olTileY, projection, urlTemplate); //19, 413000, 214585
+                        var centerX = obj.centerX;
+                        var centerY = obj.centerY;
 
-						var curZoom = obj.curZoom;
-						var minZoom = obj.minZoom;
-						var maxZoom = obj.maxZoom;
-						mapData.InitData = obj;
-						//添加底图
-						_baseMap = mapData.addBaseMap(baseMapSource, centerX, centerY, curZoom, minZoom, maxZoom, projection);
-						_baseMap.renderSync();*/
+                        var curZoom = obj.curZoom;
+                        var minZoom = obj.minZoom;
+                        var maxZoom = obj.maxZoom;
+                        mapData.InitData = obj;
+                        //添加底图
+                        _baseMap = mapData.addBaseMap(baseMapSource, centerX, centerY, curZoom, minZoom, maxZoom, projection);
+                        _baseMap.renderSync();*/
 
-			/*var defaultData = {
-				"olTileX": 54874,
-				"olTileY": 27040,
-				"centerX": 121.43497144063807,
-				"centerY": 29.995888023356642,
-				"path": "http://img.weyoo.cn/map/map_sec_zhejiang0131/map{z}/{x},{y}.jpg",
-				"curZoom": 16,
-				"minZoom": 16,
-				"maxZoom": 19
-			}
-			var option = $.extend(true, defaultData, opt);
-			//opt和default要深拷贝后合并一次
-			mapData.initMap(option);
-			mapData.initRectify(rectifyData);*/
-			
-			$.ajax({
-				type: "get",
-				url: "/static/xxsd_mapData.json",
-				async: false,
-				success: function(data) {
-					console.log(data);
-					var obj = data.data;
-					var mapdata = {
-						"olTileX": obj.olTileX,
-						"olTileY": obj.olTileY,
-						"centerX": obj.sceinitx,//120.07951802513782
-						"centerY": obj.sceinity,//30.267776483960148
-						"path": "/static/map_xxsd/map{z}/{x},{y}.jpg",
-						"curZoom": obj.scefit + obj.initlevel,
-						"minZoom": obj.scefit,
-						"maxZoom": obj.scefit + obj.zoom - 1
-					}
-					console.log(mapdata);
-					maxZoom = mapdata.maxZoom;//设置最大缩放层级
-					mapData.initMap(mapdata);//初始化地图
-					mapData.initRectify(obj);
-				},
-				error: function(e) {
-					console.log(333333);
-				}
-			});
+            /*var defaultData = {
+                "olTileX": 54874,
+                "olTileY": 27040,
+                "centerX": 121.43497144063807,
+                "centerY": 29.995888023356642,
+                "path": "http://img.weyoo.cn/map/map_sec_zhejiang0131/map{z}/{x},{y}.jpg",
+                "curZoom": 16,
+                "minZoom": 16,
+                "maxZoom": 19
+            }
+            var option = $.extend(true, defaultData, opt);
+            //opt和default要深拷贝后合并一次
+            mapData.initMap(option);
+            mapData.initRectify(rectifyData);*/
+
+            $.ajax({
+                type: "get",
+                url: "/static/xxsd_mapData.json",
+                async: false,
+                success: function(data) {
+                    console.log(data);
+                    var obj = data.data;
+                    var mapdata = {
+                        "olTileX": obj.olTileX,
+                        "olTileY": obj.olTileY,
+                        "centerX": obj.sceinitx,//120.07951802513782
+                        "centerY": obj.sceinity,//30.267776483960148
+                        "path": "/static/map_xxsd/map{z}/{x},{y}.jpg",
+                        "curZoom": obj.scefit + obj.initlevel,
+                        "minZoom": obj.scefit,
+                        "maxZoom": obj.scefit + obj.zoom - 1
+                    }
+                    console.log(mapdata);
+                    maxZoom = mapdata.maxZoom;//设置最大缩放层级
+                    mapData.initMap(mapdata);//初始化地图
+                    mapData.initRectify(obj);
+                },
+                error: function(e) {
+                    console.log(333333);
+                }
+            });
 
 
-		}, ////////////鼠标事件部分
+        }, ////////////鼠标事件部分
 		addMouseEvent: function(type, key, fun) { //添加一个鼠标事件 此处包括单击和双击你事件//***
 			if(type == "singleclick") {
 				mapData._baseMap.on('singleclick', fun);
@@ -2205,9 +2201,9 @@
 				}
 			};
 		},
-		showLayer: function(id) { //显示/隐藏相应图层//***
+		showLayer: function(id, visibility) { //显示/隐藏相应图层//***
 			var layer = pool.getLayerById(id);
-			layer.setVisible(true);
+			layer.setVisible(visibility);
 		},
 		unShowAllLayer: function() { //隐藏全部标签图层//***
 			for(var i in pool.layers) {
@@ -2577,56 +2573,8 @@
 				//				pool.getIconById(p).unclick()
 				//			}
 				//			cover.clickList = {}
-		},
-		Events: function() {
-			var listen, log, obj, one, remove, trigger, __this;
-			obj = {};
-			__this = this;
-			listen = function(key, eventfn) { // 把简历扔盒子, key就是联系方式.
-				var stack, _ref; // stack是盒子
-				stack = (_ref = obj[key]) != null ? _ref : obj[key] = [];
-				return stack.push(eventfn);
-			};
-
-			one = function(key, eventfn) {
-				remove(key);
-				return listen(key, eventfn);
-			};
-
-			remove = function(key) {
-				var _ref;
-				return(_ref = obj[key]) != null ? _ref.length = 0 : void 0;
-			};
-
-			trigger = function() { // 面试官打电话通知面试者
-				var fn, stack, _i, _len, _ref, key;
-				key = Array.prototype.shift.call(arguments);
-				stack = (_ref = obj[key]) != null ? _ref : obj[key] = [];
-
-				for(_i = 0, _len = stack.length; _i < _len; _i++) {
-
-					fn = stack[_i];
-
-					if(fn.apply(__this, arguments) === false) {
-
-						return false;
-
-					}
-
-				}
-
-			}
-			return {
-				listen: listen,
-				one: one,
-				remove: remove,
-				trigger: trigger
-			}
-		}, 
+		}
 	}
-})($, ol)
-  
-  module.exports = droreMap;
- 
- 
- })
+})(jQuery, ol)
+    module.exports = droreMap;
+})

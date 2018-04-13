@@ -34,6 +34,7 @@
             }
         },
         created () {
+
         },
         components : {
             Map
