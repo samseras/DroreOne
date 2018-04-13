@@ -37,7 +37,7 @@
 
 <script>
     import warningZtree from "./children/warningzTree.vue"
-    import echarts from "../../../../static/js/echarts.min.js"
+    // import echarts from "../../../../static/js/echarts.min.js"
     import ScrollContainer from '@/components/ScrollContainer'
 
     export default {
@@ -51,7 +51,7 @@
         methods: {
             drawLine() {
                 // 基于准备好的dom，初始化echarts实例
-                let myChart = echarts.init(document.getElementById('pie'))
+                let myChart = this.$echarts.init(document.getElementById('pie'))
                 // 绘制图表
                 myChart.setOption({
                     series: [
@@ -61,7 +61,7 @@
                                 color: "#7d7d7d"
                             },
                             type: 'pie',
-                            radius: '75%',
+                            radius: '60%',
                             center: ['50%', '50%'],
                             startAngle: 60,
                             label: {            //饼图图形上的文本标签
@@ -114,6 +114,7 @@
         height: 100%;
         display: flex;
         flex-direction: column;
+        background: #f2f2f2;
     }
 
     .warn .top {
@@ -211,7 +212,8 @@
 
     .last {
         width: 100%;
-        height: 190px;
+        height: 210px;
+        overflow: hidden;
     }
 
     .last h5 {
@@ -221,7 +223,7 @@
 
     .last h5 + div {
         width: 100%;
-        height: 143px;
+        height: 170px;
         background: #fff;
     }
 

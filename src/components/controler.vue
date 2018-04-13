@@ -9,8 +9,8 @@
                 <router-view/>
             </div>
             <div class="right">
-                <p v-if="exhibition" @click="packUpHidden(1)">《</p>
-                <p v-if="!exhibition" @click="packUpHidden(0)">》</p>
+                <i class="el-icon-d-arrow-right" v-if="exhibition" @click="packUpHidden(1)"></i>
+                <i class="el-icon-d-arrow-left" v-if="!exhibition" @click="packUpHidden(0)"></i>
                 <ul>
                     <li v-for="(item, index) in title" :class="activeIndex === index? 'active':''" @click="goControlModule(index)">
                         <router-link :to="item.route"><img :src="item.img" :alt="item.desc" :title="item.desc">
@@ -80,31 +80,35 @@
                 float: right;
                 display: flex;
                 flex-direction: column;
-                p{
+                i{
+                    display: inline-block;
                     width: 100%;
-                    height: rem(50);
+                    height: rem(40);
                     text-align: center;
-                    line-height: rem(50);
+                    line-height: rem(40);
+                    font-size: rem(20);
                     cursor: pointer;
                 }
                 ul{
                     width: 100%;
                     flex: 1;
-                    padding-top: rem(50);
+                    padding-top: rem(40);
                     box-sizing: border-box;
-                    background: #EFF7F2;
+                    background: #f2f2f2;
                     li{
                         width: 100%;
-                        height: rem(50);
+                        height: rem(40);
                         cursor: pointer;
                         a{
                             display: block;
                             width: 100%;
                             text-align: center;
                             height: 100%;
-                            line-height: rem(50);
+                            line-height: rem(40);
                             img{
                                 vertical-align: middle;
+                                width: rem(15);
+                                height: rem(15);
                             }
                         }
                     }

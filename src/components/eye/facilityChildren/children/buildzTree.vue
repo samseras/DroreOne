@@ -1,84 +1,102 @@
 <template>
-    <div class="zTreeDemoBackground left">
-        <ul id="buildzTree" class="ztree"></ul>
-    </div>
+    <el-tree
+        :data="data4"
+        show-checkbox
+        node-key="id"
+        :expand-on-click-node="true">
+    </el-tree>
 </template>
 
 <script>
-
-    import "../../../../../plugins/ztree/js/jquery-1.8.3.min.js"
-    import "../../../../../plugins/ztree/js/jquery.ztree.core.min.js"
-    import "../../../../../plugins/ztree/js/jquery.ztree.excheck.min.js"
-
-    var data = [
-        { name:"片区名称", open:true,
-            children: [
-                { name:"建筑名称"},
-                { name:"建筑名称"},
-                { name:"建筑名称"},
-                { name:"建筑名称"},
-                { name:"建筑名称"}
-
-            ]},
-        { name:"片区名称",
-            children: [
-                { name:"建筑名称"},
-                { name:"建筑名称"},
-                { name:"建筑名称"},
-                { name:"建筑名称"},
-                { name:"建筑名称"}
-
-            ]},
-        { name:"片区名称",
-            children: [
-                { name:"建筑名称"},
-                { name:"建筑名称"},
-                { name:"建筑名称"},
-                { name:"建筑名称"},
-                { name:"建筑名称"},
-                { name:"建筑名称"}
-
-            ]},
-
-    ];
+    // let id = 1000;
     export default {
-        data:function(){
-            return {
-                setting : {
-                    check: {
-                        enable: true,
-                        nocheckInherit: false
-                    },
-                    data: {
-                        simpleData: {
-                            enable: true
-                        }
-                    },
-                    view:{
-                        showIcon: true,   //是否显示节点的图标。
-                        showLine:false   // 是否显示节点之间的连线。
-                    }
-                    /*,
-                    async: {
-                        enable: true,
-                        url:"http://192.168.0.110:9090/xubin/getDataAll",
-                        dataFilter: controlData
-                    }*/
+        data() {
+            const data = [{
+                id: 1,
+                label: '室内广播 总共14个 故障2个',
+                children: [
+                    {id: 6, label: '广播1',},
+                    {id: 7, label: '广播2',},
+                    {id: 8, label: '广播3',},
+                    {id: 9, label: '广播4',},
+                    {id: 10, label: '广播5',},
+                    {id: 11, label: '广播6',},
+                    {id: 12, label: '广播7',},
+                    {id: 13, label: '广播8',},
+                    {id: 14, label: '广播9',}
+                ]
+            }, {
+                id: 2,
+                label: '室外广播 总共14个 故障2个',
+                children: [
+                    {id: 15, label: '广播1',},
+                    {id: 16, label: '广播2',},
+                    {id: 17, label: '广播3',},
+                    {id: 18, label: '广播4',},
+                    {id: 19, label: '广播5',},
+                    {id: 20, label: '广播6',},
+                    {id: 21, label: '广播7',},
+                    {id: 22, label: '广播8',},
+                    {id: 23, label: '广播9',}
+                ]
+            }, {
+                id: 3,
+                label: '室外广播 总共14个 故障2个',
+                children: [
+                    {id: 6, label: '广播1',},
+                    {id: 7, label: '广播2',},
+                    {id: 8, label: '广播3',},
+                    {id: 9, label: '广播4',},
+                    {id: 10, label: '广播5',},
+                    {id: 11, label: '广播6',},
+                    {id: 12, label: '广播7',},
+                    {id: 13, label: '广播8',},
+                    {id: 14, label: '广播9',}
+                ]
+            },
+                {
+                    id: 4,
+                    label: '室外广播 总共14个 故障2个',
+                    children: [
+                        {id: 6, label: '广播1',},
+                        {id: 7, label: '广播2',},
+                        {id: 8, label: '广播3',},
+                        {id: 9, label: '广播4',},
+                        {id: 10, label: '广播5',},
+                        {id: 11, label: '广播6',},
+                        {id: 12, label: '广播7',},
+                        {id: 13, label: '广播8',},
+                        {id: 14, label: '广播9',}
+                    ]
                 },
-                zNodes:[]
+                {
+                    id: 5,
+                    label: '室外广播 总共14个 故障2个',
+                    children: [
+                        {id: 6, label: '广播1',},
+                        {id: 7, label: '广播2',},
+                        {id: 8, label: '广播3',},
+                        {id: 9, label: '广播4',},
+                        {id: 10, label: '广播5',},
+                        {id: 11, label: '广播6',},
+                        {id: 12, label: '广播7',},
+                        {id: 13, label: '广播8',},
+                        {id: 14, label: '广播9',}
+                    ]
+                },
+            ];
+            return {
+                data4: JSON.parse(JSON.stringify(data)),
+                data5: JSON.parse(JSON.stringify(data))
             }
         },
-        created:function(){
-            this.zNodes = data;
-        },
-        mounted(){
-            $.fn.zTree.init($("#buildzTree"),this.setting,this.zNodes).expandAll(true);
+        methods: {
+
         }
-    }
+    };
 
 </script>
 <style>
 
-    @import '../../../../../plugins/zTree/css/zTreeStyle.css';
 
 </style>
