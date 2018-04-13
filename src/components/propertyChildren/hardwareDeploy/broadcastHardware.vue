@@ -42,6 +42,12 @@
                                 <span>{{scope.row.positionType | changeFilter}}</span>
                             </template>
                         </el-table-column>
+
+                        <el-table-column
+                            prop="manufactor"
+                            label="厂家">
+                        </el-table-column>
+
                         <el-table-column
                             prop="regionName"
                             label="所属片区">
@@ -139,7 +145,7 @@
                 let latitude = info.location.substring(0, index)
                 let longitude = info.location.substring(index + 1)
                 let broadObj=[{
-                    typeId: 1,
+                    typeId: 2,
                     id:info.id,
                     positionType:info.positionType,
                     name:info.name,

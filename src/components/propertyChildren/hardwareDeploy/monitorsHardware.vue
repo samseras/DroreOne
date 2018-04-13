@@ -42,6 +42,11 @@
                         </el-table-column>
 
                         <el-table-column
+                            prop="ip"
+                            label="设备IP">
+                        </el-table-column>
+
+                        <el-table-column
                             prop="regionName"
                             label="所属片区">
                         </el-table-column>
