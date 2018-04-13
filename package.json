@@ -16,11 +16,8 @@
     "cropperjs": "^1.3.3",
     "echarts": "^4.0.4",
     "element-ui": "^2.0.11",
-<<<<<<< HEAD
     "es6-promise": "^4.2.4",
-=======
     "jquery": "^1.12.4",
->>>>>>> 56ec4a8514ce96864061222f49d64ebbcb969fa6
     "moment": "^2.21.0",
     "node-sass": "^4.8.3",
     "swiper": "^3.4.2",
