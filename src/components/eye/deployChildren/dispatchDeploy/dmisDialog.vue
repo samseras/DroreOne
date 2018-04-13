@@ -9,7 +9,7 @@
             center>
             <div class="card">
                 <!--人员调度-->
-                <div class="personCardContent" v-if="route.includes('person')">
+                <div class="personCardContent" v-if="route.includes('security')">
                     <p class="name">调&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 度：
                     <el-select v-model="person.type" size="mini" placeholder="请选择">
                         <el-option
@@ -72,7 +72,7 @@
                     </p>
                 </div>
                 <!--硬件调度-->
-                <div class="personCardContent" v-if="route.includes('hardware')">
+                <div class="personCardContent" v-if="route.includes('broadcast')">
                     <p class="name">调&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 度：
                         <el-select v-model="hardware.type" size="mini" placeholder="请选择" @change="hardwareType">
                             <el-option
@@ -520,7 +520,7 @@
                     border: none;
                 }
                 .el-tag__close.el-icon-close{
-                    top:rem(1);
+                    top:rem(-2);
                 }
             }
             .el-checkbox-group{

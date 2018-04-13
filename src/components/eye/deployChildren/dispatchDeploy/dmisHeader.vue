@@ -109,7 +109,7 @@
     .dmisHeader{
         .el-checkbox__label{
             padding-left: rem(5);
-            font-size: rem(12);
+            font-size: rem(14);
         }
         .el-checkbox__inner{
             margin-top: rem(2);
@@ -123,7 +123,7 @@
                 th{
                     background: #f3f3f3;
                     .cell{
-                        font-size: rem(14);
+                        font-size: rem(16);
                         font-weight: 500;
                         color: #333;
                     }
@@ -133,7 +133,7 @@
                 padding: 5px 0;
             }
             .cell{
-                font-size: rem(12);
+                font-size: rem(14);
                 span:hover{
                     color: #54c5f2;
                     cursor:pointer;
