@@ -25,8 +25,7 @@
                         <el-table-column
                             width="55">
                             <template slot-scope="scope">
-                                <!--<input type="checkbox" :checked='scope.row.checked' class="checkBoxBtn" @change="checked(scope.row.id)">-->
-                                <el-checkbox v-model="scope.row.checked" @change="getChecked(scope.row.id)"
+                                <el-checkbox v-model="scope.row.checked" @change="checked(scope.row.id)"
                                              class="checkBoxBtn"></el-checkbox>
                             </template>
                         </el-table-column>
@@ -47,8 +46,10 @@
                             </template>
                         </el-table-column>
                         <el-table-column
-                            prop="personBean.idNum"
                             label="身份证号">
+                            <template slot-scope="scope">
+                                <span>{{scope.row.personBean.idNum | idNumFilter}}</span>
+                            </template>
                         </el-table-column>
                         <el-table-column
                             prop="personBean.phone"
@@ -58,7 +59,9 @@
                             label="操作">
                             <template slot-scope="scope">
                                 <span @click="fixedInfo(scope.row.id )">编辑</span>
+                                <span class="line">|</span>
                                 <span @click="showPersonDetail(scope.row, '人员信息')">查看</span>
+                                <span class="line">|</span>
                                 <span @click="deletInfo(scope.row.id)">删除</span>
                             </template>
                         </el-table-column>
@@ -80,7 +83,7 @@
                                 姓&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;名：<span>{{item.personBean.name}}</span></p>
                             <p class="sex">性&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;别：<span>{{item.personBean.gender | sexFilter}}</span>
                             </p>
-                            <p class="idNum">身份证号：<span>{{item.personBean.idNum}}</span></p>
+                            <p class="idNum">身份证号：<span>{{item.personBean.idNum | idNumFilter}}</span></p>
                             <p class="phoneNum">电&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;话：<span>{{item.personBean.phone}}</span>
                             </p>
                         </div>
@@ -315,7 +318,9 @@
                 }
             },
             idNumFilter(id) {
-
+             let leftId =  id.substring(0, 6)
+             let rightId = id.substring(14)
+             return `${leftId}********${rightId}`
             }
         },
         created() {

@@ -142,7 +142,7 @@
 <style lang="scss">
     .funHeader{
         .el-checkbox__label{
-            padding-left: rem(5);
+            padding-left: rem(1);
             font-size: rem(12);
         }
         .el-checkbox__inner{
