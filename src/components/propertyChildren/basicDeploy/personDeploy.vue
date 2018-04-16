@@ -228,7 +228,7 @@
                 })
                 console.log(this.choseInfoId, 'opopop')
             },
-            fixInfo(info) {
+            async fixInfo(info) {
                 let personObj = {
                     id: info.personBean.id,
                     name: info.personBean.name,
@@ -238,7 +238,17 @@
                     jobId: info.jobId
                 }
                 console.log(personObj, 'this is trashObj')
-                api.person.updatePerson(JSON.stringify(personObj)).then(res => {
+                if (info.imgUrl !== '') {
+                    await api.person.updataAva(info.imgUrl).then(res => {
+                        console.log(res, '上传成功')
+                        personObj.pictureId = res.id
+                    }).catch(err => {
+                        console.log(err, '上传失败')
+                        this.$message.error('上传失败，其请稍后重试')
+                        return
+                    })
+                }
+                await api.person.updatePerson(JSON.stringify(personObj)).then(res => {
                     this.$message.success('添加成功')
                     console.log('增加成功')
                     this.choseInfoId = []

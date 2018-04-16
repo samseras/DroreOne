@@ -500,7 +500,7 @@
                         this.$message.error('请输入完整信息')
                         return
                     }
-                    if (newInfo.dustbinBean.type === ''|| newInfo.dustbinBean.name.trim() === '' || newInfo.dustbinBean.dustbinCount.trim() === '') {
+                    if (newInfo.dustbinBean.type === ''|| newInfo.dustbinBean.name.trim() === '' || newInfo.dustbinBean.dustbinCount=== '') {
                         this.$message.error('请输入完整信息')
                         return
                     }

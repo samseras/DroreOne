@@ -245,7 +245,7 @@
                 console.log(this.choseInfoId, 'opopop')
                 this.selectAll(this.choseInfoId)
             },
-            fixInfo (info) {
+            async fixInfo (info) {
                 let boatObj = {
                     id: info.id,
                     serialNum: info.vehicle.serialNum,
@@ -258,7 +258,17 @@
                     purchaseDate: info.vehicle.purchaseDate
                 }
                 console.log(boatObj, 'this is trashObj')
-                api.boat.updateBoat(JSON.stringify(boatObj)).then(res => {
+                if (info.imgUrl !== '') {
+                    await api.person.updataAva(info.imgUrl).then(res => {
+                        console.log(res, '图片上传成功')
+                        boatObj.pictureId = res.id
+                    }).catch(err => {
+                        console.log(err, '上传失败')
+                        this.$message.error('添加失败，请稍后重试')
+                        return false
+                    })
+                }
+                await api.boat.updateBoat(JSON.stringify(boatObj)).then(res => {
                     console.log(res ,'增加成功')
                     this.$message.success('修改成功')
                     this.getAllBoat()

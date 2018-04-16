@@ -213,7 +213,7 @@
                 })
                 console.log(this.choseInfoId, 'opopop')
             },
-            fixInfo (info) {
+            async fixInfo (info) {
                 let index = info.location.includes(',')?info.location.indexOf(','):info.location.indexOf('，')
                 let latitude = info.location.substring(0, index)
                 let longitude = info.location.substring(index + 1)
@@ -224,7 +224,15 @@
                     latitude: latitude,
                     longitude: longitude
                 }
-                api.toilet.updateToilet(JSON.stringify(toiletObj)).then(res => {
+                if (info.imgUrl !== '') {
+                    await api.person.updataAva(info.imgUrl).then(res => {
+                        console.log(res, '上传成功')
+                        toiletObj.pictureId = res.id
+                    }).catch(err => {
+                        console.log(err, '上传失败')
+                    })
+                }
+                await api.toilet.updateToilet(JSON.stringify(toiletObj)).then(res => {
                     console.log(res, '修改成功')
                     this.$message.success('修改成功')
                     this.choseInfoId = []

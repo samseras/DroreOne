@@ -216,7 +216,7 @@
                 })
                 console.log(this.choseInfoId, 'opopop')
             },
-            fixInfo (info) {
+            async fixInfo (info) {
                 let index = info.location.includes(',')?info.location.indexOf(','):info.location.indexOf('，')
                 let latitude = info.location.substring(0, index)
                 let longitude = info.location.substring(index + 1)
@@ -228,7 +228,17 @@
                     longitude: longitude
                 }
                 console.log(indicatorObj, 'this is trashObj')
-                api.indicator.updateIndicator(JSON.stringify(indicatorObj)).then(res => {
+                if (info.imgUrl !== '') {
+                    await api.person.updataAva(info.imgUrl).then(res => {
+                        console.log(res, '上传成功')
+                        indicatorObj.pictureId = res.id
+                    }).catch(err => {
+                        console.log(err, '上传失败')
+                        this.$message.error('上传失败，请稍后重试')
+                        return
+                    })
+                }
+                await api.indicator.updateIndicator(JSON.stringify(indicatorObj)).then(res => {
                     console.log('修改成功')
                     this.$message.success('修改成功')
                     this.choseInfoId = []
