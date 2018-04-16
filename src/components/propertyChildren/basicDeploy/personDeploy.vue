@@ -73,7 +73,7 @@
                                          class="checkBtn"></el-checkbox>
                         </div>
                         <div class="personType" @click.stop="showPersonDetail(item, '人员信息')">
-                            <img src="" alt="">
+                            <img :src="item.picturePath" alt="">
                             <span class="type">
                                   {{item.jobName}}
                                 </span>
@@ -232,7 +232,6 @@
                 let personObj = {
                     id: info.personBean.id,
                     name: info.personBean.name,
-                    picAddress: info.imgUrl,
                     gender: info.personBean.gender,
                     idNum: info.personBean.idNum,
                     phone: info.personBean.phone,
@@ -249,21 +248,27 @@
                     this.$message.error('更新失败，请稍后重试')
                 })
             },
-            addNewPerson(info) {
+            async addNewPerson(info) {
                 console.log(info, 'opopopopopo')
                 let personObj = {
                     name: info.personBean.name,
-                    // picAddress: info.imgUrl,
                     gender: info.personBean.gender,
                     idNum: info.personBean.idNum,
                     phone: info.personBean.phone,
                     jobId: info.jobId
                 }
                 console.log(personObj, 'this is trashObj')
-                api.person.updataAvatar(info.imgUrl).then(res => {
-                    console.log(res, '上传成功')
-                })
-                api.person.createPerson(JSON.stringify(personObj)).then(res => {
+                if (info.imgUrl !== '') {
+                    await api.person.updataAva(info.imgUrl).then(res => {
+                        console.log(res, '上传成功')
+                        personObj.pictureId = res.id
+                    }).catch(err => {
+                        console.log(err, '上传失败')
+                        this.$message.error('上传失败，其请稍后重试')
+                        return
+                    })
+                }
+                await api.person.createPerson(JSON.stringify(personObj)).then(res => {
                     this.$message.success('添加成功')
                     console.log('增加成功')
                     this.getAllPerson()

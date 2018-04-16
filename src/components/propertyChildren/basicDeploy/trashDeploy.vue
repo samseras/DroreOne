@@ -68,7 +68,7 @@
                             <el-checkbox v-model="item.checked" @change="checked(item.id)" class="checkBtn"></el-checkbox>
                         </div>
                         <div class="personType" @click.stop="showTrashDetail(item, '垃圾桶信息')">
-                            <img src="" alt="">
+                            <img :src="item.picturePath" alt="">
                             <span class="type">
                                   {{item.dustbinBean.type | typeFilter}}垃圾桶
                                 </span>
@@ -236,7 +236,6 @@
                     dustbinCount: info.dustbinBean.dustbinCount,
                     type: info.dustbinBean.type,
                     regionId: info.regionId,
-                    picAddress: info.imgUrl,
                     latitude: latitude,
                     longitude: longitude
                 }
@@ -250,7 +249,7 @@
                     this.$message.error('修改失败，请稍后重试')
                 })
             },
-            addNewTrash (info) {
+            async addNewTrash (info) {
                 let index = info.location.includes(',')?info.location.indexOf(','):info.location.indexOf('，')
                 let latitude = info.location.substring(0, index)
                 let longitude = info.location.substring(index + 1)
@@ -259,12 +258,21 @@
                     dustbinCount: info.dustbinBean.dustbinCount,
                     type: info.dustbinBean.type,
                     regionId: info.regionId,
-                    picAddress: info.imgUrl,
                     latitude: latitude,
                     longitude: longitude
                 }
                 console.log(trashObj, 'this is trashObj')
-                api.dustbin.createDustbin(JSON.stringify(trashObj)).then(res => {
+                if (info.imgUrl !== '') {
+                    await api.person.updataAva(info.imgUrl).then(res => {
+                        console.log(res, '上传成功')
+                        trashObj.pictureId = res.id
+                    }).catch(err => {
+                        console.log(err, '上传失败')
+                        this.$message.error('创建失败，请稍后重试')
+                        return
+                    })
+                }
+                await api.dustbin.createDustbin(JSON.stringify(trashObj)).then(res => {
                     console.log('增加成功')
                     this.$message.success('创建成功')
                     this.getAllTrash()
@@ -313,7 +321,6 @@
         },
         filters: {
             typeFilter (item) {
-                console.log(item, '9099090909090')
                 if (item == 1) {
                     return "临时"
                 } else {

@@ -60,7 +60,7 @@
                             <el-checkbox v-model="item.checked" @change="checked(item.id)" class="checkBtn"></el-checkbox>
                         </div>
                         <div class="personType" @click.stop="showPersonDetail(item, '指示牌信息')">
-                            <img src="" alt="">
+                            <img :src="item.picturePath" alt="">
                             <span class="type">
                                 {{item.signboardBean.type | typeFilter}}
                             </span>
@@ -224,7 +224,6 @@
                     id: info.signboardBean.id,
                     type: info.signboardBean.type,
                     regionId: info.regionId,
-                    picAddress: info.imgUrl,
                     latitude: latitude,
                     longitude: longitude
                 }
@@ -238,18 +237,27 @@
                     this.$message.error('修改失败，请稍后重试')
                 })
             },
-            addNewIndicator (info) {
+            async addNewIndicator (info) {
                 let index = info.location.includes(',')?info.location.indexOf(','):info.location.indexOf('，')
                 let latitude = info.location.substring(0, index)
                 let longitude = info.location.substring(index + 1)
                 let indicatorObj = {
                     type: info.signboardBean.type,
                     regionId: info.regionId,
-                    picAddress: info.imgUrl,
                     latitude: latitude,
                     longitude: longitude
                 }
-                api.indicator.createIndicator(JSON.stringify(indicatorObj)).then(res => {
+                if (info.imgUrl !== '') {
+                    await api.person.updataAva(info.imgUrl).then(res => {
+                        console.log(res, '上传成功')
+                        indicatorObj.pictureId = res.id
+                    }).catch(err => {
+                        console.log(err, '上传失败')
+                        this.$message.error('上传失败，请稍后重试')
+                        return
+                    })
+                }
+                await api.indicator.createIndicator(JSON.stringify(indicatorObj)).then(res => {
                     console.log('增加成功')
                     this.$message.success('创建成功')
                     this.getAllIndicator()

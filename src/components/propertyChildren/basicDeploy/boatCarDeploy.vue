@@ -282,20 +282,20 @@
                    await api.person.updataAva(info.imgUrl).then(res => {
                         console.log(res, '图片上传成功')
                         boatObj.pictureId = res.id
-                       api.boat.createBoat(JSON.stringify(boatObj)).then(res => {
-                           console.log(res ,'增加成功')
-                           this.$message.success('添加成功')
-                           this.getAllBoat()
-                       }).catch(err => {
-                           console.log(err, '添加失败')
-                           this.$message.error('添加失败，请稍后重试')
-                       })
                     }).catch(err => {
                         console.log(err, '上传失败')
                         this.$message.error('添加失败，请稍后重试')
                         return false
                     })
                 }
+                await api.boat.createBoat(JSON.stringify(boatObj)).then(res => {
+                    console.log(res ,'增加成功')
+                    this.$message.success('添加成功')
+                    this.getAllBoat()
+                }).catch(err => {
+                    console.log(err, '添加失败')
+                    this.$message.error('添加失败，请稍后重试')
+                })
             },
             fixedInfo (id) {
                 if (id) {
