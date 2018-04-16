@@ -26,7 +26,8 @@
                     <p class="IP">I P 地 址：<input type="text" v-model="camera.ip"></p>
                     <p class="port">端&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  口：<input type="text" v-model="camera.port"></p>
                     <p class="place">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  置：<input type="text" v-model="camera.location">
-                        <img src="" alt="" @click="showMapDialog">
+
+                        <i class="el-icon-location-outline" @click="showMapDialog"></i>
                     </p>
                     <p class="area">所属片区：
                         <select name="" v-model="camera.regionId">
@@ -62,7 +63,7 @@
                     <p class="IP">I P 地 址：<input type="text" v-model="broadCast.ip"></p>
                     <p class="host">端&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  口：<input type="text" v-model="broadCast.port"></p>
                     <p class="place">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  置：<input type="text" v-model="broadCast.location">
-                        <img src="" alt="" @click="showMapDialog">
+                        <i class="el-icon-location-outline" @click="showMapDialog"></i>
                     </p>
                     <p class="area">所属区域：
                         <select name="" v-model="broadCast.regionId">
@@ -93,7 +94,7 @@
                     <p class="IP">I P 地 址：<input type="text" v-model="led.ip"></p>
                     <p class="host">设备编号：<input type="text" v-model="led.serialNum"></p>
                     <p class="place">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  置：<input type="text" v-model="led.location">
-                        <img src="" alt="" @click="showMapDialog">
+                        <i class="el-icon-location-outline" @click="showMapDialog"></i>
                     </p>
                     <p class="area">所属片区：
                         <select name="" v-model="led.regionId">
@@ -125,7 +126,7 @@
                     <p class="mac">M a c：<input type="text" v-model="wifi.mac"></p>
                     <p class="host">设备编号：<input type="text" v-model="wifi.serialNum"></p>
                     <p class="place">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  置：<input type="text" v-model="wifi.location">
-                        <img src="" alt="" @click="showMapDialog">
+                        <i class="el-icon-location-outline" @click="showMapDialog"></i>
                     </p>
                     <p class="area">所属片区：
                         <select name="" v-model="wifi.regionId">
@@ -161,7 +162,7 @@
                     <p class="IP">设备I P ：<input type="text" v-model="monitors.ip"></p>
                     <p class="host">设备编号：<input type="text" v-model="monitors.serialNum"></p>
                     <p class="place">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  置：<input type="text" v-model="monitors.location">
-                        <img src="" alt="" @click="showMapDialog">
+                        <i class="el-icon-location-outline" @click="showMapDialog"></i>
                     </p>
                     <p class="area">所属片区：
                         <select name="" v-model="monitors.regionId">
@@ -198,7 +199,7 @@
                     <p class="version">型&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;号：<input type="text" v-model="Light.model">
                     </p>
                     <p class="place">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置：<input type="text" v-model="Light.location">
-                        <img src="" alt="" @click="showMapDialog">
+                        <i class="el-icon-location-outline" @click="showMapDialog"></i>
                     </p>
                     <p class="area">所属片区：
                         <select name="" v-model="Light.regionId">
@@ -232,7 +233,7 @@
                     <p class="num">设备编号：<input type="text" v-model="gate.serialNum"></p>
                     <p class="name">端&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;口：<input type="text" v-model="gate.port"> </p>
                     <p class="place">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  置：<input type="text" v-model="gate.location">
-                        <img src="" alt="" @click="showMapDialog">
+                        <i class="el-icon-location-outline" @click="showMapDialog"></i>
                     </p>
                     <p class="area">所属片区：
                         <select name="" v-model="gate.regionId">
@@ -269,7 +270,7 @@
                     <p class="IP">设备I P ：<input type="text" v-model="police.ip"></p>
 
                     <p class="place">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  置：<input type="text" v-model="police.location">
-                        <img src="" alt="" @click="showMapDialog">
+                        <i class="el-icon-location-outline" @click="showMapDialog"></i>
                     </p>
                     <p class="area">所属片区：
                         <select name="" v-model="police.regionId">
@@ -447,6 +448,7 @@
                }
                newInfo.status=true
                newInfo.checked=false
+               newInfo.imgUrl = this.src
 
                if(this.Info.id){
                    newInfo.id=this.Info.id
@@ -973,12 +975,12 @@
 
                         }
                     }
-                    img {
+                    i {
                         display: inline-block;
-                        width: rem(20);
-                        height: rem(20);
+                        /*width: rem(20);*/
+                        /*height: rem(20);*/
                         border-radius: 50%;
-                        background:red;
+                        font-size: rem(16);
                         vertical-align: middle;
                     }
                     textarea{
