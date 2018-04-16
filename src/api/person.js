@@ -43,11 +43,11 @@ const person = {
             url: getUrl('/job')
         })
     },
-    updataAvatar (params) {
+    updataAva (params) {
         console.log(params, 'formdata')
         return axios({
             method: 'POST',
-            url: '/multipart-upload/haha',
+            url: getUrl('/resource/picture'),
             processData : false,
             contentType : false,
             data:params,

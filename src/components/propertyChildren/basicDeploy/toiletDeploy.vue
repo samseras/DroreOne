@@ -25,8 +25,7 @@
                         <el-table-column
                             width="55">
                             <template slot-scope="scope">
-                                <!--<input type="checkbox" :checked='scope.row.checked' class="checkBoxBtn" @change="checked(scope.row.id)">-->
-                                <el-checkbox v-model="scope.row.checked" @change="getChecked(scope.row.id)" class="checkBoxBtn"></el-checkbox>
+                                <el-checkbox v-model="scope.row.checked" @change="checked(scope.row.id)" class="checkBoxBtn"></el-checkbox>
                             </template>
                         </el-table-column>
                         <el-table-column
@@ -50,18 +49,19 @@
                             label="操作">
                             <template slot-scope="scope">
                                 <span @click="showPersonDetail(scope.row, '卫生间信息')">查看</span>
+                                <span class="line">|</span>
                                 <span @click="fixedInfo(scope.row.id )">编辑</span>
+                                <span class="line">|</span>
                                 <span @click="deletInfo(scope.row.id)">删除</span>
                             </template>
                         </el-table-column>
                     </el-table>
                     <div class="personInfo" v-for="item in toiletList" v-if="isShowToiletCard && item.status">
                         <div class="checkBox">
-                            <!--<input type="checkbox" :checked='item.checked' class="checkBtn" @change="checked(item.toiletBean.id)">-->
                             <el-checkbox v-model="item.checked" @change="checked(item.id)" class="checkBtn"></el-checkbox>
                         </div>
                         <div class="personType" @click.stop="showPersonDetail(item, '卫生间信息')">
-                            <img src="" alt="">
+                            <img :src="item.picturePath" alt="">
                             <span class="type">
                                   {{item.toiletBean.name}}
                                 </span>
@@ -213,7 +213,7 @@
                 })
                 console.log(this.choseInfoId, 'opopop')
             },
-            fixInfo (info) {
+            async fixInfo (info) {
                 let index = info.location.includes(',')?info.location.indexOf(','):info.location.indexOf('，')
                 let latitude = info.location.substring(0, index)
                 let longitude = info.location.substring(index + 1)
@@ -222,10 +222,17 @@
                     name: info.toiletBean.name,
                     regionId: info.regionId,
                     latitude: latitude,
-                    picAddress: info.imgUrl,
                     longitude: longitude
                 }
-                api.toilet.updateToilet(JSON.stringify(toiletObj)).then(res => {
+                if (info.imgUrl !== '') {
+                    await api.person.updataAva(info.imgUrl).then(res => {
+                        console.log(res, '上传成功')
+                        toiletObj.pictureId = res.id
+                    }).catch(err => {
+                        console.log(err, '上传失败')
+                    })
+                }
+                await api.toilet.updateToilet(JSON.stringify(toiletObj)).then(res => {
                     console.log(res, '修改成功')
                     this.$message.success('修改成功')
                     this.choseInfoId = []
@@ -235,7 +242,7 @@
                     this.$message.error('修改失败，请稍后重试')
                 })
             },
-            addNewToilet (info) {
+           async addNewToilet (info) {
                 let index = info.location.includes(',')?info.location.indexOf(','):info.location.indexOf('，')
                 let latitude = info.location.substring(0, index)
                 let longitude = info.location.substring(index + 1)
@@ -243,10 +250,17 @@
                     name: info.toiletBean.name,
                     regionId: info.regionId,
                     latitude: latitude,
-                    picAddress: info.imgUrl,
                     longitude: longitude
                 }
-                api.toilet.createToilet(JSON.stringify(toiletObj)).then(res => {
+                if (info.imgUrl !== '') {
+                   await api.person.updataAva(info.imgUrl).then(res => {
+                        console.log(res, '上传成功')
+                        toiletObj.pictureId = res.id
+                    }).catch(err => {
+                        console.log(err, '上传失败')
+                   })
+                }
+               await api.toilet.createToilet(JSON.stringify(toiletObj)).then(res => {
                     console.log(res, '添加成功')
                     this.$message.success('创建成功')
                     this.getAllToilet()
@@ -286,6 +300,7 @@
                         this.toiletList[i].status = true
                         this.toiletList[i].location = `${this.toiletList[i].latitude},${this.toiletList[i].longitude}`
                         this.toiletList[i].id = this.toiletList[i].toiletBean.id
+                        this.toiletList[i].state = '正常'
                     }
                 }).catch(err => {
                     console.log(err, '请求失败')

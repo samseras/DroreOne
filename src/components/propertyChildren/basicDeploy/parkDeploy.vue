@@ -26,7 +26,7 @@
                             width="55">
                             <template slot-scope="scope">
                                 <!--<input type="checkbox" :checked='scope.row.checked' class="checkBoxBtn" @change="checked(scope.row.id)">-->
-                                <el-checkbox v-model="scope.row.checked" @change="getChecked(scope.row.id)" class="checkBoxBtn"></el-checkbox>
+                                <el-checkbox v-model="scope.row.checked" @change="checked(scope.row.id)" class="checkBoxBtn"></el-checkbox>
                             </template>
                         </el-table-column>
                         <el-table-column
@@ -63,26 +63,27 @@
                         <el-table-column
                             label="操作">
                             <template slot-scope="scope">
-                                <span @click="fixedInfo(scope.row.id )">编辑</span>
                                 <span @click="showParkDetail(scope.row, '停车场信息')">查看</span>
+                                <span class="line">|</span>
+                                <span @click="fixedInfo(scope.row.id )">编辑</span>
+                                <span class="line">|</span>
                                 <span @click="deletInfo(scope.row.id)">删除</span>
                             </template>
                         </el-table-column>
                     </el-table>
                     <div class="personInfo" v-for="item in parkList" v-if="isShowParkCard && item.status">
                         <div class="checkBox">
-                            <!--<input type="checkbox" :checked='item.checked' class="checkBtn" @change="checked(item.parkingBean.id)">-->
                             <el-checkbox v-model="item.checked" @change="checked(item.id)" class="checkBtn"></el-checkbox>
                         </div>
                         <div class="personType" @click.stop="showParkDetail(item, '停车场信息')">
-                            <img src="" alt="">
+                            <img :src="item.picturePath" alt="">
                             <span class="type">
                                   {{item.parkingBean.name}}
                                 </span>
                         </div>
                         <div class="specificInfo">
                             <p class="name">所属区域：<span>{{item.regionName}}</span></p>
-                            <p class="sex">状&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;态：<span>{{item.state}}</span></p>
+                            <p class="sex">状&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;态：<span>{{item.parkingBean.state}}</span></p>
                             <p class="idNum">空余车位：<span>{{item.parkingBean.surplusNum}}</span></p>
                             <p class="phoneNum">车位总数：<span>{{item.parkingBean.capacity}}</span></p>
                         </div>
@@ -234,7 +235,7 @@
                 })
                 console.log(this.choseInfoId, 'opopop')
             },
-            fixInfo (info) {
+            async fixInfo (info) {
                 let index = info.location.includes(',')?info.location.indexOf(','):info.location.indexOf('，')
                 let latitude = info.location.substring(0, index)
                 let longitude = info.location.substring(index + 1)
@@ -244,11 +245,20 @@
                     capacity: info.parkingBean.capacity,
                     type: info.parkingBean.type,
                     regionId: info.regionId,
-                    picAddress: info.imgUrl,
                     latitude: latitude,
                     longitude: longitude
                 }
-                api.park.updatePark(JSON.stringify(parkObj)).then(res => {
+                if (info.imgUrl !== '') {
+                    await api.person.updataAva(info.imgUrl).then(res => {
+                        console.log(res, '上传成功')
+                        parkObj.pictureId = res.id
+                    }).catch(err => {
+                        console.log(err, '上传失败')
+                        this.$message.error('上传失败，请稍后重试')
+                        return
+                    })
+                }
+                await api.park.updatePark(JSON.stringify(parkObj)).then(res => {
                     console.log(res, '修改停车场成功')
                     this.$message.success('修改成功')
                     this.choseInfoId = []
@@ -257,7 +267,7 @@
                     this.$message.error('修改失败，请稍后重试')
                 })
             },
-            addNewPark (info) {
+            async addNewPark (info) {
                 let index = info.location.includes(',')?info.location.indexOf(','):info.location.indexOf('，')
                 let latitude = info.location.substring(0, index)
                 let longitude = info.location.substring(index + 1)
@@ -266,11 +276,20 @@
                     capacity: info.parkingBean.capacity,
                     type: info.parkingBean.type,
                     regionId: info.regionId,
-                    picAddress: info.imgUrl,
                     latitude: latitude,
                     longitude: longitude
                 }
-                api.park.createPark(JSON.stringify(parkObj)).then(res => {
+                if (info.imgUrl !== '') {
+                    await api.person.updataAva(info.imgUrl).then(res => {
+                        console.log(res, '上传成功')
+                        parkObj.pictureId = res.id
+                    }).catch(err => {
+                        console.log(err, '上传失败')
+                        this.$message.error('上传失败，请稍后重试')
+                        return
+                    })
+                }
+                await api.park.createPark(JSON.stringify(parkObj)).then(res => {
                     console.log(res, '创建停车场成功')
                     this.$message.success('创建成功')
                     this.getAllPark()
@@ -311,7 +330,20 @@
                         this.parkList[i].parkingBean.currentNum = this.currentNum
                         this.parkList[i].parkingBean.surplusNum = this.parkList[i].parkingBean.capacity - this.parkList[i].parkingBean.currentNum
                         this.parkList[i].location = `${this.parkList[i].latitude},${this.parkList[i].longitude}`
+                        if (this.parkList[i].parkingBean.capacity == 0 ){
+                            this.parkList[i].parkingBean.state = '已满'
+                        } else {
+                            let parcent = this.parkList[i].parkingBean.currentNum/this.parkList[i].parkingBean.capacity
+                            if (parcent < .5){
+                                this.parkList[i].parkingBean.state = '充裕'
+                            } else if (parcent < .9){
+                                this.parkList[i].parkingBean.state = '紧张'
+                            } else {
+                                this.parkList[i].parkingBean.state = '已满'
+                            }
+                        }
                     }
+                    console.log(this.parkList, 'wertyuiertyufghj')
                 }).catch(err => {
                     console.log(err)
                     this.isShowLoading = false

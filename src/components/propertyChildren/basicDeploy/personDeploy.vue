@@ -25,8 +25,7 @@
                         <el-table-column
                             width="55">
                             <template slot-scope="scope">
-                                <!--<input type="checkbox" :checked='scope.row.checked' class="checkBoxBtn" @change="checked(scope.row.id)">-->
-                                <el-checkbox v-model="scope.row.checked" @change="getChecked(scope.row.id)"
+                                <el-checkbox v-model="scope.row.checked" @change="checked(scope.row.id)"
                                              class="checkBoxBtn"></el-checkbox>
                             </template>
                         </el-table-column>
@@ -47,8 +46,10 @@
                             </template>
                         </el-table-column>
                         <el-table-column
-                            prop="personBean.idNum"
                             label="身份证号">
+                            <template slot-scope="scope">
+                                <span>{{scope.row.personBean.idNum | idNumFilter}}</span>
+                            </template>
                         </el-table-column>
                         <el-table-column
                             prop="personBean.phone"
@@ -58,7 +59,9 @@
                             label="操作">
                             <template slot-scope="scope">
                                 <span @click="fixedInfo(scope.row.id )">编辑</span>
+                                <span class="line">|</span>
                                 <span @click="showPersonDetail(scope.row, '人员信息')">查看</span>
+                                <span class="line">|</span>
                                 <span @click="deletInfo(scope.row.id)">删除</span>
                             </template>
                         </el-table-column>
@@ -70,7 +73,7 @@
                                          class="checkBtn"></el-checkbox>
                         </div>
                         <div class="personType" @click.stop="showPersonDetail(item, '人员信息')">
-                            <img src="" alt="">
+                            <img :src="item.picturePath" alt="">
                             <span class="type">
                                   {{item.jobName}}
                                 </span>
@@ -80,7 +83,7 @@
                                 姓&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;名：<span>{{item.personBean.name}}</span></p>
                             <p class="sex">性&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;别：<span>{{item.personBean.gender | sexFilter}}</span>
                             </p>
-                            <p class="idNum">身份证号：<span>{{item.personBean.idNum}}</span></p>
+                            <p class="idNum">身份证号：<span>{{item.personBean.idNum | idNumFilter}}</span></p>
                             <p class="phoneNum">电&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;话：<span>{{item.personBean.phone}}</span>
                             </p>
                         </div>
@@ -225,18 +228,27 @@
                 })
                 console.log(this.choseInfoId, 'opopop')
             },
-            fixInfo(info) {
+            async fixInfo(info) {
                 let personObj = {
                     id: info.personBean.id,
                     name: info.personBean.name,
-                    picAddress: info.imgUrl,
                     gender: info.personBean.gender,
                     idNum: info.personBean.idNum,
                     phone: info.personBean.phone,
                     jobId: info.jobId
                 }
                 console.log(personObj, 'this is trashObj')
-                api.person.updatePerson(JSON.stringify(personObj)).then(res => {
+                if (info.imgUrl !== '') {
+                    await api.person.updataAva(info.imgUrl).then(res => {
+                        console.log(res, '上传成功')
+                        personObj.pictureId = res.id
+                    }).catch(err => {
+                        console.log(err, '上传失败')
+                        this.$message.error('上传失败，其请稍后重试')
+                        return
+                    })
+                }
+                await api.person.updatePerson(JSON.stringify(personObj)).then(res => {
                     this.$message.success('添加成功')
                     console.log('增加成功')
                     this.choseInfoId = []
@@ -246,21 +258,27 @@
                     this.$message.error('更新失败，请稍后重试')
                 })
             },
-            addNewPerson(info) {
+            async addNewPerson(info) {
                 console.log(info, 'opopopopopo')
                 let personObj = {
                     name: info.personBean.name,
-                    // picAddress: info.imgUrl,
                     gender: info.personBean.gender,
                     idNum: info.personBean.idNum,
                     phone: info.personBean.phone,
                     jobId: info.jobId
                 }
                 console.log(personObj, 'this is trashObj')
-                api.person.updataAvatar(info.imgUrl).then(res => {
-                    console.log(res, '上传成功')
-                })
-                api.person.createPerson(JSON.stringify(personObj)).then(res => {
+                if (info.imgUrl !== '') {
+                    await api.person.updataAva(info.imgUrl).then(res => {
+                        console.log(res, '上传成功')
+                        personObj.pictureId = res.id
+                    }).catch(err => {
+                        console.log(err, '上传失败')
+                        this.$message.error('上传失败，其请稍后重试')
+                        return
+                    })
+                }
+                await api.person.createPerson(JSON.stringify(personObj)).then(res => {
                     this.$message.success('添加成功')
                     console.log('增加成功')
                     this.getAllPerson()
@@ -315,7 +333,9 @@
                 }
             },
             idNumFilter(id) {
-
+             let leftId =  id.substring(0, 6)
+             let rightId = id.substring(14)
+             return `${leftId}********${rightId}`
             }
         },
         created() {

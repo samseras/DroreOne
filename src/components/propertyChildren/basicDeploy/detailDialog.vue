@@ -12,20 +12,26 @@
                 <div class="personCardContent" v-if="route.includes('person')">
                     <p class="name">姓&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;名：<input type="text"v-model="person.personBean.name"></p>
                     <p class="sex">性&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;别：
-                        <select name="" v-model="person.personBean.gender">
-                            <option  value= 1>男</option>
-                            <option  value= 0>女</option>
-                        </select>
+                        <el-select v-model="person.personBean.gender" placeholder="请选择">
+                            <el-option label="男" :value="1"></el-option>
+                            <el-option label="女" :value="0"></el-option>
+                        </el-select>
                     </p>
-                    <p class="type">
-                        人员角色： <select name="" v-model="person.jobId">
-                        <option v-for="item in options" :value="item.id">{{item.name}}</option>
-                        </select>
+                    <p class="type">人员角色：
+                        <el-select v-model="person.jobId" placeholder="请选择">
+                            <el-option
+                                v-for="item in options"
+                                :key="item.value"
+                                :label="item.name"
+                                :value="item.id">
+                            </el-option>
+                        </el-select>
                     </p>
                     <p class="idNum">身份证号：<input type="text"v-model="person.personBean.idNum"></p>
                     <p class="phoneNum">电话号码：<input type="text"v-model="person.personBean.phone"></p>
                     <div class="img">
-                        <label for="avatar">
+                        <img :src="person.picturePath" alt="" v-if="isDisabled">
+                        <label for="avatar" v-if="!isDisabled">
                             <img :src="files.length ? files[0].url : 'https://www.gravatar.com/avatar/default?s=200&r=pg&d=mm'"  class="rounded-circle" />
                         </label>
                     </div>
@@ -33,20 +39,20 @@
                 <!--车船-->
                 <div class="personCardContent boatCardContent" v-if="route.includes('boat')">
                     <p class="name">类&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;型：
-                        <select name="" v-model="boatCar.vehicle.type" @change="selectePerson(boatCar.vehicle.type)">
-                            <option  value=1>船只</option>
-                            <option  value=0>车辆</option>
-                        </select>
+                        <el-select v-model="boatCar.vehicle.type" placeholder="请选择" @change="selectePerson(boatCar.vehicle.type)">
+                            <el-option label="船只" :value="1"></el-option>
+                            <el-option label="车辆" :value="0"></el-option>
+                        </el-select>
                     </p>
                     <p class="sex">编&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;号：<input type="text"v-model="boatCar.vehicle.serialNum"></p>
-                    <p class="type">
-                        维护状态： <select name="" v-model="boatCar.vehicle.maintenanceStatus">
-                        <option  value=0>正常</option>
-                        <option  value=1>异常</option>
-                    </select>
+                    <p class="type">维护状态：
+                        <el-select v-model="boatCar.vehicle.maintenanceStatus" placeholder="请选择">
+                            <el-option label="异常" :value="1"></el-option>
+                            <el-option label="正常" :value="0"></el-option>
+                        </el-select>
                     </p>
                     <p class="idNum">核载人数：<input type="text"v-model="boatCar.vehicle.capacity"></p>
-                    <p class="phoneNum">购买时间：
+                    <p class="phoneNum data">购买时间：
                         <!--<input type="text"v-model="boatCar.vehicle.purchaseDate">-->
                         <el-date-picker
                             v-model="boatCar.vehicle.purchaseDate"
@@ -54,7 +60,7 @@
                             placeholder="选择日期">
                         </el-date-picker>
                     </p>
-                    <p class="phoneNum">维护时间：
+                    <p class="phoneNum data">维护时间：
                         <el-date-picker
                             v-model="boatCar.vehicle.maintenanceDate"
                             type="date"
@@ -62,14 +68,20 @@
                         </el-date-picker>
                     </p>
                     <p class="phoneNum">驾驶人员：
-                        <select name="" v-model="boatCar.driverId">
-                            <option v-for="item in driverList" :value="item.id">{{item.name}}</option>
-                        </select>
+                        <el-select v-model="boatCar.driverId" placeholder="请选择">
+                            <el-option
+                                v-for="item in driverList"
+                                :key="item.id"
+                                :label="item.name"
+                                :value="item.id">
+                            </el-option>
+                        </el-select>
                     </p>
                     <p class="phoneNum" v-if="isDisabled">联系电话：<input type="text"v-model="boatCar.phone"></p>
                     <p class="phoneNum">设备号码：<input type="text"v-model="boatCar.vehicle.model"></p>
                     <div class="img">
-                        <label for="avatar">
+                        <img :src="boatCar.picturePath" alt="" v-if="isDisabled">
+                        <label for="avatar" v-if="!isDisabled">
                             <img :src="files.length ? files[0].url : 'https://www.gravatar.com/avatar/default?s=200&r=pg&d=mm'"  class="rounded-circle" />
                         </label>
                     </div>
@@ -77,20 +89,26 @@
                 <!--指示牌-->
                 <div class="personCardContent boatCardContent" v-if="route.includes('indicator')">
                     <p class="name">类&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;型：
-                        <select name="" v-model="indicator.signboardBean.type">
-                            <option  value= 0>标语类</option>
-                            <option  value= 1>路线类</option>
-                            <option  value= 2>设施类</option>
-                        </select>
+                        <el-select v-model="indicator.signboardBean.type" placeholder="请选择">
+                            <el-option label="标语类" :value="0"></el-option>
+                            <el-option label="路线类" :value="1"></el-option>
+                            <el-option label="设施类" :value="2"></el-option>
+                        </el-select>
                     </p>
                     <p class="phoneNum">所属片区：
-                        <select name="" v-model="indicator.regionId">
-                            <option  v-for="item in regions" :value="item.id">{{item.name}}</option>
-                        </select>
+                        <el-select v-model="indicator.regionId" placeholder="请选择">
+                            <el-option
+                                v-for="item in regions"
+                                :key="item.id"
+                                :label="item.name"
+                                :value="item.id">
+                            </el-option>
+                        </el-select>
                     </p>
-                    <p class="phoneNum">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置：<input type="text"v-model="indicator.location"><img src="" alt="" @click="showMapDialog"></p>
+                    <p class="phoneNum">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置：<input type="text"v-model="indicator.location"><i class="el-icon-location-outline" @click="showMapDialog"></i></p>
                     <div class="img">
-                        <label for="avatar">
+                        <img :src="indicator.picturePath" alt="" v-if="isDisabled">
+                        <label for="avatar" v-if="!isDisabled">
                             <img :src="files.length ? files[0].url : 'https://www.gravatar.com/avatar/default?s=200&r=pg&d=mm'"  class="rounded-circle" />
                         </label>
                     </div>
@@ -98,28 +116,34 @@
                 <!--垃圾桶-->
                 <div class="personCardContent boatCardContent" v-if="route.includes('trash')">
                     <p class="name">类&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;型：
-                        <select name="" v-model="trash.dustbinBean.type">
-                            <option  value="1">临时</option>
-                            <option  value="0">固定</option>
-                        </select>
+                        <el-select v-model="trash.dustbinBean.type" placeholder="请选择">
+                            <el-option label="临时" :value="1"></el-option>
+                            <el-option label="固定" :value="0"></el-option>
+                        </el-select>
                     </p>
                     <p class="sex">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称：<input type="text"v-model="trash.dustbinBean.name"></p>
-                    <p class="type" v-if="false">
-                        状&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;态： <select name="" v-model="trash.status">
-                        <option  value="充裕">充裕</option>
-                        <option  value="已满">已满</option>
-                    </select>
+                    <p class="type" v-if="false">状&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;态：
+                        <el-select v-model="trash.status" placeholder="请选择">
+                            <el-option label="充裕" value="充裕"></el-option>
+                            <el-option label="已满" value="已满"></el-option>
+                        </el-select>
                     </p>
                     <p class="idNum">个&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;数：<input type="text"v-model="trash.dustbinBean.dustbinCount"></p>
-                    <p class="phoneNum">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置：<input type="text"v-model="trash.location"><img src="" alt="" @click="showMapDialog"></p>
+                    <p class="phoneNum">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置：<input type="text"v-model="trash.location"><i class="el-icon-location-outline" @click="showMapDialog"></i></p>
                     <p class="phoneNum">所属片区：
-                        <select name="" v-model="trash.regionId">
-                            <option  v-for="item in regions" :value="item.id">{{item.name}}</option>
-                        </select>
+                        <el-select v-model="trash.regionId" placeholder="请选择">
+                            <el-option
+                                v-for="item in regions"
+                                :key="item.id"
+                                :label="item.name"
+                                :value="item.id">
+                            </el-option>
+                        </el-select>
                     </p>
                     <div class="img">
                         <!--<img src="" alt="">-->
-                        <label for="avatar">
+                        <img :src="trash.picturePath" alt="" v-if="isDisabled">
+                        <label for="avatar" v-if="!isDisabled">
                             <img :src="files.length ? files[0].url : 'https://www.gravatar.com/avatar/default?s=200&r=pg&d=mm'"  class="rounded-circle" />
                         </label>
                     </div>
@@ -128,22 +152,30 @@
                 <div class="personCardContent boatCardContent" v-if="route.includes('scenic')">
                     <p class="name">景点名称：<input type="text"v-model="scenic.scenicspotBean.name"></p>
                     <p class="sex">所属片区：
-                        <select name="" v-model="scenic.regionId">
-                            <option  v-for="item in regions" :value="item.id">{{item.name}}</option>
-                        </select>
+                        <el-select v-model="scenic.regionId" placeholder="请选择">
+                            <el-option
+                                v-for="item in regions"
+                                :key="item.id"
+                                :label="item.name"
+                                :value="item.id">
+                            </el-option>
+                        </el-select>
+
                     </p>
-                    <p class="type">
-                        状&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;态： <select name="" v-model="scenic.scenicspotBean.state">
-                        <option  value="正常">充裕</option>
-                        <option  value="异常">已满</option>
-                    </select>
+                    <p class="type" v-if="isDisabled">
+                        状&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;态：
+                        <el-select v-model="indicator.scenicspotBean.status" placeholder="请选择">
+                            <el-option label="充裕" value="充裕"></el-option>
+                            <el-option label="已满" value="已满"></el-option>
+                        </el-select>
                     </p>
                     <p class="idNum">容&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;量：<input type="text"v-model="scenic.scenicspotBean.capacity"></p>
 
                     <p class="phoneNum">当前人数：<input type="text"v-model="scenic.scenicspotBean.currentNum"></p>
-                    <p class="phoneNum">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置：<input type="text"v-model="scenic.location"><img src="" alt="" @click="showMapDialog"></p>
+                    <p class="phoneNum">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置：<input type="text"v-model="scenic.location"><i class="el-icon-location-outline" @click="showMapDialog"></i></p>
                     <div class="img">
-                        <label for="avatar">
+                        <img :src="scenic.picturePath" alt="" v-if="isDisabled">
+                        <label for="avatar" v-if="!isDisabled">
                             <img :src="files.length ? files[0].url : 'https://www.gravatar.com/avatar/default?s=200&r=pg&d=mm'"  class="rounded-circle" />
                         </label>
                     </div>
@@ -151,28 +183,40 @@
                 <!--商圈-->
                 <div class="personCardContent boatCardContent" v-if="route.includes('shop')">
                     <p class="name">类&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;型：
-                        <select name="" v-model="shop.businessBean.businessTypeId">
-                            <option  v-for="item in businesstype" :value="item.id">{{item.name}}</option>
-                        </select>
+                        <el-select v-model="shop.businessBean.businessTypeId" placeholder="请选择">
+                            <el-option
+                                v-for="item in businesstype"
+                                :key="item.businessType.id"
+                                :label="item.businessType.name"
+                                :value="item.businessType.id">
+                            </el-option>
+                        </el-select>
                     </p>
                     <p class="sex">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称：<input type="text"v-model="shop.businessBean.name"></p>
-                    <p class="type">
-                        状&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;态： <select name="" v-model="shop.businessBean.state">
-                        <option  value="充裕">充裕</option>
-                        <option  value="已满">已满</option>
-                    </select>
+                    <p class="type" v-if="isDisabled">
+                        状&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;态：
+                        <el-select v-model="shop.businessBean.state" placeholder="请选择">
+                            <el-option label="充裕" :value="充裕"></el-option>
+                            <el-option label="已满" :value="已满"></el-option>
+                        </el-select>
                     </p>
                     <p class="idNum">容&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;量：<input type="text"v-model="shop.businessBean.capacity"></p>
 
                     <p class="phoneNum">当前人数：<input type="text"v-model="shop.businessBean.currentNum"></p>
-                    <p class="phoneNum">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置：<input type="text"v-model="shop.location"><img src="" alt="" @click="showMapDialog"></p>
+                    <p class="phoneNum">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置：<input type="text"v-model="shop.location"><i class="el-icon-location-outline" @click="showMapDialog"></i></p>
                     <p class="phoneNum">所属片区：
-                        <select name="" v-model="shop.regionId">
-                            <option  v-for="item in regions" :value="item.id">{{item.name}}</option>
-                        </select>
+                        <el-select v-model="shop.regionId" placeholder="请选择">
+                            <el-option
+                                v-for="item in regions"
+                                :key="item.id"
+                                :label="item.name"
+                                :value="item.id">
+                            </el-option>
+                        </el-select>
                     </p>
                     <div class="img">
-                        <label for="avatar">
+                        <img :src="shop.picturePath" alt="" v-if="isDisabled">
+                        <label for="avatar" v-if="!isDisabled">
                             <img :src="files.length ? files[0].url : 'https://www.gravatar.com/avatar/default?s=200&r=pg&d=mm'"  class="rounded-circle" />
                         </label>
                     </div>
@@ -180,29 +224,38 @@
                 <!--停车场-->
                 <div class="personCardContent boatCardContent" v-if="route.includes('park')">
                     <p class="name">类&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;型：
-                        <select name="" v-model="park.parkingBean.type">
-                            <option  value = 0>室外</option>
-                            <option  value = 1>室内</option>
-                        </select>
+                        <el-select v-model="park.parkingBean.type" placeholder="请选择">
+                            <el-option label="室外" :value="0"></el-option>
+                            <el-option label="室内" :value="1"></el-option>
+                        </el-select>
                     </p>
                     <p class="sex">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称：<input type="text"v-model="park.parkingBean.name"></p>
-                    <p class="type">
-                        状&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;态： <select name="" v-model="park.parkingBean.state">
-                        <option  value="充裕">充裕</option>
-                        <option  value="已满">已满</option>
-                        <option  value="紧张">紧张</option>
-                    </select>
+                    <p class="type" v-if="isDisabled">
+                        状&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;态：
+                        <el-select v-model="park.parkingBean.state" placeholder="请选择">
+                            <el-option label="充裕" value="充裕"></el-option>
+                            <el-option label="已满" value="已满"></el-option>
+                            <el-option label="紧张" value="紧张"></el-option>
+                        </el-select>
                     </p>
                     <p class="idNum">空余车位：<input type="text"v-model="park.parkingBean.surplusNum"></p>
                     <p class="phoneNum">车位总数：<input type="text"v-model="park.parkingBean.capacity"></p>
-                    <p class="phoneNum">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置：<input type="text"v-model="park.location"><img src="" alt="" @click="showMapDialog"></p>
+                    <p class="phoneNum">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置：<input type="text"v-model="park.location">
+                        <i class="el-icon-location-outline" @click="showMapDialog"></i>
+                    </p>
                     <p class="phoneNum">所属片区：
-                        <select name="" v-model="park.regionId">
-                            <option  v-for="item in regions" :value="item.id">{{item.name}}</option>
-                        </select>
+                        <el-select v-model="park.regionId" placeholder="请选择">
+                            <el-option
+                                v-for="item in regions"
+                                :key="item.id"
+                                :label="item.name"
+                                :value="item.id">
+                            </el-option>
+                        </el-select>
                     </p>
                     <div class="img">
-                        <label for="avatar">
+                        <img :src="park.picturePath" alt="" v-if="isDisabled">
+                        <label for="avatar" v-if="!isDisabled">
                             <img :src="files.length ? files[0].url : 'https://www.gravatar.com/avatar/default?s=200&r=pg&d=mm'"  class="rounded-circle" />
                         </label>
                     </div>
@@ -211,19 +264,26 @@
                 <div class="personCardContent boatCardContent" v-if="route.includes('toilet')">
                     <p class="sex">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称：<input type="text"v-model="toilet.toiletBean.name"></p>
                     <p class="phoneNum">所属片区：
-                        <select name="" v-model="toilet.regionId">
-                            <option  v-for="item in regions" :value="item.id">{{item.name}}</option>
-                        </select>
+                        <el-select v-model="toilet.regionId" placeholder="请选择">
+                            <el-option
+                                v-for="item in regions"
+                                :key="item.id"
+                                :label="item.name"
+                                :value="item.id">
+                            </el-option>
+                        </el-select>
                     </p>
-                    <p class="type">
-                        状&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;态： <select name="" v-model="toilet.state">
-                        <option  value="正常">正常</option>
-                        <option  value="紧张">紧张</option>
-                    </select>
+                    <p class="type" v-if="isDisabled">
+                        状&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;态：
+                        <el-select v-model="toilet.state" placeholder="请选择">
+                            <el-option label="正常" value="正常"></el-option>
+                            <el-option label="紧张" value="紧张"></el-option>
+                        </el-select>
                     </p>
-                    <p class="phoneNum">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置：<input type="text"v-model="toilet.location"><img src="" alt="" @click="showMapDialog"></p>
+                    <p class="phoneNum">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置：<input type="text"v-model="toilet.location"><i class="el-icon-location-outline" @click="showMapDialog"></i></p>
                     <div class="img">
-                        <label for="avatar">
+                        <img :src="toilet.picturePath" alt="" v-if="isDisabled">
+                        <label for="avatar" v-if="!isDisabled">
                             <img :src="files.length ? files[0].url : 'https://www.gravatar.com/avatar/default?s=200&r=pg&d=mm'"  class="rounded-circle" />
                         </label>
                     </div>
@@ -232,13 +292,14 @@
                 <div class="personCardContent boatCardContent" v-if="route.includes('area')">
                     <p class="sex">片区名称：<input type="text" v-model="area.name" required="required"></p>
                     <p class="phoneNum" v-if="false">所在景区：<input type="text"v-model="area.placeScenic"></p>
-                    <p class="phoneNum">位置范围：<input type="text"v-model="area.location"><img src="" alt="" @click="showMapDialog"></p>
+                    <p class="phoneNum">位置范围：<input type="text"v-model="area.location"><i class="el-icon-location-outline" @click="showMapDialog"></i></p>
                     <p class="type">
                         描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：<textarea name="" v-model="area.description" cols="30"
                                                                                rows="5" placeholder="请输入描述信息"></textarea>
                     </p>
                     <div class="img">
-                        <label for="avatar">
+                        <img :src="area.picturePath" alt="" v-if="isDisabled">
+                        <label for="avatar" v-if="!isDisabled">
                             <img :src="files.length ? files[0].url : 'https://www.gravatar.com/avatar/default?s=200&r=pg&d=mm'"  class="rounded-circle" />
                         </label>
                     </div>
@@ -247,7 +308,7 @@
                 <div class="personCardContent boatCardContent" v-if="route.includes('roat')">
                     <p class="sex">路线名称：<input type="text"v-model="roat.name"></p>
                     <p class="phoneNum">所在景区：<input type="text"v-model="roat.placeScenic"></p>
-                    <p class="phoneNum">位置范围：<input type="text"v-model="roat.location"><img src="" alt="" @click="showMapDialog"></p>
+                    <p class="phoneNum">位置范围：<input type="text"v-model="roat.location"><i class="el-icon-location-outline" @click="showMapDialog"></i></p>
                     <p class="type">
                         描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：<textarea name=""v-model="roat.description" cols="30"
                                                                                rows="5" placeholder="请输入描述信息"></textarea>
@@ -313,7 +374,6 @@
                         gender:'',
                         idNum:'',
                         phone:'',
-                        picAddress: ''
                     },
                     jobId: '',
                 },
@@ -326,7 +386,6 @@
                         maintenanceDate:"",
                         maintenanceStatus:'',
                         model: "",
-                        picAddress:"",
                         purchaseDate:"",
                         serialNum:"",
                         type: '',
@@ -338,14 +397,12 @@
                         name: '',
                         state: '',
                         dustbinCount: '',
-                        picAddress: ''
                     },
                     location: '',
                     regionId: ''
                 },
                 indicator: {
                     signboardBean: {
-                        picAddress: '',
                         type: '',
                     },
                     regionId: '',
@@ -356,7 +413,6 @@
                         capacity: '',
                         currentNum: '',
                         name: '',
-                        picAddress: ''
                     },
                     regionId: '',
                     state: '',
@@ -366,7 +422,6 @@
                     businessBean: {
                         capacity: '',
                         currentNum: '',
-                        picAddress: '',
                         name: '',
                         state: '',
                         businessTypeId: ''
@@ -382,7 +437,6 @@
                         currentNum: '',
                         surplusNum: '',
                         capacity: '',
-                        picAddress: ''
                     },
                     location: '',
                     regionId: '',
@@ -390,7 +444,6 @@
                 toilet: {
                     toiletBean: {
                         name:'',
-                        picAddress: '',
                     },
                     state:'',
                     location:'',
@@ -401,14 +454,12 @@
                     placeScenic: '',//所在景区
                     location: '',
                     description: '',
-                    picAddress: ''
                 },
                 roat: {
                     name: '',
                     placeScenic: '',//所在景区
                     location: '',
                     description: '',
-                    picAddress: ''
                 },
                 options: [],
                 route: '',
@@ -449,7 +500,7 @@
                         this.$message.error('请输入完整信息')
                         return
                     }
-                    if (newInfo.dustbinBean.type === ''|| newInfo.dustbinBean.name.trim() === '' || newInfo.dustbinBean.dustbinCount.trim() === '') {
+                    if (newInfo.dustbinBean.type === ''|| newInfo.dustbinBean.name.trim() === '' || newInfo.dustbinBean.dustbinCount=== '') {
                         this.$message.error('请输入完整信息')
                         return
                     }
@@ -576,7 +627,7 @@
                 let jobId
                 if (type == 0){
                     jobId = 1
-                } else {
+                } else if(type == 1) {
                     jobId = 2
                 }
                 api.person.getJobPerson(jobId).then(res => {
@@ -727,6 +778,21 @@
         }
         .el-date-editor,.el-input,.el-input--prefix,.el-input--suffix,.el-date-editor--date .el-input__icon{
             line-height: rem(30);
+        }
+        .el-select .el-input,.el-input--suffix{
+            margin-top: rem(-3);
+        }
+        .data .el-input__inner{
+            padding-left: rem(30);
+        }
+        .el-input__inner{
+            border: none;
+            height: rem(30);
+            line-height: rem(30);
+            font-size: rem(12);
+            padding: 0;
+            padding-left: rem(10);
+
         }
     }
 </style>
@@ -1075,11 +1141,13 @@
                     margin-top: rem(8);
                     border-bottom: 1px solid #ccc;
                     font-size: rem(12);
+                    overflow: hidden;
                     input{
                         border: none;
                         list-style: none;
                         outline: none;
                         font-size: rem(12);
+                        padding-left: rem(10);
                     }
                     select{
                         border: none;
@@ -1099,19 +1167,18 @@
 
                         }
                     }
-                    img {
-                        display: inline-block;
-                        width: rem(20);
-                        height: rem(20);
-                        border-radius: 50%;
-                        background: red;
+                    i {
+                       display: inline-block;
+                       font-size: rem(16);
                         vertical-align: middle;
+                        cursor: pointer;
                     }
                     textarea{
                         resize: none;
                         outline: none;
                         padding: rem(3);
                         box-sizing: border-box;
+                        border-radius: rem(5);
                     }
                 }
                 .img{
@@ -1119,7 +1186,7 @@
                     height: rem(60);
                     position: absolute;
                     top: rem(0);
-                    right: rem(0);
+                    right: rem(-5);
                     background: #fff;
                     img{
                         width: rem(55);

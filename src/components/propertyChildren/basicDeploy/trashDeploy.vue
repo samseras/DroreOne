@@ -26,7 +26,7 @@
                             width="55">
                             <template slot-scope="scope">
                                 <!--<input type="checkbox" :checked='scope.row.checked' class="checkBoxBtn" @change="checked(scope.row.id)">-->
-                                <el-checkbox v-model="scope.row.checked" @change="getChecked(scope.row.id)" class="checkBoxBtn"></el-checkbox>
+                                <el-checkbox v-model="scope.row.checked" @change="checked(scope.row.id)" class="checkBoxBtn"></el-checkbox>
                             </template>
                         </el-table-column>
                         <el-table-column
@@ -56,18 +56,19 @@
                             label="操作">
                             <template slot-scope="scope">
                                 <span @click="showTrashDetail(scope.row, '垃圾桶信息')">查看</span>
+                                <sapn class="line">|</sapn>
                                 <span @click="fixedInfo(scope.row.id )">编辑</span>
+                                <sapn class="line">|</sapn>
                                 <span @click="deletInfo(scope.row.id)">删除</span>
                             </template>
                         </el-table-column>
                     </el-table>
                     <div class="personInfo" v-for="item in trashList" v-if="isShowTrashCard && item.status">
                         <div class="checkBox">
-                            <!--<input type="checkbox" :checked='item.checked' class="checkBtn" @change="checked(item.dustbinBean.id)">-->
                             <el-checkbox v-model="item.checked" @change="checked(item.id)" class="checkBtn"></el-checkbox>
                         </div>
                         <div class="personType" @click.stop="showTrashDetail(item, '垃圾桶信息')">
-                            <img src="" alt="">
+                            <img :src="item.picturePath" alt="">
                             <span class="type">
                                   {{item.dustbinBean.type | typeFilter}}垃圾桶
                                 </span>
@@ -225,7 +226,7 @@
                 })
                 console.log(this.choseInfoId, 'opopop')
             },
-            fixInfo (info) {
+            async fixInfo (info) {
                 let index = info.location.includes(',')?info.location.indexOf(','):info.location.indexOf('，')
                 let latitude = info.location.substring(0, index)
                 let longitude = info.location.substring(index + 1)
@@ -235,11 +236,20 @@
                     dustbinCount: info.dustbinBean.dustbinCount,
                     type: info.dustbinBean.type,
                     regionId: info.regionId,
-                    picAddress: info.imgUrl,
                     latitude: latitude,
                     longitude: longitude
                 }
-                api.dustbin.updateDustbin(JSON.stringify(trashObj)).then(res => {
+                if (info.imgUrl !== '') {
+                    await api.person.updataAva(info.imgUrl).then(res => {
+                        console.log(res, '上传成功')
+                        trashObj.pictureId = res.id
+                    }).catch(err => {
+                        console.log(err, '上传失败')
+                        this.$message.error('创建失败，请稍后重试')
+                        return
+                    })
+                }
+                await api.dustbin.updateDustbin(JSON.stringify(trashObj)).then(res => {
                     console.log('修改成功')
                     this.$message.success('修改成功')
                     this.choseInfoId = []
@@ -249,7 +259,7 @@
                     this.$message.error('修改失败，请稍后重试')
                 })
             },
-            addNewTrash (info) {
+            async addNewTrash (info) {
                 let index = info.location.includes(',')?info.location.indexOf(','):info.location.indexOf('，')
                 let latitude = info.location.substring(0, index)
                 let longitude = info.location.substring(index + 1)
@@ -258,12 +268,21 @@
                     dustbinCount: info.dustbinBean.dustbinCount,
                     type: info.dustbinBean.type,
                     regionId: info.regionId,
-                    picAddress: info.imgUrl,
                     latitude: latitude,
                     longitude: longitude
                 }
                 console.log(trashObj, 'this is trashObj')
-                api.dustbin.createDustbin(JSON.stringify(trashObj)).then(res => {
+                if (info.imgUrl !== '') {
+                    await api.person.updataAva(info.imgUrl).then(res => {
+                        console.log(res, '上传成功')
+                        trashObj.pictureId = res.id
+                    }).catch(err => {
+                        console.log(err, '上传失败')
+                        this.$message.error('创建失败，请稍后重试')
+                        return
+                    })
+                }
+                await api.dustbin.createDustbin(JSON.stringify(trashObj)).then(res => {
                     console.log('增加成功')
                     this.$message.success('创建成功')
                     this.getAllTrash()
@@ -312,7 +331,6 @@
         },
         filters: {
             typeFilter (item) {
-                console.log(item, '9099090909090')
                 if (item == 1) {
                     return "临时"
                 } else {
