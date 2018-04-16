@@ -63,7 +63,7 @@
                             <el-checkbox v-model="item.checked" @change="checked(item.id)" class="checkBtn"></el-checkbox>
                         </div>
                         <div class="personType" @click.stop="showPersonDetail(item, '片区信息')">
-                            <img src="" alt="">
+                            <img :src="item.picturePath" alt="">
                             <span class="type">
                                   {{item.name}}
                                 </span>
@@ -230,10 +230,20 @@
                     this.$message.error('修改失败，请稍后重试')
                 })
             },
-            addNewPerson (info) {
+            async addNewPerson (info) {
                 let aresObj = {
                     name: info.name,
                     description: info.description
+                }
+                if (info.imgUrl !== '') {
+                    await api.person.updataAva(info.imgUrl).then(res => {
+                        console.log(res, '上传成功')
+                        aresObj.pictureId = res.id
+                    }).catch(err => {
+                        console.log(err, '上传失败')
+                        this.$message.error('上传失败，请稍后重试')
+                        return
+                    })
                 }
                 api.area.createRegion(JSON.stringify(aresObj)).then(res => {
                     console.log(res, '创建成功')

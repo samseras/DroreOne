@@ -68,14 +68,14 @@
                             <el-checkbox v-model="item.checked" @change="checked(item.id)" class="checkBtn"></el-checkbox>
                         </div>
                         <div class="personType" @click.stop="showPersonDetail(item, '景点信息')">
-                            <img src="" alt="">
+                            <img :src="item.picturePath" alt="">
                             <span class="type">
                                   {{item.scenicspotBean.name}}
                                 </span>
                         </div>
                         <div class="specificInfo">
                             <p class="name">所属区域：<span>{{item.regionName}}</span></p>
-                            <p class="sex">状&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;态：<span>{{item.state}}</span></p>
+                            <p class="sex">状&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;态：<span>{{item.scenicspotBean.status}}</span></p>
                             <p class="idNum">当前人数：<span>{{item.scenicspotBean.currentNum}}</span></p>
                             <p class="phoneNum">最大容量：<span>{{item.scenicspotBean.capacity}}</span></p>
                         </div>
@@ -222,7 +222,7 @@
                 })
                 console.log(this.choseInfoId, 'opopop')
             },
-            fixInfo (info) {
+            async fixInfo (info) {
                 let index = info.location.includes(',')?info.location.indexOf(','):info.location.indexOf('，')
                 let latitude = info.location.substring(0, index)
                 let longitude = info.location.substring(index + 1)
@@ -231,19 +231,28 @@
                     name: info.scenicspotBean.name,
                     capacity: info.scenicspotBean.capacity,
                     regionId: info.regionId,
-                    picAddress: info.imgUrl,
                     latitude: latitude,
                     longitude: longitude
                 }
                 console.log(scenicObj, 'this is trashObj')
-                api.scenic.updateScenic(JSON.stringify(scenicObj)).then(res => {
+                if (info.imgUrl !== '') {
+                    await api.person.updataAva(info.imgUrl).then(res => {
+                        console.log(res, '上传成功')
+                        scenicObj.pictureId = res.id
+                    }).catch(err => {
+                        console.log(err, '上传失败')
+                        this.$message.error('上传失败，请稍后重试')
+                        return
+                    })
+                }
+                await api.scenic.updateScenic(JSON.stringify(scenicObj)).then(res => {
                     console.log('增加成功')
                     this.$message.success('修改成功')
                     this.choseInfoId = []
                     this.getAllScenic()
                 })
             },
-            addNewPerson (info) {
+            async addNewPerson (info) {
                 let index = info.location.includes(',')?info.location.indexOf(','):info.location.indexOf('，')
                 let latitude = info.location.substring(0, index)
                 let longitude = info.location.substring(index + 1)
@@ -251,14 +260,25 @@
                     name: info.scenicspotBean.name,
                     capacity: info.scenicspotBean.capacity,
                     regionId: info.regionId,
-                    picAddress: info.imgUrl,
                     latitude: latitude,
                     longitude: longitude
                 }
                 console.log(scenicObj, 'this is trashObj')
-                api.scenic.createScenic(JSON.stringify(scenicObj)).then(res => {
+                if (info.imgUrl !== '') {
+                    await api.person.updataAva(info.imgUrl).then(res => {
+                        console.log(res, '上传成功')
+                        scenicObj.pictureId = res.id
+                    }).catch(err => {
+                        console.log(err, '上传失败')
+                        this.$message.error('上传失败，请稍后重试')
+                        return
+                    })
+                }
+                await api.scenic.createScenic(JSON.stringify(scenicObj)).then(res => {
                     console.log('增加成功')
                     this.getAllScenic()
+                }).catch(err => {
+                    console.log(err, '创建失败')
                 })
             },
             fixedInfo (id) {
@@ -293,6 +313,17 @@
                         this.scenicList[i].id = this.scenicList[i].scenicspotBean.id
                         this.scenicList[i].location = `${this.scenicList[i].latitude},${this.scenicList[i].longitude}`
                         this.scenicList[i].scenicspotBean.currentNum = this.currentNum
+                        // scenicspotBean.status
+                        if (this.scenicList[i].scenicspotBean.capacity == 0) {
+                            this.scenicList[i].scenicspotBean.status = '已满'
+                        } else {
+                            let parcent = this.scenicList[i].scenicspotBean.currentNum/this.scenicList[i].scenicspotBean.capacity
+                            if (parcent < .9){
+                                this.scenicList[i].scenicspotBean.status = '充裕'
+                            } else {
+                                this.scenicList[i].scenicspotBean.status = '已满'
+                            }
+                        }
                     }
                 }).catch((err)=> {
                     console.log(err)
