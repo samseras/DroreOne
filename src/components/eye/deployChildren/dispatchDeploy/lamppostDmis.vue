@@ -1,7 +1,7 @@
 <template>
     <div class="areaDeploy">
         <div class="title">
-            路灯照明调度
+            路灯
         </div>
         <div class="personContent">
             <div class="funcTitle">
@@ -20,10 +20,13 @@
                         :data="areaList"
                         tooltip-effect="dark"
                         style="width: 100%"
+                        @select-all="selectAll"
                         @selection-change="handleSelectionChange">
                         <el-table-column
-                            type="selection"
                             width="50">
+                            <template slot-scope="scope">
+                                <el-checkbox v-model="scope.row.checked" @change="checked(scope.row.id)" class="checkBoxBtn"></el-checkbox>
+                            </template>
                         </el-table-column>
                         <el-table-column
                             prop="type"
@@ -55,6 +58,8 @@
                         <el-table-column label="操作">
                             <template slot-scope="scope">
                                 <span @click="fixedInfo(scope.row,'片区信息')" class="edit">编辑</span> |
+                                <span @click="stop(scope.row,'片区信息')" v-show="isStop">停止 |</span>
+                                <span @click="start(scope.row,'片区信息')" v-show="isStart">开始 |</span>
                                 <span @click="showPersonDetail(scope.row,'片区信息')">查看</span> |
                                 <span @click="delet(scope.row,'片区信息')">删除</span>
                             </template>
@@ -98,12 +103,21 @@
                 choseInfoId: [],
                 choseList: [],
                 isDisabled: true,
-                title: ''
+                title: '',
+                isStop:true,
+                isStart:false,
+                selection:[]
             }
         },
         methods: {
-            handleSelectionChange(val) {
-                this.multipleSelection = val;
+            handleSelectionChange(selection) {
+                this.choseInfoId = selection.map(item => {
+                    return item.id
+                })
+                // this.multipleSelection = val;
+            },
+            selectAll (selection) {
+                console.log(selection,'这是全选的数据')
             },
             showPersonDetail (info,title) {
                 this.areaInfo = info
@@ -134,13 +148,22 @@
             //     }
             // },
             checked (id) {
-                if (this.choseInfoId.includes(id)) {
-                    this.choseInfoId = this.choseInfoId.filter((item) =>{
-                        return item !== id
+                console.log(id)
+                this.areaList = this.areaList.filter(item =>{
+                    if(item.id ===id){
+                        item.checked = item.checked
+                    }
+                    return item
+                })
+
+                if(this.choseInfoId.includes(id)){
+                    this.choseInfoId = this.choseInfoId.filter((item)=>{
+                        return item!== id
                     })
-                } else {
+                }else{
                     this.choseInfoId.push(id)
                 }
+                console.log(this.choseInfoId)
             },
             choseType (type) {
                 console.log(type)
@@ -165,6 +188,7 @@
                 console.log(state, 'opopopopop')
                 this.choseList = this.areaList.filter((item) => {
                     if (state === true) {
+                        console.log("111111111111111")
                         item.checked = true
                         this.choseInfoId.push(item.id)
                         return item.checked === true
@@ -176,6 +200,7 @@
                     }
                 })
                 console.log(this.choseInfoId, 'opopop')
+                this.selectAll(this.choseInfoId)
             },
             fixInfo (info) {
                 console.log(info, 'wertyuio')
@@ -193,18 +218,34 @@
                 this.areaList.push(info)
                 this.choseList = this.areaList
             },
-            fixedInfo () {
-                if (this.choseInfoId.length > 0) {
-                    this.areaList.map((item) => {
-                        if (item.id === this.choseInfoId[0]){
-                            this.areaInfo = item
+            fixedInfo (id) {
+                // if (id) {
+                //     this.choseInfoId.push(id)
+                // }
+                console.log(this.choseInfoId)
+                if(this.choseInfoId.length > 1) {
+                    this.$message.warning('至多选择一条数据')
+                    return
+                }
+                if(this.choseInfoId.length>0){
+                    this.areaList.map((item)=>{
+                        if(item.id === this.choseInfoId[0]){
+                            this.areaInfo=item
                         }
                     })
-                    this.showPersonDetail(this.areaInfo, '修改人员信息')
-                    this.isDisabled = false
-                } else {
+                    this.showPersonDetail(this.areaInfo,'修改摄像头信息')
+                    this.isDisabled=false
+                }else{
                     this.$message.error('请选择要修改的人员')
                 }
+            },
+            stop(id){
+                this.isStop = false;
+                this.isStart = true;
+            },
+            start(id){
+                this.isStop = true;
+                this.isStart = false;
             }
         },
         created () {

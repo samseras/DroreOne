@@ -109,6 +109,7 @@
                 choseList: [],
                 isDisabled: true,
                 title: ''
+
             }
         },
         methods: {

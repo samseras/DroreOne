@@ -10,16 +10,6 @@
             <div class="card">
                 <!--人员调度-->
                 <div class="personCardContent" v-if="route.includes('security')">
-                    <p class="name">调&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 度：
-                    <el-select v-model="person.type" size="mini" placeholder="请选择">
-                        <el-option
-                            v-for="item in options"
-                            :key="item.type"
-                            :label="item.type"
-                            :value="item.type">
-                        </el-option>
-                    </el-select>
-                    </p>
                     <p class="sex">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 称：<input type="text"v-model="person.sex"class="inputText"></p>
                     <p class="time">时&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 间：
                         <el-checkbox-group v-model="filterList" @change="weekDay">
@@ -65,25 +55,14 @@
                         <el-radio v-model="radio" label="1">是</el-radio>
                         <el-radio v-model="radio" label="0">否</el-radio>
                     </p>
-                    <p class="phoneNum">位置范围：<input type="text"v-model="hardware.location" class="location" @click="showMapDialog"><img src="" alt="" @click="showMapDialog"></p>
+                    <p class="phoneNum">线路绘制：<input type="text"v-model="hardware.location" class="location" @click="showMapDialog"><img src="" alt="" @click="showMapDialog"></p>
                     <p class="type">
                         描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：<textarea name="" v-model="person.describe" cols="30"
-                                                                               rows="5" placeholder="请输入描述信息"></textarea>
+                                                                               rows="5" placeholder="请输入描述信息" style="background: #fafafa"></textarea>
                     </p>
                 </div>
-                <!--硬件调度-->
+                <!--广播-->
                 <div class="personCardContent" v-if="route.includes('broadcast')">
-                    <p class="name">调&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 度：
-                        <el-select v-model="hardware.type" size="mini" placeholder="请选择" @change="hardwareType">
-                            <el-option
-                                v-for="item in indicatorType"
-                                :key="item.type"
-                                :label="item.type"
-                                :value="item.type"
-                                >
-                            </el-option>
-                        </el-select>
-                    </p>
                     <p class="sex">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 称：<input type="text"v-model="hardware.sex" class="inputText"></p>
                     <p class="time">时&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 间：
                         <el-checkbox-group v-model="filterList" @change="weekDay">
@@ -110,7 +89,7 @@
                                         placeholder="选择时间范围">
                         </el-time-picker>
                     </p>
-                    <p class="name" v-if="associatedRadio">关联广播：
+                    <p class="name">关联广播：
                         <el-select v-model="hardware.associatedradio" size="mini" multiple placeholder="请选择">
                             <el-option
                                 v-for="item in broadcast"
@@ -120,18 +99,16 @@
                             </el-option>
                         </el-select>
                     </p>
-                    <p class="name" v-if="associatedScreen">关联大屏：
-                        <el-select v-model="hardware.associatedscreen" size="mini" multiple placeholder="请选择">
-                            <el-option
-                                v-for="item in screen"
-                                :key="item.type"
-                                :label="item.type"
-                                :value="item.type">
-                            </el-option>
-                        </el-select>
-                    </p>
-                    <p class="name" v-if="associatedStreet">关联路灯：
-                        <!--<el-select v-model="hardware.associatedStreet" size="mini" multiple placeholder="请选择">-->
+                    <!--<p class="name" v-if="associatedStreet">关联路灯：-->
+                        <!--&lt;!&ndash;<el-select v-model="hardware.associatedStreet" size="mini" multiple placeholder="请选择">&ndash;&gt;-->
+                            <!--&lt;!&ndash;<el-option&ndash;&gt;-->
+                                <!--&lt;!&ndash;v-for="item in lamppost"&ndash;&gt;-->
+                                <!--&lt;!&ndash;:key="item.type"&ndash;&gt;-->
+                                <!--&lt;!&ndash;:label="item.type"&ndash;&gt;-->
+                                <!--&lt;!&ndash;:value="item.type">&ndash;&gt;-->
+                            <!--&lt;!&ndash;</el-option>&ndash;&gt;-->
+                        <!--&lt;!&ndash;</el-select>&ndash;&gt;-->
+                        <!--<el-select v-model="hardware.associatedstreet" size="mini" multiple placeholder="请选择">-->
                             <!--<el-option-->
                                 <!--v-for="item in lamppost"-->
                                 <!--:key="item.type"-->
@@ -139,15 +116,7 @@
                                 <!--:value="item.type">-->
                             <!--</el-option>-->
                         <!--</el-select>-->
-                        <el-select v-model="hardware.associatedstreet" size="mini" multiple placeholder="请选择">
-                            <el-option
-                                v-for="item in lamppost"
-                                :key="item.type"
-                                :label="item.type"
-                                :value="item.type">
-                            </el-option>
-                        </el-select>
-                    </p>
+                    <!--</p>-->
                     <p class="idNum">重复调度：
                         <el-radio v-model="radio" label="1">是</el-radio>
                         <el-radio v-model="radio" label="0">否</el-radio>
@@ -160,7 +129,7 @@
                             :action="importFileUrl"
                             :file-list="fileList"
                             :auto-upload="false">
-                            <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
+                            <el-button slot="trigger" size="small" type="primary">曲目编辑</el-button>
                         </el-upload>
                     </p>
                     <p class="uploadText" v-if="uploadText">定义内容：
@@ -171,7 +140,200 @@
                                                                                rows="5" placeholder="请输入描述信息"></textarea>
                     </p>
                 </div>
+                <!--路灯-->
+                <div class="personCardContent" v-if="route.includes('lamppost')">
+                    <p class="sex">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 称：<input type="text"v-model="hardware.sex" class="inputText"></p>
+                    <p class="time">时&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 间：
+                        <el-checkbox-group v-model="filterList" @change="weekDay">
+                            <el-checkbox v-for="item in week" :label="item.type"></el-checkbox>
+                        </el-checkbox-group>
+                        <el-checkbox label="自定义" @change="weekCustom" v-model="weekcustom"></el-checkbox>
+                    </p>
+                    <p class="time" v-if="weekTime">选择时间：
+                        <el-date-picker
+                            v-model="definedDay"
+                            size ="mini"
+                            type="daterange"
+                            range-separator="至"
+                            start-placeholder="开始日期"
+                            end-placeholder="结束日期">
+                        </el-date-picker>
+                    </p>
+                    <p class="Hardware">执行时间：
+                        <el-time-picker is-range
+                                        v-model="definedTime"
+                                        range-separator="至"
+                                        start-placeholder="开始时间"
+                                        end-placeholder="结束时间"
+                                        placeholder="选择时间范围">
+                        </el-time-picker>
+                    </p>
+                    <p class="name">关联路灯：
+                        <el-select v-model="hardware.associatedradio" size="mini" multiple placeholder="请选择">
+                            <el-option
+                                v-for="item in broadcast"
+                                :key="item.type"
+                                :label="item.type"
+                                :value="item.type">
+                            </el-option>
+                        </el-select>
+                    </p>
+                    <!--<p class="name" v-if="associatedStreet">关联路灯：-->
+                    <!--&lt;!&ndash;<el-select v-model="hardware.associatedStreet" size="mini" multiple placeholder="请选择">&ndash;&gt;-->
+                    <!--&lt;!&ndash;<el-option&ndash;&gt;-->
+                    <!--&lt;!&ndash;v-for="item in lamppost"&ndash;&gt;-->
+                    <!--&lt;!&ndash;:key="item.type"&ndash;&gt;-->
+                    <!--&lt;!&ndash;:label="item.type"&ndash;&gt;-->
+                    <!--&lt;!&ndash;:value="item.type">&ndash;&gt;-->
+                    <!--&lt;!&ndash;</el-option>&ndash;&gt;-->
+                    <!--&lt;!&ndash;</el-select>&ndash;&gt;-->
+                    <!--<el-select v-model="hardware.associatedstreet" size="mini" multiple placeholder="请选择">-->
+                    <!--<el-option-->
+                    <!--v-for="item in lamppost"-->
+                    <!--:key="item.type"-->
+                    <!--:label="item.type"-->
+                    <!--:value="item.type">-->
+                    <!--</el-option>-->
+                    <!--</el-select>-->
+                    <!--</p>-->
+                    <p class="idNum">重复调度：
+                        <el-radio v-model="radio" label="1">是</el-radio>
+                        <el-radio v-model="radio" label="0">否</el-radio>
+                    </p>
+                    <!--<p class="upload" v-if="upload">定义曲风：-->
+                        <!--<el-upload-->
+                            <!--class="upload-demo"-->
+                            <!--ref="upload"-->
+                            <!--:limit="2"-->
+                            <!--:action="importFileUrl"-->
+                            <!--:file-list="fileList"-->
+                            <!--:auto-upload="false">-->
+                            <!--<el-button slot="trigger" size="small" type="primary">曲目编辑</el-button>-->
+                        <!--</el-upload>-->
+                    <!--</p>-->
+                    <!--<p class="uploadText" v-if="uploadText">定义内容：-->
+                        <!--<input type="text"v-model="hardware.uploadText" class="inputText">-->
+                    <!--</p>-->
+                    <p class="type">
+                        描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：<textarea name="" v-model="hardware.describe" cols="30"
+                                                                               rows="5" placeholder="请输入描述信息"></textarea>
+                    </p>
+                </div>
+                <!--保洁-->
+                <div class="personCardContent" v-if="route.includes('purifier')">
+                    <p class="sex">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 称：<input type="text"v-model="person.sex"class="inputText"></p>
+                    <p class="time">时&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 间：
+                        <el-checkbox-group v-model="filterList" @change="weekDay">
+                            <el-checkbox v-for="item in week" :label="item.type"></el-checkbox>
+                        </el-checkbox-group>
+                        <el-checkbox label="自定义" @change="weekCustom" v-model="weekcustom"></el-checkbox>
+                    </p>
+                    <p class="time" v-if="weekTime">选择时间：
+                        <el-date-picker
+                            v-model="definedDay"
+                            size ="mini"
+                            type="daterange"
+                            range-separator="至"
+                            start-placeholder="开始日期"
+                            end-placeholder="结束日期">
+                        </el-date-picker>
+                    </p>
+                    <p class="time">班&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 次：
+                        <el-checkbox-group v-model="classesList" @change="classesDay">
+                            <el-checkbox v-for="item in classes" :label="item.type"></el-checkbox>
+                        </el-checkbox-group>
+                        <el-checkbox label="自定义" @change="dayCustom" v-model="daycustom"></el-checkbox>
+                        <el-time-picker v-if="dayTime"
+                                        is-range
+                                        v-model="definedTime"
+                                        range-separator="至"
+                                        start-placeholder="开始时间"
+                                        end-placeholder="结束时间"
+                                        placeholder="选择时间范围">
+                        </el-time-picker>
+                    </p>
+                    <p class="name">人&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 员：
+                        <el-select v-model="person.people" size="mini" class="" multiple placeholder="请选择">
+                            <el-option
+                                v-for="item in options"
+                                :key="item.type"
+                                :label="item.type"
+                                :value="item.type">
+                            </el-option>
+                        </el-select>
+                    </p>
+                    <p class="idNum">重复调度：
+                        <el-radio v-model="radio" label="1">是</el-radio>
+                        <el-radio v-model="radio" label="0">否</el-radio>
+                    </p>
+                    <p class="name">片&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 区：
+                        <el-select v-model="person.people" size="mini" class="" multiple placeholder="请选择">
+                            <el-option
+                                v-for="item in options"
+                                :key="item.type"
+                                :label="item.type"
+                                :value="item.type">
+                            </el-option>
+                        </el-select>
+                    </p>
+                    <p class="type">
+                        描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：<textarea name="" v-model="person.describe" cols="30"
+                                                                               rows="5" placeholder="请输入描述信息" style="background: #fafafa"></textarea>
+                    </p>
+                </div>
+                <!--LED-->
+                <div class="personCardContent" v-if="route.includes('screen')">
+
+                    <p class="sex">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 称：<input type="text"v-model="hardware.sex" class="inputText"></p>
+                    <p class="time">时&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 间：
+                        <el-checkbox-group v-model="filterList" @change="weekDay">
+                            <el-checkbox v-for="item in week" :label="item.type"></el-checkbox>
+                        </el-checkbox-group>
+                        <el-checkbox label="自定义" @change="weekCustom" v-model="weekcustom"></el-checkbox>
+                    </p>
+                    <p class="time" v-if="weekTime">选择时间：
+                        <el-date-picker
+                            v-model="definedDay"
+                            size ="mini"
+                            type="daterange"
+                            range-separator="至"
+                            start-placeholder="开始日期"
+                            end-placeholder="结束日期">
+                        </el-date-picker>
+                    </p>
+                    <p class="Hardware">执行时间：
+                        <el-time-picker is-range
+                                        v-model="definedTime"
+                                        range-separator="至"
+                                        start-placeholder="开始时间"
+                                        end-placeholder="结束时间"
+                                        placeholder="选择时间范围">
+                        </el-time-picker>
+                    </p>
+                    <p class="name">关联广播：
+                        <el-select v-model="hardware.associatedradio" size="mini" multiple placeholder="请选择">
+                            <el-option
+                                v-for="item in broadcast"
+                                :key="item.type"
+                                :label="item.type"
+                                :value="item.type">
+                            </el-option>
+                        </el-select>
+                    </p>
+                    <p class="idNum">重复调度：
+                        <el-radio v-model="radio" label="1">是</el-radio>
+                        <el-radio v-model="radio" label="0">否</el-radio>
+                    </p>
+                    <p class="uploadText">定义内容：
+                        <input type="text"v-model="hardware.uploadText" class="inputText">
+                    </p>
+                    <p class="type">
+                        描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：<textarea name="" v-model="hardware.describe" cols="30"
+                                                                               rows="5" placeholder="请输入描述信息"></textarea>
+                    </p>
+                </div>
             </div>
+
             <div class=""slot="footer" class="dialog-footer cardFooter">
                 <el-button size="mini" class="hold" @click="addNewInfo" :disabled='isDisabled'>保存</el-button>
                 <el-button size="mini" @click = 'closeDialog' :disabled='isDisabled'>取消</el-button>
@@ -210,9 +372,9 @@
                     sex:'',
                     idNum:'',
                     type: '广播',
-                    associatedradio:[],
-                    associatedscreen:[],
-                    associatedstreet:[],
+                    // associatedradio:[],
+                    // associatedscreen:[],
+                    // associatedstreet:[],
                     phone:'',
                     people:'',
                 },

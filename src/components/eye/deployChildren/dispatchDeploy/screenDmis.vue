@@ -1,7 +1,7 @@
 <template>
     <div class="areaDeploy">
         <div class="title">
-            大屏播放调度
+            LED
         </div>
         <div class="personContent">
             <div class="funcTitle">
@@ -55,6 +55,8 @@
                         <el-table-column label="操作">
                             <template slot-scope="scope">
                                 <span @click="fixedInfo(scope.row,'片区信息')" class="edit">编辑</span> |
+                                <span @click="stop(scope.row,'片区信息')" v-show="isStop">停止 |</span>
+                                <span @click="start(scope.row,'片区信息')" v-show="isStart">开始 |</span>
                                 <span @click="showPersonDetail(scope.row,'片区信息')">查看</span> |
                                 <span @click="delet(scope.row,'片区信息')">删除</span>
                             </template>
@@ -98,7 +100,9 @@
                 choseInfoId: [],
                 choseList: [],
                 isDisabled: true,
-                title: ''
+                title: '',
+                isStop:true,
+                isStart:false
             }
         },
         methods: {
@@ -205,6 +209,14 @@
                 } else {
                     this.$message.error('请选择要修改的人员')
                 }
+            },
+            stop(id){
+                this.isStop = false;
+                this.isStart = true;
+            },
+            start(id){
+                this.isStop = true;
+                this.isStart = false;
             }
         },
         created () {

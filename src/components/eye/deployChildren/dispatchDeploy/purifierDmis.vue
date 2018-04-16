@@ -1,7 +1,7 @@
 <template>
 <div class="areaDeploy">
         <div class="title">
-            保洁排版调度
+            保洁
         </div>
         <div class="personContent">
             <div class="funcTitle">
@@ -50,6 +50,8 @@
                         <el-table-column label="操作">
                             <template slot-scope="scope">
                                 <span @click="fixedInfo(scope.row,'片区信息')">编辑</span> |
+                                <span @click="stop(scope.row,'片区信息')" v-show="isStop">停止 |</span>
+                                <span @click="start(scope.row,'片区信息')" v-show="isStart">开始 |</span>
                                 <span @click="showPersonDetail(scope.row,'片区信息')">查看</span> |
                                 <span @click="delet(scope.row,'片区信息')">删除</span>
                             </template>
@@ -108,7 +110,9 @@
                 choseInfoId: [],
                 choseList: [],
                 isDisabled: true,
-                title: ''
+                title: '',
+                isStop:true,
+                isStart:false
             }
         },
         methods: {
@@ -236,6 +240,14 @@
                 })
                 this.showPersonDetail(this.areaInfo, '修改人员信息')
                 this.isDisabled = false
+            },
+            stop(id){
+                this.isStop = false;
+                this.isStart = true;
+            },
+            start(id){
+                this.isStop = true;
+                this.isStart = false;
             }
         },
         created () {

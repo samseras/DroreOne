@@ -6,7 +6,9 @@
         </div>
         <div class="funcBtn">
             <el-button size="mini"plain @click="addNewInfo"><i class="el-icon-circle-plus"></i>添加</el-button>
-            <el-checkbox v-model="isSelected" @change="selectedAll"  class='selectedAll' >全选</el-checkbox>
+            <el-button size="mini"plain class='selectedAll' @click="selected">
+                <el-checkbox v-model="isSelected" @change="selectedAll"></el-checkbox>全选
+            </el-button>
             <!--<el-button size="mini"plain>导入</el-button>-->
             <!--<el-button size="mini"plain>导出</el-button>-->
             <el-button size="mini"plain @click="deleteCard"><i class="el-icon-delete"></i>删除</el-button>
@@ -62,6 +64,11 @@
 
                 this.$emit('addNewInfo')
             },
+            selected () {
+                this.isSelected = !this.isSelected
+                console.log(this.isSelected,"111111111111111111111111111")
+                this.$emit('selectedAll', this.isSelected)
+            },
             deleteCard () {
                 this.$emit('deletInfo')
             },
@@ -71,8 +78,9 @@
             choseType () {
                 this.$emit('choseType',this.filterList)
             },
+
             selectedAll () {
-                // this.isSelected = !this.isSelected
+                this.isSelected = !this.isSelected;
                 console.log(this.isSelected, 'zhehis')
                 this.$emit('selectedAll', this.isSelected)
             },
