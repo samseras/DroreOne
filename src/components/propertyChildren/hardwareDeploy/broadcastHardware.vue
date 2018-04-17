@@ -267,11 +267,13 @@
                 console.log(type)
                 if(type.length===0){
                     this.broadList=this.broadList.filter((item)=>{
+
                         item.status=true
                         return item
                     })
                 }else{
                     this.broadList=this.broadList.filter((item,index)=>{
+                            console.log(item.positionType)
                         if (item.positionType == 0) {
                             item.type = '室内'
                         } else{
@@ -282,6 +284,7 @@
                         }else if(!type.includes(item.type)){
                             item.status=false
                             console.log(item.type)
+                            console.log(item.positionType)
                         }
                         return item
                     })

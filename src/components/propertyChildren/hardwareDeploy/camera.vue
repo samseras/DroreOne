@@ -6,9 +6,7 @@
         </div>
         <div class="titleBtn">
             <el-button size="mini" plain @click="addNewInfo"><i class="el-icon-circle-plus"></i>添加</el-button>
-            <!--<el-button size="mini" plain class="selectedAll">-->
-                <!--<el-checkbox v-model="isSelected" @change="selectedAll" ></el-checkbox>全选-->
-            <!--</el-button>-->
+
             <el-checkbox v-model="isSelected" @change="selectedAll"  class='selectedAll' >全选</el-checkbox>
             <el-button size="mini" plain>导入</el-button>
             <el-button size="mini" plain>导出</el-button>
