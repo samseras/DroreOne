@@ -352,12 +352,14 @@
 </script>
 
 <style lang="scss" type="text/scss">
-    .el-checkbox__label{
-        padding-left:rem(5);
-        font-size:rem(13);
-    }
-    .el-checkbox__inner{
-        margin-top:rem(5);
+    .lightList{
+        .el-checkbox__label{
+            padding-left:rem(5);
+            font-size:rem(13);
+        }
+        .el-checkbox__inner{
+            margin-top:rem(5);
+        }
     }
 </style>
 

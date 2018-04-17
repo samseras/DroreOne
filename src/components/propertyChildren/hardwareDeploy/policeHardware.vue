@@ -1,5 +1,5 @@
 <template>
-    <div class="cameraHard">
+    <div class="policeHard">
         <div class="title">
             报警柱传感信息
         </div>
@@ -340,17 +340,20 @@
 </script>
 
 <style lang="scss" type="text/scss">
-    .el-checkbox__label{
-        padding-left:rem(5);
-        font-size:rem(13);
+    .policeHard{
+        .el-checkbox__label{
+            padding-left:rem(5);
+            font-size:rem(13);
+        }
+        .el-checkbox__inner{
+            margin-top:rem(5);
+        }
     }
-    .el-checkbox__inner{
-        margin-top:rem(5);
-    }
+
 </style>
 
 <style lang="scss" type="text/scss" scoped>
-    .cameraHard{
+    .policeHard{
         width:100%;
         height:100%;
         display:flex;
