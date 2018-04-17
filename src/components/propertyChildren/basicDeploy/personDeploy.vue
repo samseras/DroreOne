@@ -247,6 +247,8 @@
                         this.$message.error('上传失败，其请稍后重试')
                         return
                     })
+                } else {
+                    personObj.pictureId = info.pictureId
                 }
                 await api.person.updatePerson(JSON.stringify(personObj)).then(res => {
                     this.$message.success('添加成功')

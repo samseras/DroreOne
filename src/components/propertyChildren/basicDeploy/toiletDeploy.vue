@@ -231,6 +231,8 @@
                     }).catch(err => {
                         console.log(err, '上传失败')
                     })
+                } else {
+                    toiletObj.pictureId = info.pictureId
                 }
                 await api.toilet.updateToilet(JSON.stringify(toiletObj)).then(res => {
                     console.log(res, '修改成功')
@@ -413,6 +415,9 @@
                         p{
                             margin-left: rem(10);
                             line-height: rem(22);
+                            overflow: hidden;
+                            text-overflow: ellipsis;
+                            white-space: nowrap;
                         }
                     }
                 }

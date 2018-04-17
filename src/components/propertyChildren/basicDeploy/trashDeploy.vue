@@ -248,6 +248,8 @@
                         this.$message.error('创建失败，请稍后重试')
                         return
                     })
+                } else {
+                    trashObj.pictureId = info.pictureId
                 }
                 await api.dustbin.updateDustbin(JSON.stringify(trashObj)).then(res => {
                     console.log('修改成功')
@@ -438,6 +440,9 @@
                         p{
                             margin-left: rem(10);
                             line-height: rem(22);
+                            overflow: hidden;
+                            text-overflow: ellipsis;
+                            white-space: nowrap;
                         }
                     }
                 }
