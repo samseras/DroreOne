@@ -23,10 +23,6 @@
 </template>
 
 <script>
-    // import dataId from "../../static/xxsd_map.json"
-    // import Map from "../../static/js/droreMap.js"
-    // import mapLabe from "../../static/js/mapLabelInformationChildrenForm.js"
-    // import masterDataGrid1 from "../../static/js/masterDataGrid1.js"
     import Map from '@/components/map'
 
 
