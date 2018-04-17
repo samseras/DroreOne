@@ -257,6 +257,8 @@
                         this.$message.error('上传失败，请稍后重试')
                         return
                     })
+                } else {
+                    parkObj.pictureId = info.pictureId
                 }
                 await api.park.updatePark(JSON.stringify(parkObj)).then(res => {
                     console.log(res, '修改停车场成功')
@@ -450,6 +452,9 @@
                         p{
                             margin-left: rem(10);
                             line-height: rem(22);
+                            overflow: hidden;
+                            text-overflow: ellipsis;
+                            white-space: nowrap;
                         }
                     }
                 }

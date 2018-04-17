@@ -1,3 +1,6 @@
+//显示小图标：droreMap.showLayer()-->pool.getLayerById【拿到要显示的layerId】-【layers】->setSeedLayer-->addlayer-->droreMap.addLayer-->ulDisplay()
+define(function(require, exports, module) {
+    // 你也可以引入自己的函数依赖
 var Event = (function() {
     var SINGLECLICK_EVENT = "singleclick"; //定义了常量;
     var DOUBLECLICK_EVENT = "dblclick";
@@ -16,3 +19,6 @@ var Event = (function() {
         MODIFY_EVENT:MODIFY_EVENT
     }
 })();
+
+    module.exports = Event;
+})
