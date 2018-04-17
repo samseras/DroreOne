@@ -57,7 +57,9 @@
                         <el-table-column>
                             <template slot-scope="scope">
                                 <span @click="showPersonDetail(scope.row, '摄像头信息')">查看</span>
+                                <span class="line">|</span>
                                 <span @click="fixedInfo(scope.row.id )">编辑</span>
+                                <span class="line">|</span>
                                 <span @click="deletInfo(scope.row.id)">删除</span>
                             </template>
                         </el-table-column>

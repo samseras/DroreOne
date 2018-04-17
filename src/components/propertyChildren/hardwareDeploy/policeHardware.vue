@@ -58,7 +58,9 @@
                         <el-table-column>
                             <template slot-scope="scope">
                                 <span @click="showPoliceDetail(scope.row, '报警柱信息')">查看</span>
+                                <span class="line">|</span>
                                 <span @click="fixedInfo(scope.row.id )">编辑</span>
+                                <span class="line">|</span>
                                 <span @click="deletInfo(scope.row.id)">删除</span>
                             </template>
                         </el-table-column>
