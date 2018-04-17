@@ -281,6 +281,8 @@
                         this.$message.error('创建失败，请稍后重试')
                         return
                     })
+                } else {
+                    shopObj.pictureId = info.pictureId
                 }
                 console.log(shopObj, 'this is trashObj')
                 await api.shop.createShop(JSON.stringify(shopObj)).then(res => {
@@ -442,6 +444,9 @@
                         p{
                             margin-left: rem(10);
                             line-height: rem(22);
+                            overflow: hidden;
+                            text-overflow: ellipsis;
+                            white-space: nowrap;
                         }
                     }
                 }

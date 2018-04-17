@@ -266,6 +266,8 @@
                         this.$message.error('上传失败，请稍后重试')
                         return
                     })
+                } else {
+                    indicatorObj.pictureId = info.pictureId
                 }
                 await api.indicator.createIndicator(JSON.stringify(indicatorObj)).then(res => {
                     console.log('增加成功')
@@ -425,6 +427,9 @@
                         p{
                             margin-left: rem(10);
                             line-height: rem(22);
+                            overflow: hidden;
+                            text-overflow: ellipsis;
+                            white-space: nowrap;
                         }
                     }
                 }

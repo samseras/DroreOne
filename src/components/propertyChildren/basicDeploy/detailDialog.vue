@@ -500,7 +500,7 @@
                         this.$message.error('请输入完整信息')
                         return
                     }
-                    if (newInfo.dustbinBean.type === ''|| newInfo.dustbinBean.name.trim() === '' || newInfo.dustbinBean.dustbinCount=== '') {
+                    if (newInfo.dustbinBean.type === ''|| newInfo.dustbinBean.name === '' || newInfo.dustbinBean.dustbinCount=== '') {
                         this.$message.error('请输入完整信息')
                         return
                     }
@@ -512,7 +512,7 @@
                     }
                 } else if(this.route.includes('scenic')) {
                     newInfo = this.scenic
-                    if (newInfo.scenicspotBean.capacity.trim() === '' || newInfo.scenicspotBean.name.trim() === '') {
+                    if (newInfo.scenicspotBean.capacity === '' || newInfo.scenicspotBean.name.trim() === '') {
                         this.$message.error('请输入完整信息')
                         return
                     }
@@ -522,7 +522,7 @@
                     }
                 } else if(this.route.includes('shop')) {
                     newInfo = this.shop
-                    if (newInfo.businessBean.capacity.trim() === '' || newInfo.businessBean.currentNum.trim() === '' || newInfo.businessBean.name.trim() === '' || newInfo.businessBean.businessTypeId === '') {
+                    if (newInfo.businessBean.capacity === '' || newInfo.businessBean.currentNum === '' || newInfo.businessBean.name.trim() === '' || newInfo.businessBean.businessTypeId === '') {
                         this.$message.error('请输入完整信息')
                         return
                     }
@@ -532,7 +532,7 @@
                     }
                 } else if(this.route.includes('park')) {
                     newInfo = this.park
-                    if (newInfo.parkingBean.type === '' || newInfo.parkingBean.name.trim() === ''|| newInfo.parkingBean.surplusNum.trim() === ''|| newInfo.parkingBean.capacity.trim() === '') {
+                    if (newInfo.parkingBean.type === '' || newInfo.parkingBean.name.trim() === ''|| newInfo.parkingBean.surplusNum === ''|| newInfo.parkingBean.capacity === '') {
                         this.$message.error('请输入完整信息')
                         return
                     }

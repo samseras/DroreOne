@@ -407,7 +407,7 @@
                         img{
                             width:rem(40);
                             height:rem(40);
-                            border:2px solid #2c3b47;
+                            border:1px solid #a1b3bb;
                             border-radius: 50%;
                             position:absolute;
                             left:rem(15);

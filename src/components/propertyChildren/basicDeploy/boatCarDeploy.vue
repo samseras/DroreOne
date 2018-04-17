@@ -267,6 +267,8 @@
                         this.$message.error('添加失败，请稍后重试')
                         return false
                     })
+                } else {
+                    boatObj.pictureId = info.pictureId
                 }
                 await api.boat.updateBoat(JSON.stringify(boatObj)).then(res => {
                     console.log(res ,'增加成功')
@@ -472,6 +474,9 @@
                         p{
                             margin-left: rem(10);
                             line-height: rem(22);
+                            overflow: hidden;
+                            text-overflow: ellipsis;
+                            white-space: nowrap;
                         }
                     }
                 }
