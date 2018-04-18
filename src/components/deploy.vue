@@ -1,6 +1,6 @@
 <template>
     <div class="deploy">
-        <el-menu default-active="/deploy/broadcast-Dmis" router>
+        <el-menu default-active="/deploy/lamppost-Dmis" router>
             <ScrollContainer>
                 <template v-for="item in items">
                     <template v-if="item.subs">

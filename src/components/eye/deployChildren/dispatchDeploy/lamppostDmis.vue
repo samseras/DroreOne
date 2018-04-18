@@ -20,7 +20,6 @@
                         :data="areaList"
                         tooltip-effect="dark"
                         style="width: 100%"
-                        @select-all="selectAll"
                         @selection-change="handleSelectionChange">
                         <el-table-column
                             width="50">
@@ -60,7 +59,7 @@
                                 <span @click="fixedInfo(scope.row,'片区信息')" class="edit">编辑</span> |
                                 <span @click="stop(scope.row,'片区信息')" v-show="isStop">停止 |</span>
                                 <span @click="start(scope.row,'片区信息')" v-show="isStart">开始 |</span>
-                                <span @click="showPersonDetail(scope.row,'片区信息')">查看</span> |
+                                <span @click="showCheckDetail(scope.row,'灯光照明')">查看</span> |
                                 <span @click="delet(scope.row,'片区信息')">删除</span>
                             </template>
                         </el-table-column>
@@ -75,6 +74,17 @@
                               @fixInfo = "fixInfo"
                               @addNewInfo="addNewPerson">
                 </PersonDetail>
+                <CheckDetail v-if="checkVisible"
+                    :visible="checkVisible"
+                    :checkInfo="areaInfo"
+                    :isDisabled="isDisabled"
+                    :checkTitle="title"
+                    @closeInfoDialog ="checkVisible = false"
+                    @fixInfo = "fixInfo"
+                    @addNewInfo="addNewPerson">
+                </CheckDetail>
+
+
             </div>
         </div>
     </div>
@@ -84,6 +94,7 @@
     import ScrollContainer from '@/components/ScrollContainer'
     import Header from './dmisHeader'
     import PersonDetail from './dmisDialog'
+    import CheckDetail from './lamppostCheckDialog'
     export default {
         name: 'area-deploy',
         data(){
@@ -92,12 +103,13 @@
                 checkList: [],
                 filterList: [],
                 areaList: [
-                    {id:1,name: '下午下班音乐提示',type: '广播',number: '10个',time: '2018.02.03~2018.03.11',executetime: '18:00:00~18:10:00',repetition:'是'},
-                    {id:2,name: '上班提示',type: '广播',number: '10个',time: '2018.02.03~2018.03.11',executetime: '18:00:00~18:10:00',repetition:'是'},
-                    {id:3,name: '夜间照明',type: '路灯',number: '10个',time: '2018.02.03~2018.03.11',executetime: '18:00:00~18:10:00',repetition:'否'},
-                    {id:8,name: '室内照明',type: '路灯',number: '10个',time: '2018.02.03~2018.03.11',executetime: '18:00:00~18:10:00',repetition:'否'},
-                    {id:9,name: '节日提示',type: 'LED大屏',number: '10个',time: '2018.02.03~2018.03.11',executetime: '18:00:00~18:10:00',repetition:'是'},
+                    {id:1,checked:false,name: '下午下班音乐提示',type: '广播',number: '10个',time: '2018.02.03~2018.03.11',executetime: '18:00:00~18:10:00',repetition:'是'},
+                    {id:2,checked:false,name: '上班提示',type: '广播',number: '10个',time: '2018.02.03~2018.03.11',executetime: '18:00:00~18:10:00',repetition:'是'},
+                    {id:3,checked:false,name: '夜间照明',type: '路灯',number: '10个',time: '2018.02.03~2018.03.11',executetime: '18:00:00~18:10:00',repetition:'否'},
+                    {id:8,checked:false,name: '室内照明',type: '路灯',number: '10个',time: '2018.02.03~2018.03.11',executetime: '18:00:00~18:10:00',repetition:'否'},
+                    {id:9,checked:false,name: '节日提示',type: 'LED大屏',number: '10个',time: '2018.02.03~2018.03.11',executetime: '18:00:00~18:10:00',repetition:'是'},
                 ],
+                checkVisible:false,
                 visible: false,
                 areaInfo: {},
                 choseInfoId: [],
@@ -116,12 +128,13 @@
                 })
                 // this.multipleSelection = val;
             },
-            selectAll (selection) {
-                console.log(selection,'这是全选的数据')
-            },
             showPersonDetail (info,title) {
                 this.areaInfo = info
                 this.visible = true
+                this.title = title
+            },
+            showCheckDetail(info,title){
+                this.checkVisible = true;
                 this.title = title
             },
             addNewInfo () {
@@ -185,22 +198,19 @@
                 }
             },
             selectedAll (state) {
-                console.log(state, 'opopopopop')
                 this.choseList = this.areaList.filter((item) => {
                     if (state === true) {
-                        console.log("111111111111111")
                         item.checked = true
                         this.choseInfoId.push(item.id)
-                        return item.checked === true
+                        return
                     } else {
                         console.log('进入这个判断吗')
                         item.checked = false
                         this.choseInfoId = []
-                        return item.checked === false
+                        return
                     }
                 })
                 console.log(this.choseInfoId, 'opopop')
-                this.selectAll(this.choseInfoId)
             },
             fixInfo (info) {
                 console.log(info, 'wertyuio')
@@ -222,23 +232,32 @@
                 // if (id) {
                 //     this.choseInfoId.push(id)
                 // }
-                console.log(this.choseInfoId)
-                if(this.choseInfoId.length > 1) {
-                    this.$message.warning('至多选择一条数据')
-                    return
-                }
-                if(this.choseInfoId.length>0){
+                // console.log(this.choseInfoId)
+                // if(this.choseInfoId.length > 1) {
+                //     this.$message.warning('至多选择一条数据')
+                //     return
+                // }
+                // if(this.choseInfoId.length>0){
                     this.areaList.map((item)=>{
                         if(item.id === this.choseInfoId[0]){
                             this.areaInfo=item
                         }
                     })
-                    this.showPersonDetail(this.areaInfo,'修改摄像头信息')
+                    this.showPersonDetail(this.areaInfo,'修改路灯信息')
                     this.isDisabled=false
-                }else{
-                    this.$message.error('请选择要修改的人员')
-                }
+                // }else{
+                //     this.$message.error('请选择要修改的路灯')
+                // }
             },
+            // fixedInfo (id) {
+            //     this.areaList.map((item) => {
+            //         if (item.id === this.choseInfoId[0]){
+            //             this.areaInfo = item
+            //         }
+            //     })
+            //     this.showPersonDetail(this.areaInfo, '修改路灯信息')
+            //     this.isDisabled = false
+            // },
             stop(id){
                 this.isStop = false;
                 this.isStart = true;
@@ -258,7 +277,8 @@
         components: {
             ScrollContainer,
             Header,
-            PersonDetail
+            PersonDetail,
+            CheckDetail
         }
     }
 

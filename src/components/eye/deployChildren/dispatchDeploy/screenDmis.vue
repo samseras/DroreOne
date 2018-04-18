@@ -22,8 +22,10 @@
                         style="width: 100%"
                         @selection-change="handleSelectionChange">
                         <el-table-column
-                            type="selection"
                             width="50">
+                            <template slot-scope="scope">
+                                <el-checkbox v-model="scope.row.checked" @change="checked(scope.row.id)" class="checkBoxBtn"></el-checkbox>
+                            </template>
                         </el-table-column>
                         <el-table-column
                             prop="type"
@@ -89,11 +91,11 @@
                 checkList: [],
                 filterList: [],
                 areaList: [
-                    {id:1,name: '下午下班音乐提示',type: '广播',number: '10个',time: '2018.02.03~2018.03.11',executetime: '18:00:00~18:10:00',repetition:'是'},
-                    {id:2,name: '上班提示',type: '广播',number: '10个',time: '2018.02.03~2018.03.11',executetime: '18:00:00~18:10:00',repetition:'是'},
-                    {id:3,name: '夜间照明',type: '路灯',number: '10个',time: '2018.02.03~2018.03.11',executetime: '18:00:00~18:10:00',repetition:'否'},
-                    {id:8,name: '室内照明',type: '路灯',number: '10个',time: '2018.02.03~2018.03.11',executetime: '18:00:00~18:10:00',repetition:'否'},
-                    {id:9,name: '节日提示',type: 'LED大屏',number: '10个',time: '2018.02.03~2018.03.11',executetime: '18:00:00~18:10:00',repetition:'是'},
+                    {id:1,checked:false,name: '下午下班音乐提示',type: '广播',number: '10个',time: '2018.02.03~2018.03.11',executetime: '18:00:00~18:10:00',repetition:'是'},
+                    {id:2,checked:false,name: '上班提示',type: '广播',number: '10个',time: '2018.02.03~2018.03.11',executetime: '18:00:00~18:10:00',repetition:'是'},
+                    {id:3,checked:false,name: '夜间照明',type: '路灯',number: '10个',time: '2018.02.03~2018.03.11',executetime: '18:00:00~18:10:00',repetition:'否'},
+                    {id:8,checked:false,name: '室内照明',type: '路灯',number: '10个',time: '2018.02.03~2018.03.11',executetime: '18:00:00~18:10:00',repetition:'否'},
+                    {id:9,checked:false,name: '节日提示',type: 'LED大屏',number: '10个',time: '2018.02.03~2018.03.11',executetime: '18:00:00~18:10:00',repetition:'是'},
                 ],
                 visible: false,
                 areaInfo: {},
@@ -102,12 +104,15 @@
                 isDisabled: true,
                 title: '',
                 isStop:true,
-                isStart:false
+                isStart:false,
+                selection:[]
             }
         },
         methods: {
-            handleSelectionChange(val) {
-                this.multipleSelection = val;
+            handleSelectionChange(selection) {
+                this.choseInfoId = selection.map(item => {
+                    return item.id
+                })
             },
             showPersonDetail (info,title) {
                 this.areaInfo = info
@@ -197,8 +202,26 @@
                 this.areaList.push(info)
                 this.choseList = this.areaList
             },
-            fixedInfo () {
-                if (this.choseInfoId.length > 0) {
+            fixedInfo (id) {
+                // if (id) {
+                //     this.choseInfoId.push(id)
+                // }
+                // console.log(this.choseInfoId)
+                // if(this.choseInfoId.length > 1) {
+                //     this.$message.warning('至多选择一条数据')
+                //     return
+                // }
+                // if(this.choseInfoId.length>0){
+                //     this.areaList.map((item)=>{
+                //         if(item.id === this.choseInfoId[0]){
+                //             this.areaInfo=item
+                //         }
+                //     })
+                //     this.showPersonDetail(this.areaInfo,'修改LED信息')
+                //     this.isDisabled=false
+                // }else{
+                //     this.$message.error('请选择要修改的LED')
+                // }
                     this.areaList.map((item) => {
                         if (item.id === this.choseInfoId[0]){
                             this.areaInfo = item
@@ -206,9 +229,6 @@
                     })
                     this.showPersonDetail(this.areaInfo, '修改人员信息')
                     this.isDisabled = false
-                } else {
-                    this.$message.error('请选择要修改的人员')
-                }
             },
             stop(id){
                 this.isStop = false;

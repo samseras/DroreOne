@@ -8,7 +8,7 @@
             class="dialog echatDialog"
             center>
             <div class="card">
-                <!--人员调度-->
+                <!--巡更路线-->
                 <div class="personCardContent" v-if="route.includes('security')">
                     <p class="sex">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 称：<input type="text"v-model="person.sex"class="inputText"></p>
                     <p class="time">时&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 间：
@@ -99,41 +99,25 @@
                             </el-option>
                         </el-select>
                     </p>
-                    <!--<p class="name" v-if="associatedStreet">关联路灯：-->
-                        <!--&lt;!&ndash;<el-select v-model="hardware.associatedStreet" size="mini" multiple placeholder="请选择">&ndash;&gt;-->
-                            <!--&lt;!&ndash;<el-option&ndash;&gt;-->
-                                <!--&lt;!&ndash;v-for="item in lamppost"&ndash;&gt;-->
-                                <!--&lt;!&ndash;:key="item.type"&ndash;&gt;-->
-                                <!--&lt;!&ndash;:label="item.type"&ndash;&gt;-->
-                                <!--&lt;!&ndash;:value="item.type">&ndash;&gt;-->
-                            <!--&lt;!&ndash;</el-option>&ndash;&gt;-->
-                        <!--&lt;!&ndash;</el-select>&ndash;&gt;-->
-                        <!--<el-select v-model="hardware.associatedstreet" size="mini" multiple placeholder="请选择">-->
-                            <!--<el-option-->
-                                <!--v-for="item in lamppost"-->
-                                <!--:key="item.type"-->
-                                <!--:label="item.type"-->
-                                <!--:value="item.type">-->
-                            <!--</el-option>-->
-                        <!--</el-select>-->
-                    <!--</p>-->
                     <p class="idNum">重复调度：
                         <el-radio v-model="radio" label="1">是</el-radio>
                         <el-radio v-model="radio" label="0">否</el-radio>
                     </p>
-                    <p class="upload" v-if="upload">定义曲风：
-                        <el-upload
-                            class="upload-demo"
-                            ref="upload"
-                            :limit="2"
-                            :action="importFileUrl"
-                            :file-list="fileList"
-                            :auto-upload="false">
-                            <el-button slot="trigger" size="small" type="primary">曲目编辑</el-button>
-                        </el-upload>
-                    </p>
-                    <p class="uploadText" v-if="uploadText">定义内容：
+                    <!--<p class="upload" v-if="upload">定义曲风：-->
+                        <!--<el-upload-->
+                            <!--class="upload-demo"-->
+                            <!--ref="upload"-->
+                            <!--:limit="2"-->
+                            <!--:action="importFileUrl"-->
+                            <!--:file-list="fileList"-->
+                            <!--:auto-upload="false">-->
+                            <!--<el-button slot="trigger" size="small" type="primary" @click="showBroadcastDialog">曲目编辑</el-button>-->
+                        <!--</el-upload>-->
+                    <!--</p>-->
+                    <p class="uploadText">定义内容：
                         <input type="text"v-model="hardware.uploadText" class="inputText">
+                        <el-button slot="trigger" size="small" type="primary" @click="showBroadcastDialog">曲目编辑</el-button>
+
                     </p>
                     <p class="type">
                         描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：<textarea name="" v-model="hardware.describe" cols="30"
@@ -178,24 +162,6 @@
                             </el-option>
                         </el-select>
                     </p>
-                    <!--<p class="name" v-if="associatedStreet">关联路灯：-->
-                    <!--&lt;!&ndash;<el-select v-model="hardware.associatedStreet" size="mini" multiple placeholder="请选择">&ndash;&gt;-->
-                    <!--&lt;!&ndash;<el-option&ndash;&gt;-->
-                    <!--&lt;!&ndash;v-for="item in lamppost"&ndash;&gt;-->
-                    <!--&lt;!&ndash;:key="item.type"&ndash;&gt;-->
-                    <!--&lt;!&ndash;:label="item.type"&ndash;&gt;-->
-                    <!--&lt;!&ndash;:value="item.type">&ndash;&gt;-->
-                    <!--&lt;!&ndash;</el-option>&ndash;&gt;-->
-                    <!--&lt;!&ndash;</el-select>&ndash;&gt;-->
-                    <!--<el-select v-model="hardware.associatedstreet" size="mini" multiple placeholder="请选择">-->
-                    <!--<el-option-->
-                    <!--v-for="item in lamppost"-->
-                    <!--:key="item.type"-->
-                    <!--:label="item.type"-->
-                    <!--:value="item.type">-->
-                    <!--</el-option>-->
-                    <!--</el-select>-->
-                    <!--</p>-->
                     <p class="idNum">重复调度：
                         <el-radio v-model="radio" label="1">是</el-radio>
                         <el-radio v-model="radio" label="0">否</el-radio>
@@ -324,8 +290,20 @@
                         <el-radio v-model="radio" label="1">是</el-radio>
                         <el-radio v-model="radio" label="0">否</el-radio>
                     </p>
+                    <!--<p class="upload" v-if="upload">定义曲风：-->
+                        <!--<el-upload-->
+                            <!--class="upload-demo"-->
+                            <!--ref="upload"-->
+                            <!--:limit="2"-->
+                            <!--:action="importFileUrl"-->
+                            <!--:file-list="fileList"-->
+                            <!--:auto-upload="false">-->
+                            <!--<el-button slot="trigger" size="small" type="primary">曲目编辑</el-button>-->
+                        <!--</el-upload>-->
+                    <!--</p>-->
                     <p class="uploadText">定义内容：
                         <input type="text"v-model="hardware.uploadText" class="inputText">
+                        <el-button slot="trigger" size="small" type="primary" @click = "showScreenDialog">定义内容</el-button>
                     </p>
                     <p class="type">
                         描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：<textarea name="" v-model="hardware.describe" cols="30"
@@ -340,11 +318,15 @@
             </div>
         </el-dialog>
         <MapDialog v-if="mapVisible" :visible="mapVisible" class="map" @closeMapDialog = 'closeMapDialog'></MapDialog>
+        <broadcastDialog v-if="broadcastVisible" :visible="broadcastVisible" class="broadcastContent" @closeBroadcastDialog = 'closeBroadcastDialog'></broadcastDialog>
+        <ScreenDialog v-if="screenVisible" :visible="screenVisible" class="screenContent" @closeScreenDialog = 'closeScreenDialog'></ScreenDialog>
     </div>
 </template>
 
 <script>
     import MapDialog from './mapDialog'
+    import broadcastDialog from './broadcastDialog'
+    import ScreenDialog from './screenDialog'
     import Cropper from 'cropperjs'
     import FileUpload from 'vue-upload-component'
     export default {
@@ -359,6 +341,8 @@
                 radio: '1',
                 isShowMapDialog: false,
                 mapVisible: false,
+                broadcastVisible:false,
+                screenVisible:false,
                 person: {
                     name:'',
                     sex:'',
@@ -519,8 +503,20 @@
             showMapDialog () {
                 this.mapVisible  = true
             },
+            showBroadcastDialog () {
+                this.broadcastVisible  = true
+            },
+            showScreenDialog () {
+                this.screenVisible  = true
+            },
             closeMapDialog () {
                 this.mapVisible = false
+            },
+            closeBroadcastDialog(){
+                this.broadcastVisible = false
+            },
+            closeScreenDialog(){
+                this.screenVisible = false
             },
             editSave() {
                 this.edit = false
@@ -624,7 +620,9 @@
         },
         components: {
             FileUpload,
-            MapDialog
+            MapDialog,
+            broadcastDialog,
+            ScreenDialog
         },
         watch: {
             edit(value) {
@@ -735,7 +733,7 @@
 
             }
             .inputText{
-                width: rem(470);
+                width: rem(400);
             }
             .upload-demo{
                 display: inline-block;
