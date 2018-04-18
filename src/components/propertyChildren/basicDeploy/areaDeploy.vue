@@ -357,7 +357,7 @@
                             /*background: none;*/
                             position: absolute;
                             right: rem(5);
-                            top: rem(-3);
+                            top: rem(0);
                             cursor: pointer;
                         }
                     }
