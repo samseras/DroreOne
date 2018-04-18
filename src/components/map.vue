@@ -13,6 +13,7 @@
     import mapLabe from "../../static/js/mapLabelInformationChildrenForm.js"
     import masterDataGrid1 from "../../static/js/masterDataGrid1.js"
     import Scrollcontainer from '@/components/ScrollContainer'
+    import { mapMutations } from 'vuex'
 
     export default {
         name: "map1",
@@ -31,6 +32,7 @@
             // this.district();
         },
         methods:{
+            ...mapMutations(['MAP_LOCATION']),
             droreMapinit () {//循环输出点
                 for (var i = 0; i < 15; i++) {
                     var icon = new droreMap.icon.Marker({
@@ -47,11 +49,12 @@
                 }
             },
             labelDot(){//打点标注
+                let that = this
                 var icon = new droreMap.icon.Marker({
                     coordinate: [13365319.908706162, 3538814.1636495925],
-                    name: "asdas",
+                    name:  new Date().getTime(),
                     subtype: "098lk-",
-                    id: "12214_",
+                    id: new Date().getTime(),
                     url: "/static/img/location.png",
                 });
                 droreMap.addMouseEvent(Event.SINGLECLICK_EVENT, "single", function(evt){
@@ -61,11 +64,13 @@
                     // icon.onclick(function(e) {
                     //     console.log(e)
                     // });
+                    that.$store.commit('MAP_LOCATION', droreMap.transLayerToWgs(evt.coordinate))
                 })
                 droreMap.ifDrag = true;
                 droreMap.DragEvent(function(tabInfor) {
                     var data = tabInfor.data
                     console.log(droreMap.transLayerToWgs(data.end));
+                    that.$store.commit('MAP_LOCATION', droreMap.transLayerToWgs(data.end))
                 })
                 // var areaEvet =new droreMap.area.DrawLayer("area",'rgba(255, 255, 255, 0.2)',"red")
                 // areaEvet.ifDraw = true;
