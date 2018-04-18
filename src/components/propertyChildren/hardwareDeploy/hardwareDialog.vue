@@ -25,7 +25,8 @@
                     </p>
                     <p class="IP">I P 地 址：<input type="text" v-model="camera.ip"></p>
                     <p class="port">端&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  口：<input type="text" v-model="camera.port"></p>
-                    <p class="place">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  置：<input type="text" v-model="camera.location">
+                    <p class="place">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  置：
+                        <span>{{camera.location}}</span>
 
                         <i class="el-icon-location-outline" @click="showMapDialog"></i>
                     </p>
@@ -68,7 +69,7 @@
                     </p>
                     <p class="IP">I P 地 址：<input type="text" v-model="broadCast.ip"></p>
                     <p class="host">端&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  口：<input type="text" v-model="broadCast.port"></p>
-                    <p class="place">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  置：<input type="text" v-model="broadCast.location">
+                    <p class="place">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  置：<span>{{broadCast.location}}</span>
                         <i class="el-icon-location-outline" @click="showMapDialog"></i>
                     </p>
                     <p class="area">所属区域：
@@ -104,7 +105,7 @@
                     <p class="width">屏幕宽高：<input type="text" v-model="led.area"></p>
                     <p class="IP">I P 地 址：<input type="text" v-model="led.ip"></p>
                     <p class="host">设备编号：<input type="text" v-model="led.serialNum"></p>
-                    <p class="place">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  置：<input type="text" v-model="led.location">
+                    <p class="place">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  置：<span>{{led.location}}</span>
                         <i class="el-icon-location-outline" @click="showMapDialog"></i>
                     </p>
                     <p class="area">所属片区：
@@ -142,7 +143,7 @@
                     <p class="IP">设备I P ：<input type="text" v-model="wifi.ip"></p>
                     <p class="mac">M a c：<input type="text" v-model="wifi.mac"></p>
                     <p class="host">设备编号：<input type="text" v-model="wifi.serialNum"></p>
-                    <p class="place">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  置：<input type="text" v-model="wifi.location">
+                    <p class="place">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  置：<span>{{wifi.location}}</span>
                         <i class="el-icon-location-outline" @click="showMapDialog"></i>
                     </p>
                     <p class="area">所属片区：
@@ -182,7 +183,7 @@
                     </p >
                     <p class="IP">设备I P ：<input type="text" v-model="monitors.ip"></p>
                     <p class="host">设备编号：<input type="text" v-model="monitors.serialNum"></p>
-                    <p class="place">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  置：<input type="text" v-model="monitors.location">
+                    <p class="place">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  置：<span>{{monitors.location}}</span>
                         <i class="el-icon-location-outline" @click="showMapDialog"></i>
                     </p>
                     <p class="area">所属片区：
@@ -223,7 +224,7 @@
                     <p class="num">路灯编号：<input type="text" v-model="Light.serialNum"></p>
                     <p class="version">型&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;号：<input type="text" v-model="Light.model">
                     </p>
-                    <p class="place">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置：<input type="text" v-model="Light.location">
+                    <p class="place">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置：<span>{{Light.location}}</span>
                         <i class="el-icon-location-outline" @click="showMapDialog"></i>
                     </p>
                     <p class="area">所属片区：
@@ -260,7 +261,7 @@
                     <p class="IP">设备I P ：<input type="text" v-model="gate.ip"></p>
                     <p class="num">设备编号：<input type="text" v-model="gate.serialNum"></p>
                     <p class="name">端&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;口：<input type="text" v-model="gate.port"> </p>
-                    <p class="place">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  置：<input type="text" v-model="gate.location">
+                    <p class="place">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  置：<span>{{gate.location}}</span>
                         <i class="el-icon-location-outline" @click="showMapDialog"></i>
                     </p>
                     <p class="area">所属片区：
@@ -298,7 +299,7 @@
                     <p class="host">设备编号：<input type="text" v-model="police.serialNum"></p>
                     <p class="IP">设备I P ：<input type="text" v-model="police.ip"></p>
 
-                    <p class="place">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  置：<input type="text" v-model="police.location">
+                    <p class="place">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  置：<span>{{police.location}}</span>
                         <i class="el-icon-location-outline" @click="showMapDialog"></i>
                     </p>
                     <p class="area">所属片区：
@@ -346,7 +347,7 @@
                 <el-button size="mini" type="primary" @click="closeDialog" :disabled="isDisabled">取消</el-button>
             </div>
         </el-dialog>
-        <MapDialog v-if="mapVisible" :visible="mapVisible" class="map" @closeMapDialog="closeMapDialog"></MapDialog>
+        <MapDialog v-if="mapVisible" :visible="mapVisible" class="map" @closeMapDialog="closeMapDialog"@saveLocation = "saveLocation"></MapDialog>
     </div>
 </template>
 
@@ -355,6 +356,7 @@
     import api from '@/api'
     import FileUpload from 'vue-upload-component'
     import Cropper from 'cropperjs'
+    import { mapGetters } from 'vuex'
    export default{
        props:['visible','Info','title','isDisabled'],
        data(){
@@ -454,6 +456,30 @@
            }
        },
        methods:{
+           saveLocation () {
+               let locationString
+               if (this.getLocation.length > 0) {
+                   locationString = `${this.getLocation[0]},${this.getLocation[1]}`
+               }
+               if(this.route.includes('camera')){
+                   this.camera.location = locationString
+               }else if(this.route.includes('broadcast')){
+                   this.broadcast.location = locationString
+               }else if(this.route.includes('led')) {
+                   this.led.location = locationString
+               }else if(this.route.includes('wifi')) {
+                   this.wifi.location = locationString
+               }else if(this.route.includes('monitors')) {
+                   this.monitors.location = locationString
+               }else if(this.route.includes('Light')) {
+                   this.Light.location = locationString
+               }else if(this.route.includes('gate')) {
+                   this.gate.location = locationString
+               }else if(this.route.includes('police')) {
+                   this.police.location = locationString
+               }
+               this.mapVisible = false
+           },
            closeDialog(){
                this.$emit('closeInfoDialog')
            },
@@ -597,6 +623,9 @@
        components:{
            MapDialog,
            FileUpload
+       },
+       computed: {
+           ...mapGetters(['getLocation'])
        },
    }
 
@@ -1003,6 +1032,14 @@
                         outline: none;
                         font-size:rem(12);
                         padding-left:rem(10);
+                    }
+                    span{
+                        display: inline-block;
+                        width: rem(180);
+                        overflow: hidden;
+                        text-overflow: ellipsis;
+                        white-space: nowrap;
+                        line-height: rem(10);
                     }
                     select{
                         border: none;

@@ -11,7 +11,7 @@
                 <Map></Map>
             </div>
             <div class=""slot="footer" class="dialog-footer cardFooter">
-                <el-button size="mini" class="hold" @click="">保存</el-button>
+                <el-button size="mini" class="hold" @click="saveLocation">保存</el-button>
                 <el-button size="mini" @click = 'closeMapDialog'>取消</el-button>
             </div>
         </el-dialog>
@@ -29,6 +29,9 @@
             }
         },
         methods: {
+            saveLocation () {
+                this.$emit('saveLocation')
+            },
             closeMapDialog () {
                 this.$emit('closeMapDialog')
             }
