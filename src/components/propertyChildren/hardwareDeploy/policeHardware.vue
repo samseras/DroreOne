@@ -1,5 +1,5 @@
 <template>
-    <div class="cameraHard">
+    <div class="policeHard">
         <div class="title">
             报警柱传感信息
         </div>
@@ -58,7 +58,9 @@
                         <el-table-column>
                             <template slot-scope="scope">
                                 <span @click="showPoliceDetail(scope.row, '报警柱信息')">查看</span>
+                                <span class="line">|</span>
                                 <span @click="fixedInfo(scope.row.id )">编辑</span>
+                                <span class="line">|</span>
                                 <span @click="deletInfo(scope.row.id)">删除</span>
                             </template>
                         </el-table-column>
@@ -78,7 +80,7 @@
                             <p class="name">所属区域：<span>{{item.regionName}}</span></p>
                             <p class="sex">类&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;型：<span>{{item.sensorType | changeStatus
 }}</span></p>
-                            <p class="sex">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：<span>{{item.description}}</span></p>
+                            <p class="sex text">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：<span>{{item.description}}</span></p>
 
                         </div>
                     </div>
@@ -338,17 +340,20 @@
 </script>
 
 <style lang="scss" type="text/scss">
-    .el-checkbox__label{
-        padding-left:rem(5);
-        font-size:rem(13);
+    .policeHard{
+        .el-checkbox__label{
+            padding-left:rem(5);
+            font-size:rem(13);
+        }
+        .el-checkbox__inner{
+            margin-top:rem(5);
+        }
     }
-    .el-checkbox__inner{
-        margin-top:rem(5);
-    }
+
 </style>
 
 <style lang="scss" type="text/scss" scoped>
-    .cameraHard{
+    .policeHard{
         width:100%;
         height:100%;
         display:flex;
@@ -428,9 +433,30 @@
                     .specificInfo{
                         margin-top:rem(10);
                         font-size: rem(14);
+                        padding:0 rem(10);
+                        box-sizing: border-box;
                         p{
-                            margin-left: rem(15);
+                            /*margin-left: rem(15);*/
                             line-height: rem(22);
+                            font-size: rem(14);
+                            overflow: hidden;
+                            text-overflow: ellipsis;
+                            white-space: nowrap;
+                            span{
+                                font-size: rem(13);
+                            }
+                        }
+                        .text{
+                            line-height: rem(22);
+                            display: inline-block;
+                            width: 100%;
+                            height: rem(40);
+                            white-space: pre-wrap;
+                            overflow:hidden;
+                            text-overflow:ellipsis;
+                            display:-webkit-box;
+                            -webkit-box-orient:vertical;
+                            -webkit-line-clamp:2;
                         }
                     }
                 }
