@@ -11,27 +11,32 @@
                 <!--摄像头-->
                 <div class="cameraCard popCard" v-if="route.includes('camera')">
                     <p class="cameraType">类&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  型：
-                        <select name="" v-model="camera.positionType">
-                            <option value="0">室内</option>
-                            <option value="1">室外</option>
-                        </select>
+                        <el-select name="" v-model="camera.positionType">
+                            <el-option label='室内' :value="0"></el-option>
+                            <el-option label='室外' :value="1"></el-option>
+                        </el-select>
                     </p>
                     <p class="name">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称：<input type="text" v-model="camera.name"> </p>
                     <p class="manufacturer">厂&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;家：
-                        <select name="" v-model="camera.manufactor">
-                            <option value="海康">海康</option>
-                            <option value="卓锐">卓锐</option>
-                        </select>
+                        <el-select name="" v-model="camera.manufactor">
+                            <el-option label='海康' :value="3"></el-option>
+                            <el-option label='卓锐' :value="4"></el-option>
+                        </el-select>
                     </p>
                     <p class="IP">I P 地 址：<input type="text" v-model="camera.ip"></p>
                     <p class="port">端&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  口：<input type="text" v-model="camera.port"></p>
                     <p class="place">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  置：<input type="text" v-model="camera.location">
-                        <img src="" alt="" @click="showMapDialog">
+
+                        <i class="el-icon-location-outline" @click="showMapDialog"></i>
                     </p>
                     <p class="area">所属片区：
-                        <select name="" v-model="camera.regionId">
-                            <option  v-for="item in regions" :value="item.id">{{item.name}}</option>
-                        </select>
+                        <el-select name="" v-model="camera.regionId">
+                            <el-option
+                                v-for="item in regions"
+                                :value="item.id"
+                                :label="item.name">
+                            </el-option>
+                        </el-select>
                     </p>
                     <p class="description">描&nbsp; 述：
                         <textarea v-model="camera.description" cols="40" rows="8">
@@ -47,27 +52,33 @@
                 <!--广播-->
                 <div class="cameraCard popCard" v-if="route.includes('broadcast')">
                     <p class="type">类&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  型：
-                        <select name="" v-model="broadCast.positionType">
-                            <option value="0">室内</option>
-                            <option value="1">室外</option>
-                        </select>
+
+                        <el-select name="" v-model="broadCast.positionType">
+                            <el-option label='室内' :value="0"></el-option>
+                            <el-option label='室外' :value="1"></el-option>
+                        </el-select>
                     </p>
                     <p class="name">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称：<input type="text" v-model="broadCast.name"> </p>
                     <p class="home">厂&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;家：
-                        <select name="" v-model="broadCast.manufactor">
-                            <option value="海康">海康</option>
-                            <option value="卓锐">卓锐</option>
-                        </select>
+
+                        <el-select name="" v-model="broadCast.manufactor">
+                            <el-option label='海康' :value="3"></el-option>
+                            <el-option label='卓锐' :value="4"></el-option>
+                        </el-select>
                     </p>
                     <p class="IP">I P 地 址：<input type="text" v-model="broadCast.ip"></p>
                     <p class="host">端&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  口：<input type="text" v-model="broadCast.port"></p>
                     <p class="place">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  置：<input type="text" v-model="broadCast.location">
-                        <img src="" alt="" @click="showMapDialog">
+                        <i class="el-icon-location-outline" @click="showMapDialog"></i>
                     </p>
                     <p class="area">所属区域：
-                        <select name="" v-model="broadCast.regionId">
-                            <option  v-for="item in regions" :value="item.id">{{item.name}}</option>
-                        </select>
+                        <el-select name="" v-model="broadCast.regionId">
+                            <el-option
+                                v-for="item in regions"
+                                :value="item.id"
+                                :label="item.name">
+                            </el-option>
+                        </el-select>
                     </p>
                     <p class="describe">描&nbsp; 述：
                         <textarea v-model="broadCast.description" cols="40" rows="8">
@@ -83,22 +94,29 @@
                 <!--LED-->
                 <div class="cameraCard popCard" v-if="route.includes('led')">
                     <p class="type">类&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  型：
-                        <select name="" v-model="led.positionType">
-                            <option value="0">室内</option>
-                            <option value="1">室外</option>
-                        </select>
+                        <el-select name="" v-model="led.positionType">
+                            <el-option label='室内' :value="0"></el-option>
+                            <el-option label='室外' :value="1"></el-option>
+                        </el-select>
+
                     </p>
                     <p class="name">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称：<input type="text" v-model="led.name"> </p>
                     <p class="width">屏幕宽高：<input type="text" v-model="led.area"></p>
                     <p class="IP">I P 地 址：<input type="text" v-model="led.ip"></p>
                     <p class="host">设备编号：<input type="text" v-model="led.serialNum"></p>
                     <p class="place">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  置：<input type="text" v-model="led.location">
-                        <img src="" alt="" @click="showMapDialog">
+                        <i class="el-icon-location-outline" @click="showMapDialog"></i>
                     </p>
                     <p class="area">所属片区：
-                        <select name="" v-model="led.regionId">
-                            <option  v-for="item in regions" :value="item.id">{{item.name}}</option>
-                        </select>
+
+                        <el-select name="" v-model="led.regionId">
+                            <el-option
+                                v-for="item in regions"
+                                :value="item.id"
+                                :label="item.name">
+                            </el-option>
+                        </el-select>
+
                     </p>
                     <p class="describe">描&nbsp;&nbsp;&nbsp;述：
                         <textarea v-model="led.description" cols="40" rows="8">
@@ -114,10 +132,10 @@
                 <!--Wifi-->
                 <div class="cameraCard popCard" v-if="route.includes('wifi')">
                     <p class="type">类&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  型：
-                        <select name="" v-model="wifi.positionType">
-                            <option value="0">室内</option>
-                            <option value="1">室外</option>
-                        </select>
+                        <el-select name="" v-model="wifi.positionType">
+                            <el-option :value="0" label="室内"></el-option>
+                            <el-option :value="1" label="室外"></el-option>
+                        </el-select>
                     </p>
                     <p class="name">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称：<input type="text" v-model="wifi.name"> </p>
                     <p class="version">型&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;号：<input type="text" v-model="wifi.model"></p>
@@ -125,12 +143,16 @@
                     <p class="mac">M a c：<input type="text" v-model="wifi.mac"></p>
                     <p class="host">设备编号：<input type="text" v-model="wifi.serialNum"></p>
                     <p class="place">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  置：<input type="text" v-model="wifi.location">
-                        <img src="" alt="" @click="showMapDialog">
+                        <i class="el-icon-location-outline" @click="showMapDialog"></i>
                     </p>
                     <p class="area">所属片区：
-                        <select name="" v-model="wifi.regionId">
-                            <option  v-for="item in regions" :value="item.id">{{item.name}}</option>
-                        </select>
+
+                        <el-select v-model="wifi.regionId">
+                            <el-option
+                                v-for="item in regions"
+                                :value="item.id"
+                                :label="item.name"></el-option>
+                        </el-select>
                     </p>
                     <p class="describe">描&nbsp; 述：
                         <textarea v-model="wifi.description" cols="40" rows="8">
@@ -146,27 +168,31 @@
                 <!--传感器-->
                 <div class="cameraCard popCard" v-if="route.includes('monitors')">
                     <p class="type">类&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  型：
-                        <select name="" v-model="monitors.sensorType">
-                            <option value="1">温度</option>
-                            <option value="2">湿度</option>
-                        </select>
+                        <el-select name="" v-model="monitors.sensorType">
+                            <el-option :value="1" label="温度"></el-option>
+                            <el-option :value="2" label="湿度"></el-option>
+                        </el-select>
                     </p>
                     <p class="name">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称：<input type="text" v-model="monitors.name"> </p>
                     <p class="version">厂&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;家：
-                        <select name="" v-model="monitors.manufactor">
-                            <option value="卓锐">卓锐</option>
-                            <option value="室外">天气</option>
-                        </select>
+                        <el-select name="" v-model="monitors.manufactor">
+                            <el-option :value="3" label="卓锐"></el-option>
+                            <el-option :value="4" label="天气"></el-option>
+                        </el-select>
                     </p >
                     <p class="IP">设备I P ：<input type="text" v-model="monitors.ip"></p>
                     <p class="host">设备编号：<input type="text" v-model="monitors.serialNum"></p>
                     <p class="place">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  置：<input type="text" v-model="monitors.location">
-                        <img src="" alt="" @click="showMapDialog">
+                        <i class="el-icon-location-outline" @click="showMapDialog"></i>
                     </p>
                     <p class="area">所属片区：
-                        <select name="" v-model="monitors.regionId">
-                            <option  v-for="item in regions" :value="item.id">{{item.name}}</option>
-                        </select>
+
+                        <el-select v-model="monitors.regionId">
+                            <el-option
+                                v-for="item in regions"
+                                :value="item.id"
+                                :label="item.name"></el-option>
+                        </el-select>
                     </p>
                     <p class="describe">描&nbsp; 述：
                         <textarea v-model="monitors.description" cols="40" rows="8">
@@ -182,28 +208,31 @@
                 <!--灯光-->
                 <div class="cameraCard popCard" v-if="route.includes('Light')">
                     <p class="status">状&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;态:
-                        <select name="" v-model="Light.lightStatus">
-                            <option value="true">通电</option>
-                            <option value="false">断电</option>
-                        </select>
+                        <el-select name="" v-model="Light.lightStatus">
+                            <el-option :value="true" label="通电"></el-option>
+                            <el-option :value="false" label="断电"></el-option>
+                        </el-select>
                     </p>
                     <p class="name">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称：<input type="text" v-model="Light.name"> </p>
                     <p class="home">厂&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;家：
-                        <select name="" v-model="Light.manufactor">
-                            <option value="0">卓锐</option>
-                            <option value="1">西安</option>
-                        </select>
+                        <el-select name="" v-model="Light.manufactor">
+                            <el-option :value="0" label="卓锐"></el-option>
+                            <el-option :value="1" label="西安"></el-option>
+                        </el-select>
                     </p>
                     <p class="num">路灯编号：<input type="text" v-model="Light.serialNum"></p>
                     <p class="version">型&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;号：<input type="text" v-model="Light.model">
                     </p>
                     <p class="place">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置：<input type="text" v-model="Light.location">
-                        <img src="" alt="" @click="showMapDialog">
+                        <i class="el-icon-location-outline" @click="showMapDialog"></i>
                     </p>
                     <p class="area">所属片区：
-                        <select name="" v-model="Light.regionId">
-                            <option  v-for="item in regions" :value="item.id">{{item.name}}</option>
-                        </select>
+                        <el-select name="" v-model="Light.regionId">
+                            <el-option  v-for="item in regions" :value="item.id"
+                                :label="item.name">
+
+                            </el-option>
+                        </el-select>
                     </p>
                     <p class="describe">描&nbsp; &nbsp;&nbsp;&nbsp;述：
                         <textarea v-model="Light.description" cols="40" rows="8">
@@ -219,12 +248,12 @@
                 <!--闸机-->
                 <div class="cameraCard popCard" v-if="route.includes('gate')">
                     <p class="type">类&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  型：
-                        <select name="" v-model="gate.gateType">
-                            <option value="1">翼闸</option>
-                            <option value="2">摆闸</option>
-                            <option value="3">三角闸</option>
-                            <option value="4">平移闸</option>
-                        </select>
+                        <el-select name="" v-model="gate.gateType">
+                            <el-option :value="1" label="翼闸"></el-option>
+                            <el-option :value="2" label="摆闸"></el-option>
+                            <el-option :value="3" label="三角闸"></el-option>
+                            <el-option :value="4" label="平移闸"></el-option>
+                        </el-select>
                     </p>
                     <p class="name">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称：<input type="text" v-model="gate.name"> </p>
                     <p class="version">型&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;号：<input type="text" v-model="gate.model"></p>
@@ -232,12 +261,13 @@
                     <p class="num">设备编号：<input type="text" v-model="gate.serialNum"></p>
                     <p class="name">端&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;口：<input type="text" v-model="gate.port"> </p>
                     <p class="place">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  置：<input type="text" v-model="gate.location">
-                        <img src="" alt="" @click="showMapDialog">
+                        <i class="el-icon-location-outline" @click="showMapDialog"></i>
                     </p>
                     <p class="area">所属片区：
-                        <select name="" v-model="gate.regionId">
-                            <option  v-for="item in regions" :value="item.id">{{item.name}}</option>
-                        </select>
+                        <el-select name="" v-model="gate.regionId">
+                            <el-option  v-for="item in regions" :value="item.id"
+                                :label="item.name"></el-option>
+                        </el-select>
                     </p>
                     <p class="describe">描&nbsp;&nbsp;&nbsp;&nbsp; 述：
                         <textarea v-model="gate.description" cols="40" rows="8">
@@ -253,28 +283,29 @@
                 <!--报警柱-->
                 <div class="cameraCard popCard" v-if="route.includes('police')">
                     <p class="type">类&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  型：
-                        <select name="" v-model="police.sensorType">
-                            <option value="10">报警柱</option>
-                            <option value="11">越界</option>
-                        </select>
+                        <el-select name="" v-model="police.sensorType">
+                            <el-option :value="10" label="报警柱"></el-option>
+                            <el-option :value="11" label="越界"></el-option>
+                        </el-select>
                     </p>
                     <p class="name">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称：<input type="text" v-model="police.name"> </p>
                     <p class="version">厂&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;家:
-                        <select name="" v-model="police.manufactor">
-                            <option value="报警">报警柱</option>
-                            <option value="越界">越界</option>
-                        </select>
+                        <el-select name="" v-model="police.manufactor">
+                            <el-option :value="报警" label="报警柱"></el-option>
+                            <el-option :value="越界" label="越界"></el-option>
+                        </el-select>
                     </p>
                     <p class="host">设备编号：<input type="text" v-model="police.serialNum"></p>
                     <p class="IP">设备I P ：<input type="text" v-model="police.ip"></p>
 
                     <p class="place">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  置：<input type="text" v-model="police.location">
-                        <img src="" alt="" @click="showMapDialog">
+                        <i class="el-icon-location-outline" @click="showMapDialog"></i>
                     </p>
                     <p class="area">所属片区：
-                        <select name="" v-model="police.regionId">
-                            <option  v-for="item in regions" :value="item.id">{{item.name}}</option>
-                        </select>
+                        <el-select name="" v-model="police.regionId">
+                            <el-option  v-for="item in regions" :value="item.id"
+                                :label="item.name"></el-option>
+                        </el-select>
                     </p>
                     <p class="describe">描&nbsp; 述：
                         <textarea v-model="police.description" cols="40" rows="8">
@@ -447,6 +478,12 @@
                }
                newInfo.status=true
                newInfo.checked=false
+               newInfo.imgUrl = this.src
+//               if(this.src.trim() ===''){
+//                   newInfo.imgUrl =''
+//               }else{
+//                   newInfo.imf
+//               }
 
                if(this.Info.id){
                    newInfo.id=this.Info.id
@@ -933,6 +970,15 @@
             border-top: 1px solid #ccc;
             margin-top: rem(15);
         }
+        .el-input__inner{
+            border: none;
+            height: rem(30);
+            line-height: rem(30);
+            font-size: rem(12);
+            padding: 0;
+            padding-left: rem(10);
+
+        }
     }
 </style>
 
@@ -950,11 +996,13 @@
                     margin-top: rem(8);
                     border-bottom: 1px solid #ccc;
                     font-size: rem(12);
+
                     input{
                         border: none;
                         list-style: none;
                         outline: none;
-                        font-size:rem(12)
+                        font-size:rem(12);
+                        padding-left:rem(10);
                     }
                     select{
                         border: none;
@@ -973,12 +1021,12 @@
 
                         }
                     }
-                    img {
+                    i {
                         display: inline-block;
-                        width: rem(20);
-                        height: rem(20);
+                        /*width: rem(20);*/
+                        /*height: rem(20);*/
                         border-radius: 50%;
-                        background:red;
+                        font-size: rem(16);
                         vertical-align: middle;
                     }
                     textarea{
@@ -989,11 +1037,11 @@
                     }
                 }
                 .img{
-                        width: rem(150);
+                        width: rem(120);
                         height: rem(60);
                         position: absolute;
                         top: rem(0);
-                        right: rem(0);
+                        right: rem(-5);
                         background: #fff;
                         img{
                             width: rem(55);

@@ -26,7 +26,7 @@
                             width="55">
                             <template slot-scope="scope">
                                 <!--<input type="checkbox" :checked='scope.row.checked' class="checkBoxBtn" @change="checked(scope.row.id)">-->
-                                <el-checkbox v-model="scope.row.checked" @change="getChecked(scope.row.id)" class="checkBoxBtn"></el-checkbox>
+                                <el-checkbox v-model="scope.row.checked" @change="checked(scope.row.id)" class="checkBoxBtn"></el-checkbox>
                             </template>
                         </el-table-column>
                         <el-table-column
@@ -48,18 +48,19 @@
                             label="操作">
                             <template slot-scope="scope">
                                 <span @click="showPersonDetail(scope.row, '指示牌信息')">查看</span>
+                                <span class="line">|</span>
                                 <span @click="fixedInfo(scope.row.id )">编辑</span>
+                                <span class="line">|</span>
                                 <span @click="deletInfo(scope.row.id)">删除</span>
                             </template>
                         </el-table-column>
                     </el-table>
                     <div class="personInfo" v-for="item in indicatorList" v-if="isShowIndicatorCard && item.status">
                         <div class="checkBox">
-                            <!--<input type="checkbox" :checked='item.checked' class="checkBtn" @change="checked(item.id)">-->
                             <el-checkbox v-model="item.checked" @change="checked(item.id)" class="checkBtn"></el-checkbox>
                         </div>
                         <div class="personType" @click.stop="showPersonDetail(item, '指示牌信息')">
-                            <img src="" alt="">
+                            <img :src="item.picturePath" alt="">
                             <span class="type">
                                 {{item.signboardBean.type | typeFilter}}
                             </span>
@@ -215,7 +216,7 @@
                 })
                 console.log(this.choseInfoId, 'opopop')
             },
-            fixInfo (info) {
+            async fixInfo (info) {
                 let index = info.location.includes(',')?info.location.indexOf(','):info.location.indexOf('，')
                 let latitude = info.location.substring(0, index)
                 let longitude = info.location.substring(index + 1)
@@ -223,12 +224,21 @@
                     id: info.signboardBean.id,
                     type: info.signboardBean.type,
                     regionId: info.regionId,
-                    picAddress: info.imgUrl,
                     latitude: latitude,
                     longitude: longitude
                 }
                 console.log(indicatorObj, 'this is trashObj')
-                api.indicator.updateIndicator(JSON.stringify(indicatorObj)).then(res => {
+                if (info.imgUrl !== '') {
+                    await api.person.updataAva(info.imgUrl).then(res => {
+                        console.log(res, '上传成功')
+                        indicatorObj.pictureId = res.id
+                    }).catch(err => {
+                        console.log(err, '上传失败')
+                        this.$message.error('上传失败，请稍后重试')
+                        return
+                    })
+                }
+                await api.indicator.updateIndicator(JSON.stringify(indicatorObj)).then(res => {
                     console.log('修改成功')
                     this.$message.success('修改成功')
                     this.choseInfoId = []
@@ -237,18 +247,29 @@
                     this.$message.error('修改失败，请稍后重试')
                 })
             },
-            addNewIndicator (info) {
+            async addNewIndicator (info) {
                 let index = info.location.includes(',')?info.location.indexOf(','):info.location.indexOf('，')
                 let latitude = info.location.substring(0, index)
                 let longitude = info.location.substring(index + 1)
                 let indicatorObj = {
                     type: info.signboardBean.type,
                     regionId: info.regionId,
-                    picAddress: info.imgUrl,
                     latitude: latitude,
                     longitude: longitude
                 }
-                api.indicator.createIndicator(JSON.stringify(indicatorObj)).then(res => {
+                if (info.imgUrl !== '') {
+                    await api.person.updataAva(info.imgUrl).then(res => {
+                        console.log(res, '上传成功')
+                        indicatorObj.pictureId = res.id
+                    }).catch(err => {
+                        console.log(err, '上传失败')
+                        this.$message.error('上传失败，请稍后重试')
+                        return
+                    })
+                } else {
+                    indicatorObj.pictureId = info.pictureId
+                }
+                await api.indicator.createIndicator(JSON.stringify(indicatorObj)).then(res => {
                     console.log('增加成功')
                     this.$message.success('创建成功')
                     this.getAllIndicator()
@@ -406,6 +427,9 @@
                         p{
                             margin-left: rem(10);
                             line-height: rem(22);
+                            overflow: hidden;
+                            text-overflow: ellipsis;
+                            white-space: nowrap;
                         }
                     }
                 }

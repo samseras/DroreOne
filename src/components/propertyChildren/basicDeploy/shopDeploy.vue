@@ -26,7 +26,7 @@
                             width="55">
                             <template slot-scope="scope">
                                 <!--<input type="checkbox" :checked='scope.row.checked' class="checkBoxBtn" @change="checked(scope.row.id)">-->
-                                <el-checkbox v-model="scope.row.checked" @change="getChecked(scope.row.id)" class="checkBoxBtn"></el-checkbox>
+                                <el-checkbox v-model="scope.row.checked" @change="checked(scope.row.id)" class="checkBoxBtn"></el-checkbox>
                             </template>
                         </el-table-column>
                         <el-table-column
@@ -62,18 +62,19 @@
                             label="操作">
                             <template slot-scope="scope">
                                 <span @click="showPersonDetail(scope.row, '商圈信息')">查看</span>
+                                <sapn class="line">|</sapn>
                                 <span @click="fixedInfo(scope.row.id )">编辑</span>
+                                <sapn class="line">|</sapn>
                                 <span @click="deletInfo(scope.row.id)">删除</span>
                             </template>
                         </el-table-column>
                     </el-table>
                     <div class="personInfo" v-for="item in shopList" v-if="isShowShopCard && item.status">
                         <div class="checkBox">
-                            <!--<input type="checkbox" :checked='item.checked' class="checkBtn" @change="checked(item.id)">-->
                             <el-checkbox v-model="item.checked" @change="checked(item.id)" class="checkBtn"></el-checkbox>
                         </div>
                         <div class="personType" @click.stop="showPersonDetail(item, '商圈信息')">
-                            <img src="" alt="">
+                            <img :src="item.picturePath" alt="">
                             <span class="type">
                                   {{item.businessBean.name}}
                                 </span>
@@ -151,7 +152,7 @@
                             for (let i = 0; i < this.choseInfoId.length; i++) {
                                 this.shopList = this.shopList.filter((item, index) => {
                                     if (item.id === this.choseInfoId[i]){
-                                        this.choseList[index].checked = false
+                                        this.shopList[index].checked = false
                                     }
                                     return item.id !== this.choseInfoId[i]
                                 })
@@ -165,7 +166,6 @@
                     }).catch(() => {
                         this.$message.info('取消删除')
                     })
-
                 } else {
                     this.$message.error('请选择要删除的商铺信息')
                 }
@@ -226,7 +226,7 @@
                 })
                 console.log(this.choseInfoId, 'opopop')
             },
-            fixInfo (info) {
+            async fixInfo (info) {
                 let index = info.location.includes(',')?info.location.indexOf(','):info.location.indexOf('，')
                 let latitude = info.location.substring(0, index)
                 let longitude = info.location.substring(index + 1)
@@ -235,13 +235,22 @@
                     name: info.businessBean.name,
                     capacity: info.businessBean.capacity,
                     regionId: info.regionId,
-                    picAddress: info.imgUrl,
                     businessTypeId: info.businessBean.businessTypeId,
                     latitude: latitude,
                     longitude: longitude
                 }
                 console.log(shopObj, 'this is trashObj')
-                api.shop.updateShop(JSON.stringify(shopObj)).then(res => {
+                if (info.imgUrl !== '') {
+                    await api.person.updataAva(info.imgUrl).then(res => {
+                        console.log(res, '上传成功')
+                        shopObj.pictureId = res.id
+                    }).catch(err => {
+                        console.log(err, '上传失败')
+                        this.$message.error('创建失败，请稍后重试')
+                        return
+                    })
+                }
+                await api.shop.updateShop(JSON.stringify(shopObj)).then(res => {
                     console.log('修改成功')
                     this.$message.success('修改成功')
                     this.choseInfoId = []
@@ -251,7 +260,7 @@
                     this.$message.error('更新失败，请稍后重试')
                 })
             },
-            addNewPerson (info) {
+            async addNewPerson (info) {
                 let index = info.location.includes(',')?info.location.indexOf(','):info.location.indexOf('，')
                 let latitude = info.location.substring(0, index)
                 let longitude = info.location.substring(index + 1)
@@ -259,13 +268,24 @@
                     name: info.businessBean.name,
                     capacity: info.businessBean.capacity,
                     regionId: info.regionId,
-                    picAddress: info.imgUrl,
                     businessTypeId: info.businessBean.businessTypeId,
                     latitude: latitude,
                     longitude: longitude
                 }
+                if (info.imgUrl !== '') {
+                    await api.person.updataAva(info.imgUrl).then(res => {
+                        console.log(res, '上传成功')
+                        shopObj.pictureId = res.id
+                    }).catch(err => {
+                        console.log(err, '上传失败')
+                        this.$message.error('创建失败，请稍后重试')
+                        return
+                    })
+                } else {
+                    shopObj.pictureId = info.pictureId
+                }
                 console.log(shopObj, 'this is trashObj')
-                api.shop.createShop(JSON.stringify(shopObj)).then(res => {
+                await api.shop.createShop(JSON.stringify(shopObj)).then(res => {
                     this.$message.success('添加成功')
                     console.log('增加成功')
                     this.getAllShop()
@@ -306,6 +326,16 @@
                         this.shopList[i].id = this.shopList[i].businessBean.id
                         this.shopList[i].location = `${this.shopList[i].latitude},${this.shopList[i].longitude}`
                         this.shopList[i].businessBean.currentNum = this.currentNum
+                        if (this.shopList[i].businessBean.capacity == 0 ){
+                            this.shopList[i].businessBean.state = '已满'
+                        } else {
+                            let parcent = this.shopList[i].businessBean.currentNum/this.shopList[i].businessBean.capacity
+                            if (parcent > .9){
+                                this.shopList[i].businessBean.state = '已满'
+                            } else {
+                                this.shopList[i].businessBean.state = '充裕'
+                            }
+                        }
                     }
                 }).catch(err => {
                     console.log(err)
@@ -414,6 +444,9 @@
                         p{
                             margin-left: rem(10);
                             line-height: rem(22);
+                            overflow: hidden;
+                            text-overflow: ellipsis;
+                            white-space: nowrap;
                         }
                     }
                 }

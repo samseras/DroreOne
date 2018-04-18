@@ -11,7 +11,7 @@
                 <Map></Map>
             </div>
             <div class=""slot="footer" class="dialog-footer cardFooter">
-                <el-button size="mini" class="hold" @click="">保存</el-button>
+                <el-button size="mini" class="hold" @click="saveLocation">保存</el-button>
                 <el-button size="mini" @click = 'closeMapDialog'>取消</el-button>
             </div>
         </el-dialog>
@@ -28,10 +28,52 @@
 
             }
         },
+        mounted() {
+            // this.droreMapinit();
+        },
         methods: {
+            saveLocation () {
+                this.$emit('saveLocation')
+            },
             closeMapDialog () {
                 this.$emit('closeMapDialog')
-            }
+            },
+            // droreMapinit () {
+            //     for(var i = 0; i < 1; i++) {
+            //         var icon = new Map.icon.Marker({
+            //             coordinate: [13365319.908706162 + 500 * Math.random(), 3538814.1636495925 + 500 * Math.random()],
+            //             name: "asdas" + i,
+            //             subtype: "098lk-",
+            //             id: "12214_" + i,
+            //             url: "http://oss.drore.com/material/gis/newlabels/public/defaults/24*24/shuibeng.png"
+            //         });
+            //         Map.icon.addChild(icon);
+            //         icon.onclick(function(e) {});
+            //     }
+            //     Map.addMouseEvent(Event.SINGLECLICK_EVENT, "single", function(evt){
+            //         console.log(evt)
+            //         var icon = new Map.icon.Marker({
+            //             coordinate:evt.coordinate ,
+            //             name: "asdas",
+            //             subtype: "098lk-",
+            //             id: "12214_",
+            //             url: "http://oss.drore.com/material/gis/newlabels/public/defaults/24*24/shuibeng.png",
+            //             scale:1
+            //         });
+            //         console.log(Map.transLayerToWgs(evt.coordinate))
+            //         Map.icon.addChild(icon);
+            //         icon.onclick(function(e) {
+            //             console.log(e)
+            //         });
+            //     })
+            //     Map.ifDrag = true;
+            //     Map.DragEvent(function(tabInfor) {
+            //         var data = tabInfor.data
+            //         console.log(Map.transLayerToWgs(data.end));
+            //     })
+            //     var areaEvet =new Map.area.DrawLayer("area",'rgba(255, 255, 255, 0.2)',"red")
+            //     areaEvet.ifDraw = true;
+            // }
         },
         created () {
         },

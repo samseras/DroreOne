@@ -58,7 +58,9 @@
                         <el-table-column>
                             <template slot-scope="scope">
                                 <span @click="showLedDetail(scope.row, 'LED大屏信息')">查看</span>
+                                <span class="line">|</span>
                                 <span @click="fixedInfo(scope.row.id )">编辑</span>
+                                <span class="line">|</span>
                                 <span @click="deletInfo(scope.row.id)">删除</span>
                             </template>
                         </el-table-column>
@@ -77,7 +79,7 @@
                         <div class="specificInfo" >
                             <p class="area">所属区域：<span>{{item.regionName}}</span></p>
                             <p class="type">LED类型：<span>{{item.positionType | changeFilter}}</span></p>
-                            <p class="describe">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：<span>{{item.description}}</span></p>
+                            <p class="describe text">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：<span>{{item.description}}</span></p>
 
                         </div>
                     </div>
@@ -337,12 +339,14 @@
 </script>
 
 <style lang="scss" type="text/scss">
-    .el-checkbox__label{
-        padding-left:rem(5);
-        font-size:rem(13);
-    }
-    .el-checkbox__inner{
-        margin-top:rem(5);
+    .ledList{
+        .el-checkbox__label{
+            padding-left:rem(5);
+            font-size:rem(13);
+        }
+        .el-checkbox__inner{
+            margin-top:rem(5);
+        }
     }
 </style>
 
@@ -427,9 +431,30 @@
                     .specificInfo{
                         margin-top:rem(10);
                         font-size: rem(14);
+                        padding:0 rem(10);
+                        box-sizing: border-box;
                         p{
-                            margin-left: rem(15);
+                            /*margin-left: rem(15);*/
                             line-height: rem(22);
+                            font-size: rem(14);
+                            overflow: hidden;
+                            text-overflow: ellipsis;
+                            white-space: nowrap;
+                            span{
+                                font-size: rem(13);
+                            }
+                        }
+                        .text{
+                            line-height: rem(22);
+                            display: inline-block;
+                            width: 100%;
+                            height: rem(40);
+                            white-space: pre-wrap;
+                            overflow:hidden;
+                            text-overflow:ellipsis;
+                            display:-webkit-box;
+                            -webkit-box-orient:vertical;
+                            -webkit-line-clamp:2;
                         }
                     }
                 }

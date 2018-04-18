@@ -31,7 +31,7 @@
         </div>
         <div class="filite" v-if="route.includes('shop')">
             <el-checkbox-group v-model="filterList" @change="choseType">
-                <el-checkbox v-for="item in shopType" :label="item.name"></el-checkbox>
+                <el-checkbox v-for="item in shopType" :label="item.businessType.name"></el-checkbox>
             </el-checkbox-group>
         </div>
         <div class="filite" v-if="route.includes('park')">
@@ -142,7 +142,7 @@
 <style lang="scss">
     .funHeader{
         .el-checkbox__label{
-            padding-left: rem(5);
+            padding-left: rem(1);
             font-size: rem(12);
         }
         .el-checkbox__inner{
@@ -169,7 +169,7 @@
             }
             i{
                 font-size: rem(12);
-                margin-left: rem(-20);
+                margin-left: rem(-15);
                 cursor: pointer;
             }
         }

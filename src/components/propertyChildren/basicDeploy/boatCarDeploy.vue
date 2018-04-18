@@ -52,12 +52,16 @@
                             label="核载人数">
                         </el-table-column>
                         <el-table-column
-                            prop="phone"
+                            prop="driverPhone"
                             label="电话号码">
                         </el-table-column>
                         <el-table-column
                             prop="vehicle.model"
                             label="设备号码">
+                        </el-table-column>
+                        <el-table-column
+                            prop="vehicle.purchaseDate"
+                            label="购买时间">
                         </el-table-column>
                         <el-table-column
                             prop="vehicle.maintenanceDate"
@@ -76,11 +80,10 @@
                     </el-table>
                     <div class="personInfo" v-for="item in boatCarList" v-if="isShowBoatCard && item.status">
                         <div class="checkBox">
-                            <!--<input type="checkbox" :checked='' class="checkBtn" >-->
                             <el-checkbox v-model="item.checked" @change="getChecked(item.id)" class="checkBtn"></el-checkbox>
                         </div>
                         <div class="personType" :class="item.type === '车辆'? 'carInfo':''" @click.stop="showPersonDetail(item ,'车船信息')">
-                            <img src="" alt="">
+                            <img :src="item.picturePath" alt="">
                             <span class="type">
                                   {{item.vehicle.type | boatFilter}}信息
                                 </span>
@@ -89,7 +92,7 @@
                             <p class="name">驾驶人员：<span>{{item.driverName}}</span></p>
                             <p class="sex">状&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;态：<span>{{item.vehicle.maintenanceStatus | statusFilter}}</span></p>
                             <p class="idNum">核载人数：<span>{{item.vehicle.capacity}}</span></p>
-                            <p class="phoneNum">电&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;话：<span>{{item.phone}}</span></p>
+                            <p class="phoneNum">电&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;话：<span>{{item.driverPhone}}</span></p>
                         </div>
                     </div>
                 </ScrollContainer>
@@ -242,7 +245,7 @@
                 console.log(this.choseInfoId, 'opopop')
                 this.selectAll(this.choseInfoId)
             },
-            fixInfo (info) {
+            async fixInfo (info) {
                 let boatObj = {
                     id: info.id,
                     serialNum: info.vehicle.serialNum,
@@ -255,7 +258,19 @@
                     purchaseDate: info.vehicle.purchaseDate
                 }
                 console.log(boatObj, 'this is trashObj')
-                api.boat.updateBoat(JSON.stringify(boatObj)).then(res => {
+                if (info.imgUrl !== '') {
+                    await api.person.updataAva(info.imgUrl).then(res => {
+                        console.log(res, '图片上传成功')
+                        boatObj.pictureId = res.id
+                    }).catch(err => {
+                        console.log(err, '上传失败')
+                        this.$message.error('添加失败，请稍后重试')
+                        return false
+                    })
+                } else {
+                    boatObj.pictureId = info.pictureId
+                }
+                await api.boat.updateBoat(JSON.stringify(boatObj)).then(res => {
                     console.log(res ,'增加成功')
                     this.$message.success('修改成功')
                     this.getAllBoat()
@@ -264,7 +279,7 @@
                     this.$message.error('修改失败，请稍后重试')
                 })
             },
-            addNewBoatCar (info) {
+            async addNewBoatCar (info) {
                 let boatObj = {
                     serialNum: info.vehicle.serialNum,
                     capacity: info.vehicle.capacity,
@@ -275,8 +290,17 @@
                     maintenanceDate: info.vehicle.maintenanceDate,
                     purchaseDate: info.vehicle.purchaseDate
                 }
-                console.log(boatObj, 'this is trashObj')
-                api.boat.createBoat(JSON.stringify(boatObj)).then(res => {
+                if (info.imgUrl !== '') {
+                   await api.person.updataAva(info.imgUrl).then(res => {
+                        console.log(res, '图片上传成功')
+                        boatObj.pictureId = res.id
+                    }).catch(err => {
+                        console.log(err, '上传失败')
+                        this.$message.error('添加失败，请稍后重试')
+                        return false
+                    })
+                }
+                await api.boat.createBoat(JSON.stringify(boatObj)).then(res => {
                     console.log(res ,'增加成功')
                     this.$message.success('添加成功')
                     this.getAllBoat()
@@ -321,7 +345,6 @@
                     this.isShowLoading = false
                 })
             }
-
         },
         filters: {
             boatFilter (type) {
@@ -451,6 +474,9 @@
                         p{
                             margin-left: rem(10);
                             line-height: rem(22);
+                            overflow: hidden;
+                            text-overflow: ellipsis;
+                            white-space: nowrap;
                         }
                     }
                 }

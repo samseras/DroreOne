@@ -25,8 +25,7 @@
                         <el-table-column
                             width="55">
                             <template slot-scope="scope">
-                                <!--<input type="checkbox" :checked='scope.row.checked' class="checkBoxBtn" @change="checked(scope.row.id)">-->
-                                <el-checkbox v-model="scope.row.checked" @change="getChecked(scope.row.id)" class="checkBoxBtn"></el-checkbox>
+                                <el-checkbox v-model="scope.row.checked" @change="checked(scope.row.id)" class="checkBoxBtn"></el-checkbox>
                             </template>
                         </el-table-column>
                         <el-table-column
@@ -51,7 +50,9 @@
                             label="操作">
                             <template slot-scope="scope">
                                 <span @click="showPersonDetail(scope.row,'片区信息')">查看</span>
+                                <span class="line">|</span>
                                 <span @click="fixedInfo(scope.row.id )">编辑</span>
+                                <span class="line">|</span>
                                 <span @click="deletInfo(scope.row.id)">删除</span>
                             </template>
                         </el-table-column>
@@ -62,14 +63,14 @@
                             <el-checkbox v-model="item.checked" @change="checked(item.id)" class="checkBtn"></el-checkbox>
                         </div>
                         <div class="personType" @click.stop="showPersonDetail(item, '片区信息')">
-                            <img src="" alt="">
+                            <img :src="item.picturePath" alt="">
                             <span class="type">
                                   {{item.name}}
                                 </span>
                         </div>
                         <div class="specificInfo">
                             <p class="name" v-if="false">所在景区：<span>{{item.placeScenic}}</span></p>
-                            <p class="sex">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：<span>{{item.description}}</span></p>
+                            <p class="sex text">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：<span>{{item.description}}</span></p>
                         </div>
                     </div>
                 </ScrollContainer>
@@ -229,10 +230,20 @@
                     this.$message.error('修改失败，请稍后重试')
                 })
             },
-            addNewPerson (info) {
+            async addNewPerson (info) {
                 let aresObj = {
                     name: info.name,
                     description: info.description
+                }
+                if (info.imgUrl !== '') {
+                    await api.person.updataAva(info.imgUrl).then(res => {
+                        console.log(res, '上传成功')
+                        aresObj.pictureId = res.id
+                    }).catch(err => {
+                        console.log(err, '上传失败')
+                        this.$message.error('上传失败，请稍后重试')
+                        return
+                    })
                 }
                 api.area.createRegion(JSON.stringify(aresObj)).then(res => {
                     console.log(res, '创建成功')
@@ -375,9 +386,24 @@
                     .specificInfo{
                         margin-top: rem(10);
                         font-size: rem(12);
+                        overflow: hidden;
+                        padding: 0 rem(10);
+                        box-sizing: border-box;
                         p{
                             margin-left: rem(10);
                             line-height: rem(22);
+                        }
+                        .text{
+                            margin-left: 0;
+                            line-height: rem(22);
+                            display: inline-block;
+                            width: 100%;
+                            height: rem(85);
+                            overflow:hidden;
+                            text-overflow:ellipsis;
+                            display:-webkit-box;
+                            -webkit-box-orient:vertical;
+                            -webkit-line-clamp:4;
                         }
                     }
                 }
