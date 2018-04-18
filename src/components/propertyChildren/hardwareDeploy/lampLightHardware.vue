@@ -295,7 +295,7 @@
                 }
             },
             selectedAll(state){
-                this.choseList=this.lightList.filter((item)=>{
+                this.lightList=this.lightList.filter((item)=>{
                     if(state==true){
                         item.checked=true
                         this.choseInfoId.push(item.id)
