@@ -474,8 +474,12 @@
             saveLocation () {
                 console.log(this.getLocation, 'hhhhkhkjhjh')
                 let locationString
+                let regionLocationStr
                 if (this.getLocation.length > 0) {
                     locationString = `${this.getLocation[0]},${this.getLocation[1]}`
+                }
+                if (this.getRegionLocation.length > 0) {
+                    regionLocationStr = this.getRegionLocation
                 }
                 if(this.route.includes('trash')) {
                     this.trash.location = locationString
@@ -490,7 +494,7 @@
                 } else if(this.route.includes('toilet')) {
                     this.toilet.location = locationString
                 } else if (this.route.includes('area')) {
-                    this.area.location = locationString
+                    this.area.location = regionLocationStr
                 } else if (this.route.includes('roat')) {
                     // this.roat = this.Info
                 }
@@ -755,7 +759,11 @@
             // console.log(this.$refs.test)
         },
         computed: {
-            ...mapGetters(['getLocation'])
+            ...mapGetters([
+                'getLocation',
+                'getRegionLocation',//片区
+                'getRoatLocation'//路网
+            ])
         },
     }
 </script>
