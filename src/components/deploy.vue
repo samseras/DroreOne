@@ -1,6 +1,6 @@
 <template>
     <div class="deploy">
-        <el-menu default-active="/deploy/broadcast-Dmis" router>
+        <el-menu default-active="/deploy/lamppost-Dmis" router>
             <ScrollContainer>
                 <template v-for="item in items">
                     <template v-if="item.subs">
@@ -39,23 +39,23 @@
                         subs: [
                             {
                                 index: '/deploy/broadcast-Dmis',
-                                title: '广播播放'
+                                title: '广播'
                             },
                             {
                                 index: '/deploy/lamppost-Dmis',
-                                title: '路灯照明'
+                                title: '路灯'
                             },
                             {
                                 index: '/deploy/screen-Dmis',
-                                title: '大屏播放'
-                            },
-                            {
-                                index: '/deploy/security-Dmis',
-                                title: '巡更巡检'
+                                title: 'LED'
                             },
                             {
                                 index: '/deploy/purifier-Dmis',
-                                title: '保洁排版'
+                                title: '保洁'
+                            },
+                            {
+                                index: '/deploy/security-Dmis',
+                                title: '巡更路线'
                             },
                             {
                                 index: '/deploy/conductor-Dmis',
