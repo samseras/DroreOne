@@ -70,7 +70,7 @@
                         </div>
                         <div class="specificInfo">
                             <p class="name" v-if="false">所在景区：<span>{{item.placeScenic}}</span></p>
-                            <p class="sex">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：<span>{{item.description}}</span></p>
+                            <p class="sex text">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：<span>{{item.description}}</span></p>
                         </div>
                     </div>
                 </ScrollContainer>
@@ -357,7 +357,7 @@
                             /*background: none;*/
                             position: absolute;
                             right: rem(5);
-                            top: rem(0);
+                            top: rem(-3);
                             cursor: pointer;
                         }
                     }
@@ -386,9 +386,24 @@
                     .specificInfo{
                         margin-top: rem(10);
                         font-size: rem(12);
+                        overflow: hidden;
+                        padding: 0 rem(10);
+                        box-sizing: border-box;
                         p{
                             margin-left: rem(10);
                             line-height: rem(22);
+                        }
+                        .text{
+                            margin-left: 0;
+                            line-height: rem(22);
+                            display: inline-block;
+                            width: 100%;
+                            height: rem(85);
+                            overflow:hidden;
+                            text-overflow:ellipsis;
+                            display:-webkit-box;
+                            -webkit-box-orient:vertical;
+                            -webkit-line-clamp:4;
                         }
                     }
                 }
