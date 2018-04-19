@@ -140,8 +140,8 @@
             },
             fixInfo(info){
                 let index = info.location.includes(',')?info.location.indexOf(','):info.location.indexOf('，')
-                let latitude = info.location.substring(0, index)
-                let longitude = info.location.substring(index + 1)
+                let longitude = info.location.substring(0, index)
+                let latitude = info.location.substring(index + 1)
                 let policeObj=[{
                     typeId: 8,
                     id:info.id,
@@ -216,8 +216,8 @@
             },
             addPolice(info){
                 let index = info.location.includes(',')?info.location.indexOf(','):info.location.indexOf('，')
-                let latitude = info.location.substring(0, index)
-                let longitude = info.location.substring(index + 1)
+                let longitude = info.location.substring(0, index)
+                let latitude = info.location.substring(index + 1)
                 let policeObj=[{
                     typeId: 8,
                     sensorType:info.sensorType,
@@ -309,7 +309,7 @@
                         this.policeList[i].checked=false
                         this.policeList[i].status=true
                         this.policeList[i].id=this.policeList[i].id
-                        this.policeList[i].location=`${this.policeList[i].latitude},${this.policeList[i].longitude}`
+                        this.policeList[i].location=`${this.policeList[i].longitude},${this.policeList[i].latitude}`
                     }
                 }).catch((err)=>{
                     console.log(err)

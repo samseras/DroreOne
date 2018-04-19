@@ -146,8 +146,8 @@
             },
             fixInfo(info){
                 let index = info.location.includes(',')?info.location.indexOf(','):info.location.indexOf('，')
-                let latitude = info.location.substring(0, index)
-                let longitude = info.location.substring(index + 1)
+                let longitude = info.location.substring(0, index)
+                let latitude = info.location.substring(index + 1)
                 let wifiObj=[{
                     typeId: 7,
                     id:info.id,
@@ -224,8 +224,8 @@
             },
             addWifi (info){
                 let index = info.location.includes(',')?info.location.indexOf(','):info.location.indexOf('，')
-                let latitude = info.location.substring(0, index)
-                let longitude = info.location.substring(index + 1)
+                let longitude = info.location.substring(0, index)
+                let latitude = info.location.substring(index + 1)
                 let wifiObj=[{
                     typeId: 7,
                     positionType:info.positionType,
@@ -318,7 +318,7 @@
                         this.wifiList[i].checked=false
                         this.wifiList[i].status=true
                         this.wifiList[i].id=this.wifiList[i].id
-                        this.wifiList[i].location=`${this.wifiList[i].latitude},${this.wifiList[i].longitude}`
+                        this.wifiList[i].location=`${this.wifiList[i].longitude},${this.wifiList[i].latitude}`
                     }
                 }).catch((err)=>{
                     console.log(err)

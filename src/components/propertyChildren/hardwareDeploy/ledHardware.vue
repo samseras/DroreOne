@@ -140,8 +140,8 @@
             },
             fixInfo(info){
                 let index = info.location.includes(',')?info.location.indexOf(','):info.location.indexOf('，')
-                let latitude = info.location.substring(0,index)
-                let longitude = info.location.substring(index+1)
+                let longitude = info.location.substring(0,index)
+                let latitude = info.location.substring(index+1)
                 let item = info.area.includes(',')?info.area.indexOf(','):info.area.indexOf('，')
                 let screenWidth=info.area.substring(0,item)
                 let screenHeight = info.area.substring(item + 1)
@@ -220,8 +220,8 @@
             },
             addLed (info){
                 let index = info.location.includes(',')?info.location.indexOf(','):info.location.indexOf('，')
-                let latitude = info.location.substring(0, index)
-                let longitude = info.location.substring(index + 1)
+                let longitude = info.location.substring(0, index)
+                let latitude = info.location.substring(index + 1)
                 let item = info.area.includes(',')?info.area.indexOf(','):info.area.indexOf('，')
                 let screenWidth=info.area.substring(0,item)
                 let screenHeight = info.area.substring(item + 1)
@@ -317,7 +317,7 @@
                         this.ledList[i].checked=false
                         this.ledList[i].status=true
                         this.ledList[i].id = this.ledList[i].id
-                        this.ledList[i].location=`${this.ledList[i].latitude},${this.ledList[i].longitude}`
+                        this.ledList[i].location=`${this.ledList[i].longitude},${this.ledList[i].latitude}`
                         this.ledList[i].area=`${this.ledList[i].screenWidth},${this.ledList[i].screenHeight}`
                     }
                 }).catch((err)=>{

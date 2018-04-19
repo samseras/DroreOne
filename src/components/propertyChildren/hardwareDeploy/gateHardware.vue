@@ -141,8 +141,8 @@
             },
             fixInfo(info){
                 let index = info.location.includes(',')?info.location.indexOf(','):info.location.indexOf('，')
-                let latitude = info.location.substring(0, index)
-                let longitude = info.location.substring(index + 1)
+                let longitude = info.location.substring(0, index)
+                let latitude = info.location.substring(index + 1)
                 let gateObj=[{
                     typeId:3,
                     id:info.id,
@@ -219,8 +219,8 @@
             },
             addGate(info){
                 let index = info.location.includes(',')?info.location.indexOf(','):info.location.indexOf('，')
-                let latitude = info.location.substring(0, index)
-                let longitude = info.location.substring(index + 1)
+                let longitude = info.location.substring(0, index)
+                let latitude = info.location.substring(index + 1)
                 let gateObj=[{
                     typeId:3,
                     gateType:info.gateType,
@@ -316,7 +316,7 @@
                     for (let i=0;i<this.gateList.length;i++){
                         this.gateList[i].checked=false
                         this.gateList[i].status=true
-                        this.gateList[i].location=`${this.gateList[i].latitude},${this.gateList[i].longitude}`
+                        this.gateList[i].location=`${this.gateList[i].longitude},${this.gateList[i].latitude}`
                     }
                 }).catch((err)=>{
                     console.log(err)
