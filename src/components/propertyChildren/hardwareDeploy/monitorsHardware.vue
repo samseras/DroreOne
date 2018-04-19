@@ -142,8 +142,8 @@
             },
             fixInfo(info){
                 let index = info.location.includes(',')?info.location.indexOf(','):info.location.indexOf('，')
-                let latitude = info.location.substring(0, index)
-                let longitude = info.location.substring(index + 1)
+                let longitude = info.location.substring(0, index)
+                let latitude = info.location.substring(index + 1)
                 let monitorsObj =[{
                     typeId: 6,
                     id:info.id,
@@ -219,8 +219,8 @@
             },
             addMonitors(info){
                 let index = info.location.includes(',')?info.location.indexOf(','):info.location.indexOf('，')
-                let latitude = info.location.substring(0, index)
-                let longitude = info.location.substring(index + 1)
+                let longitude = info.location.substring(0, index)
+                let latitude  = info.location.substring(index + 1)
                 let monitorsObj =[{
                     typeId: 6,
                     sensorType:info.sensorType,
@@ -307,7 +307,7 @@
                         this.monitorsList[i].checked=false
                         this.monitorsList[i].status=true
                         this.monitorsList[i].id=this.monitorsList[i].id
-                        this.monitorsList[i].location=`${this.monitorsList[i].latitude},${this.monitorsList[i].longitude}`
+                        this.monitorsList[i].location=`${this.monitorsList[i].longitude},${this.monitorsList[i].latitude}`
                     }
                 }).catch((err)=>{
                     console.log(err)

@@ -144,8 +144,8 @@
             },
             fixInfo(info){
                 let index = info.location.includes(',')?info.location.indexOf(','):info.location.indexOf('，')
-                let latitude = info.location.substring(0, index)
-                let longitude = info.location.substring(index + 1)
+                let longitude = info.location.substring(0, index)
+                let latitude = info.location.substring(index + 1)
                 let broadObj=[{
                     typeId: 2,
                     id:info.id,
@@ -221,8 +221,8 @@
             },
             addBroad (info){
                 let index = info.location.includes(',')?info.location.indexOf(','):info.location.indexOf('，')
-                let latitude = info.location.substring(0, index)
-                let longitude = info.location.substring(index + 1)
+                let longitude = info.location.substring(0, index)
+                let latitude = info.location.substring(index + 1)
                 let broadObj=[{
                     typeId: 2,
                     positionType:info.positionType,
@@ -317,7 +317,7 @@
                         this.broadList[i].checked = false
                         this.broadList[i].status = true
                         this.broadList[i].id=this.broadList[i].id
-                        this.broadList[i].location=`${this.broadList[i].latitude},${this.broadList[i].longitude}`
+                        this.broadList[i].location=`${this.broadList[i].longitude},${this.broadList[i].latitude}`
                     }
                 }).catch((err)=>{
                     console.log(err)

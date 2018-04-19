@@ -153,8 +153,8 @@
             },
             fixInfo(info){
                 let index = info.location.includes(',')?info.location.indexOf(','):info.location.indexOf('，')
-                let latitude = info.location.substring(0, index)
-                let longitude = info.location.substring(index + 1)
+                let longitude = info.location.substring(0, index)
+                let latitude = info.location.substring(index + 1)
                 let lightObj=[{
                     typeId: 5,
                     id:info.id,
@@ -231,8 +231,8 @@
 
             addLight(info){
                 let index = info.location.includes(',')?info.location.indexOf(','):info.location.indexOf('，')
-                let latitude = info.location.substring(0, index)
-                let longitude = info.location.substring(index + 1)
+                let longitude = info.location.substring(0, index)
+                let latitude = info.location.substring(index + 1)
                 let lightObj=[{
                     typeId: 5,
                     lightStatus:info.lightStatus,
@@ -320,7 +320,7 @@
                         this.lightList[i].checked=false
                         this.lightList[i].status=true
 
-                        this.lightList[i].location=`${this.lightList[i].latitude},${this.lightList[i].longitude}`
+                        this.lightList[i].location=`${this.lightList[i].longitude},${this.lightList[i].latitude}`
                     }
                 }).catch((err)=>{
                     console.log(err)
