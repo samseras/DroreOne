@@ -105,7 +105,7 @@
                             </el-option>
                         </el-select>
                     </p>
-                    <p class="phoneNum">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置：<input type="text"v-model="indicator.location"><i class="el-icon-location-outline" @click="showMapDialog"></i></p>
+                    <p class="phoneNum">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置：<span>{{indicator.location}}</span><i class="el-icon-location-outline" @click="showMapDialog"></i></p>
                     <div class="img">
                         <img :src="indicator.picturePath" alt="" v-if="isDisabled">
                         <label for="avatar" v-if="!isDisabled">
@@ -129,7 +129,7 @@
                         </el-select>
                     </p>
                     <p class="idNum">个&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;数：<input type="text"v-model="trash.dustbinBean.dustbinCount"></p>
-                    <p class="phoneNum">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置：<input type="text"v-model="trash.location"><i class="el-icon-location-outline" @click="showMapDialog"></i></p>
+                    <p class="phoneNum">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置：<span>{{trash.location}}</span><i class="el-icon-location-outline" @click="showMapDialog"></i></p>
                     <p class="phoneNum">所属片区：
                         <el-select v-model="trash.regionId" placeholder="请选择">
                             <el-option
@@ -172,7 +172,7 @@
                     <p class="idNum">容&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;量：<input type="text"v-model="scenic.scenicspotBean.capacity"></p>
 
                     <p class="phoneNum">当前人数：<input type="text"v-model="scenic.scenicspotBean.currentNum"></p>
-                    <p class="phoneNum">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置：<input type="text"v-model="scenic.location"><i class="el-icon-location-outline" @click="showMapDialog"></i></p>
+                    <p class="phoneNum">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置：<span>{{scenic.location}}</span><i class="el-icon-location-outline" @click="showMapDialog"></i></p>
                     <div class="img">
                         <img :src="scenic.picturePath" alt="" v-if="isDisabled">
                         <label for="avatar" v-if="!isDisabled">
@@ -203,7 +203,7 @@
                     <p class="idNum">容&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;量：<input type="text"v-model="shop.businessBean.capacity"></p>
 
                     <p class="phoneNum">当前人数：<input type="text"v-model="shop.businessBean.currentNum"></p>
-                    <p class="phoneNum">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置：<input type="text"v-model="shop.location"><i class="el-icon-location-outline" @click="showMapDialog"></i></p>
+                    <p class="phoneNum">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置：<span>{{shop.location}}</span><i class="el-icon-location-outline" @click="showMapDialog"></i></p>
                     <p class="phoneNum">所属片区：
                         <el-select v-model="shop.regionId" placeholder="请选择">
                             <el-option
@@ -240,7 +240,7 @@
                     </p>
                     <p class="idNum">空余车位：<input type="text"v-model="park.parkingBean.surplusNum"></p>
                     <p class="phoneNum">车位总数：<input type="text"v-model="park.parkingBean.capacity"></p>
-                    <p class="phoneNum">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置：<input type="text"v-model="park.location">
+                    <p class="phoneNum">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置：<span>{{park.location}}</span>
                         <i class="el-icon-location-outline" @click="showMapDialog"></i>
                     </p>
                     <p class="phoneNum">所属片区：
@@ -280,7 +280,7 @@
                             <el-option label="紧张" value="紧张"></el-option>
                         </el-select>
                     </p>
-                    <p class="phoneNum">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置：<input type="text"v-model="toilet.location"><i class="el-icon-location-outline" @click="showMapDialog"></i></p>
+                    <p class="phoneNum">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置：<span>{{toilet.location}}</span><i class="el-icon-location-outline" @click="showMapDialog"></i></p>
                     <div class="img">
                         <img :src="toilet.picturePath" alt="" v-if="isDisabled">
                         <label for="avatar" v-if="!isDisabled">
@@ -347,7 +347,7 @@
                 <el-button size="mini" @click = 'closeDialog' :disabled='isDisabled'>取消</el-button>
             </div>
         </el-dialog>
-        <MapDialog v-if="mapVisible" :visible="mapVisible" class="map" @closeMapDialog = 'closeMapDialog'></MapDialog>
+        <MapDialog v-if="mapVisible" :visible="mapVisible" class="map" @closeMapDialog = 'closeMapDialog' @saveLocation = "saveLocation"></MapDialog>
     </div>
 </template>
 
@@ -356,6 +356,7 @@
     import Cropper from 'cropperjs'
     import FileUpload from 'vue-upload-component'
     import api from '@/api'
+    import { mapGetters } from 'vuex'
     export default {
         name: "person-detail",
         props: ['visible', 'Info','isDisabled','title'],
@@ -470,6 +471,35 @@
             }
         },
         methods: {
+            saveLocation () {
+                console.log(this.getLocation, 'hhhhkhkjhjh')
+                let locationString
+                let regionLocationStr
+                if (this.getLocation.length > 0) {
+                    locationString = `${this.getLocation[0]},${this.getLocation[1]}`
+                }
+                if (this.getRegionLocation.length > 0) {
+                    regionLocationStr = this.getRegionLocation
+                }
+                if(this.route.includes('trash')) {
+                    this.trash.location = locationString
+                } else if(this.route.includes('indicator')) {
+                    this.indicator.location = locationString
+                } else if(this.route.includes('scenic')) {
+                    this.scenic.location = locationString
+                } else if(this.route.includes('shop')) {
+                    this.shop.location = locationString
+                } else if(this.route.includes('park')) {
+                    this.park.location = locationString
+                } else if(this.route.includes('toilet')) {
+                    this.toilet.location = locationString
+                } else if (this.route.includes('area')) {
+                    this.area.location = regionLocationStr
+                } else if (this.route.includes('roat')) {
+                    // this.roat = this.Info
+                }
+                this.mapVisible = false
+            },
             closeDialog () {
                 console.log(this.src)
                 this.$emit('closeInfoDialog')
@@ -727,7 +757,14 @@
         mounted () {
             console.log(document.getElementsByClassName('card'), 'p[p[p[p[p[')
             // console.log(this.$refs.test)
-        }
+        },
+        computed: {
+            ...mapGetters([
+                'getLocation',
+                'getRegionLocation',//片区
+                'getRoatLocation'//路网
+            ])
+        },
     }
 </script>
 <style lang="scss">
@@ -1148,6 +1185,14 @@
                         outline: none;
                         font-size: rem(12);
                         padding-left: rem(10);
+                    }
+                    span{
+                        display: inline-block;
+                        width: rem(180);
+                        overflow: hidden;
+                        text-overflow: ellipsis;
+                        white-space: nowrap;
+                        line-height: rem(10);
                     }
                     select{
                         border: none;

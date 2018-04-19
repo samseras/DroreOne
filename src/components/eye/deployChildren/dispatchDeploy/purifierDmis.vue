@@ -1,7 +1,7 @@
 <template>
 <div class="areaDeploy">
         <div class="title">
-            保洁排版调度
+            保洁
         </div>
         <div class="personContent">
             <div class="funcTitle">
@@ -21,8 +21,10 @@
                         style="width: 100%"
                         @selection-change="handleSelectionChange">
                         <el-table-column
-                            type="selection"
                             width="50">
+                            <template slot-scope="scope">
+                                <el-checkbox v-model="scope.row.checked" @change="checked(scope.row.id)" class="checkBoxBtn"></el-checkbox>
+                            </template>
                         </el-table-column>
                         <el-table-column
                             prop="type"
@@ -50,6 +52,8 @@
                         <el-table-column label="操作">
                             <template slot-scope="scope">
                                 <span @click="fixedInfo(scope.row,'片区信息')">编辑</span> |
+                                <span @click="stop(scope.row,'片区信息')" v-show="isStop">停止 |</span>
+                                <span @click="start(scope.row,'片区信息')" v-show="isStart">开始 |</span>
                                 <span @click="showPersonDetail(scope.row,'片区信息')">查看</span> |
                                 <span @click="delet(scope.row,'片区信息')">删除</span>
                             </template>
@@ -97,18 +101,20 @@
                 checkList: [],
                 filterList: [],
                 areaList: [
-                    {id:1,name: '长江~黄河巡更',type: '售票',classes: '早班，午班，晚班',number: '10个',line: '起点（123，12312）、中间（123，12312）、终点（123，12312）'},
-                    {id:2,name: '长江~黄河巡更',type: '安保',classes: '早班，午班，晚班',number: '10个',line: '起点（123，12312）、中间（123，12312）、终点（123，12312）'},
-                    {id:3,name: '长江~黄河巡更',type: '保洁',classes: '早班，午班，晚班',number: '10个',line: '起点（123，12312）、中间（123，12312）、终点（123，12312）'},
-                    {id:8,name: '长江~黄河巡更',type: '售票',classes: '早班，午班，晚班',number: '10个',line: '起点（123，12312）、中间（123，12312）、终点（123，12312）'},
-                    {id:9,name: '长江~黄河巡更',type: '检票',classes: '早班，午班，晚班',number: '10个',line: '起点（123，12312）、中间（123，12312）、终点（123，12312）'},
+                    {id:1,checked:false,name: '长江~黄河巡更',type: '售票',classes: '早班，午班，晚班',number: '10个',line: '起点（123，12312）、中间（123，12312）、终点（123，12312）'},
+                    {id:2,checked:false,name: '长江~黄河巡更',type: '安保',classes: '早班，午班，晚班',number: '10个',line: '起点（123，12312）、中间（123，12312）、终点（123，12312）'},
+                    {id:3,checked:false,name: '长江~黄河巡更',type: '保洁',classes: '早班，午班，晚班',number: '10个',line: '起点（123，12312）、中间（123，12312）、终点（123，12312）'},
+                    {id:8,checked:false,name: '长江~黄河巡更',type: '售票',classes: '早班，午班，晚班',number: '10个',line: '起点（123，12312）、中间（123，12312）、终点（123，12312）'},
+                    {id:9,checked:false,name: '长江~黄河巡更',type: '检票',classes: '早班，午班，晚班',number: '10个',line: '起点（123，12312）、中间（123，12312）、终点（123，12312）'},
                 ],
                 visible: false,
                 areaInfo: {},
                 choseInfoId: [],
                 choseList: [],
                 isDisabled: true,
-                title: ''
+                title: '',
+                isStop:true,
+                isStart:false
             }
         },
         methods: {
@@ -228,14 +234,41 @@
                 this.areaList.push(info)
                 this.choseList = this.areaList
             },
-            fixedInfo () {
+            fixedInfo (id) {
+                // if (id) {
+                //     this.choseInfoId.push(id)
+                // }
+                // console.log(this.choseInfoId)
+                // if(this.choseInfoId.length > 1) {
+                //     this.$message.warning('至多选择一条数据')
+                //     return
+                // }
+                // if(this.choseInfoId.length>0){
+                //     this.areaList.map((item)=>{
+                //         if(item.id === this.choseInfoId[0]){
+                //             this.areaInfo=item
+                //         }
+                //     })
+                //     this.showPersonDetail(this.areaInfo,'修改保洁信息')
+                //     this.isDisabled=false
+                // }else{
+                //     this.$message.error('请选择要修改的保洁')
+                // }
                 this.areaList.map((item) => {
                     if (item.id === this.choseInfoId[0]){
                         this.areaInfo = item
                     }
                 })
-                this.showPersonDetail(this.areaInfo, '修改人员信息')
+                this.showPersonDetail(this.areaInfo, '修改保洁信息')
                 this.isDisabled = false
+            },
+            stop(id){
+                this.isStop = false;
+                this.isStart = true;
+            },
+            start(id){
+                this.isStop = true;
+                this.isStart = false;
             }
         },
         created () {

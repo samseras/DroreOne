@@ -1,7 +1,7 @@
 <template>
-    <div class="cameraHard">
+    <div class="voiceHard">
         <div class="title">
-            摄像头信息
+            音响信息
         </div>
         <div class="cameraContent">
             <div class="conTitle">
@@ -14,7 +14,7 @@
                 </Header>
             </div>
 
-            <div class="cameraList">
+            <div class="cameraList" v-loading="isShowLoading">
                 <ScrollContainer>
                     <el-table
                         v-if="!isShowPersonCard"
@@ -48,11 +48,15 @@
                         </el-table-column>
                     </el-table>
 
-                    <div class="personInfo" v-for="item in choseList" v-if="isShowPersonCard && item.status">
+                    <div class="personInfo" v-for="item in voiceList"
+                        v-if="isShowVoiceCard && item.status">
                         <div class="checkBox">
-                            <input type="checkbox" :checked="item.checked" class="checkBtn" @change="checked(item.id)">
+                            <el-checkbox v-model="item.checked"
+                                @change="checked(item.id)" class="checkBtn">
+
+                            </el-checkbox>
                         </div>
-                        <div class="personType" @click.stop="showPersonDetail(item)">
+                        <div class="personType" @click.stop="showVoiceDetail(item,'音响信息')">
                             <img src="../../../../static/img/cameras.png" alt="">
                             <span class="type">
                                   {{item.type}}
@@ -67,11 +71,11 @@
                 </ScrollContainer>
                 <HardWare v-if="visible"
                           :visible="visible"
-                          :Info="personInfo"
+                          :Info="voiceInfo"
                           :title="title"
                           :isDisabled="isDisabled"
                           @closeInfoDialog="visible=false"
-                          @addNewInfo="addNewPerson"
+                          @addNewInfo="addVoice"
                           @fixInfo="fixInfo">
 
                 </HardWare>
@@ -84,28 +88,17 @@
     import ScrollContainer from '@/components/ScrollContainer'
     import Header from './camera.vue'
     import HardWare from './hardwareDialog.vue'
+    import api from '@/api'
 
     export default{
-        data(){
-            return{
-                isShowPersonCard:true,
+        data() {
+            return {
+                voiceList: [],
                 visible:false,
-                camera:[
-                    {id:1,type:'室内',area:'A-片区',describe:'摄像头介绍'},
-                    {id:2,type:'室内',area:'A-片区',describe:'摄像头介绍'},
-                    {id:3,type:'室外',area:'A-片区',describe:'摄像头介绍'},
-                    {id:4,type:'室外',area:'A-片区',describe:'摄像头介绍'},
-                    {id:5,type:'室外',area:'A-片区',describe:'摄像头介绍'},
-                    {id:6,type:'室外',area:'A-片区',describe:'摄像头介绍'}
-                ],
-                checkList:[],
-                isSelected:false,
-                personInfo:{},
-                choseInfoId:[],
-                choseList:[],
+                isShowVoiceCard:true,
+                isShowLoading:false,
                 isDisabled:true,
-                filterList: [],
-                title:''
+                choseInfoId:[],
             }
         },
         methods:{
@@ -113,131 +106,79 @@
                 this.multipleSelection = val;
             },
             addNewInfo(){
-                this.showPersonDetail({},'添加摄像头信息')
-                this.isDisabled=false
+                this.showVoiceDetail({},'添加音响信息')
+                this.isDisabled = false
             },
-            showPersonDetail(info,title){
-                this.personInfo=info
+            showVoiceDetail(info,title){
+                this.voiceInfo= info
                 this.visible=true
                 this.title=title
-
             },
             fixInfo(info){
-                let list=this.camera
-                for(let i=0;i<list.length;i++){
-                    if(info.id===list[i].id){
-                        this.camera[i]=info
-                    }
-                }
-                this.choseList=this.camera
+
             },
-            fixedInfo(){
-                if(this.choseInfoId.length>0){
-                    this.camera.map((item)=>{
-                        if(item.id === this.choseInfoId[0]){
-                            this.personInfo=item
-                        }
-                    })
-                    this.showPersonDetail(this.personInfo,'修改人员信息')
-                    this.isDisabled=false
+            fixedInfo(id){
+                if(id){
+                    this.choseInfoId.push(id)
+                }
+                if(this.choseInfoId.length>1){
+                    this.message.warning('至多选择一条数据')
+                    return
+                }
+
+            },
+            deletInfo(id){
+
+            },
+            addVoice(info){
+
+            },
+            toggleList(type){
+                if(type ==='list'){
+                    this.isShowVoiceCard=false
                 }else{
-                    this.$message.error('请选择要修改的人员')
-                }
-            },
-            deletInfo(){
-                console.log(122)
-                for(let i=0;i<this.choseInfoId.length;i++){
-                    this.camera=this.camera.filter((item,index)=>{
-                        if(item.id === this.choseInfoId[i]){
-                            this.choseList[index].checked=false
-                        }
-                        return item.id!==this.choseInfoId[i]
-                    })
-                }
-                this.choseList=this.camera
-            },
-            addNewPerson(info){
-                info.id=new Date().getTime()
-                this.camera.push(info)
-                this.choseList=this.camera
-            },
-            toggleList (type){
-                if(type==='list'){
-                    this.isShowPersonCard=false
-                }else{
-                    this.isShowPersonCard=true
+                    this.isShowVoiceCard=true;
                 }
             },
             checked(id){
+                this.voiceList = this.voiceList.filter(item =>{
+                    if(item.id === id){
+                        item.checked =item.checked
+                    }
+                    return item
+                })
                 console.log(id)
                 if(this.choseInfoId.includes(id)){
                     this.choseInfoId = this.choseInfoId.filter((item)=>{
-                        return item!== id
+                        return item!==id
                     })
                 }else{
                     this.choseInfoId.push(id)
                 }
-            },
-            choseType(type){
-                console.log(type)
-                if(type.length===0){
-                    this.choseList=this.camera.filter((item)=>{
-                        item.status=true
-                        return item.status === true
-                    })
-                }else{
-                    this.choseList=this.camera.filter((item,index)=>{
-                        if(type.includes(item.type)){
-                            item.status=true
-                        }else if(!type.includes(item.type)){
-                            item.status=false
-                            console.log(item.type)
-                        }
-                        return item.status===true
-                    })
-                }
-            },
-            selectedAll(state){
-                this.choseList=this.camera.filter((item)=>{
-                    if(state==true){
-                        item.checked=true
-                        this.choseInfoId.push(item.id)
-                        return item.checked == true
-                    }else{
-                        console.log('进入判断')
-                        item.checked=false
-                        this.choseInfoId=[]
-                        return item.checked == false
-                    }
-                })
-                console.log(this.choseInfoId)
             }
-        },
-        created (){
-            for (let i=0;i<this.camera.length;i++){
-                this.camera[i].checked=false
-                this.camera[i].status=true
-            }
-            this.choseList=this.camera
+
+
         },
         components:{
             ScrollContainer,
             Header,
             HardWare
-
         }
     }
 
 </script>
 
 <style lang="scss" type="text/scss">
-    .el-checkbox__label{
-        padding-left:rem(5);
-        font-size:rem(13);
+    .voiceHard{
+        .el-checkbox__label{
+            padding-left:rem(5);
+            font-size:rem(13);
+        }
+        .el-checkbox__inner{
+            margin-top:rem(5);
+        }
     }
-    .el-checkbox__inner{
-        margin-top:rem(5);
-    }
+
 </style>
 
 <style lang="scss" type="text/scss" scoped>

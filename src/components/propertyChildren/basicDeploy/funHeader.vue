@@ -169,7 +169,7 @@
             }
             i{
                 font-size: rem(12);
-                margin-left: rem(-20);
+                margin-left: rem(-15);
                 cursor: pointer;
             }
         }

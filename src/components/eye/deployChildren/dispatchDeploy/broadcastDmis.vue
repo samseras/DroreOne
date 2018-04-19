@@ -1,7 +1,7 @@
 <template>
     <div class="areaDeploy">
         <div class="title">
-            广播播放调度
+            广播
         </div>
         <div class="personContent">
             <div class="funcTitle">
@@ -24,7 +24,7 @@
                         <el-table-column
                             width="50">
                             <template slot-scope="scope">
-                                <el-checkbox v-model="scope.row.checked" @change="getChecked(scope.row.id)" class="checkBoxBtn"></el-checkbox>
+                                <el-checkbox v-model="scope.row.checked" @change="checked(scope.row.id)" class="checkBoxBtn"></el-checkbox>
                             </template>
                         </el-table-column>
                         <el-table-column
@@ -57,8 +57,10 @@
                         <el-table-column label="操作">
                             <template slot-scope="scope">
                                 <span @click="fixedInfo(scope.row,'片区信息')" class="edit">编辑</span> |
+                                <span @click="stop(scope.row,'片区信息')" v-show="isStop">停止 |</span>
+                                <span @click="start(scope.row,'片区信息')" v-show="isStart">开始 |</span>
                                 <span @click="showPersonDetail(scope.row,'片区信息')">查看</span> |
-                                <span @click="delet(scope.row,'片区信息')">删除</span>
+                                <span @click="deletInfo(scope.row,'片区信息')">删除</span>
                             </template>
                         </el-table-column>
                     </el-table>
@@ -72,6 +74,7 @@
                               @fixInfo = "fixInfo"
                               @addNewInfo="addNewPerson">
                 </PersonDetail>
+
             </div>
         </div>
     </div>
@@ -89,23 +92,28 @@
                 checkList: [],
                 filterList: [],
                 areaList: [
-                    {id:1,name: '下午下班音乐提示',type: '广播',number: '10个',time: '2018.02.03~2018.03.11',executetime: '18:00:00~18:10:00',repetition:'是'},
-                    {id:2,name: '上班提示',type: '广播',number: '10个',time: '2018.02.03~2018.03.11',executetime: '18:00:00~18:10:00',repetition:'是'},
-                    {id:3,name: '夜间照明',type: '路灯',number: '10个',time: '2018.02.03~2018.03.11',executetime: '18:00:00~18:10:00',repetition:'否'},
-                    {id:8,name: '室内照明',type: '路灯',number: '10个',time: '2018.02.03~2018.03.11',executetime: '18:00:00~18:10:00',repetition:'否'},
-                    {id:9,name: '节日提示',type: 'LED大屏',number: '10个',time: '2018.02.03~2018.03.11',executetime: '18:00:00~18:10:00',repetition:'是'},
+                    {id:1,checked:false,name: '下午下班音乐提示',type: '广播',number: '10个',time: '2018.02.03~2018.03.11',executetime: '18:00:00~18:10:00',repetition:'是'},
+                    {id:2,checked:false,name: '上班提示',type: '广播',number: '10个',time: '2018.02.03~2018.03.11',executetime: '18:00:00~18:10:00',repetition:'是'},
+                    {id:3,checked:false,name: '夜间照明',type: '路灯',number: '10个',time: '2018.02.03~2018.03.11',executetime: '18:00:00~18:10:00',repetition:'否'},
+                    {id:8,checked:false,name: '室内照明',type: '路灯',number: '10个',time: '2018.02.03~2018.03.11',executetime: '18:00:00~18:10:00',repetition:'否'},
+                    {id:9,checked:false,name: '节日提示',type: 'LED大屏',number: '10个',time: '2018.02.03~2018.03.11',executetime: '18:00:00~18:10:00',repetition:'是'},
                 ],
                 visible: false,
                 areaInfo: {},
                 choseInfoId: [],
                 choseList: [],
                 isDisabled: true,
-                title: ''
+                title: '',
+                isStop:true,
+                isStart:false,
+                selection:[]
             }
         },
         methods: {
-            handleSelectionChange(val) {
-                this.multipleSelection = val;
+            handleSelectionChange(selection) {
+                this.choseInfoId = selection.map(item => {
+                    return item.id
+                })
             },
             showPersonDetail (info,title) {
                 this.areaInfo = info
@@ -116,17 +124,36 @@
                 this.showPersonDetail({}, '添加硬件调度')
                 this.isDisabled = false
             },
-            deletInfo () {
-                for (let i = 0; i < this.choseInfoId.length; i++) {
-                    this.areaList = this.areaList.filter((item, index) => {
-                        if (item.id === this.choseInfoId[i]){
-                            this.choseList[index].checked = false
-                        }
-                        return item.id !== this.choseInfoId[i]
-                    })
+            deletInfo (id) {
+                // if (id) {
+                //     this.choseInfoId.push(id)
+                // }
+                if (this.choseInfoId.length > 0) {
+                    this.$confirm('此操作将永久删除该数据, 是否继续?', '提示', {
+                        confirmButtonText: '确定',
+                        cancelButtonText: '取消',
+                        type: 'warning'
+                    }).then(() => {
+                      //  api.camera.deleteCamera(this.choseInfoId).then(res => {
+                            for (let i = 0; i < this.choseInfoId.length; i++) {
+                                this.areaList = this.areaList.filter((item, index) => {
+                                    if (item.id === this.choseInfoId[i]) {
+                                        this.choseList[index].checked = false
+                                    }
+                                    return item.id !== this.choseInfoId[i]
+                                })
+                            }
+                            this.choseList = this.areaList;
+                            this.$message.success('删除成功')
+                            this.choseInfoId = []
+                            // }).catch(err=>{
+                            //             console.log(err)
+                            //             this.$message.error('删除失败，请稍后重试')
+                        }).catch(() => {
+                            this.$message.info('取消删除')
+                        })
+                 //   })
                 }
-                this.choseList = this.areaList
-
             },
             // toggleList (type) {
             //     if (type === 'list') {
@@ -136,13 +163,21 @@
             //     }
             // },
             checked (id) {
-                if (this.choseInfoId.includes(id)) {
-                    this.choseInfoId = this.choseInfoId.filter((item) =>{
-                        return item !== id
+                this.areaList = this.areaList.filter(item =>{
+                    if(item.id ===id){
+                        item.checked = item.checked
+                    }
+                    return item
+                })
+                console.log(id)
+                if(this.choseInfoId.includes(id)){
+                    this.choseInfoId = this.choseInfoId.filter((item)=>{
+                        return item!== id
                     })
-                } else {
+                }else{
                     this.choseInfoId.push(id)
                 }
+                console.log(this.choseInfoId)
             },
             choseType (type) {
                 console.log(type)
@@ -195,18 +230,33 @@
                 this.areaList.push(info)
                 this.choseList = this.areaList
             },
-            fixedInfo () {
-                if (this.choseInfoId.length > 0) {
-                    this.areaList.map((item) => {
-                        if (item.id === this.choseInfoId[0]){
-                            this.areaInfo = item
+            fixedInfo (id) {
+                // if (id) {
+                //     this.choseInfoId.push(id)
+                // }
+                // if(this.choseInfoId.length > 1) {
+                //     this.$message.warning('至多选择一条数据')
+                //     return
+                // }
+                // if(this.choseInfoId.length>0){
+                    this.areaList.map((item)=>{
+                        if(item.id === this.choseInfoId[0]){
+                            this.areaInfo=item
                         }
                     })
-                    this.showPersonDetail(this.areaInfo, '修改人员信息')
-                    this.isDisabled = false
-                } else {
-                    this.$message.error('请选择要修改的人员')
-                }
+                    this.showPersonDetail(this.areaInfo,'修改摄像头信息')
+                    this.isDisabled=false
+                // }else{
+                //     this.$message.error('请选择要修改的人员')
+                // }
+            },
+            stop(id){
+                this.isStop = false;
+                this.isStart = true;
+            },
+            start(id){
+                this.isStop = true;
+                this.isStart = false;
             }
         },
         created () {
