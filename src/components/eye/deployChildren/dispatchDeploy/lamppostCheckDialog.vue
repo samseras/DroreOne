@@ -11,10 +11,10 @@
                 <p class="sex">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 称：{{checkTitle}}</p>
                 <p class="time">调度时间：</p>
                 <p class="Hardware">执行时间：</p>
-                <p class="name">关联路灯：
+                <p class="name">关联路灯：</p>
+                <p class="type">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：
                     <textarea name="" v-model="hardware.describe" cols="70"
                               rows="5" placeholder="请输入描述信息"></textarea></p>
-                <p class="type">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：</p>
             </div>
             <div class=""slot="footer" class="dialog-footer cardFooter">
                 <el-button size="mini" class="hold" @click="lastInfo">上一步</el-button>
