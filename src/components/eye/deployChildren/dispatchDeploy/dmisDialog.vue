@@ -116,7 +116,7 @@
                     <!--</p>-->
                     <p class="uploadText">定义内容：
                         <input type="text"v-model="hardware.uploadText" class="inputText">
-                        <el-button slot="trigger" size="small" type="primary" @click="showBroadcastDialog">曲目编辑</el-button>
+                        <el-button slot="trigger" size="small" type="primary" @click="showBroadcastDialog" :disabled='isDisabled'>曲目编辑</el-button>
 
                     </p>
                     <p class="type">
@@ -303,7 +303,7 @@
                     <!--</p>-->
                     <p class="uploadText">定义内容：
                         <input type="text"v-model="hardware.uploadText" class="inputText">
-                        <el-button slot="trigger" size="small" type="primary" @click = "showScreenDialog">定义内容</el-button>
+                        <el-button slot="trigger" size="small" type="primary" @click = "showScreenDialog" :disabled='isDisabled'>定义内容</el-button>
                     </p>
                     <p class="type">
                         描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：<textarea name="" v-model="hardware.describe" cols="30"
@@ -594,6 +594,7 @@
             }
         },
         created () {
+            console.log(this.isDisabled)
             this.route = this.$route.path
             console.log(this.Info,'  opopop')
             if (this.route.includes('person')) {

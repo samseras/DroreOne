@@ -56,11 +56,11 @@
                         </el-table-column>
                         <el-table-column label="操作">
                             <template slot-scope="scope">
-                                <span @click="fixedInfo(scope.row,'片区信息')" class="edit">编辑</span> |
+                                <span @click="fixedInfo(scope.row.id,'片区信息')" class="edit">编辑</span> |
                                 <span @click="stop(scope.row,'片区信息')" v-show="isStop">停止 |</span>
                                 <span @click="start(scope.row,'片区信息')" v-show="isStart">开始 |</span>
                                 <span @click="showPersonDetail(scope.row,'片区信息')">查看</span> |
-                                <span @click="delet(scope.row,'片区信息')">删除</span>
+                                <span @click="deletInfo(scope.row.id,'片区信息')">删除</span>
                             </template>
                         </el-table-column>
                     </el-table>
@@ -115,24 +115,51 @@
                 })
             },
             showPersonDetail (info,title) {
-                this.areaInfo = info
-                this.visible = true
-                this.title = title
+                if (!this.choseInfoId.includes(info.id)) {
+                    this.choseInfoId.push(info.id)
+                }
+                if(this.choseInfoId.length == 1){
+                    this.areaInfo = info
+                    this.visible = true
+                    this.title = title
+                    this.isDisabled = true
+                }else {
+                    this.$message.warning('至多选择一条数据')
+                }
             },
             addNewInfo () {
                 this.showPersonDetail({}, '添加硬件调度')
                 this.isDisabled = false
             },
-            deletInfo () {
-                for (let i = 0; i < this.choseInfoId.length; i++) {
-                    this.areaList = this.areaList.filter((item, index) => {
-                        if (item.id === this.choseInfoId[i]){
-                            this.choseList[index].checked = false
-                        }
-                        return item.id !== this.choseInfoId[i]
-                    })
+            deletInfo (id) {
+                if (id) {
+                    this.choseInfoId.push(id)
                 }
-                this.choseList = this.areaList
+                if (this.choseInfoId.length > 0) {
+                    this.$confirm('此操作将永久删除该数据, 是否继续?', '提示', {
+                        confirmButtonText: '确定',
+                        cancelButtonText: '取消',
+                        type: 'warning'
+                    }).then(() => {
+                        //  api.camera.deleteCamera(this.choseInfoId).then(res => {
+                        for (let i = 0; i < this.choseInfoId.length; i++) {
+                            this.areaList = this.areaList.filter((item, index) => {
+                                if (item.id === this.choseInfoId[i]) {
+                                    this.areaList[index].checked = false
+                                }
+                                return item.id !== this.choseInfoId[i]
+                            })
+                        }
+                        this.$message.success('删除成功')
+                        this.choseInfoId = []
+                        // }).catch(err=>{
+                        //             console.log(err)
+                        //             this.$message.error('删除失败，请稍后重试')
+                    }).catch(() => {
+                        this.$message.info('取消删除')
+                    })
+                    //   })
+                }
 
             },
             // toggleList (type) {
@@ -203,32 +230,25 @@
                 this.choseList = this.areaList
             },
             fixedInfo (id) {
-                // if (id) {
-                //     this.choseInfoId.push(id)
-                // }
-                // console.log(this.choseInfoId)
-                // if(this.choseInfoId.length > 1) {
-                //     this.$message.warning('至多选择一条数据')
-                //     return
-                // }
-                // if(this.choseInfoId.length>0){
-                //     this.areaList.map((item)=>{
-                //         if(item.id === this.choseInfoId[0]){
-                //             this.areaInfo=item
-                //         }
-                //     })
-                //     this.showPersonDetail(this.areaInfo,'修改LED信息')
-                //     this.isDisabled=false
-                // }else{
-                //     this.$message.error('请选择要修改的LED')
-                // }
-                    this.areaList.map((item) => {
-                        if (item.id === this.choseInfoId[0]){
-                            this.areaInfo = item
+                console.log(this.choseInfoId)
+                if (!this.choseInfoId.includes(id)) {
+                    this.choseInfoId.push(id)
+                }
+                if(this.choseInfoId.length > 1) {
+                    this.$message.warning('至多选择一条数据')
+                }
+                else if(this.choseInfoId.length>0){
+                    this.areaList.map((item)=>{
+                        if(item.id === this.choseInfoId[0]){
+                            this.areaInfo=item
                         }
                     })
-                    this.showPersonDetail(this.areaInfo, '修改人员信息')
+                    this.showPersonDetail(this.areaInfo,'修改LED信息')
                     this.isDisabled = false
+                    this.choseInfoId = []
+                }else{
+                    this.$message.error('请选择要修改的LED')
+                }
             },
             stop(id){
                 this.isStop = false;
