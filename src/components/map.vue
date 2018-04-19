@@ -19,7 +19,6 @@
         name: "map1",
         data () {
             return {
-
             }
         },
         created () {
@@ -57,10 +56,10 @@
                     id: new Date().getTime(),
                     url: "/static/img/location.png",
                 });
+                droreMap.icon.addChild(icon);
                 droreMap.addMouseEvent(Event.SINGLECLICK_EVENT, "single", function(evt){
-                    console.log(droreMap.transLayerToWgs(evt.coordinate))
-                    droreMap.icon.addChild(icon);
                     icon.setPosition(evt.coordinate);
+                    console.log(evt.coordinate)
                     // icon.onclick(function(e) {
                     //     console.log(e)
                     // });
@@ -72,8 +71,7 @@
                     console.log(droreMap.transLayerToWgs(data.end));
                     that.$store.commit('MAP_LOCATION', droreMap.transLayerToWgs(data.end))
                 })
-                // var areaEvet =new droreMap.area.DrawLayer("area",'rgba(255, 255, 255, 0.2)',"red")
-                // areaEvet.ifDraw = true;
+
             },
             district(){//区域划分
                 var areaEvet =new droreMap.area.DrawLayer("area",'rgba(255, 255, 255, 0.2)',"red")
