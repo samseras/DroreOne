@@ -2,6 +2,7 @@
  define(function(require, exports, module) {
     // 你也可以引入自己的函数依赖
      var ol = require('./ol');
+     var Event = require('./static');
      var droreMap = (function($, ol) {
          ///////****************地图初始化**********************///////
          var mapData = {
@@ -33,6 +34,7 @@
                          minZoom: minZoom,
                          maxZoom: maxZoom,
                      }),
+                     controls:[],
                      logo: false,
                      target: 'map'
                  });
@@ -655,27 +657,39 @@
                      return [x2, y2];
                  },
                  transWgToPixelInside: function(lng, lat) {
-
-                     var y = this.latToPixel(lat, 0);
-                     var x = this.lngToPixel(lng, 0);
-                     var numX = x - this.mapData.scegooglex; //所求点与基准点坐标的差值向量
-                     var numY = y - this.mapData.scegoogley;
-
-                     var a3 = Math.PI / 180 * 31;
-                     var x3 = numX * Math.cos(a3) - numY * Math.sin(a3); //num
-                     var y3 = numY * Math.cos(a3) + numX * Math.sin(a3); //num2...向量旋转后得值
-
-                     var x1 = this.mapData.spinx + x3 / parseFloat(this.mapData.spinzoomx);
-                     var y1 = this.mapData.spiny + y3 / parseFloat(this.mapData.spinzoomy); //对应293 294 google像素坐标
-
-                     //		--this.mapData.zoom;
-                     var zoo = this.mapData.zoom - 1;
-                     var ff = x1 * Math.pow(2, (this.mapData.scefit + zoo));
-                     var ff1 = this.mapData.googlecenterx * Math.pow(2, zoo) * 256;
-                     var x2 = ff - ff1;
-                     var ffy = y1 * Math.pow(2, (this.mapData.scefit + zoo));
-                     var ffy1 = this.mapData.googlecentery * Math.pow(2, zoo) * 256;
-                     var y2 = ffy - ffy1;
+                     //					console.log(this.mapData.mapType)
+                     if(this.mapData.mapType == "2D") {
+                         var y = this.latToPixel(lat, 0);
+                         var x = this.lngToPixel(lng, 0);
+                         var numX = x - this.mapData.scegooglex; //所求点与基准点坐标的差值向量
+                         var numY = y - this.mapData.scegoogley;
+                         var x1 = this.mapData.spinx + numX / parseFloat(this.mapData.spinzoomx);
+                         var y1 = this.mapData.spiny + numY / parseFloat(this.mapData.spinzoomy); //对应293 294 google像素坐标
+                         var zoo = this.mapData.zoom - 1;
+                         var ff = x1 * Math.pow(2, (this.mapData.scefit + zoo));
+                         var ff1 = this.mapData.googlecenterx * Math.pow(2, zoo) * 256;
+                         var x2 = ff - ff1;
+                         var ffy = y1 * Math.pow(2, (this.mapData.scefit + zoo));
+                         var ffy1 = this.mapData.googlecentery * Math.pow(2, zoo) * 256;
+                         var y2 = ffy - ffy1;
+                     } else {
+                         var y = this.latToPixel(lat, 0);
+                         var x = this.lngToPixel(lng, 0);
+                         var numX = x - this.mapData.scegooglex; //所求点与基准点坐标的差值向量
+                         var numY = y - this.mapData.scegoogley;
+                         var a3 = Math.PI / 180 * 31;
+                         var x3 = numX * Math.cos(a3) - numY * Math.sin(a3); //num
+                         var y3 = numY * Math.cos(a3) + numX * Math.sin(a3); //num2...向量旋转后得值
+                         var x1 = this.mapData.spinx + x3 / parseFloat(this.mapData.spinzoomx);
+                         var y1 = this.mapData.spiny + y3 / parseFloat(this.mapData.spinzoomy); //对应293 294 google像素坐标
+                         var zoo = this.mapData.zoom - 1;
+                         var ff = x1 * Math.pow(2, (this.mapData.scefit + zoo));
+                         var ff1 = this.mapData.googlecenterx * Math.pow(2, zoo) * 256;
+                         var x2 = ff - ff1;
+                         var ffy = y1 * Math.pow(2, (this.mapData.scefit + zoo));
+                         var ffy1 = this.mapData.googlecentery * Math.pow(2, zoo) * 256;
+                         var y2 = ffy - ffy1;
+                     }
                      return [x2, y2];
                  },
                  transPixelToWgsInside: function(x, y) { //内部数据调用
@@ -1039,7 +1053,7 @@
          roadNet = {
              roadPoint: function(lineFeature, parent) { //单条点线模块
                  var self = this;
-                 this.parent = parent;
+                 this.parent = parent ? parent : null;
                  this.LineFeature = lineFeature; //当前线条对象
                  this.id = lineFeature.getId();
                  this.selectPoint = null;
@@ -1157,13 +1171,14 @@
                  this.mouseXY = null;
                  this.LineStyle = new ol.style.Style({
                      stroke: new ol.style.Stroke({ //区域线条
+                         lineDash: [4, 10],
                          color: lineStyle || 'red',
-                         width: 8
+                         width: 5
                      })
                  });
                  this.PointStyle = new ol.style.Style({
                      image: new ol.style.Circle({
-                         radius: 10,
+                         radius: 5,
                          fill: new ol.style.Fill({
                              color: pointStyle || 'yellow'
                          }),
@@ -1284,13 +1299,14 @@
                      }
                  });
                  var modify = this.modify_interaction.on(Event.MODIFY_EVENT, function(e) { //TODO
-                     var keyPoint = self.groupList[e.features.getArray()[0].getId()].selectPoint;
-                     if(keyPoint) {
-                         CustomEvent.fireEvent("modify", {
-                             id: keyPoint.getId(),
-                             coord: keyPoint.getGeometry().getCoordinates()
-                         })
-                     }
+                     console.log(e)
+                     // var keyPoint = self.groupList[e.features.getArray()[0].getId()].selectPoint;
+                     // if(keyPoint) {
+                     //     CustomEvent.fireEvent("modify", {
+                     //         id: keyPoint.getId(),
+                     //         coord: keyPoint.getGeometry().getCoordinates()
+                     //     })
+                     // }
                  });
                  this.addRoad = function(road, data) { //添加单挑路线
                      //				var feature = (new ol.format.GeoJSON()).readFeature(road, {
@@ -1500,13 +1516,14 @@
                  this.setStyle = function(color1) {
                      self.LineStyle = new ol.style.Style({
                          stroke: new ol.style.Stroke({
+                             lineDash: [4, 10],
                              color: color1,
                              width: 5
                          })
                      });
                      self.PointStyle = new ol.style.Style({
                          image: new ol.style.Circle({
-                             radius: 8,
+                             radius: 5,
                              fill: new ol.style.Fill({
                                  color: color1 || 'yellow'
                              }),
@@ -1655,29 +1672,41 @@
                              element.style.cursor = DragMediator.cursor_;
                              if(featureType == "Point") { //poi点
                                  var icon = pool.getIconById(feature.getId());
-                                 this.feature_ = icon;
-                                 icon.showName = true;
-                                 var iconLayer = pool.getLayerById(icon.subtype);
-                                 iconLayer.setZIndex(999);
+                                 if(icon) {
+                                     this.feature_ = icon;
+                                     icon.showName = true;
+                                     var iconLayer = pool.getLayerById(icon.subtype);
+                                     iconLayer.setZIndex(2);
+                                 }
                              } else if(featureType == "Polygon") { //区域
                                  outMoveFunction(true, feature, feature.get("name"));
                                  this.feature_ = feature;
                              }
                          } else {
-                             if(featureType == "Point") { //在手型状态非同一poi点显示
+                             if(featureType == "Point"&&this.feature_.constructor == cover.Marker) { //在手型状态非同一poi点显示
                                  var icon = pool.getIconById(feature.getId());
+                                 console.log(icon.name,this.feature_.name)
                                  this.feature_.showName = false;
+                                 var prevLayer = pool.getLayerById(this.feature_.subtype);
+                                 prevLayer.setZIndex(1);
                                  this.feature_ = icon;
                                  icon.showName = true;
+                                 var iconLayer = pool.getLayerById(icon.subtype);
+                                 iconLayer.setZIndex(2);
                              }
                          }
                      } else if(DragMediator.previousCursor_ !== undefined) {
                          element.style.cursor = DragMediator.previousCursor_;
                          DragMediator.previousCursor_ = undefined;
-                         if(this.feature_.constructor == cover.Marker) {
-                             this.feature_.showName = false;
-                         } else if(this.feature_.getGeometry().getType() == "Polygon") {
-                             outMoveFunction(false, this.feature_)
+                         if(this.feature_) {
+                             if(this.feature_.constructor == cover.Marker) {
+                                 var icon = pool.getIconById(this.feature_.id);
+                                 var iconLayer = pool.getLayerById(icon.subtype);
+                                 iconLayer.setZIndex(1);
+                                 this.feature_.showName = false;
+                             } else if(this.feature_.getGeometry().getType() == "Polygon") {
+                                 outMoveFunction(false, this.feature_)
+                             }
                          }
                          this.feature_ = null;
                      }
@@ -1713,25 +1742,25 @@
                      DragMediator.coordinate_[1] = geometry.getCoordinates()[1];
                  }
              },
-             handleMoveEvent: function(event) {
-                 if(DragMediator.cursor_) {
-                     var map = event.map;
-                     var feature = map.forEachFeatureAtPixel(event.pixel,
-                         function(feature) {
-                             return feature;
-                         });
-                     var element = event.map.getTargetElement();
-                     if(feature) {
-                         if(element.style.cursor != DragMediator.cursor_) {
-                             DragMediator.previousCursor_ = element.style.cursor;
-                             element.style.cursor = DragMediator.cursor_;
-                         }
-                     } else if(DragMediator.previousCursor_ !== undefined) {
-                         element.style.cursor = DragMediator.previousCursor_;
-                         DragMediator.previousCursor_ = undefined;
-                     }
-                 }
-             },
+             //		handleMoveEvent: function(event) {
+             //			if(DragMediator.cursor_) {
+             //				var map = event.map;
+             //				var feature = map.forEachFeatureAtPixel(event.pixel,
+             //					function(feature) {
+             //						return feature;
+             //					});
+             //				var element = event.map.getTargetElement();
+             //				if(feature) {
+             //					if(element.style.cursor != DragMediator.cursor_) {
+             //						DragMediator.previousCursor_ = element.style.cursor;
+             //						element.style.cursor = DragMediator.cursor_;
+             //					}
+             //				} else if(DragMediator.previousCursor_ !== undefined) {
+             //					element.style.cursor = DragMediator.previousCursor_;
+             //					DragMediator.previousCursor_ = undefined;
+             //				}
+             //			}
+             //		},
              handleUpEvent: function(event) {
                  if(Math.abs(parseFloat(DragMediator.startCoordinate_[0]) - parseFloat(DragMediator.coordinate_[0])) > 0 || Math.abs(parseFloat(DragMediator.startCoordinate_[1]) - parseFloat(DragMediator.coordinate_[1])) > 0) {
                      if(DragMediator.feature_.constructor == cover.Marker) {
@@ -1766,7 +1795,7 @@
                  /**
                   * 名称字体大小
                   */
-                 var _size = 10;
+                 var _size = 12;
                  Object.defineProperty(this, "size", {
                      set: function(val) {
                          if(typeof val != "number") {
@@ -1798,63 +1827,52 @@
                      }
                  });
 
-                 //			this.style = pool.getStyleById(self.subtype).clone();
+                 //this.style = pool.getStyleById(self.subtype).clone();
                  this.style = pool.getStyleById(self.subtype) ? pool.getStyleById(self.subtype).clone() : new ol.style.Style({
                      image: new ol.style.Icon({
                          src: self.data.url
-                     })
+                     }),
+                     zIndex:22
                  });
 
-                 function showName(val) {
+                 function showName(val,name) {
                      var width = self.data.url.match(/[0-9]+/g);
                      width = width ? width[0] : 1;
                      var text = new ol.style.Text({
-                         text: self.name,
+                         text: name || self.name,
                          fill: new ol.style.Fill({
                              color: "#fff"
                          }),
-                         font: _size + "px sans-serif",
+                         font: _size + "px Microsoft Yahei",
                          offsetX: '0',
                          offsetY: -width / 2 - _size / 2 - 5,
                          stroke: new ol.style.Stroke({
-                             color: 'red',
-                             width: 0.25
+                             color: 'black',
+                             width: 8
                          })
                      });
                      if(val) {
                          self.style.setText(text);
                          self.feature.setStyle(self.style);
-                         self.style.setZIndex(999)
                      } else {
                          self.feature.setStyle(null);
                      }
                  };
+                 var selectFun;
                  this.onclick = function(fn) {
-                     var areaObj = {};
-                     var interaction,
-                         type = Event.SELECT_EVENT;
-                     if(type == Event.SELECT_EVENT) {
-                         var selected = function(e) {
-                             if(e.data.feature.getId() == self.id) {
-                                 fn(self)
-                             }
+                     selectFun = function(e) {
+                         if(e.data.feature.getId() == self.id) {
+                             fn(self)
                          }
-                         cover.clickList[self.id] = selected
-                         CustomEvent.addEvent("click", selected);
                      }
+                     CustomEvent.addEvent("click", selectFun);
                  };
+
                  /**
                   * 移除事件
                   */
                  this.unclick = function() {
-                     if(cover.clickList[self.id]) {
-                         //					self.onclick = null
-                         //					self.feature.un('click',cover.clickList[self.id],self.feature)
-                         //					mapData._baseMap.un('click', cover.clickList[self.id]);
-                         CustomEvent.removeEvent("click", cover.clickList[self.id]);
-                         delete cover.clickList[self.id]
-                     }
-
+                     CustomEvent.removeEvent("click", selectFun);
                  };
                  this.setRotation = function(rotation) {
                      var style = pool.getStyleById(self.subtype);
@@ -1862,7 +1880,7 @@
                      image.setRotation(rotation);
                      self.feature.setStyle(style);
                  };
-                 this.setUrl = function(url) { //*******
+                 this.setUrl = function(url) {
                      this.data.url = url;
                      if(self.feature) {
                          self.feature.getStyle().setImage(new ol.style.Icon({
@@ -1883,25 +1901,25 @@
                  this.setStyle = function(iconStyle) {
                      this.feature.setStyle(iconStyle);
                  };
+                 this.setName = function(name){
+                     self.name = name
+                     showName(true,name)
+                 }
                  this.clear = function() {
                      pool.removeIcon(self.id);
-                     if(cover.clickList[self.id]) {
-                         CustomEvent.removeEvent("click", cover.clickList[self.id]);
-                         delete cover.clickList[self.id]
-                     }
+                     CustomEvent.removeEvent("click", selectFun);
                  }
              },
-             clickList: {},
              popList: [],
              Popup: function(container, coord, id0) {
                  var self = this;
                  this.overlay = new ol.Overlay({
                      id: id0,
                      element: container,
-                     //offset: [0, -10],
                      stopEvent: true, //当鼠标滚轮在地图上滚动时，会触发地图缩放事件，如果在 overlay 之上滚动滚轮，并不会触发缩放事件，如果想鼠标在 overlay 之上也支持缩放，那么将该属性设置为 false
                      autoPan: false,
                      position: coord,
+                     positioning: 'bottom-center',
                      autoPanAnimation: {
                          duration: 0.1,
                      }
@@ -1926,31 +1944,30 @@
          var iconTestFeatureX;
 
          function addTestLayer() {
-             var layer = new ol.layer.Vector({
-                 source: new ol.source.Vector({}),
-                 style: new ol.style.Style({
-                     image: new ol.style.Icon({
-                         anchor: [0.5, 0.5],
-                         anchorXUnits: 'fraction',
-                         anchorYUnits: 'fraction',
-                         opacity: 1,
-                         scale: 0.2,
-                         src: 'http://oss.drore.com/material/6fad1079fc794de6a6c309a1bfba685a/201701/19/8e8996f2455c46e6a0d5bf96fa37a31b.png'
-                     })
-                 })
-             });
-             iconTestFeatureX = new ol.Feature({
-                 type: 'default',
-                 name: 'test1',
-                 info: "我是一个新添加的标记!",
-             });
-             layer.getSource().addFeature(iconTestFeatureX);
-             return layer;
+             var layer = pool.getLayerById(testIcon.subtype);
+             if(layer != null) {
+                 if(layer.getSource().getFeatureById(testIcon.id) == null) {
+                     layer.getSource().addFeature(testIcon.feature);
+                 }
+             } else {
+                 layer = mapLayer.creatLayer(testIcon.data.url, testIcon.subtype);
+                 mapData._baseMap.addLayer(layer);
+                 pool.setSeedLayer(testIcon.subtype, layer);
+                 layer.getSource().addFeature(testIcon.feature);
+             }
+             pool.setSeedIcon(testIcon.id, testIcon);
+         }
+         testIcon = new cover.Marker({
+             coordinate: [0, 0],
+             name: "测试点位",
+             subtype: "098lk",
+             id: "12214_",
+             url: "http://oss.drore.com/material/6fad1079fc794de6a6c309a1bfba685a/201701/19/8e8996f2455c46e6a0d5bf96fa37a31b.png",
+         });
+         function addTestMarker(arr) {
+             testIcon.setPosition(arr);
          }
 
-         function addTestMarker(arr) {
-             iconTestFeatureX.setGeometry(new ol.geom.Point(arr));
-         }
          var CustomEvent = {
              _listeners: {},
              // 添加
@@ -2026,6 +2043,7 @@
              this.url = url;
              this.idlist = idlist;
          };
+
          function selectfun(e) {
              CustomEvent.fireEvent("click", {
                  feature: e.selected[0],
@@ -2135,7 +2153,7 @@
                  var val = this.transFromPixToLayer(pixel[0], pixel[1])
                  var view = mapData._baseMap.getView();
                  view.setCenter(val);
-                 //			addTestMarker(ol.proj.transform(val, 'EPSG:4326', 'EPSG:3857'));
+                 addTestMarker(ol.proj.transform(val, 'EPSG:4326', 'EPSG:3857'));
                  mapData._baseMap.render();
              },
              zoomIn: function() { //地图放大一级
@@ -2191,7 +2209,7 @@
                      pool.deleteLayerById(id);
                  }
              },
-             removeAllLayer: function() {
+             removeAllLayer: function() { //*********
                  for(var p in pool.layers) {
                      var lay = pool.layers[p];
                      if(lay != undefined) {
@@ -2238,7 +2256,9 @@
                                      image: img
                                  });
                                  feature.setStyle(style);
-                             } else if(!(group.idlist.includes(feature.getId()))) {
+                             } else if(!(group.idlist.filter(function(id) {
+                                     id == feature.getId()
+                                 }))) {
                                  img = new ol.style.Icon({
                                      opacity: 0,
                                      src: group.url
@@ -2378,16 +2398,23 @@
                      }
                      pool.setSeedIcon(icon.id, icon);
                  },
-                 removeChild: function(icon) //删除标签
-                 {
+                 removeChild: function(icon) { //删除标签
                      if(icon.constructor != cover.Marker) {
                          throw new Error("the type of parameter is wrong!");
                          return;
                      }
                      var layer = pool.getLayerById(icon.subtype);
-                     layer.getSource().removeFeature(icon.feature);
-                     icon.clear();
-                     icon = null;
+                     if(layer) {
+                         layer.getSource().removeFeature(icon.feature);
+                         icon.clear();
+                         icon = null;
+                     }
+                 },
+                 removeAll: function() {
+                     for(var p in pool.iconList) {
+                         var icon = pool.iconList[p]
+                         this.removeChild(icon)
+                     };
                  }
              },
              area: {
@@ -2469,6 +2496,11 @@
                  removeAll: function() {
                      mapData._baseMap.getOverlays().clear();
                      cover.popList.splice(0, cover.popList.length)
+                 },
+                 getPopList: function() {
+                     if(cover.popList) {
+                         return cover.popList.length
+                     }
                  }
              },
              cartoon: {
@@ -2523,12 +2555,18 @@
                      }
                      mapData._baseMap.addInteraction(DragMediator.moveInteraction);
                  },
+                 removeShowRemove: function() {
+                     if(!DragMediator) {
+                         DragMediator = new Mediator();
+                     }
+                     mapData._baseMap.removeInteraction(DragMediator.moveInteraction);
+                 },
                  _ifClick: false,
                  set enableMapClick(val) {
                      if(typeof(val) != "boolean") {
                          throw new Error("the type of parameter is not boolean!")
                      } else {
-                         if(this._ifClick==val){
+                         if(this._ifClick == val) {
                              return;
                          }
                          this._ifClick = val;
@@ -2540,8 +2578,8 @@
                              DragMediator.selectInteraction.on("select", selectfun);
                          } else {
                              mapData._baseMap.removeInteraction(DragMediator.selectInteraction);
-                             DragMediator.selectInteraction.un("select", selectfun)
-                         };
+                             DragMediator.selectInteraction.un("select", selectfun);
+                         }
                      }
                  },
              },
@@ -2567,12 +2605,26 @@
              getMap: function() {
                  return mapData._baseMap;
              },
-             removeIconClick: function() {
-//			CustomEvent.removeEvent("click")
-                 //			for(var p in cover.clickList) {
-                 //				pool.getIconById(p).unclick()
-                 //			}
-                 //			cover.clickList = {}
+             clearMap: function() {
+                 if(flightCartoon) {
+                     flightCartoon.removeFlights();
+                 }
+             },
+             test: {
+                 testWgs: function(lat, lng) {
+                     addTestLayer()
+                     var pixel = dataManager.transGoogle.transWgToPixelInside(lat, lng);
+                     var val = dataManager.trandata.transFromPixToLayer(pixel[0], pixel[1])
+                     var view = mapData._baseMap.getView();
+                     view.setCenter(val);
+                     addTestMarker(val);
+                 },
+                 testCoord: function(arr) {
+                     addTestLayer()
+                     var view = mapData._baseMap.getView();
+                     view.setCenter(arr);
+                     addTestMarker(arr);
+                 }
              }
          }
      })($, ol)
@@ -2580,3 +2632,4 @@
   module.exports = droreMap;
 
  })
+

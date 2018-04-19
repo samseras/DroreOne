@@ -26,16 +26,19 @@
         },
         mounted() {
             droreMap.init();
-            // this.droreMapinit();
+            this.droreMapinit();
             this.labelDot();
+            this.districtList();
             // this.district();
+            this.roadList();
+            // this.road();
         },
         methods:{
             ...mapMutations(['MAP_LOCATION']),
             droreMapinit () {//循环输出点
                 for (var i = 0; i < 15; i++) {
                     var icon = new droreMap.icon.Marker({
-                        coordinate: droreMap.transFromWgsToLayer([120.05059811468163 + i / 1000, 30.278014328229347 + i / 1000]),
+                        coordinate: droreMap.transFromWgsToLayer([120.06672090248588 + i / 1000, 30.281761130844714 + i / 1000]),
                         name: "asdas" + i,
                         subtype: "098lk-",
                         id: "12214_" + i,
@@ -50,34 +53,46 @@
             labelDot(){//打点标注
                 let that = this
                 var icon = new droreMap.icon.Marker({
-                    coordinate: [13365319.908706162, 3538814.1636495925],
+                    coordinate: [0,0],
                     name:  new Date().getTime(),
                     subtype: "098lk-",
-                    id: new Date().getTime(),
+                    id: "12214_",
                     url: "/static/img/location.png",
                 });
                 droreMap.icon.addChild(icon);
                 droreMap.addMouseEvent(Event.SINGLECLICK_EVENT, "single", function(evt){
-                    icon.setPosition(evt.coordinate);
+                    icon.setPosition(evt.coordinate)
                     console.log(evt.coordinate)
                     // icon.onclick(function(e) {
                     //     console.log(e)
                     // });
                     that.$store.commit('MAP_LOCATION', droreMap.transLayerToWgs(evt.coordinate))
+                    droreMap.ifDrag = true;
+                    droreMap.DragEvent(function(tabInfor) {
+                        var data = tabInfor.data
+                        if(data.data.id === '12214_'){
+                            console.log(droreMap.transLayerToWgs(data.end));
+                            that.$store.commit('MAP_LOCATION', droreMap.transLayerToWgs(data.end))
+                        }
+                    })
                 })
-                droreMap.ifDrag = true;
-                droreMap.DragEvent(function(tabInfor) {
-                    var data = tabInfor.data
-                    console.log(droreMap.transLayerToWgs(data.end));
-                    that.$store.commit('MAP_LOCATION', droreMap.transLayerToWgs(data.end))
-                })
-
+            },
+            districtList(){//区域划分列表
+                var areaEvets =new droreMap.area.DrawLayer("area",'rgba(255, 255, 255, 0.2)',"red")
+                var area = [[[13367097.46117307, 3538046.3202072824],[13367065.280655375, 3537992.907176161],[13367162.817494417, 3537967.030051136],[13367217.225797825, 3538042.007350074],[13367174.097243965, 3538076.510178126],[13367174.0972439651,3538076.510178126],[13367097.46117307, 3538046.3202072824]]]
+                var data = {"areaLat":"[]","areaMercator":"[]","areaPixel":"[]","createTime":1495877197377,"id":"207","level":"1","mapId":"cd049e70a6cc4961809343c88c11938d","modifiedTime":1495877197377,"name":"方门驿站","type":"DECK_DEMO"}
+                areaEvets.addArea(area,data)
+                areaEvets.setVisible(true)
+                droreMap.area.addChild(areaEvets)
             },
             district(){//区域划分
                 var areaEvet =new droreMap.area.DrawLayer("area",'rgba(255, 255, 255, 0.2)',"red")
                 areaEvet.ifDraw = true;
+                areaEvet.ifModify = true;
+                areaEvet.ifSelect = false;
                 areaEvet.addEventListener(Event.DRAW_EVENT, "drawend", function (m,t) {
                     areaEvet.ifDraw = false;
+                    areaEvet.ifSelect = true;
                     console.log(t)
                     let ol=t[0];
                     let arrayObj = new Array();
@@ -88,10 +103,53 @@
                     let arrayObjList= new Array();
                     arrayObjList.push(arrayObj);
                     console.log(arrayObjList)
+                    areaEvet.setVisible(true)
+                    droreMap.area.addChild(areaEvet)
                 })
-                var area = [[13311112.732731298,3409316.0001550196],[13312201.960384361,3409325.554783555],[13312192.405755825,3408905.1511279866]]
+                areaEvet.addEventListener(Event.SELECT_EVENT, "select", function(e) {
+                    if(e.select){
+                        console.log(e.select.area);
+                    }else if(e.unSelect){
+                        console.log(e.unSelect.area);
+                    }
+                })
+            },
+            roadList(){//路线列表
+                var areaEvts =new droreMap.road.RoadLayer('ROUTE_DEMO', 'blue')
+                var area = [[13367132.627512183, 3538049.969542039],[13367267.984780146, 3537979.6368547007],[13367264.667172445, 3538053.287122404],[13367106.086887486, 3537987.5990512217],[13367205.614280216, 3537977.6463101264]]
                 var data = {"areaLat":"[]","areaMercator":"[]","areaPixel":"[]","createTime":1495877197377,"id":"207","level":"1","mapId":"cd049e70a6cc4961809343c88c11938d","modifiedTime":1495877197377,"name":"方门驿站","type":"DECK_DEMO"}
-                areaEvet.addArea(area,data)
+                areaEvts.addRoad(area,data)
+                droreMap.road.addRoadLayer(areaEvts)
+            },
+            road(){//路网绘画
+                var areaEvt = new droreMap.road.RoadLayer('ROUTE_DEMO', '#fb9000')
+                areaEvt.ifDraw = true;
+                areaEvt.ifModify = false;
+                areaEvt.addEventListener(Event.DRAW_EVENT, "drawend", function(m, t) {
+                    areaEvt.ifDraw = false;
+                    areaEvt.ifSelect = true;
+                    areaEvt.ifModify = true;
+                    console.log(t);
+                    var len = t.length - 1
+                    if(t[0][0] == t[len][0] && t[0][1] == t[len][1]) {
+                        layer.msg('路网不能绘制成圆环')
+                    } else {
+                        let arrayObj = new Array();
+                        for (var i = 0; i < t.length; i++) {
+                            let wgs = droreMap.transLayerToWgs(t[i])
+                            arrayObj.push(wgs);
+                        }
+                        console.log(arrayObj);
+                        droreMap.road.addRoadLayer(areaEvt)
+                    }
+                })
+                areaEvt.addEventListener(Event.SELECT_EVENT, "select", function(e) {
+                    if(e.select){
+                        console.log(e.select.area);
+                    }else if(e.unSelect){
+                        console.log(e.unSelect.area);
+                    }
+                })
             },
         },
         components: {
