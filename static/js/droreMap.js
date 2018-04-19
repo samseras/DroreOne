@@ -2578,4 +2578,5 @@
      })($, ol)
 
   module.exports = droreMap;
+
  })

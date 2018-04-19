@@ -18,7 +18,6 @@
         name: "map1",
         data () {
             return {
-
             }
         },
         created () {
@@ -48,16 +47,16 @@
             },
             labelDot(){//打点标注
                 var icon = new droreMap.icon.Marker({
-                    coordinate: [13365319.908706162, 3538814.1636495925],
+                    coordinate: [0,0],
                     name: "asdas",
                     subtype: "098lk-",
                     id: "12214_",
                     url: "/static/img/location.png",
                 });
+                droreMap.icon.addChild(icon);
                 droreMap.addMouseEvent(Event.SINGLECLICK_EVENT, "single", function(evt){
-                    console.log(droreMap.transLayerToWgs(evt.coordinate))
-                    droreMap.icon.addChild(icon);
                     icon.setPosition(evt.coordinate);
+                    console.log(evt.coordinate)
                     // icon.onclick(function(e) {
                     //     console.log(e)
                     // });
@@ -65,10 +64,9 @@
                 droreMap.ifDrag = true;
                 droreMap.DragEvent(function(tabInfor) {
                     var data = tabInfor.data
-                    console.log(droreMap.transLayerToWgs(data.end));
+                    console.log(data);
                 })
-                // var areaEvet =new droreMap.area.DrawLayer("area",'rgba(255, 255, 255, 0.2)',"red")
-                // areaEvet.ifDraw = true;
+
             },
             district(){//区域划分
                 var areaEvet =new droreMap.area.DrawLayer("area",'rgba(255, 255, 255, 0.2)',"red")
