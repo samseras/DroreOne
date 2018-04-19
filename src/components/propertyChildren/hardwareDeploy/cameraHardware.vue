@@ -137,8 +137,8 @@
             },
             fixInfo(info){
                 let index = info.location.includes(',')?info.location.indexOf(','):info.location.indexOf('，')
-                let latitude = info.location.substring(0, index)
-                let longitude = info.location.substring(index + 1)
+                let longitude = info.location.substring(0, index)
+                let latitude = info.location.substring(index + 1)
                 let cameraObj=[{
                     typeId:2,
                     id:info.id,
@@ -218,8 +218,8 @@
             },
             addNewPerson(info){
                 let index = info.location.includes(',')?info.location.indexOf(','):info.location.indexOf('，')
-                let latitude = info.location.substring(0, index)
-                let longitude = info.location.substring(index + 1)
+                let longitude = info.location.substring(0, index)
+                let latitude  = info.location.substring(index + 1)
                 let cameraObj=[{
                     typeId:2,
                     name:info.name,
@@ -313,7 +313,7 @@
                         this.cameraList[i].checked = false
                         this.cameraList[i].status = true
                         this.cameraList[i].id=this.cameraList[i].id
-                        this.cameraList[i].location = `${this.cameraList[i].latitude},${this.cameraList[i].longitude}`
+                        this.cameraList[i].location = `${this.cameraList[i].longitude},${this.cameraList[i].latitude}`
                     }
                 }).catch((err)=> {
                     console.log(err)

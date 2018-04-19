@@ -69,7 +69,8 @@
                     </p>
                     <p class="IP">I P 地 址：<input type="text" v-model="broadCast.ip"></p>
                     <p class="host">端&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  口：<input type="text" v-model="broadCast.port"></p>
-                    <p class="place">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  置：<span>{{broadCast.location}}</span>
+                    <p class="place">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  置：
+                        <span>{{broadCast.location}}</span>
                         <i class="el-icon-location-outline" @click="showMapDialog"></i>
                     </p>
                     <p class="area">所属区域：
@@ -464,7 +465,7 @@
                if(this.route.includes('camera')){
                    this.camera.location = locationString
                }else if(this.route.includes('broadcast')){
-                   this.broadcast.location = locationString
+                   this.broadCast.location = locationString
                }else if(this.route.includes('led')) {
                    this.led.location = locationString
                }else if(this.route.includes('wifi')) {

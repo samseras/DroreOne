@@ -131,6 +131,24 @@
 
             },
             addVoice(info){
+                let index =info.location.includes(',')?info.location.indexOf(','):info.location.indexOf('，')
+                let longitude =info.location.substring(0,index)
+                let latitude = info.location.substring(index+1)
+                let cameraObj=[{
+                    typeId:2,
+                    name:info.name,
+                    positionType:info.positionType,
+                    latitude:latitude,
+                    longitude:longitude
+                }]
+                console.log(cameraObj)
+                api.camera.createCamera(cameraObj).then(res =>{
+                    this.$message.success('添加成功')
+                    this.getAllCamera()
+                }).catch(err =>{
+                    this.$message.error('添加失败')
+                })
+
 
             },
             toggleList(type){
@@ -155,6 +173,20 @@
                 }else{
                     this.choseInfoId.push(id)
                 }
+            },
+            async getAllCamera(){
+                this.isShowLoading=true
+                await api.camera.getAllCamera().then((res) =>{
+                    this.isShowLoading = false
+                    this.voiceList=res.devices
+                    for(let i=0;i<this.voiceList.length;i++){
+                        this.voiceList[i].checked=false
+                        this.voiceList[i].status=true
+
+                    }
+                }).catch((err) =>{
+                    console.log(err)
+                })
             }
 
 
