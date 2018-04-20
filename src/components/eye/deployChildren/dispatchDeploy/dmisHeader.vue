@@ -6,30 +6,17 @@
         </div>
         <div class="funcBtn">
             <el-button size="mini"plain @click="addNewInfo"><i class="el-icon-circle-plus"></i>添加</el-button>
-            <!--<el-button size="mini"plain class='selectedAll' @click="selected">-->
-                <el-checkbox v-model="isSelected" @change="selectedAll">全选</el-checkbox>
-            <!--</el-button>-->
-            <!--<el-button size="mini"plain>导入</el-button>-->
-            <!--<el-button size="mini"plain>导出</el-button>-->
+             <el-checkbox v-model="isSelected" @change="selectedAll">全选</el-checkbox>
+
             <el-button size="mini"plain @click="deleteCard"><i class="el-icon-delete"></i>删除</el-button>
-            <!--<el-button size="mini"plain @click="fixCard"><i class="el-icon-edit"></i>修改</el-button>-->
+            <el-button size="mini"plain @click="fixCard"><i class="el-icon-edit"></i>修改</el-button>
         </div>
-        <div class="filite" v-if="route.includes('person')">
-            <el-checkbox-group v-model="filterList" @change="choseType">
-                <el-checkbox v-for="item in personTypeList" :label="item.type"></el-checkbox>
-            </el-checkbox-group>
-        </div>
-        <div class="filite" v-if="route.includes('hardware')">
-            <el-checkbox-group v-model="filterList" @change="choseType">
-                <el-checkbox v-for="item in indicatorType" :label="item.type"></el-checkbox>
-            </el-checkbox-group>
-        </div>
+
         <div class="page">
             <span>当前第1页/共8页</span>
             <span class="upPage"><</span>
             <span class="downPage">></span>
             <span class="listForm"><i class="el-icon-tickets"></i></span>
-            <!--<span class="cardForm" @click="toggleList('card')"><i class="el-icon-menu"></i></span>-->
         </div>
     </div>
 </template>
@@ -39,18 +26,6 @@
         name: "fun-header",
         data () {
             return {
-                filterList: [],
-                personTypeList: [
-                    {type: '安保'},
-                    {type: '售票'},
-                    {type: '保洁'},
-                    {type: '检票'}
-                ],
-                indicatorType: [
-                    {type: '广播'},
-                    {type: '路灯'},
-                    {type: 'LED'}
-                ],
                 route: '',
                 isSelected: false,
                 isShowJobType: true,
@@ -87,17 +62,7 @@
             },
             showPersonJob () {
                 this.route = this.$route.path
-                // if (route.includes('person')){
-                //     this.isShowJobType = true
-                //     this.isShowIndicatorType = false
-                //     this.isShowTrashType = false
-                // } else if (route.includes('indicator')){
-                //     this.isShowJobType = false
-                //     this.isShowIndicatorType = true
-                // } else {
-                //     this.isShowJobType = false
-                //     this.isShowIndicatorType = false
-                // }
+
             }
         },
         watch: {

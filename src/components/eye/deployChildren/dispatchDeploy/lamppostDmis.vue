@@ -155,7 +155,7 @@
                 }
             },
             addNewInfo () {
-                this.showPersonDetail({}, '添加硬件调度')
+                this.showPersonDetail({}, '添加灯光照明')
                 this.isDisabled = false
             },
             deletInfo (id) {
@@ -281,7 +281,7 @@
                                 this.areaInfo=item
                             }
                         })
-                        this.showPersonDetail(this.areaInfo,'修改摄像头信息')
+                        this.showPersonDetail(this.areaInfo,'修改路灯信息')
                         this.isDisabled=false
                         this.choseInfoId = []
                         // console.log( this.isDisabled)

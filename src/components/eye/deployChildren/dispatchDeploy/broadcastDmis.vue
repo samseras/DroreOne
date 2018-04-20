@@ -130,7 +130,7 @@
 
             },
             addNewInfo () {
-                this.showPersonDetail({}, '添加硬件调度')
+                this.showPersonDetail({}, '添加广播播放')
                 this.isDisabled = false
             },
             deletInfo (id) {
@@ -163,13 +163,7 @@
                  //   })
                 }
             },
-            // toggleList (type) {
-            //     if (type === 'list') {
-            //         this.isShowAreaCard = false
-            //     }else {
-            //         this.isShowAreaCard = true
-            //     }
-            // },
+
             checked (id) {
                 //选中状态change
                 this.areaList = this.areaList.filter(item =>{

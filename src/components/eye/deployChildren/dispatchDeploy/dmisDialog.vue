@@ -362,17 +362,7 @@
                     phone:'',
                     people:'',
                 },
-                options: [
-                    { type: '安保'},
-                    { type: '售票'},
-                    { type: '保洁'},
-                    { type: '检票'}
-                ],
-                indicatorType: [
-                    {type: '广播'},
-                    {type: 'LED'},
-                    {type: '路灯'}
-                ],
+
                 associatedRadio:true,
                 broadcast: [
                     {type: 'A-GB001'},

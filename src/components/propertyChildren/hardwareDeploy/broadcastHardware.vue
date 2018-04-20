@@ -168,6 +168,23 @@
                 })
             },
             fixedInfo(id){
+//                if(this.choseInfoId.includes(id)){
+//
+//                    if(this.choseInfoId.length>1){
+//                        this.$message.warning('只能选择一条数据')
+//                    }else{
+//                        this.broadList.map((item)=>{
+//                            if(item.id===this.choseInfoId[0]){
+//                                this.broadInfo=item
+//                            }
+//                        })
+//                        this.showBroadDetail(this.broadInfo,'修改广播信息')
+//                        this.isDisabled = false
+//                    }
+//                }else {
+//                    this.$message.warning('请选择要修改的摄像头')
+//                }
+
                 if (id) {
                     this.choseInfoId.push(id)
                 }
