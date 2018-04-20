@@ -362,7 +362,12 @@
                     phone:'',
                     people:'',
                 },
-
+                options: [
+                    { type: '保洁1'},
+                    { type: '保洁2'},
+                    { type: '保洁3'},
+                    { type: '保洁4'}
+                ],
                 associatedRadio:true,
                 broadcast: [
                     {type: 'A-GB001'},

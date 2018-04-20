@@ -9,7 +9,6 @@
              <el-checkbox v-model="isSelected" @change="selectedAll">全选</el-checkbox>
 
             <el-button size="mini"plain @click="deleteCard"><i class="el-icon-delete"></i>删除</el-button>
-            <el-button size="mini"plain @click="fixCard"><i class="el-icon-edit"></i>修改</el-button>
         </div>
 
         <div class="page">

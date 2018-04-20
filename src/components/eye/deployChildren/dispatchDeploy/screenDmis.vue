@@ -54,7 +54,7 @@
                             label="重复调度"
                             sortable>
                         </el-table-column>
-                        <el-table-column label="操作">
+                        <el-table-column label="操作" width="200">
                             <template slot-scope="scope">
                                 <span @click="fixedInfo(scope.row.id,'片区信息')" class="edit">编辑</span> |
                                 <span @click="stop(scope.row,'片区信息')" v-if="scope.row.isStop">停止 |</span>
@@ -91,11 +91,11 @@
                 checkList: [],
                 filterList: [],
                 areaList: [
-                    {id:1,checked:false,isStop:true,isStart:false,name: '下午下班音乐提示',type: '广播',number: '10个',time: '2018.02.03~2018.03.11',executetime: '18:00:00~18:10:00',repetition:'是'},
-                    {id:2,checked:false,isStop:true,isStart:false,name: '上班提示',type: '广播',number: '10个',time: '2018.02.03~2018.03.11',executetime: '18:00:00~18:10:00',repetition:'是'},
-                    {id:3,checked:false,isStop:true,isStart:false,name: '夜间照明',type: '路灯',number: '10个',time: '2018.02.03~2018.03.11',executetime: '18:00:00~18:10:00',repetition:'否'},
-                    {id:8,checked:false,isStop:true,isStart:false,name: '室内照明',type: '路灯',number: '10个',time: '2018.02.03~2018.03.11',executetime: '18:00:00~18:10:00',repetition:'否'},
-                    {id:9,checked:false,isStop:true,isStart:false,name: '节日提示',type: 'LED大屏',number: '10个',time: '2018.02.03~2018.03.11',executetime: '18:00:00~18:10:00',repetition:'是'},
+                    {id:1,checked:false,isStop:true,isStart:false,name: '下午下班音乐提示',type: 'LED-1',number: '10个',time: '2018.02.03~2018.03.11',executetime: '18:00:00~18:10:00',repetition:'是'},
+                    {id:2,checked:false,isStop:true,isStart:false,name: '上班提示',type: 'LED-2',number: '10个',time: '2018.02.03~2018.03.11',executetime: '18:00:00~18:10:00',repetition:'是'},
+                    {id:3,checked:false,isStop:true,isStart:false,name: '夜间照明',type: 'LED-3',number: '10个',time: '2018.02.03~2018.03.11',executetime: '18:00:00~18:10:00',repetition:'否'},
+                    {id:8,checked:false,isStop:true,isStart:false,name: '室内照明',type: 'LED-4',number: '10个',time: '2018.02.03~2018.03.11',executetime: '18:00:00~18:10:00',repetition:'否'},
+                    {id:9,checked:false,isStop:true,isStart:false,name: '节日提示',type: 'LED-5',number: '10个',time: '2018.02.03~2018.03.11',executetime: '18:00:00~18:10:00',repetition:'是'},
                 ],
                 visible: false,
                 areaInfo: {},
@@ -321,29 +321,51 @@
                 }
             },
             stop(Info){
-                console.log(this.choseInfoId)
-                if(!this.choseInfoId.includes(Info.id)){
-                    this.choseInfoId.push(Info.id)
-                }
-                if(this.choseInfoId.length == 1){
-                    Info.isStart = true;
-                    Info.isStop = false;
-                    this.choseInfoId = []
-                }else{
-                    this.$message.warning('至多选择一条数据')
+                console.log(Info.id)
+                if (this.choseInfoId.includes(Info.id)) {
+                    if(this.choseInfoId.length > 1){
+                        this.$message.warning('至多选择一条数据')
+                    }else{
+                        Info.isStart = true;
+                        Info.isStop = false;
+                    }
+                }else {
+                    if(this.choseChecked.length == 0){
+                        this.choseInfoId.push(Info.id)
+                        if(this.choseInfoId.length > 1){
+                            this.$message.warning('至多选择一条数据')
+                        }else{
+                            Info.isStart = true;
+                            Info.isStop = false;
+                        }
+                        this.choseInfoId = []
+                    }else {
+                        this.$message.warning('选择的数据和即将编辑的数据不一致，或者未选择包编辑的数据')
+                    }
                 }
             },
             start(Info){
-                console.log(this.choseInfoId)
-                if(!this.choseInfoId.includes(Info.id)){
-                    this.choseInfoId.push(Info.id)
-                }
-                if(this.choseInfoId.length == 1){
-                    Info.isStart = false;
-                    Info.isStop = true;
-                    this.choseInfoId = []
-                }else{
-                    this.$message.warning('至多选择一条数据')
+                console.log(Info.id)
+                if (this.choseInfoId.includes(Info.id)) {
+                    if(this.choseInfoId.length > 1){
+                        this.$message.warning('至多选择一条数据')
+                    }else{
+                        Info.isStart = false;
+                        Info.isStop = true;
+                    }
+                }else {
+                    if(this.choseChecked.length == 0){
+                        this.choseInfoId.push(Info.id)
+                        if(this.choseInfoId.length > 1){
+                            this.$message.warning('至多选择一条数据')
+                        }else{
+                            Info.isStart = false;
+                            Info.isStop = true;
+                        }
+                        this.choseInfoId = []
+                    }else {
+                        this.$message.warning('选择的数据和即将编辑的数据不一致，或者未选择包编辑的数据')
+                    }
                 }
             }
         },

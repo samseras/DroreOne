@@ -48,7 +48,7 @@
                             label="线路"
                             width="500">
                         </el-table-column>
-                        <el-table-column label="操作">
+                        <el-table-column label="操作" width="200">
                             <template slot-scope="scope">
                                 <span @click="fixedInfo(scope.row.id,'片区信息')">编辑</span> |
                                 <span @click="stop(scope.row,'片区信息')" v-if="scope.row.isStop">停止 |</span>
@@ -100,11 +100,11 @@
                 checkList: [],
                 filterList: [],
                 areaList: [
-                    {id:1,checked:false,isStop:true,isStart:false,name: '长江~黄河巡更',type: '售票',classes: '早班，午班，晚班',number: '10个',line: '起点（123，12312）、中间（123，12312）、终点（123，12312）'},
-                    {id:2,checked:false,isStop:true,isStart:false,name: '长江~黄河巡更',type: '安保',classes: '早班，午班，晚班',number: '10个',line: '起点（123，12312）、中间（123，12312）、终点（123，12312）'},
-                    {id:3,checked:false,isStop:true,isStart:false,name: '长江~黄河巡更',type: '保洁',classes: '早班，午班，晚班',number: '10个',line: '起点（123，12312）、中间（123，12312）、终点（123，12312）'},
-                    {id:8,checked:false,isStop:true,isStart:false,name: '长江~黄河巡更',type: '售票',classes: '早班，午班，晚班',number: '10个',line: '起点（123，12312）、中间（123，12312）、终点（123，12312）'},
-                    {id:9,checked:false,isStop:true,isStart:false,name: '长江~黄河巡更',type: '检票',classes: '早班，午班，晚班',number: '10个',line: '起点（123，12312）、中间（123，12312）、终点（123，12312）'},
+                    {id:1,checked:false,isStop:true,isStart:false,name: '长江~黄河巡更',type: '刘瑜',classes: '早班，午班，晚班',number: '10个',line: '起点（123，12312）、中间（123，12312）、终点（123，12312）'},
+                    {id:2,checked:false,isStop:true,isStart:false,name: '长江~黄河巡更',type: '刘梦旭',classes: '早班，午班，晚班',number: '10个',line: '起点（123，12312）、中间（123，12312）、终点（123，12312）'},
+                    {id:3,checked:false,isStop:true,isStart:false,name: '长江~黄河巡更',type: '贾方园',classes: '早班，午班，晚班',number: '10个',line: '起点（123，12312）、中间（123，12312）、终点（123，12312）'},
+                    {id:8,checked:false,isStop:true,isStart:false,name: '长江~黄河巡更',type: '李姗',classes: '早班，午班，晚班',number: '10个',line: '起点（123，12312）、中间（123，12312）、终点（123，12312）'},
+                    {id:9,checked:false,isStop:true,isStart:false,name: '长江~黄河巡更',type: '绍燕',classes: '早班，午班，晚班',number: '10个',line: '起点（123，12312）、中间（123，12312）、终点（123，12312）'},
                 ],
                 visible: false,
                 areaInfo: {},
@@ -329,29 +329,51 @@
                 }
             },
             stop(Info){
-                console.log(this.choseInfoId)
-                if(!this.choseInfoId.includes(Info.id)){
-                    this.choseInfoId.push(Info.id)
-                }
-                if(this.choseInfoId.length == 1){
-                    Info.isStart = true;
-                    Info.isStop = false;
-                    this.choseInfoId = []
-                }else{
-                    this.$message.warning('至多选择一条数据')
+                console.log(Info.id)
+                if (this.choseInfoId.includes(Info.id)) {
+                    if(this.choseInfoId.length > 1){
+                        this.$message.warning('至多选择一条数据')
+                    }else{
+                        Info.isStart = true;
+                        Info.isStop = false;
+                    }
+                }else {
+                    if(this.choseChecked.length == 0){
+                        this.choseInfoId.push(Info.id)
+                        if(this.choseInfoId.length > 1){
+                            this.$message.warning('至多选择一条数据')
+                        }else{
+                            Info.isStart = true;
+                            Info.isStop = false;
+                        }
+                        this.choseInfoId = []
+                    }else {
+                        this.$message.warning('选择的数据和即将编辑的数据不一致，或者未选择包编辑的数据')
+                    }
                 }
             },
             start(Info){
-                console.log(this.choseInfoId)
-                if(!this.choseInfoId.includes(Info.id)){
-                    this.choseInfoId.push(Info.id)
-                }
-                if(this.choseInfoId.length == 1){
-                    Info.isStart = false;
-                    Info.isStop = true;
-                    this.choseInfoId = []
-                }else{
-                    this.$message.warning('至多选择一条数据')
+                console.log(Info.id)
+                if (this.choseInfoId.includes(Info.id)) {
+                    if(this.choseInfoId.length > 1){
+                        this.$message.warning('至多选择一条数据')
+                    }else{
+                        Info.isStart = false;
+                        Info.isStop = true;
+                    }
+                }else {
+                    if(this.choseChecked.length == 0){
+                        this.choseInfoId.push(Info.id)
+                        if(this.choseInfoId.length > 1){
+                            this.$message.warning('至多选择一条数据')
+                        }else{
+                            Info.isStart = false;
+                            Info.isStop = true;
+                        }
+                        this.choseInfoId = []
+                    }else {
+                        this.$message.warning('选择的数据和即将编辑的数据不一致，或者未选择包编辑的数据')
+                    }
                 }
             }
         },

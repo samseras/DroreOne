@@ -27,13 +27,13 @@
                             </template>
                         </el-table-column>
                         <el-table-column
-                            prop="type"
+                            prop="name"
                             label="调度人员"
                             sortable
                             width="120">
                         </el-table-column>
                         <el-table-column
-                            prop="name"
+                            prop="type"
                             label="名称">
                         </el-table-column>
                         <el-table-column
@@ -49,7 +49,7 @@
                             label="线路"
                             width="500">
                         </el-table-column>
-                        <el-table-column label="操作">
+                        <el-table-column label="操作" width="200">
                             <template slot-scope="scope">
                                 <span @click="fixedInfo(scope.row.id,'片区信息')">编辑</span> |
                                 <span @click="stop(scope.row,'片区信息')" v-if="scope.row.isStop">停止 |</span>
@@ -101,11 +101,11 @@
                 checkList: [],
                 filterList: [],
                 areaList: [
-                    {id:1,checked:false,isStop:true,isStart:false,name: '长江~黄河巡更',type: '售票',classes: '早班，午班，晚班',number: '10个',line: '起点（123，12312）、中间（123，12312）、终点（123，12312）'},
-                    {id:2,checked:false,isStop:true,isStart:false,name: '长江~黄河巡更',type: '安保',classes: '早班，午班，晚班',number: '10个',line: '起点（123，12312）、中间（123，12312）、终点（123，12312）'},
-                    {id:3,checked:false,isStop:true,isStart:false,name: '长江~黄河巡更',type: '保洁',classes: '早班，午班，晚班',number: '10个',line: '起点（123，12312）、中间（123，12312）、终点（123，12312）'},
-                    {id:8,checked:false,isStop:true,isStart:false,name: '长江~黄河巡更',type: '售票',classes: '早班，午班，晚班',number: '10个',line: '起点（123，12312）、中间（123，12312）、终点（123，12312）'},
-                    {id:9,checked:false,isStop:true,isStart:false,name: '长江~黄河巡更',type: '检票',classes: '早班，午班，晚班',number: '10个',line: '起点（123，12312）、中间（123，12312）、终点（123，12312）'},
+                    {id:1,checked:false,isStop:true,isStart:false,name: '张三',type: '保洁',classes: '早班，午班，晚班',number: '10个',line: '起点（123，12312）、中间（123，12312）、终点（123，12312）'},
+                    {id:2,checked:false,isStop:true,isStart:false,name: '李四',type: '保洁',classes: '早班，午班，晚班',number: '10个',line: '起点（123，12312）、中间（123，12312）、终点（123，12312）'},
+                    {id:3,checked:false,isStop:true,isStart:false,name: '王五',type: '保洁',classes: '早班，午班，晚班',number: '10个',line: '起点（123，12312）、中间（123，12312）、终点（123，12312）'},
+                    {id:8,checked:false,isStop:true,isStart:false,name: '刘瑜',type: '保洁',classes: '早班，午班，晚班',number: '10个',line: '起点（123，12312）、中间（123，12312）、终点（123，12312）'},
+                    {id:9,checked:false,isStop:true,isStart:false,name: '小明',type: '保洁',classes: '早班，午班，晚班',number: '10个',line: '起点（123，12312）、中间（123，12312）、终点（123，12312）'},
                 ],
                 visible: false,
                 areaInfo: {},
