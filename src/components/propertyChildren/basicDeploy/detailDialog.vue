@@ -9,10 +9,10 @@
             center>
             <div class="card">
                 <!--人员-->
-                <div class="personCardContent" v-if="route.includes('person')">
-                    <p class="name">姓&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;名：<input type="text"v-model="person.personBean.name"></p>
+                <div class="personCardContent" v-if="route.includes('person') && $route.params.id">
+                    <p class="name">姓&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;名：<input type="text"v-model="person.name"></p>
                     <p class="sex">性&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;别：
-                        <el-select v-model="person.personBean.gender" placeholder="请选择">
+                        <el-select v-model="person.gender" placeholder="请选择">
                             <el-option label="男" :value="1"></el-option>
                             <el-option label="女" :value="0"></el-option>
                         </el-select>
@@ -27,8 +27,8 @@
                             </el-option>
                         </el-select>
                     </p>
-                    <p class="idNum">身份证号：<input type="text"v-model="person.personBean.idNum"></p>
-                    <p class="phoneNum">电话号码：<input type="text"v-model="person.personBean.phone"></p>
+                    <p class="idNum">身份证号：<input type="text"v-model="person.idNum"></p>
+                    <p class="phoneNum">电话号码：<input type="text"v-model="person.phone"></p>
                     <div class="img">
                         <img :src="person.picturePath" alt="" v-if="isDisabled">
                         <label for="avatar" v-if="!isDisabled">
@@ -332,6 +332,11 @@
                         </el-select>
                     </p>
                 </div>
+                <!--人员类型-->
+                <div class="personCardContent boatCardContent" v-if="route.includes('personType')">
+                    <p class="basicType">人员类型：<input type="text"v-model="job.name">
+                    </p>
+                </div>
 
                 <div class="text-center p-2">
                     <file-upload
@@ -387,13 +392,11 @@
                     type:'片区'
                 },
                 person: {
-                    personBean: {
-                        name:'',
-                        gender:'',
-                        idNum:'',
-                        phone:'',
-                    },
-                    jobId: '',
+                    name:'',
+                    gender:'',
+                    idNum:'',
+                    phone:'',
+                    jobId: this.$route.params.id,
                 },
                 boatCar: {
                     driverId: '',
@@ -479,6 +482,9 @@
                     location: '',
                     description: '',
                 },
+                job: {
+                    name: ''
+                },
                 options: [],
                 route: '',
                 file: {},
@@ -523,19 +529,19 @@
             },
             addNewInfo () {
                 let newInfo = {}
-                if (this.route.includes('person')) {
+                if (this.route.includes('person') && this.$route.params.id) {
                     newInfo = this.person
                     let  myreg = /^[1][3,4,5,6,7,8][0-9]{9}$/
                     let idReg = /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/
-                    if (newInfo.personBean.name.trim() === '' || newInfo.personBean.gender === '' || newInfo.jobId === '') {
+                    if (newInfo.name.trim() === '' || newInfo.gender === '' || newInfo.jobId === '') {
                         this.$message.error('请填写完整信息')
                         return
                     }
-                    if (newInfo.personBean.phone === '' || !myreg.test(newInfo.personBean.phone)) {
+                    if (newInfo.phone === '' || !myreg.test(newInfo.phone)) {
                         this.$message.error('请填写正确的电话号码')
                         return
                     }
-                    if (newInfo.personBean.idNum === '' || !idReg.test(newInfo.personBean.idNum)) {
+                    if (newInfo.idNum === '' || !idReg.test(newInfo.idNum)) {
                         this.$message.error('请填写正确的身份证号码')
                         return
                     }
@@ -597,6 +603,8 @@
                     newInfo = this.area
                 } else if (this.route.includes('roat')) {
                     newInfo = this.roat
+                } else if (this.route.includes('personType')) {
+                    newInfo = this.job
                 }
                 newInfo.status = true
                 newInfo.checked = false
@@ -692,12 +700,14 @@
             })
             this.route = this.$route.path
             console.log(this.Info,'  opopop')
-            if (this.route.includes('person')) {
+            if (this.route.includes('person') && this.$route.params.id) {
+                let jobId = this.$route.params.id
                 api.person.getJob().then(res => {
                     console.log(res, '所有工种')
                     this.options = res
                 })
                 this.person = this.Info
+                this.person.jobId = jobId
             } else if(this.route.includes('boat')) {
                 let jobId
                 if (this.Info.vehicle) {
@@ -735,6 +745,8 @@
                 this.area = this.Info
             } else if (this.route.includes('roat')) {
                 this.roat = this.Info
+            } else if (this.route.includes('personType')) {
+                this.job = this.Info
             }
         },
         components: {

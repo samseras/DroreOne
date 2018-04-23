@@ -14,11 +14,11 @@
             <el-button size="mini"plain @click="deleteCard"><i class="el-icon-delete"></i>删除</el-button>
             <el-button size="mini"plain @click="fixCard"><i class="el-icon-delete"></i>修改</el-button>
         </div>
-        <div class="filite" v-if="route.includes('person')">
-            <el-checkbox-group v-model="filterList" @change="choseType">
-                <el-checkbox v-for="item in personTypeList" :label="item.name"></el-checkbox>
-            </el-checkbox-group>
-        </div>
+        <!--<div class="filite" v-if="route.includes('person')">-->
+            <!--<el-checkbox-group v-model="filterList" @change="choseType">-->
+                <!--<el-checkbox v-for="item in personTypeList" :label="item.name"></el-checkbox>-->
+            <!--</el-checkbox-group>-->
+        <!--</div>-->
         <div class="filite" v-if="route.includes('indicator')">
             <el-checkbox-group v-model="filterList" @change="choseType">
                 <el-checkbox v-for="item in indicatorType" :label="item.type"></el-checkbox>
@@ -39,7 +39,7 @@
                 <el-checkbox v-for="item in parkType" :label="item.type | packFilter"></el-checkbox>
             </el-checkbox-group>
         </div>
-        <div class="page" v-if="!route.includes('basictype')">
+        <div class="page" v-if="!route.includes('basictype') || !route.includes('personType')">
             <span>当前第1页/共8页</span>
             <span class="upPage"><</span>
             <span class="downPage">></span>
