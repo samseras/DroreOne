@@ -27,10 +27,10 @@
         mounted() {
             droreMap.init();
             this.droreMapinit();
-            this.labelDot();
             this.districtList();
-            // this.district();
             this.roadList();
+            this.labelDot();
+            // this.district();
             // this.road();
         },
         methods:{
@@ -54,7 +54,7 @@
                 let that = this
                 var icon = new droreMap.icon.Marker({
                     coordinate: [0,0],
-                    name:  new Date().getTime(),
+                    name:  "test",
                     subtype: "098lk-",
                     id: "12214_",
                     url: "/static/img/location.png",
@@ -67,14 +67,14 @@
                     //     console.log(e)
                     // });
                     that.$store.commit('MAP_LOCATION', droreMap.transLayerToWgs(evt.coordinate))
-                    droreMap.ifDrag = true;
-                    droreMap.DragEvent(function(tabInfor) {
-                        var data = tabInfor.data
-                        if(data.data.id === '12214_'){
-                            console.log(droreMap.transLayerToWgs(data.end));
-                            that.$store.commit('MAP_LOCATION', droreMap.transLayerToWgs(data.end))
-                        }
-                    })
+                })
+                droreMap.ifDrag = true;
+                droreMap.DragEvent(function(tabInfor) {
+                    var data = tabInfor.data
+                    if(data.data.id === '12214_'){
+                        console.log(droreMap.transLayerToWgs(data.end));
+                        that.$store.commit('MAP_LOCATION', droreMap.transLayerToWgs(data.end))
+                    }
                 })
             },
             districtList(){//区域划分列表
