@@ -1,140 +1,39 @@
 <template>
     <div class="property">
-        <el-menu default-active="/property/person-deploy" router>
-            <ScrollContainer>
-                <template v-for="item in items">
-                    <template v-if="item.subs">
-                        <el-submenu :index="item.index">
-                            <template slot="title"><i :class="item.icon"></i>{{ item.title }}</template>
-                            <el-menu-item v-for="(subItem,i) in item.subs" :key="i" :index="subItem.index">
-                                <img src="" alt="">
-                                {{ subItem.title }}
-                            </el-menu-item>
-                        </el-submenu>
-                    </template>
-                    <template v-else>
-                        <el-menu-item :index="item.index">
-                            <i :class="item.icon"></i>{{ item.title }}
-                        </el-menu-item>
-                    </template>
-                </template>
-            </ScrollContainer>
-        </el-menu>
-
-            <div class="content">
-                <ScrollContainer>
-                    <router-view></router-view>
-                </ScrollContainer>
+        <div class="pro_menu">
+            <div class="pro_title">
+                <img src="" alt="">资产管理平台
             </div>
+            <div class="pro_router">
+                <router-link to="/basic-property" :class="isActive? 'active' : ''">设施类型</router-link>
+                <span class="line">|</span>
+                <router-link to="/hard-property" :class="isActive? '' : 'active'">设备类型</router-link>
+            </div>
+        </div>
+        <div class="pro_content">
+            <router-view></router-view>
+        </div>
     </div>
 </template>
 
 <script>
     import ScrollContainer from '@/components/ScrollContainer'
+
     export default {
         name: "property",
-        data () {
+        data() {
             return {
-                items: [
-                    {
-                        icon: 'el-icon-setting',
-                        index: '/property/person-deploy',
-                        title: '基础信息',
-                        subs: [
-                            {
-                                index: '/property/person-deploy',
-                                title: '人员信息'
-                            },
-                            {
-                                index: '/property/boat-deploy',
-                                title: '车船'
-                            },
-                            {
-                                index: '/property/roat-deploy',
-                                title: '路网'
-                            },
-                            {
-                                index: '/property/area-deploy',
-                                title: '片区'
-                            },
-                            {
-                                index: '/property/toilet-deploy',
-                                title: '卫生间'
-                            },
-                            {
-                                index: '/property/park-deploy',
-                                title: '停车场'
-                            },
-                            {
-                                index: '/property/shop-deploy',
-                                title: '商圈'
-                            },
-                            {
-                                index: '/property/scenic-deploy',
-                                title: '景点'
-                            },
-
-                            {
-                                index: '/property/trash-deploy',
-                                title: '垃圾桶'
-                            },
-                            {
-                                index: '/property/indicator-deploy',
-                                title: '指示牌'
-                            },
-                            {
-                                index: '/property/other-deploy',
-                                title: '其他'
-                            },
-
-                        ]
-                    },
-                    {
-                        icon: 'el-icon-date',
-                        index: '2',
-                        title: '硬件信息',
-                        subs: [
-                            {
-                                index: '/property/camera-Hware',
-                                title: '摄像头'
-                            },
-                            {
-                                index: '/property/broadcast-Hware',
-                                title: '广播'
-                            },
-                            {
-                                index: '/property/monitors-Hware',
-                                title: '环境监测传感器'
-                            },
-                            {
-                                index: '/property/police-Hware',
-                                title: '报警柱传感器'
-                            },
-                            {
-                                index: '/property/led-Hware',
-                                title: 'LED大屏'
-                            },
-                            {
-                                index: '/property/wifi-Hware',
-                                title: 'WIFI'
-                            },
-                            {
-                                index: '/property/voice-Hware',
-                                title: '音响'
-                            },
-                            {
-                                index: '/property/gate-Hware',
-                                title: '闸机'
-                            },
-                            {
-                                index: '/property/lampLight-Hware',
-                                title: '灯光'
-                            },
-
-                        ]
-                    }
-                ]
+                isActive: false
             }
+        },
+        watch: {
+          '$route'(){
+              if (this.$route.path.includes('basic')) {
+                  this.isActive = true
+              } else {
+                  this.isActive = false
+              }
+          }
         },
         components: {
             ScrollContainer
@@ -142,51 +41,65 @@
     }
 </script>
 
-<style lang="scss">
-    .property .el-submenu .el-menu-item{
-        width: 100%;
-        height: rem(30);
-        line-height: rem(30);
-        padding: rem(0)!important;
-        padding-left: rem(20)!important;
-        font-size: rem(14);
-        img{
-            display: inline-block;
-            width: rem(20);
-            height: rem(20);
-            vertical-align: middle;
-            background: red;
-            margin-right: rem(5);
-        }
-    }
-    .property .el-menu-item{
-        width: 100%;
-        height: rem(30);
-        line-height: rem(30);
-        /*border-bottom: 1px solid #ccc;*/
-    }
-    .property .el-menu .el-menu--inline{
-        width: 100%;
-        background: #eee;
-        box-sizing: border-box;
-        text-align: left;
-        /*padding-left: rem(8);*/
-        font-size: rem(14);
-    }
-</style>
-<style lang="scss"  type="text/scss" scoped>
-    .property{
-        display:flex;
-        width:100%;
-        height: 100%;
-        .el-menu{
-            width: rem(200);
-        }
-        .content{
-            flex: 1;
-            height: 100%;
-            padding: 0;
-        }
 
+<style lang="scss" type="text/scss" scoped>
+    .property {
+        width: 100%;
+        height: 100%;
+        .pro_menu {
+            width: 100%;
+            height: rem(40);
+            color: #fff;
+            line-height: rem(40);
+            box-sizing: border-box;
+            display: flex;
+            div {
+                display: inline-block;
+            }
+            .pro_title {
+                width: rem(200);
+                text-align: center;
+                background: #2E3D5F;
+                img{
+                    display: inline-block;
+                    width: rem(20);
+                    height: rem(20);
+                    vertical-align: middle;
+                    background: red;
+                    margin-left: rem(-35);
+                    margin-right: rem(5);
+                }
+            }
+            .pro_router{
+                flex: 1;
+                background: #203f70;
+                padding: 0 rem(15);
+                box-sizing: border-box;
+                a{
+                    color: #fff;
+                    margin-right: rem(10);
+                }
+                .active{
+                    color: #0086b3;
+                }
+                span{
+                    color: #2c3b47;
+                    margin-right: rem(10);
+                }
+            }
+        }
+        .pro_content{
+            width: 100%;
+            height: calc(100% - 2.5rem);
+            display: flex;
+            .el-menu {
+                width: rem(200);
+            }
+            .content {
+                flex: 1;
+                height: 100%;
+                padding: 0;
+            }
+        }
     }
 </style>
