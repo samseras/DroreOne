@@ -363,15 +363,10 @@
                     people:'',
                 },
                 options: [
-                    { type: '安保'},
-                    { type: '售票'},
-                    { type: '保洁'},
-                    { type: '检票'}
-                ],
-                indicatorType: [
-                    {type: '广播'},
-                    {type: 'LED'},
-                    {type: '路灯'}
+                    { type: '保洁1'},
+                    { type: '保洁2'},
+                    { type: '保洁3'},
+                    { type: '保洁4'}
                 ],
                 associatedRadio:true,
                 broadcast: [

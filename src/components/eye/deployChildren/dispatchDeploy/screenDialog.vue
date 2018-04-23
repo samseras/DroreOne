@@ -23,7 +23,6 @@
                 </div>
             </div>
             <div class=""slot="footer" class="dialog-footer cardFooter">
-
                 <el-button size="mini" class="hold" @click="">保存</el-button>
                 <el-button size="mini" @click = 'closeScreenDialog'>取消</el-button>
             </div>

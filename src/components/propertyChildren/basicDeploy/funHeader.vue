@@ -39,7 +39,7 @@
                 <el-checkbox v-for="item in parkType" :label="item.type | packFilter"></el-checkbox>
             </el-checkbox-group>
         </div>
-        <div class="page">
+        <div class="page" v-if="!route.includes('basictype')">
             <span>当前第1页/共8页</span>
             <span class="upPage"><</span>
             <span class="downPage">></span>

@@ -22,7 +22,7 @@
                         <el-table-column
                             width="50">
                             <template slot-scope="scope">
-                                <el-checkbox v-model="scope.row.checked" @change="checked(scope.row.id)" class="checkBoxBtn"></el-checkbox>
+                                <el-checkbox v-model="scope.row.checked" @change="checked(scope.row)" class="checkBoxBtn"></el-checkbox>
                             </template>
                         </el-table-column>
                         <el-table-column
@@ -48,11 +48,11 @@
                             label="线路"
                             width="500">
                         </el-table-column>
-                        <el-table-column label="操作">
+                        <el-table-column label="操作" width="200">
                             <template slot-scope="scope">
                                 <span @click="fixedInfo(scope.row.id,'片区信息')">编辑</span> |
-                                <span @click="stop(scope.row,'片区信息')" v-show="isStop">停止 |</span>
-                                <span @click="start(scope.row,'片区信息')" v-show="isStart">开始 |</span>
+                                <span @click="stop(scope.row,'片区信息')" v-if="scope.row.isStop">停止 |</span>
+                                <span @click="start(scope.row,'片区信息')" v-else="scope.row.isStart">开始 |</span>
                                 <span @click="showPersonDetail(scope.row,'片区信息')">查看</span> |
                                 <span @click="deletInfo(scope.row.id,'片区信息')">删除</span>
                             </template>
@@ -100,15 +100,16 @@
                 checkList: [],
                 filterList: [],
                 areaList: [
-                    {id:1,checked:false,name: '长江~黄河巡更',type: '售票',classes: '早班，午班，晚班',number: '10个',line: '起点（123，12312）、中间（123，12312）、终点（123，12312）'},
-                    {id:2,checked:false,name: '长江~黄河巡更',type: '安保',classes: '早班，午班，晚班',number: '10个',line: '起点（123，12312）、中间（123，12312）、终点（123，12312）'},
-                    {id:3,checked:false,name: '长江~黄河巡更',type: '保洁',classes: '早班，午班，晚班',number: '10个',line: '起点（123，12312）、中间（123，12312）、终点（123，12312）'},
-                    {id:8,checked:false,name: '长江~黄河巡更',type: '售票',classes: '早班，午班，晚班',number: '10个',line: '起点（123，12312）、中间（123，12312）、终点（123，12312）'},
-                    {id:9,checked:false,name: '长江~黄河巡更',type: '检票',classes: '早班，午班，晚班',number: '10个',line: '起点（123，12312）、中间（123，12312）、终点（123，12312）'},
+                    {id:1,checked:false,isStop:true,isStart:false,name: '长江~黄河巡更',type: '刘瑜',classes: '早班，午班，晚班',number: '10个',line: '起点（123，12312）、中间（123，12312）、终点（123，12312）'},
+                    {id:2,checked:false,isStop:true,isStart:false,name: '长江~黄河巡更',type: '刘梦旭',classes: '早班，午班，晚班',number: '10个',line: '起点（123，12312）、中间（123，12312）、终点（123，12312）'},
+                    {id:3,checked:false,isStop:true,isStart:false,name: '长江~黄河巡更',type: '贾方园',classes: '早班，午班，晚班',number: '10个',line: '起点（123，12312）、中间（123，12312）、终点（123，12312）'},
+                    {id:8,checked:false,isStop:true,isStart:false,name: '长江~黄河巡更',type: '李姗',classes: '早班，午班，晚班',number: '10个',line: '起点（123，12312）、中间（123，12312）、终点（123，12312）'},
+                    {id:9,checked:false,isStop:true,isStart:false,name: '长江~黄河巡更',type: '绍燕',classes: '早班，午班，晚班',number: '10个',line: '起点（123，12312）、中间（123，12312）、终点（123，12312）'},
                 ],
                 visible: false,
                 areaInfo: {},
                 choseInfoId: [],
+                choseChecked:[],
                 choseList: [],
                 isDisabled: true,
                 title: '',
@@ -124,69 +125,122 @@
                 })
             },
             showPersonDetail (info,title) {
-                if (!this.choseInfoId.includes(info.id)) {
-                    this.choseInfoId.push(info.id)
-                }
-                if(this.choseInfoId.length == 1){
-                    this.areaInfo = info
-                    this.visible = true
-                    this.title = title
-                    this.isDisabled = true
+                console.log(info.id)
+                if (this.choseInfoId.includes(info.id)) {
+                    if(this.choseInfoId.length > 1){
+                        this.$message.warning('至多选择一条数据')
+                    }else{
+                        this.areaInfo = info
+                        this.visible = true
+                        this.title = title
+                        this.isDisabled = true
+                    }
                 }else {
-                    this.$message.warning('至多选择一条数据')
+                    if(this.choseChecked.length == 0){
+                        this.choseInfoId.push(info.id)
+                        if(this.choseInfoId.length > 1){
+                            this.$message.warning('至多选择一条数据')
+                        }else{
+                            this.areaInfo = info
+                            this.visible = true
+                            this.title = title
+                            this.isDisabled = true
+                        }
+                        this.choseInfoId = []
+                    }else {
+                        this.$message.warning('选择的数据和即将编辑的数据不一致，或者未选择包编辑的数据')
+                    }
                 }
             },
             addNewInfo () {
                 this.showPersonDetail({}, '添加人员调度')
                 this.isDisabled = false
             },
+            delet(id){
+                this.$confirm('此操作将永久删除该数据, 是否继续?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    //  api.camera.deleteCamera(this.choseInfoId).then(res => {
+                    for (let i = 0; i < this.choseInfoId.length; i++) {
+                        this.areaList = this.areaList.filter((item, index) => {
+                            if (item.id === this.choseInfoId[i]) {
+                                this.areaList[index].checked = false
+                            }
+                            return item.id !== this.choseInfoId[i]
+                        })
+                    }
+                    this.$message.success('删除成功')
+                    this.choseInfoId = []
+                    this.choseChecked = []
+                    // }).catch(err=>{
+                    //             console.log(err)
+                    //             this.$message.error('删除失败，请稍后重试')
+                }).catch(() => {
+                    this.$message.info('取消删除')
+                })
+                //   })
+            },
             deletInfo (id) {
                 console.log(id)
                 console.log(this.choseInfoId)
-                if (id) {
-                    this.choseInfoId.push(id)
-                }
-                if (this.choseInfoId.length > 0) {
-                    this.$confirm('此操作将永久删除该数据, 是否继续?', '提示', {
-                        confirmButtonText: '确定',
-                        cancelButtonText: '取消',
-                        type: 'warning'
-                    }).then(() => {
-                        //  api.camera.deleteCamera(this.choseInfoId).then(res => {
-                        for (let i = 0; i < this.choseInfoId.length; i++) {
-                            this.areaList = this.areaList.filter((item, index) => {
-                                if (item.id === this.choseInfoId[i]) {
-                                    this.areaList[index].checked = false
-                                }
-                                return item.id !== this.choseInfoId[i]
-                            })
+                console.log(this.choseInfoId.includes(id))
+                if (id === undefined) {
+                    if(this.choseChecked.length>0){
+                        this.delet(id)
+                    }else {
+                        this.$message.warning('请选择要删除的数据')
+                    }
+                }else{
+                    if(this.choseInfoId.includes(id)){
+                        if(this.choseInfoId.length > 1){
+                            this.$message.warning('至多选择一条数据')
+                        }else {
+                            this.delet(id)
                         }
-                        this.$message.success('删除成功')
-                        this.choseInfoId = []
-                        // }).catch(err=>{
-                        //             console.log(err)
-                        //             this.$message.error('删除失败，请稍后重试')
-                    }).catch(() => {
-                        this.$message.info('取消删除')
-                    })
-                    //   })
+                    }else{
+                        if(this.choseChecked.length == 0) {
+                            this.choseInfoId.push(id)
+                            if(this.choseInfoId.length > 1){
+                                this.$message.warning('至多选择一条数据')
+                            }else{
+                                this.delet(id)
+                            }
+                        }else {
+                            this.choseInfoId.push(id)
+                            if(this.choseInfoId.length == 1){
+                                this.delet(id)
+                            }else{
+                                this.$message.warning('选择的数据和即将编辑的数据不一致，或者未选择包编辑的数据')
+                                let index = this.choseInfoId.indexOf(id);
+                                this.choseInfoId.splice(index,1)
+                            }
+                        }
+                    }
                 }
             },
-            // toggleList (type) {
-            //     if (type === 'list') {
-            //         this.isShowAreaCard = false
-            //     }else {
-            //         this.isShowAreaCard = true
-            //     }
-            // },
-            checked (id) {
-                if (this.choseInfoId.includes(id)) {
-                    this.choseInfoId = this.choseInfoId.filter((item) =>{
-                        return item !== id
+            checked (Info) {
+                console.log(Info.id)
+                this.areaList = this.areaList.filter(item =>{
+                    if(item.id ===Info.id){
+                        item.checked = item.checked
+                    }
+                    return item
+                })
+                if(this.choseInfoId.includes(Info.id)){
+                    let index = this.choseInfoId.indexOf(Info.id);
+                    this.choseInfoId = this.choseInfoId.filter((item)=>{
+                        return item!== Info.id
                     })
-                } else {
-                    this.choseInfoId.push(id)
+                    this.choseChecked.splice(index,1);
+                }else{
+                    this.choseInfoId.push(Info.id)
+                    this.choseChecked.push(Info.checked)
                 }
+
+                console.log(this.choseInfoId)
+                console.log(this.choseChecked)
             },
             choseType (type) {
                 console.log(type)
@@ -213,12 +267,14 @@
                     if (state === true) {
                         item.checked = true
                         this.choseInfoId.push(item.id)
-                        return item.checked === true
+                        this.choseChecked.push(item.checked)
+                        return
                     } else {
                         console.log('进入这个判断吗')
                         item.checked = false
                         this.choseInfoId = []
-                        return item.checked === false
+                        this.choseChecked = []
+                        return
                     }
                 })
                 console.log(this.choseInfoId, 'opopop')
@@ -239,40 +295,86 @@
                 this.choseList = this.areaList
             },
             fixedInfo (id) {
-                console.log(this.choseInfoId)
-                if (!this.choseInfoId.includes(id)) {
-                    this.choseInfoId.push(id)
-                }
-                if(this.choseInfoId.length > 1) {
-                    this.$message.warning('至多选择一条数据')
-                }
-                else if(this.choseInfoId.length>0){
-                    this.areaList.map((item)=>{
-                        if(item.id === this.choseInfoId[0]){
-                            this.areaInfo=item
+                console.log(id)
+                if (this.choseInfoId.includes(id)) {
+                    if(this.choseInfoId.length > 1){
+                        this.$message.warning('至多选择一条数据')
+                    }else{
+                        this.areaList.map((item)=>{
+                            if(item.id === this.choseInfoId[0]){
+                                this.areaInfo=item
+                            }
+                        })
+                        this.showPersonDetail(this.areaInfo,'修改摄像头信息')
+                        this.isDisabled=false
+                    }
+                }else {
+                    if(this.choseChecked.length == 0){
+                        this.choseInfoId.push(id)
+                        if(this.choseInfoId.length > 1){
+                            this.$message.warning('至多选择一条数据')
+                        }else{
+                            this.areaList.map((item)=>{
+                                if(item.id === this.choseInfoId[0]){
+                                    this.areaInfo=item
+                                }
+                            })
+                            this.showPersonDetail(this.areaInfo,'修改摄像头信息')
+                            this.isDisabled=false
                         }
-                    })
-                    this.showPersonDetail(this.areaInfo,'修改巡更路线信息')
-                    this.isDisabled=false
-                    this.choseInfoId = []
-                }else{
-                    this.$message.error('请选择要修改的巡更路线')
+                        this.choseInfoId = []
+                    }else {
+                        this.$message.warning('选择的数据和即将编辑的数据不一致，或者未选择包编辑的数据')
+                    }
                 }
-                // this.areaList.map((item) => {
-                //     if (item.id === this.choseInfoId[0]){
-                //         this.areaInfo = item
-                //     }
-                // })
-                // this.showPersonDetail(this.areaInfo, '修改巡更路线信息')
-                // this.isDisabled = false
             },
-            stop(id){
-                this.isStop = false;
-                this.isStart = true;
+            stop(Info){
+                console.log(Info.id)
+                if (this.choseInfoId.includes(Info.id)) {
+                    if(this.choseInfoId.length > 1){
+                        this.$message.warning('至多选择一条数据')
+                    }else{
+                        Info.isStart = true;
+                        Info.isStop = false;
+                    }
+                }else {
+                    if(this.choseChecked.length == 0){
+                        this.choseInfoId.push(Info.id)
+                        if(this.choseInfoId.length > 1){
+                            this.$message.warning('至多选择一条数据')
+                        }else{
+                            Info.isStart = true;
+                            Info.isStop = false;
+                        }
+                        this.choseInfoId = []
+                    }else {
+                        this.$message.warning('选择的数据和即将编辑的数据不一致，或者未选择包编辑的数据')
+                    }
+                }
             },
-            start(id){
-                this.isStop = true;
-                this.isStart = false;
+            start(Info){
+                console.log(Info.id)
+                if (this.choseInfoId.includes(Info.id)) {
+                    if(this.choseInfoId.length > 1){
+                        this.$message.warning('至多选择一条数据')
+                    }else{
+                        Info.isStart = false;
+                        Info.isStop = true;
+                    }
+                }else {
+                    if(this.choseChecked.length == 0){
+                        this.choseInfoId.push(Info.id)
+                        if(this.choseInfoId.length > 1){
+                            this.$message.warning('至多选择一条数据')
+                        }else{
+                            Info.isStart = false;
+                            Info.isStop = true;
+                        }
+                        this.choseInfoId = []
+                    }else {
+                        this.$message.warning('选择的数据和即将编辑的数据不一致，或者未选择包编辑的数据')
+                    }
+                }
             }
         },
         created () {

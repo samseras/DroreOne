@@ -319,6 +319,20 @@
                         </label>
                     </div>
                 </div>
+                <!--设施类行-->
+                <div class="personCardContent boatCardContent" v-if="route.includes('basictype')">
+                    <p class="basicType">设施类行：
+                        <el-select v-model="basicType.type" placeholder="请选择">
+                            <el-option label="片区" value="片区"></el-option>
+                            <el-option label="车船" value="车船"></el-option>
+                            <el-option label="卫生间" value="卫生间"></el-option>
+                            <el-option label="商圈" value="商圈"></el-option>
+                            <el-option label="景点" value="景点"></el-option>
+                            <el-option label="停车场" value="停车场"></el-option>
+                        </el-select>
+                    </p>
+                </div>
+
                 <div class="text-center p-2">
                     <file-upload
                         extensions="gif,jpg,jpeg,png,webp"
@@ -369,6 +383,9 @@
                 src: {},
                 isShowMapDialog: false,
                 mapVisible: false,
+                basicType: {
+                    type:'片区'
+                },
                 person: {
                     personBean: {
                         name:'',
@@ -1225,6 +1242,9 @@
                         box-sizing: border-box;
                         border-radius: rem(5);
                     }
+                }
+                .basicType{
+                    text-align: center;
                 }
                 .img{
                     width: rem(100);

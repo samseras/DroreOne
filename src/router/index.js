@@ -41,7 +41,14 @@ import HomePage from '@/components/homePage'
 
 import Deploy from '@/components/deploy'
 
+//资产
 import Property from '@/components/property'
+import ProBasicMenu from '@/components/propertyChildren/basicMenu'
+import HardWareMenu from '@/components/propertyChildren/hardWareMenu'
+import BasicType from '@/components/propertyChildren/basicDeploy/basicType'
+import HardWareType from '@/components/propertyChildren/hardwareDeploy/hardWareType'
+
+
 import AreaDeploy from '@/components/propertyChildren/basicDeploy/areaDeploy'       //片区
 import BoatDeploy from '@/components/propertyChildren/basicDeploy/boatCarDeploy'       //车船
 import IndicatorDeploy from '@/components/propertyChildren/basicDeploy/indicatorDeploy'       //指示牌
@@ -172,31 +179,49 @@ const routes = [
     {
         path: '/property',
         name: 'property',
-        redirect: '/property/person-deploy',
+        redirect: '/basic-property',
         component: Property,
         children: [
-            {path: '/property/area-deploy',name: 'AreaDeploy',component: AreaDeploy},
-            {path: '/property/boat-deploy',name: 'BoatDeploy',component: BoatDeploy },
-            {path: '/property/indicator-deploy',name: 'IndicatorDeploy',component: IndicatorDeploy },
-            {path: '/property/other-deploy',name: 'OtherDeploy',component: OtherDeploy },
-            {path: '/property/park-deploy',name: 'ParkDeploy',component: ParkDeploy },
-            {path: '/property/person-deploy',name: 'PersonDeploy',component: PersonDeploy },
-            {path: '/property/roat-deploy',name: 'RoatDeploy',component: RoatDeploy },
-            {path: '/property/scenic-deploy',name: 'ScenicDeploy',component: ScenicDeploy },
-            {path: '/property/shop-deploy',name: 'ShopDeploy',component: ShopDeploy },
-            {path: '/property/toilet-deploy',name: 'ToiletDeploy',component: ToiletDeploy },
-            {path: '/property/trash-deploy',name: 'TrashDeploy',component: TrashDeploy },
+            {
+                path: '/basic-property',
+                name: 'ProBasicMenu',
+                redirect: '/basic-property/basictype',
+                component: ProBasicMenu,
+                children: [
+                    {path: '/basic-property/basictype', name: 'BasicType', component: BasicType},
+                    {path: '/basic-property/area-deploy', name: 'AreaDeploy', component: AreaDeploy},
+                    {path: '/basic-property/boat-deploy', name: 'BoatDeploy', component: BoatDeploy},
+                    {path: '/basic-property/indicator-deploy', name: 'IndicatorDeploy', component: IndicatorDeploy},
+                    {path: '/basic-property/other-deploy', name: 'OtherDeploy', component: OtherDeploy},
+                    {path: '/basic-property/park-deploy', name: 'ParkDeploy', component: ParkDeploy},
+                    {path: '/basic-property/person-deploy', name: 'PersonDeploy', component: PersonDeploy},
+                    {path: '/basic-property/roat-deploy', name: 'RoatDeploy', component: RoatDeploy},
+                    {path: '/basic-property/scenic-deploy', name: 'ScenicDeploy', component: ScenicDeploy},
+                    {path: '/basic-property/shop-deploy', name: 'ShopDeploy', component: ShopDeploy},
+                    {path: '/basic-property/toilet-deploy', name: 'ToiletDeploy', component: ToiletDeploy},
+                    {path: '/basic-property/trash-deploy', name: 'TrashDeploy', component: TrashDeploy},
 
-            {path:'/property/camera-Hware',name:'CameraHware',component:CameraHware},
-            {path:'/property/broadcast-Hware',name:'BroadcastHware',component:BroadcastHware},
-            {path:'/property/gate-Hware',name:'GateHware',component:GateHware},
-            {path:'/property/lampLight-Hware',name:'LightHware',component:LightHware},
-            {path:'/property/lampLight-Hware',name:'LightHware',component:LightHware},
-            {path:'/property/led-Hware',name:'LedHware',component:LedHware},
-            {path:'/property/wifi-Hware',name:'WifiHware',component:WifiHware},
-            {path:'/property/voice-Hware',name:'VoiceHware',component:VoiceHware},
-            {path:'/property/police-Hware',name:'PoliceHware',component:PoliceHware},
-            {path:'/property/monitors-Hware',name:'MonitorsHware',component:MonitorsHware},
+                ]
+            },
+            {
+                path: '/hard-property',
+                name: 'HardWareMenu',
+                redirect: '/hard-property/hardwaretype',
+                component: HardWareMenu,
+                children: [
+                    {path: '/hard-property/hardwaretype', name: 'HardWareType', component: HardWareType},
+                    {path: '/hard-property/camera-Hware', name: 'CameraHware', component: CameraHware},
+                    {path: '/hard-property/broadcast-Hware', name: 'BroadcastHware', component: BroadcastHware},
+                    {path: '/hard-property/gate-Hware', name: 'GateHware', component: GateHware},
+                    {path: '/hard-property/lampLight-Hware', name: 'LightHware', component: LightHware},
+                    {path: '/hard-property/lampLight-Hware', name: 'LightHware', component: LightHware},
+                    {path: '/hard-property/led-Hware', name: 'LedHware', component: LedHware},
+                    {path: '/hard-property/wifi-Hware', name: 'WifiHware', component: WifiHware},
+                    {path: '/hard-property/voice-Hware', name: 'VoiceHware', component: VoiceHware},
+                    {path: '/hard-property/police-Hware', name: 'PoliceHware', component: PoliceHware},
+                    {path: '/hard-property/monitors-Hware', name: 'MonitorsHware', component: MonitorsHware},
+                ]
+            }
         ]
     }
   ]

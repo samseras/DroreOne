@@ -1,7 +1,7 @@
 <template>
-    <div class="broadHard">
+    <div class="hardwareType">
         <div class="title">
-            广播信息
+            设备类型
         </div>
         <div class="cameraContent">
             <div class="conTitle">
@@ -17,7 +17,6 @@
             <div class="cameraList" v-loading="isShowLoading">
                 <ScrollContainer>
                     <el-table
-                        v-if="!isShowBroadCard"
                         ref="multipleTable"
                         :data="broadList"
                         tooltip-effect="dark"
@@ -61,7 +60,7 @@
                         <el-table-column
                             label="操作">
                             <template slot-scope="scope">
-                                <span @click="showBroadDetail(scope.row, '广播信息')">查看</span>
+                                <span @click="showBroadDetail(scope.row, '设备类型')">查看</span>
                                 <span class="line">|</span>
                                 <span @click="fixedInfo(scope.row.id )">编辑</span>
                                 <span class="line">|</span>
@@ -70,24 +69,24 @@
                         </el-table-column>
                     </el-table>
 
-                    <div class="personInfo" v-for="item in broadList" v-if="isShowBroadCard && item.status">
-                        <div class="checkBox">
-                            <!--<input type="checkbox" :checked="item.checked" class="checkBtn" @change="checked(item.id)">-->
-                            <el-checkbox v-model="item.checked" @change="checked(item.id)" class="checkBtn"></el-checkbox>
-                        </div>
-                        <div class="personType" @click.stop="showBroadDetail(item,'广播信息')">
-                            <img src="../../../../static/img/cameras.png" alt="">
-                            <span class="name">
-                                  {{item.name}}
-                                </span>
-                        </div>
-                        <div class="specificInfo" >
-                            <p class="area">所属区域：<span>{{item.regionName}}</span></p>
-                            <p class="type">广播类型：<span>{{item.positionType|changeFilter}}</span></p>
-                            <p class="describe text">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：<span>{{item.description}}</span></p>
+                    <!--<div class="personInfo" v-for="item in broadList" v-if="isShowBroadCard && item.status">-->
+                        <!--<div class="checkBox">-->
+                            <!--&lt;!&ndash;<input type="checkbox" :checked="item.checked" class="checkBtn" @change="checked(item.id)">&ndash;&gt;-->
+                            <!--<el-checkbox v-model="item.checked" @change="checked(item.id)" class="checkBtn"></el-checkbox>-->
+                        <!--</div>-->
+                        <!--<div class="personType" @click.stop="showBroadDetail(item,'设备类型')">-->
+                            <!--<img src="../../../../static/img/cameras.png" alt="">-->
+                            <!--<span class="name">-->
+                                  <!--{{item.name}}-->
+                                <!--</span>-->
+                        <!--</div>-->
+                        <!--<div class="specificInfo" >-->
+                            <!--<p class="area">所属区域：<span>{{item.regionName}}</span></p>-->
+                            <!--<p class="type">广播类型：<span>{{item.positionType|changeFilter}}</span></p>-->
+                            <!--<p class="describe text">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：<span>{{item.description}}</span></p>-->
 
-                        </div>
-                    </div>
+                        <!--</div>-->
+                    <!--</div>-->
                 </ScrollContainer>
                 <HardWare v-if="visible"
                           :visible="visible"
@@ -198,10 +197,10 @@
                             this.broadInfo=item
                         }
                     })
-                    this.showBroadDetail(this.broadInfo,'修改广播信息')
+                    this.showBroadDetail(this.broadInfo,'修改设备类型')
                     this.isDisabled=false
                 }else{
-                    this.$message.error('请选择要修改的广播信息')
+                    this.$message.error('请选择要修改的设备类型')
                 }
             },
             deletInfo(id){
@@ -292,7 +291,7 @@
                     })
                 }else{
                     this.broadList=this.broadList.filter((item,index)=>{
-                            console.log(item.positionType)
+                        console.log(item.positionType)
                         if (item.positionType == 0) {
                             item.type = '室内'
                         } else{
@@ -346,13 +345,13 @@
             this.getAllBroadcast()
         },
         filters:{
-          changeStatus(item){
-              if(item==0){
-                  return '室内'
-              }else{
-                  return '室外'
-              }
-          }
+            changeStatus(item){
+                if(item==0){
+                    return '室内'
+                }else{
+                    return '室外'
+                }
+            }
         },
         components:{
             ScrollContainer,
@@ -365,7 +364,7 @@
 </script>
 
 <style lang="scss" type="text/scss">
-    .broadHard{
+    .hardwareType{
         .el-checkbox__label{
             padding-left:rem(5);
             font-size:rem(13);
@@ -378,7 +377,7 @@
 </style>
 
 <style lang="scss" type="text/scss" scoped>
-    .broadHard{
+    .hardwareType{
         width:100%;
         height:100%;
         display:flex;

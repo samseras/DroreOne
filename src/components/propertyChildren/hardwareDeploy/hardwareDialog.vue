@@ -320,6 +320,18 @@
                         </label>
                     </div>
                 </div>
+                <!--设备类型-->
+                <div class="cameraCard popCard" v-if="route.includes('hardwaretype')">
+                    <p class="type">设备名称：
+                        <el-select name="" v-model="hardwaretype.hardName">
+                            <el-option :value="0" label="室内"></el-option>
+                            <el-option :value="1" label="室外"></el-option>
+                        </el-select>
+                    </p>
+                    <p class="name">厂家名称：<input type="text" v-model="hardwaretype.tradeName"> </p>
+                    <p class="IP">设备型号：<input type="text" v-model="hardwaretype.model"></p>
+                    <p class="mac">类&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;型：<input type="text" v-model="hardwaretype.type"></p>
+                </div>
             </div>
             <div class="text-center p-2">
                 <file-upload
@@ -447,6 +459,12 @@
                    location:'',
                    regionId:'',
                    description:''
+               },
+               hardwaretype: {
+                   hardName: '',
+                   tradeName: '',
+                   type: '',
+                   model: ''
                },
                route:'',
                file: {},
