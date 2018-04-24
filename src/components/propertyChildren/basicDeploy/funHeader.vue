@@ -9,10 +9,10 @@
             <el-button size="mini"plain class='selectedAll' @click="selected">
                 <el-checkbox v-model="isSelected" @change="selectedAll"></el-checkbox>全选
             </el-button>
-            <el-button size="mini"plain>导入</el-button>
-            <el-button size="mini"plain>导出</el-button>
+            <el-button size="mini"plain v-if="isShowHeader">导入</el-button>
+            <el-button size="mini"plain v-if="isShowHeader">导出</el-button>
             <el-button size="mini"plain @click="deleteCard"><i class="el-icon-delete"></i>删除</el-button>
-            <el-button size="mini"plain @click="fixCard"><i class="el-icon-delete"></i>修改</el-button>
+            <el-button size="mini"plain @click="fixCard"><i class="el-icon-edit"></i>修改</el-button>
         </div>
         <!--<div class="filite" v-if="route.includes('person')">-->
             <!--<el-checkbox-group v-model="filterList" @change="choseType">-->
@@ -39,7 +39,7 @@
                 <el-checkbox v-for="item in parkType" :label="item.type | packFilter"></el-checkbox>
             </el-checkbox-group>
         </div>
-        <div class="page" v-if="!route.includes('basictype') || !route.includes('personType')">
+        <div class="page" v-if="isShowHeader">
             <span>当前第1页/共8页</span>
             <span class="upPage"><</span>
             <span class="downPage">></span>
@@ -73,6 +73,7 @@
                 ],
                 route: '',
                 isSelected: false,
+                isShowHeader: true
             }
         },
         methods: {
@@ -95,8 +96,6 @@
                 this.$emit('choseType',this.filterList)
             },
             selectedAll () {
-                // this.isSelected = !this.isSelected
-                console.log(this.isSelected, 'zhehis')
                 this.$emit('selectedAll', this.isSelected)
             },
             fixCard () {
@@ -117,6 +116,15 @@
                 } else if (this.route.includes('indicator')) {
                     console.log('这是指示牌')
                 }
+            },
+            showHeader () {
+                if (this.route.includes('basictype')) {
+                    this.isShowHeader = false
+                } else if (this.route.includes('personType')) {
+                    this.isShowHeader = false
+                } else {
+                    this.isShowHeader = true
+                }
             }
         },
         filters: {
@@ -131,10 +139,12 @@
         watch: {
             '$route' () {
                 this.showType()
+                this.showHeader()
             }
         },
         created () {
             this.showType()
+            this.showHeader()
         }
     }
 </script>

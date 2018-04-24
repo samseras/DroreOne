@@ -19,8 +19,8 @@
                     <p class="name">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称：<input type="text" v-model="camera.name"> </p>
                     <p class="manufacturer">厂&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;家：
                         <el-select name="" v-model="camera.manufactor">
-                            <el-option label='海康' :value="3"></el-option>
-                            <el-option label='卓锐' :value="4"></el-option>
+                            <el-option label='海康' :value="haikang"></el-option>
+                            <el-option label='卓锐' :value="zhuorui"></el-option>
                         </el-select>
                     </p>
                     <p class="IP">I P 地 址：<input type="text" v-model="camera.ip"></p>
@@ -320,17 +320,20 @@
                         </label>
                     </div>
                 </div>
-                <!--设备类型-->
+
+                <!--设备型号-->
                 <div class="cameraCard popCard" v-if="route.includes('hardwaretype')">
                     <p class="type">设备名称：
                         <el-select name="" v-model="hardwaretype.hardName">
-                            <el-option :value="0" label="室内"></el-option>
-                            <el-option :value="1" label="室外"></el-option>
+                            <el-option :value="0" label="摄像头"></el-option>
+                            <el-option :value="1" label="广播"></el-option>
+                            <el-option :value="2" label="WIFI"></el-option>
+
                         </el-select>
                     </p>
                     <p class="name">厂家名称：<input type="text" v-model="hardwaretype.tradeName"> </p>
                     <p class="IP">设备型号：<input type="text" v-model="hardwaretype.model"></p>
-                    <p class="mac">类&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;型：<input type="text" v-model="hardwaretype.type"></p>
+                    <p class="mac">类&nbsp;  &nbsp;&nbsp;&nbsp;&nbsp;  型：<input type="text" v-model="hardwaretype.type"></p>
                 </div>
             </div>
             <div class="text-center p-2">

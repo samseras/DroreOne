@@ -11,7 +11,7 @@
                 <Map></Map>
             </div>
             <div class=""slot="footer" class="dialog-footer cardFooter">
-                <el-button size="mini" class="hold" @click="saveLocation">保存</el-button>
+                <el-button size="mini" class="hold" @click="saveLocation" :disabled='!isSave'>保存</el-button>
                 <el-button size="mini" @click = 'closeMapDialog'>取消</el-button>
             </div>
         </el-dialog>
@@ -20,6 +20,7 @@
 
 <script>
     import Map from '@/components/map'
+    import { mapGetters } from 'vuex'
     export default {
         props: ['visible'],
         name: "map-dialog",
@@ -79,6 +80,19 @@
         },
         components : {
             Map
+        },
+        computed: {
+            ...mapGetters(['getRegionLocationState','getRoatLocationState']),
+            isSave () {
+                let route = this.$route.path
+                if (route.includes('area-deploy')) {
+                    return this.getRegionLocationState
+                } else if (route.includes('roat-deploy')) {
+                    return this.getRoatLocationState
+                } else {
+                    return true
+                }
+            }
         }
     }
 </script>

@@ -1,10 +1,10 @@
 <template>
     <div class="personType">
         <div class="title">
-            人员信息
+            人员类型
         </div>
         <div class="personContent">
-            <div class="funcTitle">
+            <div class="funcTitle" v-if="false">
                 <Header @addNewInfo="addNewInfo"
                         @deletInfo="deletInfo"
                         @toggleList="toggleList"
@@ -33,15 +33,15 @@
                             width="960">
                         </el-table-column>
 
-                        <el-table-column
-                            label="操作">
-                            <template slot-scope="scope">
-                                <span @click="fixedInfo(scope.row.id )">编辑</span>
-                                <span class="line">|</span>
-                                <span @click="showPersonDetail(scope.row, '人员信息')">查看</span>
-                                <span class="line">|</span>
-                                <span @click="deletInfo(scope.row.id)">删除</span>
-                            </template>
+                        <el-table-column>
+                            <!--label="操作">-->
+                            <!--<template slot-scope="scope">-->
+                                <!--<span @click="fixedInfo(scope.row.id )">编辑</span>-->
+                                <!--<span class="line">|</span>-->
+                                <!--<span @click="showPersonDetail(scope.row, '人员信息')">查看</span>-->
+                                <!--<span class="line">|</span>-->
+                                <!--<span @click="deletInfo(scope.row.id)">删除</span>-->
+                            <!--</template>-->
                         </el-table-column>
                     </el-table>
                 </ScrollContainer>
@@ -339,7 +339,7 @@
             .personList {
                 width: 100%;
                 flex: 1;
-                margin-top: rem(20);
+                /*margin-top: rem(20);*/
                 .personInfo {
                     width: rem(210);
                     height: rem(140);
