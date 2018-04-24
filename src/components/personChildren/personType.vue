@@ -1,5 +1,5 @@
 <template>
-    <div class="personDeploy">
+    <div class="personType">
         <div class="title">
             人员信息
         </div>
@@ -8,7 +8,6 @@
                 <Header @addNewInfo="addNewInfo"
                         @deletInfo="deletInfo"
                         @toggleList="toggleList"
-                        @choseType='choseType'
                         @selectedAll='selectedAll'
                         @fixedInfo='fixedInfo'>
                 </Header>
@@ -16,9 +15,8 @@
             <div class="personList" v-loading="isShowLoading">
                 <ScrollContainer>
                     <el-table
-                        v-if="!isShowPersonCard"
                         ref="multipleTable"
-                        :data="personList"
+                        :data="jobList"
                         tooltip-effect="dark"
                         style="width: 100%"
                         @selection-change="handleSelectionChange">
@@ -30,31 +28,11 @@
                             </template>
                         </el-table-column>
                         <el-table-column
-                            prop="personBean.name"
-                            label="姓名"
-                            width="120">
+                            prop="name"
+                            label="人员类型"
+                            width="960">
                         </el-table-column>
-                        <el-table-column
-                            prop="jobName"
-                            label="人员角色">
-                        </el-table-column>
-                        <el-table-column
-                            prop="personBean.gender"
-                            label="性别">
-                            <template slot-scope="scope">
-                                <span>{{scope.row.personBean.gender | sexFilter}}</span>
-                            </template>
-                        </el-table-column>
-                        <el-table-column
-                            label="身份证号">
-                            <template slot-scope="scope">
-                                <span>{{scope.row.personBean.idNum | idNumFilter}}</span>
-                            </template>
-                        </el-table-column>
-                        <el-table-column
-                            prop="personBean.phone"
-                            label="电话号码">
-                        </el-table-column>
+
                         <el-table-column
                             label="操作">
                             <template slot-scope="scope">
@@ -66,37 +44,15 @@
                             </template>
                         </el-table-column>
                     </el-table>
-                    <div class="personInfo" v-for="item in personList" v-if="isShowPersonCard && item.status">
-                        <div class="checkBox">
-                            <!--<input type="checkbox" :checked='item.checked' class="checkBtn" @change="checked(item.id)">-->
-                            <el-checkbox v-model="item.checked" @change="checked(item.id)"
-                                         class="checkBtn"></el-checkbox>
-                        </div>
-                        <div class="personType" @click.stop="showPersonDetail(item, '人员信息')">
-                            <img :src="item.picturePath" alt="">
-                            <span class="type">
-                                  {{item.jobName}}
-                                </span>
-                        </div>
-                        <div class="specificInfo">
-                            <p class="name">
-                                姓&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;名：<span>{{item.personBean.name}}</span></p>
-                            <p class="sex">性&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;别：<span>{{item.personBean.gender | sexFilter}}</span>
-                            </p>
-                            <p class="idNum">身份证号：<span>{{item.personBean.idNum | idNumFilter}}</span></p>
-                            <p class="phoneNum">电&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;话：<span>{{item.personBean.phone}}</span>
-                            </p>
-                        </div>
-                    </div>
                 </ScrollContainer>
                 <PersonDetail v-if="visible"
                               :visible="visible"
-                              :Info="personInfo"
+                              :Info="jobinfo"
                               :isDisabled="isDisabled"
                               :title="title"
                               @closeInfoDialog="visible = false"
                               @fixInfo="fixInfo"
-                              @addNewInfo="addNewPerson">
+                              @addNewInfo="addNewJob">
                 </PersonDetail>
             </div>
         </div>
@@ -104,9 +60,10 @@
 </template>
 <script>
     import ScrollContainer from '@/components/ScrollContainer'
-    import Header from './funHeader'
-    import PersonDetail from './detailDialog'
+    import Header from '../propertyChildren/basicDeploy/funHeader'
+    import PersonDetail from '../propertyChildren/basicDeploy/detailDialog'
     import api from '@/api'
+    import {mapMutations} from 'vuex'
 
     export default {
         name: 'person-deploy',
@@ -115,9 +72,9 @@
                 isShowPersonCard: true,
                 checkList: [],
                 filterList: [],
-                personList: [],
+                jobList: [],
                 visible: false,
-                personInfo: {},
+                jobinfo: {},
                 choseInfoId: [],
                 choseList: [],
                 isDisabled: true,
@@ -126,16 +83,17 @@
             }
         },
         methods: {
+            ...mapMutations(['JOB_TYPE','DEL_JOB_TYPR']),
             handleSelectionChange(val) {
                 this.multipleSelection = val;
             },
             showPersonDetail(info, title) {
-                this.personInfo = info
+                this.jobinfo = info
                 this.visible = true
                 this.title = title
             },
             addNewInfo() {
-                this.showPersonDetail({personBean: {}}, '添加人员信息')
+                this.showPersonDetail({personBean: {}}, '添加人员类型信息')
                 this.isDisabled = false
             },
             deletInfo(id) {
@@ -148,14 +106,16 @@
                         cancelButtonText: '取消',
                         type: 'warning'
                     }).then(() => {
-                        api.person.deletePerson(this.choseInfoId).then(res => {
+                        api.person.deleteJob(this.choseInfoId).then(res => {
                             console.log(res, '删除成功')
                             for (let i = 0; i < this.choseInfoId.length; i++) {
-                                this.personList = this.personList.filter((item, index) => {
+                                this.jobList = this.jobList.filter((item, index) => {
                                     if (item.id === this.choseInfoId[i]) {
-                                        this.personList[index].checked = false
+                                        this.jobList[index].checked = false
                                     }
+                                    this.$store.commit('DEL_JOB_TYPR',this.choseInfoId[i])
                                     return item.id !== this.choseInfoId[i]
+
                                 })
                             }
                             this.$message.success('删除成功')
@@ -169,7 +129,7 @@
                     })
 
                 } else {
-                    this.$message.error('请选择要删除的人选信息')
+                    this.$message.error('请选择要删除的人员类型信息')
                 }
             },
             toggleList(type) {
@@ -180,7 +140,7 @@
                 }
             },
             checked(id) {
-                this.personList = this.personList.filter(item => {
+                this.jobList = this.jobList.filter(item => {
                     if (item.id === id) {
                         item.checked = item.checked
                     }
@@ -194,27 +154,27 @@
                     this.choseInfoId.push(id)
                 }
             },
-            choseType(type) {
-                console.log(type)
-                if (type.length === 0) {
-                    this.personList = this.personList.filter((item) => {
-                        item.status = true
-                        return item
-                    })
-                } else {
-                    this.personList = this.personList.filter((item, index) => {
-                        if (type.includes(item.jobName)) {
-                            item.status = true
-                        } else if (!type.includes(item.jobName)) {
-                            item.status = false
-                            console.log(item.type, 'p[p[p[');
-                        }
-                        return item
-                    })
-                }
-            },
+            // choseType(type) {
+            //     console.log(type)
+            //     if (type.length === 0) {
+            //         this.jobList = this.jobList.filter((item) => {
+            //             item.status = true
+            //             return item
+            //         })
+            //     } else {
+            //         this.jobList = this.jobList.filter((item, index) => {
+            //             if (type.includes(item.jobName)) {
+            //                 item.status = true
+            //             } else if (!type.includes(item.jobName)) {
+            //                 item.status = false
+            //                 console.log(item.type, 'p[p[p[');
+            //             }
+            //             return item
+            //         })
+            //     }
+            // },
             selectedAll(state) {
-                this.personList = this.personList.filter((item) => {
+                this.jobList = this.jobList.filter((item) => {
                     if (state === true) {
                         item.checked = true
                         this.choseInfoId.push(item.id)
@@ -229,17 +189,14 @@
                 console.log(this.choseInfoId, 'opopop')
             },
             async fixInfo(info) {
-                let personObj = {
-                    id: info.personBean.id,
-                    name: info.personBean.name,
-                    gender: info.personBean.gender,
-                    idNum: info.personBean.idNum,
-                    phone: info.personBean.phone,
-                    jobId: info.jobId
+                let jobObj = {
+                    id: info.id,
+                    name: info.name,
+                    description: '描述'
                 }
-                console.log(personObj, 'this is trashObj')
+                console.log(jobObj, 'this is trashObj')
                 if (info.imgUrl !== '') {
-                    await api.person.updataAva(info.imgUrl).then(res => {
+                    await api.person.updataJob(info.imgUrl).then(res => {
                         console.log(res, '上传成功')
                         personObj.pictureId = res.id
                     }).catch(err => {
@@ -248,26 +205,23 @@
                         return
                     })
                 } else {
-                    personObj.pictureId = info.pictureId
+                    jobObj.pictureId = info.pictureId
                 }
-                await api.person.updatePerson(JSON.stringify(personObj)).then(res => {
-                    this.$message.success('添加成功')
+                await api.person.updataJob(JSON.stringify(jobObj)).then(res => {
+                    this.$message.success('更新成功')
                     console.log('增加成功')
                     this.choseInfoId = []
-                    this.getAllPerson()
+                    this.getAllJob()
                 }).catch(err => {
                     console.log(err, '更新失败')
                     this.$message.error('更新失败，请稍后重试')
                 })
             },
-            async addNewPerson(info) {
+            async addNewJob(info) {
                 console.log(info, 'opopopopopo')
                 let personObj = {
-                    name: info.personBean.name,
-                    gender: info.personBean.gender,
-                    idNum: info.personBean.idNum,
-                    phone: info.personBean.phone,
-                    jobId: info.jobId
+                    name: info.name,
+                    description: '描述'
                 }
                 console.log(personObj, 'this is trashObj')
                 if (info.imgUrl !== '') {
@@ -280,10 +234,10 @@
                         return
                     })
                 }
-                await api.person.createPerson(JSON.stringify(personObj)).then(res => {
+                await api.person.createJob(JSON.stringify(personObj)).then(res => {
                     this.$message.success('添加成功')
                     console.log('增加成功')
-                    this.getAllPerson()
+                    this.getAllJob()
                 }).catch(err => {
                     console.log(err, '添加失败')
                     this.$message.error('添加失败，请稍后重试')
@@ -297,29 +251,30 @@
                     this.$message.warning('至多选择一个数据修改')
                 }
                 if (this.choseInfoId.length > 0) {
-                    this.personList.map((item) => {
+                    this.jobList.map((item) => {
                         if (item.id === this.choseInfoId[0]) {
-                            this.personInfo = item
+                            this.jobinfo = item
                         }
                     })
-                    this.showPersonDetail(this.personInfo, '修改人员信息')
+                    this.showPersonDetail(this.jobinfo, '修改人员类型信息')
                     this.isDisabled = false
                     this.choseInfoId = []
                 } else {
-                    this.$message.error('请选择要修改的人员')
+                    this.$message.error('请选择要修改的人员类型')
                 }
             },
-            async getAllPerson() {
+            async getAllJob() {
                 this.isShowLoading = true
-                await api.person.getAllPerson().then(res => {
+                await api.person.getJob().then(res => {
                     console.log(res, '这是请求回来的')
                     this.isShowLoading = false
-                    this.personList = res
-                    for (let i = 0; i < this.personList.length; i++) {
-                        this.personList[i].checked = false
-                        this.personList[i].status = true
-                        this.personList[i].id = this.personList[i].personBean.id
+                    this.jobList = res
+                    for (let i = 0; i < this.jobList.length; i++) {
+                        this.jobList[i].checked = false
+                        this.jobList[i].status = true
+                        this.jobList[i].jobId = this.$route.params.id
                     }
+                    this.$store.commit('JOB_TYPE', res)
                 }).catch(err => {
                     console.log(err)
                     this.isShowLoading = false
@@ -335,24 +290,25 @@
                 }
             },
             idNumFilter(id) {
-             let leftId =  id.substring(0, 6)
-             let rightId = id.substring(14)
-             return `${leftId}********${rightId}`
+                let leftId =  id.substring(0, 6)
+                let rightId = id.substring(14)
+                return `${leftId}********${rightId}`
             }
         },
         created() {
-            this.getAllPerson()
+            this.getAllJob()
         },
         components: {
             ScrollContainer,
             Header,
             PersonDetail
-        }
+        },
+
     }
 </script>
 
 <style lang="scss" scoped type="text/scss">
-    .personDeploy {
+    .personType {
         width: 100%;
         height: 100%;
         display: flex;

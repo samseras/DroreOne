@@ -54,7 +54,7 @@ import BoatDeploy from '@/components/propertyChildren/basicDeploy/boatCarDeploy'
 import IndicatorDeploy from '@/components/propertyChildren/basicDeploy/indicatorDeploy'       //指示牌
 import OtherDeploy from '@/components/propertyChildren/basicDeploy/otherDeploy'       //其他
 import ParkDeploy from '@/components/propertyChildren/basicDeploy/parkDeploy'       //停车场
-import PersonDeploy from '@/components/propertyChildren/basicDeploy/personDeploy'       //人员
+import PersonDeploy from '@/components/personChildren/personDeploy'       //人员
 import RoatDeploy from '@/components/propertyChildren/basicDeploy/roatDeploy'       //路网
 import ScenicDeploy from '@/components/propertyChildren/basicDeploy/scenicDeploy'       //景点
 import ShopDeploy from '@/components/propertyChildren/basicDeploy/shopDeploy'       //商圈
@@ -81,6 +81,10 @@ import conductorDmis from '@/components/eye/deployChildren/dispatchDeploy/conduc
 import tellersDmis from '@/components/eye/deployChildren/dispatchDeploy/tellersDmis' //检票排版
 
 import dispatchRecord from '@/components/eye/deployChildren/recordDeploy/dispatchRecord' //调度统计
+
+//人员
+import PersonPlat from '@/components/person'
+import PersonType from '@/components/personChildren/personType'
 
 Vue.use(Router)
 const routes = [
@@ -194,7 +198,7 @@ const routes = [
                     {path: '/basic-property/indicator-deploy', name: 'IndicatorDeploy', component: IndicatorDeploy},
                     {path: '/basic-property/other-deploy', name: 'OtherDeploy', component: OtherDeploy},
                     {path: '/basic-property/park-deploy', name: 'ParkDeploy', component: ParkDeploy},
-                    {path: '/basic-property/person-deploy', name: 'PersonDeploy', component: PersonDeploy},
+                    // {path: '/basic-property/person-deploy', name: 'PersonDeploy', component: PersonDeploy},
                     {path: '/basic-property/roat-deploy', name: 'RoatDeploy', component: RoatDeploy},
                     {path: '/basic-property/scenic-deploy', name: 'ScenicDeploy', component: ScenicDeploy},
                     {path: '/basic-property/shop-deploy', name: 'ShopDeploy', component: ShopDeploy},
@@ -222,6 +226,17 @@ const routes = [
                     {path: '/hard-property/monitors-Hware', name: 'MonitorsHware', component: MonitorsHware},
                 ]
             }
+        ]
+    },
+  //  人员
+    {
+        path: '/person',
+        name: PersonPlat,
+        component: PersonPlat,
+        redirect: '/person/personType',
+        children: [
+            {path: '/person/personType', name: "PersonType", component: PersonType},
+            { path: '/person/:id',name: 'PersonDeploy', component:PersonDeploy }
         ]
     }
   ]

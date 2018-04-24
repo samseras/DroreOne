@@ -46,10 +46,10 @@
                         index: '2',
                         title: '设施信息',
                         subs: [
-                            {
-                                index: '/basic-property/person-deploy',
-                                title: '人员信息'
-                            },
+                            // {
+                            //     index: '/basic-property/person-deploy',
+                            //     title: '人员信息'
+                            // },
                             {
                                 index: '/basic-property/boat-deploy',
                                 title: '车船'
