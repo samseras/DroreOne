@@ -320,7 +320,6 @@
                         this.personList[i].checked = false
                         this.personList[i].status = true
                         this.personList[i].jobId = this.$route.params.id
-
                     }
                 }).catch(err => {
                     console.log(err)
@@ -343,10 +342,12 @@
             }
         },
         created() {
+            this.personList = []
             this.getAllPerson()
         },
         watch: {
             '$route' () {
+                this.personList = []
                 this.getAllPerson()
             }
         },

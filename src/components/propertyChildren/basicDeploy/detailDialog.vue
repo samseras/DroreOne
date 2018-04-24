@@ -292,23 +292,23 @@
                 <div class="personCardContent boatCardContent" v-if="route.includes('area')">
                     <p class="sex">片区名称：<input type="text" v-model="area.name" required="required"></p>
                     <p class="phoneNum" v-if="false">所在景区：<input type="text"v-model="area.placeScenic"></p>
-                    <p class="phoneNum">位置范围：<input type="text"v-model="area.location"><i class="el-icon-location-outline" @click="showMapDialog"></i></p>
+                    <p class="phoneNum">位置范围：<span>{{area.location}}</span><i class="el-icon-location-outline" @click="showMapDialog"></i></p>
                     <p class="type">
                         描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：<textarea name="" v-model="area.description" cols="30"
                                                                                rows="5" placeholder="请输入描述信息"></textarea>
                     </p>
-                    <div class="img">
-                        <img :src="area.picturePath" alt="" v-if="isDisabled">
-                        <label for="avatar" v-if="!isDisabled">
-                            <img :src="files.length ? files[0].url : 'https://www.gravatar.com/avatar/default?s=200&r=pg&d=mm'"  class="rounded-circle" />
-                        </label>
-                    </div>
+                    <!--<div class="img">-->
+                        <!--<img :src="area.picturePath" alt="" v-if="isDisabled">-->
+                        <!--<label for="avatar" v-if="!isDisabled">-->
+                            <!--<img :src="files.length ? files[0].url : 'https://www.gravatar.com/avatar/default?s=200&r=pg&d=mm'"  class="rounded-circle" />-->
+                        <!--</label>-->
+                    <!--</div>-->
                 </div>
                 <!--路网-->
                 <div class="personCardContent boatCardContent" v-if="route.includes('roat')">
                     <p class="sex">路线名称：<input type="text"v-model="roat.name"></p>
                     <p class="phoneNum">所在景区：<input type="text"v-model="roat.placeScenic"></p>
-                    <p class="phoneNum">位置范围：<input type="text"v-model="roat.location"><i class="el-icon-location-outline" @click="showMapDialog"></i></p>
+                    <p class="phoneNum">位置范围：<span>{{roat.location}}</span><i class="el-icon-location-outline" @click="showMapDialog"></i></p>
                     <p class="type">
                         描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：<textarea name=""v-model="roat.description" cols="30"
                                                                                rows="5" placeholder="请输入描述信息"></textarea>
@@ -495,14 +495,17 @@
         },
         methods: {
             saveLocation () {
-                console.log(this.getLocation, 'hhhhkhkjhjh')
                 let locationString
                 let regionLocationStr
+                let roatLocationStr
                 if (this.getLocation.length > 0) {
                     locationString = `${this.getLocation[0]},${this.getLocation[1]}`
                 }
                 if (this.getRegionLocation.length > 0) {
                     regionLocationStr = this.getRegionLocation
+                }
+                if (this.getRoatLocation.length > 0) {
+                    roatLocationStr = this.getRoatLocation
                 }
                 if(this.route.includes('trash')) {
                     this.trash.location = locationString
@@ -519,7 +522,7 @@
                 } else if (this.route.includes('area')) {
                     this.area.location = regionLocationStr
                 } else if (this.route.includes('roat')) {
-                    // this.roat = this.Info
+                    this.roat.location = roatLocationStr
                 }
                 this.mapVisible = false
             },
@@ -784,8 +787,6 @@
             }
         },
         mounted () {
-            console.log(document.getElementsByClassName('card'), 'p[p[p[p[p[')
-            // console.log(this.$refs.test)
         },
         computed: {
             ...mapGetters([
@@ -1221,7 +1222,7 @@
                         overflow: hidden;
                         text-overflow: ellipsis;
                         white-space: nowrap;
-                        line-height: rem(10);
+                        line-height: rem(15);
                     }
                     select{
                         border: none;
