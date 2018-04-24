@@ -39,7 +39,7 @@
                     {
                         icon: 'el-icon-setting',
                         index: '/hard-property/hardwaretype',
-                        title: '设备类型',
+                        title: '设备型号信息',
                     //     subs: [
                     //         // {
                     //         //     index: '/property/person-deploy',

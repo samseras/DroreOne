@@ -1,7 +1,7 @@
 <template>
     <div class="hardwareType">
         <div class="title">
-            设备类型
+            设备型号信息
         </div>
         <div class="cameraContent">
             <div class="conTitle">
@@ -69,24 +69,7 @@
                         </el-table-column>
                     </el-table>
 
-                    <!--<div class="personInfo" v-for="item in broadList" v-if="isShowBroadCard && item.status">-->
-                        <!--<div class="checkBox">-->
-                            <!--&lt;!&ndash;<input type="checkbox" :checked="item.checked" class="checkBtn" @change="checked(item.id)">&ndash;&gt;-->
-                            <!--<el-checkbox v-model="item.checked" @change="checked(item.id)" class="checkBtn"></el-checkbox>-->
-                        <!--</div>-->
-                        <!--<div class="personType" @click.stop="showBroadDetail(item,'设备类型')">-->
-                            <!--<img src="../../../../static/img/cameras.png" alt="">-->
-                            <!--<span class="name">-->
-                                  <!--{{item.name}}-->
-                                <!--</span>-->
-                        <!--</div>-->
-                        <!--<div class="specificInfo" >-->
-                            <!--<p class="area">所属区域：<span>{{item.regionName}}</span></p>-->
-                            <!--<p class="type">广播类型：<span>{{item.positionType|changeFilter}}</span></p>-->
-                            <!--<p class="describe text">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：<span>{{item.description}}</span></p>-->
 
-                        <!--</div>-->
-                    <!--</div>-->
                 </ScrollContainer>
                 <HardWare v-if="visible"
                           :visible="visible"
@@ -132,7 +115,7 @@
                 this.multipleSelection = val;
             },
             addNewInfo(){
-                this.showBroadDetail({},'添加广播信息')
+                this.showBroadDetail({},'添加设备型号信息')
                 this.isDisabled=false
             },
             showBroadDetail(info,title){
