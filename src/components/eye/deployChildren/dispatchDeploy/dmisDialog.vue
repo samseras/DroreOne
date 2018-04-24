@@ -10,7 +10,7 @@
             <div class="card">
                 <!--巡更路线-->
                 <div class="personCardContent" v-if="route.includes('security')">
-                    <p class="sex">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 称：<input type="text"v-model="person.sex"class="inputText"></p>
+                    <p class="sex">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 称：<input type="text"v-model="security.name"class="inputText"></p>
                     <p class="time">时&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 间：
                         <el-checkbox-group v-model="filterList" @change="weekDay">
                             <el-checkbox v-for="item in week" :label="item.type"></el-checkbox>
@@ -42,7 +42,7 @@
                         </el-time-picker>
                     </p>
                     <p class="name">人&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 员：
-                        <el-select v-model="person.people" size="mini" class="" multiple placeholder="请选择">
+                        <el-select v-model="security.people" size="mini" class="" multiple placeholder="请选择">
                             <el-option
                                 v-for="item in options"
                                 :key="item.type"
@@ -55,15 +55,15 @@
                         <el-radio v-model="radio" label="1">是</el-radio>
                         <el-radio v-model="radio" label="0">否</el-radio>
                     </p>
-                    <p class="phoneNum">线路绘制：<input type="text"v-model="hardware.location" class="location" @click="showMapDialog"><img src="" alt="" @click="showMapDialog"></p>
+                    <p class="phoneNum">线路绘制：<input type="text"v-model="security.location" class="location" @click="showMapDialog"><img src="" alt="" @click="showMapDialog"></p>
                     <p class="type">
-                        描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：<textarea name="" v-model="person.describe" cols="30"
+                        描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：<textarea name="" v-model="security.describe" cols="30"
                                                                                rows="5" placeholder="请输入描述信息" style="background: #fafafa"></textarea>
                     </p>
                 </div>
                 <!--广播-->
                 <div class="personCardContent" v-if="route.includes('broadcast')">
-                    <p class="sex">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 称：<input type="text"v-model="hardware.sex" class="inputText"></p>
+                    <p class="sex">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 称：<input type="text"v-model="broadcast.name" class="inputText"></p>
                     <p class="time">时&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 间：
                         <el-checkbox-group v-model="filterList" @change="weekDay">
                             <el-checkbox v-for="item in week" :label="item.type"></el-checkbox>
@@ -90,9 +90,9 @@
                         </el-time-picker>
                     </p>
                     <p class="name">关联广播：
-                        <el-select v-model="hardware.associatedradio" size="mini" multiple placeholder="请选择">
+                        <el-select v-model="broadcast.associatedradio" size="mini" multiple placeholder="请选择">
                             <el-option
-                                v-for="item in broadcast"
+                                v-for="item in options"
                                 :key="item.type"
                                 :label="item.type"
                                 :value="item.type">
@@ -103,30 +103,18 @@
                         <el-radio v-model="radio" label="1">是</el-radio>
                         <el-radio v-model="radio" label="0">否</el-radio>
                     </p>
-                    <!--<p class="upload" v-if="upload">定义曲风：-->
-                        <!--<el-upload-->
-                            <!--class="upload-demo"-->
-                            <!--ref="upload"-->
-                            <!--:limit="2"-->
-                            <!--:action="importFileUrl"-->
-                            <!--:file-list="fileList"-->
-                            <!--:auto-upload="false">-->
-                            <!--<el-button slot="trigger" size="small" type="primary" @click="showBroadcastDialog">曲目编辑</el-button>-->
-                        <!--</el-upload>-->
-                    <!--</p>-->
                     <p class="uploadText">定义内容：
-                        <input type="text"v-model="hardware.uploadText" class="inputText">
+                        <input type="text"v-model="broadcast.musicIds" class="inputText">
                         <el-button slot="trigger" size="small" type="primary" @click="showBroadcastDialog" :disabled='isDisabled'>曲目编辑</el-button>
-
                     </p>
                     <p class="type">
-                        描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：<textarea name="" v-model="hardware.describe" cols="30"
+                        描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：<textarea name="" v-model="broadcast.describe" cols="30"
                                                                                rows="5" placeholder="请输入描述信息"></textarea>
                     </p>
                 </div>
                 <!--路灯-->
                 <div class="personCardContent" v-if="route.includes('lamppost')">
-                    <p class="sex">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 称：<input type="text"v-model="hardware.sex" class="inputText"></p>
+                    <p class="sex">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 称：<input type="text"v-model="lamppost.name" class="inputText"></p>
                     <p class="time">时&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 间：
                         <el-checkbox-group v-model="filterList" @change="weekDay">
                             <el-checkbox v-for="item in week" :label="item.type"></el-checkbox>
@@ -153,9 +141,9 @@
                         </el-time-picker>
                     </p>
                     <p class="name">关联路灯：
-                        <el-select v-model="hardware.associatedradio" size="mini" multiple placeholder="请选择">
+                        <el-select v-model="lamppost.associatedradio" size="mini" multiple placeholder="请选择">
                             <el-option
-                                v-for="item in broadcast"
+                                v-for="item in options"
                                 :key="item.type"
                                 :label="item.type"
                                 :value="item.type">
@@ -166,28 +154,14 @@
                         <el-radio v-model="radio" label="1">是</el-radio>
                         <el-radio v-model="radio" label="0">否</el-radio>
                     </p>
-                    <!--<p class="upload" v-if="upload">定义曲风：-->
-                        <!--<el-upload-->
-                            <!--class="upload-demo"-->
-                            <!--ref="upload"-->
-                            <!--:limit="2"-->
-                            <!--:action="importFileUrl"-->
-                            <!--:file-list="fileList"-->
-                            <!--:auto-upload="false">-->
-                            <!--<el-button slot="trigger" size="small" type="primary">曲目编辑</el-button>-->
-                        <!--</el-upload>-->
-                    <!--</p>-->
-                    <!--<p class="uploadText" v-if="uploadText">定义内容：-->
-                        <!--<input type="text"v-model="hardware.uploadText" class="inputText">-->
-                    <!--</p>-->
                     <p class="type">
-                        描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：<textarea name="" v-model="hardware.describe" cols="30"
+                        描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：<textarea name="" v-model="lamppost.describe" cols="30"
                                                                                rows="5" placeholder="请输入描述信息"></textarea>
                     </p>
                 </div>
                 <!--保洁-->
                 <div class="personCardContent" v-if="route.includes('purifier')">
-                    <p class="sex">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 称：<input type="text"v-model="person.sex"class="inputText"></p>
+                    <p class="sex">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 称：<input type="text"v-model="purifier.name"class="inputText"></p>
                     <p class="time">时&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 间：
                         <el-checkbox-group v-model="filterList" @change="weekDay">
                             <el-checkbox v-for="item in week" :label="item.type"></el-checkbox>
@@ -219,7 +193,7 @@
                         </el-time-picker>
                     </p>
                     <p class="name">人&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 员：
-                        <el-select v-model="person.people" size="mini" class="" multiple placeholder="请选择">
+                        <el-select v-model="purifier.people" size="mini" class="" multiple placeholder="请选择">
                             <el-option
                                 v-for="item in options"
                                 :key="item.type"
@@ -233,7 +207,7 @@
                         <el-radio v-model="radio" label="0">否</el-radio>
                     </p>
                     <p class="name">片&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 区：
-                        <el-select v-model="person.people" size="mini" class="" multiple placeholder="请选择">
+                        <el-select v-model="purifier.people" size="mini" class="" multiple placeholder="请选择">
                             <el-option
                                 v-for="item in options"
                                 :key="item.type"
@@ -243,14 +217,14 @@
                         </el-select>
                     </p>
                     <p class="type">
-                        描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：<textarea name="" v-model="person.describe" cols="30"
+                        描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：<textarea name="" v-model="purifier.describe" cols="30"
                                                                                rows="5" placeholder="请输入描述信息" style="background: #fafafa"></textarea>
                     </p>
                 </div>
                 <!--LED-->
                 <div class="personCardContent" v-if="route.includes('screen')">
 
-                    <p class="sex">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 称：<input type="text"v-model="hardware.sex" class="inputText"></p>
+                    <p class="sex">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 称：<input type="text"v-model="screen.name" class="inputText"></p>
                     <p class="time">时&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 间：
                         <el-checkbox-group v-model="filterList" @change="weekDay">
                             <el-checkbox v-for="item in week" :label="item.type"></el-checkbox>
@@ -277,9 +251,9 @@
                         </el-time-picker>
                     </p>
                     <p class="name">关联广播：
-                        <el-select v-model="hardware.associatedradio" size="mini" multiple placeholder="请选择">
+                        <el-select v-model="screen.associatedradio" size="mini" multiple placeholder="请选择">
                             <el-option
-                                v-for="item in broadcast"
+                                v-for="item in options"
                                 :key="item.type"
                                 :label="item.type"
                                 :value="item.type">
@@ -290,35 +264,23 @@
                         <el-radio v-model="radio" label="1">是</el-radio>
                         <el-radio v-model="radio" label="0">否</el-radio>
                     </p>
-                    <!--<p class="upload" v-if="upload">定义曲风：-->
-                        <!--<el-upload-->
-                            <!--class="upload-demo"-->
-                            <!--ref="upload"-->
-                            <!--:limit="2"-->
-                            <!--:action="importFileUrl"-->
-                            <!--:file-list="fileList"-->
-                            <!--:auto-upload="false">-->
-                            <!--<el-button slot="trigger" size="small" type="primary">曲目编辑</el-button>-->
-                        <!--</el-upload>-->
-                    <!--</p>-->
                     <p class="uploadText">定义内容：
-                        <input type="text"v-model="hardware.uploadText" class="inputText">
+                        <input type="text"v-model="screen.uploadText" class="inputText">
                         <el-button slot="trigger" size="small" type="primary" @click = "showScreenDialog" :disabled='isDisabled'>定义内容</el-button>
                     </p>
                     <p class="type">
-                        描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：<textarea name="" v-model="hardware.describe" cols="30"
+                        描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：<textarea name="" v-model="screen.describe" cols="30"
                                                                                rows="5" placeholder="请输入描述信息"></textarea>
                     </p>
                 </div>
             </div>
-
             <div class=""slot="footer" class="dialog-footer cardFooter">
                 <el-button size="mini" class="hold" @click="addNewInfo" :disabled='isDisabled'>保存</el-button>
                 <el-button size="mini" @click = 'closeDialog' :disabled='isDisabled'>取消</el-button>
             </div>
         </el-dialog>
         <MapDialog v-if="mapVisible" :visible="mapVisible" class="map" @closeMapDialog = 'closeMapDialog'></MapDialog>
-        <broadcastDialog v-if="broadcastVisible" :visible="broadcastVisible" class="broadcastContent" @closeBroadcastDialog = 'closeBroadcastDialog'></broadcastDialog>
+        <broadcastDialog v-if="broadcastVisible" :visible="broadcastVisible" class="broadcastContent" @closeBroadcastDialog = 'closeBroadcastDialog' @saveMusicList = "musicList"></broadcastDialog>
         <ScreenDialog v-if="screenVisible" :visible="screenVisible" class="screenContent" @closeScreenDialog = 'closeScreenDialog'></ScreenDialog>
     </div>
 </template>
@@ -343,61 +305,27 @@
                 mapVisible: false,
                 broadcastVisible:false,
                 screenVisible:false,
-                person: {
-                    name:'',
-                    sex:'',
-                    idNum:'',
-                    type: '',
-                    phone:'',
-                    people:'',
-                },
-                hardware: {
-                    name:'',
-                    sex:'',
-                    idNum:'',
-                    type: '广播',
-                    // associatedradio:[],
-                    // associatedscreen:[],
-                    // associatedstreet:[],
-                    phone:'',
-                    people:'',
-                },
+                broadcast: {},
+                lamppost:{},
+                security:{},
+                purifier:{},
+                screen:{},
                 options: [
                     { type: '保洁1'},
                     { type: '保洁2'},
                     { type: '保洁3'},
-                    { type: '保洁4'}
-                ],
-                associatedRadio:true,
-                broadcast: [
+                    { type: '保洁4'},
                     {type: 'A-GB001'},
                     {type: 'A-GB002'},
                     {type: 'A-GB003'},
-                    {type: 'A-GB004'},
-                    {type: 'A-GB005'},
-                    {type: 'A-GB006'}
+                    {type: 'A-GB004'}
                 ],
+                associatedRadio:true,
                 associatedScreen:false,
-                screen: [
-                    {type: 'A-DP001'},
-                    {type: 'A-DP002'},
-                    {type: 'A-DP003'},
-                    {type: 'A-DP004'},
-                    {type: 'A-DP005'},
-                    {type: 'A-DP006'}
-                ],
                 associatedStreet:false,
-                lamppost: [
-                    {type: 'A-LD001'},
-                    {type: 'A-LD002'},
-                    {type: 'A-LD003'},
-                    {type: 'A-LD004'},
-                    {type: 'A-LD005'},
-                    {type: 'A-LD006'}
-                ],
                 route: '',
                 file: {},
-                definedDay: '',
+                definedDay: [new Date(2016, 9, 10), new Date(2016, 9, 12)],
                 weekcustom:false,
                 weekTime:false,
                 filterList:[],
@@ -418,7 +346,7 @@
                     {type: '晚班'}
                 ],
                 daycustom:false,
-                definedTime:'',
+                definedTime:[new Date(2016, 9, 10, 8, 40), new Date(2016, 9, 10, 9, 40)],
                 upload:true,
                 importFileUrl: 'http:dtc.com/cpy/add',
                 fileList:[],
@@ -438,33 +366,37 @@
             closeDialog () {
                 this.$emit('closeInfoDialog')
             },
+            timeD(time1,time2){
+                var str = "";
+                str += moment(time1).format('YYYY.MM.DD')+"~"+moment(time2).format('YYYY.MM.DD');
+                return str;
+            },
+            timeD1(time1,time2){
+                var str = "";
+                let a1 = time1.toISOString().slice(0,10).split("-");
+                let a2 = time2.toISOString().slice(0,10).split("-");
+                str = a1.join(".")+"~"+a2.join(".");
+                return str;
+            },
             addNewInfo () {
                 let newInfo = {}
-                if (this.route.includes('person')) {
-                    newInfo = this.person
-                } else if(this.route.includes('boat')) {
-                    newInfo = this.boatCar
-                } else if(this.route.includes('trash')) {
-                    newInfo = this.trash
-                } else if(this.route.includes('indicator')) {
-                    newInfo = this.indicator
-                } else if(this.route.includes('scenic')) {
-                    newInfo = this.scenic
-                } else if(this.route.includes('shop')) {
-                    newInfo = this.shop
-                } else if(this.route.includes('park')) {
-                    newInfo = this.park
-                } else if(this.route.includes('toilet')) {
-                    newInfo = this.toilet
-                } else if(this.route.includes('area')) {
-                    newInfo = this.area
-                } else if (this.route.includes('roat')) {
-                    newInfo = this.roat
+                if (this.route.includes('security')) {
+                    newInfo = this.security
+                } else if(this.route.includes('broadcast')) {
+                    newInfo = this.broadcast
+                } else if(this.route.includes('lamppost')) {
+                    newInfo = this.lamppost
+                } else if(this.route.includes('purifier')) {
+                    newInfo = this.purifier
+                } else if(this.route.includes('screen')) {
+                    newInfo = this.screen
                 }
                 newInfo.status = true
                 newInfo.checked = false
                 if (this.Info.id) {
                     newInfo.id = this.Info.id
+                    newInfo.time = this.timeD1(newInfo.time[0],newInfo.time[1])
+                    console.log(newInfo)
                     this.$emit('fixInfo', newInfo)
                 } else {
                     this.$emit('addNewInfo', newInfo)
@@ -477,9 +409,11 @@
                 }else {
                     this.weekTime  = true;
                     this.filterList = [];
+                    console.log(this.definedTime)
                 }
             },
             weekDay(){
+                console.log(this.filterList)
                 this.weekTime  = false;
                 this.weekcustom =false;
             },
@@ -589,29 +523,70 @@
             }
         },
         created () {
-            console.log(this.isDisabled)
             this.route = this.$route.path
             console.log(this.Info,'  opopop')
-            if (this.route.includes('person')) {
-                this.person = this.Info
-            } else if(this.route.includes('boat')) {
-                this.boatCar = this.Info
-            } else if(this.route.includes('trash')) {
-                this.trash = this.Info
-            } else if(this.route.includes('indicator')) {
-                this.indicator = this.Info
-            } else if(this.route.includes('scenic')) {
-                this.scenic = this.Info
-            } else if(this.route.includes('shop')) {
-                this.shop = this.Info
-            } else if(this.route.includes('park')) {
-                this.park = this.Info
-            } else if(this.route.includes('toilet')) {
-                this.toilet = this.Info
-            } else if (this.route.includes('area')) {
-                this.area = this.Info
-            } else if (this.route.includes('roat')) {
-                this.roat = this.Info
+            if (this.route.includes('security')) {
+                this.security = this.Info;
+                if(this.security.isCustomizedDays){
+                    this.definedDay = this.security.time;
+                    this.weekTime = true;
+                    this.weekcustom = true;
+                }else {
+                    this.filterList = this.security.time;
+                }
+                if(this.security.isCustomizedShift){
+                    this.definedTime = this.security.shift;
+                    this.dayTime = true;
+                    this.daycustom = true;
+                }else{
+                    this.classesList = this.security.shift;
+                }
+            } else if(this.route.includes('broadcast')) {
+                this.broadcast = this.Info;
+                this.definedTime = this.broadcast.executetime;
+                if(this.broadcast.isCustomizedDays){
+                    this.definedDay = this.broadcast.time;
+                    this.weekTime = true;
+                    this.weekcustom = true;
+                }else {
+                    this.filterList = this.broadcast.time;
+                }
+            } else if(this.route.includes('lamppost')) {
+                this.lamppost = this.Info;
+                this.definedTime = this.lamppost.executetime;
+                if(this.lamppost.isCustomizedDays){
+                    this.definedDay = this.lamppost.time;
+                    this.weekTime = true;
+                    this.weekcustom = true;
+                }else {
+                    this.filterList = this.lamppost.time;
+                }
+            } else if(this.route.includes('purifier')) {
+                this.purifier = this.Info;
+                if(this.purifier.isCustomizedDays){
+                    this.definedDay = this.purifier.time;
+                    this.weekTime = true;
+                    this.weekcustom = true;
+                }else {
+                    this.filterList = this.purifier.time;
+                }
+                if(this.purifier.isCustomizedShift){
+                    this.definedTime = this.purifier.shift;
+                    this.dayTime = true;
+                    this.daycustom = true;
+                }else{
+                    this.classesList = this.purifier.shift;
+                }
+            } else if(this.route.includes('screen')) {
+                this.screen = this.Info;
+                this.definedTime = this.screen.executetime;
+                if(this.screen.isCustomizedDays){
+                    this.definedDay = this.screen.time;
+                    this.weekTime = true;
+                    this.weekcustom = true;
+                }else {
+                    this.filterList = this.screen.time;
+                }
             }
         },
         components: {
