@@ -22,6 +22,8 @@ import boat from './boatCar'
 import lamppost from './lamppost'
 import schedulebroadcast from './schedulebroadcast'
 import scheduleled from './scheduleled'
+import roat from './roat'
+
 
 export default {
     analyze,
@@ -45,4 +47,5 @@ export default {
     lamppost,
     schedulebroadcast,
     scheduleled,
+    roat
 }

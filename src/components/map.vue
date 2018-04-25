@@ -47,16 +47,16 @@
                 'MAP_ROAT_LOCATION'
             ]),
             droreMapinit () {//循环输出点
-                for (var i = 0; i < 15; i++) {
-                    var icon = new droreMap.icon.Marker({
+                for (var i = 0; i < 5; i++) {
+                    var icon1 = new droreMap.icon.Marker({
                         coordinate: droreMap.transFromWgsToLayer([120.06672090248588 + i / 1000, 30.281761130844714 + i / 1000]),
                         name: "asdas" + i,
                         subtype: "098lk-",
                         id: "12214_" + i,
                         url: "/static/img/location.png"
                     });
-                    droreMap.icon.addChild(icon);
-                    icon.onclick(function (e) {
+                    droreMap.icon.addChild(icon1);
+                    icon1.onclick(function (e) {
                         alert(e.coordinate);
                     });
                 }

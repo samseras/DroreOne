@@ -13,7 +13,7 @@
                         @fixedInfo = 'fixedInfo'>
                 </Header>
             </div>
-            <div class="personList">
+            <div class="personList" v-loading="isShowLoading">
                 <ScrollContainer>
                     <el-table
                         v-if="!isShowRoatCard"
@@ -25,7 +25,6 @@
                         <el-table-column
                             width="55">
                             <template slot-scope="scope">
-                                <!--<input type="checkbox" :checked='scope.row.checked' class="checkBoxBtn" @change="checked(scope.row.id)">-->
                                 <el-checkbox v-model="scope.row.checked" @change="checked(scope.row.id)" class="checkBoxBtn"></el-checkbox>
                             </template>
                         </el-table-column>
@@ -35,25 +34,21 @@
                             width="120">
                         </el-table-column>
                         <el-table-column
-                            prop="placeScenic"
-                            label="所在景区">
-                        </el-table-column>
-                        <el-table-column
-                            prop="location"
-                            label="位置范围">
-                        </el-table-column>
-                        <el-table-column
-                            prop="describe"
+                            prop="description"
                             label="描述">
                         </el-table-column>
                         <el-table-column
                             label="操作">
                             <template slot-scope="scope">
-                                <span @click="showPersonDetail(scope.row,'路网信息')">编辑</span>
+                                <span @click="showPersonDetail(scope.row,'路网信息')">查看</span>
+                                <span class="line">|</span>
+                                <span @click="fixedInfo(scope.row.id )">编辑</span>
+                                <span class="line">|</span>
+                                <span @click="deletInfo(scope.row.id)">删除</span>
                             </template>
                         </el-table-column>
                     </el-table>
-                    <div class="personInfo" v-for="item in choseList" v-if="isShowRoatCard && item.status">
+                    <div class="personInfo" v-for="item in roatList" v-if="isShowRoatCard && item.status">
                         <div class="checkBox">
                             <el-checkbox v-model="item.checked" @change="checked(item.id)" class="checkBtn"></el-checkbox>
                         </div>
@@ -64,8 +59,7 @@
                                 </span>
                         </div>
                         <div class="specificInfo">
-                            <p class="name">所在景区：<span>{{item.placeScenic}}</span></p>
-                            <p class="sex">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：<span>{{item.describe}}</span></p>
+                            <p class="sex">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：<span>{{item.description}}</span></p>
                         </div>
                     </div>
                 </ScrollContainer>
@@ -76,7 +70,7 @@
                               :title="title"
                               @closeInfoDialog ="visible = false"
                               @fixInfo = "fixInfo"
-                              @addNewInfo="addNewPerson">
+                              @addNewInfo="addNewRoat">
                 </PersonDetail>
             </div>
         </div>
@@ -87,6 +81,7 @@
     import ScrollContainer from '@/components/ScrollContainer'
     import Header from './funHeader'
     import PersonDetail from './detailDialog'
+    import api from '@/api'
     export default {
         name: "roat-deploy",
         data(){
@@ -94,19 +89,14 @@
                 isShowRoatCard: true,
                 checkList: [],
                 filterList: [],
-                roatList: [
-                    {id:1,name: '人行路线',placeScenic: '百里杜鹃',location: '234567890',describe: '这是百里杜鹃的描述'},
-                    {id:2,name: '车行路线',placeScenic: '百里杜鹃',location: '234567890',describe: '这是百里杜鹃的描述'},
-                    {id:3,name: '人行路线',placeScenic: '百里杜鹃',location: '234567890',describe: '这是百里杜鹃的描述'},
-                    {id:8,name: '车行路线',placeScenic: '百里杜鹃',location: '234567890',describe: '这是百里杜鹃的描述'},
-                    {id:9,name: '车行路线',placeScenic: '百里杜鹃',location: '234567890',describe: '这是百里杜鹃的描述'}
-                ],
+                roatList: [],
                 visible: false,
                 roatInfo: {},
                 choseInfoId: [],
                 choseList: [],
                 isDisabled: true,
-                title: ''
+                title: '',
+                isShowLoading: false
             }
         },
         methods: {
@@ -122,16 +112,40 @@
                 this.showPersonDetail({}, '添加路网信息')
                 this.isDisabled = false
             },
-            deletInfo () {
-                for (let i = 0; i < this.choseInfoId.length; i++) {
-                    this.roatList = this.roatList.filter((item, index) => {
-                        if (item.id === this.choseInfoId[i]){
-                            this.choseList[index].checked = false
-                        }
-                        return item.id !== this.choseInfoId[i]
-                    })
+            deletInfo (id) {
+                if (id) {
+                    this.choseInfoId.push(id)
                 }
-                this.choseList = this.roatList
+                if (this.choseInfoId.length > 0) {
+                    this.$confirm('此操作将永久删除该数据, 是否继续?', '提示', {
+                        confirmButtonText: '确定',
+                        cancelButtonText: '取消',
+                        type: 'warning'
+                    }).then(() => {
+                        api.roat.deleteRoat(this.choseInfoId).then(res => {
+                            console.log(res, '删除成功')
+                            this.$message.success('删除成功')
+                            for (let i = 0; i < this.choseInfoId.length; i++) {
+                                this.roatList = this.roatList.filter((item, index) => {
+                                    if (item.id === this.choseInfoId[i]){
+                                        this.roatList[index].checked = false
+                                    }
+                                    return item.id !== this.choseInfoId[i]
+                                })
+                            }
+                            this.choseInfoId = []
+                        }).catch(err => {
+                            this.$message.error('删除失败，请稍后重试')
+                            console.log(err)
+                            this.choseInfoId = []
+                        })
+                    }).catch(() => {
+                        this.$message.info('取消删除')
+                    })
+                } else {
+                    this.$message.error('请选择要删除的数据')
+                    return
+                }
 
             },
             toggleList (type) {
@@ -142,6 +156,12 @@
                 }
             },
             checked (id) {
+                this.roatList = this.roatList.filter(item => {
+                    if (item.id === id) {
+                        item.checked = item.checked
+                    }
+                    return item
+                })
                 if (this.choseInfoId.includes(id)) {
                     this.choseInfoId = this.choseInfoId.filter((item) =>{
                         return item !== id
@@ -171,7 +191,7 @@
             },
             selectedAll (state) {
                 console.log(state, 'opopopopop')
-                this.choseList = this.roatList.filter((item) => {
+                this.roatList = this.roatList.filter((item) => {
                     if (state === true) {
                         item.checked = true
                         this.choseInfoId.push(item.id)
@@ -186,20 +206,50 @@
                 console.log(this.choseInfoId, 'opopop')
             },
             fixInfo (info) {
-                console.log(info, 'wertyuio')
-                let list = this.roatList
-                for(let i = 0;i< list.length; i++){
-                    if (info.id === list[i].id) {
-                        this.roatList[i] = info
-
+                let roatObj = {
+                    id: info.id,
+                    name: info.name,
+                    description: info.description,
+                    geo: {
+                        type:"LineString",
+                        coordinates: info.location
                     }
                 }
-                this.choseList = this.roatList
+                api.roat.updateRoat(JSON.stringify(roatObj)).then(res => {
+                    console.log(res, '创建成功')
+                    this.$message.success('修改成功')
+                    this.choseInfoId = []
+                    this.getAllRoat()
+                }).catch(err => {
+                    this.$message.error('修改失败，请稍后重试')
+                })
             },
-            addNewPerson (info) {
-                info.id = new Date().getTime()
-                this.roatList.push(info)
-                this.choseList = this.roatList
+           async addNewRoat (info) {
+                let roatObj = {
+                    name: info.name,
+                    description: info.description,
+                    geo: {
+                        type:"LineString",
+                        coordinates: info.location
+                    }
+                }
+                if (info.imgUrl !== '') {
+                    await api.person.updataAva(info.imgUrl).then(res => {
+                        console.log(res, '上传成功')
+                        aresObj.pictureId = res.id
+                    }).catch(err => {
+                        console.log(err, '上传失败')
+                        this.$message.error('上传失败，请稍后重试')
+                        return
+                    })
+                }
+                api.roat.createRoat(JSON.stringify(roatObj)).then(res => {
+                    console.log(res, '创建成功')
+                    this.$message.success('创建成功')
+                    this.getAllRoat()
+                }).catch(err => {
+                    this.$message.error('创建失败，请稍后重试')
+                })
             },
             fixedInfo () {
                 if (this.choseInfoId.length > 0) {
@@ -213,14 +263,30 @@
                 } else {
                     this.$message.error('请选择要修改的人员')
                 }
+            },
+            async getAllRoat () {
+                this.isShowLoading = true
+                await api.roat.getAllRoat().then(res => {
+                    console.log(res, '请求路网成功')
+                    this.isShowLoading = false
+                    this.roatList = res
+                    for (let i = 0; i < this.roatList.length; i++) {
+                        this.roatList[i].checked = false
+                        this.roatList[i].status = true
+                        this.roatList[i].location = this.roatList[i].geo
+                    }
+                }).catch(err => {
+                    console.log(err, '请求失败')
+                })
             }
         },
         created () {
-            for (let i = 0; i < this.roatList.length; i++) {
-                this.roatList[i].checked = false
-                this.roatList[i].status = true
-            }
-            this.choseList = this.roatList
+            this.getAllRoat()
+            // for (let i = 0; i < this.roatList.length; i++) {
+            //     this.roatList[i].checked = false
+            //     this.roatList[i].status = true
+            // }
+            // this.choseList = this.roatList
         },
         components: {
             ScrollContainer,
