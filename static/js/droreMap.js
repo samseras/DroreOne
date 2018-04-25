@@ -1,5 +1,5 @@
 //显示小图标：droreMap.showLayer()-->pool.getLayerById【拿到要显示的layerId】-【layers】->setSeedLayer-->addlayer-->droreMap.addLayer-->ulDisplay()
- define(function(require, exports, module) {
+define(function(require, exports, module) {
     // 你也可以引入自己的函数依赖
      var ol = require('./ol');
      var Event = require('./static');
@@ -2050,38 +2050,8 @@
              })
              DragMediator.selectInteraction.getFeatures().clear();
          }
-
          return { //返回一个对象
              init: function(opt, rectifyData) { //初始化地图//***
-                 /*			var projection = ol.proj.get('EPSG:3857'); //墨卡托投影
-                             var urlTemplate = obj.path; //"./map_sec_sichuan0003/map{z}/{x},{y}.jpg";
-                             var baseMapSource = mapData.setSource(obj.minZoom, obj.olTileX, obj.olTileY, projection, urlTemplate); //19, 413000, 214585
-                             var centerX = obj.centerX;
-                             var centerY = obj.centerY;
-
-                             var curZoom = obj.curZoom;
-                             var minZoom = obj.minZoom;
-                             var maxZoom = obj.maxZoom;
-                             mapData.InitData = obj;
-                             //添加底图
-                             _baseMap = mapData.addBaseMap(baseMapSource, centerX, centerY, curZoom, minZoom, maxZoom, projection);
-                             _baseMap.renderSync();*/
-
-/*                 var defaultData = {
-                     "olTileX": 54874,
-                     "olTileY": 27040,
-                     "centerX": 121.43497144063807,
-                     "centerY": 29.995888023356642,
-                     "path": "http://img.weyoo.cn/map/map_sec_zhejiang0131/map{z}/{x},{y}.jpg",
-                     "curZoom": 16,
-                     "minZoom": 16,
-                     "maxZoom": 19
-                 }
-                 var option = $.extend(true, defaultData, opt);
-                 //opt和default要深拷贝后合并一次
-                 mapData.initMap(option);
-                 mapData.initRectify(rectifyData);*/
-
                  $.ajax({
                      type: "get",
                      url: "/static/xxsd_mapData.json",
@@ -2108,8 +2078,6 @@
                          console.log(333333);
                      }
                  });
-
-
              }, ////////////鼠标事件部分
              addMouseEvent: function(type, key, fun) { //添加一个鼠标事件 此处包括单击和双击你事件//***
                  if(type == "singleclick") {
