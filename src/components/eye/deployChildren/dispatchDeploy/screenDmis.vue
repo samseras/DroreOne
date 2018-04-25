@@ -28,13 +28,13 @@
                             </template>
                         </el-table-column>
                         <el-table-column
-                            prop="type"
+                            prop="name"
                             label="调度硬件"
                             sortable
                             width="120">
                         </el-table-column>
                         <el-table-column
-                            prop="name"
+                            prop="type"
                             label="名称">
                         </el-table-column>
                         <el-table-column
@@ -49,17 +49,12 @@
                             prop="executetime"
                             label="执行时间">
                         </el-table-column>
-                        <el-table-column
-                            prop="repetition"
-                            label="重复调度"
-                            sortable>
-                        </el-table-column>
                         <el-table-column label="操作" width="200">
                             <template slot-scope="scope">
-                                <span @click="fixedInfo(scope.row.id,'片区信息')" class="edit">编辑</span> |
+                                <span @click="fixedInfo(scope.row.id,'LED编辑')" class="edit">编辑</span> |
                                 <span @click="stop(scope.row,'片区信息')" v-if="scope.row.isStop">停止 |</span>
                                 <span @click="start(scope.row,'片区信息')" v-else="scope.row.isStart">开始 |</span>
-                                <span @click="showPersonDetail(scope.row,'片区信息')">查看</span> |
+                                <span @click="showPersonDetail(scope.row,'LED信息')">查看</span> |
                                 <span @click="deletInfo(scope.row.id,'片区信息')">删除</span>
                             </template>
                         </el-table-column>
@@ -69,8 +64,8 @@
                               :visible="visible"
                               :Info="areaInfo"
                               :isDisabled="isDisabled"
-                              :title="title"
                               @closeInfoDialog ="visible = false"
+                              :title="title"
                               @fixInfo = "fixInfo"
                               @addNewInfo="addNewPerson">
                 </PersonDetail>
@@ -90,16 +85,24 @@
                 isShowAreaCard: true,
                 checkList: [],
                 filterList: [],
-                areaList: [
-                    {id:1,checked:false,isStop:true,isStart:false,name: '下午下班音乐提示',type: 'LED-1',number: '10个',time: '2018.02.03~2018.03.11',executetime: '18:00:00~18:10:00',repetition:'是'},
-                    {id:2,checked:false,isStop:true,isStart:false,name: '上班提示',type: 'LED-2',number: '10个',time: '2018.02.03~2018.03.11',executetime: '18:00:00~18:10:00',repetition:'是'},
-                    {id:3,checked:false,isStop:true,isStart:false,name: '夜间照明',type: 'LED-3',number: '10个',time: '2018.02.03~2018.03.11',executetime: '18:00:00~18:10:00',repetition:'否'},
-                    {id:8,checked:false,isStop:true,isStart:false,name: '室内照明',type: 'LED-4',number: '10个',time: '2018.02.03~2018.03.11',executetime: '18:00:00~18:10:00',repetition:'否'},
-                    {id:9,checked:false,isStop:true,isStart:false,name: '节日提示',type: 'LED-5',number: '10个',time: '2018.02.03~2018.03.11',executetime: '18:00:00~18:10:00',repetition:'是'},
+                // areaList: [
+                //     {id:1,checked:false,isStop:true,isStart:false,type: '下午下班音乐提示',name: 'LED-1',number: '10个',time: '2018.02.03~2018.03.11',executetime: '18:00:00~18:10:00',repetition:'是',filterList:''},
+                //     {id:2,checked:false,isStop:true,isStart:false,type: '上班提示',name: 'LED-2',number: '10个',time: '2018.02.03~2018.03.11',executetime: '18:00:00~18:10:00',repetition:'是',filterList:''},
+                //     {id:3,checked:false,isStop:true,isStart:false,type: '夜间照明',name: 'LED-3',number: '10个',time: '2018.02.03~2018.03.11',executetime: '18:00:00~18:10:00',repetition:'否',filterList:''},
+                //     {id:8,checked:false,isStop:true,isStart:false,type: '室内照明',name: 'LED-4',number: '10个',time: '2018.02.03~2018.03.11',executetime: '18:00:00~18:10:00',repetition:'否',filterList:''},
+                //     {id:9,checked:false,isStop:true,isStart:false,type: '节日提示',name: 'LED-5',number: '10个',time: '2018.02.03~2018.03.11',executetime: '18:00:00~18:10:00',repetition:'是',filterList:''},
+                // ],
+                areaList:[
+                    {id:1,type: '下午下班音乐提示',name: 'LED-1',number: '10个',isCustomizedDays:true,days:'1,2',startDate: '2018.02.03',endDate:'2018.03.11',isCustomizedShift:false,shifts:'1,2,3',customizedStartTime :'18:00:00',customizedEndTime:'18:30:00',isEnabled:false,description:'',ledIds :[],contentIds:[]},
+                    {id:2,type: '上班提示',name: 'LED-2',number: '10个',isCustomizedDays:true,days:'1,2',startDate: '2018.02.03',endDate:'2018.03.11',isCustomizedShift:false,shifts:'1',customizedStartTime :'18:00:00',customizedEndTime:'18:30:00',isEnabled:false,description:'',ledIds :[],contentIds:[]},
+                    {id:3,type: '夜间照明',name: 'LED-3',number: '10个',isCustomizedDays:false,days:'1,2',startDate: '2018.02.03',endDate:'2018.03.11',isCustomizedShift:false,shifts:'2',customizedStartTime :'18:00:00',customizedEndTime:'18:30:00',isEnabled:false,description:'',ledIds :[],contentIds:[]},
+                    {id:8,type: '室内照明',name: 'LED-4',number: '10个',isCustomizedDays:false,days:'1,2',startDate: '2018.02.03',endDate:'2018.03.11',isCustomizedShift:false,shifts:'3',customizedStartTime :'18:00:00',customizedEndTime:'18:30:00',isEnabled:false,description:'',ledIds :[],contentIds:[]},
+                    {id:9,type: '室内照明',name: 'LED-4',number: '10个',isCustomizedDays:false,days:'1,2',startDate: '2018.02.03',endDate:'2018.03.11',isCustomizedShift:false,shifts:'3',customizedStartTime :'18:00:00',customizedEndTime:'18:30:00',isEnabled:false,description:'',ledIds :[],contentIds:[]},
                 ],
                 visible: false,
                 areaInfo: {},
                 choseInfoId: [],
+                choseId:[],
                 choseChecked:[],
                 choseList: [],
                 isDisabled: true,
@@ -115,39 +118,69 @@
                     return item.id
                 })
             },
-            showPersonDetail (info,title) {
-                console.log(info.id)
-                if (this.choseInfoId.includes(info.id)) {
-                    if(this.choseInfoId.length > 1){
-                        this.$message.warning('至多选择一条数据')
-                    }else{
-                        this.areaInfo = info
-                        this.visible = true
-                        this.title = title
-                        this.isDisabled = true
-                    }
-                }else {
-                    if(this.choseChecked.length == 0){
-                        this.choseInfoId.push(info.id)
-                        if(this.choseInfoId.length > 1){
-                            this.$message.warning('至多选择一条数据')
-                        }else{
-                            this.areaInfo = info
-                            this.visible = true
-                            this.title = title
-                            this.isDisabled = true
-                        }
-                        this.choseInfoId = []
+            init(){
+                this.areaList.forEach(function(item){
+                    let executetime = item.customizedStartTime + "~" + item.customizedEndTime;
+                    let date = item.startDate + "~" + item.endDate;
+                    item.executetime = executetime;
+                    item.date = date;
+                    item.checked = false;
+                    item.isStop = true;
+                    item.isStart = false;
+                    if(item.isCustomizedDays === true){
+                        // let time = item.startDate + "~" + item.endDate;
+                        item.time = item.startDate + "~" + item.endDate;
                     }else {
-                        this.$message.warning('选择的数据和即将编辑的数据不一致，或者未选择包编辑的数据')
+                        let shift=new Array();
+                        let str = item.days;
+                        let attr = str.split(",")
+                        attr = attr.filter(function(num){
+                            if(num == "1"){
+                                shift.push("周一 ");
+                            }else if(num == "2"){
+                                shift.push("周二 ");
+                            }else if(num == "3"){
+                                shift.push("周三 ");
+                            }else if(num == "4"){
+                                shift.push("周四 ");
+                            }else if(num == "5"){
+                                shift.push("周五 ");
+                            }else if(num == "6"){
+                                shift.push("周六 ");
+                            }else if(num == "7"){
+                                shift.push("周日");
+                            }
+                            return shift
+                        })
+                        item.time = shift
                     }
-                }
+                })
+            },
+            timeTr(dates){
+                let arr = dates.split("~");
+                let d1 = arr[0].split(".");
+                let d2 = arr[1].split(".");
+                return [new Date(d1[0], d1[1], d1[2]), new Date(d2[0], d2[1], d2[2])];
+            },
+            timeD(dates,times){
+                let arr1 = dates.split("~");
+                let arr2 = times.split("~");
+                let d1 = arr1[0].split(".");
+                let d2 = arr1[1].split(".");
+                let a1 = arr2[0].split(":");
+                let a2 = arr2[1].split(":");
+                return [new Date(d1[0], d1[1], d1[2],a1[0],a1[1],a1[2]), new Date(d2[0], d2[1], d2[2],a2[0],a2[1],a2[2])];
+            },
+            showPersonDetail (info,title) {
+                this.visible = true;
+                this.title = title;
+                this.isDisabled = true;
             },
             addNewInfo () {
                 this.showPersonDetail({}, '添加硬件调度')
                 this.isDisabled = false
             },
-            delet(id){
+            deletChose(id){
                 this.$confirm('此操作将永久删除该数据, 是否继续?', '提示', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
@@ -164,7 +197,6 @@
                     }
                     this.$message.success('删除成功')
                     this.choseInfoId = []
-                    this.choseChecked = []
                     // }).catch(err=>{
                     //             console.log(err)
                     //             this.$message.error('删除失败，请稍后重试')
@@ -174,42 +206,37 @@
                 //   })
             },
             deletInfo (id) {
-                console.log(id)
-                console.log(this.choseInfoId)
-                console.log(this.choseInfoId.includes(id))
-                if (id === undefined) {
-                    if(this.choseChecked.length>0){
-                        this.delet(id)
-                    }else {
-                        this.$message.warning('请选择要删除的数据')
-                    }
-                }else{
-                    if(this.choseInfoId.includes(id)){
-                        if(this.choseInfoId.length > 1){
-                            this.$message.warning('至多选择一条数据')
-                        }else {
-                            this.delet(id)
-                        }
+                if(id === undefined){
+                    if (this.choseInfoId.length > 0) {
+                        this.deletChose(id)
                     }else{
-                        if(this.choseChecked.length == 0) {
-                            this.choseInfoId.push(id)
-                            if(this.choseInfoId.length > 1){
-                                this.$message.warning('至多选择一条数据')
-                            }else{
-                                this.delet(id)
-                            }
-                        }else {
-                            this.choseInfoId.push(id)
-                            if(this.choseInfoId.length == 1){
-                                this.delet(id)
-                            }else{
-                                this.$message.warning('选择的数据和即将编辑的数据不一致，或者未选择包编辑的数据')
-                                let index = this.choseInfoId.indexOf(id);
-                                this.choseInfoId.splice(index,1)
-                            }
-                        }
+                        this.$message.warning("请选择要删除的项")
                     }
+                }else {
+                    this.choseId.push(id);
+                    this.$confirm('此操作将永久删除该数据, 是否继续?', '提示', {
+                        confirmButtonText: '确定',
+                        cancelButtonText: '取消',
+                        type: 'warning'
+                    }).then(() => {
+                        //  api.camera.deleteCamera(this.choseInfoId).then(res => {
+                        this.areaList = this.areaList.filter((item, index) => {
+                            if (item.id === this.choseId[0]) {
+                                this.areaList[index].checked = false
+                            }
+                            return item.id !== this.choseId[0]
+                        })
+                        this.$message.success('删除成功')
+                        this.choseId = [];
+                        // }).catch(err=>{
+                        //             console.log(err)
+                        //             this.$message.error('删除失败，请稍后重试')
+                    }).catch(() => {
+                        this.$message.info('取消删除')
+                    })
+                    //   })
                 }
+                console.log(this.choseId,"1234567890-=")
             },
             checked (Info) {
                 console.log(Info.id)
@@ -286,39 +313,27 @@
                 this.areaList.push(info)
                 this.choseList = this.areaList
             },
-            fixedInfo (id) {
-                console.log(id)
-                if (this.choseInfoId.includes(id)) {
-                    if(this.choseInfoId.length > 1){
-                        this.$message.warning('至多选择一条数据')
-                    }else{
-                        this.areaList.map((item)=>{
-                            if(item.id === this.choseInfoId[0]){
-                                this.areaInfo=item
-                            }
-                        })
-                        this.showPersonDetail(this.areaInfo,'修改摄像头信息')
-                        this.isDisabled=false
-                    }
-                }else {
-                    if(this.choseChecked.length == 0){
-                        this.choseInfoId.push(id)
-                        if(this.choseInfoId.length > 1){
-                            this.$message.warning('至多选择一条数据')
-                        }else{
-                            this.areaList.map((item)=>{
-                                if(item.id === this.choseInfoId[0]){
-                                    this.areaInfo=item
+            fixedInfo (id,title) {
+                console.log(this.choseInfoId)
+                this.choseId.push(id)
+                this.areaList.map((item)=>{
+                    if(item.id === this.choseId[0]){
+                        this.areaInfo=item
+                        if(this.areaInfo.isCustomizedDays){
+                            this.areaInfo.time = this.timeTr(item.time);
+                        }else {
+                            for(let i=0; i< this.areaInfo.time.length; i++) {
+                                if (this.areaInfo.time[i].includes(' ')){
+                                    this.areaInfo.time[i] = this.areaInfo.time[i].substring(0,this.areaInfo.time[i].length -1)
                                 }
-                            })
-                            this.showPersonDetail(this.areaInfo,'修改摄像头信息')
-                            this.isDisabled=false
+                            }
                         }
-                        this.choseInfoId = []
-                    }else {
-                        this.$message.warning('选择的数据和即将编辑的数据不一致，或者未选择包编辑的数据')
+                        this.areaInfo.executetime = this.timeD(item.date,item.executetime);
+                        this.showPersonDetail(this.areaInfo,title)
+                        this.isDisabled=false
+                        this.choseId = [];
                     }
-                }
+                })
             },
             stop(Info){
                 console.log(Info.id)
@@ -380,6 +395,10 @@
             ScrollContainer,
             Header,
             PersonDetail
+        },
+        mounted:function(){
+            this.init();
+            console.log(this.areaList)
         }
     }
 
