@@ -2050,6 +2050,7 @@ define(function(require, exports, module) {
              })
              DragMediator.selectInteraction.getFeatures().clear();
          }
+
          return { //返回一个对象
              init: function(opt, rectifyData) { //初始化地图//***
                  $.ajax({
@@ -2349,6 +2350,7 @@ define(function(require, exports, module) {
              icon: {
                  Marker: cover.Marker,
                  addChild: function(icon) { //TODO 添加标签新入口
+                     console.log(icon)
                      if(icon.constructor != cover.Marker) {
                          throw new Error("the type of parameter is wrong!");
                          return;
@@ -2595,9 +2597,8 @@ define(function(require, exports, module) {
                  }
              }
          }
+
      })($, ol)
-
   module.exports = droreMap;
-
  })
 

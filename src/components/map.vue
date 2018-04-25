@@ -25,7 +25,7 @@
             droreMap.unShowAllLayer()
         },
         mounted() {
-            droreMap.init();
+             droreMap.init();
             let route = this.$route.path
             if (route.includes('area-deploy')) {
                 this.districtList();// 片区输出
@@ -34,7 +34,7 @@
                 this.roadList();// 路线输出
                 this.road(); // 路线打点
             } else {
-                this.droreMapinit();// 循环输出点
+                // this.droreMapinit();// 循环输出点
                 this.labelDot();// 打点
             }
         },
