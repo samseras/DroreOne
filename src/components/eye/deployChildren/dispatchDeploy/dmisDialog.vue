@@ -93,9 +93,9 @@
                         <el-select v-model="broadcast.associatedradio" size="mini" multiple placeholder="请选择">
                             <el-option
                                 v-for="item in options"
-                                :key="item.type"
-                                :label="item.type"
-                                :value="item.type">
+                                :key="item.id"
+                                :label="item.name"
+                                :value="item.id">
                             </el-option>
                         </el-select>
                     </p>
@@ -144,9 +144,9 @@
                         <el-select v-model="lamppost.associatedradio" size="mini" multiple placeholder="请选择">
                             <el-option
                                 v-for="item in options"
-                                :key="item.type"
-                                :label="item.type"
-                                :value="item.type">
+                                :key="item.id"
+                                :label="item.name"
+                                :value="item.id">
                             </el-option>
                         </el-select>
                     </p>
@@ -155,7 +155,7 @@
                         <el-radio v-model="radio" label="0">否</el-radio>
                     </p>
                     <p class="type">
-                        描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：<textarea name="" v-model="lamppost.describe" cols="30"
+                        描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：<textarea name="" v-model="lamppost.description" cols="30"
                                                                                rows="5" placeholder="请输入描述信息"></textarea>
                     </p>
                 </div>
@@ -287,6 +287,7 @@
 
 <script>
     import MapDialog from './mapDialog'
+    import api from '@/api'
     import broadcastDialog from './broadcastDialog'
     import ScreenDialog from './screenDialog'
     import Cropper from 'cropperjs'
@@ -311,14 +312,14 @@
                 purifier:{},
                 screen:{},
                 options: [
-                    { type: '保洁1'},
-                    { type: '保洁2'},
-                    { type: '保洁3'},
-                    { type: '保洁4'},
-                    {type: 'A-GB001'},
-                    {type: 'A-GB002'},
-                    {type: 'A-GB003'},
-                    {type: 'A-GB004'}
+                    { name: '保洁1'},
+                    { name: '保洁2'},
+                    { name: '保洁3'},
+                    { name: '保洁4'},
+                    {name: 'A-GB001'},
+                    {name: 'A-GB002'},
+                    {name: 'A-GB003'},
+                    {name: 'A-GB004'}
                 ],
                 associatedRadio:true,
                 associatedScreen:false,
@@ -485,6 +486,28 @@
                     this.edit = false
                 }
             },
+            getAllLight (){
+                // this.isShowLoading = true
+                 api.light.getAllLight().then(res => {
+                    // this.isShowLoading = false
+                    console.log(res, '这是请求回来所有路灯列表')
+                     this.options = res.devices;
+                }).catch(err => {
+                    console.log(err, '请求失败')
+                    this.isShowLoading = false
+                })
+            },
+            getAllBroadcast (){
+                // this.isShowLoading = true
+                api.broadcast.getAllBroadcast().then(res => {
+                    // this.isShowLoading = false
+                    console.log(res, '这是请求回来所有广播列表')
+                    this.options = res.devices;
+                }).catch(err => {
+                    console.log(err, '请求失败')
+                    this.isShowLoading = false
+                })
+            },
             inputFilter(newFile, oldFile, prevent) {
                 if (newFile && !oldFile) {
                     if (!/\.(gif|jpg|jpeg|png|webp)$/i.test(newFile.name)) {
@@ -542,6 +565,7 @@
                     this.classesList = this.security.shift;
                 }
             } else if(this.route.includes('broadcast')) {
+                this.getAllBroadcast()
                 this.broadcast = this.Info;
                 this.definedTime = this.broadcast.executetime;
                 if(this.broadcast.isCustomizedDays){
@@ -552,9 +576,10 @@
                     this.filterList = this.broadcast.time;
                 }
             } else if(this.route.includes('lamppost')) {
+                this.getAllLight()
                 this.lamppost = this.Info;
                 this.definedTime = this.lamppost.executetime;
-                if(this.lamppost.isCustomizedDays){
+                if(this.lamppost.customizedDays){
                     this.definedDay = this.lamppost.time;
                     this.weekTime = true;
                     this.weekcustom = true;

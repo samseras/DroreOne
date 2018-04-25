@@ -5,7 +5,7 @@
         </div>
         <div class="personContent">
             <div class="funcTitle">
-                <Header @addNewInfo = "addNewInfo"
+                <Header @addNewInfo = "addNewInfo('添加路灯')"
                         @deletInfo = "deletInfo"
                         @choseType = 'choseType'
                         @selectedAll = 'selectedAll'
@@ -29,16 +29,16 @@
                         </el-table-column>
                         <el-table-column
                             prop="name"
-                            label="调度硬件"
+                            label="名称"
                             sortable
                             width="120">
                         </el-table-column>
                         <el-table-column
-                            prop="type"
-                            label="名称">
+                            prop="description"
+                            label="描述">
                         </el-table-column>
                         <el-table-column
-                            prop="number"
+                            prop="lightIds.length"
                             label="硬件总数">
                         </el-table-column>
                         <el-table-column
@@ -72,7 +72,7 @@
                               @closeInfoDialog ="visible = false"
                               @fixInfo = "fixInfo"
                               :title = "title"
-                              @addNewInfo="addNewPerson">
+                              @addNewInfo1="addNewPerson">
                 </PersonDetail>
                 <CheckDetail v-if="checkVisible"
                     :visible="checkVisible"
@@ -91,6 +91,7 @@
 
 <script>
     import ScrollContainer from '@/components/ScrollContainer'
+    import api from '@/api'
     import Header from './dmisHeader'
     import PersonDetail from './dmisDialog'
     import CheckDetail from './lamppostCheckDialog'
@@ -102,14 +103,15 @@
                 checkList: [],
                 filterList: [],
                 areaList: [
-                    {id:1,type: '夜间照明',name: '路灯1',isCustomizedDays:true,number: '10个',startDate: '2018.02.03',endDate:'2018.03.11',startTime :'18:00:00',endTime:'18:30:00',isEnabled:true,description :'',days:'1,2,3,4,5',lightIds:[]},
-                    {id:2,type: '室内照明',name: '路灯2',isCustomizedDays:false,number: '10个',startDate: '2018.02.03',endDate:'2018.03.11',startTime :'18:00:00',endTime:'18:30:00',isEnabled:true,description :'',days:'1,2,3,4,5,',lightIds:[]},
-                    {id:3,type: '夜间照明',name: '路灯3',isCustomizedDays:false,number: '10个',startDate: '2018.02.03',endDate:'2018.03.11',startTime :'18:00:00',endTime:'18:30:00',isEnabled:true,description :'',days:'1,2,3,4',lightIds:[]},
-                    {id:8,type: '室内照明',name: '路灯4',isCustomizedDays:false,number: '10个',startDate: '2018.02.03',endDate:'2018.03.11',startTime :'18:00:00',endTime:'18:30:00',isEnabled:true,description :'',days:'1,5,6',lightIds:[]},
-                    {id:9,type: '夜间照明',name: '路灯5',isCustomizedDays:false,number: '10个',startDate: '2018.02.03',endDate:'2018.03.11',startTime :'18:00:00',endTime:'18:30:00',isEnabled:true,description :'',days:'2,5,6',lightIds:[]},
-                    {id:4,type: '室内照明',name: '路灯6',isCustomizedDays:false,number: '10个',startDate: '2018.02.03',endDate:'2018.03.11',startTime :'18:00:00',endTime:'18:30:00',isEnabled:true,description :'',days:'3,4,5',lightIds:[]},
-                    {id:5,type: '夜间照明',name: '路灯7',isCustomizedDays:false,number: '10个',startDate: '2018.02.03',endDate:'2018.03.11',startTime :'18:00:00',endTime:'18:30:00',isEnabled:true,description :'',days:'1,2,4',lightIds:[]},
-                ],
+                //     {id:1,type: '夜间照明',name: '路灯1',isCustomizedDays:true,number: '10个',startDate: '2018.02.03',endDate:'2018.03.11',startTime :'18:00:00',endTime:'18:30:00',isEnabled:true,description :'',days:'1,2,3,4,5',lightIds:[]},
+                //     {id:2,type: '室内照明',name: '路灯2',isCustomizedDays:false,number: '10个',startDate: '2018.02.03',endDate:'2018.03.11',startTime :'18:00:00',endTime:'18:30:00',isEnabled:true,description :'',days:'1,2,3,4,5,',lightIds:[]},
+                //     {id:3,type: '夜间照明',name: '路灯3',isCustomizedDays:false,number: '10个',startDate: '2018.02.03',endDate:'2018.03.11',startTime :'18:00:00',endTime:'18:30:00',isEnabled:true,description :'',days:'1,2,3,4',lightIds:[]},
+                //     {id:8,type: '室内照明',name: '路灯4',isCustomizedDays:false,number: '10个',startDate: '2018.02.03',endDate:'2018.03.11',startTime :'18:00:00',endTime:'18:30:00',isEnabled:true,description :'',days:'1,5,6',lightIds:[]},
+                //     {id:9,type: '夜间照明',name: '路灯5',isCustomizedDays:false,number: '10个',startDate: '2018.02.03',endDate:'2018.03.11',startTime :'18:00:00',endTime:'18:30:00',isEnabled:true,description :'',days:'2,5,6',lightIds:[]},
+                //     {id:4,type: '室内照明',name: '路灯6',isCustomizedDays:false,number: '10个',startDate: '2018.02.03',endDate:'2018.03.11',startTime :'18:00:00',endTime:'18:30:00',isEnabled:true,description :'',days:'3,4,5',lightIds:[]},
+                //     {id:5,type: '夜间照明',name: '路灯7',isCustomizedDays:false,number: '10个',startDate: '2018.02.03',endDate:'2018.03.11',startTime :'18:00:00',endTime:'18:30:00',isEnabled:true,description :'',days:'1,2,4',lightIds:[]},
+                //
+                    ],
                 checkVisible:false,
                 visible: false,
                 areaInfo: {},
@@ -120,7 +122,8 @@
                 title:'',
                 isStop:true,
                 isStart:false,
-                selection:[]
+                selection:[],
+                isDisabled:true
             }
         },
         methods: {
@@ -130,16 +133,33 @@
                 })
                 // this.multipleSelection = val;
             },
+            async getLamppostList (){
+                // this.isShowLoading = true
+                await api.lamppost.getLamppostList().then(res => {
+                    // this.isShowLoading = false
+                    console.log(res, '这是请求回来的')
+                    let that = this;
+                    res.forEach(function(item){
+                        item.light.lightIds = item.lightIds;
+                        that.areaList.push(item.light);
+                    })
+                    console.log(that.areaList, '这是请求回来的')
+                    that.init()
+                }).catch(err => {
+                    console.log(err, '请求失败')
+                    this.isShowLoading = false
+                })
+            },
             init(){
                 this.areaList.forEach(function(item){
                     let executetime = item.startTime + "~" + item.endTime;
-                    let date = item.startDate + "~" + item.endDate;
+                    // let date = item.startDate + "~" + item.endDate;
                     item.executetime = executetime;
-                    item.date = date;
+                    // item.date = date;
                     item.checked = false;
                     item.isStop = true;
                     item.isStart = false;
-                    if(item.isCustomizedDays === true){
+                    if(item.customizedDays === true){
                         // let time = item.startDate + "~" + item.endDate;
                         item.time = item.startDate + "~" + item.endDate;
                     }else {
@@ -170,18 +190,19 @@
             },
             timeDate(dates){
                 let arr = dates.split("~");
-                let d1 = arr[0].split(".");
-                let d2 = arr[1].split(".");
+                let d1 = arr[0].split("-");
+                let d2 = arr[1].split("-");
                 return [new Date(d1[0], d1[1], d1[2]), new Date(d2[0], d2[1], d2[2])];
             },
-            timeD(dates,times){
-                let arr1 = dates.split("~");
+            timeD(times){
+                // let arr1 = dates.split("~");
                 let arr2 = times.split("~");
-                let d1 = arr1[0].split(".");
-                let d2 = arr1[1].split(".");
+                // let d1 = arr1[0].split(".");
+                // let d2 = arr1[1].split(".");
                 let a1 = arr2[0].split(":");
                 let a2 = arr2[1].split(":");
-                return [new Date(d1[0], d1[1], d1[2],a1[0],a1[1],a1[2]), new Date(d2[0], d2[1], d2[2],a2[0],a2[1],a2[2])];
+                // return [new Date(d1[0], d1[1], d1[2],a1[0],a1[1],a1[2]), new Date(d2[0], d2[1], d2[2],a2[0],a2[1],a2[2])];
+                return [new Date('2018', '04', '25',a1[0],a1[1],a1[2]), new Date('2018', '04', '25',a2[0],a2[1],a2[2])];
             },
             showPersonDetail (info,title) {
                 this.visible = true;
@@ -338,7 +359,8 @@
                 this.areaList.map((item)=>{
                     if(item.id === this.choseId[0]){
                         this.areaInfo=item
-                        if(this.areaInfo.isCustomizedDays){
+                        console.log(this.areaInfo,"gggggggggggggggg")
+                        if(this.areaInfo.customizedDays){
                             this.areaInfo.time = this.timeDate(item.time);
                         }else {
                             for(let i=0; i< this.areaInfo.time.length; i++) {
@@ -347,7 +369,8 @@
                                 }
                             }
                         }
-                        this.areaInfo.executetime = this.timeD(item.date,item.executetime);
+                        // this.areaInfo.executetime = this.timeD(item.date,item.executetime);
+                        this.areaInfo.executetime = this.timeD(item.executetime);
                         this.showPersonDetail(this.areaInfo,title)
                         this.isDisabled=false
                         this.choseId = [];
@@ -404,10 +427,12 @@
             }
         },
         created () {
-            for (let i = 0; i < this.areaList.length; i++) {
-                this.areaList[i].checked = false
-                this.areaList[i].status = true
-            }
+            this.getLamppostList ();
+            console.log(this.areaList)
+            // for (let i = 0; i < this.areaList.length; i++) {
+            //     this.areaList[i].checked = false
+            //     this.areaList[i].status = true
+            // }
             this.choseList = this.areaList
         },
         components: {
@@ -417,8 +442,7 @@
             CheckDetail
         },
         mounted:function(){
-            this.init();
-            console.log(this.areaList)
+
         }
     }
 
