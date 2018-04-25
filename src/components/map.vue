@@ -35,7 +35,7 @@
                 this.road(); // 路线打点
             } else {
                 // this.droreMapinit();// 循环输出点
-                this.labelDot();// 打点
+                // this.labelDot();// 打点
             }
         },
         methods:{
@@ -148,11 +148,43 @@
                 })
             },
             roadList(){//路线列表
-                var areaEvts =new droreMap.road.RoadLayer('ROUTE', 'blue')
-                var area = [[13367132.627512183, 3538049.969542039],[13367267.984780146, 3537979.6368547007],[13367264.667172445, 3538053.287122404],[13367106.086887486, 3537987.5990512217],[13367205.614280216, 3537977.6463101264]]
-                var data = {"areaLat":"[]","areaMercator":"[]","areaPixel":"[]","createTime":1495877197377,"id":"207","level":"1","mapId":"cd049e70a6cc4961809343c88c11938d","modifiedTime":1495877197377,"name":"方门驿站","type":"DECK_DEMO"}
-                areaEvts.addRoad(area,data)
-                droreMap.road.addRoadLayer(areaEvts)
+                for (var i = 1; i < 4; i++) {
+                        var areaEvtList =new droreMap.road.RoadLayer('ROUTE_list', 'blue')
+                        var area = [[13364027.131406585+i*10, 3538738.399854742+i*10], [13364475.004619194+i*100, 3538663.157155024+i*100], [13364135.815306177+i*100, 3538921.132125486+i*100]]
+                        var data = {"id": i, "name": "方门驿站"+i,"constructor":''}
+                        areaEvtList.addRoad(area, data)
+                        droreMap.road.addRoadLayer(areaEvtList)
+                    }
+            },
+            roadListEidt(){//路线列表
+                for (var i = 1; i < 4; i++) {
+                    if(i == 1){
+                        var areaEvts =new droreMap.road.RoadLayer('ROUTE_show', 'red')
+                        var area = [[13364027.131406585, 3538738.399854742], [13364475.004619194, 3538663.157155024], [13364135.815306177, 3538921.132125486]]
+                        var data = {"id": i, "name": "方门驿站"+i,"constructor":''}
+                        areaEvts.addRoad(area, data)
+                        droreMap.road.addRoadLayer(areaEvts)
+                    }else{
+                        var areaEvtList =new droreMap.road.RoadLayer('ROUTE_list', 'blue')
+                        var area = [[13364027.131406585+i*10, 3538738.399854742+i*10], [13364475.004619194+i*100, 3538663.157155024+i*100], [13364135.815306177+i*100, 3538921.132125486+i*100]]
+                        var data = {"id": i, "name": "方门驿站"+i,"constructor":''}
+                        areaEvtList.addRoad(area, data)
+                        droreMap.road.addRoadLayer(areaEvtList)
+                    }
+                }
+                areaEvts.ifModify = true;
+                areaEvts.ifSelect = true;
+                areaEvts.addEventListener('select', "select", function(e) {
+                    if(e.select){
+                        if(e.select.id==1){
+                            console.log(e.select.area);
+                        }
+                    }else if(e.unSelect){
+                        if(e.unSelect.id==1){
+                            console.log(e.unSelect.area,'id等于1返回的经纬度');
+                        }
+                    }
+                })
             },
             road(){//路网绘画
                 var that = this
