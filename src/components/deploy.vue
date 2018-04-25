@@ -56,14 +56,6 @@
                             {
                                 index: '/deploy/security-Dmis',
                                 title: '巡更路线'
-                            },
-                            {
-                                index: '/deploy/conductor-Dmis',
-                                title: '售票排版'
-                            },
-                            {
-                                index: '/deploy/tellers-Dmis',
-                                title: '检票排版'
                             }
                         ]
                     },
