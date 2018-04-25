@@ -27,7 +27,7 @@ module.exports = {
             changeOrigin: true
         },
         '/analysis': {
-            target: 'http://192.168.0.121:8033/',
+            target: 'http://192.168.0.150:9527/',
             changeOrigin: true
         }
     },

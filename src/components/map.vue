@@ -26,15 +26,26 @@
         },
         mounted() {
             droreMap.init();
-            this.droreMapinit();
-            this.labelDot();
-            this.districtList();
-            // this.district();
-            this.roadList();
-            // this.road();
+            let route = this.$route.path
+            if (route.includes('area-deploy')) {
+                this.districtList();// 片区输出
+                this.district(); // 片区打点
+            } else if (route.includes('roat-deploy')) {
+                this.roadList();// 路线输出
+                this.road(); // 路线打点
+            } else {
+                this.droreMapinit();// 循环输出点
+                this.labelDot();// 打点
+            }
         },
         methods:{
-            ...mapMutations(['MAP_LOCATION']),
+            ...mapMutations([
+                'MAP_LOCATION',
+                'MAP_REGION_LOCATION',
+                'REGION_LOCATION_STATE',
+                'ROAT_LOCATION_STATE',
+                'MAP_ROAT_LOCATION'
+            ]),
             droreMapinit () {//循环输出点
                 for (var i = 0; i < 15; i++) {
                     var icon = new droreMap.icon.Marker({
@@ -54,7 +65,7 @@
                 let that = this
                 var icon = new droreMap.icon.Marker({
                     coordinate: [0,0],
-                    name:  new Date().getTime(),
+                    name:  "test",
                     subtype: "098lk-",
                     id: "12214_",
                     url: "/static/img/location.png",
@@ -67,18 +78,18 @@
                     //     console.log(e)
                     // });
                     that.$store.commit('MAP_LOCATION', droreMap.transLayerToWgs(evt.coordinate))
-                    droreMap.ifDrag = true;
-                    droreMap.DragEvent(function(tabInfor) {
-                        var data = tabInfor.data
-                        if(data.data.id === '12214_'){
-                            console.log(droreMap.transLayerToWgs(data.end));
-                            that.$store.commit('MAP_LOCATION', droreMap.transLayerToWgs(data.end))
-                        }
-                    })
+                })
+                droreMap.ifDrag = true;
+                droreMap.DragEvent(function(tabInfor) {
+                    var data = tabInfor.data
+                    if(data.data.id === '12214_'){
+                        console.log(droreMap.transLayerToWgs(data.end));
+                        that.$store.commit('MAP_LOCATION', droreMap.transLayerToWgs(data.end))
+                    }
                 })
             },
             districtList(){//区域划分列表
-                var areaEvets =new droreMap.area.DrawLayer("area",'rgba(255, 255, 255, 0.2)',"red")
+                var areaEvets =new droreMap.area.DrawLayer("areaList",'rgba(255, 255, 255, 0.2)',"red")
                 var area = [[[13367097.46117307, 3538046.3202072824],[13367065.280655375, 3537992.907176161],[13367162.817494417, 3537967.030051136],[13367217.225797825, 3538042.007350074],[13367174.097243965, 3538076.510178126],[13367174.0972439651,3538076.510178126],[13367097.46117307, 3538046.3202072824]]]
                 var data = {"areaLat":"[]","areaMercator":"[]","areaPixel":"[]","createTime":1495877197377,"id":"207","level":"1","mapId":"cd049e70a6cc4961809343c88c11938d","modifiedTime":1495877197377,"name":"方门驿站","type":"DECK_DEMO"}
                 areaEvets.addArea(area,data)
@@ -86,13 +97,17 @@
                 droreMap.area.addChild(areaEvets)
             },
             district(){//区域划分
+                var that = this
                 var areaEvet =new droreMap.area.DrawLayer("area",'rgba(255, 255, 255, 0.2)',"red")
                 areaEvet.ifDraw = true;
                 areaEvet.ifModify = true;
                 areaEvet.ifSelect = false;
                 areaEvet.addEventListener(Event.DRAW_EVENT, "drawend", function (m,t) {
+                    console.log('创建区域')
                     areaEvet.ifDraw = false;
-                    areaEvet.ifSelect = true;
+                    setTimeout(() => {
+                        areaEvet.ifSelect = true;
+                    },1000)
                     console.log(t)
                     let ol=t[0];
                     let arrayObj = new Array();
@@ -105,31 +120,52 @@
                     console.log(arrayObjList)
                     areaEvet.setVisible(true)
                     droreMap.area.addChild(areaEvet)
+                    that.$store.commit('MAP_REGION_LOCATION',arrayObjList)
+                    that.$store.commit('REGION_LOCATION_STATE',true)
                 })
                 areaEvet.addEventListener(Event.SELECT_EVENT, "select", function(e) {
                     if(e.select){
+                        console.log('编辑已创建区域')
                         console.log(e.select.area);
+                        that.$store.commit('REGION_LOCATION_STATE',false)
                     }else if(e.unSelect){
-                        console.log(e.unSelect.area);
+                        console.log('完成编辑已创建区域')
+                        if (!e.unSelect.id){
+                            let ol=e.unSelect.area[0];
+                            let arrayObj = new Array();
+                            for(var i = 0; i < ol.length; i++) {
+                                let wgs=droreMap.transLayerToWgs(ol[i])
+                                arrayObj.push(wgs);
+                            }
+                            let arrayObjList= new Array();
+                            arrayObjList.push(arrayObj);
+                            that.$store.commit('MAP_REGION_LOCATION',arrayObjList )
+                            console.log(arrayObjList, '冲洗你编辑的');
+                            that.$store.commit('REGION_LOCATION_STATE',true)
+                        }
+
                     }
                 })
             },
             roadList(){//路线列表
-                var areaEvts =new droreMap.road.RoadLayer('ROUTE_DEMO', 'blue')
+                var areaEvts =new droreMap.road.RoadLayer('ROUTE', 'blue')
                 var area = [[13367132.627512183, 3538049.969542039],[13367267.984780146, 3537979.6368547007],[13367264.667172445, 3538053.287122404],[13367106.086887486, 3537987.5990512217],[13367205.614280216, 3537977.6463101264]]
                 var data = {"areaLat":"[]","areaMercator":"[]","areaPixel":"[]","createTime":1495877197377,"id":"207","level":"1","mapId":"cd049e70a6cc4961809343c88c11938d","modifiedTime":1495877197377,"name":"方门驿站","type":"DECK_DEMO"}
                 areaEvts.addRoad(area,data)
                 droreMap.road.addRoadLayer(areaEvts)
             },
             road(){//路网绘画
+                var that = this
                 var areaEvt = new droreMap.road.RoadLayer('ROUTE_DEMO', '#fb9000')
                 areaEvt.ifDraw = true;
                 areaEvt.ifModify = false;
                 areaEvt.addEventListener(Event.DRAW_EVENT, "drawend", function(m, t) {
                     areaEvt.ifDraw = false;
-                    areaEvt.ifSelect = true;
+                    setTimeout(() => {
+                        areaEvt.ifSelect = true;
+                    },1000)
                     areaEvt.ifModify = true;
-                    console.log(t);
+                    console.log(t, '909090');
                     var len = t.length - 1
                     if(t[0][0] == t[len][0] && t[0][1] == t[len][1]) {
                         layer.msg('路网不能绘制成圆环')
@@ -140,14 +176,26 @@
                             arrayObj.push(wgs);
                         }
                         console.log(arrayObj);
+                        that.$store.commit('MAP_ROAT_LOCATION', arrayObj)
+                        that.$store.commit('ROAT_LOCATION_STATE', true)
                         droreMap.road.addRoadLayer(areaEvt)
                     }
                 })
                 areaEvt.addEventListener(Event.SELECT_EVENT, "select", function(e) {
                     if(e.select){
                         console.log(e.select.area);
+                        that.$store.commit('ROAT_LOCATION_STATE', false)
                     }else if(e.unSelect){
-                        console.log(e.unSelect.area);
+                        if (!e.unSelect.id) {
+                            let arrayObj = new Array();
+                            for (var i = 0; i < e.unSelect.area.length; i++) {
+                                let wgs = droreMap.transLayerToWgs(e.unSelect.area[i])
+                                arrayObj.push(wgs);
+                            }
+                            console.log(arrayObj);
+                            that.$store.commit('MAP_ROAT_LOCATION', arrayObj)
+                            that.$store.commit('ROAT_LOCATION_STATE', true)
+                        }
                     }
                 })
             },

@@ -2067,7 +2067,7 @@
                              _baseMap = mapData.addBaseMap(baseMapSource, centerX, centerY, curZoom, minZoom, maxZoom, projection);
                              _baseMap.renderSync();*/
 
-                 /*var defaultData = {
+/*                 var defaultData = {
                      "olTileX": 54874,
                      "olTileY": 27040,
                      "centerX": 121.43497144063807,

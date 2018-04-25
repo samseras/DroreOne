@@ -44,7 +44,7 @@
             </el-checkbox-group>
         </div>
 
-        <div class="titlePage">
+        <div class="titlePage" v-if="!route.includes('hardwaretype')">
             <span>当前第1页/共8页</span>
             <span class="upPage"><</span>
             <span class="downPage">></span>

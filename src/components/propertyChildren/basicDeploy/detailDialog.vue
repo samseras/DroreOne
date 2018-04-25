@@ -9,10 +9,10 @@
             center>
             <div class="card">
                 <!--人员-->
-                <div class="personCardContent" v-if="route.includes('person')">
-                    <p class="name">姓&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;名：<input type="text"v-model="person.personBean.name"></p>
+                <div class="personCardContent" v-if="route.includes('person') && $route.params.id">
+                    <p class="name">姓&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;名：<input type="text"v-model="person.name"></p>
                     <p class="sex">性&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;别：
-                        <el-select v-model="person.personBean.gender" placeholder="请选择">
+                        <el-select v-model="person.gender" placeholder="请选择">
                             <el-option label="男" :value="1"></el-option>
                             <el-option label="女" :value="0"></el-option>
                         </el-select>
@@ -27,8 +27,8 @@
                             </el-option>
                         </el-select>
                     </p>
-                    <p class="idNum">身份证号：<input type="text"v-model="person.personBean.idNum"></p>
-                    <p class="phoneNum">电话号码：<input type="text"v-model="person.personBean.phone"></p>
+                    <p class="idNum">身份证号：<input type="text"v-model="person.idNum"></p>
+                    <p class="phoneNum">电话号码：<input type="text"v-model="person.phone"></p>
                     <div class="img">
                         <img :src="person.picturePath" alt="" v-if="isDisabled">
                         <label for="avatar" v-if="!isDisabled">
@@ -292,23 +292,23 @@
                 <div class="personCardContent boatCardContent" v-if="route.includes('area')">
                     <p class="sex">片区名称：<input type="text" v-model="area.name" required="required"></p>
                     <p class="phoneNum" v-if="false">所在景区：<input type="text"v-model="area.placeScenic"></p>
-                    <p class="phoneNum">位置范围：<input type="text"v-model="area.location"><i class="el-icon-location-outline" @click="showMapDialog"></i></p>
+                    <p class="phoneNum">位置范围：<span>{{area.location}}</span><i class="el-icon-location-outline" @click="showMapDialog"></i></p>
                     <p class="type">
                         描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：<textarea name="" v-model="area.description" cols="30"
                                                                                rows="5" placeholder="请输入描述信息"></textarea>
                     </p>
-                    <div class="img">
-                        <img :src="area.picturePath" alt="" v-if="isDisabled">
-                        <label for="avatar" v-if="!isDisabled">
-                            <img :src="files.length ? files[0].url : 'https://www.gravatar.com/avatar/default?s=200&r=pg&d=mm'"  class="rounded-circle" />
-                        </label>
-                    </div>
+                    <!--<div class="img">-->
+                        <!--<img :src="area.picturePath" alt="" v-if="isDisabled">-->
+                        <!--<label for="avatar" v-if="!isDisabled">-->
+                            <!--<img :src="files.length ? files[0].url : 'https://www.gravatar.com/avatar/default?s=200&r=pg&d=mm'"  class="rounded-circle" />-->
+                        <!--</label>-->
+                    <!--</div>-->
                 </div>
                 <!--路网-->
                 <div class="personCardContent boatCardContent" v-if="route.includes('roat')">
                     <p class="sex">路线名称：<input type="text"v-model="roat.name"></p>
                     <p class="phoneNum">所在景区：<input type="text"v-model="roat.placeScenic"></p>
-                    <p class="phoneNum">位置范围：<input type="text"v-model="roat.location"><i class="el-icon-location-outline" @click="showMapDialog"></i></p>
+                    <p class="phoneNum">位置范围：<span>{{roat.location}}</span><i class="el-icon-location-outline" @click="showMapDialog"></i></p>
                     <p class="type">
                         描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：<textarea name=""v-model="roat.description" cols="30"
                                                                                rows="5" placeholder="请输入描述信息"></textarea>
@@ -319,6 +319,25 @@
                         </label>
                     </div>
                 </div>
+                <!--设施类行-->
+                <div class="personCardContent boatCardContent" v-if="route.includes('basictype')">
+                    <p class="basicType">设施类行：
+                        <el-select v-model="basicType.type" placeholder="请选择">
+                            <el-option label="片区" value="片区"></el-option>
+                            <el-option label="车船" value="车船"></el-option>
+                            <el-option label="卫生间" value="卫生间"></el-option>
+                            <el-option label="商圈" value="商圈"></el-option>
+                            <el-option label="景点" value="景点"></el-option>
+                            <el-option label="停车场" value="停车场"></el-option>
+                        </el-select>
+                    </p>
+                </div>
+                <!--人员类型-->
+                <div class="personCardContent boatCardContent" v-if="route.includes('personType')">
+                    <p class="basicType">人员类型：<input type="text"v-model="job.name">
+                    </p>
+                </div>
+
                 <div class="text-center p-2">
                     <file-upload
                         extensions="gif,jpg,jpeg,png,webp"
@@ -369,14 +388,15 @@
                 src: {},
                 isShowMapDialog: false,
                 mapVisible: false,
+                basicType: {
+                    type:'片区'
+                },
                 person: {
-                    personBean: {
-                        name:'',
-                        gender:'',
-                        idNum:'',
-                        phone:'',
-                    },
-                    jobId: '',
+                    name:'',
+                    gender:'',
+                    idNum:'',
+                    phone:'',
+                    jobId: this.$route.params.id,
                 },
                 boatCar: {
                     driverId: '',
@@ -462,6 +482,9 @@
                     location: '',
                     description: '',
                 },
+                job: {
+                    name: ''
+                },
                 options: [],
                 route: '',
                 file: {},
@@ -472,14 +495,17 @@
         },
         methods: {
             saveLocation () {
-                console.log(this.getLocation, 'hhhhkhkjhjh')
                 let locationString
                 let regionLocationStr
+                let roatLocationStr
                 if (this.getLocation.length > 0) {
                     locationString = `${this.getLocation[0]},${this.getLocation[1]}`
                 }
                 if (this.getRegionLocation.length > 0) {
                     regionLocationStr = this.getRegionLocation
+                }
+                if (this.getRoatLocation.length > 0) {
+                    roatLocationStr = this.getRoatLocation
                 }
                 if(this.route.includes('trash')) {
                     this.trash.location = locationString
@@ -496,7 +522,7 @@
                 } else if (this.route.includes('area')) {
                     this.area.location = regionLocationStr
                 } else if (this.route.includes('roat')) {
-                    // this.roat = this.Info
+                    this.roat.location = roatLocationStr
                 }
                 this.mapVisible = false
             },
@@ -506,19 +532,19 @@
             },
             addNewInfo () {
                 let newInfo = {}
-                if (this.route.includes('person')) {
+                if (this.route.includes('person') && this.$route.params.id) {
                     newInfo = this.person
                     let  myreg = /^[1][3,4,5,6,7,8][0-9]{9}$/
                     let idReg = /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/
-                    if (newInfo.personBean.name.trim() === '' || newInfo.personBean.gender === '' || newInfo.jobId === '') {
+                    if (newInfo.name.trim() === '' || newInfo.gender === '' || newInfo.jobId === '') {
                         this.$message.error('请填写完整信息')
                         return
                     }
-                    if (newInfo.personBean.phone === '' || !myreg.test(newInfo.personBean.phone)) {
+                    if (newInfo.phone === '' || !myreg.test(newInfo.phone)) {
                         this.$message.error('请填写正确的电话号码')
                         return
                     }
-                    if (newInfo.personBean.idNum === '' || !idReg.test(newInfo.personBean.idNum)) {
+                    if (newInfo.idNum === '' || !idReg.test(newInfo.idNum)) {
                         this.$message.error('请填写正确的身份证号码')
                         return
                     }
@@ -580,6 +606,8 @@
                     newInfo = this.area
                 } else if (this.route.includes('roat')) {
                     newInfo = this.roat
+                } else if (this.route.includes('personType')) {
+                    newInfo = this.job
                 }
                 newInfo.status = true
                 newInfo.checked = false
@@ -675,12 +703,14 @@
             })
             this.route = this.$route.path
             console.log(this.Info,'  opopop')
-            if (this.route.includes('person')) {
+            if (this.route.includes('person') && this.$route.params.id) {
+                let jobId = this.$route.params.id
                 api.person.getJob().then(res => {
                     console.log(res, '所有工种')
                     this.options = res
                 })
                 this.person = this.Info
+                this.person.jobId = jobId
             } else if(this.route.includes('boat')) {
                 let jobId
                 if (this.Info.vehicle) {
@@ -718,6 +748,8 @@
                 this.area = this.Info
             } else if (this.route.includes('roat')) {
                 this.roat = this.Info
+            } else if (this.route.includes('personType')) {
+                this.job = this.Info
             }
         },
         components: {
@@ -755,8 +787,6 @@
             }
         },
         mounted () {
-            console.log(document.getElementsByClassName('card'), 'p[p[p[p[p[')
-            // console.log(this.$refs.test)
         },
         computed: {
             ...mapGetters([
@@ -1192,7 +1222,7 @@
                         overflow: hidden;
                         text-overflow: ellipsis;
                         white-space: nowrap;
-                        line-height: rem(10);
+                        line-height: rem(15);
                     }
                     select{
                         border: none;
@@ -1225,6 +1255,9 @@
                         box-sizing: border-box;
                         border-radius: rem(5);
                     }
+                }
+                .basicType{
+                    text-align: center;
                 }
                 .img{
                     width: rem(100);

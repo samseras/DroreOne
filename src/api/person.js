@@ -43,6 +43,29 @@ const person = {
             url: getUrl('/job')
         })
     },
+    deleteJob (par) {
+        return axios({
+            method: 'DELETE',
+            url: getUrl('/job'),
+            data:{
+                ids: par
+            }
+        })
+    },
+    updataJob (params) {
+        return axios({
+            method: 'PUT',
+            url: getUrl('/job'),
+            data: params
+        })
+    },
+    createJob (params) {
+        return axios({
+            method: 'POST',
+            url: getUrl('/job'),
+            data: params
+        })
+    },
     updataAva (params) {
         console.log(params, 'formdata')
         return axios({
