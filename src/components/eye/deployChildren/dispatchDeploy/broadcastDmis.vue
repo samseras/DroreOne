@@ -82,6 +82,7 @@
 
 <script>
     import ScrollContainer from '@/components/ScrollContainer'
+    import api from '@/api'
     import Header from './dmisHeader'
     import PersonDetail from './dmisDialog'
     export default {
@@ -116,6 +117,23 @@
                     return item.id
                 })
             },
+            // async getBroadcastList (){
+            //     // this.isShowLoading = true
+            //     await api.schedulebroadcast.getbroadcastList().then(res => {
+            //         // this.isShowLoading = false
+            //         console.log(res, '这是请求回来的')
+            //         let that = this;
+            //         res.forEach(function(item){
+            //             item.light.lightIds = item.lightIds;
+            //             that.areaList.push(item.light);
+            //         })
+            //         console.log(that.areaList, '这是请求回来的')
+            //         that.init()
+            //     }).catch(err => {
+            //         console.log(err, '请求失败')
+            //         this.isShowLoading = false
+            //     })
+            // },
             init(){
                 this.areaList.forEach(function(item){
                     let executetime = item.startTime + "~" + item.endTime;
@@ -357,6 +375,7 @@
             PersonDetail
         },
         mounted:function(){
+           // this.getBroadcastList()
             this.init();
             console.log(this.areaList)
         }

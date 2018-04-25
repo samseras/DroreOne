@@ -19,7 +19,9 @@ import gate from './gate'
 import light from './light'
 import police from './police'
 import boat from './boatCar'
-
+import lamppost from './lamppost'
+import schedulebroadcast from './schedulebroadcast'
+import scheduleled from './scheduleled'
 
 export default {
     analyze,
@@ -39,5 +41,8 @@ export default {
     gate,
     light,
     police,
-    boat
+    boat,
+    lamppost,
+    schedulebroadcast,
+    scheduleled,
 }

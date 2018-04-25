@@ -26,6 +26,10 @@ module.exports = {
             target: 'http://192.168.0.110:8090/',
             changeOrigin: true
         },
+        '/schedule':{
+            target: 'http://192.168.0.135:8080/',
+            changeOrigin: true
+        },
         '/analysis': {
             target: 'http://192.168.0.150:9527/',
             changeOrigin: true
