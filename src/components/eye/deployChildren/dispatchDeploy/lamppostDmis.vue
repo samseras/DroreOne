@@ -72,7 +72,7 @@
                               @closeInfoDialog ="visible = false"
                               @fixInfo = "fixInfo"
                               :title = "title"
-                              @addNewInfo="addNewPerson('添加路灯')">
+                              @addNewInfo="addNewPerson">
                 </PersonDetail>
                 <CheckDetail v-if="checkVisible"
                     :visible="checkVisible"
@@ -80,8 +80,7 @@
                     :isDisabled="isDisabled"
                     @closeInfoDialog ="checkVisible = false"
                     :title = "title"
-                    @fixInfo = "fixInfo"
-                    @addNewInfo="addNewPerson">
+                    @fixInfo = "fixInfo">
                 </CheckDetail>
 
 
@@ -329,6 +328,7 @@
                 this.choseList = this.areaList
             },
             addNewPerson (info) {
+                console.log(info)
                 info.id = new Date().getTime()
                 this.areaList.push(info)
                 this.choseList = this.areaList
