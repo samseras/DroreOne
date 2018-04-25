@@ -13,7 +13,7 @@
     import mapLabe from "../../static/js/mapLabelInformationChildrenForm.js"
     import masterDataGrid1 from "../../static/js/masterDataGrid1.js"
     import Scrollcontainer from '@/components/ScrollContainer'
-    import { mapMutations } from 'vuex'
+    import { mapMutations,mapGetters } from 'vuex'
 
     export default {
         name: "map1",
@@ -202,6 +202,9 @@
         },
         components: {
             Scrollcontainer
+        },
+        computed: {
+            ...mapGetters(['getLocationId'])
         }
     }
 </script>
