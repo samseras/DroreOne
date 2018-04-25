@@ -307,17 +307,16 @@
                 <!--路网-->
                 <div class="personCardContent boatCardContent" v-if="route.includes('roat')">
                     <p class="sex">路线名称：<input type="text"v-model="roat.name"></p>
-                    <p class="phoneNum">所在景区：<input type="text"v-model="roat.placeScenic"></p>
                     <p class="phoneNum">位置范围：<span>{{roat.location}}</span><i class="el-icon-location-outline" @click="showMapDialog"></i></p>
                     <p class="type">
                         描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：<textarea name=""v-model="roat.description" cols="30"
                                                                                rows="5" placeholder="请输入描述信息"></textarea>
                     </p>
-                    <div class="img">
-                        <label for="avatar">
-                            <img :src="files.length ? files[0].url : 'https://www.gravatar.com/avatar/default?s=200&r=pg&d=mm'"  class="rounded-circle" />
-                        </label>
-                    </div>
+                    <!--<div class="img">-->
+                        <!--<label for="avatar">-->
+                            <!--<img :src="files.length ? files[0].url : 'https://www.gravatar.com/avatar/default?s=200&r=pg&d=mm'"  class="rounded-circle" />-->
+                        <!--</label>-->
+                    <!--</div>-->
                 </div>
                 <!--设施类行-->
                 <div class="personCardContent boatCardContent" v-if="route.includes('basictype')">
@@ -478,7 +477,6 @@
                 },
                 roat: {
                     name: '',
-                    placeScenic: '',//所在景区
                     location: '',
                     description: '',
                 },

@@ -8,7 +8,6 @@
                 <Header @addNewInfo = "addNewInfo"
                         @deletInfo = "deletInfo"
                         @toggleList = "toggleList"
-                        @choseType = 'choseType'
                         @selectedAll = 'selectedAll'
                         @fixedInfo = 'fixedInfo'>
                 </Header>
@@ -181,25 +180,6 @@
                     this.choseInfoId.push(id)
                 }
             },
-            choseType (type) {
-                console.log(type)
-                if (type.length === 0){
-                    this.areaList = this.areaList.filter((item) => {
-                        item.status = true
-                        return item.status === true
-                    })
-                } else {
-                    this.choseList = this.areaList.filter((item,index) => {
-                        if (type.includes(item.type)){
-                            item.status = true
-                        } else if(!type.includes(item.type)){
-                            item.status = false
-                            console.log(item.type, 'p[p[p[');
-                        }
-                        return item.status === true
-                    })
-                }
-            },
             selectedAll (state) {
                 console.log(state, 'opopopopop')
                 this.areaList = this.areaList.filter((item) => {
@@ -219,7 +199,11 @@
                 let aresObj = {
                     id: info.id,
                     name: info.name,
-                    description: info.description
+                    description: info.description,
+                    geo: {
+                        type:"Polygon",
+                        coordinates: info.location
+                    }
                 }
                 api.area.updateRegion(JSON.stringify(aresObj)).then(res => {
                     console.log(res, '创建成功')
@@ -231,9 +215,14 @@
                 })
             },
             async addNewPerson (info) {
+                console.log(info.location, 'p[p[p[p[p[p[p[p[p[')
                 let aresObj = {
                     name: info.name,
-                    description: info.description
+                    description: info.description,
+                    geo: {
+                        type:"Polygon",
+                        coordinates: info.location
+                    }
                 }
                 if (info.imgUrl !== '') {
                     await api.person.updataAva(info.imgUrl).then(res => {
@@ -281,6 +270,7 @@
                     for (let i = 0; i < this.areaList.length; i++) {
                         this.areaList[i].checked = false
                         this.areaList[i].status = true
+                        this.areaList[i].location = this.areaList[i].geo
                     }
                 }).catch(err => {
                     console.log(err, '失败')
