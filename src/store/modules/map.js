@@ -51,6 +51,7 @@ const map = {
         },
         [types.LOCATION_ID] (state, data) {
             state.locationId = data
+            console.log(state.locationId,'1231123123')
         },
     },
     actions: {

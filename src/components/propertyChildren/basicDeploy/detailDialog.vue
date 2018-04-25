@@ -753,6 +753,8 @@
             if (this.Info.id) {
                 console.log(this.Info.id, '这是拿到的Id')
                 this.$store.commit('LOCATION_ID', this.Info.id)
+            }else {
+                this.$store.commit('LOCATION_ID', '')
             }
         },
         components: {

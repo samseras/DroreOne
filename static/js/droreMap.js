@@ -2057,6 +2057,7 @@ define(function(require, exports, module) {
                      type: "get",
                      url: "/static/xxsd_mapData.json",
                      async: false,
+                     cache:false,
                      success: function(data) {
                          console.log(data);
                          var obj = data.data;
@@ -2350,7 +2351,6 @@ define(function(require, exports, module) {
              icon: {
                  Marker: cover.Marker,
                  addChild: function(icon) { //TODO 添加标签新入口
-                     console.log(icon)
                      if(icon.constructor != cover.Marker) {
                          throw new Error("the type of parameter is wrong!");
                          return;
@@ -2363,6 +2363,7 @@ define(function(require, exports, module) {
                      } else {
                          layer = mapLayer.creatLayer(icon.data.url, icon.subtype);
                          mapData._baseMap.addLayer(layer);
+                         console.log(layer)
                          pool.setSeedLayer(icon.subtype, layer);
                          layer.getSource().addFeature(icon.feature);
                      }
@@ -2599,6 +2600,6 @@ define(function(require, exports, module) {
          }
 
      })($, ol)
-  module.exports = droreMap;
+     module.exports = droreMap;
  })
 
