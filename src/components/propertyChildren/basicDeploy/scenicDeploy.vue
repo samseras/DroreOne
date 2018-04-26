@@ -235,18 +235,6 @@
                     longitude: longitude
                 }
                 console.log(scenicObj, 'this is trashObj')
-                if (info.imgUrl !== '') {
-                    await api.person.updataAva(info.imgUrl).then(res => {
-                        console.log(res, '上传成功')
-                        scenicObj.pictureId = res.id
-                    }).catch(err => {
-                        console.log(err, '上传失败')
-                        this.$message.error('上传失败，请稍后重试')
-                        return
-                    })
-                } else {
-                    scenicObj.pictureId = info.pictureId
-                }
                 await api.scenic.updateScenic(JSON.stringify(scenicObj)).then(res => {
                     console.log('增加成功')
                     this.$message.success('修改成功')
@@ -266,16 +254,6 @@
                     longitude: longitude
                 }
                 console.log(scenicObj, 'this is trashObj')
-                if (info.imgUrl !== '') {
-                    await api.person.updataAva(info.imgUrl).then(res => {
-                        console.log(res, '上传成功')
-                        scenicObj.pictureId = res.id
-                    }).catch(err => {
-                        console.log(err, '上传失败')
-                        this.$message.error('上传失败，请稍后重试')
-                        return
-                    })
-                }
                 await api.scenic.createScenic(JSON.stringify(scenicObj)).then(res => {
                     console.log('增加成功')
                     this.getAllScenic()
@@ -353,7 +331,7 @@
         flex-direction: column;
         .title{
             width: 100%;
-            padding: rem(5) 0 rem(5) rem(15);
+            padding: rem(16) 0 rem(17) rem(15);;
             box-sizing: border-box;
             font-size: rem(16);
             color: #0086b3;

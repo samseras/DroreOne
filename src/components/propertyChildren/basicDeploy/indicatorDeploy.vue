@@ -228,16 +228,6 @@
                     longitude: longitude
                 }
                 console.log(indicatorObj, 'this is trashObj')
-                if (info.imgUrl !== '') {
-                    await api.person.updataAva(info.imgUrl).then(res => {
-                        console.log(res, '上传成功')
-                        indicatorObj.pictureId = res.id
-                    }).catch(err => {
-                        console.log(err, '上传失败')
-                        this.$message.error('上传失败，请稍后重试')
-                        return
-                    })
-                }
                 await api.indicator.updateIndicator(JSON.stringify(indicatorObj)).then(res => {
                     console.log('修改成功')
                     this.$message.success('修改成功')
@@ -256,18 +246,6 @@
                     regionId: info.regionId,
                     latitude: latitude,
                     longitude: longitude
-                }
-                if (info.imgUrl !== '') {
-                    await api.person.updataAva(info.imgUrl).then(res => {
-                        console.log(res, '上传成功')
-                        indicatorObj.pictureId = res.id
-                    }).catch(err => {
-                        console.log(err, '上传失败')
-                        this.$message.error('上传失败，请稍后重试')
-                        return
-                    })
-                } else {
-                    indicatorObj.pictureId = info.pictureId
                 }
                 await api.indicator.createIndicator(JSON.stringify(indicatorObj)).then(res => {
                     console.log('增加成功')
@@ -346,7 +324,7 @@
         flex-direction: column;
         .title{
             width: 100%;
-            padding: rem(5) 0 rem(5) rem(15);
+            padding: rem(16) 0 rem(17) rem(15);
             box-sizing: border-box;
             font-size: rem(16);
             color: #0086b3;
