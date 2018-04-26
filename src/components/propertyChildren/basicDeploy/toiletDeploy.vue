@@ -224,16 +224,6 @@
                     latitude: latitude,
                     longitude: longitude
                 }
-                if (info.imgUrl !== '') {
-                    await api.person.updataAva(info.imgUrl).then(res => {
-                        console.log(res, '上传成功')
-                        toiletObj.pictureId = res.id
-                    }).catch(err => {
-                        console.log(err, '上传失败')
-                    })
-                } else {
-                    toiletObj.pictureId = info.pictureId
-                }
                 await api.toilet.updateToilet(JSON.stringify(toiletObj)).then(res => {
                     console.log(res, '修改成功')
                     this.$message.success('修改成功')
@@ -253,14 +243,6 @@
                     regionId: info.regionId,
                     latitude: latitude,
                     longitude: longitude
-                }
-                if (info.imgUrl !== '') {
-                   await api.person.updataAva(info.imgUrl).then(res => {
-                        console.log(res, '上传成功')
-                        toiletObj.pictureId = res.id
-                    }).catch(err => {
-                        console.log(err, '上传失败')
-                   })
                 }
                await api.toilet.createToilet(JSON.stringify(toiletObj)).then(res => {
                     console.log(res, '添加成功')
@@ -334,7 +316,7 @@
         flex-direction: column;
         .title{
             width: 100%;
-            padding: rem(5) 0 rem(5) rem(15);
+            padding: rem(16) 0 rem(17) rem(15);
             box-sizing: border-box;
             font-size: rem(16);
             color: #0086b3;

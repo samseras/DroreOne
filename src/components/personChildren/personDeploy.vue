@@ -320,7 +320,6 @@
                         this.personList[i].checked = false
                         this.personList[i].status = true
                         this.personList[i].jobId = this.$route.params.id
-
                     }
                 }).catch(err => {
                     console.log(err)
@@ -343,10 +342,12 @@
             }
         },
         created() {
+            this.personList = []
             this.getAllPerson()
         },
         watch: {
             '$route' () {
+                this.personList = []
                 this.getAllPerson()
             }
         },
@@ -366,7 +367,7 @@
         flex-direction: column;
         .title {
             width: 100%;
-            padding: rem(5) 0 rem(5) rem(15);
+            padding: rem(16) 0 rem(17) rem(15);
             box-sizing: border-box;
             font-size: rem(16);
             color: #0086b3;

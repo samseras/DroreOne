@@ -6,6 +6,9 @@ const map = {
         location: [],//点
         regionLocation: [],//片区
         roatLocation: [],// 路网
+        isSaveRegionLocation: false,
+        isSaveRoatLocation: false,
+        locationId: ''
     },
     getters: {
         getLocation (state) {
@@ -17,6 +20,15 @@ const map = {
         getRoatLocation (state) {
             return state.roatLocation
         },
+        getRegionLocationState (state) {
+            return state.isSaveRegionLocation
+        },
+        getRoatLocationState (state) {
+            return state.isSaveRoatLocation
+        },
+        getLocationId (state) {
+            return state.locationId
+        }
     },
     setters: {},
 
@@ -30,6 +42,16 @@ const map = {
         },
         [types.MAP_ROAT_LOCATION] (state, data) {
             state.roatLocation = data
+        },
+        [types.REGION_LOCATION_STATE] (state, data) {
+            state.isSaveRegionLocation = data
+        },
+        [types.ROAT_LOCATION_STATE] (state, data) {
+            state.isSaveRoatLocation = data
+        },
+        [types.LOCATION_ID] (state, data) {
+            state.locationId = data
+            console.log(state.locationId,'1231123123')
         },
     },
     actions: {

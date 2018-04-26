@@ -248,18 +248,6 @@
                     latitude: latitude,
                     longitude: longitude
                 }
-                if (info.imgUrl !== '') {
-                    await api.person.updataAva(info.imgUrl).then(res => {
-                        console.log(res, '上传成功')
-                        parkObj.pictureId = res.id
-                    }).catch(err => {
-                        console.log(err, '上传失败')
-                        this.$message.error('上传失败，请稍后重试')
-                        return
-                    })
-                } else {
-                    parkObj.pictureId = info.pictureId
-                }
                 await api.park.updatePark(JSON.stringify(parkObj)).then(res => {
                     console.log(res, '修改停车场成功')
                     this.$message.success('修改成功')
@@ -281,16 +269,6 @@
                     latitude: latitude,
                     longitude: longitude
                 }
-                if (info.imgUrl !== '') {
-                    await api.person.updataAva(info.imgUrl).then(res => {
-                        console.log(res, '上传成功')
-                        parkObj.pictureId = res.id
-                    }).catch(err => {
-                        console.log(err, '上传失败')
-                        this.$message.error('上传失败，请稍后重试')
-                        return
-                    })
-                }
                 await api.park.createPark(JSON.stringify(parkObj)).then(res => {
                     console.log(res, '创建停车场成功')
                     this.$message.success('创建成功')
@@ -305,6 +283,7 @@
                 }
                 if (this.choseInfoId.length > 1) {
                     this.$message.warning('至多选择一个数据修改')
+                    return
                 }
                 if (this.choseInfoId.length > 0) {
                     this.parkList.map((item) => {
@@ -371,7 +350,7 @@
         flex-direction: column;
         .title{
             width: 100%;
-            padding: rem(5) 0 rem(5) rem(15);
+            padding: rem(16) 0 rem(17) rem(15);
             box-sizing: border-box;
             font-size: rem(16);
             color: #0086b3;

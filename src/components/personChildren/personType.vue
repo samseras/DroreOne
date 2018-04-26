@@ -1,10 +1,10 @@
 <template>
     <div class="personType">
         <div class="title">
-            人员信息
+            职业
         </div>
         <div class="personContent">
-            <div class="funcTitle">
+            <div class="funcTitle" v-if="false">
                 <Header @addNewInfo="addNewInfo"
                         @deletInfo="deletInfo"
                         @toggleList="toggleList"
@@ -29,19 +29,19 @@
                         </el-table-column>
                         <el-table-column
                             prop="name"
-                            label="人员类型"
+                            label="职业"
                             width="960">
                         </el-table-column>
 
-                        <el-table-column
-                            label="操作">
-                            <template slot-scope="scope">
-                                <span @click="fixedInfo(scope.row.id )">编辑</span>
-                                <span class="line">|</span>
-                                <span @click="showPersonDetail(scope.row, '人员信息')">查看</span>
-                                <span class="line">|</span>
-                                <span @click="deletInfo(scope.row.id)">删除</span>
-                            </template>
+                        <el-table-column>
+                            <!--label="操作">-->
+                            <!--<template slot-scope="scope">-->
+                                <!--<span @click="fixedInfo(scope.row.id )">编辑</span>-->
+                                <!--<span class="line">|</span>-->
+                                <!--<span @click="showPersonDetail(scope.row, '人员信息')">查看</span>-->
+                                <!--<span class="line">|</span>-->
+                                <!--<span @click="deletInfo(scope.row.id)">删除</span>-->
+                            <!--</template>-->
                         </el-table-column>
                     </el-table>
                 </ScrollContainer>
@@ -315,10 +315,10 @@
         flex-direction: column;
         .title {
             width: 100%;
-            padding: rem(5) 0 rem(5) rem(15);
+            padding: rem(16) 0 rem(17) rem(15);
             box-sizing: border-box;
             font-size: rem(16);
-            color: #0086b3;
+            color: #4ac4f2;
             font-weight: 600;
             border-bottom: 1px solid #ccc;
         }
@@ -339,7 +339,7 @@
             .personList {
                 width: 100%;
                 flex: 1;
-                margin-top: rem(20);
+                /*margin-top: rem(20);*/
                 .personInfo {
                     width: rem(210);
                     height: rem(140);

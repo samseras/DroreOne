@@ -1,20 +1,20 @@
 <template>
     <div class="detailDialog">
         <el-dialog
-            :title="checkTitle"
+            :title = "title"
             :visible="visible"
             :before-close="lastInfo"
             width="600px"
             class="dialog echatDialog"
             center>
             <div class="lamppostCheck">
-                <p class="sex">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 称：{{checkTitle}}</p>
-                <p class="time">调度时间：</p>
-                <p class="Hardware">执行时间：</p>
+                <p class="sex">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 称：{{checkInfo.name}}</p>
+                <p class="time">调度时间：{{checkInfo.time}}</p>
+                <p class="Hardware">执行时间：{{checkInfo.executetime}}</p>
                 <p class="name">关联路灯：
                     </p>
                 <p class="type">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：
-                    <textarea name="" v-model="hardware.describe" cols="70"
+                    <textarea name="" v-model="checkInfo.description" cols="70"
                               rows="5" placeholder="请输入描述信息"></textarea></p>
             </div>
             <div class=""slot="footer" class="dialog-footer cardFooter">
@@ -28,7 +28,7 @@
 <script>
     export default {
         name: "lamppost-check-dialog",
-        props: ['visible', 'checknfo','isDisabled','checkTitle'],
+        props: ['visible', 'checkInfo','isDisabled','title'],
         data(){
             return {
                 hardware: {

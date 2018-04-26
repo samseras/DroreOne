@@ -84,11 +84,9 @@ import PoliceHware from '@/components/propertyChildren/hardwareDeploy/policeHard
 
 import broadcastDmis from '@/components/eye/deployChildren/dispatchDeploy/broadcastDmis' //广播播放
 import lamppostDmis from '@/components/eye/deployChildren/dispatchDeploy/lamppostDmis' //路灯照明
-import screenDmis from '@/components/eye/deployChildren/dispatchDeploy/screenDmis' //大屏播放
+import screenDmis from '@/components/eye/deployChildren/dispatchDeploy/screenDmis' //LED
 import securityDmis from '@/components/eye/deployChildren/dispatchDeploy/securityDmis' //巡更巡检
-import purifierDmis from '@/components/eye/deployChildren/dispatchDeploy/purifierDmis' //保洁排版
-import conductorDmis from '@/components/eye/deployChildren/dispatchDeploy/conductorDmis' //售票排版
-import tellersDmis from '@/components/eye/deployChildren/dispatchDeploy/tellersDmis' //检票排版
+import purifierDmis from '@/components/eye/deployChildren/dispatchDeploy/purifierDmis' //保洁
 
 import dispatchRecord from '@/components/eye/deployChildren/recordDeploy/dispatchRecord' //调度统计
 
@@ -181,15 +179,13 @@ const routes = [
                     {path:'/deploy/screen-Dmis',name:'screenDmis',component:screenDmis},
                     {path:'/deploy/security-Dmis',name:'securityDmis',component:securityDmis},
                     {path:'/deploy/purifier-Dmis',name:'purifierDmis',component:purifierDmis},
-                    {path:'/deploy/conductor-Dmis',name:'conductorDmis',component:conductorDmis},
-                    {path:'/deploy/tellers-Dmis',name:'tellersDmis',component:tellersDmis},
 
                     {path:'/deploy/dispatch-Record',name:'dispatchRecord',component:dispatchRecord}
                 ]
             }
         ]
     },
-    //资产
+    //数据中心
     {
         path: '/property',
         name: 'property',
@@ -245,20 +241,20 @@ const routes = [
                     {path: '/hard-property/police-Hware', name: 'PoliceHware', component: PoliceHware},
                     {path: '/hard-property/monitors-Hware', name: 'MonitorsHware', component: MonitorsHware},
                 ]
+            },
+            {
+                path: '/person',
+                name: PersonPlat,
+                component: PersonPlat,
+                redirect: '/person/personType',
+                children: [
+                    {path: '/person/personType', name: "PersonType", component: PersonType},
+                    { path: '/person/:id',name: 'PersonDeploy', component:PersonDeploy }
+                ]
             }
         ]
     },
   //  人员
-    {
-        path: '/person',
-        name: PersonPlat,
-        component: PersonPlat,
-        redirect: '/person/personType',
-        children: [
-            {path: '/person/personType', name: "PersonType", component: PersonType},
-            { path: '/person/:id',name: 'PersonDeploy', component:PersonDeploy }
-        ]
-    }
   ]
 const router = new Router({
     mode: 'history',

@@ -79,12 +79,6 @@
                     </p>
                     <p class="phoneNum" v-if="isDisabled">联系电话：<input type="text"v-model="boatCar.phone"></p>
                     <p class="phoneNum">设备号码：<input type="text"v-model="boatCar.vehicle.model"></p>
-                    <div class="img">
-                        <img :src="boatCar.picturePath" alt="" v-if="isDisabled">
-                        <label for="avatar" v-if="!isDisabled">
-                            <img :src="files.length ? files[0].url : 'https://www.gravatar.com/avatar/default?s=200&r=pg&d=mm'"  class="rounded-circle" />
-                        </label>
-                    </div>
                 </div>
                 <!--指示牌-->
                 <div class="personCardContent boatCardContent" v-if="route.includes('indicator')">
@@ -106,12 +100,6 @@
                         </el-select>
                     </p>
                     <p class="phoneNum">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置：<span>{{indicator.location}}</span><i class="el-icon-location-outline" @click="showMapDialog"></i></p>
-                    <div class="img">
-                        <img :src="indicator.picturePath" alt="" v-if="isDisabled">
-                        <label for="avatar" v-if="!isDisabled">
-                            <img :src="files.length ? files[0].url : 'https://www.gravatar.com/avatar/default?s=200&r=pg&d=mm'"  class="rounded-circle" />
-                        </label>
-                    </div>
                 </div>
                 <!--垃圾桶-->
                 <div class="personCardContent boatCardContent" v-if="route.includes('trash')">
@@ -140,13 +128,6 @@
                             </el-option>
                         </el-select>
                     </p>
-                    <div class="img">
-                        <!--<img src="" alt="">-->
-                        <img :src="trash.picturePath" alt="" v-if="isDisabled">
-                        <label for="avatar" v-if="!isDisabled">
-                            <img :src="files.length ? files[0].url : 'https://www.gravatar.com/avatar/default?s=200&r=pg&d=mm'"  class="rounded-circle" />
-                        </label>
-                    </div>
                 </div>
                 <!--景点-->
                 <div class="personCardContent boatCardContent" v-if="route.includes('scenic')">
@@ -173,12 +154,6 @@
 
                     <p class="phoneNum">当前人数：<input type="text"v-model="scenic.scenicspotBean.currentNum"></p>
                     <p class="phoneNum">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置：<span>{{scenic.location}}</span><i class="el-icon-location-outline" @click="showMapDialog"></i></p>
-                    <div class="img">
-                        <img :src="scenic.picturePath" alt="" v-if="isDisabled">
-                        <label for="avatar" v-if="!isDisabled">
-                            <img :src="files.length ? files[0].url : 'https://www.gravatar.com/avatar/default?s=200&r=pg&d=mm'"  class="rounded-circle" />
-                        </label>
-                    </div>
                 </div>
                 <!--商圈-->
                 <div class="personCardContent boatCardContent" v-if="route.includes('shop')">
@@ -214,12 +189,6 @@
                             </el-option>
                         </el-select>
                     </p>
-                    <div class="img">
-                        <img :src="shop.picturePath" alt="" v-if="isDisabled">
-                        <label for="avatar" v-if="!isDisabled">
-                            <img :src="files.length ? files[0].url : 'https://www.gravatar.com/avatar/default?s=200&r=pg&d=mm'"  class="rounded-circle" />
-                        </label>
-                    </div>
                 </div>
                 <!--停车场-->
                 <div class="personCardContent boatCardContent" v-if="route.includes('park')">
@@ -253,12 +222,6 @@
                             </el-option>
                         </el-select>
                     </p>
-                    <div class="img">
-                        <img :src="park.picturePath" alt="" v-if="isDisabled">
-                        <label for="avatar" v-if="!isDisabled">
-                            <img :src="files.length ? files[0].url : 'https://www.gravatar.com/avatar/default?s=200&r=pg&d=mm'"  class="rounded-circle" />
-                        </label>
-                    </div>
                 </div>
                 <!--洗手间-->
                 <div class="personCardContent boatCardContent" v-if="route.includes('toilet')">
@@ -281,43 +244,25 @@
                         </el-select>
                     </p>
                     <p class="phoneNum">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置：<span>{{toilet.location}}</span><i class="el-icon-location-outline" @click="showMapDialog"></i></p>
-                    <div class="img">
-                        <img :src="toilet.picturePath" alt="" v-if="isDisabled">
-                        <label for="avatar" v-if="!isDisabled">
-                            <img :src="files.length ? files[0].url : 'https://www.gravatar.com/avatar/default?s=200&r=pg&d=mm'"  class="rounded-circle" />
-                        </label>
-                    </div>
                 </div>
                 <!--片区-->
                 <div class="personCardContent boatCardContent" v-if="route.includes('area')">
                     <p class="sex">片区名称：<input type="text" v-model="area.name" required="required"></p>
                     <p class="phoneNum" v-if="false">所在景区：<input type="text"v-model="area.placeScenic"></p>
-                    <p class="phoneNum">位置范围：<input type="text"v-model="area.location"><i class="el-icon-location-outline" @click="showMapDialog"></i></p>
+                    <p class="phoneNum">位置范围：<span>{{area.location}}</span><i class="el-icon-location-outline" @click="showMapDialog"></i></p>
                     <p class="type">
                         描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：<textarea name="" v-model="area.description" cols="30"
                                                                                rows="5" placeholder="请输入描述信息"></textarea>
                     </p>
-                    <div class="img">
-                        <img :src="area.picturePath" alt="" v-if="isDisabled">
-                        <label for="avatar" v-if="!isDisabled">
-                            <img :src="files.length ? files[0].url : 'https://www.gravatar.com/avatar/default?s=200&r=pg&d=mm'"  class="rounded-circle" />
-                        </label>
-                    </div>
                 </div>
                 <!--路网-->
                 <div class="personCardContent boatCardContent" v-if="route.includes('roat')">
                     <p class="sex">路线名称：<input type="text"v-model="roat.name"></p>
-                    <p class="phoneNum">所在景区：<input type="text"v-model="roat.placeScenic"></p>
-                    <p class="phoneNum">位置范围：<input type="text"v-model="roat.location"><i class="el-icon-location-outline" @click="showMapDialog"></i></p>
+                    <p class="phoneNum">位置范围：<span>{{roat.location}}</span><i class="el-icon-location-outline" @click="showMapDialog"></i></p>
                     <p class="type">
                         描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：<textarea name=""v-model="roat.description" cols="30"
                                                                                rows="5" placeholder="请输入描述信息"></textarea>
                     </p>
-                    <div class="img">
-                        <label for="avatar">
-                            <img :src="files.length ? files[0].url : 'https://www.gravatar.com/avatar/default?s=200&r=pg&d=mm'"  class="rounded-circle" />
-                        </label>
-                    </div>
                 </div>
                 <!--设施类行-->
                 <div class="personCardContent boatCardContent" v-if="route.includes('basictype')">
@@ -375,7 +320,7 @@
     import Cropper from 'cropperjs'
     import FileUpload from 'vue-upload-component'
     import api from '@/api'
-    import { mapGetters } from 'vuex'
+    import { mapGetters,mapMutations} from 'vuex'
     export default {
         name: "person-detail",
         props: ['visible', 'Info','isDisabled','title'],
@@ -478,7 +423,6 @@
                 },
                 roat: {
                     name: '',
-                    placeScenic: '',//所在景区
                     location: '',
                     description: '',
                 },
@@ -494,15 +438,19 @@
             }
         },
         methods: {
+            ...mapMutations(['LOCATION_ID']),
             saveLocation () {
-                console.log(this.getLocation, 'hhhhkhkjhjh')
                 let locationString
                 let regionLocationStr
+                let roatLocationStr
                 if (this.getLocation.length > 0) {
                     locationString = `${this.getLocation[0]},${this.getLocation[1]}`
                 }
                 if (this.getRegionLocation.length > 0) {
                     regionLocationStr = this.getRegionLocation
+                }
+                if (this.getRoatLocation.length > 0) {
+                    roatLocationStr = this.getRoatLocation
                 }
                 if(this.route.includes('trash')) {
                     this.trash.location = locationString
@@ -519,7 +467,7 @@
                 } else if (this.route.includes('area')) {
                     this.area.location = regionLocationStr
                 } else if (this.route.includes('roat')) {
-                    // this.roat = this.Info
+                    this.roat.location = roatLocationStr
                 }
                 this.mapVisible = false
             },
@@ -748,6 +696,12 @@
             } else if (this.route.includes('personType')) {
                 this.job = this.Info
             }
+            if (this.Info.id) {
+                console.log(this.Info.id, '这是拿到的Id')
+                this.$store.commit('LOCATION_ID', this.Info.id)
+            }else {
+                this.$store.commit('LOCATION_ID', '')
+            }
         },
         components: {
             FileUpload,
@@ -784,8 +738,6 @@
             }
         },
         mounted () {
-            console.log(document.getElementsByClassName('card'), 'p[p[p[p[p[')
-            // console.log(this.$refs.test)
         },
         computed: {
             ...mapGetters([
@@ -1221,7 +1173,7 @@
                         overflow: hidden;
                         text-overflow: ellipsis;
                         white-space: nowrap;
-                        line-height: rem(10);
+                        line-height: rem(15);
                     }
                     select{
                         border: none;

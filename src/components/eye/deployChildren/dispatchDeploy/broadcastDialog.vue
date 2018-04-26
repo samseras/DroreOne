@@ -52,9 +52,6 @@
 </template>
 
 <script>
-    // import 'APlayer/dist/APlayer.min.css'
-    // import 'vue-aplayer/dist/vue-aplayer.min.js'
-    // import APlayer from 'vue-aplayer';
      import VueAplayer from 'vue-aplayer'
     export default {
         props: ['visible'],
@@ -205,7 +202,9 @@
                 console.log(this.selectNameList)
             },
             saveBroadMusicList(){
-                console.log(this.playMusicList)
+                let musicList = this.playMusicList;
+                this.$emit('saveMusicList',musicList)
+                console.log(musicList)
             }
         },
         watch:{

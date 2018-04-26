@@ -21,6 +21,10 @@ import police from './police'
 import boat from './boatCar'
 import types from './type'
 import gps from './gps'
+import lamppost from './lamppost'
+import schedulebroadcast from './schedulebroadcast'
+import scheduleled from './scheduleled'
+import roat from './roat'
 
 
 export default {
@@ -43,5 +47,9 @@ export default {
     police,
     boat,
     types,
-    gps
+    gps,
+    lamppost,
+    schedulebroadcast,
+    scheduleled,
+    roat
 }
