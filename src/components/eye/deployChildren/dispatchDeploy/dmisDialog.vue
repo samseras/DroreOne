@@ -45,16 +45,16 @@
                         <el-select v-model="security.people" size="mini" class="" multiple placeholder="请选择">
                             <el-option
                                 v-for="item in options"
-                                :key="item.type"
-                                :label="item.type"
-                                :value="item.type">
+                                :key="item.id"
+                                :label="item.name"
+                                :value="item.id">
                             </el-option>
                         </el-select>
                     </p>
-                    <p class="idNum">重复调度：
-                        <el-radio v-model="radio" label="1">是</el-radio>
-                        <el-radio v-model="radio" label="0">否</el-radio>
-                    </p>
+                    <!--<p class="idNum">重复调度：-->
+                        <!--<el-radio v-model="radio" label="1">是</el-radio>-->
+                        <!--<el-radio v-model="radio" label="0">否</el-radio>-->
+                    <!--</p>-->
                     <p class="phoneNum">线路绘制：<input type="text"v-model="security.location" class="location" @click="showMapDialog"><img src="" alt="" @click="showMapDialog"></p>
                     <p class="type">
                         描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：<textarea name="" v-model="security.describe" cols="30"
@@ -99,10 +99,10 @@
                             </el-option>
                         </el-select>
                     </p>
-                    <p class="idNum">重复调度：
-                        <el-radio v-model="radio" label="1">是</el-radio>
-                        <el-radio v-model="radio" label="0">否</el-radio>
-                    </p>
+                    <!--<p class="idNum">重复调度：-->
+                        <!--<el-radio v-model="radio" label="1">是</el-radio>-->
+                        <!--<el-radio v-model="radio" label="0">否</el-radio>-->
+                    <!--</p>-->
                     <p class="uploadText">定义内容：
                         <input type="text"v-model="broadcast.musicIds" class="inputText">
                         <el-button slot="trigger" size="small" type="primary" @click="showBroadcastDialog" :disabled='isDisabled'>曲目编辑</el-button>
@@ -114,7 +114,7 @@
                 </div>
                 <!--路灯-->
                 <div class="personCardContent" v-if="route.includes('lamppost')">
-                    <p class="sex">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 称：<input type="text"v-model="lamppost.name" class="inputText"></p>
+                    <p class="sex">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 称：<input type="text" v-model="lamppost.name" class="inputText"></p>
                     <p class="time">时&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 间：
                         <el-checkbox-group v-model="filterList" @change="weekDay">
                             <el-checkbox v-for="item in week" :label="item.type"></el-checkbox>
@@ -141,7 +141,7 @@
                         </el-time-picker>
                     </p>
                     <p class="name">关联路灯：
-                        <el-select v-model="lamppost.associatedradio" size="mini" multiple placeholder="请选择">
+                        <el-select v-model="selectLight" size="mini" multiple placeholder="请选择">
                             <el-option
                                 v-for="item in options"
                                 :key="item.id"
@@ -150,10 +150,10 @@
                             </el-option>
                         </el-select>
                     </p>
-                    <p class="idNum">重复调度：
-                        <el-radio v-model="radio" label="1">是</el-radio>
-                        <el-radio v-model="radio" label="0">否</el-radio>
-                    </p>
+                    <!--<p class="idNum">重复调度：-->
+                        <!--<el-radio v-model="radio" label="1">是</el-radio>-->
+                        <!--<el-radio v-model="radio" label="0">否</el-radio>-->
+                    <!--</p>-->
                     <p class="type">
                         描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：<textarea name="" v-model="lamppost.description" cols="30"
                                                                                rows="5" placeholder="请输入描述信息"></textarea>
@@ -202,10 +202,10 @@
                             </el-option>
                         </el-select>
                     </p>
-                    <p class="idNum">重复调度：
-                        <el-radio v-model="radio" label="1">是</el-radio>
-                        <el-radio v-model="radio" label="0">否</el-radio>
-                    </p>
+                    <!--<p class="idNum">重复调度：-->
+                        <!--<el-radio v-model="radio" label="1">是</el-radio>-->
+                        <!--<el-radio v-model="radio" label="0">否</el-radio>-->
+                    <!--</p>-->
                     <p class="name">片&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 区：
                         <el-select v-model="purifier.people" size="mini" class="" multiple placeholder="请选择">
                             <el-option
@@ -254,16 +254,16 @@
                         <el-select v-model="screen.associatedradio" size="mini" multiple placeholder="请选择">
                             <el-option
                                 v-for="item in options"
-                                :key="item.type"
-                                :label="item.type"
-                                :value="item.type">
+                                :key="item.id"
+                                :label="item.name"
+                                :value="item.id">
                             </el-option>
                         </el-select>
                     </p>
-                    <p class="idNum">重复调度：
-                        <el-radio v-model="radio" label="1">是</el-radio>
-                        <el-radio v-model="radio" label="0">否</el-radio>
-                    </p>
+                    <!--<p class="idNum">重复调度：-->
+                        <!--<el-radio v-model="radio" label="1">是</el-radio>-->
+                        <!--<el-radio v-model="radio" label="0">否</el-radio>-->
+                    <!--</p>-->
                     <p class="uploadText">定义内容：
                         <input type="text"v-model="screen.uploadText" class="inputText">
                         <el-button slot="trigger" size="small" type="primary" @click = "showScreenDialog" :disabled='isDisabled'>定义内容</el-button>
@@ -288,6 +288,7 @@
 <script>
     import MapDialog from './mapDialog'
     import api from '@/api'
+    import moment from 'moment'
     import broadcastDialog from './broadcastDialog'
     import ScreenDialog from './screenDialog'
     import Cropper from 'cropperjs'
@@ -298,6 +299,7 @@
         data () {
             return {
                 files: [],
+                selectLight:[],
                 edit: false,
                 cropper: false,
                 src: '',
@@ -307,19 +309,32 @@
                 broadcastVisible:false,
                 screenVisible:false,
                 broadcast: {},
-                lamppost:{},
+                lamppost:{
+                    id:"",
+                    name:"",
+                    customizedDays:false,
+                    days:[],
+                    startDate:"",
+                    endDate:"",
+                    startTime:"",
+                    endTime:"",
+                    type:5,
+                    enabled:true,
+                    description:"",
+                    lightIds:[]
+                },
                 security:{},
                 purifier:{},
                 screen:{},
                 options: [
-                    { name: '保洁1'},
-                    { name: '保洁2'},
-                    { name: '保洁3'},
-                    { name: '保洁4'},
-                    {name: 'A-GB001'},
-                    {name: 'A-GB002'},
-                    {name: 'A-GB003'},
-                    {name: 'A-GB004'}
+                    // { name: '保洁1'},
+                    // { name: '保洁2'},
+                    // { name: '保洁3'},
+                    // { name: '保洁4'},
+                    // {name: 'A-GB001'},
+                    // {name: 'A-GB002'},
+                    // {name: 'A-GB003'},
+                    // {name: 'A-GB004'}
                 ],
                 associatedRadio:true,
                 associatedScreen:false,
@@ -361,31 +376,62 @@
             fi (e) {
                 this.file = e.target.files[0]
             },
-            select () {
-                console.log(this.type, 'klklkl')
+            timeDateFiler(item) {
+                return  moment(item).format('YYYY-MM-DD');
+            },
+            timeTimeFiler(item) {
+                return moment(item).format('YY:MM:DD');
+            },
+            days(weeks){
+                let arr = [];
+                weeks = weeks.filter((item)=>{
+                    if(item == "周一"){
+                        arr.push("1");
+                    }else if(item == "周二"){
+                        arr.push("2");
+                    }else if(item == "周三"){
+                        arr.push("3");
+                    }else if(item == "周四"){
+                        arr.push("4");
+                    }else if(item == "周五"){
+                        arr.push("5");
+                    }else if(item == "周六"){
+                        arr.push("6");
+                    }else if(item == "周日"){
+                        arr.push("7");
+                    }
+                    return arr;
+                })
+                console.log(arr,"[[[[[[[[[[[[[")
             },
             closeDialog () {
                 this.$emit('closeInfoDialog')
-            },
-            timeD(time1,time2){
-                var str = "";
-                str += moment(time1).format('YYYY.MM.DD')+"~"+moment(time2).format('YYYY.MM.DD');
-                return str;
-            },
-            timeD1(time1,time2){
-                var str = "";
-                let a1 = time1.toISOString().slice(0,10).split("-");
-                let a2 = time2.toISOString().slice(0,10).split("-");
-                str = a1.join(".")+"~"+a2.join(".");
-                return str;
             },
             addNewInfo () {
                 let newInfo = {}
                 if (this.route.includes('security')) {
                     newInfo = this.security
                 } else if(this.route.includes('broadcast')) {
+                    this.broadcast.executetime = this.definedTime;
                     newInfo = this.broadcast
                 } else if(this.route.includes('lamppost')) {
+                    console.log(this.lamppost,"{}}}}}}}{{}}{}{")
+                    this.lamppost.executetime = this.definedTime;
+                    this.lamppost.type = "5";
+                    if(this.filterList == []){
+                        this.lamppost.customizedDays = false
+                        this.lamppost.time = this.filterList;
+                        this.lamppost.days = this.days(this.filterList);
+                    }else {
+                        this.lamppost.customizedDays = true
+                        this.lamppost.time = this.definedDay;
+                        this.lamppost.startDate = this.timeDateFiler(this.definedDay[0]);
+                        this.lamppost.endDate = this.timeDateFiler(this.definedDay[1]);
+                        this.lamppost.days = [];
+                    }
+                    // console.log(this.filterList,"qqqqqqqqq")
+                    // console.log(this.definedDay,"12345")
+                    // console.log(this.lamppost,"要保存的路灯数据")
                     newInfo = this.lamppost
                 } else if(this.route.includes('purifier')) {
                     newInfo = this.purifier
@@ -396,11 +442,10 @@
                 newInfo.checked = false
                 if (this.Info.id) {
                     newInfo.id = this.Info.id
-                    newInfo.time = this.timeD1(newInfo.time[0],newInfo.time[1])
-                    console.log(newInfo)
+                    console.log(newInfo,"返回的数据")
                     this.$emit('fixInfo', newInfo)
                 } else {
-                    this.$emit('addNewInfo', newInfo)
+                    this.$emit('saveNewInfo', newInfo)
                 }
                 this.closeDialog()
             },
@@ -486,26 +531,56 @@
                     this.edit = false
                 }
             },
-            getAllLight (){
+            async getAllLight (data){
                 // this.isShowLoading = true
-                 api.light.getAllLight().then(res => {
+                await api.light.getAllLight().then(res => {
                     // this.isShowLoading = false
                     console.log(res, '这是请求回来所有路灯列表')
                      this.options = res.devices;
+                    console.log(res.devices)
+                    this.selectLight = data.lightIds;
+                    // for(let i=0;i<data.lightIds.length;i++){
+                    //     for(let j=0;j<res.devices.length;j++){
+                    //         if(res.devices[j].id == data.lightIds[i]){
+                    //             this.selectLight.push(res.devices[j].name);
+                    //         }
+                    //     }
+                    // }
+                    console.log(this.selectLight,"wwwwwwwwwwwwww")
                 }).catch(err => {
                     console.log(err, '请求失败')
                     this.isShowLoading = false
                 })
             },
-            getAllBroadcast (){
+            async getAllBroadcast (){
                 // this.isShowLoading = true
-                api.broadcast.getAllBroadcast().then(res => {
+                await api.broadcast.getAllBroadcast().then(res => {
                     // this.isShowLoading = false
                     console.log(res, '这是请求回来所有广播列表')
                     this.options = res.devices;
                 }).catch(err => {
                     console.log(err, '请求失败')
                     this.isShowLoading = false
+                })
+            },
+            async getAllLed (){
+                // this.isShowLoading = true
+                await api.led.getAllLed().then(res => {
+                    // this.isShowLoading = false
+                    console.log(res, '这是请求回来所有LED列表')
+                    this.options = res.devices;
+                }).catch(err => {
+                    console.log(err, '请求失败')
+                    this.isShowLoading = false
+                })
+            },
+            async getSafePerson () {
+                let jobId = 3
+                await api.person.getJobPerson(jobId).then(res => {
+                    console.log(res, '安保人员')
+                    this.options = res;
+                }).catch(err => {
+                    console.log(err, '请求失败')
                 })
             },
             inputFilter(newFile, oldFile, prevent) {
@@ -544,12 +619,14 @@
                     this.associatedStreet = true;
                 }
             }
+
         },
-        created () {
+        async created () {
             this.route = this.$route.path
             console.log(this.Info,'  opopop')
             if (this.route.includes('security')) {
                 this.security = this.Info;
+                this.getSafePerson()
                 if(this.security.isCustomizedDays){
                     this.definedDay = this.security.time;
                     this.weekTime = true;
@@ -576,8 +653,9 @@
                     this.filterList = this.broadcast.time;
                 }
             } else if(this.route.includes('lamppost')) {
-                this.getAllLight()
                 this.lamppost = this.Info;
+                console.log(this.lamppost,"[][][][]][[][]")
+                this.getAllLight(this.lamppost)
                 this.definedTime = this.lamppost.executetime;
                 if(this.lamppost.customizedDays){
                     this.definedDay = this.lamppost.time;
@@ -603,6 +681,7 @@
                     this.classesList = this.purifier.shift;
                 }
             } else if(this.route.includes('screen')) {
+                this.getAllLed()
                 this.screen = this.Info;
                 this.definedTime = this.screen.executetime;
                 if(this.screen.isCustomizedDays){
