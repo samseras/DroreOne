@@ -49,11 +49,6 @@
                             prop='executetime'
                             label="执行时间">
                         </el-table-column>
-                        <!--<el-table-column-->
-                            <!--prop="repetition"-->
-                            <!--label="重复调度"-->
-                            <!--sortable>-->
-                        <!--</el-table-column>-->
                         <el-table-column label="操作" width="200">
                             <template slot-scope="scope">
                                 <span @click="fixedInfo(scope.row.id,'路灯编辑')" class="edit">编辑</span> |
@@ -72,18 +67,15 @@
                               @closeInfoDialog ="visible = false"
                               @fixInfo = "fixInfo"
                               :title = "title"
-                              @addNewInfo1="addNewPerson">
+                              @saveNewInfo="saveNewPerson">
                 </PersonDetail>
                 <CheckDetail v-if="checkVisible"
                     :visible="checkVisible"
                     :checkInfo="areaInfo"
                     :isDisabled="isDisabled"
                     @closeInfoDialog ="checkVisible = false"
-                    :title = "title"
-                    @fixInfo = "fixInfo">
+                    :title = "title">
                 </CheckDetail>
-
-
             </div>
         </div>
     </div>
@@ -92,6 +84,7 @@
 <script>
     import ScrollContainer from '@/components/ScrollContainer'
     import api from '@/api'
+    import moment from 'moment'
     import Header from './dmisHeader'
     import PersonDetail from './dmisDialog'
     import CheckDetail from './lamppostCheckDialog'
@@ -123,7 +116,7 @@
                 isStop:true,
                 isStart:false,
                 selection:[],
-                isDisabled:true
+                isDisabled:true,
             }
         },
         methods: {
@@ -137,13 +130,13 @@
                 // this.isShowLoading = true
                 await api.lamppost.getLamppostList().then(res => {
                     // this.isShowLoading = false
-                    console.log(res, '这是请求回来的')
+                    this.areaList = [];
                     let that = this;
                     res.forEach(function(item){
                         item.light.lightIds = item.lightIds;
                         that.areaList.push(item.light);
                     })
-                    console.log(that.areaList, '这是请求回来的')
+                    console.log(res,"pppppppppppppp");
                     that.init()
                 }).catch(err => {
                     console.log(err, '请求失败')
@@ -188,6 +181,28 @@
                     }
                 })
             },
+            // days(weeks){
+            //     let arr = [];
+            //      weeks = weeks.filter((item)=>{
+            //           if(item == "周一"){
+            //               arr.push("1");
+            //           }else if(item == "周二"){
+            //               arr.push("2");
+            //           }else if(item == "周三"){
+            //               arr.push("3");
+            //           }else if(item == "周四"){
+            //               arr.push("4");
+            //           }else if(item == "周五"){
+            //               arr.push("5");
+            //           }else if(item == "周六"){
+            //               arr.push("6");
+            //           }else if(item == "周日"){
+            //               arr.push("7");
+            //           }
+            //           return arr;
+            //       })
+            //     console.log(arr,"[[[[[[[[[[[[[")
+            // },
             timeDate(dates){
                 let arr = dates.split("~");
                 let d1 = arr[0].split("-");
@@ -204,6 +219,12 @@
                 // return [new Date(d1[0], d1[1], d1[2],a1[0],a1[1],a1[2]), new Date(d2[0], d2[1], d2[2],a2[0],a2[1],a2[2])];
                 return [new Date('2018', '04', '25',a1[0],a1[1],a1[2]), new Date('2018', '04', '25',a2[0],a2[1],a2[2])];
             },
+            timeDateFiler(item) {
+                return  moment(item).format('YYYY-MM-DD');
+            },
+            timeTimeFiler(item) {
+                return moment(item).format('YY:MM:DD');
+            },
             showPersonDetail (info,title) {
                 this.visible = true;
                 this.title = title;
@@ -217,9 +238,8 @@
                 console.log("1234567yuiol;'")
             },
             addNewInfo (title) {
+                this.areaInfo = [];
                 this.title = title
-                this.visible = true
-                console.log(info, '1111111111')
                 this.showPersonDetail({}, '添加灯光照明')
                 this.isDisabled = false
             },
@@ -262,23 +282,23 @@
                         cancelButtonText: '取消',
                         type: 'warning'
                     }).then(() => {
-                        //  api.camera.deleteCamera(this.choseInfoId).then(res => {
-                        this.areaList = this.areaList.filter((item, index) => {
-                            if (item.id === this.choseId[0]) {
-                                this.areaList[index].checked = false
-                            }
-                            return item.id !== this.choseId[0]
+                        api.lamppost.deletLamppost(this.choseId).then(res => {
+                            this.areaList = this.areaList.filter((item, index) => {
+                                if (item.id === this.choseId[0]) {
+                                    this.areaList[index].checked = false
+                                }
+                                return item.id !== this.choseId[0]
+                            })
+                            this.$message.success('删除成功')
+                            this.choseId = [];
+                            }).catch(err=>{
+                                        console.log(err)
+                                        this.$message.error('删除失败，请稍后重试')
+                            }).catch(() => {
+                                this.$message.info('取消删除')
+                            })
                         })
-                        this.$message.success('删除成功')
-                        this.choseId = [];
-                        // }).catch(err=>{
-                        //             console.log(err)
-                        //             this.$message.error('删除失败，请稍后重试')
-                    }).catch(() => {
-                        this.$message.info('取消删除')
-                    })
-                    //   })
-                }
+                    }
                 console.log(this.choseId,"1234567890-=")
             },
             checked (Info) {
@@ -338,19 +358,80 @@
                 })
                 console.log(this.choseInfoId, 'opopop')
             },
-            fixInfo (info) {
+            async fixInfo (info) {
                 console.log(info, 'wertyuio')
-                let list = this.areaList
+                let list = this.areaList;
+                let obj = {};
                 for(let i = 0;i< list.length; i++){
                     if (info.id === list[i].id) {
-                        this.areaList[i] = info
+                        if(info.customizedDays){
+                            this.areaList[i].time = this.timeDateFiler(this.areaList[i].time[0])+"~"+this.timeDateFiler(this.areaList[i].time[1])
+                            this.areaList[i].startDate = this.timeDateFiler(this.areaList[i].time[0]);
+                            this.areaList[i].endDate = this.timeDateFiler(this.areaList[i].time[1]);
+                        }else {
+                              this.areaList[i].time = this.days(info.time);
+                        }
+                        this.areaList[i].executetime = this.timeTimeFiler(this.areaList[i].executetime[0])+"~"+this.timeTimeFiler(this.areaList[i].executetime[1])
+                        // this.areaList[i] = info
+                         obj = {
+                            id:this.areaList[i].id,
+                            name:this.areaList[i].name,
+                             customizedDays:this.areaList[i].customizedDays,
+                            days:this.areaList[i].time,
+                             startDate:"",
+                             endDate:"",
+                             startTime:this.areaList[i].startTime,
+                            endTime:this.areaList[i].endTime,
+                            type:this.areaList[i].type,
+                            enabled:this.areaList[i].enabled,
+                            description:this.areaList[i].description,
+                             lightIds:["8b887835-265b-4049-ae6e-c9b463471594"]
+                        }
                     }
                 }
-                this.choseList = this.areaList
+                let that = this;
+                await api.lamppost.updataLamppost(JSON.stringify(obj)).then(res => {
+                    console.log(res, '这是请求回来的')
+                    this.$message.success('修改成功')
+                    this.getLamppostList()
+                    console.log(that.areaList, '这是请求回来的数据')
+                    // that.init()
+                }).catch(err => {
+                    console.log(err, '请求失败')
+                    this.isShowLoading = false
+                })
+                console.log(this.areaList,"编辑")
+                // this.choseList = this.areaList
             },
-            addNewPerson (info) {
-                console.log(info)
-                info.id = new Date().getTime()
+            saveNewPerson (info) {
+                console.log(info,"这是新添加的数据")
+                info.startTime = this.timeTimeFiler(info.executetime[0]);
+                info.endTime = this.timeTimeFiler(info.executetime[1])
+                let obj = {
+                    name:info.name,
+                    customizedDays:info.customizedDays,
+                    days:info.time,
+                    startDate:info.startDate,
+                    endDate:info.endDate,
+                    startTime:info.startTime,
+                    endTime:info.endTime,
+                    type:info.type,
+                    enabled:true,
+                    description:info.description,
+                    lightIds:["8b887835-265b-4049-ae6e-c9b463471594"]
+                }
+                api.lamppost.addLamppost(JSON.stringify(obj)).then(res => {
+                    console.log(res, '这是请求回来的')
+                    this.$message.success('修改成功')
+                    this.getLamppostList()
+                    console.log(that.areaList, '这是请求回来的数据')
+                    // that.init()
+                }).catch(err => {
+                    console.log(err, '请求失败')
+                    this.isShowLoading = false
+                })
+                console.log(info,"这是新添加的数据")
+
                 this.areaList.push(info)
                 this.choseList = this.areaList
             },
@@ -359,7 +440,7 @@
                 this.areaList.map((item)=>{
                     if(item.id === this.choseId[0]){
                         this.areaInfo=item
-                        console.log(this.areaInfo,"gggggggggggggggg")
+                        // console.log(this.areaInfo,"gggggggggggggggg")
                         if(this.areaInfo.customizedDays){
                             this.areaInfo.time = this.timeDate(item.time);
                         }else {

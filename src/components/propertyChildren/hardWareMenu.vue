@@ -183,7 +183,7 @@
         height: 100%;
         display: flex;
         .el-menu {
-            width: rem(200);
+            width: 15%;
         }
         .content {
             flex: 1;

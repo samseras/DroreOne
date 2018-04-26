@@ -367,7 +367,7 @@
         flex-direction: column;
         .title {
             width: 100%;
-            padding: rem(5) 0 rem(5) rem(15);
+            padding: rem(16) 0 rem(17) rem(15);
             box-sizing: border-box;
             font-size: rem(16);
             color: #0086b3;

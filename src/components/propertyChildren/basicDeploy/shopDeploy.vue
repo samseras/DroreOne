@@ -240,16 +240,6 @@
                     longitude: longitude
                 }
                 console.log(shopObj, 'this is trashObj')
-                if (info.imgUrl !== '') {
-                    await api.person.updataAva(info.imgUrl).then(res => {
-                        console.log(res, '上传成功')
-                        shopObj.pictureId = res.id
-                    }).catch(err => {
-                        console.log(err, '上传失败')
-                        this.$message.error('创建失败，请稍后重试')
-                        return
-                    })
-                }
                 await api.shop.updateShop(JSON.stringify(shopObj)).then(res => {
                     console.log('修改成功')
                     this.$message.success('修改成功')
@@ -271,18 +261,6 @@
                     businessTypeId: info.businessBean.businessTypeId,
                     latitude: latitude,
                     longitude: longitude
-                }
-                if (info.imgUrl !== '') {
-                    await api.person.updataAva(info.imgUrl).then(res => {
-                        console.log(res, '上传成功')
-                        shopObj.pictureId = res.id
-                    }).catch(err => {
-                        console.log(err, '上传失败')
-                        this.$message.error('创建失败，请稍后重试')
-                        return
-                    })
-                } else {
-                    shopObj.pictureId = info.pictureId
                 }
                 console.log(shopObj, 'this is trashObj')
                 await api.shop.createShop(JSON.stringify(shopObj)).then(res => {
@@ -363,7 +341,7 @@
         flex-direction: column;
         .title{
             width: 100%;
-            padding: rem(5) 0 rem(5) rem(15);
+            padding: rem(16) 0 rem(17) rem(15);
             box-sizing: border-box;
             font-size: rem(16);
             color: #0086b3;

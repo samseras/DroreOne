@@ -258,18 +258,6 @@
                     purchaseDate: info.vehicle.purchaseDate
                 }
                 console.log(boatObj, 'this is trashObj')
-                if (info.imgUrl !== '') {
-                    await api.person.updataAva(info.imgUrl).then(res => {
-                        console.log(res, '图片上传成功')
-                        boatObj.pictureId = res.id
-                    }).catch(err => {
-                        console.log(err, '上传失败')
-                        this.$message.error('添加失败，请稍后重试')
-                        return false
-                    })
-                } else {
-                    boatObj.pictureId = info.pictureId
-                }
                 await api.boat.updateBoat(JSON.stringify(boatObj)).then(res => {
                     console.log(res ,'增加成功')
                     this.$message.success('修改成功')
@@ -289,16 +277,6 @@
                     maintenanceStatus: 0,
                     maintenanceDate: info.vehicle.maintenanceDate,
                     purchaseDate: info.vehicle.purchaseDate
-                }
-                if (info.imgUrl !== '') {
-                   await api.person.updataAva(info.imgUrl).then(res => {
-                        console.log(res, '图片上传成功')
-                        boatObj.pictureId = res.id
-                    }).catch(err => {
-                        console.log(err, '上传失败')
-                        this.$message.error('添加失败，请稍后重试')
-                        return false
-                    })
                 }
                 await api.boat.createBoat(JSON.stringify(boatObj)).then(res => {
                     console.log(res ,'增加成功')
@@ -390,7 +368,7 @@
         flex-direction: column;
         .title{
             width: 100%;
-            padding: rem(5) 0 rem(5) rem(15);
+            padding: rem(16) 0 rem(17) rem(15);
             box-sizing: border-box;
             font-size: rem(16);
             color: #0086b3;

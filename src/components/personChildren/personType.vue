@@ -1,7 +1,7 @@
 <template>
     <div class="personType">
         <div class="title">
-            人员类型
+            职业
         </div>
         <div class="personContent">
             <div class="funcTitle" v-if="false">
@@ -29,7 +29,7 @@
                         </el-table-column>
                         <el-table-column
                             prop="name"
-                            label="人员类型"
+                            label="职业"
                             width="960">
                         </el-table-column>
 
@@ -315,10 +315,10 @@
         flex-direction: column;
         .title {
             width: 100%;
-            padding: rem(5) 0 rem(5) rem(15);
+            padding: rem(16) 0 rem(17) rem(15);
             box-sizing: border-box;
             font-size: rem(16);
-            color: #0086b3;
+            color: #4ac4f2;
             font-weight: 600;
             border-bottom: 1px solid #ccc;
         }

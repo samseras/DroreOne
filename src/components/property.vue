@@ -6,10 +6,10 @@
             </div>
             <div class="pro_router">
                 <router-link to="/basic-property" :class="route.includes('basic')? 'active' : ''">设施</router-link>
-                <span class="line">|</span>
                 <router-link to="/hard-property" :class="route.includes('hard')? 'active' : ''">设备</router-link>
-                <span class="line">|</span>
                 <router-link to="/person" :class="route.includes('person')? 'active' : ''">人员</router-link>
+                <router-link to="">建筑</router-link>
+                <router-link to="">植物</router-link>
             </div>
         </div>
         <div class="pro_content">
@@ -49,18 +49,18 @@
         height: 100%;
         .pro_menu {
             width: 100%;
-            height: rem(40);
+            height: rem(60);
             color: #fff;
-            line-height: rem(40);
+            line-height: rem(60);
             box-sizing: border-box;
             display: flex;
             div {
                 display: inline-block;
             }
             .pro_title {
-                width: rem(200);
+                width: 15%;
                 text-align: center;
-                background: #2E3D5F;
+                background: #34495E;
                 img{
                     display: inline-block;
                     width: rem(20);
@@ -73,28 +73,25 @@
             }
             .pro_router{
                 flex: 1;
-                background: #203f70;
-                padding: 0 rem(15);
+                background: #2D3E50;
+                padding: 0 rem(35);
                 box-sizing: border-box;
                 a{
+                    display: inline-block;
                     color: #fff;
-                    margin-right: rem(10);
+                    padding: 0 rem(15);
                 }
                 .active{
-                    color: #0086b3;
-                }
-                span{
-                    color: #2c3b47;
-                    margin-right: rem(10);
+                    color: #74cef2;
                 }
             }
         }
         .pro_content{
             width: 100%;
-            height: calc(100% - 2.5rem);
+            height: calc(100% - 3.75rem);
             display: flex;
             .el-menu {
-                width: rem(200);
+                width: 15%;
             }
             .content {
                 flex: 1;

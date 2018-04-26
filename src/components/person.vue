@@ -45,12 +45,12 @@
                 {
                     icon: 'el-icon-setting',
                     index: '/person/personType',
-                    title: '人员类型',
+                    title: '职业',
                 },
                 {
                     icon: 'el-icon-setting',
                     index: '2',
-                    title: '人员信息',
+                    title: '人员',
                     subs: []
                 },
             ]
@@ -79,59 +79,52 @@
     }
 </script>
 
+<style lang="scss">
+    .person .el-submenu .el-menu-item {
+        width: 100%;
+        height: rem(40);
+        line-height: rem(40);
+        padding: rem(0) !important;
+        padding-left: rem(20) !important;
+        font-size: rem(14);
+        img {
+            display: inline-block;
+            width: rem(20);
+            height: rem(20);
+            vertical-align: middle;
+            background: red;
+            margin-right: rem(5);
+        }
+    }
 
+    .person .el-menu-item {
+        width: 100%;
+        height: rem(55);
+        line-height: rem(55);
+        border-bottom: 1px solid #e0e0e0;
+    }
+
+    .person .el-menu .el-menu--inline {
+        width: 100%;
+        background: #f2f2f2;
+        box-sizing: border-box;
+        text-align: left;
+        font-size: rem(14);
+    }
+    .person .el-submenu{
+        border-bottom: 1px solid #e0e0e0;
+    }
+</style>
 <style lang="scss" type="text/scss" scoped>
     .person {
         width: 100%;
         height: 100%;
-        .pro_menu {
-            width: 100%;
-            height: rem(40);
-            color: #fff;
-            line-height: rem(40);
-            box-sizing: border-box;
-            display: flex;
-            div {
-                display: inline-block;
-            }
-            .pro_title {
-                width: rem(200);
-                text-align: center;
-                background: #2E3D5F;
-                img{
-                    display: inline-block;
-                    width: rem(20);
-                    height: rem(20);
-                    vertical-align: middle;
-                    background: red;
-                    margin-left: rem(-35);
-                    margin-right: rem(5);
-                }
-            }
-            .pro_router{
-                flex: 1;
-                background: #203f70;
-                padding: 0 rem(15);
-                box-sizing: border-box;
-                a{
-                    color: #fff;
-                    margin-right: rem(10);
-                }
-                .active{
-                    color: #0086b3;
-                }
-                span{
-                    color: #2c3b47;
-                    margin-right: rem(10);
-                }
-            }
-        }
         .pro_content{
             width: 100%;
-            height: calc(100% - 2.5rem);
+            height: 100%;
             display: flex;
             .el-menu {
-                width: rem(200);
+                width: 15%;
             }
             .content {
                 flex: 1;

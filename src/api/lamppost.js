@@ -2,41 +2,44 @@
  调度路灯api请求
 * */
 import axios from '@/http'
-
+import {getUrl} from "./path";
 
 
 const lamppost = {
     getLamppostList () {
         return axios ({
             method: 'GET',
-            url: '/schedule/light'
+            url: getUrl('/schedule/light')
         })
     },
-    addLamppost () {
+    addLamppost (item) {
         return axios ({
             method: 'POST',
-            url: '/schedule/light'
+            url: getUrl('/schedule/light')
+
         })
     },
-    deletLamppost(){
+    deletLamppost(item){
         return axios ({
             method: 'DELETE',
-            url: '/schedule/light'
+            url: getUrl('/schedule/light'),data:{
+                ids:item
+            }
+
         })
     },
-    updataLamppost(){
+    updataLamppost(info){
         return axios ({
             method: 'PUT',
-            url: '/schedule/light'
+            url: getUrl('/schedule/light'),
+            data:info
         })
     },
     searchLamppost(par){
         return axios ({
             method: 'GET',
-            url: '/schedule/light',
-            data:{
-                ids: par
-            }
+            url: getUrl('/schedule/light'),
+            data:par
         })
     }
 }

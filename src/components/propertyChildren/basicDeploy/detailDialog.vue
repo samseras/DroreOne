@@ -79,12 +79,6 @@
                     </p>
                     <p class="phoneNum" v-if="isDisabled">联系电话：<input type="text"v-model="boatCar.phone"></p>
                     <p class="phoneNum">设备号码：<input type="text"v-model="boatCar.vehicle.model"></p>
-                    <div class="img">
-                        <img :src="boatCar.picturePath" alt="" v-if="isDisabled">
-                        <label for="avatar" v-if="!isDisabled">
-                            <img :src="files.length ? files[0].url : 'https://www.gravatar.com/avatar/default?s=200&r=pg&d=mm'"  class="rounded-circle" />
-                        </label>
-                    </div>
                 </div>
                 <!--指示牌-->
                 <div class="personCardContent boatCardContent" v-if="route.includes('indicator')">
@@ -106,12 +100,6 @@
                         </el-select>
                     </p>
                     <p class="phoneNum">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置：<span>{{indicator.location}}</span><i class="el-icon-location-outline" @click="showMapDialog"></i></p>
-                    <div class="img">
-                        <img :src="indicator.picturePath" alt="" v-if="isDisabled">
-                        <label for="avatar" v-if="!isDisabled">
-                            <img :src="files.length ? files[0].url : 'https://www.gravatar.com/avatar/default?s=200&r=pg&d=mm'"  class="rounded-circle" />
-                        </label>
-                    </div>
                 </div>
                 <!--垃圾桶-->
                 <div class="personCardContent boatCardContent" v-if="route.includes('trash')">
@@ -140,13 +128,6 @@
                             </el-option>
                         </el-select>
                     </p>
-                    <div class="img">
-                        <!--<img src="" alt="">-->
-                        <img :src="trash.picturePath" alt="" v-if="isDisabled">
-                        <label for="avatar" v-if="!isDisabled">
-                            <img :src="files.length ? files[0].url : 'https://www.gravatar.com/avatar/default?s=200&r=pg&d=mm'"  class="rounded-circle" />
-                        </label>
-                    </div>
                 </div>
                 <!--景点-->
                 <div class="personCardContent boatCardContent" v-if="route.includes('scenic')">
@@ -173,12 +154,6 @@
 
                     <p class="phoneNum">当前人数：<input type="text"v-model="scenic.scenicspotBean.currentNum"></p>
                     <p class="phoneNum">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置：<span>{{scenic.location}}</span><i class="el-icon-location-outline" @click="showMapDialog"></i></p>
-                    <div class="img">
-                        <img :src="scenic.picturePath" alt="" v-if="isDisabled">
-                        <label for="avatar" v-if="!isDisabled">
-                            <img :src="files.length ? files[0].url : 'https://www.gravatar.com/avatar/default?s=200&r=pg&d=mm'"  class="rounded-circle" />
-                        </label>
-                    </div>
                 </div>
                 <!--商圈-->
                 <div class="personCardContent boatCardContent" v-if="route.includes('shop')">
@@ -214,12 +189,6 @@
                             </el-option>
                         </el-select>
                     </p>
-                    <div class="img">
-                        <img :src="shop.picturePath" alt="" v-if="isDisabled">
-                        <label for="avatar" v-if="!isDisabled">
-                            <img :src="files.length ? files[0].url : 'https://www.gravatar.com/avatar/default?s=200&r=pg&d=mm'"  class="rounded-circle" />
-                        </label>
-                    </div>
                 </div>
                 <!--停车场-->
                 <div class="personCardContent boatCardContent" v-if="route.includes('park')">
@@ -253,12 +222,6 @@
                             </el-option>
                         </el-select>
                     </p>
-                    <div class="img">
-                        <img :src="park.picturePath" alt="" v-if="isDisabled">
-                        <label for="avatar" v-if="!isDisabled">
-                            <img :src="files.length ? files[0].url : 'https://www.gravatar.com/avatar/default?s=200&r=pg&d=mm'"  class="rounded-circle" />
-                        </label>
-                    </div>
                 </div>
                 <!--洗手间-->
                 <div class="personCardContent boatCardContent" v-if="route.includes('toilet')">
@@ -281,12 +244,6 @@
                         </el-select>
                     </p>
                     <p class="phoneNum">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置：<span>{{toilet.location}}</span><i class="el-icon-location-outline" @click="showMapDialog"></i></p>
-                    <div class="img">
-                        <img :src="toilet.picturePath" alt="" v-if="isDisabled">
-                        <label for="avatar" v-if="!isDisabled">
-                            <img :src="files.length ? files[0].url : 'https://www.gravatar.com/avatar/default?s=200&r=pg&d=mm'"  class="rounded-circle" />
-                        </label>
-                    </div>
                 </div>
                 <!--片区-->
                 <div class="personCardContent boatCardContent" v-if="route.includes('area')">
@@ -297,12 +254,6 @@
                         描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：<textarea name="" v-model="area.description" cols="30"
                                                                                rows="5" placeholder="请输入描述信息"></textarea>
                     </p>
-                    <!--<div class="img">-->
-                        <!--<img :src="area.picturePath" alt="" v-if="isDisabled">-->
-                        <!--<label for="avatar" v-if="!isDisabled">-->
-                            <!--<img :src="files.length ? files[0].url : 'https://www.gravatar.com/avatar/default?s=200&r=pg&d=mm'"  class="rounded-circle" />-->
-                        <!--</label>-->
-                    <!--</div>-->
                 </div>
                 <!--路网-->
                 <div class="personCardContent boatCardContent" v-if="route.includes('roat')">
@@ -312,11 +263,6 @@
                         描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：<textarea name=""v-model="roat.description" cols="30"
                                                                                rows="5" placeholder="请输入描述信息"></textarea>
                     </p>
-                    <!--<div class="img">-->
-                        <!--<label for="avatar">-->
-                            <!--<img :src="files.length ? files[0].url : 'https://www.gravatar.com/avatar/default?s=200&r=pg&d=mm'"  class="rounded-circle" />-->
-                        <!--</label>-->
-                    <!--</div>-->
                 </div>
                 <!--设施类行-->
                 <div class="personCardContent boatCardContent" v-if="route.includes('basictype')">

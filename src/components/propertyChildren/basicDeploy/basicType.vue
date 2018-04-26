@@ -1,7 +1,7 @@
 <template>
     <div class="basicType">
         <div class="title">
-            设施类型
+            类型
         </div>
         <div class="personContent">
             <div class="funcTitle">
@@ -294,10 +294,10 @@
         flex-direction: column;
         .title{
             width: 100%;
-            padding: rem(5) 0 rem(5) rem(15);
+            padding: rem(17) 0 rem(16) rem(15);
             box-sizing: border-box;
             font-size: rem(16);
-            color: #0086b3;
+            color: #74cef2;
             font-weight: 600;
             border-bottom:  1px solid #ccc;
         }
@@ -350,7 +350,7 @@
                     .personType{
                         width: 100%;
                         height: rem(20);
-                        background: #0086b3;
+                        background: #74cef2;
                         position: relative;
                         font-size: rem(12);
                         img{
