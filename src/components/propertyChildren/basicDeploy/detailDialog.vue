@@ -374,7 +374,7 @@
     import Cropper from 'cropperjs'
     import FileUpload from 'vue-upload-component'
     import api from '@/api'
-    import { mapGetters } from 'vuex'
+    import { mapGetters,mapMutations} from 'vuex'
     export default {
         name: "person-detail",
         props: ['visible', 'Info','isDisabled','title'],
@@ -492,6 +492,7 @@
             }
         },
         methods: {
+            ...mapMutations(['LOCATION_ID']),
             saveLocation () {
                 let locationString
                 let regionLocationStr
@@ -748,6 +749,12 @@
                 this.roat = this.Info
             } else if (this.route.includes('personType')) {
                 this.job = this.Info
+            }
+            if (this.Info.id) {
+                console.log(this.Info.id, '这是拿到的Id')
+                this.$store.commit('LOCATION_ID', this.Info.id)
+            }else {
+                this.$store.commit('LOCATION_ID', '')
             }
         },
         components: {

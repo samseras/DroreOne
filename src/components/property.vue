@@ -2,12 +2,14 @@
     <div class="property">
         <div class="pro_menu">
             <div class="pro_title">
-                <img src="" alt="">资产管理平台
+                <img src="" alt=""> Drore One智慧旅游云数据中心
             </div>
             <div class="pro_router">
-                <router-link to="/basic-property" :class="isActive? 'active' : ''">设施类型</router-link>
+                <router-link to="/basic-property" :class="route.includes('basic')? 'active' : ''">设施</router-link>
                 <span class="line">|</span>
-                <router-link to="/hard-property" :class="isActive? '' : 'active'">设备类型</router-link>
+                <router-link to="/hard-property" :class="route.includes('hard')? 'active' : ''">设备</router-link>
+                <span class="line">|</span>
+                <router-link to="/person" :class="route.includes('person')? 'active' : ''">人员</router-link>
             </div>
         </div>
         <div class="pro_content">
@@ -23,16 +25,15 @@
         name: "property",
         data() {
             return {
-                isActive: false
+                route: ''
             }
+        },
+        created () {
+            this.route = this.$route.path
         },
         watch: {
           '$route'(){
-              if (this.$route.path.includes('basic')) {
-                  this.isActive = true
-              } else {
-                  this.isActive = false
-              }
+              this.route = this.$route.path
           }
         },
         components: {

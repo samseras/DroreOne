@@ -7,13 +7,11 @@
 </template>
 
 <script>
-    import dataId from "../../static/xxsd_map.json"
     import droreMap from "../../static/js/droreMap.js"
     import Event from "../../static/js/static.js"
-    import mapLabe from "../../static/js/mapLabelInformationChildrenForm.js"
-    import masterDataGrid1 from "../../static/js/masterDataGrid1.js"
     import Scrollcontainer from '@/components/ScrollContainer'
-    import { mapMutations } from 'vuex'
+    import { mapMutations,mapGetters } from 'vuex'
+    import api from '@/api'
 
     export default {
         name: "map1",
@@ -22,19 +20,23 @@
             }
         },
         created () {
-            droreMap.unShowAllLayer()
+
         },
         mounted() {
-             droreMap.init();
+            droreMap.init();
             let route = this.$route.path
             if (route.includes('area-deploy')) {
                 this.districtList();// 片区输出
                 this.district(); // 片区打点
             } else if (route.includes('roat-deploy')) {
-                this.roadList();// 路线输出
-                this.road(); // 路线打点
+                if(!this.getLocationId){
+                    this.roadList();// 路线输出
+                    this.road(); // 路线打点
+                }else {
+                    this.roadListEidt();//修改路线
+                }
             } else {
-                // this.droreMapinit();// 循环输出点
+                this.droreMapinit();// 循环输出点
                 this.labelDot();// 打点
             }
         },
@@ -56,6 +58,7 @@
                         url: "/static/img/location.png"
                     });
                     droreMap.icon.addChild(icon1);
+                    // icon1.showName = true
                     icon1.onclick(function (e) {
                         alert(e.coordinate);
                     });
@@ -147,12 +150,27 @@
                     }
                 })
             },
+            async getAllRoat () {
+                await api.roat.getAllRoat().then(res => {
+                    console.log(res, '请求路网成功')
+                    for (var i = 0; i < res.length; i++) {
+                        var areaEvtList =new droreMap.road.RoadLayer('ROUTE_list', 'blue')
+                        let geo =JSON.parse(res[i].geo);
+                        let area = [];
+                        for(var j = 0; j < geo.length; j++) {
+                            let wgs=droreMap.transFromWgsToLayer(geo[j])
+                            area.push(wgs);
+                        }
+                        var data = {"id": res[i].id, "name": res[i].name,"constructor":''}
+                        areaEvtList.addRoad(area, data)
+                        droreMap.road.addRoadLayer(areaEvtList)
+                    }
+                }).catch(err => {
+                    console.log(err, '请求失败')
+                })
+            },
             roadList(){//路线列表
-                var areaEvts =new droreMap.road.RoadLayer('ROUTE', 'blue')
-                var area = [[13367132.627512183, 3538049.969542039],[13367267.984780146, 3537979.6368547007],[13367264.667172445, 3538053.287122404],[13367106.086887486, 3537987.5990512217],[13367205.614280216, 3537977.6463101264]]
-                var data = {"areaLat":"[]","areaMercator":"[]","areaPixel":"[]","createTime":1495877197377,"id":"207","level":"1","mapId":"cd049e70a6cc4961809343c88c11938d","modifiedTime":1495877197377,"name":"方门驿站","type":"DECK_DEMO"}
-                areaEvts.addRoad(area,data)
-                droreMap.road.addRoadLayer(areaEvts)
+                this.getAllRoat()
             },
             road(){//路网绘画
                 var that = this
@@ -199,9 +217,65 @@
                     }
                 })
             },
+            async getAllRoatedit () {
+                await api.roat.getAllRoat().then(res => {
+                    console.log(res, '编辑请求路网成功')
+                    for (var i = 0; i < res.length; i++) {
+                        if(res[i].id === this.getLocationId){
+                            var areaEvts =new droreMap.road.RoadLayer('ROUTE_show', 'red')
+                            let geo =JSON.parse(res[i].geo);
+                            let area = [];
+                            for(var j = 0; j < geo.length; j++) {
+                                let wgs=droreMap.transFromWgsToLayer(geo[j])
+                                area.push(wgs);
+                            }
+                            var data = {"id": res[i].id, "name": res[i].name,"constructor":''}
+                            areaEvts.addRoad(area, data)
+                            droreMap.road.addRoadLayer(areaEvts)
+                        }else{
+                            var areaEvtList =new droreMap.road.RoadLayer('ROUTE_list', 'blue')
+                            let geo =JSON.parse(res[i].geo);
+                            let area = [];
+                            for(var j = 0; j < geo.length; j++) {
+                                let wgs=droreMap.transFromWgsToLayer(geo[j])
+                                area.push(wgs);
+                            }
+                            var data = {"id": res[i].id, "name": res[i].name,"constructor":''}
+                            areaEvtList.addRoad(area, data)
+                            droreMap.road.addRoadLayer(areaEvtList)
+                        }
+                    }
+                    let that =this
+                    areaEvts.ifModify = true;
+                    areaEvts.ifSelect = true;
+                    areaEvts.addEventListener('select', "select", function(e) {
+                        if(e.select){
+                            console.log(e.select);
+                            that.$store.commit('ROAT_LOCATION_STATE', false)
+                        }else if(e.unSelect){
+                                let arrayObj = new Array();
+                                for (var i = 0; i < e.unSelect.area.length; i++) {
+                                    let wgs = droreMap.transLayerToWgs(e.unSelect.area[i])
+                                    arrayObj.push(wgs);
+                                }
+                                console.log(arrayObj);
+                                that.$store.commit('MAP_ROAT_LOCATION', arrayObj)
+                                that.$store.commit('ROAT_LOCATION_STATE', true)
+                        }
+                    })
+                }).catch(err => {
+                    console.log(err, '请求失败')
+                })
+            },
+            roadListEidt(){//路线列表
+                this.getAllRoatedit()
+            },
         },
         components: {
             Scrollcontainer
+        },
+        computed: {
+            ...mapGetters(['getLocationId'])
         }
     }
 </script>

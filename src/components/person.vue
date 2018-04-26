@@ -1,15 +1,5 @@
 <template>
     <div class="person">
-        <div class="pro_menu">
-            <div class="pro_title">
-                <img src="" alt="">人员管理平台
-            </div>
-            <div class="pro_router">
-                <!--<router-link to="/basic-property" :class="isActive? 'active' : ''">设施类型</router-link>-->
-                <!--<span class="line">|</span>-->
-                <!--<router-link to="/hard-property" :class="isActive? '' : 'active'">设备类型</router-link>-->
-            </div>
-        </div>
         <div class="pro_content">
             <el-menu default-active="/person/personType" router>
                 <ScrollContainer>

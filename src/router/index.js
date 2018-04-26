@@ -175,7 +175,7 @@ const routes = [
             }
         ]
     },
-    //资产
+    //数据中心
     {
         path: '/property',
         name: 'property',
@@ -221,20 +221,20 @@ const routes = [
                     {path: '/hard-property/police-Hware', name: 'PoliceHware', component: PoliceHware},
                     {path: '/hard-property/monitors-Hware', name: 'MonitorsHware', component: MonitorsHware},
                 ]
+            },
+            {
+                path: '/person',
+                name: PersonPlat,
+                component: PersonPlat,
+                redirect: '/person/personType',
+                children: [
+                    {path: '/person/personType', name: "PersonType", component: PersonType},
+                    { path: '/person/:id',name: 'PersonDeploy', component:PersonDeploy }
+                ]
             }
         ]
     },
   //  人员
-    {
-        path: '/person',
-        name: PersonPlat,
-        component: PersonPlat,
-        redirect: '/person/personType',
-        children: [
-            {path: '/person/personType', name: "PersonType", component: PersonType},
-            { path: '/person/:id',name: 'PersonDeploy', component:PersonDeploy }
-        ]
-    }
   ]
 const router = new Router({
     mode: 'history',

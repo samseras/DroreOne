@@ -24,7 +24,7 @@
                             </li>
                             <li class="two">
                                 <div class="bigData">
-                                    <div class="change"><a href="/MicServiceManagementSystem">大数据分析>><img src="../../../static/img/bagData.png"/></a></div>
+                                    <div class="change"><a target="_blank" href="http://192.168.0.150:9527/analysis">大数据分析>><img src="../../../static/img/bagData.png"/></a></div>
                                     <div class="dataCenter change" id="dataCenter"><a href="">数据中心>><img src="../../../static/img/dataCenter.png"/></a></div>
                                 </div>
                                 <div class="eye">
