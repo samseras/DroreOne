@@ -24,6 +24,7 @@
         },
         mounted() {
             droreMap.init();
+            droreMap.object.getMap().getLayers().getArray()[1].setVisible(false)
             let route = this.$route.path
             if (route.includes('area-deploy')) {
                 this.districtList();// 片区输出
@@ -38,6 +39,7 @@
             } else {
                 this.droreMapinit();// 循环输出点
                 this.labelDot();// 打点
+                this.overView();//鹰眼
             }
         },
         methods:{
@@ -51,11 +53,11 @@
             droreMapinit () {//循环输出点
                 for (var i = 0; i < 5; i++) {
                     var icon1 = new droreMap.icon.Marker({
-                        coordinate: droreMap.transFromWgsToLayer([120.06672090248588 + i / 1000, 30.281761130844714 + i / 1000]),
+                        coordinate: droreMap.trans.transFromWgsToLayer([120.06672090248588 + i / 1000, 30.281761130844714 + i / 1000]),
                         name: "asdas" + i,
-                        subtype: "098lk-",
+                        subtype: "droreMapinit",
                         id: "12214_" + i,
-                        url: "/static/img/location.png"
+                        url: "http://label.drore.com/gisLabelTabImage/public/defaults/24*24/shineiquanjing.png"
                     });
                     droreMap.icon.addChild(icon1);
                     // icon1.showName = true
@@ -69,25 +71,25 @@
                 var icon = new droreMap.icon.Marker({
                     coordinate: [0,0],
                     name:  "test",
-                    subtype: "098lk-",
+                    subtype: "labelDot",
                     id: "12214_",
                     url: "/static/img/location.png",
                 });
                 droreMap.icon.addChild(icon);
-                droreMap.addMouseEvent(Event.SINGLECLICK_EVENT, "single", function(evt){
+                droreMap.event.addMouseEvent(Event.SINGLECLICK_EVENT, "single", function(evt){
                     icon.setPosition(evt.coordinate)
                     console.log(evt.coordinate)
                     // icon.onclick(function(e) {
                     //     console.log(e)
                     // });
-                    that.$store.commit('MAP_LOCATION', droreMap.transLayerToWgs(evt.coordinate))
+                    that.$store.commit('MAP_LOCATION', droreMap.trans.transLayerToWgs(evt.coordinate))
                 })
-                droreMap.ifDrag = true;
-                droreMap.DragEvent(function(tabInfor) {
+                droreMap.interaction.ifDrag = true;
+                droreMap.event.DragEvent(function(tabInfor) {
                     var data = tabInfor.data
                     if(data.data.id === '12214_'){
-                        console.log(droreMap.transLayerToWgs(data.end));
-                        that.$store.commit('MAP_LOCATION', droreMap.transLayerToWgs(data.end))
+                        console.log(droreMap.trans.transLayerToWgs(data.end));
+                        that.$store.commit('MAP_LOCATION', droreMap.trans.transLayerToWgs(data.end))
                     }
                 })
             },
@@ -115,7 +117,7 @@
                     let ol=t[0];
                     let arrayObj = new Array();
                     for(var i = 0; i < ol.length; i++) {
-                        let wgs=droreMap.transLayerToWgs(ol[i])
+                        let wgs=droreMap.trans.transLayerToWgs(ol[i])
                         arrayObj.push(wgs);
                     }
                     let arrayObjList= new Array();
@@ -137,7 +139,7 @@
                             let ol=e.unSelect.area[0];
                             let arrayObj = new Array();
                             for(var i = 0; i < ol.length; i++) {
-                                let wgs=droreMap.transLayerToWgs(ol[i])
+                                let wgs=droreMap.trans.transLayerToWgs(ol[i])
                                 arrayObj.push(wgs);
                             }
                             let arrayObjList= new Array();
@@ -158,7 +160,7 @@
                         let geo =JSON.parse(res[i].geo);
                         let area = [];
                         for(var j = 0; j < geo.length; j++) {
-                            let wgs=droreMap.transFromWgsToLayer(geo[j])
+                            let wgs=droreMap.trans.transFromWgsToLayer(geo[j])
                             area.push(wgs);
                         }
                         var data = {"id": res[i].id, "name": res[i].name,"constructor":''}
@@ -190,7 +192,7 @@
                     } else {
                         let arrayObj = new Array();
                         for (var i = 0; i < t.length; i++) {
-                            let wgs = droreMap.transLayerToWgs(t[i])
+                            let wgs = droreMap.trans.transLayerToWgs(t[i])
                             arrayObj.push(wgs);
                         }
                         console.log(arrayObj);
@@ -207,7 +209,7 @@
                         if (!e.unSelect.id) {
                             let arrayObj = new Array();
                             for (var i = 0; i < e.unSelect.area.length; i++) {
-                                let wgs = droreMap.transLayerToWgs(e.unSelect.area[i])
+                                let wgs = droreMap.trans.transLayerToWgs(e.unSelect.area[i])
                                 arrayObj.push(wgs);
                             }
                             console.log(arrayObj);
@@ -226,7 +228,7 @@
                             let geo =JSON.parse(res[i].geo);
                             let area = [];
                             for(var j = 0; j < geo.length; j++) {
-                                let wgs=droreMap.transFromWgsToLayer(geo[j])
+                                let wgs=droreMap.trans.transFromWgsToLayer(geo[j])
                                 area.push(wgs);
                             }
                             var data = {"id": res[i].id, "name": res[i].name,"constructor":''}
@@ -237,7 +239,7 @@
                             let geo =JSON.parse(res[i].geo);
                             let area = [];
                             for(var j = 0; j < geo.length; j++) {
-                                let wgs=droreMap.transFromWgsToLayer(geo[j])
+                                let wgs=droreMap.trans.transFromWgsToLayer(geo[j])
                                 area.push(wgs);
                             }
                             var data = {"id": res[i].id, "name": res[i].name,"constructor":''}
@@ -255,7 +257,7 @@
                         }else if(e.unSelect){
                                 let arrayObj = new Array();
                                 for (var i = 0; i < e.unSelect.area.length; i++) {
-                                    let wgs = droreMap.transLayerToWgs(e.unSelect.area[i])
+                                    let wgs = droreMap.trans.transLayerToWgs(e.unSelect.area[i])
                                     arrayObj.push(wgs);
                                 }
                                 console.log(arrayObj);
@@ -269,6 +271,11 @@
             },
             roadListEidt(){//路线列表
                 this.getAllRoatedit()
+            },
+            overView() {//鹰眼图
+                var overView = new droreMap.control.OverviewMap({'url': '/static/img/xxsd.jpg'});
+                droreMap.control.addControl(overView);
+                overView.setBoxColor("#f60")
             },
         },
         components: {
