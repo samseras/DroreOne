@@ -6,6 +6,12 @@ import axios from '@/http'
 import {getUrl} from "./path";
 
 const police={
+    getPoliceType(){
+      return axios({
+          method:'GET',
+          url:'/info/device/model?type=8'
+      })
+    },
     getAllPolice(){
         return axios({
             method:'GET',

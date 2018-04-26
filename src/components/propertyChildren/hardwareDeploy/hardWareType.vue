@@ -1,8 +1,8 @@
 <template>
     <div class="hardwareType">
-        <div class="title">
-            设备型号信息
-        </div>
+        <!--<div class="title">-->
+            <!--设备型号-->
+        <!--</div>-->
         <div class="cameraContent">
             <div class="conTitle">
                 <Header @addNewInfo="addNewInfo"
@@ -60,11 +60,11 @@
                         <el-table-column
                             label="操作">
                             <template slot-scope="scope">
-                                <span @click="showBroadDetail(scope.row, '设备类型')">查看</span>
-                                <span class="line">|</span>
-                                <span @click="fixedInfo(scope.row.id )">编辑</span>
-                                <span class="line">|</span>
-                                <span @click="deletInfo(scope.row.id)">删除</span>
+                                <el-button @click="showBroadDetail(scope.row, '设备类型')" size="small" type="success" plain>查看</el-button>
+                                <!--<span class="line">|</span>-->
+                                <!--<span @click="fixedInfo(scope.row.id )">编辑</span>-->
+                                <!--<span class="line">|</span>-->
+                                <!--<span @click="deletInfo(scope.row.id)">删除</span>-->
                             </template>
                         </el-table-column>
                     </el-table>

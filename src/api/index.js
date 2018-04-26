@@ -19,6 +19,8 @@ import gate from './gate'
 import light from './light'
 import police from './police'
 import boat from './boatCar'
+import types from './type'
+import gps from './gps'
 
 
 export default {
@@ -39,5 +41,7 @@ export default {
     gate,
     light,
     police,
-    boat
+    boat,
+    types,
+    gps
 }

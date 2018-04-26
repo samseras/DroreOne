@@ -7,6 +7,13 @@ import {getUrl} from "./path";
 
 
 const light={
+    getLightType(){
+        return axios({
+            method:'GET',
+            url:'/info/device/model?type=5'
+        })
+    },
+
     getAllLight(){
         return axios({
             method:'GET',
