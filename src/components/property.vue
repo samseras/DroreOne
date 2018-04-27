@@ -2,7 +2,7 @@
     <div class="property">
         <div class="pro_menu">
             <div class="pro_title">
-                <img src="" alt=""> Drore One智慧旅游云数据中心
+                <img src="./../../static/img/data.png" alt="">
             </div>
             <div class="pro_router">
                 <router-link to="/basic-property" :class="route.includes('basic')? 'active' : ''">设施</router-link>
@@ -63,12 +63,11 @@
                 background: #34495E;
                 img{
                     display: inline-block;
-                    width: rem(20);
-                    height: rem(20);
+                    width: rem(140);
+                    height: rem(35);
                     vertical-align: middle;
-                    background: red;
                     margin-left: rem(-35);
-                    margin-right: rem(5);
+                    margin-right: rem(10);
                 }
             }
             .pro_router{

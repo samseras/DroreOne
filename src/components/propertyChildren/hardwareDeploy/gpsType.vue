@@ -6,7 +6,7 @@
                 style="width:100%">
                 <el-table-column
                     prop="name"
-                    label="报警柱型号">
+                    label="GPS型号">
                 </el-table-column>
 
                 <el-table-column

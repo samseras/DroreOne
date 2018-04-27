@@ -55,7 +55,7 @@
 </script>
 
 <style lang="scss" type="text/scss" scoped>
-    .monitorType{
+    .gateType{
         width:100%;
         padding:0 rem(15);
         box-sizing: border-box;

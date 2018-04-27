@@ -1,13 +1,16 @@
 <template>
     <div class="hardwareMenu">
         <el-menu default-active="/hard-property/hardwaretype" router>
+
             <ScrollContainer>
                 <template v-for="item in items">
                     <template v-if="item.subs">
                         <el-submenu :index="item.index">
-                            <template slot="title"><i :class="item.icon"></i>{{ item.title }}</template>
+                            <template slot="title">
+                                <i :class="item.icon"></i>{{ item.title }}
+                            </template>
                             <el-menu-item v-for="(subItem,i) in item.subs" :key="i" :index="subItem.index">
-                                <img src="" alt="">
+                                <img :src="subItem.icon" alt="">
                                 {{ subItem.title }}
                             </el-menu-item>
                         </el-submenu>
@@ -42,6 +45,7 @@
                         title: '设备型号',
                          subs: [
                              {
+                                 icon:'./../../../static/img/船夫.svg',
                                 index: '/hard-property/cameraType',
                                  title: '摄像头'
                              },
@@ -147,7 +151,7 @@
             width: rem(20);
             height: rem(20);
             vertical-align: middle;
-            background: red;
+           /* background: red;*/
             margin-right: rem(5);
         }
     }
