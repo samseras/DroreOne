@@ -6,6 +6,12 @@ import axios from '@/http'
 import {getUrl} from "./path";
 
 const monitor={
+    getMonitorType(){
+      return axios({
+          method:'GET',
+          url:'/info/device/model?type=6'
+      })
+    },
     getAllMonitor(){
         return axios({
             method:'GET',

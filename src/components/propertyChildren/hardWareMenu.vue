@@ -38,56 +38,47 @@
                 items: [
                     {
                         icon: 'el-icon-setting',
-                        index: '/hard-property/hardwaretype',
-                        title: '设备型号信息',
-                    //     subs: [
-                    //         // {
-                    //         //     index: '/property/person-deploy',
-                    //         //     title: '人员信息'
-                    //         // },
-                    //         {
-                    //             index: '/property/boat-deploy',
-                    //             title: '车船'
-                    //         },
-                    //         {
-                    //             index: '/property/roat-deploy',
-                    //             title: '路网'
-                    //         },
-                    //         {
-                    //             index: '/property/area-deploy',
-                    //             title: '片区'
-                    //         },
-                    //         {
-                    //             index: '/property/toilet-deploy',
-                    //             title: '卫生间'
-                    //         },
-                    //         {
-                    //             index: '/property/park-deploy',
-                    //             title: '停车场'
-                    //         },
-                    //         {
-                    //             index: '/property/shop-deploy',
-                    //             title: '商圈'
-                    //         },
-                    //         {
-                    //             index: '/property/scenic-deploy',
-                    //             title: '景点'
-                    //         },
-                    //
-                    //         {
-                    //             index: '/property/trash-deploy',
-                    //             title: '垃圾桶'
-                    //         },
-                    //         {
-                    //             index: '/property/indicator-deploy',
-                    //             title: '指示牌'
-                    //         },
-                    //         {
-                    //             index: '/property/other-deploy',
-                    //             title: '其他'
-                    //         },
-                    //
-                    //     ]
+                        index:'1' ,
+                        title: '设备型号',
+                         subs: [
+                             {
+                                index: '/hard-property/cameraType',
+                                 title: '摄像头'
+                             },
+                             {
+                                 index: '/hard-property/wifitype',
+                                 title: 'WIFI'
+                             },
+                             {
+                                 index:  '/hard-property/broadcastType',
+                                 title: '广 播'
+                             },
+                             {
+                                 index: '/hard-property/ledType',
+                                 title: 'LED'
+                             },
+                             {
+                                index:'/hard-property/monitorType',
+                                title:'传感器'
+                             },
+                             {
+                                 index:'/hard-property/gateType',
+                                 title:'闸 机'
+                             },
+                             {
+                                 index:'/hard-property/lightType',
+                                 title:'路 灯'
+                             },
+                             {
+                                 index:'/hard-property/policeType',
+                                 title:'报警柱'
+                             },
+                             {
+                                 index:'/hard-property/gpsType',
+                                 title:'GPS'
+                             },
+
+                         ]
                     },
                     {
                         icon: 'el-icon-date',

@@ -5,6 +5,14 @@ import axios from '@/http'
 import {getUrl} from "./path";
 
 const camera={
+    getCameraType(){
+      return axios({
+          method:'GET',
+          url:'/info/device/model?type=2'
+      })
+    },
+
+
     getAllCamera(){
         return axios({
             method:'GET',

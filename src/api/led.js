@@ -6,6 +6,13 @@ import axios from '@/http'
 import {getUrl} from "./path";
 
 const led={
+    getLedType(){
+        return axios({
+            method:'GET',
+            url:'/info/device/model?type=4'
+        })
+    },
+
     getAllLed(){
         return axios({
             method:'GET',

@@ -42,7 +42,7 @@
                             </template>
                         </el-table-column>
                         <el-table-column
-                            prop="manufactor"
+                            prop="model"
                             label="厂家">
                         </el-table-column>
 
@@ -145,7 +145,7 @@
                     name:info.name,
                     positionType:info.positionType,
                     regionId:info.regionId,
-                    manufactor:info.manufactor,
+                    model:info.model,
                     port:info.port,
                     ip:info.ip,
                     description:info.description,
@@ -225,7 +225,7 @@
                     name:info.name,
                     positionType:info.positionType,
                     regionId:info.regionId,
-                    manufactor:info.manufactor,
+                    model:info.model,
                     port:info.port,
                     ip:info.ip,
                     description:info.description,

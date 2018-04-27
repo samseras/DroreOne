@@ -47,6 +47,16 @@ import ProBasicMenu from '@/components/propertyChildren/basicMenu'
 import HardWareMenu from '@/components/propertyChildren/hardWareMenu'
 import BasicType from '@/components/propertyChildren/basicDeploy/basicType'
 import HardWareType from '@/components/propertyChildren/hardwareDeploy/hardWareType'
+import wifiType from '@/components/propertyChildren/hardwareDeploy/wifiType'          //wifi型号
+import broadcastType from '@/components/propertyChildren/hardwareDeploy/broadcastType'//广播型号
+import cameraType from '@/components/propertyChildren/hardwareDeploy/cameraType'    //摄像头型号
+import ledType from '@/components/propertyChildren/hardwareDeploy/ledType'          //led型号
+import monitorType from '@/components/propertyChildren/hardwareDeploy/monitorType' //传感器型号
+import gateType from '@/components/propertyChildren/hardwareDeploy/gateType'        //闸机型号
+import lightType from '@/components/propertyChildren/hardwareDeploy/lightType'      //路灯型号
+import policeType from '@/components/propertyChildren/hardwareDeploy/policeType'    //报警柱型号
+import gpsType from '@/components/propertyChildren/hardwareDeploy/gpsType'          //GPS型号
+
 
 
 import AreaDeploy from '@/components/propertyChildren/basicDeploy/areaDeploy'       //片区
@@ -206,10 +216,20 @@ const routes = [
             {
                 path: '/hard-property',
                 name: 'HardWareMenu',
-                redirect: '/hard-property/hardwaretype',
+                redirect: '/hard-property/cameraType',
                 component: HardWareMenu,
                 children: [
-                    {path: '/hard-property/hardwaretype', name: 'HardWareType', component: HardWareType},
+                    {path: '/hard-property/cameraType', name: 'cameraType', component: cameraType},
+                    {path: '/hard-property/wifitype', name: 'wifiType', component: wifiType},
+                    {path: '/hard-property/broadcastType', name: 'broadcastType', component:broadcastType},
+                    {path: '/hard-property/ledType', name: 'ledType', component: ledType},
+                    {path: '/hard-property/monitorType', name: 'monitorType', component: monitorType},
+                    {path: '/hard-property/gateType', name: 'gateType', component: gateType},
+                    {path: '/hard-property/lightType', name: 'lightType', component: lightType},
+                    {path: '/hard-property/policeType', name: 'policeType', component: policeType},
+                    {path: '/hard-property/gpsType', name: 'gpsType', component: gpsType},
+
+
                     {path: '/hard-property/camera-Hware', name: 'CameraHware', component: CameraHware},
                     {path: '/hard-property/broadcast-Hware', name: 'BroadcastHware', component: BroadcastHware},
                     {path: '/hard-property/gate-Hware', name: 'GateHware', component: GateHware},

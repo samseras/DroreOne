@@ -6,6 +6,13 @@ import {getUrl} from "./path";
 
 
 const broadcast={
+    getBroadcastType(){
+      return axios({
+          method:'GET',
+          url:'/info/device/model?type=1'
+      })
+    },
+
     getAllBroadcast(){
         return axios({
             method:'GET',
@@ -43,6 +50,7 @@ const broadcast={
             }
         })
     }
+
 
 }
 export default broadcast

@@ -5,6 +5,12 @@ import axios from '@/http'
 import {getUrl} from "./path";
 
 const gate={
+    getGateType(){
+      return axios({
+          method:'GET',
+          url:'/info/device/model?type=3'
+      })
+    },
     getAllGate(){
         return axios({
             method:'GET',

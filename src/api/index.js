@@ -19,6 +19,8 @@ import gate from './gate'
 import light from './light'
 import police from './police'
 import boat from './boatCar'
+import types from './type'
+import gps from './gps'
 import lamppost from './lamppost'
 import schedulebroadcast from './schedulebroadcast'
 import scheduleled from './scheduleled'
@@ -44,6 +46,8 @@ export default {
     light,
     police,
     boat,
+    types,
+    gps,
     lamppost,
     schedulebroadcast,
     scheduleled,
