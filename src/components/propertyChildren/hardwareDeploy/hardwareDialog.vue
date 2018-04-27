@@ -46,11 +46,11 @@
                                 {{camera.description}}
                         </textarea>
                     </p>
-                    <div class="img">
-                        <label for="avatar">
-                            <img :src="files.length ? files[0].url : 'https://www.gravatar.com/avatar/default?s=200&r=pg&d=mm'"  class="rounded-circle" />
-                        </label>
-                    </div>
+                    <!--<div class="img">-->
+                        <!--<label for="avatar">-->
+                            <!--<img :src="files.length ? files[0].url : 'https://www.gravatar.com/avatar/default?s=200&r=pg&d=mm'"  class="rounded-circle" />-->
+                        <!--</label>-->
+                    <!--</div>-->
                 </div>
                 <!--广播-->
                 <div class="cameraCard popCard" v-if="route.includes('broadcast')">
@@ -91,11 +91,11 @@
 
                         </textarea>
                     </p>
-                    <div class="img">
-                        <label for="avatar">
-                            <img :src="files.length ? files[0].url : 'https://www.gravatar.com/avatar/default?s=200&r=pg&d=mm'"  class="rounded-circle" />
-                        </label>
-                    </div>
+                    <!--<div class="img">-->
+                        <!--<label for="avatar">-->
+                            <!--<img :src="files.length ? files[0].url : 'https://www.gravatar.com/avatar/default?s=200&r=pg&d=mm'"  class="rounded-circle" />-->
+                        <!--</label>-->
+                    <!--</div>-->
                 </div>
                 <!--LED-->
                 <div class="cameraCard popCard" v-if="route.includes('led')">
@@ -138,11 +138,11 @@
 
                         </textarea>
                     </p>
-                    <div class="img">
-                        <label for="avatar">
-                            <img :src="files.length ? files[0].url : 'https://www.gravatar.com/avatar/default?s=200&r=pg&d=mm'"  class="rounded-circle" />
-                        </label>
-                    </div>
+                    <!--<div class="img">-->
+                        <!--<label for="avatar">-->
+                            <!--<img :src="files.length ? files[0].url : 'https://www.gravatar.com/avatar/default?s=200&r=pg&d=mm'"  class="rounded-circle" />-->
+                        <!--</label>-->
+                    <!--</div>-->
                 </div>
                 <!--Wifi-->
                 <div class="cameraCard popCard" v-if="route.includes('wifi')">
@@ -181,11 +181,11 @@
 
                         </textarea>
                     </p>
-                    <div class="img">
-                        <label for="avatar">
-                            <img :src="files.length ? files[0].url : 'https://www.gravatar.com/avatar/default?s=200&r=pg&d=mm'"  class="rounded-circle" />
-                        </label>
-                    </div>
+                    <!--<div class="img">-->
+                        <!--<label for="avatar">-->
+                            <!--<img :src="files.length ? files[0].url : 'https://www.gravatar.com/avatar/default?s=200&r=pg&d=mm'"  class="rounded-circle" />-->
+                        <!--</label>-->
+                    <!--</div>-->
                 </div>
                 <!--传感器-->
                 <div class="cameraCard popCard" v-if="route.includes('monitors')">
@@ -223,11 +223,11 @@
 
                         </textarea>
                     </p>
-                    <div class="img">
-                        <label for="avatar">
-                            <img :src="files.length ? files[0].url : 'https://www.gravatar.com/avatar/default?s=200&r=pg&d=mm'"  class="rounded-circle" />
-                        </label>
-                    </div>
+                    <!--<div class="img">-->
+                        <!--<label for="avatar">-->
+                            <!--<img :src="files.length ? files[0].url : 'https://www.gravatar.com/avatar/default?s=200&r=pg&d=mm'"  class="rounded-circle" />-->
+                        <!--</label>-->
+                    <!--</div>-->
                 </div>
                 <!--灯光-->
                 <div class="cameraCard popCard" v-if="route.includes('Light')">
@@ -265,11 +265,11 @@
 
                         </textarea>
                     </p>
-                    <div class="img">
-                        <label for="avatar">
-                            <img :src="files.length ? files[0].url : 'https://www.gravatar.com/avatar/default?s=200&r=pg&d=mm'"  class="rounded-circle" />
-                        </label>
-                    </div>
+                    <!--<div class="img">-->
+                        <!--<label for="avatar">-->
+                            <!--<img :src="files.length ? files[0].url : 'https://www.gravatar.com/avatar/default?s=200&r=pg&d=mm'"  class="rounded-circle" />-->
+                        <!--</label>-->
+                    <!--</div>-->
                 </div>
                 <!--闸机-->
                 <div class="cameraCard popCard" v-if="route.includes('gate')">
@@ -307,11 +307,11 @@
 
                         </textarea>
                     </p>
-                    <div class="img">
-                        <label for="avatar">
-                            <img :src="files.length ? files[0].url : 'https://www.gravatar.com/avatar/default?s=200&r=pg&d=mm'"  class="rounded-circle" />
-                        </label>
-                    </div>
+                    <!--<div class="img">-->
+                        <!--<label for="avatar">-->
+                            <!--<img :src="files.length ? files[0].url : 'https://www.gravatar.com/avatar/default?s=200&r=pg&d=mm'"  class="rounded-circle" />-->
+                        <!--</label>-->
+                    <!--</div>-->
                 </div>
                 <!--报警柱-->
                 <div class="cameraCard popCard" v-if="route.includes('police')">
@@ -348,20 +348,20 @@
 
                         </textarea>
                     </p>
-                    <div class="img">
-                        <label for="avatar">
-                            <img :src="files.length ? files[0].url : 'https://www.gravatar.com/avatar/default?s=200&r=pg&d=mm'"  class="rounded-circle" />
-                        </label>
-                    </div>
+                    <!--<div class="img">-->
+                        <!--<label for="avatar">-->
+                            <!--<img :src="files.length ? files[0].url : 'https://www.gravatar.com/avatar/default?s=200&r=pg&d=mm'"  class="rounded-circle" />-->
+                        <!--</label>-->
+                    <!--</div>-->
                 </div>
 
-                <!--设备型号-->
-                <div class="cameraCard popCard" v-if="route.includes('hardwaretype')">
-                    <p class="type">设备名称：<input type="text" v-model="hardwaretype.hardName"></p>
-                    <p class="name">厂家名称：<input type="text" v-model="hardwaretype.tradeName"> </p>
-                    <p class="IP">设备型号：<input type="text" v-model="hardwaretype.model"></p>
-                    <p class="mac">类&nbsp;  &nbsp;&nbsp;&nbsp;&nbsp;  型：<input type="text" v-model="hardwaretype.type"></p>
-                </div>
+                <!--&lt;!&ndash;设备型号&ndash;&gt;-->
+                <!--<div class="cameraCard popCard" v-if="route.includes('hardwaretype')">-->
+                    <!--<p class="type">设备名称：<input type="text" v-model="hardwaretype.hardName"></p>-->
+                    <!--<p class="name">厂家名称：<input type="text" v-model="hardwaretype.tradeName"> </p>-->
+                    <!--<p class="IP">设备型号：<input type="text" v-model="hardwaretype.model"></p>-->
+                    <!--<p class="mac">类&nbsp;  &nbsp;&nbsp;&nbsp;&nbsp;  型：<input type="text" v-model="hardwaretype.type"></p>-->
+                <!--</div>-->
             </div>
             <div class="text-center p-2">
                 <file-upload
@@ -536,7 +536,6 @@
            },
            addNewInfo(){
                let newInfo={ }
-               this.model=Number(this.model)
                if(this.route.includes('camera')){
                    newInfo=this.camera
                }else if(this.route.includes('broadcast')){
@@ -1120,7 +1119,9 @@
                     margin-top: rem(8);
                     border-bottom: 1px solid #ccc;
                     font-size: rem(12);
-
+                    .el-select{
+                        width:rem(140);
+                    }
                     input{
                         border: none;
                         list-style: none;
@@ -1168,7 +1169,7 @@
                         box-sizing: border-box;
                     }
                 }
-                .img{
+                /*.img{
                         width: rem(120);
                         height: rem(60);
                         position: absolute;
@@ -1184,7 +1185,7 @@
                             border-radius: 50%;
                             margin-left: rem(40);
                         }
-                    }
+                    }*/
             }
             .cardFooter {
                 width: 100%;
