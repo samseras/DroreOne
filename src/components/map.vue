@@ -77,6 +77,7 @@
                 });
                 droreMap.icon.addChild(icon);
                 droreMap.event.addMouseEvent(Event.SINGLECLICK_EVENT, "single", function(evt){
+                    droreMap.interaction.ifDrag = true;
                     icon.setPosition(evt.coordinate)
                     console.log(evt.coordinate)
                     // icon.onclick(function(e) {
@@ -84,7 +85,6 @@
                     // });
                     that.$store.commit('MAP_LOCATION', droreMap.trans.transLayerToWgs(evt.coordinate))
                 })
-                droreMap.interaction.ifDrag = true;
                 droreMap.event.DragEvent(function(tabInfor) {
                     var data = tabInfor.data
                     if(data.data.id === '12214_'){
