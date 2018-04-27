@@ -1161,10 +1161,10 @@ define(function(require, exports, module) {
                     image: new ol.style.Circle({
                         radius: 5,
                         fill: new ol.style.Fill({
-                            color: pointStyle || 'yellow'
+                            color: pointStyle || 'yellow',
                         }),
                         stroke: new ol.style.Stroke({
-                            color: 'black',
+                            color: 'white',
                             width: 1
                         })
                     })
@@ -3228,11 +3228,14 @@ define(function(require, exports, module) {
             road: {
                 RoadLayer: roadNet.Road,
                 addRoadLayer: function(roadLayer) {
-                    if(roadLayer.constructor === roadNet.Road) {
-                        roadNet.roadList.push(roadLayer);
-                        mapData._baseMap.addLayer(roadLayer.lineLayer);
-                        mapData._baseMap.addLayer(roadLayer.pointLayer);
-                    }
+                    // if(roadLayer.constructor === roadNet.Road) {
+                    //     roadNet.roadList.push(roadLayer);
+                    //     mapData._baseMap.addLayer(roadLayer.lineLayer);
+                    //     mapData._baseMap.addLayer(roadLayer.pointLayer);
+                    // }
+                    roadNet.roadList.push(roadLayer);
+                    mapData._baseMap.addLayer(roadLayer.lineLayer);
+                    // mapData._baseMap.addLayer(roadLayer.pointLayer);
                 },
                 removeAll: function() {
                     roadNet.roadList.forEach(function(t, i) {

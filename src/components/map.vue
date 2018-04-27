@@ -40,6 +40,8 @@
                 this.droreMapinit();// 循环输出点
                 this.labelDot();// 打点
                 this.overView();//鹰眼
+                // this.roadList();// 路线输出
+                // this.road(); // 路线打点
             }
         },
         methods:{
@@ -54,7 +56,7 @@
                 for (var i = 0; i < 5; i++) {
                     var icon1 = new droreMap.icon.Marker({
                         coordinate: droreMap.trans.transFromWgsToLayer([120.06672090248588 + i / 1000, 30.281761130844714 + i / 1000]),
-                        name: "asdas" + i,
+                        name: "droreMapinit" + i,
                         subtype: "droreMapinit",
                         id: "12214_" + i,
                         url: "http://label.drore.com/gisLabelTabImage/public/defaults/24*24/shineiquanjing.png"
@@ -156,7 +158,7 @@
                 await api.roat.getAllRoat().then(res => {
                     console.log(res, '请求路网成功')
                     for (var i = 0; i < res.length; i++) {
-                        var areaEvtList =new droreMap.road.RoadLayer('ROUTE_list', 'blue')
+                        var areaEvtList =new droreMap.road.RoadLayer('ROUTE_list', 'blue', 'blue')
                         let geo =JSON.parse(res[i].geo);
                         let area = [];
                         for(var j = 0; j < geo.length; j++) {
@@ -224,7 +226,7 @@
                     console.log(res, '编辑请求路网成功')
                     for (var i = 0; i < res.length; i++) {
                         if(res[i].id === this.getLocationId){
-                            var areaEvts =new droreMap.road.RoadLayer('ROUTE_show', 'red')
+                            var areaEvts =new droreMap.road.RoadLayer('ROUTE_show', 'red', 'red')
                             let geo =JSON.parse(res[i].geo);
                             let area = [];
                             for(var j = 0; j < geo.length; j++) {
@@ -235,7 +237,7 @@
                             areaEvts.addRoad(area, data)
                             droreMap.road.addRoadLayer(areaEvts)
                         }else{
-                            var areaEvtList =new droreMap.road.RoadLayer('ROUTE_list', 'blue')
+                            var areaEvtList =new droreMap.road.RoadLayer('ROUTE_list', 'blue', 'blue')
                             let geo =JSON.parse(res[i].geo);
                             let area = [];
                             for(var j = 0; j < geo.length; j++) {
@@ -254,6 +256,10 @@
                         if(e.select){
                             console.log(e.select);
                             that.$store.commit('ROAT_LOCATION_STATE', false)
+                            if(e.select.type == 'Point') {
+                                //点击路网中的点，出现面板，包括延长、拆分和关键点
+                                alert('请点击路网进行拖拽编辑！')
+                            }
                         }else if(e.unSelect){
                                 let arrayObj = new Array();
                                 for (var i = 0; i < e.unSelect.area.length; i++) {
