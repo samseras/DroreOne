@@ -2438,9 +2438,9 @@ define(function(require, exports, module) {
             },
             eventList: {},
             addEventListener: function(obj, type, key, fn) {
-                if(CustomEvent.eventList[key] != undefined) {
-                    return;
-                }
+                // if(CustomEvent.eventList[key] != undefined) {
+                //     return;
+                // }
                 this.obj = obj;
                 this.type = type;
                 this.fn = fn;

@@ -254,7 +254,6 @@
                     areaEvts.ifSelect = true;
                     areaEvts.addEventListener('select', "select", function(e) {
                         if(e.select){
-                            console.log(e.select);
                             that.$store.commit('ROAT_LOCATION_STATE', false)
                             if(e.select.type == 'Point') {
                                 //点击路网中的点，出现面板，包括延长、拆分和关键点
