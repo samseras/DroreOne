@@ -353,10 +353,10 @@ define(function(require, exports, module) {
                     $(".ol-overviewmap-box").css("border-color", color)
                 };
                 this.setRect = function(width, height) {
-                    $(".ol-overviewmap").css("width", width)
-                    $(".ol-custom-overviewmap").css("width", width)
-                    $(".ol-overviewmap").css("height", height)
-                    $(".ol-custom-overviewmap").css("height", height)
+                    // $(".ol-overviewmap").css("width", width)
+                    $(".ol-overviewmap-map").css("width", width)
+                    // $(".ol-overviewmap").css("height", height)
+                    $(".ol-overviewmap-map").css("height", height)
                 };
                 this.getElement = function() {
                     return this.overviewMap.element;

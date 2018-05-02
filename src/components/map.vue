@@ -53,6 +53,8 @@
                 'MAP_ROAT_LOCATION'
             ]),
             droreMapinit () {//循环输出点
+                droreMap.interaction.enableMapClick = true
+                droreMap.interaction.showMove()
                 for (var i = 0; i < 5; i++) {
                     var icon1 = new droreMap.icon.Marker({
                         coordinate: droreMap.trans.transFromWgsToLayer([120.06672090248588 + i / 1000, 30.281761130844714 + i / 1000]),
@@ -63,8 +65,8 @@
                     });
                     droreMap.icon.addChild(icon1);
                     // icon1.showName = true
-                    icon1.onclick(function (e) {
-                        alert(e.coordinate);
+                    icon1.onclick(function(e) {
+                        console.log(e)
                     });
                 }
             },
@@ -82,9 +84,6 @@
                     droreMap.interaction.ifDrag = true;
                     icon.setPosition(evt.coordinate)
                     console.log(evt.coordinate)
-                    // icon.onclick(function(e) {
-                    //     console.log(e)
-                    // });
                     that.$store.commit('MAP_LOCATION', droreMap.trans.transLayerToWgs(evt.coordinate))
                 })
                 droreMap.event.DragEvent(function(tabInfor) {
@@ -281,6 +280,7 @@
                 var overView = new droreMap.control.OverviewMap({'url': '/static/img/xxsd.jpg'});
                 droreMap.control.addControl(overView);
                 overView.setBoxColor("#f60")
+                overView.setRect('270px','150px')
             },
         },
         components: {
@@ -291,7 +291,7 @@
         }
     }
 </script>
-<style >
+<style>
     .ol-control,.ol-scale-line {
         position:absolute;
         padding:2px
@@ -499,9 +499,9 @@
     }
     .ol-overviewmap .ol-overviewmap-map {
         border:1px solid #7b98bc;
-        height:150px;
+        height:144px;
         margin:2px;
-        width:150px
+        width:264px
     }
     .ol-overviewmap:not(.ol-collapsed) button {
         bottom:1px;
@@ -517,7 +517,6 @@
     .ol-overviewmap-box {
         border:2px dotted rgba(0,60,136,.7)
     }
-
 </style>
 <style lang="scss" scoped>
     #map{
