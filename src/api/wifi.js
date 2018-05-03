@@ -6,6 +6,14 @@ import axios from '@/http'
 import {getUrl} from "./path";
 
 const wifi={
+    getWifiType(){
+        return axios({
+            method:'GET',
+            url:'/info/device/model?type=7'
+        })
+    },
+
+
     getAllWifi(){
         return axios({
             method:'GET',

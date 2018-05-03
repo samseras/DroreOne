@@ -100,7 +100,6 @@
                 alert(message)
             },
             inputFile(newFile, oldFile, prevent) {
-                debugger
                 if (newFile && !oldFile) {
                     this.$nextTick(function () {
                         this.edit = true
@@ -111,7 +110,6 @@
                 }
             },
             inputFilter(newFile, oldFile, prevent) {
-                debugger
                 if (newFile && !oldFile) {
                     if (!/\.(gif|jpg|jpeg|png|webp)$/i.test(newFile.name)) {
                         this.alert('Your choice is not a picture')

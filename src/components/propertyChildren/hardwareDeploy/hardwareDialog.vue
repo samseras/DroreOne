@@ -17,10 +17,12 @@
                         </el-select>
                     </p>
                     <p class="name">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称：<input type="text" v-model="camera.name"> </p>
-                    <p class="manufacturer">厂&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;家：
-                        <el-select name="" v-model="camera.manufactor">
-                            <el-option label='海康' :value="haikang"></el-option>
-                            <el-option label='卓锐' :value="zhuorui"></el-option>
+                    <p class="manufacturer">型&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;号：
+                        <el-select name="" v-model="camera.model">
+                            <el-option v-for="item in modelType"
+                                       :value="item.id"
+                                       :label="item.name">
+                            </el-option>
                         </el-select>
                     </p>
                     <p class="IP">I P 地 址：<input type="text" v-model="camera.ip"></p>
@@ -44,11 +46,11 @@
                                 {{camera.description}}
                         </textarea>
                     </p>
-                    <div class="img">
-                        <label for="avatar">
-                            <img :src="files.length ? files[0].url : 'https://www.gravatar.com/avatar/default?s=200&r=pg&d=mm'"  class="rounded-circle" />
-                        </label>
-                    </div>
+                    <!--<div class="img">-->
+                        <!--<label for="avatar">-->
+                            <!--<img :src="files.length ? files[0].url : 'https://www.gravatar.com/avatar/default?s=200&r=pg&d=mm'"  class="rounded-circle" />-->
+                        <!--</label>-->
+                    <!--</div>-->
                 </div>
                 <!--广播-->
                 <div class="cameraCard popCard" v-if="route.includes('broadcast')">
@@ -60,11 +62,13 @@
                         </el-select>
                     </p>
                     <p class="name">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称：<input type="text" v-model="broadCast.name"> </p>
-                    <p class="home">厂&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;家：
+                    <p class="home">型&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  号：
 
-                        <el-select name="" v-model="broadCast.manufactor">
-                            <el-option label='海康' :value="3"></el-option>
-                            <el-option label='卓锐' :value="4"></el-option>
+                        <el-select name="" v-model="broadCast.model">
+                            <el-option v-for="item in modelType"
+                                       :value="item.id"
+                                        :label="item.name">
+                            </el-option>
                         </el-select>
                     </p>
                     <p class="IP">I P 地 址：<input type="text" v-model="broadCast.ip"></p>
@@ -87,11 +91,11 @@
 
                         </textarea>
                     </p>
-                    <div class="img">
-                        <label for="avatar">
-                            <img :src="files.length ? files[0].url : 'https://www.gravatar.com/avatar/default?s=200&r=pg&d=mm'"  class="rounded-circle" />
-                        </label>
-                    </div>
+                    <!--<div class="img">-->
+                        <!--<label for="avatar">-->
+                            <!--<img :src="files.length ? files[0].url : 'https://www.gravatar.com/avatar/default?s=200&r=pg&d=mm'"  class="rounded-circle" />-->
+                        <!--</label>-->
+                    <!--</div>-->
                 </div>
                 <!--LED-->
                 <div class="cameraCard popCard" v-if="route.includes('led')">
@@ -103,6 +107,15 @@
 
                     </p>
                     <p class="name">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称：<input type="text" v-model="led.name"> </p>
+                    <p class="home">型&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  号：
+
+                        <el-select v-model="led.model">
+                            <el-option v-for="item in modelType"
+                                       :value="item.id"
+                                       :label="item.name">
+                            </el-option>
+                        </el-select>
+                    </p>
                     <p class="width">屏幕宽高：<input type="text" v-model="led.area"></p>
                     <p class="IP">I P 地 址：<input type="text" v-model="led.ip"></p>
                     <p class="host">设备编号：<input type="text" v-model="led.serialNum"></p>
@@ -125,11 +138,11 @@
 
                         </textarea>
                     </p>
-                    <div class="img">
-                        <label for="avatar">
-                            <img :src="files.length ? files[0].url : 'https://www.gravatar.com/avatar/default?s=200&r=pg&d=mm'"  class="rounded-circle" />
-                        </label>
-                    </div>
+                    <!--<div class="img">-->
+                        <!--<label for="avatar">-->
+                            <!--<img :src="files.length ? files[0].url : 'https://www.gravatar.com/avatar/default?s=200&r=pg&d=mm'"  class="rounded-circle" />-->
+                        <!--</label>-->
+                    <!--</div>-->
                 </div>
                 <!--Wifi-->
                 <div class="cameraCard popCard" v-if="route.includes('wifi')">
@@ -140,7 +153,14 @@
                         </el-select>
                     </p>
                     <p class="name">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称：<input type="text" v-model="wifi.name"> </p>
-                    <p class="version">型&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;号：<input type="text" v-model="wifi.model"></p>
+                    <p class="version">型&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;号:
+                        <el-select name="" v-model="wifi.model">
+                            <el-option v-for="item in modelType"
+                                       :value="item.id"
+                                       :label="item.name">
+                            </el-option>
+                        </el-select>
+                    </p>
                     <p class="IP">设备I P ：<input type="text" v-model="wifi.ip"></p>
                     <p class="mac">M a c：<input type="text" v-model="wifi.mac"></p>
                     <p class="host">设备编号：<input type="text" v-model="wifi.serialNum"></p>
@@ -161,11 +181,11 @@
 
                         </textarea>
                     </p>
-                    <div class="img">
-                        <label for="avatar">
-                            <img :src="files.length ? files[0].url : 'https://www.gravatar.com/avatar/default?s=200&r=pg&d=mm'"  class="rounded-circle" />
-                        </label>
-                    </div>
+                    <!--<div class="img">-->
+                        <!--<label for="avatar">-->
+                            <!--<img :src="files.length ? files[0].url : 'https://www.gravatar.com/avatar/default?s=200&r=pg&d=mm'"  class="rounded-circle" />-->
+                        <!--</label>-->
+                    <!--</div>-->
                 </div>
                 <!--传感器-->
                 <div class="cameraCard popCard" v-if="route.includes('monitors')">
@@ -176,10 +196,12 @@
                         </el-select>
                     </p>
                     <p class="name">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称：<input type="text" v-model="monitors.name"> </p>
-                    <p class="version">厂&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;家：
-                        <el-select name="" v-model="monitors.manufactor">
-                            <el-option :value="3" label="卓锐"></el-option>
-                            <el-option :value="4" label="天气"></el-option>
+                    <p class="version">型&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;号:
+                        <el-select name="" v-model="monitors.model">
+                            <el-option v-for="item in modelType"
+                                       :value="item.id"
+                                       :label="item.name">
+                            </el-option>
                         </el-select>
                     </p >
                     <p class="IP">设备I P ：<input type="text" v-model="monitors.ip"></p>
@@ -201,11 +223,11 @@
 
                         </textarea>
                     </p>
-                    <div class="img">
-                        <label for="avatar">
-                            <img :src="files.length ? files[0].url : 'https://www.gravatar.com/avatar/default?s=200&r=pg&d=mm'"  class="rounded-circle" />
-                        </label>
-                    </div>
+                    <!--<div class="img">-->
+                        <!--<label for="avatar">-->
+                            <!--<img :src="files.length ? files[0].url : 'https://www.gravatar.com/avatar/default?s=200&r=pg&d=mm'"  class="rounded-circle" />-->
+                        <!--</label>-->
+                    <!--</div>-->
                 </div>
                 <!--灯光-->
                 <div class="cameraCard popCard" v-if="route.includes('Light')">
@@ -216,15 +238,17 @@
                         </el-select>
                     </p>
                     <p class="name">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称：<input type="text" v-model="Light.name"> </p>
-                    <p class="home">厂&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;家：
-                        <el-select name="" v-model="Light.manufactor">
-                            <el-option :value="0" label="卓锐"></el-option>
-                            <el-option :value="1" label="西安"></el-option>
-                        </el-select>
-                    </p>
+
                     <p class="num">路灯编号：<input type="text" v-model="Light.serialNum"></p>
-                    <p class="version">型&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;号：<input type="text" v-model="Light.model">
-                    </p>
+                    <p class="version">型&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;号:
+                        <el-select  v-model="Light.model">
+                            <el-option v-for="item in modelType"
+                                       :value="item.id"
+                                       :label="item.name">
+                            </el-option>
+                        </el-select>
+                    </p >
+
                     <p class="place">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置：<span>{{Light.location}}</span>
                         <i class="el-icon-location-outline" @click="showMapDialog"></i>
                     </p>
@@ -241,11 +265,11 @@
 
                         </textarea>
                     </p>
-                    <div class="img">
-                        <label for="avatar">
-                            <img :src="files.length ? files[0].url : 'https://www.gravatar.com/avatar/default?s=200&r=pg&d=mm'"  class="rounded-circle" />
-                        </label>
-                    </div>
+                    <!--<div class="img">-->
+                        <!--<label for="avatar">-->
+                            <!--<img :src="files.length ? files[0].url : 'https://www.gravatar.com/avatar/default?s=200&r=pg&d=mm'"  class="rounded-circle" />-->
+                        <!--</label>-->
+                    <!--</div>-->
                 </div>
                 <!--闸机-->
                 <div class="cameraCard popCard" v-if="route.includes('gate')">
@@ -258,7 +282,14 @@
                         </el-select>
                     </p>
                     <p class="name">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称：<input type="text" v-model="gate.name"> </p>
-                    <p class="version">型&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;号：<input type="text" v-model="gate.model"></p>
+                    <p class="version">型&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;号：
+                        <el-select  v-model="gate.model">
+                            <el-option v-for="item in modelType"
+                                       :value="item.id"
+                                       :label="item.name">
+                            </el-option>
+                        </el-select>
+                    </p>
                     <p class="IP">设备I P ：<input type="text" v-model="gate.ip"></p>
                     <p class="num">设备编号：<input type="text" v-model="gate.serialNum"></p>
                     <p class="name">端&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;口：<input type="text" v-model="gate.port"> </p>
@@ -276,11 +307,11 @@
 
                         </textarea>
                     </p>
-                    <div class="img">
-                        <label for="avatar">
-                            <img :src="files.length ? files[0].url : 'https://www.gravatar.com/avatar/default?s=200&r=pg&d=mm'"  class="rounded-circle" />
-                        </label>
-                    </div>
+                    <!--<div class="img">-->
+                        <!--<label for="avatar">-->
+                            <!--<img :src="files.length ? files[0].url : 'https://www.gravatar.com/avatar/default?s=200&r=pg&d=mm'"  class="rounded-circle" />-->
+                        <!--</label>-->
+                    <!--</div>-->
                 </div>
                 <!--报警柱-->
                 <div class="cameraCard popCard" v-if="route.includes('police')">
@@ -291,10 +322,13 @@
                         </el-select>
                     </p>
                     <p class="name">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称：<input type="text" v-model="police.name"> </p>
-                    <p class="version">厂&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;家:
-                        <el-select name="" v-model="police.manufactor">
-                            <el-option :value="报警" label="报警柱"></el-option>
-                            <el-option :value="越界" label="越界"></el-option>
+                    <p class="version">型&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;号:
+                        <el-select name="" v-model="police.model">
+                            <el-option v-for="item in modelType"
+                                        :value="item.id"
+                                        :label="item.name">
+
+                            </el-option>
                         </el-select>
                     </p>
                     <p class="host">设备编号：<input type="text" v-model="police.serialNum"></p>
@@ -314,27 +348,20 @@
 
                         </textarea>
                     </p>
-                    <div class="img">
-                        <label for="avatar">
-                            <img :src="files.length ? files[0].url : 'https://www.gravatar.com/avatar/default?s=200&r=pg&d=mm'"  class="rounded-circle" />
-                        </label>
-                    </div>
+                    <!--<div class="img">-->
+                        <!--<label for="avatar">-->
+                            <!--<img :src="files.length ? files[0].url : 'https://www.gravatar.com/avatar/default?s=200&r=pg&d=mm'"  class="rounded-circle" />-->
+                        <!--</label>-->
+                    <!--</div>-->
                 </div>
 
-                <!--设备型号-->
-                <div class="cameraCard popCard" v-if="route.includes('hardwaretype')">
-                    <p class="type">设备名称：
-                        <el-select name="" v-model="hardwaretype.hardName">
-                            <el-option :value="0" label="摄像头"></el-option>
-                            <el-option :value="1" label="广播"></el-option>
-                            <el-option :value="2" label="WIFI"></el-option>
-
-                        </el-select>
-                    </p>
-                    <p class="name">厂家名称：<input type="text" v-model="hardwaretype.tradeName"> </p>
-                    <p class="IP">设备型号：<input type="text" v-model="hardwaretype.model"></p>
-                    <p class="mac">类&nbsp;  &nbsp;&nbsp;&nbsp;&nbsp;  型：<input type="text" v-model="hardwaretype.type"></p>
-                </div>
+                <!--&lt;!&ndash;设备型号&ndash;&gt;-->
+                <!--<div class="cameraCard popCard" v-if="route.includes('hardwaretype')">-->
+                    <!--<p class="type">设备名称：<input type="text" v-model="hardwaretype.hardName"></p>-->
+                    <!--<p class="name">厂家名称：<input type="text" v-model="hardwaretype.tradeName"> </p>-->
+                    <!--<p class="IP">设备型号：<input type="text" v-model="hardwaretype.model"></p>-->
+                    <!--<p class="mac">类&nbsp;  &nbsp;&nbsp;&nbsp;&nbsp;  型：<input type="text" v-model="hardwaretype.type"></p>-->
+                <!--</div>-->
             </div>
             <div class="text-center p-2">
                 <file-upload
@@ -380,11 +407,12 @@
                files: [],
                isShowMapDialog:false,
                mapVisible:false,
+               modelType:{},
                regions: [],
               camera:{
                   positionType:'',
                   name:'',
-                  manufactor:'',
+                  model:'',
                   ip:'',
                   port:'',
                   regionId:'',
@@ -394,7 +422,7 @@
                broadCast:{
                    positionType:'',
                    name:'',
-                   manufactor:'',
+                   model:'',
                    ip:'',
                    port:'',
                    location:'',
@@ -405,6 +433,7 @@
                    positionType:'',
                    name:'',
                    area:'',
+                   model:'',
                    ip:'',
                    serialNum:'',
                    location:'',
@@ -425,7 +454,7 @@
                monitors:{
                    sensorType:'',
                    name:'',
-                   manufactor:'',
+                   model:'',
                    ip:'',
                    serialNum:'',
                    location:'',
@@ -435,7 +464,6 @@
                Light:{
                    lightStatus:'',
                    name:'',
-                   manufactor:'',
                    serialNum:'',
                    model:'',
                    location:'',
@@ -456,7 +484,7 @@
                police:{
                    sensorType:'',
                    name:'',
-                   manufactor:'',
+                   model:'',
                    serialNum:'',
                    ip:'',
                    location:'',
@@ -478,6 +506,7 @@
            }
        },
        methods:{
+
            saveLocation () {
                let locationString
                if (this.getLocation.length > 0) {
@@ -602,24 +631,67 @@
                console.log(res, '所有片区')
                this.regions = res
            })
+
+           let typeId
            this.route=this.$route.path
+
            if(this.route.includes('camera')){
                this.camera=this.Info
+               if(this.camera.model){
+                   this.camera.model = Number(this.camera.model)
+               }
+               typeId =2
            }else if(this.route.includes('broadcast')){
                this.broadCast=this.Info
+//               console.log(this.broadCast, '这是拿到我偶的')
+               if(this.broadCast.model){
+                   this.broadCast.model = Number(this.broadCast.model)
+               }
+               typeId =1
            }else if(this.route.includes('led')){
                this.led=this.Info
+               if(this.led.model){
+                   this.led.model = Number(this.led.model)
+               }
+               typeId =4
            }else if(this.route.includes('wifi')){
                this.wifi=this.Info
+               if(this.wifi.model){
+                   this.wifi.model = Number(this.wifi.model)
+               }
+               typeId =7
            }else if(this.route.includes('monitors')){
                this.monitors=this.Info
+               if(this.monitors.model){
+                   this.monitors.model = Number(this.monitors.model)
+               }
+               typeId =6
            }else if(this.route.includes('Light')){
                this.Light=this.Info
+               if(this.Light.model){
+                   this.Light.model = Number(this.Light.model)
+               }
+               typeId =5
            }else if(this.route.includes('gate')){
                this.gate=this.Info
+               if(this.gate.model){
+                   this.gate.model = Number(this.gate.model)
+               }
+               typeId =3
            }else if(this.route.includes('police')){
                this.police=this.Info
+               if(this.police.model){
+                   this.police.model = Number(this.police.model)
+               }
+               typeId =8
            }
+
+           api.types.getAllmodelType(typeId).then(res =>{
+               console.log(res,'设备所有类型')
+               this.modelType = res
+           })
+//           this.Info.model = Number(this.Info.model)
+
        },
        watch: {
            edit(value) {
@@ -1047,7 +1119,9 @@
                     margin-top: rem(8);
                     border-bottom: 1px solid #ccc;
                     font-size: rem(12);
-
+                    .el-select{
+                        width:rem(140);
+                    }
                     input{
                         border: none;
                         list-style: none;
@@ -1095,7 +1169,7 @@
                         box-sizing: border-box;
                     }
                 }
-                .img{
+                /*.img{
                         width: rem(120);
                         height: rem(60);
                         position: absolute;
@@ -1111,7 +1185,7 @@
                             border-radius: 50%;
                             margin-left: rem(40);
                         }
-                    }
+                    }*/
             }
             .cardFooter {
                 width: 100%;

@@ -46,10 +46,6 @@
 
                         </el-table-column>
 
-                        <el-table-column
-                            prop="manufactor"
-                            label="厂家">
-                        </el-table-column>
 
                         <el-table-column
                             prop="serialNum"
@@ -160,7 +156,6 @@
                     id:info.id,
                     lightStatus:info.lightStatus,
                     name:info.name,
-                    manufactor:info.manufactor,
                     serialNum:info.serialNum,
                     model:info.model,
                     regionId:info.regionId,
@@ -237,7 +232,6 @@
                     typeId: 5,
                     lightStatus:info.lightStatus,
                     name:info.name,
-                    manufactor:info.manufactor,
                     serialNum:info.serialNum,
                     model:info.model,
                     regionId:info.regionId,
