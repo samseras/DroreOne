@@ -7,7 +7,7 @@
                         <el-submenu :index="item.index">
                             <template slot="title"><i :class="item.icon"></i>{{ item.title }}</template>
                             <el-menu-item v-for="(subItem,i) in item.subs" :key="i" :index="subItem.index">
-                                <img src="" alt="">
+                                <img :src="subItem.icon" alt="">
                                 {{ subItem.title }}
                             </el-menu-item>
                         </el-submenu>
@@ -38,22 +38,27 @@
                         title: '调度管理',
                         subs: [
                             {
+                                icon: './../../static/img/broadcast.svg',
                                 index: '/deploy/broadcast-Dmis',
                                 title: '广播'
                             },
                             {
+                                icon: './../../static/img/light.svg',
                                 index: '/deploy/lamppost-Dmis',
                                 title: '路灯'
                             },
                             {
+                                icon: './../../static/img/led.svg',
                                 index: '/deploy/screen-Dmis',
                                 title: 'LED'
                             },
                             {
+                                icon: './../../static/img/clearer.svg',
                                 index: '/deploy/purifier-Dmis',
                                 title: '保洁'
                             },
                             {
+                                icon: './../../static/img/roat.svg',
                                 index: '/deploy/security-Dmis',
                                 title: '巡更路线'
                             }
@@ -98,8 +103,8 @@
             width: rem(20);
             height: rem(20);
             vertical-align: middle;
-            background: red;
             margin-right: rem(5);
+            margin-left: rem(5);
         }
     }
     .deploy .el-menu-item{
