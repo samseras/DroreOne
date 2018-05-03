@@ -1,44 +1,43 @@
 /*
- 调度广播api请求
+ 调度巡更路线api请求
 * */
 import axios from '@/http'
 import {getUrl} from "./path";
 
 
 
-const schedulebroadcast = {
-    getAllBroadcast () {
+const patrol = {
+    getAllPatrol () {
         return axios ({
             method: 'GET',
-            url: getUrl('/schedule/broadcast')
+            url: getUrl('/schedule/inspection')
         })
-
     },
-    createdBroadcast (item) {
+    createdPatrol (item) {
         return axios ({
             method: 'POST',
-            url: getUrl('/schedule/broadcast'),
+            url: getUrl('/schedule/inspection'),
             data:item
 
         })
     },
-    deleteBroadcast(item){
+    deletePatrol(item){
         return axios ({
             method: 'DELETE',
-            url: getUrl('/schedule/broadcast'),
+            url: getUrl('/schedule/inspection'),
             data:{
                 ids:item
             }
 
         })
     },
-    updataBroadcast(info){
+    updataPatrol(info){
         return axios ({
             method: 'PUT',
-            url: getUrl('/schedule/broadcast'),
+            url: getUrl('/schedule/inspection'),
             data:info
         })
     },
 }
 
-export default schedulebroadcast
+export default patrol

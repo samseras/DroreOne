@@ -353,10 +353,10 @@ define(function(require, exports, module) {
                     $(".ol-overviewmap-box").css("border-color", color)
                 };
                 this.setRect = function(width, height) {
-                    $(".ol-overviewmap").css("width", width)
-                    $(".ol-custom-overviewmap").css("width", width)
-                    $(".ol-overviewmap").css("height", height)
-                    $(".ol-custom-overviewmap").css("height", height)
+                    // $(".ol-overviewmap").css("width", width)
+                    $(".ol-overviewmap-map").css("width", width)
+                    // $(".ol-overviewmap").css("height", height)
+                    $(".ol-overviewmap-map").css("height", height)
                 };
                 this.getElement = function() {
                     return this.overviewMap.element;
@@ -1161,10 +1161,10 @@ define(function(require, exports, module) {
                     image: new ol.style.Circle({
                         radius: 5,
                         fill: new ol.style.Fill({
-                            color: pointStyle || 'yellow'
+                            color: pointStyle || 'yellow',
                         }),
                         stroke: new ol.style.Stroke({
-                            color: 'black',
+                            color: 'white',
                             width: 1
                         })
                     })
@@ -2438,9 +2438,9 @@ define(function(require, exports, module) {
             },
             eventList: {},
             addEventListener: function(obj, type, key, fn) {
-                if(CustomEvent.eventList[key] != undefined) {
-                    return;
-                }
+                // if(CustomEvent.eventList[key] != undefined) {
+                //     return;
+                // }
                 this.obj = obj;
                 this.type = type;
                 this.fn = fn;
@@ -3228,11 +3228,14 @@ define(function(require, exports, module) {
             road: {
                 RoadLayer: roadNet.Road,
                 addRoadLayer: function(roadLayer) {
-                    if(roadLayer.constructor === roadNet.Road) {
-                        roadNet.roadList.push(roadLayer);
-                        mapData._baseMap.addLayer(roadLayer.lineLayer);
-                        mapData._baseMap.addLayer(roadLayer.pointLayer);
-                    }
+                    // if(roadLayer.constructor === roadNet.Road) {
+                    //     roadNet.roadList.push(roadLayer);
+                    //     mapData._baseMap.addLayer(roadLayer.lineLayer);
+                    //     mapData._baseMap.addLayer(roadLayer.pointLayer);
+                    // }
+                    roadNet.roadList.push(roadLayer);
+                    mapData._baseMap.addLayer(roadLayer.lineLayer);
+                    // mapData._baseMap.addLayer(roadLayer.pointLayer);
                 },
                 removeAll: function() {
                     roadNet.roadList.forEach(function(t, i) {

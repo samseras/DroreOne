@@ -5,36 +5,35 @@
         </div>
         <div class="personContent">
             <div class="funcTitle">
-                <Header @addNewInfo = "addNewInfo('添加路灯')"
+                <Header @addNewInfo = "addNewInfo"
                         @deletInfo = "deletInfo"
-                        @choseType = 'choseType'
                         @selectedAll = 'selectedAll'
                         @fixedInfo = 'fixedInfo'>
                 </Header>
             </div>
-            <div class="personList">
+            <div class="personList" v-loading="isShowLoading">
                 <ScrollContainer>
                     <el-table
                         v-if="isShowAreaCard"
                         ref="multipleTable"
-                        :data="areaList"
+                        :data="lamppostList"
                         tooltip-effect="dark"
                         style="width: 100%"
                         @selection-change="handleSelectionChange">
                         <el-table-column
                             width="50">
                             <template slot-scope="scope">
-                                <el-checkbox v-model="scope.row.checked" @change="checked(scope.row)" class="checkBoxBtn"></el-checkbox>
+                                <el-checkbox v-model="scope.row.checked" @change="checked(scope.row.id)" class="checkBoxBtn"></el-checkbox>
                             </template>
                         </el-table-column>
                         <el-table-column
-                            prop="name"
+                            prop="lightSchedule.name"
                             label="名称"
                             sortable
                             width="120">
                         </el-table-column>
                         <el-table-column
-                            prop="description"
+                            prop="lightSchedule.description"
                             label="描述">
                         </el-table-column>
                         <el-table-column
@@ -42,27 +41,32 @@
                             label="硬件总数">
                         </el-table-column>
                         <el-table-column
-                            prop="time"
                             label="时间">
+                            <template slot-scope="scope">
+                                <span v-if="scope.row.lightSchedule.customizedDays">{{scope.row.lightSchedule.startDate}}~{{scope.row.lightSchedule.endDate}}</span>
+                                <span v-if="!scope.row.lightSchedule.customizedDays">{{scope.row.lightSchedule.days | weekFilter}}</span>
+                            </template>
                         </el-table-column>
                         <el-table-column
-                            prop='executetime'
                             label="执行时间">
+                            <template slot-scope="scope">
+                                <span>{{scope.row.lightSchedule.startTime}}~{{scope.row.lightSchedule.endTime}}</span>
+                            </template>
                         </el-table-column>
                         <el-table-column label="操作" width="200">
                             <template slot-scope="scope">
-                                <span @click="fixedInfo(scope.row.id,'路灯编辑')" class="edit">编辑</span> |
-                                <span @click="stop(scope.row,'片区信息')" v-if="scope.row.isStop">停止 |</span>
-                                <span @click="start(scope.row,'片区信息')" v-else="scope.row.isStart">开始 |</span>
+                                <span @click="fixedInfo(scope.row,'路灯编辑')" class="edit">编辑</span> |
+                                <span @click="stop(scope.row)" v-if="scope.row.isStop">停止 |</span>
+                                <span @click="start(scope.row)" v-else="scope.row.isStart">开始 |</span>
                                 <span @click="showCheckDetail(scope.row,'路灯信息')">查看</span> |
-                                <span @click="deletInfo(scope.row.id,'片区信息')">删除</span>
+                                <span @click="deletInfo(scope.row.light.id)">删除</span>
                             </template>
                         </el-table-column>
                     </el-table>
                 </ScrollContainer>
                 <PersonDetail v-if="visible"
                               :visible="visible"
-                              :Info="areaInfo"
+                              :Info="lamppostInfo"
                               :isDisabled="isDisabled"
                               @closeInfoDialog ="visible = false"
                               @fixInfo = "fixInfo"
@@ -71,7 +75,7 @@
                 </PersonDetail>
                 <CheckDetail v-if="checkVisible"
                     :visible="checkVisible"
-                    :checkInfo="areaInfo"
+                    :checkInfo="lamppostInfo"
                     :isDisabled="isDisabled"
                     @closeInfoDialog ="checkVisible = false"
                     :title = "title">
@@ -95,19 +99,10 @@
                 isShowAreaCard: true,
                 checkList: [],
                 filterList: [],
-                areaList: [
-                //     {id:1,type: '夜间照明',name: '路灯1',isCustomizedDays:true,number: '10个',startDate: '2018.02.03',endDate:'2018.03.11',startTime :'18:00:00',endTime:'18:30:00',isEnabled:true,description :'',days:'1,2,3,4,5',lightIds:[]},
-                //     {id:2,type: '室内照明',name: '路灯2',isCustomizedDays:false,number: '10个',startDate: '2018.02.03',endDate:'2018.03.11',startTime :'18:00:00',endTime:'18:30:00',isEnabled:true,description :'',days:'1,2,3,4,5,',lightIds:[]},
-                //     {id:3,type: '夜间照明',name: '路灯3',isCustomizedDays:false,number: '10个',startDate: '2018.02.03',endDate:'2018.03.11',startTime :'18:00:00',endTime:'18:30:00',isEnabled:true,description :'',days:'1,2,3,4',lightIds:[]},
-                //     {id:8,type: '室内照明',name: '路灯4',isCustomizedDays:false,number: '10个',startDate: '2018.02.03',endDate:'2018.03.11',startTime :'18:00:00',endTime:'18:30:00',isEnabled:true,description :'',days:'1,5,6',lightIds:[]},
-                //     {id:9,type: '夜间照明',name: '路灯5',isCustomizedDays:false,number: '10个',startDate: '2018.02.03',endDate:'2018.03.11',startTime :'18:00:00',endTime:'18:30:00',isEnabled:true,description :'',days:'2,5,6',lightIds:[]},
-                //     {id:4,type: '室内照明',name: '路灯6',isCustomizedDays:false,number: '10个',startDate: '2018.02.03',endDate:'2018.03.11',startTime :'18:00:00',endTime:'18:30:00',isEnabled:true,description :'',days:'3,4,5',lightIds:[]},
-                //     {id:5,type: '夜间照明',name: '路灯7',isCustomizedDays:false,number: '10个',startDate: '2018.02.03',endDate:'2018.03.11',startTime :'18:00:00',endTime:'18:30:00',isEnabled:true,description :'',days:'1,2,4',lightIds:[]},
-                //
-                    ],
+                lamppostList: [],
                 checkVisible:false,
                 visible: false,
-                areaInfo: {},
+                lamppostInfo: {},
                 choseInfoId: [],
                 choseId:[],
                 choseChecked:[],
@@ -124,339 +119,164 @@
                 this.choseInfoId = selection.map(item => {
                     return item.id
                 })
-                // this.multipleSelection = val;
             },
             async getLamppostList (){
-                // this.isShowLoading = true
+                this.isShowLoading = true
                 await api.lamppost.getLamppostList().then(res => {
-                    // this.isShowLoading = false
-                    this.areaList = [];
-                    let that = this;
-                    res.forEach(function(item){
-                        item.light.lightIds = item.lightIds;
-                        that.areaList.push(item.light);
-                    })
                     console.log(res,"pppppppppppppp");
-                    that.init()
+                    this.isShowLoading = false
+                    this.lamppostList = res
+                    this.lamppostList.forEach(item => {
+                        item.checked = false;
+                        item.isStop = true;
+                        item.isStart = false;
+                        item.lightSchedule.time = [item.lightSchedule.startDate,item.lightSchedule.endDate]
+                        item.lightSchedule.watchTime = [`2018-04-25,${item.lightSchedule.startTime}`,`2018-04-25,${item.lightSchedule.endTime}`]
+                        item.id = item.lightSchedule.id
+                        if (!item.lightSchedule.customizedDays) {
+                            item.lightSchedule.days = item.lightSchedule.days.split(',')
+                        }
+                    })
                 }).catch(err => {
                     console.log(err, '请求失败')
                     this.isShowLoading = false
                 })
             },
-            init(){
-                this.areaList.forEach(function(item){
-                    let executetime = item.startTime + "~" + item.endTime;
-                    // let date = item.startDate + "~" + item.endDate;
-                    item.executetime = executetime;
-                    // item.date = date;
-                    item.checked = false;
-                    item.isStop = true;
-                    item.isStart = false;
-                    if(item.customizedDays === true){
-                        // let time = item.startDate + "~" + item.endDate;
-                        item.time = item.startDate + "~" + item.endDate;
-                    }else {
-                        let shift=new Array();
-                        let str = item.days;
-                        let attr = str.split(",")
-                        attr = attr.filter(function(num){
-                            if(num == "1"){
-                                shift.push("周一 ");
-                            }else if(num == "2"){
-                                shift.push("周二 ");
-                            }else if(num == "3"){
-                                shift.push("周三 ");
-                            }else if(num == "4"){
-                                shift.push("周四 ");
-                            }else if(num == "5"){
-                                shift.push("周五 ");
-                            }else if(num == "6"){
-                                shift.push("周六 ");
-                            }else if(num == "7"){
-                                shift.push("周日");
-                            }
-                            return shift
-                        })
-                        item.time = shift
-                    }
-                })
-            },
-            // days(weeks){
-            //     let arr = [];
-            //      weeks = weeks.filter((item)=>{
-            //           if(item == "周一"){
-            //               arr.push("1");
-            //           }else if(item == "周二"){
-            //               arr.push("2");
-            //           }else if(item == "周三"){
-            //               arr.push("3");
-            //           }else if(item == "周四"){
-            //               arr.push("4");
-            //           }else if(item == "周五"){
-            //               arr.push("5");
-            //           }else if(item == "周六"){
-            //               arr.push("6");
-            //           }else if(item == "周日"){
-            //               arr.push("7");
-            //           }
-            //           return arr;
-            //       })
-            //     console.log(arr,"[[[[[[[[[[[[[")
-            // },
-            timeDate(dates){
-                let arr = dates.split("~");
-                let d1 = arr[0].split("-");
-                let d2 = arr[1].split("-");
-                return [new Date(d1[0], d1[1], d1[2]), new Date(d2[0], d2[1], d2[2])];
-            },
-            timeD(times){
-                // let arr1 = dates.split("~");
-                let arr2 = times.split("~");
-                // let d1 = arr1[0].split(".");
-                // let d2 = arr1[1].split(".");
-                let a1 = arr2[0].split(":");
-                let a2 = arr2[1].split(":");
-                // return [new Date(d1[0], d1[1], d1[2],a1[0],a1[1],a1[2]), new Date(d2[0], d2[1], d2[2],a2[0],a2[1],a2[2])];
-                return [new Date('2018', '04', '25',a1[0],a1[1],a1[2]), new Date('2018', '04', '25',a2[0],a2[1],a2[2])];
-            },
-            timeDateFiler(item) {
-                return  moment(item).format('YYYY-MM-DD');
-            },
-            timeTimeFiler(item) {
-                return moment(item).format('YY:MM:DD');
-            },
             showPersonDetail (info,title) {
+                this.lamppostInfo = info;
                 this.visible = true;
                 this.title = title;
-                this.isDisabled = true
+                this.isDisabled = false
             },
             showCheckDetail(info,title){
-                this.areaInfo = info;
+                this.lamppostInfo = info;
                 this.checkVisible = true;
                 this.title = title;
                 this.isDisabled = true;
-                console.log("1234567yuiol;'")
             },
-            addNewInfo (title) {
-                this.areaInfo = [];
-                this.title = title
-                this.showPersonDetail({}, '添加灯光照明')
+            addNewInfo () {
+                this.showPersonDetail({lightSchedule:{}}, '添加灯光照明')
                 this.isDisabled = false
             },
-            deletChose(id){
-                this.$confirm('此操作将永久删除该数据, 是否继续?', '提示', {
-                    confirmButtonText: '确定',
-                    cancelButtonText: '取消',
-                    type: 'warning'
-                }).then(() => {
-                    //  api.camera.deleteCamera(this.choseInfoId).then(res => {
-                    for (let i = 0; i < this.choseInfoId.length; i++) {
-                        this.areaList = this.areaList.filter((item, index) => {
-                            if (item.id === this.choseInfoId[i]) {
-                                this.areaList[index].checked = false
-                            }
-                            return item.id !== this.choseInfoId[i]
-                        })
-                    }
-                    this.$message.success('删除成功')
-                    this.choseInfoId = []
-                    // }).catch(err=>{
-                    //             console.log(err)
-                    //             this.$message.error('删除失败，请稍后重试')
-                }).catch(() => {
-                    this.$message.info('取消删除')
-                })
-                //   })
-            },
             deletInfo (id) {
-                if(id === undefined){
-                    if (this.choseInfoId.length > 0) {
-                        this.deletChose(id)
-                    }else{
-                        this.$message.warning("请选择要删除的项")
-                    }
-                }else {
-                    this.choseId.push(id);
+                if (id) {
+                    this.choseInfoId = [id]
+                }
+                if (this.choseInfoId.length > 0) {
                     this.$confirm('此操作将永久删除该数据, 是否继续?', '提示', {
                         confirmButtonText: '确定',
                         cancelButtonText: '取消',
                         type: 'warning'
                     }).then(() => {
-                        api.lamppost.deletLamppost(this.choseId).then(res => {
-                            this.areaList = this.areaList.filter((item, index) => {
-                                if (item.id === this.choseId[0]) {
-                                    this.areaList[index].checked = false
-                                }
-                                return item.id !== this.choseId[0]
-                            })
+                        api.lamppost.deletLamppost(this.choseInfoId).then(res => {
+                            console.log(res, '删除成功')
                             this.$message.success('删除成功')
-                            this.choseId = [];
-                            }).catch(err=>{
-                                        console.log(err)
-                                        this.$message.error('删除失败，请稍后重试')
-                            }).catch(() => {
-                                this.$message.info('取消删除')
-                            })
+                            for (let i = 0; i < this.choseInfoId.length; i++) {
+                                this.lamppostList = this.lamppostList.filter((item, index) => {
+                                    if (item.id === this.choseInfoId[i]){
+                                        this.lamppostList[index].checked = false
+                                        this.lamppostList[index].status = false
+                                    }
+                                    return item.status !== false
+                                })
+                            }
+                            this.choseInfoId = []
+                        }).catch(err => {
+                            this.$message.error('删除失败，请稍后重试')
+                            console.log(err)
+                            this.choseInfoId = []
                         })
-                    }
-                console.log(this.choseId,"1234567890-=")
+                    }).catch(() => {
+                        this.$message.info('取消删除')
+                    })
+                } else {
+                    this.$message.error('请选择要删除的数据')
+                    return
+                }
             },
-            checked (Info) {
-                console.log(Info.id)
-                this.areaList = this.areaList.filter(item =>{
-                    if(item.id ===Info.id){
+            checked (id) {
+                this.lamppostList = this.lamppostList.filter(item => {
+                    if (item.id === id) {
                         item.checked = item.checked
                     }
                     return item
                 })
-                if(this.choseInfoId.includes(Info.id)){
-                    let index = this.choseInfoId.indexOf(Info.id);
-                    this.choseInfoId = this.choseInfoId.filter((item)=>{
-                        return item!== Info.id
-                    })
-                    this.choseChecked.splice(index,1);
-                }else{
-                    this.choseInfoId.push(Info.id)
-                    this.choseChecked.push(Info.checked)
-                }
-                console.log(this.choseInfoId)
-                console.log(this.choseChecked)
-            },
-            choseType (type) {
-                console.log(type)
-                if (type.length === 0){
-                    this.choseList = this.areaList.filter((item) => {
-                        item.status = true
-                        return item.status === true
+                if (this.choseInfoId.includes(id)) {
+                    this.choseInfoId = this.choseInfoId.filter((item) =>{
+                        return item !== id
                     })
                 } else {
-                    this.choseList = this.areaList.filter((item,index) => {
-                        if (type.includes(item.type)){
-                            item.status = true
-                        } else if(!type.includes(item.type)){
-                            item.status = false
-                            console.log(item.type, 'p[p[p[');
-                        }
-                        return item.status === true
-                    })
+                    this.choseInfoId.push(id)
                 }
             },
             selectedAll (state) {
-                this.choseList = this.areaList.filter((item) => {
+                this.lamppostList = this.lamppostList.filter((item) => {
                     if (state === true) {
                         item.checked = true
                         this.choseInfoId.push(item.id)
-                        this.choseChecked.push(item.checked)
-                        return
+                        return item.checked === true
                     } else {
-                        console.log('进入这个判断吗')
                         item.checked = false
                         this.choseInfoId = []
-                        this.choseChecked = []
-                        return
+                        return item.checked === false
                     }
                 })
-                console.log(this.choseInfoId, 'opopop')
             },
             async fixInfo (info) {
-                console.log(info, 'wertyuio')
-                let list = this.areaList;
-                let obj = {};
-                for(let i = 0;i< list.length; i++){
-                    if (info.id === list[i].id) {
-                        if(info.customizedDays){
-                            this.areaList[i].time = this.timeDateFiler(this.areaList[i].time[0])+"~"+this.timeDateFiler(this.areaList[i].time[1])
-                            this.areaList[i].startDate = this.timeDateFiler(this.areaList[i].time[0]);
-                            this.areaList[i].endDate = this.timeDateFiler(this.areaList[i].time[1]);
-                        }else {
-                              this.areaList[i].time = this.days(info.time);
-                        }
-                        this.areaList[i].executetime = this.timeTimeFiler(this.areaList[i].executetime[0])+"~"+this.timeTimeFiler(this.areaList[i].executetime[1])
-                        // this.areaList[i] = info
-                         obj = {
-                            id:this.areaList[i].id,
-                            name:this.areaList[i].name,
-                             customizedDays:this.areaList[i].customizedDays,
-                            days:this.areaList[i].time,
-                             startDate:"",
-                             endDate:"",
-                             startTime:this.areaList[i].startTime,
-                            endTime:this.areaList[i].endTime,
-                            type:this.areaList[i].type,
-                            enabled:this.areaList[i].enabled,
-                            description:this.areaList[i].description,
-                             lightIds:["8b887835-265b-4049-ae6e-c9b463471594"]
-                        }
-                    }
+                console.log(info, '这是传回的数据')
+                let obj = {
+                    id: info.id,
+                    name:info.lightSchedule.name,
+                    customizedDays:info.lightSchedule.customizedDays,
+                    startTime:moment(info.lightSchedule.watchTime[0]).format('HH:mm:ss'),
+                    endTime:moment(info.lightSchedule.watchTime[1]).format('HH:mm:ss'),
+                    description:info.lightSchedule.description,
+                    lightIds:info.lightIds
                 }
-                let that = this;
+                if (info.light.customizedDays) {
+                    obj.startDate = moment(info.lightSchedule.time[0]).format('YYYY-MM-DD')
+                    obj.endDate = moment(info.lightSchedule.time[1]).format('YYYY-MM-DD')
+                } else {
+                    obj.days = info.lightSchedule.days
+                }
                 await api.lamppost.updataLamppost(JSON.stringify(obj)).then(res => {
                     console.log(res, '这是请求回来的')
                     this.$message.success('修改成功')
                     this.getLamppostList()
-                    console.log(that.areaList, '这是请求回来的数据')
                     // that.init()
                 }).catch(err => {
                     console.log(err, '请求失败')
                     this.isShowLoading = false
                 })
-                console.log(this.areaList,"编辑")
-                // this.choseList = this.areaList
             },
             saveNewPerson (info) {
-                console.log(info,"这是新添加的数据")
-                info.startTime = this.timeTimeFiler(info.executetime[0]);
-                info.endTime = this.timeTimeFiler(info.executetime[1])
                 let obj = {
-                    name:info.name,
-                    customizedDays:info.customizedDays,
-                    days:info.time,
-                    startDate:info.startDate,
-                    endDate:info.endDate,
-                    startTime:info.startTime,
-                    endTime:info.endTime,
-                    type:info.type,
-                    enabled:true,
-                    description:info.description,
-                    lightIds:["8b887835-265b-4049-ae6e-c9b463471594"]
+                    name:info.lightSchedule.name,
+                    customizedDays:info.lightSchedule.customizedDays,
+                    startTime:moment(info.lightSchedule.watchTime[0]).format('HH:mm:ss'),
+                    endTime:moment(info.lightSchedule.watchTime[1]).format('HH:mm:ss'),
+                    description:info.lightSchedule.description,
+                    lightIds:info.lightIds
                 }
+                if (info.light.customizedDays) {
+                    obj.startDate = moment(info.lightSchedule.time[0]).format('YYYY-MM-DD')
+                    obj.endDate = moment(info.lightSchedule.time[1]).format('YYYY-MM-DD')
+                } else {
+                    obj.days = info.light.days
+                }
+                console.log(obj, '擦时候')
                 api.lamppost.addLamppost(JSON.stringify(obj)).then(res => {
                     console.log(res, '这是请求回来的')
-                    this.$message.success('修改成功')
+                    this.$message.success('添加成功')
                     this.getLamppostList()
-                    console.log(that.areaList, '这是请求回来的数据')
-                    // that.init()
                 }).catch(err => {
                     console.log(err, '请求失败')
                     this.isShowLoading = false
                 })
-                console.log(info,"这是新添加的数据")
-
-                this.areaList.push(info)
-                this.choseList = this.areaList
             },
-            fixedInfo (id,title) {
-                this.choseId.push(id)
-                this.areaList.map((item)=>{
-                    if(item.id === this.choseId[0]){
-                        this.areaInfo=item
-                        // console.log(this.areaInfo,"gggggggggggggggg")
-                        if(this.areaInfo.customizedDays){
-                            this.areaInfo.time = this.timeDate(item.time);
-                        }else {
-                            for(let i=0; i< this.areaInfo.time.length; i++) {
-                                if (this.areaInfo.time[i].includes(' ')){
-                                    this.areaInfo.time[i] = this.areaInfo.time[i].substring(0,this.areaInfo.time[i].length -1)
-                                }
-                            }
-                        }
-                        // this.areaInfo.executetime = this.timeD(item.date,item.executetime);
-                        this.areaInfo.executetime = this.timeD(item.executetime);
-                        this.showPersonDetail(this.areaInfo,title)
-                        this.isDisabled=false
-                        this.choseId = [];
-                    }
-                })
+            fixedInfo (info,title) {
+                this.lamppostInfo = info
+                this.showPersonDetail(info, title)
             },
             stop(Info){
                 console.log(Info.id)
@@ -509,12 +329,6 @@
         },
         created () {
             this.getLamppostList ();
-            console.log(this.areaList)
-            // for (let i = 0; i < this.areaList.length; i++) {
-            //     this.areaList[i].checked = false
-            //     this.areaList[i].status = true
-            // }
-            this.choseList = this.areaList
         },
         components: {
             ScrollContainer,
