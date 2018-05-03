@@ -59,7 +59,7 @@
                                 <span @click="stop(scope.row)" v-if="scope.row.isStop">停止 |</span>
                                 <span @click="start(scope.row)" v-else="scope.row.isStart">开始 |</span>
                                 <span @click="showCheckDetail(scope.row,'路灯信息')">查看</span> |
-                                <span @click="deletInfo(scope.row.light.id)">删除</span>
+                                <span @click="deletInfo(scope.row.id)">删除</span>
                             </template>
                         </el-table-column>
                     </el-table>
@@ -233,7 +233,7 @@
                     description:info.lightSchedule.description,
                     lightIds:info.lightIds
                 }
-                if (info.light.customizedDays) {
+                if (info.lightSchedule.customizedDays) {
                     obj.startDate = moment(info.lightSchedule.time[0]).format('YYYY-MM-DD')
                     obj.endDate = moment(info.lightSchedule.time[1]).format('YYYY-MM-DD')
                 } else {
@@ -258,11 +258,11 @@
                     description:info.lightSchedule.description,
                     lightIds:info.lightIds
                 }
-                if (info.light.customizedDays) {
+                if (info.lightSchedule.customizedDays) {
                     obj.startDate = moment(info.lightSchedule.time[0]).format('YYYY-MM-DD')
                     obj.endDate = moment(info.lightSchedule.time[1]).format('YYYY-MM-DD')
                 } else {
-                    obj.days = info.light.days
+                    obj.days = info.lightSchedule.days
                 }
                 console.log(obj, '擦时候')
                 api.lamppost.addLamppost(JSON.stringify(obj)).then(res => {

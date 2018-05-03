@@ -132,7 +132,7 @@
                 this.isDisabled = state;
             },
             addNewInfo () {
-                this.showPersonDetail({}, '添加人员调度', false)
+                this.showPersonDetail({inspectionSchedule: {}}, '添加人员调度', false)
             },
             deletInfo (id) {
                 if (id) {

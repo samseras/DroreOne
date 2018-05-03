@@ -38,6 +38,31 @@ const scheduleled = {
             data:info
         })
     },
+
+    getAllContent () {
+        return axios ({
+            method: 'GET',
+            url: getUrl('/ledcontent')
+        })
+    },
+    createdContent (item) {
+        return axios ({
+            method: 'POST',
+            url: getUrl('/ledcontent'),
+            data:item
+
+        })
+    },
+    deleteContent(item){
+        return axios ({
+            method: 'DELETE',
+            url: getUrl('/ledcontent'),
+            data:{
+                ids:item
+            }
+
+        })
+    },
 }
 
 export default scheduleled
