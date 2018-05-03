@@ -1,129 +1,121 @@
 <template>
-    <div class="areaDeploy">
+    <div class="landmarkBuilding">
         <div class="title">
-            片区信息
+            地标型建筑
         </div>
         <div class="personContent">
             <div class="funcTitle">
-                <Header @addNewInfo = "addNewInfo"
-                        @deletInfo = "deletInfo"
-                        @toggleList = "toggleList"
-                        @choseType = 'choseType'
-                        @selectedAll = 'selectedAll'
-                        @fixedInfo = 'fixedInfo'>
+                <Header @addNewInfo="addNewInfo"
+                        @deletInfo="deletInfo"
+                        @toggleList="toggleList"
+                        @choseType='choseType'
+                        @selectedAll='selectedAll'
+                        @fixedInfo='fixedInfo'>
                 </Header>
             </div>
             <div class="personList" v-loading="isShowLoading">
                 <ScrollContainer>
                     <el-table
-                        v-if="!isShowAreaCard"
                         ref="multipleTable"
-                        :data="areaList"
+                        :data="personList"
                         tooltip-effect="dark"
                         style="width: 100%"
                         @selection-change="handleSelectionChange">
                         <el-table-column
                             width="55">
                             <template slot-scope="scope">
-                                <el-checkbox v-model="scope.row.checked" @change="checked(scope.row.id)" class="checkBoxBtn"></el-checkbox>
+                                <el-checkbox v-model="scope.row.checked" @change="checked(scope.row.id)"
+                                             class="checkBoxBtn"></el-checkbox>
                             </template>
                         </el-table-column>
                         <el-table-column
-                            prop="name"
-                            label="片区名称"
+                            prop="personBean.name"
+                            label="姓名"
                             width="120">
                         </el-table-column>
                         <el-table-column
-                            prop="placeScenic"
-                            label="所在景区">
+                            prop="jobName"
+                            label="人员角色">
                         </el-table-column>
                         <el-table-column
-                            prop="location"
-                            label="位置范围">
+                            prop="personBean.gender"
+                            label="性别">
+                            <template slot-scope="scope">
+                                <span>{{scope.row.personBean.gender | sexFilter}}</span>
+                            </template>
                         </el-table-column>
                         <el-table-column
-                            prop="description"
-                            label="描述"
-                            width="240">
+                            label="身份证号">
+                            <template slot-scope="scope">
+                                <span>{{scope.row.personBean.idNum | idNumFilter}}</span>
+                            </template>
+                        </el-table-column>
+                        <el-table-column
+                            prop="personBean.phone"
+                            label="电话号码">
                         </el-table-column>
                         <el-table-column
                             label="操作">
                             <template slot-scope="scope">
-                                <span @click="showPersonDetail(scope.row,'片区信息')">查看</span>
-                                <span class="line">|</span>
                                 <span @click="fixedInfo(scope.row.id )">编辑</span>
+                                <span class="line">|</span>
+                                <span @click="showPersonDetail(scope.row, '人员信息')">查看</span>
                                 <span class="line">|</span>
                                 <span @click="deletInfo(scope.row.id)">删除</span>
                             </template>
                         </el-table-column>
                     </el-table>
-                    <div class="personInfo" v-for="item in areaList" v-if="isShowAreaCard && item.status">
-                        <div class="checkBox">
-                            <!--<input type="checkbox" :checked='item.checked' class="checkBtn" @change="checked(item.id)">-->
-                            <el-checkbox v-model="item.checked" @change="checked(item.id)" class="checkBtn"></el-checkbox>
-                        </div>
-                        <div class="personType" @click.stop="showPersonDetail(item, '片区信息')">
-                            <img :src="item.picturePath" alt="">
-                            <span class="type">
-                                  {{item.name}}
-                                </span>
-                        </div>
-                        <div class="specificInfo">
-                            <p class="name" v-if="false">所在景区：<span>{{item.placeScenic}}</span></p>
-                            <p class="sex text">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：<span>{{item.description}}</span></p>
-                        </div>
-                    </div>
                 </ScrollContainer>
                 <PersonDetail v-if="visible"
                               :visible="visible"
-                              :Info="areaInfo"
+                              :Info="personInfo"
                               :isDisabled="isDisabled"
                               :title="title"
-                              @closeInfoDialog ="visible = false"
-                              @fixInfo = "fixInfo"
+                              @closeInfoDialog="visible = false"
+                              @fixInfo="fixInfo"
                               @addNewInfo="addNewPerson">
                 </PersonDetail>
             </div>
         </div>
     </div>
 </template>
-
 <script>
     import ScrollContainer from '@/components/ScrollContainer'
-    import Header from './funHeader'
-    import PersonDetail from './detailDialog'
+    import Header from '@/components/propertyChildren/basicDeploy/funHeader'
+    import PersonDetail from '@/components/propertyChildren/basicDeploy/detailDialog'
     import api from '@/api'
+
     export default {
-        name: 'area-deploy',
-        data(){
-            return{
-                isShowAreaCard: true,
+        name: 'landmark-building',
+        data() {
+            return {
+                isShowPersonCard: true,
                 checkList: [],
                 filterList: [],
-                areaList: [],
+                personList: [],
                 visible: false,
-                areaInfo: {},
+                personInfo: {},
                 choseInfoId: [],
                 choseList: [],
                 isDisabled: true,
                 title: '',
-                isShowLoading : false
+                isShowLoading: false
             }
         },
         methods: {
             handleSelectionChange(val) {
                 this.multipleSelection = val;
             },
-            showPersonDetail (info,title) {
-                this.areaInfo = info
+            showPersonDetail(info, title) {
+                this.personInfo = info
                 this.visible = true
                 this.title = title
             },
-            addNewInfo () {
-                this.showPersonDetail({}, '添加片区信息')
+            addNewInfo() {
+                this.showPersonDetail({personBean: {}}, '添加人员信息')
                 this.isDisabled = false
             },
-            deletInfo (id) {
+            deletInfo(id) {
                 if (id) {
                     this.choseInfoId.push(id)
                 }
@@ -133,81 +125,79 @@
                         cancelButtonText: '取消',
                         type: 'warning'
                     }).then(() => {
-                        api.area.deleteRegion(this.choseInfoId).then(res => {
+                        api.person.deletePerson(this.choseInfoId).then(res => {
                             console.log(res, '删除成功')
-                            this.$message.success('删除成功')
                             for (let i = 0; i < this.choseInfoId.length; i++) {
-                                this.areaList = this.areaList.filter((item, index) => {
-                                    if (item.id === this.choseInfoId[i]){
-                                        this.areaList[index].checked = false
-                                        this.areaList[index].status = false
+                                this.personList = this.personList.filter((item, index) => {
+                                    if (item.id === this.choseInfoId[i]) {
+                                        this.personList[index].checked = false
                                     }
-                                    return item
+                                    return item.id !== this.choseInfoId[i]
                                 })
                             }
+                            this.$message.success('删除成功')
                             this.choseInfoId = []
                         }).catch(err => {
-                            this.$message.error('删除失败，请稍后重试')
                             console.log(err)
-                            this.choseInfoId = []
+                            this.$message.error('删除失败，请稍后重试')
                         })
                     }).catch(() => {
                         this.$message.info('取消删除')
                     })
+
                 } else {
-                    this.$message.error('请选择要删除的数据')
-                    return
+                    this.$message.error('请选择要删除的人选信息')
                 }
             },
-            toggleList (type) {
+            toggleList(type) {
                 if (type === 'list') {
-                    this.isShowAreaCard = false
-                }else {
-                    this.isShowAreaCard = true
+                    this.isShowPersonCard = false
+                } else {
+                    this.isShowPersonCard = true
                 }
             },
-            checked (id) {
-                this.areaList = this.areaList.filter(item => {
+            checked(id) {
+                this.personList = this.personList.filter(item => {
                     if (item.id === id) {
                         item.checked = item.checked
                     }
                     return item
                 })
                 if (this.choseInfoId.includes(id)) {
-                    this.choseInfoId = this.choseInfoId.filter((item) =>{
+                    this.choseInfoId = this.choseInfoId.filter((item) => {
                         return item !== id
                     })
                 } else {
                     this.choseInfoId.push(id)
                 }
             },
-            choseType (type) {
+            choseType(type) {
                 console.log(type)
-                if (type.length === 0){
-                    this.areaList = this.areaList.filter((item) => {
+                if (type.length === 0) {
+                    this.personList = this.personList.filter((item) => {
                         item.status = true
-                        return item.status === true
+                        return item
                     })
                 } else {
-                    this.choseList = this.areaList.filter((item,index) => {
-                        if (type.includes(item.type)){
+                    this.personList = this.personList.filter((item, index) => {
+                        if (type.includes(item.jobName)) {
                             item.status = true
-                        } else if(!type.includes(item.type)){
+                        } else if (!type.includes(item.jobName)) {
                             item.status = false
                             console.log(item.type, 'p[p[p[');
                         }
-                        return item.status === true
+                        return item
                     })
                 }
             },
-            selectedAll (state) {
-                console.log(state, 'opopopopop')
-                this.areaList = this.areaList.filter((item) => {
+            selectedAll(state) {
+                this.personList = this.personList.filter((item) => {
                     if (state === true) {
                         item.checked = true
                         this.choseInfoId.push(item.id)
                         return item.checked === true
                     } else {
+                        console.log('进入这个判断吗')
                         item.checked = false
                         this.choseInfoId = []
                         return item.checked === false
@@ -215,45 +205,68 @@
                 })
                 console.log(this.choseInfoId, 'opopop')
             },
-            fixInfo (info) {
-                let aresObj = {
+            async fixInfo(info) {
+                let personObj = {
                     id: info.id,
                     name: info.name,
-                    description: info.description
+                    gender: info.gender,
+                    idNum: info.idNum,
+                    phone: info.phone,
+                    jobId: info.jobId
                 }
-                api.area.updateRegion(JSON.stringify(aresObj)).then(res => {
-                    console.log(res, '创建成功')
-                    this.$message.success('修改成功')
-                    this.choseInfoId = []
-                    this.getAllArea()
-                }).catch(err => {
-                    this.$message.error('修改失败，请稍后重试')
-                })
-            },
-            async addNewPerson (info) {
-                let aresObj = {
-                    name: info.name,
-                    description: info.description
-                }
+                console.log(personObj, 'this is trashObj')
                 if (info.imgUrl !== '') {
                     await api.person.updataAva(info.imgUrl).then(res => {
                         console.log(res, '上传成功')
-                        aresObj.pictureId = res.id
+                        personObj.pictureId = res.id
                     }).catch(err => {
                         console.log(err, '上传失败')
-                        this.$message.error('上传失败，请稍后重试')
+                        this.$message.error('上传失败，其请稍后重试')
+                        return
+                    })
+                } else {
+                    personObj.pictureId = info.pictureId
+                }
+                await api.person.updatePerson(JSON.stringify(personObj)).then(res => {
+                    this.$message.success('添加成功')
+                    console.log('增加成功')
+                    this.choseInfoId = []
+                    this.getAllPerson()
+                }).catch(err => {
+                    console.log(err, '更新失败')
+                    this.$message.error('更新失败，请稍后重试')
+                })
+            },
+            async addNewPerson(info) {
+                console.log(info, 'opopopopopo')
+                let personObj = {
+                    name: info.name,
+                    gender: info.gender,
+                    idNum: info.idNum,
+                    phone: info.phone,
+                    jobId: info.jobId
+                }
+                console.log(personObj, 'this is trashObj')
+                if (info.imgUrl !== '') {
+                    await api.person.updataAva(info.imgUrl).then(res => {
+                        console.log(res, '上传成功')
+                        personObj.pictureId = res.id
+                    }).catch(err => {
+                        console.log(err, '上传失败')
+                        this.$message.error('上传失败，其请稍后重试')
                         return
                     })
                 }
-                api.area.createRegion(JSON.stringify(aresObj)).then(res => {
-                    console.log(res, '创建成功')
-                    this.$message.success('创建成功')
-                    this.getAllArea()
+                await api.person.createPerson(JSON.stringify(personObj)).then(res => {
+                    this.$message.success('添加成功')
+                    console.log('增加成功')
+                    this.getAllPerson()
                 }).catch(err => {
-                    this.$message.error('创建失败，请稍后重试')
+                    console.log(err, '添加失败')
+                    this.$message.error('添加失败，请稍后重试')
                 })
             },
-            fixedInfo (id) {
+            fixedInfo(id) {
                 if (id) {
                     this.choseInfoId.push(id)
                 }
@@ -261,35 +274,59 @@
                     this.$message.warning('至多选择一个数据修改')
                 }
                 if (this.choseInfoId.length > 0) {
-                    this.areaList.map((item) => {
-                        if (item.id === this.choseInfoId[0]){
-                            this.areaInfo = item
+                    this.personList.map((item) => {
+                        if (item.id === this.choseInfoId[0]) {
+                            this.personInfo = item
                         }
                     })
-                    this.showPersonDetail(this.areaInfo, '修改片区信息')
+                    this.showPersonDetail(this.personInfo, '修改人员信息')
                     this.isDisabled = false
+                    this.choseInfoId = []
                 } else {
-                    this.$message.error('请选择要修改的片区')
+                    this.$message.error('请选择要修改的人员')
                 }
             },
-            async getAllArea () {
+            async getAllPerson() {
                 this.isShowLoading = true
-                await api.area.getAllRegion().then(res => {
-                    console.log(res, '这是请求回来的片区')
+                let id = this.$route.params.id || 2
+                await api.person.getJobPerson(id).then(res => {
+                    console.log(res, '这是请求回来的')
                     this.isShowLoading = false
-                    this.areaList = res
-                    for (let i = 0; i < this.areaList.length; i++) {
-                        this.areaList[i].checked = false
-                        this.areaList[i].status = true
+                    this.personList = res
+                    for (let i = 0; i < this.personList.length; i++) {
+                        this.personList[i].checked = false
+                        this.personList[i].status = true
+                        this.personList[i].jobId = this.$route.params.id
                     }
                 }).catch(err => {
-                    console.log(err, '失败')
+                    console.log(err)
                     this.isShowLoading = false
                 })
             }
         },
-        created () {
-           this.getAllArea()
+        filters: {
+            sexFilter(item) {
+                if (item == 1) {
+                    return '男'
+                } else {
+                    return '女'
+                }
+            },
+            idNumFilter(id) {
+                let leftId =  id.substring(0, 6)
+                let rightId = id.substring(14)
+                return `${leftId}********${rightId}`
+            }
+        },
+        created() {
+            this.personList = []
+            this.getAllPerson()
+        },
+        watch: {
+            '$route' () {
+                this.personList = []
+                this.getAllPerson()
+            }
         },
         components: {
             ScrollContainer,
@@ -297,25 +334,24 @@
             PersonDetail
         }
     }
-
 </script>
 
 <style lang="scss" scoped type="text/scss">
-    .areaDeploy{
+    .landmarkBuilding {
         width: 100%;
         height: 100%;
         display: flex;
         flex-direction: column;
-        .title{
+        .title {
             width: 100%;
-            padding: rem(5) 0 rem(5) rem(15);
+            padding: rem(16) 0 rem(17) rem(15);
             box-sizing: border-box;
             font-size: rem(16);
             color: #0086b3;
             font-weight: 600;
-            border-bottom:  1px solid #ccc;
+            border-bottom: 1px solid #ccc;
         }
-        .personContent{
+        .personContent {
             flex: 1;
             width: 100%;
             /*background: red;*/
@@ -329,11 +365,11 @@
                 margin-top: rem(10);
                 border-bottom: 1px solid #a13309;
             }
-            .personList{
+            .personList {
                 width: 100%;
                 flex: 1;
                 margin-top: rem(20);
-                .personInfo{
+                .personInfo {
                     width: rem(210);
                     height: rem(140);
                     border: 1px solid #ccc;
@@ -342,14 +378,14 @@
                     margin-right: rem(5.5);
                     margin-bottom: rem(5);
                     border-radius: rem(5);
-                    .checkBox{
+                    .checkBox {
                         width: 100%;
                         height: rem(20);
                         background: #fff;
                         border-top-left-radius: rem(5);
                         border-top-right-radius: rem(5);
                         position: relative;
-                        .checkBtn{
+                        .checkBtn {
                             /*width: rem(15);*/
                             /*height: rem(15);*/
                             /*outline: none;*/
@@ -361,13 +397,13 @@
                             cursor: pointer;
                         }
                     }
-                    .personType{
+                    .personType {
                         width: 100%;
                         height: rem(20);
                         background: #0086b3;
                         position: relative;
                         font-size: rem(12);
-                        img{
+                        img {
                             width: rem(40);
                             height: rem(40);
                             border-radius: 50%;
@@ -376,34 +412,22 @@
                             top: rem(-10);
                             background: red;
                         }
-                        span{
+                        span {
                             float: right;
                             margin-right: rem(20);
                             line-height: rem(20);
                             color: #fff;
                         }
                     }
-                    .specificInfo{
-                        margin-top: rem(10);
+                    .specificInfo {
+                        margin-top: rem(5);
                         font-size: rem(12);
-                        overflow: hidden;
-                        padding: 0 rem(10);
-                        box-sizing: border-box;
-                        p{
+                        p {
                             margin-left: rem(10);
                             line-height: rem(22);
-                        }
-                        .text{
-                            margin-left: 0;
-                            line-height: rem(22);
-                            display: inline-block;
-                            width: 100%;
-                            height: rem(85);
-                            overflow:hidden;
-                            text-overflow:ellipsis;
-                            display:-webkit-box;
-                            -webkit-box-orient:vertical;
-                            -webkit-line-clamp:4;
+                            overflow: hidden;
+                            text-overflow: ellipsis;
+                            white-space: nowrap;
                         }
                     }
                 }
@@ -412,3 +436,4 @@
     }
 
 </style>
+

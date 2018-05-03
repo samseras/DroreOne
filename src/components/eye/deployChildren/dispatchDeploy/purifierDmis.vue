@@ -1,5 +1,5 @@
 <template>
-<div class="areaDeploy">
+<div class="puriiferDmis">
         <div class="title">
             保洁
         </div>
@@ -7,16 +7,15 @@
             <div class="funcTitle">
                 <Header @addNewInfo = "addNewInfo"
                         @deletInfo = "deletInfo"
-                        @choseType = 'choseType'
                         @selectedAll = 'selectedAll'
                         @fixedInfo = 'fixedInfo'>
                 </Header>
             </div>
-            <div class="personList">
+            <div class="personList" v-loading="isShowLoading">
                 <ScrollContainer>
                     <el-table
                         ref="multipleTable"
-                        :data="areaList"
+                        :data="purifierList"
                         tooltip-effect="dark"
                         style="width: 100%"
                         @selection-change="handleSelectionChange">
@@ -27,35 +26,46 @@
                             </template>
                         </el-table-column>
                         <el-table-column
-                            prop="name"
+                            prop="cleanSchedule.name"
                             label="调度人员"
                             sortable
                             width="120">
                         </el-table-column>
                         <el-table-column
+                            width="120"
                             prop="type"
                             label="名称">
                         </el-table-column>
                         <el-table-column
-                            prop="number"
+                            prop="cleanerIds.length"
+                            width="120"
                             label="人员数量">
                         </el-table-column>
                         <el-table-column
-                            prop="time"
+                            width="240"
                             label="时间">
+                            <template slot-scope="scope">
+                                <span v-if="scope.row.cleanSchedule.customizedDays">{{scope.row.cleanSchedule.startDate}}~{{scope.row.cleanSchedule.endDate}}</span>
+                                <span v-if="!scope.row.cleanSchedule.customizedDays">{{scope.row.cleanSchedule.days | weekFilter}}</span>
+                            </template>
                         </el-table-column>
                         <el-table-column
-                            prop="shift"
                             label="班次">
+                            <template slot-scope="scope">
+                                <span v-if="scope.row.cleanSchedule.customizedShift">{{scope.row.cleanSchedule.customizedStartTime}}~{{scope.row.cleanSchedule.customizedEndTime}}</span>
+                                <span v-if="!scope.row.cleanSchedule.customizedShift">{{scope.row.cleanSchedule.shifts | shiftFilter}}</span>
+                            </template>
                         </el-table-column>
                         <el-table-column
-                            prop="line"
-                            label="线路"
-                            width="500">
+                            label="片区"
+                            width="240">
+                            <template slot-scope="scope">
+                                <span  class="regionName" v-for="item in scope.row.regions">{{item.name}}</span>
+                            </template>
                         </el-table-column>
                         <el-table-column label="操作" width="200">
                             <template slot-scope="scope">
-                                <span @click="fixedInfo(scope.row.id,'保洁信息编辑')">编辑</span> |
+                                <span @click="fixedInfo(scope.row,'保洁信息编辑')">编辑</span> |
                                 <span @click="stop(scope.row,'片区信息')" v-if="scope.row.isStop">停止 |</span>
                                 <span @click="start(scope.row,'片区信息')" v-else="scope.row.isStart">开始 |</span>
                                 <span @click="showPersonDetail(scope.row,'保洁信息')">查看</span> |
@@ -81,12 +91,12 @@
                 </ScrollContainer>
                 <PersonDetail v-if="visible"
                               :visible="visible"
-                              :Info="areaInfo"
+                              :Info="purifierInfo"
                               :isDisabled="isDisabled"
                               @closeInfoDialog ="visible = false"
                               @fixInfo = "fixInfo"
                               :title = "title"
-                              @addNewInfo="addNewPerson">
+                              @saveNewInfo="addNewPerson">
                 </PersonDetail>
             </div>
         </div>
@@ -97,21 +107,18 @@
     import ScrollContainer from '@/components/ScrollContainer'
     import Header from './dmisHeader'
     import PersonDetail from './dmisDialog'
+    import api from '@/api'
+    import moment from 'moment'
     export default {
-        name: 'area-deploy',
+        name: 'purifier-dmis',
         data(){
             return{
                 isShowAreaCard: true,
                 checkList: [],
                 filterList: [],
-                areaList: [
-                    {id:1,name: '张三',type: '保洁',number: '10个',isCustomizedDays:false,days:'1,2',startDate: '2018.02.03',endDate:'2018.03.11',isCustomizedShift:false,shifts:'1,2,3',customizedStartTime :'18:00:00',customizedEndTime:'18:30:00',isEnabled:false,description:'',cleanerIds:[],regionIds:[]},
-                    {id:2,name: '李四',type: '保洁',number: '10个',isCustomizedDays:false,days:'2,3',startDate: '2018.02.03',endDate:'2018.03.11',isCustomizedShift:false,shifts:'1,3',customizedStartTime :'18:00:00',customizedEndTime:'18:30:00',isEnabled:false,description:'',cleanerIds:[],regionIds:[]},
-                    {id:3,name: '王五',type: '保洁',number: '10个',isCustomizedDays:true,days:'3,4',startDate: '2018.02.03',endDate:'2018.03.11',isCustomizedShift:false,shifts:'1,2',customizedStartTime :'18:00:00',customizedEndTime:'18:30:00',isEnabled:false,description:'',cleanerIds:[],regionIds:[]},
-                    {id:8,name: '刘瑜',type: '保洁',number: '10个',isCustomizedDays:true,days:'5,6',startDate: '2018.02.03',endDate:'2018.03.11',isCustomizedShift:false,shifts:'3',customizedStartTime :'18:00:00',customizedEndTime:'18:30:00',isEnabled:false,description:'',cleanerIds:[],regionIds:[]},
-                ],
+                purifierList: [],
                 visible: false,
-                areaInfo: {},
+                purifierInfo: {},
                 choseInfoId: [],
                 choseId:[],
                 choseChecked:[],
@@ -119,253 +126,154 @@
                 title:'',
                 isDisabled: true,
                 isStop:true,
-                isStart:false
+                isStart:false,
+                isShowLoading: false
             }
         },
         methods: {
             handleSelectionChange(val) {
                 this.multipleSelection = val;
             },
-            init(){
-                this.areaList.forEach(function(item){
-                    let executetime = item.customizedStartTime + "~" + item.customizedEndTime;
-                    let date = item.startDate + "~" + item.endDate;
-                    item.executetime = executetime;
-                    item.date = date;
-                    item.checked = false;
-                    item.isStop = true;
-                    item.isStart = false;
-                    if(item.isCustomizedDays === true){
-                        item.time = item.startDate + "~" + item.endDate;
-                    }else {
-                        let shift=new Array();
-                        let str = item.days;
-                        let attr = str.split(",")
-                        attr = attr.filter(function(num){
-                            if(num == "1"){
-                                shift.push("周一 ");
-                            }else if(num == "2"){
-                                shift.push("周二 ");
-                            }else if(num == "3"){
-                                shift.push("周三 ");
-                            }else if(num == "4"){
-                                shift.push("周四 ");
-                            }else if(num == "5"){
-                                shift.push("周五 ");
-                            }else if(num == "6"){
-                                shift.push("周六 ");
-                            }else if(num == "7"){
-                                shift.push("周日");
-                            }
-                            return shift
-                        })
-                        item.time = shift
-                    }
-                    if(item.isCustomizedShift === true){
-                        item.shift = item.customizedStartTime + "~" + item.customizedEndTime;
-                    }else {
-                        let shift = [];
-                        let str = item.shifts;
-                        let attr = str.split(",")
-                        attr = attr.filter(function(num){
-                            if(num == "1"){
-                                shift.push("早班 ");
-                            }else if(num == "2"){
-                                shift.push("中班 ");
-                            }else if(num == "3"){
-                                shift.push("晚班");
-                            }
-                            return shift
-                        })
-                        item.shift = shift
-                    }
-                })
-            },
-            timeDate(dates){
-                let arr = dates.split("~");
-                let d1 = arr[0].split(".");
-                let d2 = arr[1].split(".");
-                return [new Date(d1[0], d1[1], d1[2]), new Date(d2[0], d2[1], d2[2])];
-            },
-            timeD(dates,times){
-                let arr1 = dates.split("~");
-                let arr2 = times.split("~");
-                let d1 = arr1[0].split(".");
-                let d2 = arr1[1].split(".");
-                let a1 = arr2[0].split(":");
-                let a2 = arr2[1].split(":");
-                return [new Date(d1[0], d1[1], d1[2],a1[0],a1[1],a1[2]), new Date(d2[0], d2[1], d2[2],a2[0],a2[1],a2[2])];
-            },
-            showPersonDetail (info,title) {
+            showPersonDetail (info,title,state) {
                 this.visible = true;
                 this.title = title;
-                this.isDisabled = true;
+                this.isDisabled = state;
+                this.purifierInfo = info
             },
             addNewInfo () {
-                this.showPersonDetail({}, '添加人员调度')
-                this.isDisabled = false
-            },
-            deletChose(id){
-                this.$confirm('此操作将永久删除该数据, 是否继续?', '提示', {
-                    confirmButtonText: '确定',
-                    cancelButtonText: '取消',
-                    type: 'warning'
-                }).then(() => {
-                    //  api.camera.deleteCamera(this.choseInfoId).then(res => {
-                    for (let i = 0; i < this.choseInfoId.length; i++) {
-                        this.areaList = this.areaList.filter((item, index) => {
-                            if (item.id === this.choseInfoId[i]) {
-                                this.areaList[index].checked = false
-                            }
-                            return item.id !== this.choseInfoId[i]
-                        })
-                    }
-                    this.$message.success('删除成功')
-                    this.choseInfoId = []
-                    // }).catch(err=>{
-                    //             console.log(err)
-                    //             this.$message.error('删除失败，请稍后重试')
-                }).catch(() => {
-                    this.$message.info('取消删除')
-                })
-                //   })
+                this.showPersonDetail({cleanSchedule: {},}, '添加人员调度',false)
             },
             deletInfo (id) {
-                if(id === undefined){
-                    if (this.choseInfoId.length > 0) {
-                        this.deletChose(id)
-                    }else{
-                        this.$message.warning("请选择要删除的项")
-                    }
-                }else {
-                    this.choseId.push(id);
+                if (id) {
+                    this.choseInfoId = [id]
+                }
+                if (this.choseInfoId.length > 0) {
                     this.$confirm('此操作将永久删除该数据, 是否继续?', '提示', {
                         confirmButtonText: '确定',
                         cancelButtonText: '取消',
                         type: 'warning'
                     }).then(() => {
-                        //  api.camera.deleteCamera(this.choseInfoId).then(res => {
-                        this.areaList = this.areaList.filter((item, index) => {
-                            if (item.id === this.choseId[0]) {
-                                this.areaList[index].checked = false
+                        api.purifier.deletPurifier(this.choseInfoId).then(res => {
+                            console.log(res, '删除成功')
+                            this.$message.success('删除成功')
+                            for (let i = 0; i < this.choseInfoId.length; i++) {
+                                this.purifierList = this.purifierList.filter((item, index) => {
+                                    if (item.id === this.choseInfoId[i]){
+                                        this.purifierList[index].checked = false
+                                        this.purifierList[index].status = false
+                                    }
+                                    return item.status !== false
+                                })
                             }
-                            return item.id !== this.choseId[0]
+                            this.choseInfoId = []
+                        }).catch(err => {
+                            this.$message.error('删除失败，请稍后重试')
+                            console.log(err)
+                            this.choseInfoId = []
                         })
-                        this.$message.success('删除成功')
-                        this.choseId = [];
-                        // }).catch(err=>{
-                        //             console.log(err)
-                        //             this.$message.error('删除失败，请稍后重试')
                     }).catch(() => {
                         this.$message.info('取消删除')
                     })
-                    //   })
+                } else {
+                    this.$message.error('请选择要删除的数据')
+                    return
                 }
-                console.log(this.choseId,"1234567890-=")
             },
-            checked (Info) {
-                console.log(Info.id)
-                this.areaList = this.areaList.filter(item =>{
-                    if(item.id ===Info.id){
+            checked (id) {
+                this.purifierList = this.purifierList.filter(item => {
+                    if (item.id === id) {
                         item.checked = item.checked
                     }
                     return item
                 })
-                if(this.choseInfoId.includes(Info.id)){
-                    let index = this.choseInfoId.indexOf(Info.id);
-                    this.choseInfoId = this.choseInfoId.filter((item)=>{
-                        return item!== Info.id
-                    })
-                    this.choseChecked.splice(index,1);
-                }else{
-                    this.choseInfoId.push(Info.id)
-                    this.choseChecked.push(Info.checked)
-                }
-
-                console.log(this.choseInfoId)
-                console.log(this.choseChecked)
-            },
-            choseType (type) {
-                console.log(type)
-                if (type.length === 0){
-                    this.choseList = this.areaList.filter((item) => {
-                        item.status = true
-                        return item.status === true
+                if (this.choseInfoId.includes(id)) {
+                    this.choseInfoId = this.choseInfoId.filter((item) =>{
+                        return item !== id
                     })
                 } else {
-                    this.choseList = this.areaList.filter((item,index) => {
-                        if (type.includes(item.type)){
-                            item.status = true
-                        } else if(!type.includes(item.type)){
-                            item.status = false
-                            console.log(item.type, 'p[p[p[');
-                        }
-                        return item.status === true
-                    })
+                    this.choseInfoId.push(id)
                 }
             },
             selectedAll (state) {
-                console.log(state, 'opopopopop')
-                this.choseList = this.areaList.filter((item) => {
+                this.purifierList = this.purifierList.filter((item) => {
                     if (state === true) {
                         item.checked = true
                         this.choseInfoId.push(item.id)
-                        this.choseChecked.push(item.checked)
-                        return
+                        return item.checked === true
                     } else {
-                        console.log('进入这个判断吗')
                         item.checked = false
                         this.choseInfoId = []
-                        this.choseChecked = []
-                        return
+                        return item.checked === false
                     }
                 })
-                console.log(this.choseInfoId, 'opopop')
             },
             fixInfo (info) {
-                console.log(info, 'wertyuio')
-                let list = this.areaList
-                for(let i = 0;i< list.length; i++){
-                    if (info.id === list[i].id) {
-                        this.areaList[i] = info
-                    }
+                let obj = {
+                    id: info.cleanSchedule.id,
+                    name: info.cleanSchedule.name,
+                    customizedDays: info.cleanSchedule.customizedDays,
+                    customizedShift: info.cleanSchedule.customizedShift,
+                    description: info.cleanSchedule.description,
+                    cleanerIds: info.cleanerIds,
+                    regionIds: info.regionIds
                 }
-                this.choseList = this.areaList
+                if (info.clean.customizedDays) {
+                    obj.startDate = moment(info.cleanSchedule.time[0]).format('YYYY-MM-DD')
+                    obj.endDate = moment(info.cleanSchedule.time[1]).format('YYYY-MM-DD')
+                }else {
+                    obj.days = info.cleanSchedule.days
+                }
+                if (info.cleanSchedule.customizedShift) {
+                    obj.customizedStartTime = moment(info.cleanSchedule.classTime[0]).format('HH:mm:ss')
+                    obj.customizedEndTime = moment(info.cleanSchedule.classTime[1]).format('HH:mm:ss')
+                }else {
+                    obj.shifts = info.cleanSchedule.shifts
+                }
+                console.log(obj, '这是传给后台的')
+                api.purifier.updataPurifier(JSON.stringify(obj)).then(res => {
+                    console.log(res, '创建成功')
+                    this.$message.success('修改成功')
+                    this.getAllPurifier()
+                }).catch(err => {
+                    console.log(err, '创建失败')
+                    this.$message.error('修改失败')
+                })
             },
             addNewPerson (info) {
-                info.id = new Date().getTime()
-                this.areaList.push(info)
-                this.choseList = this.areaList
-            },
-            fixedInfo (id,title) {
-                console.log(this.choseInfoId)
-                this.choseId.push(id)
-                this.areaList.map((item)=>{
-                    if(item.id === this.choseId[0]){
-                        this.areaInfo=item
-                        if(this.areaInfo.isCustomizedDays){
-                            this.areaInfo.time = this.timeDate(item.time);
-                        }else {
-                            for(let i=0; i< this.areaInfo.time.length; i++) {
-                                if (this.areaInfo.time[i].includes(' ')){
-                                    this.areaInfo.time[i] = this.areaInfo.time[i].substring(0,this.areaInfo.time[i].length -1)
-                                }
-                            }
-                        }
-                        if(this.areaInfo.isCustomizedShift){
-                            this.areaInfo.shift = this.timeD(item.date,item.shift);
-                        }else {
-                            for(let i=0; i< this.areaInfo.shift.length; i++) {
-                                if (this.areaInfo.shift[i].includes(' ')){
-                                    this.areaInfo.shift[i] = this.areaInfo.shift[i].substring(0,this.areaInfo.shift[i].length -1)
-                                }
-                            }
-                        }
-                        this.showPersonDetail(this.areaInfo,title)
-                        this.isDisabled=false
-                        this.choseId = [];
-                    }
+               console.log(info, '这是要添加的')
+                let obj = {
+                    name: info.cleanSchedule.name,
+                    customizedDays: info.cleanSchedule.customizedDays,
+                    customizedShift: info.cleanSchedule.customizedShift,
+                    description: info.cleanSchedule.description,
+                    cleanerIds: info.cleanerIds,
+                    regionIds: info.regionIds
+                }
+                if (info.clean.customizedDays) {
+                    obj.startDate = moment(info.cleanSchedule.time[0]).format('YYYY-MM-DD')
+                    obj.endDate = moment(info.cleanSchedule.time[1]).format('YYYY-MM-DD')
+                }else {
+                    obj.days = info.cleanSchedule.days
+                }
+                if (info.clean.customizedShift) {
+                   obj.customizedStartTime = moment(info.cleanSchedule.classTime[0]).format('HH:mm:ss')
+                   obj.customizedEndTime = moment(info.cleanSchedule.classTime[1]).format('HH:mm:ss')
+                }else {
+                   obj.shifts = info.cleanSchedule.shifts
+                }
+                console.log(obj, '这是传给后台的')
+                api.purifier.createdPurifier(JSON.stringify(obj)).then(res => {
+                    console.log(res, '创建成功')
+                    this.$message.success('创建成功')
+                    this.getAllPurifier()
+                }).catch(err => {
+                    console.log(err, '创建失败')
+                    this.$message.error('创建失败')
                 })
+            },
+            fixedInfo (info,title) {
+                this.purifierInfo = info
+                this.showPersonDetail(info, title, false)
             },
             stop(Info){
                 console.log(this.choseInfoId)
@@ -392,30 +300,65 @@
                 }else{
                     this.$message.warning('至多选择一条数据')
                 }
+            },
+            async getAllPurifier () {
+                this.isShowLoading = true
+                await api.purifier.getPurifierList().then(res => {
+                    this.isShowLoading = false
+                    console.log(res, '请求成功')
+                    this.purifierList = res
+                    this.purifierList.forEach(item => {
+                        item.id = item.cleanSchedule.id
+                        item.checked = false;
+                        if (item.cleanSchedule.customizedDays) {
+                            item.cleanSchedule.time = [item.cleanSchedule.startDate,item.clean.endDate]
+                        } else {
+                            item.cleanSchedule.days = item.cleanSchedule.days.split(',')
+                        }
+                        if (item.cleanSchedule.customizedShift) {
+                            item.cleanSchedule.classTime = [`2018-04-25,${item.cleanSchedule.customizedStartTime}`,`2018-04-25,${item.cleanSchedule.customizedEndTime}`]
+                        } else {
+                            item.cleanSchedule.shifts = item.cleanSchedule.shifts.split(',')
+                        }
+                    })
+                }).catch(err => {
+                    console.log(err, '请求失败')
+                    this.isShowLoading = false
+                })
             }
         },
         created () {
-            for (let i = 0; i < this.areaList.length; i++) {
-                this.areaList[i].checked = false
-                this.areaList[i].status = true
+           this.getAllPurifier()
+        },
+        filters: {
+            shiftFilter (item) {
+                if (item === null) {
+                    item = ''
+                }
+                let classShift = []
+                if (item.includes('1')) {
+                    classShift.push('早班')
+                }
+                if (item.includes('2')) {
+                    classShift.push('中班')
+                }
+                if (item.includes('3')) {
+                    classShift.push('晚班')
+                }
+                return classShift.join()
             }
-            this.choseList = this.areaList
         },
         components: {
             ScrollContainer,
             Header,
             PersonDetail
-        },
-        mounted:function(){
-             this.init();
-            console.log(this.areaList)
         }
     }
 
 </script>
 
 <style lang="scss" scoped type="text/scss">
-    .areaDeploy{
+    .puriiferDmis{
         width: 100%;
         height: 100%;
         display: flex;
@@ -447,6 +390,9 @@
                 width: 100%;
                 flex: 1;
                 margin-top: rem(20);
+                .regionName{
+                    margin-right: rem(10);
+                }
                 .personInfo{
                     width: rem(210);
                     height: rem(140);

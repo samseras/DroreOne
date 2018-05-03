@@ -23,6 +23,8 @@ import lamppost from './lamppost'
 import schedulebroadcast from './schedulebroadcast'
 import scheduleled from './scheduleled'
 import roat from './roat'
+import purifier from './schedulepurifier'
+import patrol from './patrol'
 
 
 export default {
@@ -47,5 +49,7 @@ export default {
     lamppost,
     schedulebroadcast,
     scheduleled,
-    roat
+    roat,
+    purifier,
+    patrol
 }

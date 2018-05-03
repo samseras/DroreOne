@@ -15,14 +15,16 @@ const lamppost = {
     addLamppost (item) {
         return axios ({
             method: 'POST',
-            url: getUrl('/schedule/light')
+            url: getUrl('/schedule/light'),
+            data:item
 
         })
     },
     deletLamppost(item){
         return axios ({
             method: 'DELETE',
-            url: getUrl('/schedule/light'),data:{
+            url: getUrl('/schedule/light'),
+            data:{
                 ids:item
             }
 

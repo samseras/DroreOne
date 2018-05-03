@@ -12,7 +12,7 @@
                 </el-col>
                 <el-col :xs="5" :sm="5" :md="5" :lg="5" :xl="6" id="getTime">
                     {{currTime | timeFiler}} ({{currTime | weekFiler}})
-                    <div @click="changeLanguage">切换语言</div>
+                    <div @click="changeLanguage" v-if="false">切换语言</div>
                 </el-col>
 
                 <el-col :xs="7" :sm="6" :md="5" :lg="3" :xl="2">
@@ -39,7 +39,7 @@
     export default {
         data() {
             return {
-                manage: ['message.homePage', 'message.control', 'message.facility', 'message.analyze', 'message.deploy'],
+                manage: [ 'message.control', 'message.facility', 'message.analyze', 'message.deploy'],
                 currTime: new Date(),   //当前时间
                 title: ["&#xe8c0;", "&#xe627;", "&#xe647;"],
                 activeIndex: 1,

@@ -25,7 +25,7 @@
                             <li class="two">
                                 <div class="bigData">
                                     <div class="change"><a target="_blank" href="http://192.168.0.150:9527/analysis">大数据分析>><img src="../../../static/img/bagData.png"/></a></div>
-                                    <div class="dataCenter change" id="dataCenter"><a href="">数据中心>><img src="../../../static/img/dataCenter.png"/></a></div>
+                                    <div class="dataCenter change" id="dataCenter"><router-link to="/property">数据中心>><img src="../../../static/img/dataCenter.png"/></router-link></div>
                                 </div>
                                 <div class="eye">
                                     <router-link to="/eye"  id="eye" class="change">全视之眼>><img src="../../../static/img/eye.png"/></router-link>
@@ -47,7 +47,7 @@
                 </el-carousel-item>
                 <el-carousel-item>
                     <div class="conversion">
-                        <router-link to="/property"  id="property" class="change">资产>><img src="../../../static/img/eye.png"/></router-link>
+                        <!--<router-link to="/property">资产>><img src="../../../static/img/eye.png"/></router-link>-->
                     </div>
                 </el-carousel-item>
                 <el-carousel-item>

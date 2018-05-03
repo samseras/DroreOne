@@ -1,44 +1,42 @@
 /*
- 调度广播api请求
+ 调度保洁api请求
 * */
 import axios from '@/http'
 import {getUrl} from "./path";
 
 
-
-const schedulebroadcast = {
-    getAllBroadcast () {
+const purifier = {
+    getPurifierList () {
         return axios ({
             method: 'GET',
-            url: getUrl('/schedule/broadcast')
+            url: getUrl('/schedule/clean')
         })
-
     },
-    createdBroadcast (item) {
+    createdPurifier (item) {
         return axios ({
             method: 'POST',
-            url: getUrl('/schedule/broadcast'),
+            url: getUrl('/schedule/clean'),
             data:item
 
         })
     },
-    deleteBroadcast(item){
+    deletPurifier(item){
         return axios ({
             method: 'DELETE',
-            url: getUrl('/schedule/broadcast'),
+            url: getUrl('/schedule/clean'),
             data:{
                 ids:item
             }
 
         })
     },
-    updataBroadcast(info){
+    updataPurifier(info){
         return axios ({
             method: 'PUT',
-            url: getUrl('/schedule/broadcast'),
+            url: getUrl('/schedule/clean'),
             data:info
         })
     },
 }
 
-export default schedulebroadcast
+export default purifier
