@@ -7,23 +7,23 @@
             width="40%"
             class="dialog screen_Dialog"
             center>
-            <div class="screenContent">
+            <div class="screenContent" v-loading="isShowLoading">
                  <div class="screenTop">
-                     <textarea name="" cols="60" rows="4" placeholder="定义内容"></textarea>
+                     <textarea name="" cols="60" rows="4" placeholder="定义内容" v-model="content"></textarea>
                      <i class="el-icon-circle-plus" @click="addContent"></i>
                  </div>
                 <div class="screenBottom">
                     <ul>
-                        <li v-for="(item,idx) in contentList">
-                            <el-checkbox v-model="item.checked" @change="checked(item,idx)"></el-checkbox>
+                        <li v-for="item in contentList">
+                            <el-checkbox v-model="item.checked" @change="checked(item.id)"></el-checkbox>
                             <p>{{item.content}}</p>
-                            <i class="el-icon-close" @click="deleteList(item,idx)"></i>
+                            <i class="el-icon-close" @click="deleteList(item.id)"></i>
                         </li>
                     </ul>
                 </div>
             </div>
             <div class=""slot="footer" class="dialog-footer cardFooter">
-                <el-button size="mini" class="hold" @click="">保存</el-button>
+                <el-button size="mini" class="hold" @click="saveContent">保存</el-button>
                 <el-button size="mini" @click = 'closeScreenDialog'>取消</el-button>
             </div>
         </el-dialog>
@@ -31,71 +31,108 @@
 </template>
 
 <script>
+    import api from '@/api'
     export default {
         props: ['visible'],
         name: "LED-dialog",
         data () {
             return{
-               contentList:[
-                   {
-                       checked:true,
-                       content:"1.新年快乐！"
-                   },
-                   {
-                       checked:false,
-                       content:"2.下雨天路滑，请注意"
-                   },
-                   {
-                       checked:false,
-                       content: "3.夏天炎热，请注意防暑"
-                   }
-               ],
+               contentList:[],
                 showContentList:[],
-                checkedList:[],
-                dataList:[]
+                checkList:[],
+                dataList:[],
+                isShowLoading: false,
+                content: ''
             }
         },
         methods: {
             closeScreenDialog () {
                 this.$emit('closeScreenDialog')
             },
+            saveContent () {
+                let list = []
+                this.contentList.forEach(item => {
+                    for (let i = 0; i < this.checkList.length; i++) {
+                         if (item.id === this.checkList[i]) {
+                             list.push(item)
+                         }
+                    }
+                })
+                console.log(list, '选择好的')
+                this.$emit('saveContent', list)
+            },
             addContent(){
-                let content = $(".screenTop>textarea").val();
-                let obj = {
-                    checked:false,
-                    content:content
-                };
-                if(this.dataList.indexOf(obj.content)===-1){
-                         this.contentList.push(obj)
-                         this.dataList.push(obj.content)
+                if (this.content.trim() === '') {
+                    this.$message.error('请填写要播放的内容')
+                    return
+                } else {
+                    let obj = {
+                        name: '1',
+                        content: this.content
+                    }
+                    api.scheduleled.createdContent(JSON.stringify(obj)).then(res => {
+                        console.log(res, '添加成功')
+                        this.getAllContent()
+                        this.$message.success('添加成功')
+                        this.content = ''
+                    }).catch(err =>{
+                        console.log(err, '添加失败')
+                        this.$message.error('添加失败，请稍后重试')
+                    })
                 }
-                console.log(this.contentList);
             },
-            deleteList(item,idx){
-                this.contentList.splice(idx,1);
-                if(this.checkedList.indexOf(item.content) !== -1 ){
-                    let index = this.checkedList.indexOf(item.content);
-                    this.checkedList.splice(index,1);
-                    this.showContentList.splice(index,1);
+            deleteList(id){
+                this.$confirm('此操作将永久删除该数据, 是否继续?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    api.scheduleled.deleteContent([id]).then(res => {
+                        console.log(res, '删除成功')
+                        this.contentList = this.contentList.filter(item => {
+                            return item.id !== id
+                        })
+                        this.$message.success('删除成功')
+                    }).catch(err => {
+                        console.log(err, '删除失败')
+                        this.$message.error('删除失败，请稍后重试')
+                    })
+                }).catch(() => {
+                    this.$message.info('取消删除')
+
+                })
+            },
+            checked (id) {
+                this.contentList = this.contentList.filter(item => {
+                    if (item.id === id) {
+                        item.checked = item.checked
+                    }
+                    return item
+                })
+                if (this.checkList.includes(id)) {
+                    this.checkList = this.checkList.filter(item => {
+                        return item !== id
+                    })
+                } else {
+                    this.checkList.push(id)
                 }
-               // console.log(this.checkedList);
-               //  console.log(this.showContentList)
             },
-            checked (item,idx) {
-                if(item.checked){
-                    item.checked = true;
-                    this.checkedList.push(item.content);
-                    this.showContentList.push(item)
-                }else {
-                    item.checked = false;
-                    let index = this.checkedList.indexOf(item.content)
-                    this.checkedList.splice(index,1);
-                    this.showContentList.splice(index,1);
-                }
-                console.log(this.showContentList)
-            },
+            async getAllContent () {
+                this.isShowLoading =true
+                await api.scheduleled.getAllContent().then(res => {
+                    console.log(res, '请求成功')
+                    this.isShowLoading = false
+                    this.contentList = res
+                    this.contentList.forEach(item => {
+                        item.checked = false
+                    })
+                }).catch(err => {
+                    console.log(err, '请求失败')
+                })
+            }
         },
         created () {
+            this.getAllContent()
         },
         components : {
 

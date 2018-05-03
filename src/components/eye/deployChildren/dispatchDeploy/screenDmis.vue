@@ -66,7 +66,7 @@
                               @closeInfoDialog ="visible = false"
                               :title="title"
                               @fixInfo = "fixInfo"
-                              @addNewInfo="addNewPerson">
+                              @saveNewInfo="addNewPerson">
                 </PersonDetail>
             </div>
         </div>
@@ -78,6 +78,7 @@
     import Header from './dmisHeader'
     import PersonDetail from './dmisDialog'
     import api from '@/api'
+    import moment from 'moment'
     export default {
         name: 'area-deploy',
         data(){
@@ -102,9 +103,9 @@
         },
         methods: {
             handleSelectionChange(selection) {
-                this.choseInfoId = selection.map(item => {
-                    return item.id
-                })
+                // this.choseInfoId = selection.map(item => {
+                //     return item.id
+                // })
             },
             showPersonDetail (info,title,state) {
                 this.screenInfo = info
@@ -113,7 +114,7 @@
                 this.isDisabled = state;
             },
             addNewInfo () {
-                this.showPersonDetail({led:{}}, '添加硬件调度',false)
+                this.showPersonDetail({ledSchedule:{}}, '添加硬件调度',false)
                 this.isDisabled = false
             },
             deletChose(id){
@@ -202,20 +203,61 @@
                 })
             },
             fixInfo (info) {
-                console.log(info, 'wertyuio')
-                let list = this.areaList
-                for(let i = 0;i< list.length; i++){
-                    if (info.id === list[i].id) {
-                        this.areaList[i] = info
-
-                    }
+                let contentIds = info.contents.map(item => {
+                    return item.id
+                })
+                let obj = {
+                    id: info.ledSchedule.id,
+                    name: info.ledSchedule.name,
+                    customizedDays: info.ledSchedule.customizedDays,
+                    startTime: moment(info.ledSchedule.watchTime[0]).format('HH:mm:ss'),
+                    endTime: moment(info.ledSchedule.watchTime[1]).format('HH:mm:ss'),
+                    description: info.ledSchedule.description,
+                    ledIds: info.ledIds,
+                    contentIds: contentIds
                 }
-                this.choseList = this.areaList
+                if (info.ledSchedule.customizedDays) {
+                    obj.startDate = moment(info.ledSchedule.time[0]).format('YYYY-MM-DD')
+                    obj.endDate = moment(info.ledSchedule.time[1]).format('YYYY-MM-DD')
+                } else {
+                    obj.days = info.ledSchedule.days
+                }
+                api.scheduleled.updataScreenLed(JSON.stringify(obj)).then(res => {
+                    console.log(res, '创建成功')
+                    this.getAllScreenLed()
+                    this.$message.success('修改成功')
+                }).catch(err => {
+                    console.log(err, '创建失败')
+                    this.$message.error('修改失败，请稍后重试')
+                })
             },
             addNewPerson (info) {
-                info.id = new Date().getTime()
-                this.areaList.push(info)
-                this.choseList = this.areaList
+                let contentIds = info.contents.map(item => {
+                    return item.id
+                })
+                let obj = {
+                    name: info.ledSchedule.name,
+                    customizedDays: info.ledSchedule.customizedDays,
+                    startTime: moment(info.ledSchedule.watchTime[0]).format('HH:mm:ss'),
+                    endTime: moment(info.ledSchedule.watchTime[1]).format('HH:mm:ss'),
+                    description: info.ledSchedule.description,
+                    ledIds: info.ledIds,
+                    contentIds: contentIds
+                }
+                if (info.ledSchedule.customizedDays) {
+                    obj.startDate = moment(info.ledSchedule.time[0]).format('YYYY-MM-DD')
+                    obj.endDate = moment(info.ledSchedule.time[1]).format('YYYY-MM-DD')
+                } else {
+                    obj.days = info.ledSchedule.days
+                }
+                api.scheduleled.createdScreenLed(JSON.stringify(obj)).then(res => {
+                    console.log(res, '创建成功')
+                    this.getAllScreenLed()
+                    this.$message.success('创建成功')
+                }).catch(err => {
+                    console.log(err, '创建失败')
+                    this.$message.error('创建失败，请稍后重试')
+                })
             },
             fixedInfo (info,title) {
                 this.screenInfo = info

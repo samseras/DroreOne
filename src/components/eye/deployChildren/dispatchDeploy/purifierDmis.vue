@@ -217,7 +217,7 @@
                     cleanerIds: info.cleanerIds,
                     regionIds: info.regionIds
                 }
-                if (info.clean.customizedDays) {
+                if (info.cleanSchedule.customizedDays) {
                     obj.startDate = moment(info.cleanSchedule.time[0]).format('YYYY-MM-DD')
                     obj.endDate = moment(info.cleanSchedule.time[1]).format('YYYY-MM-DD')
                 }else {
@@ -249,13 +249,13 @@
                     cleanerIds: info.cleanerIds,
                     regionIds: info.regionIds
                 }
-                if (info.clean.customizedDays) {
+                if (info.cleanSchedule.customizedDays) {
                     obj.startDate = moment(info.cleanSchedule.time[0]).format('YYYY-MM-DD')
                     obj.endDate = moment(info.cleanSchedule.time[1]).format('YYYY-MM-DD')
                 }else {
                     obj.days = info.cleanSchedule.days
                 }
-                if (info.clean.customizedShift) {
+                if (info.cleanSchedule.customizedShift) {
                    obj.customizedStartTime = moment(info.cleanSchedule.classTime[0]).format('HH:mm:ss')
                    obj.customizedEndTime = moment(info.cleanSchedule.classTime[1]).format('HH:mm:ss')
                 }else {
