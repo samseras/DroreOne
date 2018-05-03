@@ -53,7 +53,7 @@
                 }else {
                     this.districtList();// 片区输出
                 }
-            } else if (route.includes('roat-deploy','roat-deploy')) {
+            } else if (route.includes('roat-deploy') || route.includes('security-Dmis')) {
                 if(!this.getLocationId){
                     this.roadList();// 路线输出
                     this.road(); // 路线打点
