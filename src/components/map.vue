@@ -557,7 +557,7 @@
                         });
                         droreMap.icon.addChild(icon1);
                         icon1.onclick(function(e) {
-                            console.log(e.data);
+                            console.log('这是路灯','id是'+e.data.id);
                         });
                     }
                 }).catch((err)=>{
@@ -617,6 +617,9 @@
                             url: "http://label.drore.com/gisLabelTabImage/public/defaults/24*24/zhaji.png"
                         });
                         droreMap.icon.addChild(icon1);
+                        icon1.onclick(function(e) {
+                            console.log('这是闸机','id是'+e.data.id);
+                        });
                     }
                 }).catch((err)=>{
                     console.log(err)
@@ -674,6 +677,9 @@
                             url: "http://label.drore.com/gisLabelTabImage/public/defaults/24*24/wifi.png"
                         });
                         droreMap.icon.addChild(icon1);
+                        icon1.onclick(function(e) {
+                            console.log('这是wifi','id是'+e.data.id);
+                        });
                     }
                 }).catch((err)=>{
                     console.log(err)
@@ -731,6 +737,9 @@
                             url: "http://label.drore.com/gisLabelTabImage/public/defaults/24*24/dianziping.png"
                         });
                         droreMap.icon.addChild(icon1);
+                        icon1.onclick(function(e) {
+                            console.log('这是Led','id是'+e.data.id);
+                        });
                     }
                 }).catch((err)=>{
                     console.log(err)
@@ -788,6 +797,9 @@
                             url: "http://label.drore.com/gisLabelTabImage/public/defaults/24*24/baojingtingqianyi.png"
                         });
                         droreMap.icon.addChild(icon1);
+                        icon1.onclick(function(e) {
+                            console.log('这是报警柱','id是'+e.data.id);
+                        });
                     }
                 }).catch((err)=>{
                     console.log(err)
@@ -832,7 +844,7 @@
                     console.log(err)
                 })
             },
-            async getAllMonitor(){ //传感器列表
+            async getAllMonitor(){ //环境监测列表
                 await api.monitor.getAllMonitor().then((res)=>{
                     this.monitorsList=res.devices
                     for (let i=0;i<this.monitorsList.length;i++){
@@ -845,12 +857,15 @@
                             url: "http://label.drore.com/gisLabelTabImage/public/defaults/24*24/huanjingjiance.png"
                         });
                         droreMap.icon.addChild(icon1);
+                        icon1.onclick(function(e) {
+                            console.log('这是环境监测','id是'+e.data.id);
+                        });
                     }
                 }).catch((err)=>{
                     console.log(err)
                 })
             },
-            async getAllMonitorEdit(){ //传感器列表修改
+            async getAllMonitorEdit(){ //环境监测列表修改
                 await api.monitor.getAllMonitor().then((res)=>{
                     this.monitorsList=res.devices
                     for (let i=0;i<this.monitorsList.length;i++){
@@ -902,6 +917,9 @@
                             url: "http://label.drore.com/gisLabelTabImage/public/defaults/24*24/guangboshebei.png"
                         });
                         droreMap.icon.addChild(icon1);
+                        icon1.onclick(function(e) {
+                            console.log('这是广播','id是'+e.data.id);
+                        });
                     }
                 }).catch((err)=>{
                     console.log(err)
@@ -961,6 +979,9 @@
                             url: "http://label.drore.com/gisLabelTabImage/public/defaults/24*24/shexiangtou.png"
                         });
                         droreMap.icon.addChild(icon1);
+                        icon1.onclick(function(e) {
+                            console.log('这是摄像头','id是'+e.data.id);
+                        });
                     }
                 }).catch((err)=> {
                     console.log(err)
@@ -1005,32 +1026,6 @@
                     console.log(err)
                 })
             },
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
             districtList(){//区域划分列表
                 var areaEvets =new droreMap.area.DrawLayer("areaList",'rgba(255, 255, 255, 0.2)',"red")

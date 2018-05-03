@@ -586,11 +586,18 @@
                 let line0ption,lineResult;
                 api.analyze.getScenarioMapData(scenarioId).then(res=>{
                     this.echatData = res.result;
-                   // console.log(res,"这是返回的line数据");
                     lineResult = JSON.parse(res.result);
+                    // console.log(lineResult,"这是返回的line数据");
+                    var legendData = lineResult.legendData;
+                    var seriesData = lineResult.seriesData;
                     $("#"+scenarioId).prev().find(".title").text(lineResult.title);
                     this.lineDom = this.$echarts.init(document.getElementById(scenarioId));
                     line0ption = {
+                        title: {
+                            text: '',
+                            //subtext: subtitle,
+                            x: 'center'
+                        },
                         grid: {
                             left: '5%',
                             right: '5%',
@@ -601,13 +608,13 @@
                         xAxis: {
                             type: 'category',
                             boundaryGap: false,
-                            data: lineResult.name
+                            data: legendData
                         },
                         yAxis: {
                             type: 'value'
                         },
                         series: [{
-                            data: lineResult.value,
+                            data: seriesData,
                             type: 'line',
                             markPoint: {
                                 data: [
@@ -838,8 +845,6 @@
                     this.echatData = res.result;
                    // console.log(res,"这是返回的radar数据");
                     radarResult = JSON.parse(res.result);
-                    var title = radarResult.title;
-                    var subtitle = radarResult.subtitle;
                     var legendData = radarResult.legendData;
                     var seriesName = radarResult.seriesName;
                     var seriesData = radarResult.seriesData;
@@ -849,8 +854,8 @@
                     this.radarDom = this.$echarts.init(document.getElementById(scenarioId));
                     radar0ption = {
                             title: {
-                                text: title,
-                                subtext: subtitle
+                                text: '',
+                                subtext: ''
                             },
                             tooltip: {},
                             legend: {
