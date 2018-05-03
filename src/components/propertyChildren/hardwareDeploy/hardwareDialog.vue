@@ -388,7 +388,7 @@
     import api from '@/api'
     import FileUpload from 'vue-upload-component'
     import Cropper from 'cropperjs'
-    import { mapGetters } from 'vuex'
+    import { mapGetters,mapMutations} from 'vuex'
    export default{
        props:['visible','Info','title','isDisabled'],
        data(){
@@ -507,6 +507,7 @@
            }
        },
        methods:{
+           ...mapMutations(['LOCATION_ID']),
            choseModel (item) {
                console.log(item, '这是选择的')
                console.log(this.modelType, '所有的')
@@ -706,7 +707,12 @@
                this.modelType = res
            })
 //           this.Info.model = Number(this.Info.model)
-
+           if (this.Info.id) {
+               console.log(this.Info.id, '这是拿到的Id')
+               this.$store.commit('LOCATION_ID', this.Info.id)
+           }else {
+               this.$store.commit('LOCATION_ID', '')
+           }
        },
        watch: {
            edit(value) {

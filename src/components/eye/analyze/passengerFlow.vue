@@ -295,18 +295,24 @@
                 })
             },
             getBarData(scenarioId){
-                let that = this
                 let bar0ption,barResult,bigDom;
                 api.analyze.getScenarioMapData(scenarioId).then(res=>{
                     this.echatData = res.result;
                     barResult = JSON.parse(res.result);
-                    console.log(barResult, 'sdsdfhdsfhsdf')
-                    // console.log(res,"这是返回的bar数据");
+                    // console.log(barResult, 'sdsdfhdsfhsdf')
+                    var title = barResult.title;
+                    var subtitle = barResult.subtitle;
+                    var legendData = barResult.legendData;
+                    var seriesData = barResult.seriesData;
+                    var valueName = barResult.valueName;
+                    var nameArray = new Array();
+                    nameArray[0] = valueName;
                     $("#"+scenarioId).prev().find(".title").text(barResult.title);
                     this.barDom = this.$echarts.init(document.getElementById(scenarioId));
                     bar0ption={
                         title:{
-                            text:'',
+                            text:title,
+                            subtext:subtitle,
                             textStyle : {
                                 color: '#fff',
                                 fontSize:18
@@ -314,30 +320,34 @@
                         },
                         legend:{//图例组件
                             /* orient:'vertical',*/
-                            // data:['流入'],
+                            data:nameArray,
                             top:'5px',
                             right:'5px',
                             textStyle:{
                                 color:"#949494"
                             }
                         },
-                        grid:{
-                            width:'85%',  //组件得宽
-                            height:'60%', //组件得高
-                            top:'20%',  //组件离容器上侧得距离
-
+                        grid: {
+                            left: '5%',
+                            right: '5%',
+                            bottom: '10%',
+                            top:'15%',
+                            containLabel: true
                         },
                         xAxis :
                             {
                                 type: 'category',
-                                boundaryGap: [0, 0.05],
-                             //   data: ['11点','12点','13点','14点','15点','16点'],
-                                data:barResult.name,
+                                boundaryGap: [0, 0.03],
+                                data:legendData,
                                 axisLine:{
                                     lineStyle:{
                                         color:'#949494',
                                         width:0.1
                                     }
+                                },
+                                nameTextStyle:{
+                                    fontSize:12,
+                                    fontStyle:"lighter"
                                 }
                             },
                         yAxis :
@@ -346,17 +356,16 @@
                                 axisLine:{//坐标轴轴线设置
                                     lineStyle:{
                                         color:"#949494",
-                                        width:1,
+                                        width:0.5,
                                     }
                                 }
                             },
                         series : [
                             {
-                                name:'流入',
+                                name:valueName,
                                 type:'bar',
-                                barWidth: '35%',
-                            //    data:[451,668,905,498,276,164],
-                                data:barResult.value,
+                                barWidth: '30%',
+                                data:seriesData,
                                 itemStyle:{
                                     normal:{
                                         color:'#9a57b4',
@@ -373,7 +382,7 @@
                                     }
                                 }
                             }
-                            ]
+                        ]
                     };
                     this.barDom.setOption(bar0ption);
                 })

@@ -27,7 +27,7 @@
             droreMap.object.getMap().getLayers().getArray()[1].setVisible(false)
             let route = this.$route.path
             if (route.includes('build')) {
-                droreMap.interaction.showMove()
+                // droreMap.interaction.showMove()
                 this.getAllIndicator();//指示牌现有标注
                 this.getAllTrash();//垃圾桶现有标注
                 this.getAllScenic();//景点现有标注
@@ -35,10 +35,25 @@
                 this.getAllPark();//停车场现有标注
                 this.getAllToilet();//卫生间现有标注
                 this.overView();//鹰眼
+            }else if (route.includes('broad')) {
+                // droreMap.interaction.showMove()
+                this.getAllLight();//路灯现有标注
+                this.getAllGate();//闸机现有标注
+                this.getAllWifi();//wifi现有标注
+                this.getAllLed();//Led现有标注
+                this.getAllPolice();//报警柱现有标注
+                this.getAllMonitor();//传感器现有标注
+                this.getAllBroadcast();//广播现有标注
+                this.getAllCamera();//摄像头现有标注
+                this.overView();//鹰眼
             } else if (route.includes('area-deploy')) {
-                this.districtList();// 片区输出
-                this.district(); // 片区打点
-            } else if (route.includes('roat-deploy')) {
+                if(!this.getLocationId){
+                    this.districtList();// 片区输出
+                    this.district(); // 片区打点
+                }else {
+                    this.districtList();// 片区输出
+                }
+            } else if (route.includes('roat-deploy','roat-deploy')) {
                 if(!this.getLocationId){
                     this.roadList();// 路线输出
                     this.road(); // 路线打点
@@ -94,6 +109,55 @@
                 }else {
                     this.getAllLightEdit();// 路灯修改
                 }
+            }else if (route.includes('gate-Hware'))  {
+                if(!this.getLocationId) {
+                    this.getAllGate();//闸机现有标注
+                    this.labelDot();// 闸机打点
+                }else {
+                    this.getAllGateEdit();// 闸机修改
+                }
+            }else if (route.includes('wifi-Hware'))  {
+                if(!this.getLocationId) {
+                    this.getAllWifi();//wifi现有标注
+                    this.labelDot();// wifi打点
+                }else {
+                    this.getAllWifiEdit();// wifi修改
+                }
+            }else if (route.includes('led-Hware'))  {
+                if(!this.getLocationId) {
+                    this.getAllLed();//Led现有标注
+                    this.labelDot();// Led打点
+                }else {
+                    this.getAllLedEdit();// Led修改
+                }
+            }else if (route.includes('police-Hware'))  {
+                if(!this.getLocationId) {
+                    this.getAllPolice();//报警柱现有标注
+                    this.labelDot();// 报警柱打点
+                }else {
+                    this.getAllPoliceEdit();// 报警柱修改
+                }
+            }else if (route.includes('monitors-Hware'))  {
+                if(!this.getLocationId) {
+                    this.getAllMonitor();//传感器现有标注
+                    this.labelDot();// 传感器打点
+                }else {
+                    this.getAllMonitorEdit();// 传感器修改
+                }
+            }else if (route.includes('broadcast-Hware'))  {
+                if(!this.getLocationId) {
+                    this.getAllBroadcast();//广播现有标注
+                    this.labelDot();// 广播打点
+                }else {
+                    this.getAllBroadcastEdit();// 广播修改
+                }
+            }else if (route.includes('camera-Hware'))  {
+                if(!this.getLocationId) {
+                    this.getAllCamera();//摄像头现有标注
+                    this.labelDot();// 摄像头打点
+                }else {
+                    this.getAllCameraEdit();// 摄像头修改
+                }
             }else {
                 this.labelDot();// 路灯打点
             }
@@ -124,7 +188,6 @@
                 })
                 droreMap.event.DragEvent(function(tabInfor) {
                     var data = tabInfor.data
-                    console.log(data.data.id)
                     if(data.data.id === '12214_'){
                         console.log(droreMap.trans.transLayerToWgs(data.end));
                         that.$store.commit('MAP_LOCATION', droreMap.trans.transLayerToWgs(data.end))
@@ -141,7 +204,7 @@
                             name: this.indicatorList[i].regionName,
                             subtype: "droreMapinit",
                             id: this.indicatorList[i].signboardBean.id,
-                            url: "http://label.drore.com/gisLabelTabImage/public/defaults/24*24/shineiquanjing.png"
+                            url: "http://label.drore.com/gisLabelTabImage/public/defaults/24*24/zhilupai.png"
                         });
                         droreMap.icon.addChild(icon1);
                     }
@@ -180,7 +243,7 @@
                                 name: this.indicatorList[i].regionName,
                                 subtype: "droreMapinit",
                                 id: this.indicatorList[i].signboardBean.id,
-                                url: "http://label.drore.com/gisLabelTabImage/public/defaults/24*24/shineiquanjing.png"
+                                url: "http://label.drore.com/gisLabelTabImage/public/defaults/24*24/zhilupai.png"
                             });
                             droreMap.icon.addChild(icon1);
                         }
@@ -199,7 +262,7 @@
                             name: this.trashList[i].dustbinBean.name,
                             subtype: "droreMapinit",
                             id: this.trashList[i].dustbinBean.id,
-                            url: "http://label.drore.com/gisLabelTabImage/public/defaults/24*24/shineiquanjing.png"
+                            url: "http://label.drore.com/gisLabelTabImage/public/defaults/24*24/lajitong.png"
                         });
                         droreMap.icon.addChild(icon1);
                     }
@@ -238,7 +301,7 @@
                                 name: this.trashList[i].dustbinBean.name,
                                 subtype: "droreMapinit",
                                 id: this.trashList[i].dustbinBean.id,
-                                url: "http://label.drore.com/gisLabelTabImage/public/defaults/24*24/shineiquanjing.png"
+                                url: "http://label.drore.com/gisLabelTabImage/public/defaults/24*24/lajitong.png"
                             });
                             droreMap.icon.addChild(icon1);
                         }
@@ -258,7 +321,7 @@
                             name: this.scenicList[i].scenicspotBean.name,
                             subtype: "droreMapinit",
                             id: this.scenicList[i].scenicspotBean.id,
-                            url: "http://label.drore.com/gisLabelTabImage/public/defaults/24*24/shineiquanjing.png"
+                            url: "http://label.drore.com/gisLabelTabImage/public/defaults/24*24/jingdian.png"
                         });
                         droreMap.icon.addChild(icon1);
                     }
@@ -297,7 +360,7 @@
                                 name: this.scenicList[i].scenicspotBean.name,
                                 subtype: "droreMapinit",
                                 id: this.scenicList[i].scenicspotBean.id,
-                                url: "http://label.drore.com/gisLabelTabImage/public/defaults/24*24/shineiquanjing.png"
+                                url: "http://label.drore.com/gisLabelTabImage/public/defaults/24*24/jingdian.png"
                             });
                             droreMap.icon.addChild(icon1)
                         }
@@ -317,7 +380,7 @@
                             name: this.shopList[i].businessBean.name,
                             subtype: "droreMapinit",
                             id: this.shopList[i].businessBean.id,
-                            url: "http://label.drore.com/gisLabelTabImage/public/defaults/24*24/shineiquanjing.png"
+                            url: "http://label.drore.com/gisLabelTabImage/public/defaults/24*24/shangchang.png"
                         });
                         droreMap.icon.addChild(icon1);
                     }
@@ -355,7 +418,7 @@
                                 name: this.shopList[i].businessBean.name,
                                 subtype: "droreMapinit",
                                 id: this.shopList[i].businessBean.id,
-                                url: "http://label.drore.com/gisLabelTabImage/public/defaults/24*24/shineiquanjing.png"
+                                url: "http://label.drore.com/gisLabelTabImage/public/defaults/24*24/shangchang.png"
                             });
                             droreMap.icon.addChild(icon1);
                         }
@@ -374,7 +437,7 @@
                             name: this.parkList[i].parkingBean.name,
                             subtype: "droreMapinit",
                             id: this.parkList[i].parkingBean.id,
-                            url: "http://label.drore.com/gisLabelTabImage/public/defaults/24*24/shineiquanjing.png"
+                            url: "http://label.drore.com/gisLabelTabImage/public/defaults/24*24/tingchechang.png"
                         });
                         droreMap.icon.addChild(icon1);
                     }
@@ -412,7 +475,7 @@
                                 name: this.parkList[i].parkingBean.name,
                                 subtype: "droreMapinit",
                                 id: this.parkList[i].parkingBean.id,
-                                url: "http://label.drore.com/gisLabelTabImage/public/defaults/24*24/shineiquanjing.png"
+                                url: "http://label.drore.com/gisLabelTabImage/public/defaults/24*24/tingchechang.png"
                             });
                             droreMap.icon.addChild(icon1);
                         }
@@ -432,7 +495,7 @@
                             name: this.toiletList[i].toiletBean.name,
                             subtype: "droreMapinit",
                             id: this.toiletList[i].toiletBean.id,
-                            url: "http://label.drore.com/gisLabelTabImage/public/defaults/24*24/shineiquanjing.png"
+                            url: "http://label.drore.com/gisLabelTabImage/public/defaults/24*24/cesuo.png"
                         });
                         droreMap.icon.addChild(icon1);
                     }
@@ -470,7 +533,7 @@
                                 name: this.toiletList[i].toiletBean.name,
                                 subtype: "droreMapinit",
                                 id: this.toiletList[i].toiletBean.id,
-                                url: "http://label.drore.com/gisLabelTabImage/public/defaults/24*24/shineiquanjing.png"
+                                url: "http://label.drore.com/gisLabelTabImage/public/defaults/24*24/cesuo.png"
                             });
                             droreMap.icon.addChild(icon1);
                         }
@@ -489,7 +552,7 @@
                             name: this.lightList[i].name,
                             subtype: "droreMapinit",
                             id: this.lightList[i].id,
-                            url: "http://label.drore.com/gisLabelTabImage/public/defaults/24*24/shineiquanjing.png"
+                            url: "http://label.drore.com/gisLabelTabImage/public/defaults/24*24/ludeng.png"
                         });
                         droreMap.icon.addChild(icon1);
                     }
@@ -501,13 +564,53 @@
                 await api.light.getAllLight().then((res)=>{
                     this.lightList=res.devices
                     for (let i=0;i<this.lightList.length;i++){
-                        this.lightList[i].location = [this.lightList[i].longitude,this.lightList[i].latitude]
+                        if(this.lightList[i].id === this.getLocationId){
+                            this.lightList[i].location = [this.lightList[i].longitude,this.lightList[i].latitude]
+                            var iconedit = new droreMap.icon.Marker({
+                                coordinate: droreMap.trans.transFromWgsToLayer(this.lightList[i].location),
+                                name: this.lightList[i].name,
+                                subtype: "droreMapinit",
+                                id: this.lightList[i].id,
+                                url: "/static/img/location_on.png"
+                            });
+                            droreMap.icon.addChild(iconedit);
+                            droreMap.interaction.ifDrag = true;
+                            let that =this
+                            droreMap.event.DragEvent(function(tabInfor) {
+                                var data = tabInfor.data
+                                if(data.data.id === that.getLocationId){
+                                    console.log(droreMap.trans.transLayerToWgs(data.end));
+                                    that.$store.commit('MAP_LOCATION', droreMap.trans.transLayerToWgs(data.end))
+                                }
+                            })
+                        }else {
+                            this.lightList[i].location = [this.lightList[i].longitude,this.lightList[i].latitude]
+                            var icon1 = new droreMap.icon.Marker({
+                                coordinate: droreMap.trans.transFromWgsToLayer(this.lightList[i].location),
+                                name: this.lightList[i].name,
+                                subtype: "droreMapinit",
+                                id: this.lightList[i].id,
+                                url: "http://label.drore.com/gisLabelTabImage/public/defaults/24*24/ludeng.png"
+                            });
+                            droreMap.icon.addChild(icon1);
+                        }
+                    }
+                }).catch((err)=>{
+                    console.log(err)
+                })
+            },
+
+            async getAllGate(){//闸机列表
+                await api.gate.getAllGate().then((res)=>{
+                    this.gateList=res.devices
+                    for (let i=0;i<this.gateList.length;i++){
+                        this.gateList[i].location = [this.gateList[i].longitude,this.gateList[i].latitude]
                         var icon1 = new droreMap.icon.Marker({
-                            coordinate: droreMap.trans.transFromWgsToLayer(this.lightList[i].location),
-                            name: this.lightList[i].name,
+                            coordinate: droreMap.trans.transFromWgsToLayer(this.gateList[i].location),
+                            name: this.gateList[i].name,
                             subtype: "droreMapinit",
-                            id: this.lightList[i].id,
-                            url: "http://label.drore.com/gisLabelTabImage/public/defaults/24*24/shineiquanjing.png"
+                            id: this.gateList[i].id,
+                            url: "http://label.drore.com/gisLabelTabImage/public/defaults/24*24/zhaji.png"
                         });
                         droreMap.icon.addChild(icon1);
                     }
@@ -515,16 +618,389 @@
                     console.log(err)
                 })
             },
-
-
-
-
-
-
-
-
-
-
+            async getAllGateEdit(){//闸机列表修改
+                await api.gate.getAllGate().then((res)=>{
+                    this.gateList=res.devices
+                    for (let i=0;i<this.gateList.length;i++){
+                        if(this.gateList[i].id === this.getLocationId){
+                            this.gateList[i].location = [this.gateList[i].longitude,this.gateList[i].latitude]
+                            var iconedit = new droreMap.icon.Marker({
+                                coordinate: droreMap.trans.transFromWgsToLayer(this.gateList[i].location),
+                                name: this.gateList[i].name,
+                                subtype: "droreMapinit",
+                                id: this.gateList[i].id,
+                                url: "/static/img/location_on.png"
+                            });
+                            droreMap.icon.addChild(iconedit);
+                            droreMap.interaction.ifDrag = true;
+                            let that =this
+                            droreMap.event.DragEvent(function(tabInfor) {
+                                var data = tabInfor.data
+                                if(data.data.id === that.getLocationId){
+                                    console.log(droreMap.trans.transLayerToWgs(data.end));
+                                    that.$store.commit('MAP_LOCATION', droreMap.trans.transLayerToWgs(data.end))
+                                }
+                            })
+                        }else {
+                            this.gateList[i].location = [this.gateList[i].longitude,this.gateList[i].latitude]
+                            var icon1 = new droreMap.icon.Marker({
+                                coordinate: droreMap.trans.transFromWgsToLayer(this.gateList[i].location),
+                                name: this.gateList[i].name,
+                                subtype: "droreMapinit",
+                                id: this.gateList[i].id,
+                                url: "http://label.drore.com/gisLabelTabImage/public/defaults/24*24/zhaji.png"
+                            });
+                            droreMap.icon.addChild(icon1);
+                        }
+                    }
+                }).catch((err)=>{
+                    console.log(err)
+                })
+            },
+            async getAllWifi(){//wifi列表
+                await api.wifi.getAllWifi().then((res)=>{
+                    this.wifiList=res.devices
+                    for(let i=0;i<this.wifiList.length;i++){
+                        this.wifiList[i].location = [this.wifiList[i].longitude,this.wifiList[i].latitude]
+                        var icon1 = new droreMap.icon.Marker({
+                            coordinate: droreMap.trans.transFromWgsToLayer(this.wifiList[i].location),
+                            name: this.wifiList[i].name,
+                            subtype: "droreMapinit",
+                            id: this.wifiList[i].id,
+                            url: "http://label.drore.com/gisLabelTabImage/public/defaults/24*24/wifi.png"
+                        });
+                        droreMap.icon.addChild(icon1);
+                    }
+                }).catch((err)=>{
+                    console.log(err)
+                })
+            },
+            async getAllWifiEdit(){//wifi列表修改
+                await api.wifi.getAllWifi().then((res)=>{
+                    this.wifiList=res.devices
+                    for(let i=0;i<this.wifiList.length;i++){
+                        if(this.wifiList[i].id === this.getLocationId){
+                            this.wifiList[i].location = [this.wifiList[i].longitude,this.wifiList[i].latitude]
+                            var iconedit = new droreMap.icon.Marker({
+                                coordinate: droreMap.trans.transFromWgsToLayer(this.wifiList[i].location),
+                                name: this.wifiList[i].name,
+                                subtype: "droreMapinit",
+                                id: this.wifiList[i].id,
+                                url: "/static/img/location_on.png"
+                            });
+                            droreMap.icon.addChild(iconedit);
+                            droreMap.interaction.ifDrag = true;
+                            let that =this
+                            droreMap.event.DragEvent(function(tabInfor) {
+                                var data = tabInfor.data
+                                if(data.data.id === that.getLocationId){
+                                    console.log(droreMap.trans.transLayerToWgs(data.end));
+                                    that.$store.commit('MAP_LOCATION', droreMap.trans.transLayerToWgs(data.end))
+                                }
+                            })
+                        }else {
+                            this.wifiList[i].location = [this.wifiList[i].longitude, this.wifiList[i].latitude]
+                            var icon1 = new droreMap.icon.Marker({
+                                coordinate: droreMap.trans.transFromWgsToLayer(this.wifiList[i].location),
+                                name: this.wifiList[i].name,
+                                subtype: "droreMapinit",
+                                id: this.wifiList[i].id,
+                                url: "http://label.drore.com/gisLabelTabImage/public/defaults/24*24/wifi.png"
+                            });
+                            droreMap.icon.addChild(icon1);
+                        }
+                    }
+                }).catch((err)=>{
+                    console.log(err)
+                })
+            },
+            async getAllLed(){//Led列表
+                await api.led.getAllLed().then((res)=>{
+                    this.ledList=res.devices
+                    for (let i=0;i<this.ledList.length;i++){
+                        this.ledList[i].location = [this.ledList[i].longitude,this.ledList[i].latitude]
+                        var icon1 = new droreMap.icon.Marker({
+                            coordinate: droreMap.trans.transFromWgsToLayer(this.ledList[i].location),
+                            name: this.ledList[i].name,
+                            subtype: "droreMapinit",
+                            id: this.ledList[i].id,
+                            url: "http://label.drore.com/gisLabelTabImage/public/defaults/24*24/dianziping.png"
+                        });
+                        droreMap.icon.addChild(icon1);
+                    }
+                }).catch((err)=>{
+                    console.log(err)
+                })
+            },
+            async getAllLedEdit(){//Led列表修改
+                await api.led.getAllLed().then((res)=>{
+                    this.ledList=res.devices
+                    for (let i=0;i<this.ledList.length;i++){
+                        if(this.ledList[i].id === this.getLocationId){
+                            this.ledList[i].location = [this.ledList[i].longitude,this.ledList[i].latitude]
+                            var iconedit = new droreMap.icon.Marker({
+                                coordinate: droreMap.trans.transFromWgsToLayer(this.ledList[i].location),
+                                name: this.ledList[i].name,
+                                subtype: "droreMapinit",
+                                id: this.ledList[i].id,
+                                url: "/static/img/location_on.png"
+                            });
+                            droreMap.icon.addChild(iconedit);
+                            droreMap.interaction.ifDrag = true;
+                            let that =this
+                            droreMap.event.DragEvent(function(tabInfor) {
+                                var data = tabInfor.data
+                                if(data.data.id === that.getLocationId){
+                                    console.log(droreMap.trans.transLayerToWgs(data.end));
+                                    that.$store.commit('MAP_LOCATION', droreMap.trans.transLayerToWgs(data.end))
+                                }
+                            })
+                        }else {
+                            this.ledList[i].location = [this.ledList[i].longitude,this.ledList[i].latitude]
+                            var icon1 = new droreMap.icon.Marker({
+                                coordinate: droreMap.trans.transFromWgsToLayer(this.ledList[i].location),
+                                name: this.ledList[i].name,
+                                subtype: "droreMapinit",
+                                id: this.ledList[i].id,
+                                url: "http://label.drore.com/gisLabelTabImage/public/defaults/24*24/dianziping.png"
+                            });
+                            droreMap.icon.addChild(icon1);
+                        }
+                    }
+                }).catch((err)=>{
+                    console.log(err)
+                })
+            },
+            async getAllPolice(){//报警柱列表
+                await api.police.getAllPolice().then((res)=>{
+                    this.policeList=res.devices
+                    for (let i=0;i<this.policeList.length;i++){
+                        this.policeList[i].location = [this.policeList[i].longitude,this.policeList[i].latitude]
+                        var icon1 = new droreMap.icon.Marker({
+                            coordinate: droreMap.trans.transFromWgsToLayer(this.policeList[i].location),
+                            name: this.policeList[i].name,
+                            subtype: "droreMapinit",
+                            id: this.policeList[i].id,
+                            url: "http://label.drore.com/gisLabelTabImage/public/defaults/24*24/baojingtingqianyi.png"
+                        });
+                        droreMap.icon.addChild(icon1);
+                    }
+                }).catch((err)=>{
+                    console.log(err)
+                })
+            },
+            async getAllPoliceEdit(){//报警柱列表修改
+                await api.police.getAllPolice().then((res)=>{
+                    this.policeList=res.devices
+                    for (let i=0;i<this.policeList.length;i++){
+                        if(this.policeList[i].id === this.getLocationId){
+                            this.policeList[i].location = [this.policeList[i].longitude,this.policeList[i].latitude]
+                            var iconedit = new droreMap.icon.Marker({
+                                coordinate: droreMap.trans.transFromWgsToLayer(this.policeList[i].location),
+                                name: this.policeList[i].name,
+                                subtype: "droreMapinit",
+                                id: this.policeList[i].id,
+                                url: "/static/img/location_on.png"
+                            });
+                            droreMap.icon.addChild(iconedit);
+                            droreMap.interaction.ifDrag = true;
+                            let that =this
+                            droreMap.event.DragEvent(function(tabInfor) {
+                                var data = tabInfor.data
+                                if(data.data.id === that.getLocationId){
+                                    console.log(droreMap.trans.transLayerToWgs(data.end));
+                                    that.$store.commit('MAP_LOCATION', droreMap.trans.transLayerToWgs(data.end))
+                                }
+                            })
+                        }else {
+                            this.policeList[i].location = [this.policeList[i].longitude, this.policeList[i].latitude]
+                            var icon1 = new droreMap.icon.Marker({
+                                coordinate: droreMap.trans.transFromWgsToLayer(this.policeList[i].location),
+                                name: this.policeList[i].name,
+                                subtype: "droreMapinit",
+                                id: this.policeList[i].id,
+                                url: "http://label.drore.com/gisLabelTabImage/public/defaults/24*24/baojingtingqianyi.png"
+                            });
+                            droreMap.icon.addChild(icon1);
+                        }
+                    }
+                }).catch((err)=>{
+                    console.log(err)
+                })
+            },
+            async getAllMonitor(){ //传感器列表
+                await api.monitor.getAllMonitor().then((res)=>{
+                    this.monitorsList=res.devices
+                    for (let i=0;i<this.monitorsList.length;i++){
+                        this.monitorsList[i].location = [this.monitorsList[i].longitude,this.monitorsList[i].latitude]
+                        var icon1 = new droreMap.icon.Marker({
+                            coordinate: droreMap.trans.transFromWgsToLayer(this.monitorsList[i].location),
+                            name: this.monitorsList[i].name,
+                            subtype: "droreMapinit",
+                            id: this.monitorsList[i].id,
+                            url: "http://label.drore.com/gisLabelTabImage/public/defaults/24*24/huanjingjiance.png"
+                        });
+                        droreMap.icon.addChild(icon1);
+                    }
+                }).catch((err)=>{
+                    console.log(err)
+                })
+            },
+            async getAllMonitorEdit(){ //传感器列表修改
+                await api.monitor.getAllMonitor().then((res)=>{
+                    this.monitorsList=res.devices
+                    for (let i=0;i<this.monitorsList.length;i++){
+                        if(this.monitorsList[i].id === this.getLocationId){
+                            this.monitorsList[i].location = [this.monitorsList[i].longitude,this.monitorsList[i].latitude]
+                            var iconedit = new droreMap.icon.Marker({
+                                coordinate: droreMap.trans.transFromWgsToLayer(this.monitorsList[i].location),
+                                name: this.monitorsList[i].name,
+                                subtype: "droreMapinit",
+                                id: this.monitorsList[i].id,
+                                url: "/static/img/location_on.png"
+                            });
+                            droreMap.icon.addChild(iconedit);
+                            droreMap.interaction.ifDrag = true;
+                            let that =this
+                            droreMap.event.DragEvent(function(tabInfor) {
+                                var data = tabInfor.data
+                                if(data.data.id === that.getLocationId){
+                                    console.log(droreMap.trans.transLayerToWgs(data.end));
+                                    that.$store.commit('MAP_LOCATION', droreMap.trans.transLayerToWgs(data.end))
+                                }
+                            })
+                        }else {
+                            this.monitorsList[i].location = [this.monitorsList[i].longitude, this.monitorsList[i].latitude]
+                            var icon1 = new droreMap.icon.Marker({
+                                coordinate: droreMap.trans.transFromWgsToLayer(this.monitorsList[i].location),
+                                name: this.monitorsList[i].name,
+                                subtype: "droreMapinit",
+                                id: this.monitorsList[i].id,
+                                url: "http://label.drore.com/gisLabelTabImage/public/defaults/24*24/huanjingjiance.png"
+                            });
+                            droreMap.icon.addChild(icon1);
+                        }
+                    }
+                }).catch((err)=>{
+                    console.log(err)
+                })
+            },
+            async getAllBroadcast(){//广播列表
+                await api.broadcast.getAllBroadcast().then((res)=>{
+                    this.broadList=res.devices
+                    for (let i=0;i<this.broadList.length;i++) {
+                        this.broadList[i].location = [this.broadList[i].longitude, this.broadList[i].latitude]
+                        var icon1 = new droreMap.icon.Marker({
+                            coordinate: droreMap.trans.transFromWgsToLayer(this.broadList[i].location),
+                            name: this.broadList[i].name,
+                            subtype: "droreMapinit",
+                            id: this.broadList[i].id,
+                            url: "http://label.drore.com/gisLabelTabImage/public/defaults/24*24/guangboshebei.png"
+                        });
+                        droreMap.icon.addChild(icon1);
+                    }
+                }).catch((err)=>{
+                    console.log(err)
+                    this.isShowLoading=false
+                })
+            },
+            async getAllBroadcastEdit(){//广播列表修改
+                await api.broadcast.getAllBroadcast().then((res)=>{
+                    this.broadList=res.devices
+                    for (let i=0;i<this.broadList.length;i++) {
+                        if(this.broadList[i].id === this.getLocationId){
+                            this.broadList[i].location = [this.broadList[i].longitude,this.broadList[i].latitude]
+                            var iconedit = new droreMap.icon.Marker({
+                                coordinate: droreMap.trans.transFromWgsToLayer(this.broadList[i].location),
+                                name: this.broadList[i].name,
+                                subtype: "droreMapinit",
+                                id: this.broadList[i].id,
+                                url: "/static/img/location_on.png"
+                            });
+                            droreMap.icon.addChild(iconedit);
+                            droreMap.interaction.ifDrag = true;
+                            let that =this
+                            droreMap.event.DragEvent(function(tabInfor) {
+                                var data = tabInfor.data
+                                if(data.data.id === that.getLocationId){
+                                    console.log(droreMap.trans.transLayerToWgs(data.end));
+                                    that.$store.commit('MAP_LOCATION', droreMap.trans.transLayerToWgs(data.end))
+                                }
+                            })
+                        }else {
+                            this.broadList[i].location = [this.broadList[i].longitude, this.broadList[i].latitude]
+                            var icon1 = new droreMap.icon.Marker({
+                                coordinate: droreMap.trans.transFromWgsToLayer(this.broadList[i].location),
+                                name: this.broadList[i].name,
+                                subtype: "droreMapinit",
+                                id: this.broadList[i].id,
+                                url: "http://label.drore.com/gisLabelTabImage/public/defaults/24*24/guangboshebei.png"
+                            });
+                            droreMap.icon.addChild(icon1);
+                        }
+                    }
+                }).catch((err)=>{
+                    console.log(err)
+                    this.isShowLoading=false
+                })
+            },
+            async getAllCamera () {//摄像头列表
+                await api.camera.getAllCamera().then((res) => {
+                    this.cameraList = res.devices
+                    for (let i=0; i < this.cameraList.length; i++) {
+                        this.cameraList[i].location = [this.cameraList[i].longitude, this.cameraList[i].latitude]
+                        var icon1 = new droreMap.icon.Marker({
+                            coordinate: droreMap.trans.transFromWgsToLayer(this.cameraList[i].location),
+                            name: this.cameraList[i].name,
+                            subtype: "droreMapinit",
+                            id: this.cameraList[i].id,
+                            url: "http://label.drore.com/gisLabelTabImage/public/defaults/24*24/shexiangtou.png"
+                        });
+                        droreMap.icon.addChild(icon1);
+                    }
+                }).catch((err)=> {
+                    console.log(err)
+                })
+            },
+            async getAllCameraEdit () {//摄像头列表修改
+                await api.camera.getAllCamera().then((res) => {
+                    this.cameraList = res.devices
+                    for (let i=0; i < this.cameraList.length; i++) {
+                        if(this.cameraList[i].id === this.getLocationId){
+                            this.cameraList[i].location = [this.cameraList[i].longitude,this.cameraList[i].latitude]
+                            var iconedit = new droreMap.icon.Marker({
+                                coordinate: droreMap.trans.transFromWgsToLayer(this.cameraList[i].location),
+                                name: this.cameraList[i].name,
+                                subtype: "droreMapinit",
+                                id: this.cameraList[i].id,
+                                url: "/static/img/location_on.png"
+                            });
+                            droreMap.icon.addChild(iconedit);
+                            droreMap.interaction.ifDrag = true;
+                            let that =this
+                            droreMap.event.DragEvent(function(tabInfor) {
+                                var data = tabInfor.data
+                                if(data.data.id === that.getLocationId){
+                                    console.log(droreMap.trans.transLayerToWgs(data.end));
+                                    that.$store.commit('MAP_LOCATION', droreMap.trans.transLayerToWgs(data.end))
+                                }
+                            })
+                        }else {
+                            this.cameraList[i].location = [this.cameraList[i].longitude, this.cameraList[i].latitude]
+                            var icon1 = new droreMap.icon.Marker({
+                                coordinate: droreMap.trans.transFromWgsToLayer(this.cameraList[i].location),
+                                name: this.cameraList[i].name,
+                                subtype: "droreMapinit",
+                                id: this.cameraList[i].id,
+                                url: "http://label.drore.com/gisLabelTabImage/public/defaults/24*24/shexiangtou.png"
+                            });
+                            droreMap.icon.addChild(icon1);
+                        }
+                    }
+                }).catch((err)=> {
+                    console.log(err)
+                })
+            },
 
 
 
