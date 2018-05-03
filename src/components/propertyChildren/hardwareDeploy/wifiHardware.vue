@@ -157,7 +157,9 @@
                     ip:info.ip,
                     serialNum:info.serialNum,
                     mac:info.mac,
+                    port:info.port,
                     regionId:info.regionId,
+                    jsonAttr:info.jsonAttr,
                     description:info.description,
                     latitude:latitude,
                     longitude:longitude
@@ -234,6 +236,7 @@
                     ip:info.ip,
                     serialNum:info.serialNum,
                     mac:info.mac,
+                    port:info.port,
                     regionId:info.regionId,
                     description:info.description,
                     jsonAttr:info.jsonAttr,

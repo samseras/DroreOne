@@ -48,6 +48,7 @@
                 <el-carousel-item>
                     <div class="conversion">
                         <!--<router-link to="/property">资产>><img src="../../../static/img/eye.png"/></router-link>-->
+
                     </div>
                 </el-carousel-item>
                 <el-carousel-item>
@@ -139,7 +140,7 @@
    .change{box-shadow:0px 3px 8px rgba(0, 0, 0, 0.3);position: relative;}
    img{position: absolute;left: 40%;top: 40%;width: 25px;height: 25px;}
    #eye img{left: 33%;width: 100px;height: 30px;}
-   #dataCenter img{left: 40%;}
+   #property img{left: 40%;}
    #bee img{top: 44%;}
    .estate img,#dataCenter img,#GIS img{left:47%;}
 

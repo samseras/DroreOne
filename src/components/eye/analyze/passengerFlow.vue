@@ -167,11 +167,11 @@
                 this.moveChart();
             },
             getEchats () {
-                console.log(this.getRefresh)
+                // console.log(this.getRefresh)
                 this.isShowLoading = true
                 let id = this.$route.params.id;
                 api.analyze.getStreamDataById(id).then(res=> {
-                    console.log(res,'nimeide ')
+                    // console.log(res,'nimeide ')
                     this.isShowloading = false;
                     this.echatList = res.result;
                     let scenarioId,chartId,chartDomH;
@@ -295,18 +295,24 @@
                 })
             },
             getBarData(scenarioId){
-                let that = this
                 let bar0ption,barResult,bigDom;
                 api.analyze.getScenarioMapData(scenarioId).then(res=>{
                     this.echatData = res.result;
                     barResult = JSON.parse(res.result);
-                    console.log(barResult, 'sdsdfhdsfhsdf')
-                    // console.log(res,"这是返回的bar数据");
+                    // console.log(barResult, 'sdsdfhdsfhsdf')
+                    var title = barResult.title;
+                    var subtitle = barResult.subtitle;
+                    var legendData = barResult.legendData;
+                    var seriesData = barResult.seriesData;
+                    var valueName = barResult.valueName;
+                    var nameArray = new Array();
+                    nameArray[0] = valueName;
                     $("#"+scenarioId).prev().find(".title").text(barResult.title);
                     this.barDom = this.$echarts.init(document.getElementById(scenarioId));
                     bar0ption={
                         title:{
-                            text:'',
+                            text:title,
+                            subtext:subtitle,
                             textStyle : {
                                 color: '#fff',
                                 fontSize:18
@@ -314,30 +320,34 @@
                         },
                         legend:{//图例组件
                             /* orient:'vertical',*/
-                            // data:['流入'],
+                            data:nameArray,
                             top:'5px',
                             right:'5px',
                             textStyle:{
                                 color:"#949494"
                             }
                         },
-                        grid:{
-                            width:'85%',  //组件得宽
-                            height:'60%', //组件得高
-                            top:'20%',  //组件离容器上侧得距离
-
+                        grid: {
+                            left: '5%',
+                            right: '5%',
+                            bottom: '10%',
+                            top:'15%',
+                            containLabel: true
                         },
                         xAxis :
                             {
                                 type: 'category',
-                                boundaryGap: [0, 0.05],
-                             //   data: ['11点','12点','13点','14点','15点','16点'],
-                                data:barResult.name,
+                                boundaryGap: [0, 0.03],
+                                data:legendData,
                                 axisLine:{
                                     lineStyle:{
                                         color:'#949494',
                                         width:0.1
                                     }
+                                },
+                                nameTextStyle:{
+                                    fontSize:12,
+                                    fontStyle:"lighter"
                                 }
                             },
                         yAxis :
@@ -346,17 +356,16 @@
                                 axisLine:{//坐标轴轴线设置
                                     lineStyle:{
                                         color:"#949494",
-                                        width:1,
+                                        width:0.5,
                                     }
                                 }
                             },
                         series : [
                             {
-                                name:'流入',
+                                name:valueName,
                                 type:'bar',
-                                barWidth: '35%',
-                            //    data:[451,668,905,498,276,164],
-                                data:barResult.value,
+                                barWidth: '30%',
+                                data:seriesData,
                                 itemStyle:{
                                     normal:{
                                         color:'#9a57b4',
@@ -373,7 +382,7 @@
                                     }
                                 }
                             }
-                            ]
+                        ]
                     };
                     this.barDom.setOption(bar0ption);
                 })
@@ -383,12 +392,18 @@
                 api.analyze.getScenarioMapData(scenarioId).then(res=>{
                     this.echatData = res.result;
                     pieResult = JSON.parse(res.result);
-                //    console.log(res,"这是返回的pie数据");
+                   console.log(pieResult,"这是返回的pie数据");
+                    var title = pieResult.title;
+                    var subtitle = pieResult.subtitle;
+                    var legendData = pieResult.legendData;
+                    var seriesName = pieResult.seriesName;
+                    var seriesData = pieResult.seriesData;
+                    var indicator = pieResult.indicator;
                     $("#"+scenarioId).prev().find(".title").text(pieResult.title);
                     this.pieDom = this.$echarts.init(document.getElementById(scenarioId));
                     pie0ption = {
                         title:{
-                            text:"",
+                            text:title,
                             textStyle : {
                                 color: '#fff',
                                 fontSize:18
@@ -400,24 +415,24 @@
                         },
 
                         legend: {
-                            formatter:  function(name){
-                                var total = 0;
-                                var target;
-                                for (var i = 0, l = pieResult.value.length; i < l; i++) {
-                                    total += pieResult.value[i].value;
-                                    if (pieResult.value[i].name == name) {
-                                        target = pieResult.value[i].value;
-                                        name = name;
-                                    }
-                                }
-                                return name + '' + ((target/total)*100).toFixed(0) + '%';
-                            },
+                            // formatter:  function(name){
+                            //     var total = 0;
+                            //     var target;
+                            //     for (var i = 0, l = pieResult.value.length; i < l; i++) {
+                            //         total += pieResult.value[i].value;
+                            //         if (pieResult.value[i].name == name) {
+                            //             target = pieResult.value[i].value;
+                            //             name = name;
+                            //         }
+                            //     }
+                            //     return name + '' + ((target/total)*100).toFixed(0) + '%';
+                            // },
                             icon: 'circle',
                             orient: 'vertical',
                             right: '7%',
                             top:'10%',
                             // bottom:'30px',
-                            data:pieResult.name,
+                            data:legendData,
                             textStyle:{color:"#949494"}
                         },
                         series : [
@@ -426,7 +441,7 @@
                                 type: 'pie',
                                 radius : '55%',
                                 center: ['38%','45%'],
-                                data:pieResult.value,
+                                data:seriesData,
                                 itemStyle: {
                                     emphasis: {
                                         shadowBlur: 10,
@@ -687,7 +702,7 @@
                 let relativebar0ption,relativebarResult;
                 api.analyze.getScenarioMapData(scenarioId).then(res=>{
                     this.echatData = res.result;
-                  //  console.log(res,"这是返回的relativebar数据");
+                   console.log(res,"这是返回的relativebar数据");
                     relativebarResult = JSON.parse(res.result);
                     $("#"+scenarioId).prev().find(".title").text(relativebarResult.title);
                     this.relativebarDom = this.$echarts.init(document.getElementById(scenarioId));
@@ -823,36 +838,46 @@
                     this.echatData = res.result;
                    // console.log(res,"这是返回的radar数据");
                     radarResult = JSON.parse(res.result);
+                    var title = radarResult.title;
+                    var subtitle = radarResult.subtitle;
+                    var legendData = radarResult.legendData;
+                    var seriesName = radarResult.seriesName;
+                    var seriesData = radarResult.seriesData;
+                    var indicator = radarResult.indicator;
+
                     $("#"+scenarioId).prev().find(".title").text(radarResult.title);
                     this.radarDom = this.$echarts.init(document.getElementById(scenarioId));
                     radar0ption = {
-                        title: {
-                            text: ''
-                        },
-                        tooltip: {},
-                        // legend: {
-                        //     data: radarResult.lengeData
-                        // },
-                        radar: {
-                            // shape: 'circle',
-                            name: {
-                                textStyle: {
-                                    color: '#fff',
-                                    backgroundColor: '#999',
-                                    borderRadius: 5,
-                                    padding: [3, 5]
-                                }
+                            title: {
+                                text: title,
+                                subtext: subtitle
                             },
-                            indicator: radarResult.lengeData
-                        },
-                        series: [{
-                            name: '预算 vs 开销（Budget vs spending）',
-                            type: 'radar',
-                            // areaStyle: {normal: {}},
-                            data : radarResult.value
-                        }],
-                        color:['#68c6e0','#9acc5d']
-                    };
+                            tooltip: {},
+                            legend: {
+                                data: legendData
+                            },
+                            radar: {
+                                name: {
+                                    textStyle: {
+                                        color: "#fff",
+                                        backgroundColor: "#999",
+                                        borderRadius: 3,
+                                        padding: [
+                                            3,
+                                            5
+                                        ]
+                                    }
+                                },
+                                indicator: indicator
+                            },
+                            "series": [
+                                {
+                                    name: seriesName,
+                                    type: "radar",
+                                    data: seriesData
+                                }
+                            ]
+                        };
                     this.radarDom.setOption(radar0ption);
                 })
             },
@@ -1042,7 +1067,11 @@
                         background: #000;
                         opacity: 0.3;
                     }
+
                     }
+                    /*.echatsContent{*/
+                         /*background: #fff;*/
+                     /*}*/
                 }
             }
         }

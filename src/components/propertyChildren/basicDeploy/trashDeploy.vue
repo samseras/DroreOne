@@ -228,8 +228,8 @@
             },
             async fixInfo (info) {
                 let index = info.location.includes(',')?info.location.indexOf(','):info.location.indexOf('，')
-                let latitude = info.location.substring(0, index)
-                let longitude = info.location.substring(index + 1)
+                let longitude= info.location.substring(0, index)
+                let latitude = info.location.substring(index + 1)
                 let trashObj = {
                     id: info.dustbinBean.id,
                     name: info.dustbinBean.name,
@@ -251,8 +251,8 @@
             },
             async addNewTrash (info) {
                 let index = info.location.includes(',')?info.location.indexOf(','):info.location.indexOf('，')
-                let latitude = info.location.substring(0, index)
-                let longitude = info.location.substring(index + 1)
+                let longitude= info.location.substring(0, index)
+                let latitude = info.location.substring(index + 1)
                 let trashObj = {
                     name: info.dustbinBean.name,
                     dustbinCount: info.dustbinBean.dustbinCount,
@@ -298,7 +298,7 @@
                     this.isShowLoading = false
                     this.trashList = res
                     for (let i = 0; i < this.trashList.length; i++) {
-                        this.trashList[i].location = `${this.trashList[i].latitude},${this.trashList[i].longitude}`
+                        this.trashList[i].location = `${this.trashList[i].longitude},${this.trashList[i].latitude}`
                         this.trashList[i].checked = false
                         this.trashList[i].status = true
                         this.trashList[i].id = this.trashList[i].dustbinBean.id

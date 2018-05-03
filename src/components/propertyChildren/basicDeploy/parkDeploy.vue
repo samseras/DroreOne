@@ -237,8 +237,8 @@
             },
             async fixInfo (info) {
                 let index = info.location.includes(',')?info.location.indexOf(','):info.location.indexOf('，')
-                let latitude = info.location.substring(0, index)
-                let longitude = info.location.substring(index + 1)
+                let longitude = info.location.substring(0, index)
+                let latitude = info.location.substring(index + 1)
                 let parkObj = {
                     id: info.parkingBean.id,
                     name: info.parkingBean.name,
@@ -259,8 +259,8 @@
             },
             async addNewPark (info) {
                 let index = info.location.includes(',')?info.location.indexOf(','):info.location.indexOf('，')
-                let latitude = info.location.substring(0, index)
-                let longitude = info.location.substring(index + 1)
+                let longitude = info.location.substring(0, index)
+                let latitude = info.location.substring(index + 1)
                 let parkObj = {
                     name: info.parkingBean.name,
                     capacity: info.parkingBean.capacity,
@@ -310,7 +310,7 @@
                         this.parkList[i].id = this.parkList[i].parkingBean.id
                         this.parkList[i].parkingBean.currentNum = this.currentNum
                         this.parkList[i].parkingBean.surplusNum = this.parkList[i].parkingBean.capacity - this.parkList[i].parkingBean.currentNum
-                        this.parkList[i].location = `${this.parkList[i].latitude},${this.parkList[i].longitude}`
+                        this.parkList[i].location = `${this.parkList[i].longitude},${this.parkList[i].latitude}`
                         if (this.parkList[i].parkingBean.capacity == 0 ){
                             this.parkList[i].parkingBean.state = '已满'
                         } else {
