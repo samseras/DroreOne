@@ -25,7 +25,7 @@
                             <li class="two">
                                 <div class="bigData">
                                     <div class="change"><a target="_blank" href="http://192.168.0.150:9527/analysis">大数据分析>><img src="../../../static/img/bagData.png"/></a></div>
-                                    <div class="dataCenter change" id="dataCenter"><a href="">数据中心>><img src="../../../static/img/dataCenter.png"/></a></div>
+                                    <router-link to="/property" class="change" id="property">数据中心>><img src="../../../static/img/dataCenter.png"/></router-link>
                                 </div>
                                 <div class="eye">
                                     <router-link to="/eye"  id="eye" class="change">全视之眼>><img src="../../../static/img/eye.png"/></router-link>
@@ -47,7 +47,7 @@
                 </el-carousel-item>
                 <el-carousel-item>
                     <div class="conversion">
-                        <router-link to="/property"  id="property" class="change">资产>><img src="../../../static/img/eye.png"/></router-link>
+
                     </div>
                 </el-carousel-item>
                 <el-carousel-item>
@@ -115,7 +115,7 @@
      #eye{width:66%;background:#3296d2;}
     .two .eye div:last-child{width:32%;background: #6f7dbc;}
     .two .bigData div:first-child{width:32%;background: #f6b75a;}
-    .two .bigData div:last-child{width:66%;background: #d9776a;}
+    .two .bigData #property{width:66%;background: #d9776a;}
 	#top .three{width: 33%;}
 	#top .three>div{width: 100%;height: 48%;margin-bottom: 10px;}
 	#top .three>div:first-child{background:#e6b000;}
@@ -139,7 +139,7 @@
    .change{box-shadow:0px 3px 8px rgba(0, 0, 0, 0.3);position: relative;}
    img{position: absolute;left: 40%;top: 40%;width: 25px;height: 25px;}
    #eye img{left: 33%;width: 100px;height: 30px;}
-   #dataCenter img{left: 40%;}
+   #property img{left: 40%;}
    #bee img{top: 44%;}
    .estate img,#dataCenter img,#GIS img{left:47%;}
 

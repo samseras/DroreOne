@@ -224,8 +224,8 @@
             },
             async fixInfo (info) {
                 let index = info.location.includes(',')?info.location.indexOf(','):info.location.indexOf('，')
-                let latitude = info.location.substring(0, index)
-                let longitude = info.location.substring(index + 1)
+                let longitude = info.location.substring(0, index)
+                let latitude = info.location.substring(index + 1)
                 let scenicObj = {
                     id: info.scenicspotBean.id,
                     name: info.scenicspotBean.name,
@@ -244,8 +244,8 @@
             },
             async addNewPerson (info) {
                 let index = info.location.includes(',')?info.location.indexOf(','):info.location.indexOf('，')
-                let latitude = info.location.substring(0, index)
-                let longitude = info.location.substring(index + 1)
+                let longitude = info.location.substring(0, index)
+                let latitude = info.location.substring(index + 1)
                 let scenicObj = {
                     name: info.scenicspotBean.name,
                     capacity: info.scenicspotBean.capacity,
@@ -291,7 +291,7 @@
                         this.scenicList[i].checked = false
                         this.scenicList[i].status = true
                         this.scenicList[i].id = this.scenicList[i].scenicspotBean.id
-                        this.scenicList[i].location = `${this.scenicList[i].latitude},${this.scenicList[i].longitude}`
+                        this.scenicList[i].location = `${this.scenicList[i].longitude},${this.scenicList[i].latitude}`
                         this.scenicList[i].scenicspotBean.currentNum = this.currentNum
                         // scenicspotBean.status
                         if (this.scenicList[i].scenicspotBean.capacity == 0) {

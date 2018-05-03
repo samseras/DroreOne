@@ -167,11 +167,11 @@
                 this.moveChart();
             },
             getEchats () {
-                console.log(this.getRefresh)
+                // console.log(this.getRefresh)
                 this.isShowLoading = true
                 let id = this.$route.params.id;
                 api.analyze.getStreamDataById(id).then(res=> {
-                    console.log(res,'nimeide ')
+                    // console.log(res,'nimeide ')
                     this.isShowloading = false;
                     this.echatList = res.result;
                     let scenarioId,chartId,chartDomH;
@@ -383,12 +383,18 @@
                 api.analyze.getScenarioMapData(scenarioId).then(res=>{
                     this.echatData = res.result;
                     pieResult = JSON.parse(res.result);
-                //    console.log(res,"这是返回的pie数据");
+                   console.log(pieResult,"这是返回的pie数据");
+                    var title = pieResult.title;
+                    var subtitle = pieResult.subtitle;
+                    var legendData = pieResult.legendData;
+                    var seriesName = pieResult.seriesName;
+                    var seriesData = pieResult.seriesData;
+                    var indicator = pieResult.indicator;
                     $("#"+scenarioId).prev().find(".title").text(pieResult.title);
                     this.pieDom = this.$echarts.init(document.getElementById(scenarioId));
                     pie0ption = {
                         title:{
-                            text:"",
+                            text:title,
                             textStyle : {
                                 color: '#fff',
                                 fontSize:18
@@ -400,24 +406,24 @@
                         },
 
                         legend: {
-                            formatter:  function(name){
-                                var total = 0;
-                                var target;
-                                for (var i = 0, l = pieResult.value.length; i < l; i++) {
-                                    total += pieResult.value[i].value;
-                                    if (pieResult.value[i].name == name) {
-                                        target = pieResult.value[i].value;
-                                        name = name;
-                                    }
-                                }
-                                return name + '' + ((target/total)*100).toFixed(0) + '%';
-                            },
+                            // formatter:  function(name){
+                            //     var total = 0;
+                            //     var target;
+                            //     for (var i = 0, l = pieResult.value.length; i < l; i++) {
+                            //         total += pieResult.value[i].value;
+                            //         if (pieResult.value[i].name == name) {
+                            //             target = pieResult.value[i].value;
+                            //             name = name;
+                            //         }
+                            //     }
+                            //     return name + '' + ((target/total)*100).toFixed(0) + '%';
+                            // },
                             icon: 'circle',
                             orient: 'vertical',
                             right: '7%',
                             top:'10%',
                             // bottom:'30px',
-                            data:pieResult.name,
+                            data:legendData,
                             textStyle:{color:"#949494"}
                         },
                         series : [
@@ -426,7 +432,7 @@
                                 type: 'pie',
                                 radius : '55%',
                                 center: ['38%','45%'],
-                                data:pieResult.value,
+                                data:seriesData,
                                 itemStyle: {
                                     emphasis: {
                                         shadowBlur: 10,
@@ -687,7 +693,7 @@
                 let relativebar0ption,relativebarResult;
                 api.analyze.getScenarioMapData(scenarioId).then(res=>{
                     this.echatData = res.result;
-                  //  console.log(res,"这是返回的relativebar数据");
+                   console.log(res,"这是返回的relativebar数据");
                     relativebarResult = JSON.parse(res.result);
                     $("#"+scenarioId).prev().find(".title").text(relativebarResult.title);
                     this.relativebarDom = this.$echarts.init(document.getElementById(scenarioId));
@@ -823,36 +829,46 @@
                     this.echatData = res.result;
                    // console.log(res,"这是返回的radar数据");
                     radarResult = JSON.parse(res.result);
+                    var title = radarResult.title;
+                    var subtitle = radarResult.subtitle;
+                    var legendData = radarResult.legendData;
+                    var seriesName = radarResult.seriesName;
+                    var seriesData = radarResult.seriesData;
+                    var indicator = radarResult.indicator;
+
                     $("#"+scenarioId).prev().find(".title").text(radarResult.title);
                     this.radarDom = this.$echarts.init(document.getElementById(scenarioId));
                     radar0ption = {
-                        title: {
-                            text: ''
-                        },
-                        tooltip: {},
-                        // legend: {
-                        //     data: radarResult.lengeData
-                        // },
-                        radar: {
-                            // shape: 'circle',
-                            name: {
-                                textStyle: {
-                                    color: '#fff',
-                                    backgroundColor: '#999',
-                                    borderRadius: 5,
-                                    padding: [3, 5]
-                                }
+                            title: {
+                                text: title,
+                                subtext: subtitle
                             },
-                            indicator: radarResult.lengeData
-                        },
-                        series: [{
-                            name: '预算 vs 开销（Budget vs spending）',
-                            type: 'radar',
-                            // areaStyle: {normal: {}},
-                            data : radarResult.value
-                        }],
-                        color:['#68c6e0','#9acc5d']
-                    };
+                            tooltip: {},
+                            legend: {
+                                data: legendData
+                            },
+                            radar: {
+                                name: {
+                                    textStyle: {
+                                        color: "#fff",
+                                        backgroundColor: "#999",
+                                        borderRadius: 3,
+                                        padding: [
+                                            3,
+                                            5
+                                        ]
+                                    }
+                                },
+                                indicator: indicator
+                            },
+                            "series": [
+                                {
+                                    name: seriesName,
+                                    type: "radar",
+                                    data: seriesData
+                                }
+                            ]
+                        };
                     this.radarDom.setOption(radar0ption);
                 })
             },
@@ -1042,7 +1058,11 @@
                         background: #000;
                         opacity: 0.3;
                     }
+
                     }
+                    /*.echatsContent{*/
+                         /*background: #fff;*/
+                     /*}*/
                 }
             }
         }

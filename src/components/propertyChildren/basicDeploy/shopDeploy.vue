@@ -228,8 +228,8 @@
             },
             async fixInfo (info) {
                 let index = info.location.includes(',')?info.location.indexOf(','):info.location.indexOf('，')
-                let latitude = info.location.substring(0, index)
-                let longitude = info.location.substring(index + 1)
+                let longitude= info.location.substring(0, index)
+                let latitude = info.location.substring(index + 1)
                 let shopObj = {
                     id: info.businessBean.id,
                     name: info.businessBean.name,
@@ -252,8 +252,8 @@
             },
             async addNewPerson (info) {
                 let index = info.location.includes(',')?info.location.indexOf(','):info.location.indexOf('，')
-                let latitude = info.location.substring(0, index)
-                let longitude = info.location.substring(index + 1)
+                let longitude= info.location.substring(0, index)
+                let latitude = info.location.substring(index + 1)
                 let shopObj = {
                     name: info.businessBean.name,
                     capacity: info.businessBean.capacity,
@@ -302,7 +302,7 @@
                         this.shopList[i].checked = false
                         this.shopList[i].status = true
                         this.shopList[i].id = this.shopList[i].businessBean.id
-                        this.shopList[i].location = `${this.shopList[i].latitude},${this.shopList[i].longitude}`
+                        this.shopList[i].location = `${this.shopList[i].longitude},${this.shopList[i].latitude}`
                         this.shopList[i].businessBean.currentNum = this.currentNum
                         if (this.shopList[i].businessBean.capacity == 0 ){
                             this.shopList[i].businessBean.state = '已满'

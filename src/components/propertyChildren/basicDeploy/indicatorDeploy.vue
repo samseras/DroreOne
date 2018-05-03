@@ -218,8 +218,8 @@
             },
             async fixInfo (info) {
                 let index = info.location.includes(',')?info.location.indexOf(','):info.location.indexOf('，')
-                let latitude = info.location.substring(0, index)
-                let longitude = info.location.substring(index + 1)
+                let longitude= info.location.substring(0, index)
+                let latitude = info.location.substring(index + 1)
                 let indicatorObj = {
                     id: info.signboardBean.id,
                     type: info.signboardBean.type,
@@ -239,8 +239,8 @@
             },
             async addNewIndicator (info) {
                 let index = info.location.includes(',')?info.location.indexOf(','):info.location.indexOf('，')
-                let latitude = info.location.substring(0, index)
-                let longitude = info.location.substring(index + 1)
+                let longitude = info.location.substring(0, index)
+                let latitude = info.location.substring(index + 1)
                 let indicatorObj = {
                     type: info.signboardBean.type,
                     regionId: info.regionId,
@@ -286,7 +286,7 @@
                         this.indicatorList[i].checked = false
                         this.indicatorList[i].status = true
                         this.indicatorList[i].id = this.indicatorList[i].signboardBean.id
-                        this.indicatorList[i].location = `${this.indicatorList[i].latitude},${this.indicatorList[i].longitude}`
+                        this.indicatorList[i].location = `${this.indicatorList[i].longitude},${this.indicatorList[i].latitude}`
                     }
                 }).catch(err => {
                     console.log(err)
