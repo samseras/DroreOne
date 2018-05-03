@@ -1139,7 +1139,8 @@
                 p{
                     margin-top: rem(8);
                     border-bottom: 1px solid #ccc;
-                    font-size: rem(12);
+                    font-size: rem(13);
+                    color:#606266;
                     .el-select{
                         width:rem(140);
                     }

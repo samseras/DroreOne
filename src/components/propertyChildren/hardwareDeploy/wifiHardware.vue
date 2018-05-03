@@ -159,6 +159,7 @@
                     mac:info.mac,
                     port:info.port,
                     regionId:info.regionId,
+                    jsonAttr:info.jsonAttr,
                     description:info.description,
                     latitude:latitude,
                     longitude:longitude
