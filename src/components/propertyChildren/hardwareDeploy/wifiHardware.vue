@@ -236,6 +236,7 @@
                     mac:info.mac,
                     regionId:info.regionId,
                     description:info.description,
+                    jsonAttr:info.jsonAttr,
                     latitude:latitude,
                     longitude:longitude
                 }]

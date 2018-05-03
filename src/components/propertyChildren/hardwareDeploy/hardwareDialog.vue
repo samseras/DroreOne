@@ -18,7 +18,7 @@
                     </p>
                     <p class="name">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称：<input type="text" v-model="camera.name"> </p>
                     <p class="manufacturer">型&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;号：
-                        <el-select name="" v-model="camera.model">
+                        <el-select name="" v-model="camera.model" @change="choseModel(camera.model)">
                             <el-option v-for="item in modelType"
                                        :value="item.id"
                                        :label="item.name">
@@ -154,11 +154,19 @@
                     </p>
                     <p class="name">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称：<input type="text" v-model="wifi.name"> </p>
                     <p class="version">型&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;号:
-                        <el-select name="" v-model="wifi.model">
+                        <el-select name="" v-model="wifi.model" @change="choseModel(wifi.model)">
                             <el-option v-for="item in modelType"
                                        :value="item.id"
                                        :label="item.name">
                             </el-option>
+                        </el-select>
+                    </p>
+                    <p class="model" v-if="modelExtend" v-for="item in extend">
+                        {{item.label}}:
+                        <input type="text" v-bind:class="item.name" v-model="item.value" v-if="item.type === 'STRING'">
+                        <el-select name="" v-model="item.value" v-if="item.type === 'BOOLEAN'" v-bind:class="item.name">
+                            <el-option value='是' label="是"></el-option>
+                            <el-option value='否' label="否"></el-option>
                         </el-select>
                     </p>
                     <p class="IP">设备I P ：<input type="text" v-model="wifi.ip"></p>
@@ -449,7 +457,9 @@
                    serialNum:'',
                    location:'',
                    regionId:'',
-                   description:''
+                   description:'',
+                   attributes:'',
+                   jsonAttr:''
                },
                monitors:{
                    sensorType:'',
@@ -503,10 +513,24 @@
                edit: false,
                cropper: false,
                src: {},
+               attribute:{},
+               extend:{},
+               content:[],
+               modelExtend : false
+
            }
        },
        methods:{
-
+           choseModel (item) {
+               console.log(item, '这是选择的')
+               console.log(this.modelType, '所有的')
+               this.attribute = this.modelType.filter(type => {
+                   return type.id === item
+               })
+               console.log(this.attribute[0].attributes, '过滤出来的')
+               this.extend = this.attribute[0].attributes
+               this.modelExtend = true
+           },
            saveLocation () {
                let locationString
                if (this.getLocation.length > 0) {
@@ -543,6 +567,13 @@
                }else if(this.route.includes('led')) {
                    newInfo = this.led
                }else if(this.route.includes('wifi')) {
+
+                   console.log(this.extend, '选择上的')
+                   this.obj = {}
+                   this.extend.forEach(item => {
+                       this.obj[item.name] = item.value
+                   })
+                   console.log(this.obj, '进来')
                    newInfo = this.wifi
                }else if(this.route.includes('monitors')) {
                    newInfo = this.monitors
@@ -553,15 +584,12 @@
                }else if(this.route.includes('police')) {
                    newInfo = this.police
                }
+               newInfo.jsonAttr = JSON.stringify(this.obj)
                newInfo.status=true
                newInfo.checked=false
                newInfo.imgUrl = this.src
-//               if(this.src.trim() ===''){
-//                   newInfo.imgUrl =''
-//               }else{
-//                   newInfo.imf
-//               }
 
+                console.log(newInfo.jsonAttr)
                if(this.Info.id){
                    newInfo.id=this.Info.id
                    this.$emit('fixInfo',newInfo)

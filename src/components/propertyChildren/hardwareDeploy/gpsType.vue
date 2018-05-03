@@ -48,6 +48,10 @@
         },
         created(){
             this.getGpsType()
+        },
+        components:{
+            ScrollContainer
+
         }
 
     }

@@ -48,6 +48,10 @@
         },
         created(){
             this.getMonitorType()
+        },
+        components:{
+            ScrollContainer
+
         }
 
     }
