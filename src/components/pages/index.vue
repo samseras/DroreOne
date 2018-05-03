@@ -116,7 +116,7 @@
      #eye{width:66%;background:#3296d2;}
     .two .eye div:last-child{width:32%;background: #6f7dbc;}
     .two .bigData div:first-child{width:32%;background: #f6b75a;}
-    .two .bigData #property{width:66%;background: #d9776a;}
+    .two .bigData div:last-child{width:66%;background: #d9776a;}
 	#top .three{width: 33%;}
 	#top .three>div{width: 100%;height: 48%;margin-bottom: 10px;}
 	#top .three>div:first-child{background:#e6b000;}
