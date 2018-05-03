@@ -26,7 +26,16 @@
             droreMap.init();
             droreMap.object.getMap().getLayers().getArray()[1].setVisible(false)
             let route = this.$route.path
-            if (route.includes('area-deploy')) {
+            if (route.includes('build')) {
+                droreMap.interaction.showMove()
+                this.getAllIndicator();//指示牌现有标注
+                this.getAllTrash();//垃圾桶现有标注
+                this.getAllScenic();//景点现有标注
+                this.getAllShop();//商圈现有标注
+                this.getAllPark();//停车场现有标注
+                this.getAllToilet();//卫生间现有标注
+                this.overView();//鹰眼
+            } else if (route.includes('area-deploy')) {
                 this.districtList();// 片区输出
                 this.district(); // 片区打点
             } else if (route.includes('roat-deploy')) {
@@ -78,8 +87,15 @@
                 }else {
                     this.getAllToiletEdit();// 卫生间修改
                 }
-            }else{
-                this.overView();//鹰眼
+            }else if (route.includes('lampLight-Hware'))  {
+                if(!this.getLocationId) {
+                    this.getAllLight();//路灯现有标注
+                    this.labelDot();// 路灯打点
+                }else {
+                    this.getAllLightEdit();// 路灯修改
+                }
+            }else {
+                this.labelDot();// 路灯打点
             }
         },
         methods:{
@@ -463,7 +479,42 @@
                     console.log(err, '请求失败')
                 })
             },
-
+            async getAllLight(){//路灯列表
+                await api.light.getAllLight().then((res)=>{
+                    this.lightList=res.devices
+                    for (let i=0;i<this.lightList.length;i++){
+                        this.lightList[i].location = [this.lightList[i].longitude,this.lightList[i].latitude]
+                        var icon1 = new droreMap.icon.Marker({
+                            coordinate: droreMap.trans.transFromWgsToLayer(this.lightList[i].location),
+                            name: this.lightList[i].name,
+                            subtype: "droreMapinit",
+                            id: this.lightList[i].id,
+                            url: "http://label.drore.com/gisLabelTabImage/public/defaults/24*24/shineiquanjing.png"
+                        });
+                        droreMap.icon.addChild(icon1);
+                    }
+                }).catch((err)=>{
+                    console.log(err)
+                })
+            },
+            async getAllLightEdit(){//路灯列表修改
+                await api.light.getAllLight().then((res)=>{
+                    this.lightList=res.devices
+                    for (let i=0;i<this.lightList.length;i++){
+                        this.lightList[i].location = [this.lightList[i].longitude,this.lightList[i].latitude]
+                        var icon1 = new droreMap.icon.Marker({
+                            coordinate: droreMap.trans.transFromWgsToLayer(this.lightList[i].location),
+                            name: this.lightList[i].name,
+                            subtype: "droreMapinit",
+                            id: this.lightList[i].id,
+                            url: "http://label.drore.com/gisLabelTabImage/public/defaults/24*24/shineiquanjing.png"
+                        });
+                        droreMap.icon.addChild(icon1);
+                    }
+                }).catch((err)=>{
+                    console.log(err)
+                })
+            },
 
 
 
