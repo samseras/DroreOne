@@ -215,8 +215,8 @@
             },
             async fixInfo (info) {
                 let index = info.location.includes(',')?info.location.indexOf(','):info.location.indexOf('，')
-                let latitude = info.location.substring(0, index)
-                let longitude = info.location.substring(index + 1)
+                let longitude = info.location.substring(0, index)
+                let latitude = info.location.substring(index + 1)
                 let toiletObj = {
                     id: info.toiletBean.id,
                     name: info.toiletBean.name,
@@ -236,8 +236,8 @@
             },
            async addNewToilet (info) {
                 let index = info.location.includes(',')?info.location.indexOf(','):info.location.indexOf('，')
-                let latitude = info.location.substring(0, index)
-                let longitude = info.location.substring(index + 1)
+                let longitude = info.location.substring(0, index)
+                let latitude = info.location.substring(index + 1)
                 let toiletObj = {
                     name: info.toiletBean.name,
                     regionId: info.regionId,
@@ -282,7 +282,7 @@
                     for (let i = 0; i < this.toiletList.length; i++) {
                         this.toiletList[i].checked = false
                         this.toiletList[i].status = true
-                        this.toiletList[i].location = `${this.toiletList[i].latitude},${this.toiletList[i].longitude}`
+                        this.toiletList[i].location = `${this.toiletList[i].longitude},${this.toiletList[i].latitude}`
                         this.toiletList[i].id = this.toiletList[i].toiletBean.id
                         this.toiletList[i].state = '正常'
                     }

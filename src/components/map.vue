@@ -36,12 +36,50 @@
                 }else {
                     this.roadListEidt();//修改路线
                 }
-            } else {
-                this.droreMapinit();// 循环输出点
-                this.labelDot();// 打点
+            } else if (route.includes('indicator-deploy'))  {
+                if(!this.getLocationId) {
+                    this.getAllIndicator();//指示牌现有标注
+                    this.labelDot();// 指示牌打点
+                }else {
+                    this.getAllIndicatorEdit();// 指示牌修改
+                }
+            } else if (route.includes('trash-deploy'))  {
+                if(!this.getLocationId) {
+                    this.getAllTrash();//垃圾桶现有标注
+                    this.labelDot();// 垃圾桶打点
+                }else {
+                    this.getAllTrashEdit();// 垃圾桶修改
+                }
+            } else if (route.includes('scenic-deploy'))  {
+                if(!this.getLocationId) {
+                    this.getAllScenic();//景点现有标注
+                    this.labelDot();// 景点打点
+                }else {
+                    this.getAllScenicEdit();// 景点修改
+                }
+            } else if (route.includes('shop-deploy'))  {
+                if(!this.getLocationId) {
+                    this.getAllShop();//商圈现有标注
+                    this.labelDot();// 商圈打点
+                }else {
+                    this.getAllShopEdit();// 商圈修改
+                }
+            } else if (route.includes('park-deploy'))  {
+                if(!this.getLocationId) {
+                    this.getAllPark();//停车场现有标注
+                    this.labelDot();// 停车场打点
+                }else {
+                    this.getAllParkEdit();// 停车场修改
+                }
+            }else if (route.includes('toilet-deploy'))  {
+                if(!this.getLocationId) {
+                    this.getAllToilet();//卫生间现有标注
+                    this.labelDot();// 卫生间打点
+                }else {
+                    this.getAllToiletEdit();// 卫生间修改
+                }
+            }else{
                 this.overView();//鹰眼
-                // this.roadList();// 路线输出
-                // this.road(); // 路线打点
             }
         },
         methods:{
@@ -52,29 +90,11 @@
                 'ROAT_LOCATION_STATE',
                 'MAP_ROAT_LOCATION'
             ]),
-            droreMapinit () {//循环输出点
-                droreMap.interaction.enableMapClick = true
-                droreMap.interaction.showMove()
-                for (var i = 0; i < 5; i++) {
-                    var icon1 = new droreMap.icon.Marker({
-                        coordinate: droreMap.trans.transFromWgsToLayer([120.06672090248588 + i / 1000, 30.281761130844714 + i / 1000]),
-                        name: "droreMapinit" + i,
-                        subtype: "droreMapinit",
-                        id: "12214_" + i,
-                        url: "http://label.drore.com/gisLabelTabImage/public/defaults/24*24/shineiquanjing.png"
-                    });
-                    droreMap.icon.addChild(icon1);
-                    // icon1.showName = true
-                    icon1.onclick(function(e) {
-                        console.log(e)
-                    });
-                }
-            },
             labelDot(){//打点标注
                 let that = this
                 var icon = new droreMap.icon.Marker({
                     coordinate: [0,0],
-                    name:  "test",
+                    name:  "标注",
                     subtype: "labelDot",
                     id: "12214_",
                     url: "/static/img/location.png",
@@ -88,12 +108,399 @@
                 })
                 droreMap.event.DragEvent(function(tabInfor) {
                     var data = tabInfor.data
+                    console.log(data.data.id)
                     if(data.data.id === '12214_'){
                         console.log(droreMap.trans.transLayerToWgs(data.end));
                         that.$store.commit('MAP_LOCATION', droreMap.trans.transLayerToWgs(data.end))
                     }
                 })
             },
+            async getAllIndicator () {//指示牌
+                await api.indicator.getAllIndicator().then(res => {
+                    this.indicatorList = res
+                    for (let i = 0; i < this.indicatorList.length; i++) {
+                        this.indicatorList[i].location = [this.indicatorList[i].longitude,this.indicatorList[i].latitude]
+                        var icon1 = new droreMap.icon.Marker({
+                            coordinate: droreMap.trans.transFromWgsToLayer(this.indicatorList[i].location),
+                            name: this.indicatorList[i].regionName,
+                            subtype: "droreMapinit",
+                            id: this.indicatorList[i].signboardBean.id,
+                            url: "http://label.drore.com/gisLabelTabImage/public/defaults/24*24/shineiquanjing.png"
+                        });
+                        droreMap.icon.addChild(icon1);
+                    }
+                }).catch(err => {
+                    console.log(err)
+                })
+            },
+
+            async getAllIndicatorEdit () {//指示牌修改
+                await api.indicator.getAllIndicator().then(res => {
+                    this.indicatorList = res
+                    for (let i = 0; i < this.indicatorList.length; i++) {
+                        if(this.indicatorList[i].signboardBean.id === this.getLocationId){
+                            this.indicatorList[i].location = [this.indicatorList[i].longitude,this.indicatorList[i].latitude]
+                            var iconedit = new droreMap.icon.Marker({
+                                coordinate: droreMap.trans.transFromWgsToLayer(this.indicatorList[i].location),
+                                name: this.indicatorList[i].regionName,
+                                subtype: "droreMapinit",
+                                id: this.indicatorList[i].signboardBean.id,
+                                url: "/static/img/location_on.png"
+                            });
+                            droreMap.icon.addChild(iconedit);
+                            droreMap.interaction.ifDrag = true;
+                            let that =this
+                            droreMap.event.DragEvent(function(tabInfor) {
+                                var data = tabInfor.data
+                                if(data.data.id === that.getLocationId){
+                                    console.log(droreMap.trans.transLayerToWgs(data.end));
+                                    that.$store.commit('MAP_LOCATION', droreMap.trans.transLayerToWgs(data.end))
+                                }
+                            })
+                        }else{
+                            this.indicatorList[i].location = [this.indicatorList[i].longitude,this.indicatorList[i].latitude]
+                            var icon1 = new droreMap.icon.Marker({
+                                coordinate: droreMap.trans.transFromWgsToLayer(this.indicatorList[i].location),
+                                name: this.indicatorList[i].regionName,
+                                subtype: "droreMapinit",
+                                id: this.indicatorList[i].signboardBean.id,
+                                url: "http://label.drore.com/gisLabelTabImage/public/defaults/24*24/shineiquanjing.png"
+                            });
+                            droreMap.icon.addChild(icon1);
+                        }
+                    }
+                }).catch(err => {
+                    console.log(err)
+                })
+            },
+            async getAllTrash () { //垃圾桶现有标注
+                await api.dustbin.getAllDustbin().then(res => {
+                    this.trashList = res
+                    for (let i = 0; i < this.trashList.length; i++) {
+                        this.trashList[i].location = [this.trashList[i].longitude,this.trashList[i].latitude]
+                        var icon1 = new droreMap.icon.Marker({
+                            coordinate: droreMap.trans.transFromWgsToLayer(this.trashList[i].location),
+                            name: this.trashList[i].dustbinBean.name,
+                            subtype: "droreMapinit",
+                            id: this.trashList[i].dustbinBean.id,
+                            url: "http://label.drore.com/gisLabelTabImage/public/defaults/24*24/shineiquanjing.png"
+                        });
+                        droreMap.icon.addChild(icon1);
+                    }
+                }).catch(err => {
+                    console.log(err)
+                    this.isShowLoading = false
+                })
+            },
+            async getAllTrashEdit () { //垃圾桶现有标注修改
+                await api.dustbin.getAllDustbin().then(res => {
+                    this.trashList = res
+                    for (let i = 0; i < this.trashList.length; i++) {
+                        if(this.trashList[i].dustbinBean.id === this.getLocationId){
+                            this.trashList[i].location = [this.trashList[i].longitude,this.trashList[i].latitude]
+                            var iconedit = new droreMap.icon.Marker({
+                                coordinate: droreMap.trans.transFromWgsToLayer(this.trashList[i].location),
+                                name: this.trashList[i].dustbinBean.name,
+                                subtype: "droreMapinit",
+                                id: this.trashList[i].dustbinBean.id,
+                                url: "/static/img/location_on.png"
+                            });
+                            droreMap.icon.addChild(iconedit);
+                            droreMap.interaction.ifDrag = true;
+                            let that =this
+                            droreMap.event.DragEvent(function(tabInfor) {
+                                var data = tabInfor.data
+                                if(data.data.id === that.getLocationId){
+                                    console.log(droreMap.trans.transLayerToWgs(data.end));
+                                    that.$store.commit('MAP_LOCATION', droreMap.trans.transLayerToWgs(data.end))
+                                }
+                            })
+                        }else{
+                            this.trashList[i].location = [this.trashList[i].longitude,this.trashList[i].latitude]
+                            var icon1 = new droreMap.icon.Marker({
+                                coordinate: droreMap.trans.transFromWgsToLayer(this.trashList[i].location),
+                                name: this.trashList[i].dustbinBean.name,
+                                subtype: "droreMapinit",
+                                id: this.trashList[i].dustbinBean.id,
+                                url: "http://label.drore.com/gisLabelTabImage/public/defaults/24*24/shineiquanjing.png"
+                            });
+                            droreMap.icon.addChild(icon1);
+                        }
+                    }
+                }).catch(err => {
+                    console.log(err)
+                    this.isShowLoading = false
+                })
+            },
+            async getAllScenic () {//景点列表
+                await api.scenic.getAllScenic().then((res) => {
+                    this.scenicList = res
+                    for (let i = 0; i < this.scenicList.length; i++) {
+                        this.scenicList[i].location = [this.scenicList[i].longitude,this.scenicList[i].latitude]
+                        var icon1 = new droreMap.icon.Marker({
+                            coordinate: droreMap.trans.transFromWgsToLayer(this.scenicList[i].location),
+                            name: this.scenicList[i].scenicspotBean.name,
+                            subtype: "droreMapinit",
+                            id: this.scenicList[i].scenicspotBean.id,
+                            url: "http://label.drore.com/gisLabelTabImage/public/defaults/24*24/shineiquanjing.png"
+                        });
+                        droreMap.icon.addChild(icon1);
+                    }
+                }).catch((err)=> {
+                    console.log(err)
+                    this.isShowLoading = false
+                })
+            },
+            async getAllScenicEdit () {//景点列表修改
+                await api.scenic.getAllScenic().then((res) => {
+                    this.scenicList = res
+                    for (let i = 0; i < this.scenicList.length; i++) {
+                        if(this.scenicList[i].scenicspotBean.id === this.getLocationId){
+                            this.scenicList[i].location = [this.scenicList[i].longitude,this.scenicList[i].latitude]
+                            var iconedit = new droreMap.icon.Marker({
+                                coordinate: droreMap.trans.transFromWgsToLayer(this.scenicList[i].location),
+                                name: this.scenicList[i].scenicspotBean.name,
+                                subtype: "droreMapinit",
+                                id: this.scenicList[i].scenicspotBean.id,
+                                url: "/static/img/location_on.png"
+                            });
+                            droreMap.icon.addChild(iconedit);
+                            droreMap.interaction.ifDrag = true;
+                            let that =this
+                            droreMap.event.DragEvent(function(tabInfor) {
+                                var data = tabInfor.data
+                                if(data.data.id === that.getLocationId){
+                                    console.log(droreMap.trans.transLayerToWgs(data.end));
+                                    that.$store.commit('MAP_LOCATION', droreMap.trans.transLayerToWgs(data.end))
+                                }
+                            })
+                        }else {
+                            this.scenicList[i].location = [this.scenicList[i].longitude, this.scenicList[i].latitude]
+                            var icon1 = new droreMap.icon.Marker({
+                                coordinate: droreMap.trans.transFromWgsToLayer(this.scenicList[i].location),
+                                name: this.scenicList[i].scenicspotBean.name,
+                                subtype: "droreMapinit",
+                                id: this.scenicList[i].scenicspotBean.id,
+                                url: "http://label.drore.com/gisLabelTabImage/public/defaults/24*24/shineiquanjing.png"
+                            });
+                            droreMap.icon.addChild(icon1)
+                        }
+                    }
+                }).catch((err)=> {
+                    console.log(err)
+                    this.isShowLoading = false
+                })
+            },
+            async getAllShop () { //商圈列表
+                await api.shop.getAllShop().then(res => {
+                    this.shopList = res
+                    for (let i = 0; i < this.shopList.length; i++) {
+                        this.shopList[i].location = [this.shopList[i].longitude,this.shopList[i].latitude]
+                        var icon1 = new droreMap.icon.Marker({
+                            coordinate: droreMap.trans.transFromWgsToLayer(this.shopList[i].location),
+                            name: this.shopList[i].businessBean.name,
+                            subtype: "droreMapinit",
+                            id: this.shopList[i].businessBean.id,
+                            url: "http://label.drore.com/gisLabelTabImage/public/defaults/24*24/shineiquanjing.png"
+                        });
+                        droreMap.icon.addChild(icon1);
+                    }
+                }).catch(err => {
+                    console.log(err)
+                })
+            },
+            async getAllShopEdit () { //商圈列表
+                await api.shop.getAllShop().then(res => {
+                    this.shopList = res
+                    for (let i = 0; i < this.shopList.length; i++) {
+                        if(this.shopList[i].businessBean.id === this.getLocationId){
+                            this.shopList[i].location = [this.shopList[i].longitude,this.shopList[i].latitude]
+                            var iconedit = new droreMap.icon.Marker({
+                                coordinate: droreMap.trans.transFromWgsToLayer(this.shopList[i].location),
+                                name: this.shopList[i].businessBean.name,
+                                subtype: "droreMapinit",
+                                id: this.shopList[i].businessBean.id,
+                                url: "/static/img/location_on.png"
+                            });
+                            droreMap.icon.addChild(iconedit);
+                            droreMap.interaction.ifDrag = true;
+                            let that =this
+                            droreMap.event.DragEvent(function(tabInfor) {
+                                var data = tabInfor.data
+                                if(data.data.id === that.getLocationId){
+                                    console.log(droreMap.trans.transLayerToWgs(data.end));
+                                    that.$store.commit('MAP_LOCATION', droreMap.trans.transLayerToWgs(data.end))
+                                }
+                            })
+                        }else {
+                            this.shopList[i].location = [this.shopList[i].longitude, this.shopList[i].latitude]
+                            var icon1 = new droreMap.icon.Marker({
+                                coordinate: droreMap.trans.transFromWgsToLayer(this.shopList[i].location),
+                                name: this.shopList[i].businessBean.name,
+                                subtype: "droreMapinit",
+                                id: this.shopList[i].businessBean.id,
+                                url: "http://label.drore.com/gisLabelTabImage/public/defaults/24*24/shineiquanjing.png"
+                            });
+                            droreMap.icon.addChild(icon1);
+                        }
+                    }
+                }).catch(err => {
+                    console.log(err)
+                })
+            },
+            async getAllPark () {//停车场列表
+                await api.park.getAllPark().then(res => {
+                    this.parkList = res
+                    for (let i = 0; i < this.parkList.length; i++) {
+                        this.parkList[i].location = [this.parkList[i].longitude,this.parkList[i].latitude]
+                        var icon1 = new droreMap.icon.Marker({
+                            coordinate: droreMap.trans.transFromWgsToLayer(this.parkList[i].location),
+                            name: this.parkList[i].parkingBean.name,
+                            subtype: "droreMapinit",
+                            id: this.parkList[i].parkingBean.id,
+                            url: "http://label.drore.com/gisLabelTabImage/public/defaults/24*24/shineiquanjing.png"
+                        });
+                        droreMap.icon.addChild(icon1);
+                    }
+                }).catch(err => {
+                    console.log(err)
+                })
+            },
+            async getAllParkEdit () {//停车场列表
+                await api.park.getAllPark().then(res => {
+                    this.parkList = res
+                    for (let i = 0; i < this.parkList.length; i++) {
+                        if(this.parkList[i].parkingBean.id === this.getLocationId){
+                            this.parkList[i].location = [this.parkList[i].longitude,this.parkList[i].latitude]
+                            var iconedit = new droreMap.icon.Marker({
+                                coordinate: droreMap.trans.transFromWgsToLayer(this.parkList[i].location),
+                                name: this.parkList[i].parkingBean.name,
+                                subtype: "droreMapinit",
+                                id: this.parkList[i].parkingBean.id,
+                                url: "/static/img/location_on.png"
+                            });
+                            droreMap.icon.addChild(iconedit);
+                            droreMap.interaction.ifDrag = true;
+                            let that =this
+                            droreMap.event.DragEvent(function(tabInfor) {
+                                var data = tabInfor.data
+                                if(data.data.id === that.getLocationId){
+                                    console.log(droreMap.trans.transLayerToWgs(data.end));
+                                    that.$store.commit('MAP_LOCATION', droreMap.trans.transLayerToWgs(data.end))
+                                }
+                            })
+                        }else {
+                            this.parkList[i].location = [this.parkList[i].longitude, this.parkList[i].latitude]
+                            var icon1 = new droreMap.icon.Marker({
+                                coordinate: droreMap.trans.transFromWgsToLayer(this.parkList[i].location),
+                                name: this.parkList[i].parkingBean.name,
+                                subtype: "droreMapinit",
+                                id: this.parkList[i].parkingBean.id,
+                                url: "http://label.drore.com/gisLabelTabImage/public/defaults/24*24/shineiquanjing.png"
+                            });
+                            droreMap.icon.addChild(icon1);
+                        }
+                    }
+                }).catch(err => {
+                    console.log(err)
+                })
+            },
+
+            async getAllToilet () {//卫生间列表
+                await api.toilet.getAllToilet().then(res => {
+                    this.toiletList = res
+                    for (let i = 0; i < this.toiletList.length; i++) {
+                        this.toiletList[i].location = [this.toiletList[i].longitude,this.toiletList[i].latitude]
+                        var icon1 = new droreMap.icon.Marker({
+                            coordinate: droreMap.trans.transFromWgsToLayer(this.toiletList[i].location),
+                            name: this.toiletList[i].toiletBean.name,
+                            subtype: "droreMapinit",
+                            id: this.toiletList[i].toiletBean.id,
+                            url: "http://label.drore.com/gisLabelTabImage/public/defaults/24*24/shineiquanjing.png"
+                        });
+                        droreMap.icon.addChild(icon1);
+                    }
+                }).catch(err => {
+                    console.log(err, '请求失败')
+                })
+            },
+            async getAllToiletEdit () {//卫生间列表修改
+                await api.toilet.getAllToilet().then(res => {
+                    this.toiletList = res
+                    for (let i = 0; i < this.toiletList.length; i++) {
+                        if(this.toiletList[i].toiletBean.id === this.getLocationId){
+                            this.toiletList[i].location = [this.toiletList[i].longitude,this.toiletList[i].latitude]
+                            var iconedit = new droreMap.icon.Marker({
+                                coordinate: droreMap.trans.transFromWgsToLayer(this.toiletList[i].location),
+                                name: this.toiletList[i].toiletBean.name,
+                                subtype: "droreMapinit",
+                                id: this.toiletList[i].toiletBean.id,
+                                url: "/static/img/location_on.png"
+                            });
+                            droreMap.icon.addChild(iconedit);
+                            droreMap.interaction.ifDrag = true;
+                            let that =this
+                            droreMap.event.DragEvent(function(tabInfor) {
+                                var data = tabInfor.data
+                                if(data.data.id === that.getLocationId){
+                                    console.log(droreMap.trans.transLayerToWgs(data.end));
+                                    that.$store.commit('MAP_LOCATION', droreMap.trans.transLayerToWgs(data.end))
+                                }
+                            })
+                        }else {
+                            this.toiletList[i].location = [this.toiletList[i].longitude, this.toiletList[i].latitude]
+                            var icon1 = new droreMap.icon.Marker({
+                                coordinate: droreMap.trans.transFromWgsToLayer(this.toiletList[i].location),
+                                name: this.toiletList[i].toiletBean.name,
+                                subtype: "droreMapinit",
+                                id: this.toiletList[i].toiletBean.id,
+                                url: "http://label.drore.com/gisLabelTabImage/public/defaults/24*24/shineiquanjing.png"
+                            });
+                            droreMap.icon.addChild(icon1);
+                        }
+                    }
+                }).catch(err => {
+                    console.log(err, '请求失败')
+                })
+            },
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
             districtList(){//区域划分列表
                 var areaEvets =new droreMap.area.DrawLayer("areaList",'rgba(255, 255, 255, 0.2)',"red")
                 var area = [[[13367097.46117307, 3538046.3202072824],[13367065.280655375, 3537992.907176161],[13367162.817494417, 3537967.030051136],[13367217.225797825, 3538042.007350074],[13367174.097243965, 3538076.510178126],[13367174.0972439651,3538076.510178126],[13367097.46117307, 3538046.3202072824]]]
@@ -222,7 +629,6 @@
             },
             async getAllRoatedit () {
                 await api.roat.getAllRoat().then(res => {
-                    console.log(res, '编辑请求路网成功')
                     for (var i = 0; i < res.length; i++) {
                         if(res[i].id === this.getLocationId){
                             var areaEvts =new droreMap.road.RoadLayer('ROUTE_show', 'red', 'red')
