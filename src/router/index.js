@@ -41,12 +41,17 @@ import HomePage from '@/components/homePage'
 
 import Deploy from '@/components/deploy'
 
-//资产
+//数据中心
 import Property from '@/components/property'
 import ProBasicMenu from '@/components/propertyChildren/basicMenu'
 import HardWareMenu from '@/components/propertyChildren/hardWareMenu'
 import BasicType from '@/components/propertyChildren/basicDeploy/basicType'
 import HardWareType from '@/components/propertyChildren/hardwareDeploy/hardWareType'
+//建筑
+import BuildingMenu from '@/components/propertyChildren/buildingMenu'
+import BuildingType from '@/components/propertyChildren/buildingDeploy/buildingType'
+import LandmarkBuilding from '@/components/propertyChildren/buildingDeploy/landmarkBuilding'
+import ServiceBuilding from '@/components/propertyChildren/buildingDeploy/serviceBuilding'
 import wifiType from '@/components/propertyChildren/hardwareDeploy/wifiType'          //wifi型号
 import broadcastType from '@/components/propertyChildren/hardwareDeploy/broadcastType'//广播型号
 import cameraType from '@/components/propertyChildren/hardwareDeploy/cameraType'    //摄像头型号
@@ -56,7 +61,6 @@ import gateType from '@/components/propertyChildren/hardwareDeploy/gateType'    
 import lightType from '@/components/propertyChildren/hardwareDeploy/lightType'      //路灯型号
 import policeType from '@/components/propertyChildren/hardwareDeploy/policeType'    //报警柱型号
 import gpsType from '@/components/propertyChildren/hardwareDeploy/gpsType'          //GPS型号
-
 
 
 import AreaDeploy from '@/components/propertyChildren/basicDeploy/areaDeploy'       //片区
@@ -94,11 +98,13 @@ import dispatchRecord from '@/components/eye/deployChildren/recordDeploy/dispatc
 import PersonPlat from '@/components/person'
 import PersonType from '@/components/personChildren/personType'
 
+
+
 Vue.use(Router)
 const routes = [
     {
       path: '/',
-      redirect: '/index',
+      redirect: '/drore_one',
       component: Index
     },
     {
@@ -107,7 +113,7 @@ const routes = [
     },
       // 主页面
     {
-      path: '/index',
+      path: '/drore_one',
       component: Index
     },
     {
@@ -250,6 +256,17 @@ const routes = [
                 children: [
                     {path: '/person/personType', name: "PersonType", component: PersonType},
                     { path: '/person/:id',name: 'PersonDeploy', component:PersonDeploy }
+                ]
+            },
+            {
+                path: '/building',
+                name: BuildingMenu,
+                component: BuildingMenu,
+                redirect: '/building/buildType',
+                children: [
+                    {path: '/building/buildType', name: "BuildingType", component: BuildingType},
+                    {path: '/building/landmarkBuild',name: 'LandmarkBuilding', component:LandmarkBuilding },
+                    {path: '/building/serviceBuild',name: 'ServiceBuilding', component:ServiceBuilding }
                 ]
             }
         ]

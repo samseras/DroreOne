@@ -76,7 +76,7 @@
                             <el-checkbox v-model="item.checked" @change="checked(item.id)" class="checkBtn"></el-checkbox>
                         </div>
                         <div class="personType" @click.stop="showBroadDetail(item,'广播信息')">
-                            <img src="../../../../static/img/cameras.png" alt="">
+                            <img src="../../../../static/img/broadcast.svg" alt="">
                             <span class="name">
                                   {{item.name}}
                                 </span>

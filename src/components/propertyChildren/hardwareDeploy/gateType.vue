@@ -48,6 +48,10 @@
         },
         created(){
             this.getGateType()
+        },
+        components:{
+            ScrollContainer
+
         }
 
     }

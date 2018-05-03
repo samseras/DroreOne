@@ -8,6 +8,7 @@ const map = {
     },
     getters: {
         getJobTypeList (state) {
+            console.log(state.jobType, '这是从vuex里边拿到的')
             return state.jobType
         }
     },

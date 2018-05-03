@@ -150,6 +150,7 @@
                     model:info.model,
                     serialNum:info.serialNum,
                     ip:info.ip,
+                    port:info.port,
                     regionId:info.regionId,
                     description:info.description,
                     latitude:latitude,
@@ -226,6 +227,7 @@
                     serialNum:info.serialNum,
                     ip:info.ip,
                     regionId:info.regionId,
+                    port:info.port,
                     description:info.description,
                     latitude:latitude,
                     longitude:longitude

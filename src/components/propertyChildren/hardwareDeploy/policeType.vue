@@ -48,6 +48,10 @@
         },
         created(){
             this.getPoliceType()
+        },
+        components:{
+            ScrollContainer
+
         }
 
     }

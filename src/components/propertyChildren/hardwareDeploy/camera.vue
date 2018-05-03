@@ -8,8 +8,8 @@
             <el-button size="mini" plain @click="addNewInfo"><i class="el-icon-circle-plus"></i>添加</el-button>
 
             <el-checkbox v-model="isSelected" @change="selectedAll"  class='selectedAll' >全选</el-checkbox>
-            <el-button size="mini" plain>导入</el-button>
-            <el-button size="mini" plain>导出</el-button>
+            <el-button size="mini" plain @click="uploadFile">导入</el-button>
+            <el-button size="mini" plain @click="downloadFile">导出</el-button>
             <el-button size="mini"plain @click="deleteCard"><i class="el-icon-delete"></i>删除</el-button>
             <el-button size="mini"plain @click="fixCard"><i class="el-icon-edit-outline"></i>修改</el-button>
         </div>
@@ -85,6 +85,12 @@
             },
             deleteCard(){
                 this.$emit('deletInfo')
+            },
+            uploadFile(){
+                this.$emit('uploadInfo')
+            },
+            downloadFile(id){
+                this.$emit('downloadInfo',id)
             },
             toggleList(type){
                 this.$emit('toggleList',type)

@@ -48,6 +48,10 @@
         },
         created(){
             this.getLedType()
+        },
+        components:{
+            ScrollContainer
+
         }
 
     }
