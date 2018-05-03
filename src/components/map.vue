@@ -36,6 +36,7 @@
                 this.getAllToilet();//卫生间现有标注
                 this.overView();//鹰眼
             }else if (route.includes('broad')) {
+                droreMap.interaction.enableMapClick = true
                 // droreMap.interaction.showMove()
                 this.getAllLight();//路灯现有标注
                 this.getAllGate();//闸机现有标注
@@ -53,7 +54,7 @@
                 }else {
                     this.districtList();// 片区输出
                 }
-            } else if (route.includes('roat-deploy','roat-deploy')) {
+            } else if (route.includes('roat-deploy','security-Dmis')) {
                 if(!this.getLocationId){
                     this.roadList();// 路线输出
                     this.road(); // 路线打点
@@ -555,6 +556,9 @@
                             url: "http://label.drore.com/gisLabelTabImage/public/defaults/24*24/ludeng.png"
                         });
                         droreMap.icon.addChild(icon1);
+                        icon1.onclick(function(e) {
+                            console.log(e.data);
+                        });
                     }
                 }).catch((err)=>{
                     console.log(err)
