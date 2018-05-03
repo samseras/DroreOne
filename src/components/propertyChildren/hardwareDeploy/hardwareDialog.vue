@@ -170,6 +170,8 @@
                         </el-select>
                     </p>
                     <p class="IP">设备I P ：<input type="text" v-model="wifi.ip"></p>
+
+                    <p class="IP">设备端口 ：<input type="text" v-model="wifi.port"></p>
                     <p class="mac">M a c：<input type="text" v-model="wifi.mac"></p>
                     <p class="host">设备编号：<input type="text" v-model="wifi.serialNum"></p>
                     <p class="place">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  置：<span>{{wifi.location}}</span>
@@ -340,6 +342,7 @@
                         </el-select>
                     </p>
                     <p class="host">设备编号：<input type="text" v-model="police.serialNum"></p>
+                    <p class="port">设备端口：<input type="text" v-model="police.port"></p>
                     <p class="IP">设备I P ：<input type="text" v-model="police.ip"></p>
 
                     <p class="place">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  置：<span>{{police.location}}</span>
@@ -459,7 +462,8 @@
                    regionId:'',
                    description:'',
                    attributes:'',
-                   jsonAttr:''
+                   jsonAttr:'',
+                   port:''
                },
                monitors:{
                    sensorType:'',
@@ -499,7 +503,8 @@
                    ip:'',
                    location:'',
                    regionId:'',
-                   description:''
+                   description:'',
+                   port:''
                },
                hardwaretype: {
                    hardName: '',
@@ -571,6 +576,7 @@
                    console.log(this.extend, '选择上的')
                    this.obj = {}
                    this.extend.forEach(item => {
+                       console.log(item)
                        this.obj[item.name] = item.value
                    })
                    console.log(this.obj, '进来')
