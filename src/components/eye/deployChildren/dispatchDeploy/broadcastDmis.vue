@@ -71,7 +71,7 @@
                               @closeInfoDialog ="visible = false"
                               @fixInfo = "fixInfo"
                               :title = "title"
-                              @addNewInfo="addNewPerson">
+                              @saveNewInfo="addNewPerson">
                 </PersonDetail>
 
             </div>
@@ -198,10 +198,7 @@
                 this.choseList = this.areaList
             },
             addNewPerson (info) {
-                console.log(info)
-                info.id = new Date().getTime()
-                this.areaList.push(info)
-                this.choseList = this.areaList
+                console.log(info, '这是要添加的')
             },
             fixedInfo (info,title) {
                 this.broadCastInfo = info

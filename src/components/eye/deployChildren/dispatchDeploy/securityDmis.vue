@@ -48,7 +48,7 @@
                             </template>
                         </el-table-column>
                         <el-table-column
-                            prop="line"
+                            prop="routeName"
                             label="线路">
                         </el-table-column>
                         <el-table-column label="操作" width="200">

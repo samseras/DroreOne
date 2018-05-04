@@ -1,5 +1,5 @@
 <template>
-    <div class="detailDialog">
+    <div class="dmisDialog">
         <el-dialog
             :title="title"
             :visible="visible"
@@ -431,8 +431,10 @@
                     }
                     newInfo = this.security
                 } else if(this.route.includes('broadcast')) {
-                    this.broadcast.executetime = this.definedTime;
-                    newInfo = this.broadcast
+                    if (!this.broadList.broadcastSchedule.customizedDays) {
+                        this.broadList.broadcastSchedule.days = this.filterList.join()
+                    }
+                    newInfo = this.broadList
                 } else if(this.route.includes('lamppost')) {
                     if (!this.lamppost.lightSchedule.customizedDays) {
                         this.lamppost.lightSchedule.days = this.filterList.join()
@@ -635,7 +637,7 @@
     }
 </script>
 <style lang="scss">
-    .detailDialog{
+    .dmisDialog{
         width: 100%;
         height: 100%;
         .el-dialog .el-dialog--center{
@@ -762,13 +764,20 @@
             border-top: 1px solid #ccc;
             margin-top: rem(15);
         }
-    }
-    .el-select-dropdown__item span{
-        font-size: rem(12);
+        .el-checkbox__label{
+            font-size: rem(12);
+            padding-left: rem(7);
+        }
+        .el-checkbox+.el-checkbox{
+            margin-left: rem(10);
+        }
+        .el-select-dropdown__item span{
+            font-size: rem(12);
+        }
     }
 </style>
 <style lang="scss" scoped type="text/scss">
-    .detailDialog{
+    .dmisDialog{
         .card{
             width: 100%;
             height: 100%;
@@ -866,11 +875,5 @@
     }
 </style>
 <style lang="scss">
-    .el-checkbox__label{
-        font-size: rem(12);
-        padding-left: rem(7);
-    }
-    .el-checkbox+.el-checkbox{
-        margin-left: rem(10);
-    }
+
 </style>
