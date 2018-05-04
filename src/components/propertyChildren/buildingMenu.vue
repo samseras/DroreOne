@@ -79,7 +79,6 @@
             width: rem(20);
             height: rem(20);
             vertical-align: middle;
-            background: red;
             margin-right: rem(5);
         }
     }

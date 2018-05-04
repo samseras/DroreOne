@@ -74,7 +74,7 @@
         methods: {
             getscreen(){
                  this.fullHeight = window.innerHeight;
-                 this.fullWidth = window.innerWidth;
+                 this.fullWidth = window.innerWidth-90;
             },
             fullscreen(){
                 this.isBigScreen = !this.isBigScreen;
@@ -90,7 +90,7 @@
                 for(let i=0;i<this.echatList.length;i++){
                     changeH = this.echatList[i].pos_height/100;
                     changeW = this.echatList[i].pos_width/100;
-                    $($(".echatsContent")[i]).css({"height":this.fullHeight*changeH-20+"px","width":this.fullWidth*changeW-50+"px"});
+                    $($(".echatsContent")[i]).css({"height":this.fullHeight*changeH+"px","width":this.fullWidth*changeW-12+"px"});
                 };
                 this.moveChart();
             },
@@ -107,7 +107,7 @@
                     for(let i=0;i<this.echatList.length;i++){
                         changeH = this.echatList[i].pos_height/100;
                         changeW = this.echatList[i].pos_width/100;
-                        $($(".echatsContent")[i]).css({"height":this.chartH*changeH-32+"px","width":this.chartW*changeW+"px"});
+                            $($(".echatsContent")[i]).css({"height":this.full*changeH-42+"px","width":this.chartW*changeW-7+"px"});
                     };
                     this.moveChart();
                 }
@@ -146,7 +146,7 @@
                 for(let i=0;i<this.echatList.length;i++){
                     changeH = this.echatList[i].pos_height/100;
                     changeW = this.echatList[i].pos_width/100;
-                    $($(".echatsContent")[i]).css({"width":this.fullWidth*changeW-150+"px"});
+                    $($(".echatsContent")[i]).css({"width":this.chartW*changeW-7+"px"});
                 };
                 this.moveChart();
             },
@@ -162,7 +162,7 @@
                 for(let i=0;i<this.echatList.length;i++){
                     changeH = this.echatList[i].pos_height/100;
                     changeW = this.echatList[i].pos_width/100;
-                    $($(".echatsContent")[i]).css({"width":this.fullWidth*changeW-50+"px"});
+                    $($(".echatsContent")[i]).css({"width":this.fullWidth*changeW-12+"px"});
                 };
                 this.moveChart();
             },
@@ -252,9 +252,9 @@
                     this.kind = res.result;
                      let kindName = res.result;
                      if(this.isAllScreen){
-                          chartDomHpx = this.fullHeight*chartDomH-10+"px";
+                          chartDomHpx = this.fullHeight*chartDomH-42+"px";
                      }else {
-                          chartDomHpx = this.chartH*chartDomH-32+"px";
+                          chartDomHpx = this.chartH*chartDomH-42+"px";
                      }
                     $("#"+scenarioId).css("height",chartDomHpx);
                     switch(kindName) {
@@ -307,12 +307,17 @@
                     var valueName = barResult.valueName;
                     var nameArray = new Array();
                     nameArray[0] = valueName;
+                    if(barResult.subtitle==''){
+                        var colors = ['#5abdff'];
+                    }else {
+                        var colors = barResult.subtitle;
+                    }
                     $("#"+scenarioId).prev().find(".title").text(barResult.title);
                     this.barDom = this.$echarts.init(document.getElementById(scenarioId));
                     bar0ption={
                         title:{
-                            text:title,
-                            subtext:subtitle,
+                            text:'',
+                            subtext:'',
                             textStyle : {
                                 color: '#fff',
                                 fontSize:18
@@ -368,7 +373,7 @@
                                 data:seriesData,
                                 itemStyle:{
                                     normal:{
-                                        color:'#9a57b4',
+                                        color: colors,
                                         borderType:'dotted',
                                         barBorderRadius:5
                                     }
@@ -403,7 +408,7 @@
                     this.pieDom = this.$echarts.init(document.getElementById(scenarioId));
                     pie0ption = {
                         title:{
-                            text:title,
+                            text:'',
                             textStyle : {
                                 color: '#fff',
                                 fontSize:18
@@ -462,51 +467,55 @@
                     this.echatData = res.result;
                     roseResult = JSON.parse(res.result);
                  //   console.log(res,"这是返回的rose数据");
+                    var title = roseResult.title;
+                    var legendData = roseResult.legendData;
+                    var seriesData = roseResult.seriesData;
+                    var nameColumn = roseResult.nameColumn;
                     $("#"+scenarioId).prev().find(".title").text(roseResult.title);
                     this.roseDom = this.$echarts.init(document.getElementById(scenarioId));
                     rose0ption={
-                        title : {
-                            text: '',
-                            x:'center'
-                        },
-                        tooltip : {
-                            trigger: 'item',
-                            formatter: "{a} <br/>{b} : {c} ({d}%)"
-                        },
-                        legend: {
-                            left:'5%',
-                            top:'10%',
-                            data:roseResult.name,
-                            orient: 'vertical'
-                        },
-                        calculable : true,
-                        series : [
-                            {
-                                name:'半径模式',
-                                type:'pie',
-                                radius : ['30%', '70%'],
-                                center : ['55%', '45%'],
-                                roseType : 'radius',
-                                label: {
-                                    normal: {
-                                        show: false
+                            title : {
+                                text: '',
+                                x:'center'
+                            },
+                            tooltip : {
+                                trigger: 'item',
+                                formatter: "{a} <br/>{b} : {c} ({d}%)"
+                            },
+                            legend: {
+                                left:'5%',
+                                top:'8%',
+                                data:legendData,
+                                orient: 'vertical'
+                            },
+                            calculable : true,
+                            series : [
+                                {
+                                    name:nameColumn,
+                                    type:'pie',
+                                    radius : [30, 70],
+                                    center : ['55%', '45%'],
+                                    roseType : 'area',
+                                    label: {
+                                        normal: {
+                                            show: true
+                                        },
+                                        emphasis: {
+                                            show: true
+                                        }
                                     },
-                                    emphasis: {
-                                        show: true
-                                    }
-                                },
-                                lableLine: {
-                                    normal: {
-                                        show: false
+                                    lableLine: {
+                                        normal: {
+                                            show: true
+                                        },
+                                        emphasis: {
+                                            show: true
+                                        }
                                     },
-                                    emphasis: {
-                                        show: true
-                                    }
-                                },
-                                data:roseResult.value
-                            }
+                                    data:seriesData
+                                }
 
-                        ]
+                            ]
                     };
                     this.roseDom.setOption(rose0ption);
                 })
@@ -660,6 +669,9 @@
                     this.echatData = res.result;
                  //   console.log(res,"这是返回的ring数据");
                     ringResult = JSON.parse(res.result);
+                    var legendData = ringResult.legendData;
+                    var seriesData = ringResult.seriesData;
+                    var nameColumn = ringResult.nameColumn;
                     $("#"+scenarioId).prev().find(".title").text(ringResult.title);
                     this.ringDom = this.$echarts.init(document.getElementById(scenarioId));
                     ring0ption = {
@@ -669,16 +681,16 @@
                         },
                         legend: {
                             orient: 'vertical',
-                            top:'3%',
-                            left:'5%',
-                            data:ringResult.name
+                            top:'11%',
+                            left:'3%',
+                            data:legendData
                         },
                         series: [
                             {
-                                name:'访问来源',
+                                name:nameColumn,
                                 type:'pie',
                                 radius: ['50%', '70%'],
-                                avoidLabelOverlap: false,
+                                avoidLabelOverlap: true,
                                 label: {
                                     normal: {
                                         show: false,
@@ -697,7 +709,7 @@
                                         show: false
                                     }
                                 },
-                                data:ringResult.value
+                                data:seriesData
                             }
                         ],
                         color:['yellowgreen','cornflowerblue','darkgoldenrod','blueviolet','hotpink']
@@ -859,7 +871,9 @@
                             },
                             tooltip: {},
                             legend: {
-                                data: legendData
+                                data: legendData,
+                                x: 'left',
+                                orient: 'vertical',
                             },
                             radar: {
                                 name: {
@@ -892,7 +906,7 @@
                 }
                 if (localStorage.getItem('REFRESHTIME')){
                     let time = localStorage.getItem('REFRESHTIME')
-                    if (new Date().getTime() - time > this.getRefresh * 10){
+                    if (new Date().getTime() - time > this.getRefresh){
                         this.getEchats()
                         localStorage.setItem('REFRESHTIME',new Date().getTime())
                     }
@@ -918,9 +932,9 @@
             ...mapGetters(['getRefresh'])
         },
         mounted: function () {
-            setInterval(this.getRefreshTime,10000)
+            setInterval(this.getRefreshTime,5000)
             this.chartH = this.$refs.content.getBoundingClientRect().height;
-            this.chartW = this.$refs.content.getBoundingClientRect().width;
+            this.chartW = this.$refs.content.getBoundingClientRect().width-15;
             let that=this
             window.onresize = function(){
                 that.showList();
@@ -943,7 +957,7 @@
     .passengerFlow{
         width: 100%;
         height: 100%;
-        padding: rem(20) rem(30);
+        padding: rem(20) rem(20);
         box-sizing: border-box;
         /*background:  #174984;*/
         i{
@@ -972,9 +986,9 @@
             min-height: rem(545);
             /*flex-direction: column;*/
             .rankBtn{
-                position: absolute;
-                top:rem(0);
-                right: rem(0);
+                position: fixed;
+                top:rem(70);
+                right: rem(10);
                 width: rem(25);
                 height: rem(25);
                 padding: 0;
@@ -1026,24 +1040,25 @@
                 /*}*/
                 .echatsForm{
                     position: absolute;
-                    border: 1px solid #ccc;
+                    /*border: 1px solid #eee;*/
                     float: left;
-                    box-sizing: border-box;
-                    margin-bottom: rem(20);
                     border-radius: rem(5);
+                    padding:0 rem(10) rem(10) 0;
+                    box-sizing: border-box;
                     .echatsTitle{
                         width: 100%;
                         padding: rem(5) rem(10);
                         box-sizing: border-box;
                         text-align: left;
-                        color: #222;
+                        color: #666;
                         /*border-bottom: 1px solid #ccc;*/
-                        background: #f2f2f2;
+                        background: #f6f6f6;
                         border-radius: rem(5);
                         border-bottom-right-radius: rem(0);
                         border-bottom-left-radius: rem(0);
                         p{
                             display: inline-block;
+                            font-size: rem(14);
                         }
                         .echatsBtn{
                             display: inline-block;
@@ -1074,9 +1089,11 @@
                     }
 
                     }
-                    /*.echatsContent{*/
-                         /*background: #fff;*/
-                     /*}*/
+                    .echatsContent{
+                        border: 1px solid #eee;
+                        border-top: none;
+                        background: #fff;
+                     }
                 }
             }
         }
