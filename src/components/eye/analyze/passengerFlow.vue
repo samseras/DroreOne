@@ -73,8 +73,8 @@
         props:['listName'],
         methods: {
             getscreen(){
-                 this.fullHeight = window.innerHeight;
-                 this.fullWidth = window.innerWidth-90;
+                 this.fullHeight = window.innerHeight-40;
+                 this.fullWidth = window.innerWidth-70;
             },
             fullscreen(){
                 this.isBigScreen = !this.isBigScreen;
@@ -90,9 +90,9 @@
                 for(let i=0;i<this.echatList.length;i++){
                     changeH = this.echatList[i].pos_height/100;
                     changeW = this.echatList[i].pos_width/100;
-                    $($(".echatsContent")[i]).css({"height":this.fullHeight*changeH+"px","width":this.fullWidth*changeW-12+"px"});
+                    $($(".echatsContent")[i]).css({"height":this.fullHeight*changeH-22+"px","width":this.fullWidth*changeW-12+"px"});
+                    this.moveChart();
                 };
-                this.moveChart();
             },
             showList(){
                 if(!this.checkFull()){
@@ -107,9 +107,9 @@
                     for(let i=0;i<this.echatList.length;i++){
                         changeH = this.echatList[i].pos_height/100;
                         changeW = this.echatList[i].pos_width/100;
-                            $($(".echatsContent")[i]).css({"height":this.full*changeH-42+"px","width":this.chartW*changeW-7+"px"});
+                            $($(".echatsContent")[i]).css({"height":this.chartH*changeH-42+"px","width":this.chartW*changeW-7+"px"});
+                        this.moveChart();
                     };
-                    this.moveChart();
                 }
             },
             checkFull(){
@@ -147,8 +147,9 @@
                     changeH = this.echatList[i].pos_height/100;
                     changeW = this.echatList[i].pos_width/100;
                     $($(".echatsContent")[i]).css({"width":this.chartW*changeW-7+"px"});
+                    this.moveChart();
                 };
-                this.moveChart();
+
             },
             packUp(){
                 this.isSetOut = !this.isSetOut;
@@ -163,8 +164,8 @@
                     changeH = this.echatList[i].pos_height/100;
                     changeW = this.echatList[i].pos_width/100;
                     $($(".echatsContent")[i]).css({"width":this.fullWidth*changeW-12+"px"});
+                    this.moveChart();
                 };
-                this.moveChart();
             },
             getEchats () {
                 // console.log(this.getRefresh)
@@ -251,9 +252,11 @@
                     let chartDomHpx;
                     this.kind = res.result;
                      let kindName = res.result;
-                     if(this.isAllScreen){
-                          chartDomHpx = this.fullHeight*chartDomH-42+"px";
+                     if(this.isBigScreen){
+                          chartDomHpx = this.fullHeight*chartDomH-22+"px";
+                         console.log('全屏')
                      }else {
+                         console.log('小品')
                           chartDomHpx = this.chartH*chartDomH-42+"px";
                      }
                     $("#"+scenarioId).css("height",chartDomHpx);
@@ -323,6 +326,12 @@
                                 fontSize:18
                             }
                         },
+                        tooltip : {
+                            trigger: 'axis',
+                            axisPointer : {            // 坐标轴指示器，坐标轴触发有效
+                                type : 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+                            }
+                        },
                         legend:{//图例组件
                             /* orient:'vertical',*/
                             data:nameArray,
@@ -378,14 +387,14 @@
                                         barBorderRadius:5
                                     }
                                 },
-                                //图形上的文本标签
-                                label:{
-                                    normal:{
-                                        show:true,
-                                        position:'top',
-                                        color:'#949494'
-                                    }
-                                }
+                                // //图形上的文本标签
+                                // label:{
+                                //     normal:{
+                                //         show:true,
+                                //         position:'top',
+                                //         color:'#949494'
+                                //     }
+                                // }
                             }
                         ]
                     };
@@ -442,7 +451,7 @@
                         },
                         series : [
                             {
-                                name: '',
+                                name: title,
                                 type: 'pie',
                                 radius : '55%',
                                 center: ['38%','45%'],
@@ -491,7 +500,7 @@
                             calculable : true,
                             series : [
                                 {
-                                    name:nameColumn,
+                                    name:title,
                                     type:'pie',
                                     radius : [30, 70],
                                     center : ['55%', '45%'],
@@ -597,6 +606,7 @@
                     this.echatData = res.result;
                     lineResult = JSON.parse(res.result);
                     // console.log(lineResult,"这是返回的line数据");
+                    var title = lineResult.title;
                     var legendData = lineResult.legendData;
                     var seriesData = lineResult.seriesData;
                     $("#"+scenarioId).prev().find(".title").text(lineResult.title);
@@ -606,6 +616,9 @@
                             text: '',
                             //subtext: subtitle,
                             x: 'center'
+                        },
+                        tooltip: {
+                            trigger: 'axis'
                         },
                         grid: {
                             left: '5%',
@@ -623,6 +636,7 @@
                             type: 'value'
                         },
                         series: [{
+                            name:title,
                             data: seriesData,
                             type: 'line',
                             markPoint: {
@@ -672,6 +686,7 @@
                     var legendData = ringResult.legendData;
                     var seriesData = ringResult.seriesData;
                     var nameColumn = ringResult.nameColumn;
+                    var title = ringResult.title;
                     $("#"+scenarioId).prev().find(".title").text(ringResult.title);
                     this.ringDom = this.$echarts.init(document.getElementById(scenarioId));
                     ring0ption = {
@@ -687,7 +702,7 @@
                         },
                         series: [
                             {
-                                name:nameColumn,
+                                name:title,
                                 type:'pie',
                                 radius: ['50%', '70%'],
                                 avoidLabelOverlap: true,
@@ -932,7 +947,8 @@
             ...mapGetters(['getRefresh'])
         },
         mounted: function () {
-            setInterval(this.getRefreshTime,5000)
+            setInterval(this.getRefreshTime,this.getRefresh)
+            console.log(this.getRefresh,'qweqwe')
             this.chartH = this.$refs.content.getBoundingClientRect().height;
             this.chartW = this.$refs.content.getBoundingClientRect().width-15;
             let that=this
