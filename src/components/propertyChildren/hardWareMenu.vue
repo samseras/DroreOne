@@ -158,14 +158,15 @@
         padding: rem(0) !important;
         padding-left: rem(20) !important;
         font-size: rem(14);
-        img {
-            display: inline-block;
-            width: rem(20);
-            height: rem(20);
-            vertical-align: middle;
-           /* background: red;*/
-            margin-right: rem(5);
-        }
+    img{
+        display: inline-block;
+        width: rem(18);
+        height: rem(18);
+        vertical-align: middle;
+        margin-right: rem(5);
+        margin-left: rem(5);
+        margin-top: rem(-4);
+    }
     }
     .hardwareMenu .el-submenu__title{
         img{

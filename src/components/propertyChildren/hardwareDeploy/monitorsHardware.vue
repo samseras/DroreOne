@@ -74,7 +74,7 @@
 
                         </div>
                         <div class="personType" @click.stop="showMonitorDetail(item,'传感器信息')">
-                            <img src="../../../../static/img/cameras.png" alt="">
+                            <img src="../../../../static/img/environmentCard.png" alt="">
                             <span class="type">
                                   {{item.name}}
                                 </span>
@@ -349,13 +349,12 @@
         display:flex;
         flex-direction:column;
         .title{
-            width:100%;
-            padding:rem(5) 0 rem(5) rem(15);
+            width: 100%;
+            padding: rem(16) 0 rem(17) rem(15);
             box-sizing: border-box;
-            font-size:rem(16);
-            color:#0086b3;
-            font-weight:500;
-            border-bottom:1px solid #ccc;
+            font-size: rem(16);
+            color: #26bbf0;
+            border-bottom:  1px solid #ccc;
         }
         .cameraContent{
             flex:1;
@@ -368,7 +367,7 @@
                 width:100%;
                 height:rem(30);
                 margin-top:rem(10);
-                border-bottom: 1px solid #a13309;
+                border-bottom: 2px solid #e44b4e;
             }
             .cameraList{
                 width:100%;
@@ -407,7 +406,7 @@
                         img{
                             width:rem(40);
                             height:rem(40);
-                            border:2px solid #2c3b47;
+
                             border-radius: 50%;
                             position:absolute;
                             left:rem(15);

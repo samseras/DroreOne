@@ -224,7 +224,7 @@
             }
             .cardForm{
                 i{
-                    color: #a13309;
+                    color: #e44b4e;
                 }
             }
         }

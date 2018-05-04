@@ -313,14 +313,13 @@
         height: 100%;
         display: flex;
         flex-direction: column;
-        .title {
+        .title{
             width: 100%;
             padding: rem(16) 0 rem(17) rem(15);
             box-sizing: border-box;
             font-size: rem(16);
-            color: #4ac4f2;
-            font-weight: 600;
-            border-bottom: 1px solid #ccc;
+            color: #26bbf0;
+            border-bottom:  1px solid #ccc;
         }
         .personContent {
             flex: 1;
