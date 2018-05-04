@@ -53,7 +53,7 @@
                             <el-checkbox v-model="item.checked" @change="checked(item.id)" class="checkBtn"></el-checkbox>
                         </div>
                         <div class="personType" @click.stop="showPersonDetail(item, '路网信息')">
-                            <img src="" alt="">
+                            <img src="../../../../static/img/loadCard.png" alt="">
                             <span class="type">
                                   {{item.name}}
                                 </span>
@@ -369,7 +369,7 @@
                             position: absolute;
                             left: rem(15);
                             top: rem(-10);
-                            background: red;
+
                         }
                         span{
                             float: right;

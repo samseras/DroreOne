@@ -70,7 +70,7 @@
                             <el-checkbox v-model="item.checked" @change="checked(item.id)" class="checkBtn"></el-checkbox>
                         </div>
                         <div class="personType" @click.stop="showPersonDetail(item,'摄像头信息')">
-                            <img src="../../../../static/img/cameras.png" alt="">
+                            <img src="../../../../static/img/cameraCard.png" alt="">
                             <span class="type">
                                   {{item.name}}
                             </span>
@@ -410,7 +410,7 @@
                         img{
                             width:rem(40);
                             height:rem(40);
-                            border:1px solid #a1b3bb;
+
                             border-radius: 50%;
                             position:absolute;
                             left:rem(15);

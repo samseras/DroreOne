@@ -76,7 +76,7 @@
                             <el-checkbox v-model="item.checked" @change="checked(item.id)" class="checkBtn"></el-checkbox>
                         </div>
                         <div class="personType" @click.stop="showParkDetail(item, '停车场信息')">
-                            <img :src="item.picturePath" alt="">
+                            <img src="../../../../static/img/parkCard.png" alt="">
                             <span class="type">
                                   {{item.parkingBean.name}}
                                 </span>
@@ -415,7 +415,7 @@
                             position: absolute;
                             left: rem(15);
                             top: rem(-10);
-                            background: red;
+
                         }
                         span{
                             float: right;
