@@ -77,7 +77,7 @@
                             <el-checkbox v-model="item.checked" @change="checked(item.id)" class="checkBtn"></el-checkbox>
                         </div>
                         <div class="personType" @click.stop="showWifiDetail(item,'WIFI信息')">
-                            <img src="../../../../static/img/cameras.png" alt="">
+                            <img src="../../../../static/img/wifiCard.png" alt="">
                             <span class="name">
                                   {{item.name}}
                                 </span>
@@ -430,7 +430,7 @@
                         img{
                             width:rem(40);
                             height:rem(40);
-                            border:2px solid #2c3b47;
+
                             border-radius: 50%;
                             position:absolute;
                             left:rem(15);

@@ -61,7 +61,7 @@
                             <el-checkbox v-model="item.checked" @change="checked(item.id)" class="checkBtn"></el-checkbox>
                         </div>
                         <div class="personType" @click.stop="showPersonDetail(item, '卫生间信息')">
-                            <img :src="item.picturePath" alt="">
+                            <img src="../../../../static/img/toiletCard.png" alt="">
                             <span class="type">
                                   {{item.toiletBean.name}}
                                 </span>
@@ -381,7 +381,7 @@
                             position: absolute;
                             left: rem(15);
                             top: rem(-10);
-                            background: red;
+
                         }
                         span{
                             float: right;

@@ -74,7 +74,7 @@
 
                         </div>
                         <div class="personType" @click.stop="showMonitorDetail(item,'传感器信息')">
-                            <img src="../../../../static/img/cameras.png" alt="">
+                            <img src="../../../../static/img/environmentCard.png" alt="">
                             <span class="type">
                                   {{item.name}}
                                 </span>
@@ -406,7 +406,7 @@
                         img{
                             width:rem(40);
                             height:rem(40);
-                            border:2px solid #2c3b47;
+
                             border-radius: 50%;
                             position:absolute;
                             left:rem(15);

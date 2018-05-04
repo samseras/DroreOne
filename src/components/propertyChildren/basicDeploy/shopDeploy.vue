@@ -74,7 +74,7 @@
                             <el-checkbox v-model="item.checked" @change="checked(item.id)" class="checkBtn"></el-checkbox>
                         </div>
                         <div class="personType" :class="getClass(item.businessBean.businessTypeId)" @click.stop="showPersonDetail(item, '商圈信息')">
-                            <img :src="item.picturePath" alt="">
+                            <img src="../../../../static/img/businesCard.png" alt="">
                             <span class="type">
                                   {{item.businessBean.name}}
                                 </span>
@@ -435,7 +435,7 @@
                             position: absolute;
                             left: rem(15);
                             top: rem(-10);
-                            background: red;
+
                         }
                         span{
                             float: right;
