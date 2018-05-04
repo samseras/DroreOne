@@ -517,6 +517,13 @@
                console.log(this.attribute[0].attributes, '过滤出来的')
                this.extend = this.attribute[0].attributes
                this.modelExtend = true
+
+               this.obj = {}
+               this.extend.forEach(item => {
+                   console.log(item)
+                   this.obj[item.name] = item.value
+               })
+               console.log(this.obj, '进来')
            },
            saveLocation () {
                let locationString
@@ -556,12 +563,7 @@
                }else if(this.route.includes('wifi')) {
 
                    console.log(this.extend, '选择上的')
-                   this.obj = {}
-                   this.extend.forEach(item => {
-                       console.log(item)
-                       this.obj[item.name] = item.value
-                   })
-                   console.log(this.obj, '进来')
+
                    newInfo = this.wifi
                }else if(this.route.includes('monitors')) {
                    newInfo = this.monitors

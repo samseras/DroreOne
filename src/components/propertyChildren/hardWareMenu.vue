@@ -165,6 +165,7 @@
             vertical-align: middle;
            /* background: red;*/
             margin-right: rem(5);
+            margin-left:rem(7);
         }
     }
     .hardwareMenu .el-submenu__title{
