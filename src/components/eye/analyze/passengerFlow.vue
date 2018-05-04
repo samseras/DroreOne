@@ -90,7 +90,7 @@
                 for(let i=0;i<this.echatList.length;i++){
                     changeH = this.echatList[i].pos_height/100;
                     changeW = this.echatList[i].pos_width/100;
-                    $($(".echatsContent")[i]).css({"height":this.fullHeight*changeH-32+"px","width":this.fullWidth*changeW-12+"px"});
+                    $($(".echatsContent")[i]).css({"height":this.fullHeight*changeH+"px","width":this.fullWidth*changeW-12+"px"});
                 };
                 this.moveChart();
             },
@@ -107,7 +107,7 @@
                     for(let i=0;i<this.echatList.length;i++){
                         changeH = this.echatList[i].pos_height/100;
                         changeW = this.echatList[i].pos_width/100;
-                            $($(".echatsContent")[i]).css({"height":this.chartH*changeH-42+"px","width":this.chartW*changeW-7+"px"});
+                            $($(".echatsContent")[i]).css({"height":this.full*changeH-42+"px","width":this.chartW*changeW-7+"px"});
                     };
                     this.moveChart();
                 }
@@ -307,12 +307,17 @@
                     var valueName = barResult.valueName;
                     var nameArray = new Array();
                     nameArray[0] = valueName;
+                    if(barResult.subtitle==''){
+                        var colors = ['#5abdff'];
+                    }else {
+                        var colors = barResult.subtitle;
+                    }
                     $("#"+scenarioId).prev().find(".title").text(barResult.title);
                     this.barDom = this.$echarts.init(document.getElementById(scenarioId));
                     bar0ption={
                         title:{
-                            text:title,
-                            subtext:subtitle,
+                            text:'',
+                            subtext:'',
                             textStyle : {
                                 color: '#fff',
                                 fontSize:18
@@ -368,10 +373,7 @@
                                 data:seriesData,
                                 itemStyle:{
                                     normal:{
-                                        color: function () {
-                                            var colors = ['#fda67e', '#81cacc', '#cca8ba', "#88cc81", "#82a0c5", '#fddb7e', '#735ba1', '#bda29a', '#6e7074', '#546570', '#c4ccd3'];
-                                            return colors[parseInt(Math.random() * 1)];
-                                        },
+                                        color: colors,
                                         borderType:'dotted',
                                         barBorderRadius:5
                                     }
@@ -406,7 +408,7 @@
                     this.pieDom = this.$echarts.init(document.getElementById(scenarioId));
                     pie0ption = {
                         title:{
-                            text:title,
+                            text:'',
                             textStyle : {
                                 color: '#fff',
                                 fontSize:18
@@ -667,7 +669,6 @@
                     this.echatData = res.result;
                  //   console.log(res,"这是返回的ring数据");
                     ringResult = JSON.parse(res.result);
-                    var title = ringResult.title;
                     var legendData = ringResult.legendData;
                     var seriesData = ringResult.seriesData;
                     var nameColumn = ringResult.nameColumn;
@@ -931,7 +932,7 @@
             ...mapGetters(['getRefresh'])
         },
         mounted: function () {
-            setInterval(this.getRefreshTime,this.getRefresh)
+            setInterval(this.getRefreshTime,5000)
             this.chartH = this.$refs.content.getBoundingClientRect().height;
             this.chartW = this.$refs.content.getBoundingClientRect().width-15;
             let that=this
@@ -956,7 +957,7 @@
     .passengerFlow{
         width: 100%;
         height: 100%;
-        padding: rem(20) rem(30);
+        padding: rem(20) rem(20);
         box-sizing: border-box;
         /*background:  #174984;*/
         i{
@@ -985,9 +986,9 @@
             min-height: rem(545);
             /*flex-direction: column;*/
             .rankBtn{
-                position: absolute;
-                top:rem(0);
-                right: rem(0);
+                position: fixed;
+                top:rem(70);
+                right: rem(10);
                 width: rem(25);
                 height: rem(25);
                 padding: 0;
