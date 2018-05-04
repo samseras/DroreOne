@@ -73,7 +73,7 @@
                                          class="checkBtn"></el-checkbox>
                         </div>
                         <div class="personType" @click.stop="showPersonDetail(item, '人员信息')">
-                            <img :src="item.picturePath" alt="">
+                            <img :src="getUrl(item.pictureId,item.jobId)" alt="">
                             <span class="type">
                                   {{item.jobName}}
                                 </span>
@@ -126,6 +126,40 @@
             }
         },
         methods: {
+            getUrl (url,id) {
+                if (url === '') {
+                    console.log(url, 'ioioioio')
+                    switch (id) {
+                        case '1': {
+                            return './../../../static/img/driveCard.png';
+                            break
+                        }
+                        case '2': {
+                            return './../../../static/img/boatCard.png';
+                            break
+                        }
+                        case '3': {
+                            return './../../../static/img/clearCard.png';
+                            break
+                        }
+                        case '4': {
+                            return './../../../static/img/clearCard.png';
+                            break
+                        }
+                        case '5': {
+                            return './../../../static/img/saleTrickCard.png';
+                            break
+                        }
+                        case '6': {
+                            return './../../../static/img/trickCard.png';
+                            break
+                        }
+
+                    }
+                } else {
+                    return url
+                }
+            },
             handleSelectionChange(val) {
                 this.multipleSelection = val;
             },
