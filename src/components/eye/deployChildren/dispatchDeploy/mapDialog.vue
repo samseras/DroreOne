@@ -2,16 +2,17 @@
     <div class="mapDialog">
         <el-dialog
             :visible="visible"
-            title="添加片区范围"
+            title="巡更路线图"
             :before-close="closeMapDialog"
             width="50%"
             class="dialog map_Dialog"
             center>
+            <p>路线名称： <input type="text" v-model="name"></p>
             <div class="map">
                 <Map></Map>
             </div>
             <div class=""slot="footer" class="dialog-footer cardFooter">
-                <el-button size="mini" class="hold" @click="">保存</el-button>
+                <el-button size="mini" class="hold" @click="saveRoat">保存</el-button>
                 <el-button size="mini" @click = 'closeMapDialog'>取消</el-button>
             </div>
         </el-dialog>
@@ -20,6 +21,8 @@
 
 <script>
     import Map from '@/components/map'
+    import api from '@/api'
+    import {mapGetters} from 'vuex'
     export default {
         props: ['visible'],
         name: "map-dialog",
@@ -31,12 +34,31 @@
         methods: {
             closeMapDialog () {
                 this.$emit('closeMapDialog')
+            },
+            saveRoat () {
+                let roatObj = {
+                    name: this.name,
+                    geo: {
+                        type:"LineString",
+                        coordinates: this.getRoatLocation
+                    }
+                }
+                api.roat.createRoat(JSON.stringify(roatObj)).then(res => {
+                    console.log(res, '创建成功')
+                    this.$message.success('创建成功')
+                }).catch(err => {
+                    this.$message.error(err.message)
+                })
+
             }
         },
         created () {
         },
         components : {
             Map
+        },
+        computed: {
+            ...mapGetters(['getRoatLocation'])
         }
     }
 </script>
@@ -88,6 +110,20 @@
                 height: rem(400);
                 background: yellowgreen;
                 border-radius: rem(5);
+            }
+            p{
+                width: 100%;
+                height: rem(20);
+                font-size: rem(12);
+                border-bottom: 1px solid #ccc;
+                margin-bottom: 1px;
+                input{
+                    border: none;
+                    list-style: none;
+                    outline: none;
+                    font-size: rem(12);
+                    padding-left: rem(10);
+                }
             }
         }
     }

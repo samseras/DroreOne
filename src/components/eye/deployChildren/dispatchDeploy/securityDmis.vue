@@ -84,7 +84,7 @@
                               @closeInfoDialog ="visible = false"
                               @fixInfo = "fixInfo"
                               :title="title"
-                              @addNewInfo="addNewPerson">
+                              @saveNewInfo="addNewPerson">
                 </PersonDetail>
             </div>
         </div>
@@ -199,19 +199,65 @@
                 })
             },
             fixInfo (info) {
-                console.log(info, 'wertyuio')
-                let list = this.areaList
-                for(let i = 0;i< list.length; i++){
-                    if (info.id === list[i].id) {
-                        this.areaList[i] = info
-                    }
+                let obj = {
+                    id: info.inspectionSchedule.id,
+                    name: info.inspectionSchedule.name,
+                    customizedDays: info.inspectionSchedule.customizedDays,
+                    customizedShift: info.inspectionSchedule.customizedShift,
+                    routeId: info.inspectionSchedule.routeId,
+                    description: info.inspectionSchedule.description,
+                    securityIds: info.securityIds
                 }
-                this.choseList = this.areaList
+                if (info.inspectionSchedule.customizedDays) {
+                    obj.startDate = moment(info.inspectionSchedule.time[0]).format('YYYY-MM-DD')
+                    obj.endDate = moment(info.inspectionSchedule.time[1]).format('YYYY-MM-DD')
+                }else {
+                    obj.days = info.inspectionSchedule.days
+                }
+                if (info.inspectionSchedule.customizedShift) {
+                    obj.customizedStartTime = moment(info.inspectionSchedule.classTime[0]).format('HH:mm:ss')
+                    obj.customizedEndTime = moment(info.inspectionSchedule.classTime[1]).format('HH:mm:ss')
+                }else {
+                    obj.shifts = info.inspectionSchedule.shifts
+                }
+                api.patrol.updataPatrol(JSON.stringify(obj)).then(res => {
+                    console.log(res, '创建成功')
+                    this.$message.success('修改成功')
+                    this.getAllpatrol()
+                }).catch(err => {
+                    console.log(err, '创建失败')
+                    this.$message.error('修改失败，请稍后重试')
+                })
             },
             addNewPerson (info) {
-                info.id = new Date().getTime()
-                this.areaList.push(info)
-                this.choseList = this.areaList
+                let obj = {
+                    name: info.inspectionSchedule.name,
+                    customizedDays: info.inspectionSchedule.customizedDays,
+                    customizedShift: info.inspectionSchedule.customizedShift,
+                    routeId: info.inspectionSchedule.routeId,
+                    description: info.inspectionSchedule.description,
+                    securityIds: info.securityIds
+                }
+                if (info.inspectionSchedule.customizedDays) {
+                    obj.startDate = moment(info.inspectionSchedule.time[0]).format('YYYY-MM-DD')
+                    obj.endDate = moment(info.inspectionSchedule.time[1]).format('YYYY-MM-DD')
+                }else {
+                    obj.days = info.inspectionSchedule.days
+                }
+                if (info.inspectionSchedule.customizedShift) {
+                    obj.customizedStartTime = moment(info.inspectionSchedule.classTime[0]).format('HH:mm:ss')
+                    obj.customizedEndTime = moment(info.inspectionSchedule.classTime[1]).format('HH:mm:ss')
+                }else {
+                    obj.shifts = info.inspectionSchedule.shifts
+                }
+                api.patrol.createdPatrol(JSON.stringify(obj)).then(res => {
+                    console.log(res, '创建成功')
+                    this.$message.success('创建成功')
+                    this.getAllpatrol()
+                }).catch(err => {
+                    console.log(err, '创建失败')
+                    this.$message.error('创建失败')
+                })
             },
             fixedInfo (info,title) {
                 this.showPersonDetail(info, title, false)

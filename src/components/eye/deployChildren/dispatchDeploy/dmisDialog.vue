@@ -29,7 +29,7 @@
                     </p>
                     <p class="time">班&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 次：
                         <el-checkbox-group v-model="classesList" @change="security.inspectionSchedule.customizedShift = false">
-                            <el-checkbox v-for="item in classes" :label="item.type"></el-checkbox>
+                            <el-checkbox v-for="item in classes" :label="item.id" :key="item.id">{{item.type}}</el-checkbox>
                         </el-checkbox-group>
                         <el-checkbox label="自定义" @change="dayCustom(security.inspectionSchedule.customizedShift)" v-model="security.inspectionSchedule.customizedShift"></el-checkbox>
                         <el-time-picker v-if="security.inspectionSchedule.customizedShift"
@@ -44,7 +44,7 @@
                     <p class="name">人&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 员：
                         <el-select v-model="security.securityIds" size="mini" class="" multiple placeholder="请选择">
                             <el-option
-                                v-for="item in options"
+                                v-for="item in personList"
                                 :key="item.id"
                                 :label="item.name"
                                 :value="item.id">
@@ -55,7 +55,18 @@
                         <!--<el-radio v-model="radio" label="1">是</el-radio>-->
                         <!--<el-radio v-model="radio" label="0">否</el-radio>-->
                     <!--</p>-->
-                    <p class="phoneNum">线路绘制：<input type="text"v-model="security.location" class="location"><img src="" alt="" @click="showMapDialog"></p>
+                    <p class="phoneNum">线路绘制：
+                        <!--<input type="text"v-model="security.location" class="location">-->
+                        <el-select v-model="security.inspectionSchedule.routeId" placeholder="请选择">
+                            <el-option
+                                v-for="item in options"
+                                :key="item.id"
+                                :label="item.name"
+                                :value="item.id">
+                            </el-option>
+                        </el-select>
+                        <i class="el-icon-location-outline" @click="showMapDialog"></i>
+                    </p>
                     <p class="type">
                         描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：<textarea name="" v-model="security.inspectionSchedule.description" cols="30"
                                                                                rows="5" placeholder="请输入描述信息" style="background: #fafafa"></textarea>
@@ -412,6 +423,12 @@
             addNewInfo () {
                 let newInfo = {}
                 if (this.route.includes('security')) {
+                    if (!this.security.inspectionSchedule.customizedDays) {
+                        this.security.inspectionSchedule.days = this.filterList.join()
+                    }
+                    if (!this.security.inspectionSchedule.customizedShift) {
+                        this.security.inspectionSchedule.shifts = this.classesList.join()
+                    }
                     newInfo = this.security
                 } else if(this.route.includes('broadcast')) {
                     this.broadcast.executetime = this.definedTime;
@@ -514,7 +531,7 @@
                 let jobId = 3
                 await api.person.getJobPerson(jobId).then(res => {
                     console.log(res, '安保人员')
-                    this.options = res;
+                    this.personList = res;
                 }).catch(err => {
                     console.log(err, '请求失败')
                 })
@@ -536,12 +553,21 @@
                   console.log(err, '请求片区失败')
               })
             },
+            async getAllRouteLine () {
+                await api.roat.getAllRoat().then(res => {
+                    console.log(res, '请求成功')
+                    this.options = res
+                }).catch(err => {
+                    console.log(err, '请求失败')
+                })
+            }
         },
         async created () {
             this.route = this.$route.path
             console.log(this.Info,'  opopop')
             if (this.route.includes('security')) {
-                this.getSafePerson()
+                await this.getSafePerson()
+                await this.getAllRouteLine()
                 this.security = this.Info;
                 if (this.security.inspectionSchedule.customizedDays === false) {
                     this.filterList = this.security.inspectionSchedule.days;
@@ -798,6 +824,9 @@
                         border: 1px solid #ccc;
                         line-height: rem(28);
                         width: rem(490);
+                    }
+                    i{
+                        font-size: rem(16);
                     }
                 }
                 .uploadText{

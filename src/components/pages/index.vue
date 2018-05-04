@@ -10,7 +10,12 @@
             <a class="indexExit" href="login" ></a>
         </header>
 		<div class="main">
-            <div class="search"><input type="text" placeholder="请输入关键字"><button>搜索</button></div>
+            <div class="search">
+                <input type="text" placeholder="请输入关键字" v-model="searchContent" @focus="searchAnything"><button @click="search">搜索</button>
+                <div class="searchContent">
+                    <p class="cont" v-for="item in searchList">{{item.title}}</p>
+                </div>
+            </div>
             <el-carousel indicator-position="outside" trigger="click" class="" height="500px" :autoplay="false" arrow="never">
                 <el-carousel-item>
                     <div id="top" class="entrence-cont">
@@ -66,8 +71,17 @@
 	export default {
 		data() {
 	        return {
-                currTime: new Date()  //当前时间
-			       }
+                currTime: new Date(),  //当前时间
+                searchContent: '',
+                searchList: [],
+                routeList: [],
+                list: [
+                    {
+                        title: '全视之眼',
+                        route: '/eye'
+                    }
+                ]
+			}
 	   },
         filters: {
             timeFiler(item) {
@@ -80,6 +94,14 @@
                     return index === day
                 })
                 return `星期${week[0]}`
+            }
+        },
+        methods: {
+		    search () {
+
+            },
+            searchAnything () {
+
             }
         }
 

@@ -104,7 +104,7 @@ Vue.use(Router)
 const routes = [
     {
       path: '/',
-      redirect: '/drore_one',
+      redirect: '/droreone',
       component: Index
     },
     {
@@ -113,7 +113,7 @@ const routes = [
     },
       // 主页面
     {
-      path: '/drore_one',
+      path: '/droreone',
       component: Index
     },
     {
