@@ -10,6 +10,19 @@
                 <router-link to="/person" :class="route.includes('person')? 'active' : ''">人员</router-link>
                 <router-link to="/building" :class="route.includes('build')? 'active' : ''">建筑</router-link>
                 <router-link to="">植物</router-link>
+                <div class="func">
+                    <el-menu  class="el-menu-demo" mode="horizontal" router>
+                        <el-submenu index="">
+                            <template slot="title">
+                                <span class="Admin">Admin</span>
+                                <img src="./../../static/img/peopleInfo.svg" alt="">
+                            </template>
+                            <el-menu-item index="">个人中心</el-menu-item>
+                            <el-menu-item index="/droreone">返回主页</el-menu-item>
+                            <el-menu-item @click="logout"index="/login">退出</el-menu-item>
+                        </el-submenu>
+                    </el-menu>
+                </div>
             </div>
         </div>
         <div class="pro_content">
@@ -38,11 +51,43 @@
         },
         components: {
             ScrollContainer
+        },
+        methods:{
+            logout() {
+                this.$router.push('/login')
+            }
         }
     }
 </script>
 
+<style lang="scss">
+    .property{
+        .el-menu-demo,.el-menu--horizontal,.el-menu{
+            background-color: transparent;
+        }
+        /*.el-menu-demo,.el-menu--horizontal,.el-menu:hover{*/
+            /*background-color: transparent;*/
+        /*}*/
+        .el-menu--horizontal>.el-submenu .el-submenu__title{
+            color: #fff;
+        }
+        .el-menu--horizontal>.el-submenu .el-submenu__title:hover{
+            background-color: transparent;
+        }
+        .func .el-submenu__title img{
+            display: inline-block;
+            width: rem(20);
+            height: rem(20);
+            vertical-align: middle;
+            margin-top: rem(-4);
+            margin-left: rem(5);
+        }
+        .el-submenu.is-active,.el-submenu__title{
+            border-bottom-color: transparent;
+        }
+    }
 
+</style>
 <style lang="scss" type="text/scss" scoped>
     .property {
         width: 100%;
@@ -82,6 +127,12 @@
                 }
                 .active{
                     color: #74cef2;
+                }
+                .func{
+                    display: inline-block;
+                    float: right;
+                    margin-right: rem(20);
+
                 }
             }
         }
