@@ -4,20 +4,20 @@
             类型
         </div>
         <div class="personContent">
-            <div class="funcTitle">
-                <Header @addNewInfo = "addNewInfo"
-                        @deletInfo = "deletInfo"
-                        @toggleList = "toggleList"
-                        @choseType = 'choseType'
-                        @selectedAll = 'selectedAll'
-                        @fixedInfo = 'fixedInfo'>
-                </Header>
-            </div>
+            <!--<div class="funcTitle">-->
+                <!--<Header @addNewInfo = "addNewInfo"-->
+                        <!--@deletInfo = "deletInfo"-->
+                        <!--@toggleList = "toggleList"-->
+                        <!--@choseType = 'choseType'-->
+                        <!--@selectedAll = 'selectedAll'-->
+                        <!--@fixedInfo = 'fixedInfo'>-->
+                <!--</Header>-->
+            <!--</div>-->
             <div class="personList" v-loading="isShowLoading">
                 <ScrollContainer>
                     <el-table
                         ref="multipleTable"
-                        :data="areaList"
+                        :data="basicList"
                         tooltip-effect="dark"
                         style="width: 100%"
                         @selection-change="handleSelectionChange">
@@ -29,18 +29,17 @@
                         </el-table-column>
                         <el-table-column
                             prop="name"
-                            label="片区名称"
+                            label="设施名称"
                             width="960">
                         </el-table-column>
-                        <el-table-column
-                            label="操作">
-                            <template slot-scope="scope">
-                                <span @click="showPersonDetail(scope.row,'设施类型')">查看</span>
-                                <span class="line">|</span>
-                                <span @click="fixedInfo(scope.row.id )">编辑</span>
-                                <span class="line">|</span>
-                                <span @click="deletInfo(scope.row.id)">删除</span>
-                            </template>
+                        <el-table-column>
+                            <!--<template slot-scope="scope">-->
+                                <!--<span @click="showPersonDetail(scope.row,'设施类型')">查看</span>-->
+                                <!--<span class="line">|</span>-->
+                                <!--<span @click="fixedInfo(scope.row.id )">编辑</span>-->
+                                <!--<span class="line">|</span>-->
+                                <!--<span @click="deletInfo(scope.row.id)">删除</span>-->
+                            <!--</template>-->
                         </el-table-column>
                     </el-table>
                     <!--<div class="personInfo" v-for="item in areaList" v-if="isShowAreaCard && item.status">-->
@@ -86,7 +85,17 @@
                 isShowAreaCard: true,
                 checkList: [],
                 filterList: [],
-                areaList: [],
+                basicList: [
+                    {name: '车船'},
+                    {name: '路网'},
+                    {name: '片区'},
+                    {name: '卫生间'},
+                    {name: '停车场'},
+                    {name: '商圈'},
+                    {name: '景点'},
+                    {name: '垃圾桶'},
+                    {name: '指示牌'},
+                ],
                 visible: false,
                 areaInfo: {},
                 choseInfoId: [],
@@ -153,7 +162,7 @@
                 }
             },
             checked (id) {
-                this.areaList = this.areaList.filter(item => {
+                this.basicList = this.basicList.filter(item => {
                     if (item.id === id) {
                         item.checked = item.checked
                     }
@@ -275,7 +284,7 @@
             }
         },
         created () {
-            this.getAllArea()
+            // this.getAllArea()
         },
         components: {
             ScrollContainer,

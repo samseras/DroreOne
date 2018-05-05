@@ -338,6 +338,7 @@
                     },
                     lightIds:[]
                 },
+                label:{},
                 security:{
                     inspectionSchedule: {
                         name: '',
@@ -605,6 +606,8 @@
                 if(this.screen.ledSchedule.customizedDays === false) {
                     this.filterList = this.screen.ledSchedule.days;
                 }
+            } else if(this.route.includes('label')){
+                this.label = this.Info;
             }
         },
         components: {

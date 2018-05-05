@@ -30,9 +30,9 @@
                     <p class="idNum">身份证号：<input type="text"v-model="person.idNum"></p>
                     <p class="phoneNum">电话号码：<input type="text"v-model="person.phone"></p>
                     <div class="img">
-                        <img :src="person.picturePath" alt="" v-if="isDisabled">
+                        <img :src="getUrl(person.picturePath)" alt="" v-if="isDisabled" @error="imgError">
                         <label for="avatar" v-if="!isDisabled">
-                            <img :src="files.length ? files[0].url : 'https://www.gravatar.com/avatar/default?s=200&r=pg&d=mm'"  class="rounded-circle" />
+                            <img :src="files.length ? files[0].url : getUrl(person.picturePath)"  @error="imgError" class="rounded-circle" />
                         </label>
                     </div>
                 </div>
@@ -439,6 +439,44 @@
         },
         methods: {
             ...mapMutations(['LOCATION_ID']),
+            imgError (e) {
+                e.target.src = this.getUrl(null);
+            },
+            getUrl (url) {
+                if (url === null || url === undefined) {
+                    let imgSrc
+                    switch (this.$route.params.id) {
+                        case '1': {
+                            imgSrc = './../../../static/img/driveCard.png';
+                            break
+                        }
+                        case '2': {
+                            imgSrc = './../../../static/img/boatCard.png';
+                            break
+                        }
+                        case '3': {
+                            imgSrc = './../../../static/img/clearCard.png';
+                            break
+                        }
+                        case '4': {
+                            imgSrc = './../../../static/img/clearCard.png';
+                            break
+                        }
+                        case '5': {
+                            imgSrc = './../../../static/img/saleTrickCard.png';
+                            break
+                        }
+                        case '6': {
+                            imgSrc = './../../../static/img/trickCard.png';
+                            break
+                        }
+                    }
+                    console.log(imgSrc, 'opopopopopopopo')
+                    return imgSrc
+                } else {
+                    return url
+                }
+            },
             saveLocation () {
                 let locationString
                 let regionLocationStr
@@ -1221,7 +1259,6 @@
                         width: rem(55);
                         height: rem(55);
                         display: inline-block;
-                        background: red;
                         border-radius: 50%;
                         margin-left: rem(25);
                     }
