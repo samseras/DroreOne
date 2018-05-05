@@ -60,7 +60,7 @@
                             <template slot-scope="scope">
                                 <span @click="fixedInfo(scope.row.id )">编辑</span>
                                 <span class="line">|</span>
-                                <span @click="showPersonDetail(scope.row, '人员信息')">查看</span>
+                                <span @click="showPersonDetail(scope.row, '人员信息',true)">查看</span>
                                 <span class="line">|</span>
                                 <span @click="deletInfo(scope.row.id)">删除</span>
                             </template>
@@ -68,12 +68,11 @@
                     </el-table>
                     <div class="personInfo" v-for="item in personList" v-if="isShowPersonCard && item.status">
                         <div class="checkBox">
-                            <!--<input type="checkbox" :checked='item.checked' class="checkBtn" @change="checked(item.id)">-->
                             <el-checkbox v-model="item.checked" @change="checked(item.id)"
                                          class="checkBtn"></el-checkbox>
                         </div>
-                        <div class="personType" @click.stop="showPersonDetail(item, '人员信息')">
-                            <img :src="getUrl(item.pictureId,item.jobId)" alt="">
+                        <div class="personType" @click.stop="showPersonDetail(item, '人员信息',true)">
+                            <img :src="getUrl(item.picturePath)" alt="" @error="imgError">
                             <span class="type">
                                   {{item.jobName}}
                                 </span>
@@ -126,36 +125,40 @@
             }
         },
         methods: {
-            getUrl (url,id) {
-                if (url === '') {
-                    console.log(url, 'ioioioio')
-                    switch (id) {
+            imgError (e) {
+                e.target.src = this.getUrl(null);
+            },
+            getUrl (url) {
+                if (url === null) {
+                    let imgSrc
+                    switch (this.$route.params.id) {
                         case '1': {
-                            return './../../../static/img/driveCard.png';
+                            imgSrc = './../../../static/img/driveCard.png';
                             break
                         }
                         case '2': {
-                            return './../../../static/img/boatCard.png';
+                            imgSrc = './../../../static/img/boatCard.png';
                             break
                         }
                         case '3': {
-                            return './../../../static/img/clearCard.png';
+                            imgSrc = './../../../static/img/clearCard.png';
                             break
                         }
                         case '4': {
-                            return './../../../static/img/clearCard.png';
+                            imgSrc = './../../../static/img/clearCard.png';
                             break
                         }
                         case '5': {
-                            return './../../../static/img/saleTrickCard.png';
+                            imgSrc = './../../../static/img/saleTrickCard.png';
                             break
                         }
                         case '6': {
-                            return './../../../static/img/trickCard.png';
+                            imgSrc = './../../../static/img/trickCard.png';
                             break
                         }
-
                     }
+                    console.log(imgSrc, 'opopopopopopopo')
+                    return imgSrc
                 } else {
                     return url
                 }
@@ -163,14 +166,14 @@
             handleSelectionChange(val) {
                 this.multipleSelection = val;
             },
-            showPersonDetail(info, title) {
+            showPersonDetail(info, title, state) {
                 this.personInfo = info
                 this.visible = true
                 this.title = title
+                this.isDisabled = state
             },
             addNewInfo() {
-                this.showPersonDetail({personBean: {}}, '添加人员信息')
-                this.isDisabled = false
+                this.showPersonDetail({}, '添加人员信息',false)
             },
             deletInfo(id) {
                 if (id) {
@@ -336,7 +339,7 @@
                             this.personInfo = item
                         }
                     })
-                    this.showPersonDetail(this.personInfo, '修改人员信息')
+                    this.showPersonDetail(this.personInfo, '修改人员信息', false)
                     this.isDisabled = false
                     this.choseInfoId = []
                 } else {
@@ -354,6 +357,11 @@
                         this.personList[i].checked = false
                         this.personList[i].status = true
                         this.personList[i].jobId = this.$route.params.id
+                        this.personList[i].gender = this.personList[i].personBean.gender
+                        this.personList[i].id = this.personList[i].personBean.id
+                        this.personList[i].idNum = this.personList[i].personBean.idNum
+                        this.personList[i].name = this.personList[i].personBean.name
+                        this.personList[i].phone = this.personList[i].personBean.phone
                     }
                 }).catch(err => {
                     console.log(err)
