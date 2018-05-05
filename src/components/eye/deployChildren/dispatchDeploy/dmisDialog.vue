@@ -326,6 +326,7 @@
                 security:{},
                 purifier:{},
                 screen:{},
+                label:{},
                 options: [
                     // { name: '保洁1'},
                     // { name: '保洁2'},
@@ -691,6 +692,8 @@
                 }else {
                     this.filterList = this.screen.time;
                 }
+            } else if(this.route.includes('label')){
+                this.label = this.Info;
             }
         },
         components: {

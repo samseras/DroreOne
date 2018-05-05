@@ -22,6 +22,12 @@ import Camera from '@/components/eye/controlChildren/cameraControl'
 import Environment from '@/components/eye/controlChildren/environment'
 
 
+//地图
+import gis from '@/components/pages/gis'
+import mapManage from '@/components/gis/mapManage/mapManage'
+import mapData from '@/components/gis/mapManage/mapData'
+import labelManage from '@/components/gis/labelManage/labelManage'
+import labelLibrary from '@/components/gis/labelManage/labelLibrary'
 
 import Analyze from '@/components/analyze'
 import Passenger from '@/components/eye/analyze/passengerFlow'
@@ -119,7 +125,7 @@ const routes = [
       path: '/eye',
       name: 'eye',
       redirect: '/controler',
-      component: eye,
+        component: eye,
         children: [
             {
                 path: '/homePage',
@@ -179,7 +185,6 @@ const routes = [
                     {path:'/deploy/screen-Dmis',name:'screenDmis',component:screenDmis},
                     {path:'/deploy/security-Dmis',name:'securityDmis',component:securityDmis},
                     {path:'/deploy/purifier-Dmis',name:'purifierDmis',component:purifierDmis},
-
                     {path:'/deploy/dispatch-Record',name:'dispatchRecord',component:dispatchRecord}
                 ]
             }
@@ -254,7 +259,45 @@ const routes = [
             }
         ]
     },
-  //  人员
+    //GIS
+    {
+        path: '/gisMap',
+        name: 'gisMap',
+        component: gis,
+        redirect: '/mapManage',
+        children: [
+            {
+                path: '/mapManage',
+                name: 'mapManage',
+                redirect: '/mapManage/mapData',
+                component: mapManage,
+                children: [
+                    {path: '/mapManage/mapData',name: 'mapData', component: mapData}
+                ]
+            },
+            {
+                path: '/labelManage',
+                name: 'labelManage',
+                redirect: '/labelManage/labelLibrary',
+                component: labelManage,
+                children: [
+                    {path: '/labelManage/labelLibrary',name: 'labelLibrary', component:labelLibrary}
+                ]
+            }
+            // ,
+            // {
+            //     path: '/styleManage',
+            //     name: 'styleManage',
+            //     redirect: '/styleManage/styleLibrary',
+            //     component: styleManage,
+            //     children: [
+            //         {path: '/styleManage/styleLibrary',name: 'styleLibrary', component:styleLibrary}
+            //     ]
+            // }
+        ]
+    },
+
+    //  人员
   ]
 const router = new Router({
     mode: 'history',

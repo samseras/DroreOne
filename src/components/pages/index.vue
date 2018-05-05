@@ -37,7 +37,12 @@
                     </div>
                     <div id="bottom" class="entrence-cont">
                         <ul>
-                            <li class="change" id="GIS"><a href="/login">GIS地图>><img src="../../../static/img/GIS.png"/></a></li>
+
+                            <li class="change">
+                                <div id="GIS">
+                                    <router-link to="/gisMap">GIS地图<img src="../../../static/img/GIS.png"/></router-link>
+                                </div>
+                            </li>
                             <li class="change"><a href="/login">官网门户>><img src="../../../static/img/home.png"/></a></li>
                             <li class="change"><a href="/login">电子票务>><img src="../../../static/img/elecTicket.png"/></a></li>
                             <li class="change"><a href="/login">电子商圈>><img src="../../../static/img/elecBusiness.png"/></a></li>
