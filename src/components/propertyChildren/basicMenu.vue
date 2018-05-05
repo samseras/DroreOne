@@ -47,7 +47,7 @@
                         title: '设施信息',
                         subs: [
                             {
-                                icon: './../../../static/img/basicInfo.svg',
+                                icon: './../../../static/img/boatCar.svg',
                                 index: '/basic-property/boat-deploy',
                                 title: '车船'
                             },

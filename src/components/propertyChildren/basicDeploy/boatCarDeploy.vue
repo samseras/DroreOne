@@ -83,7 +83,7 @@
                             <el-checkbox v-model="item.checked" @change="getChecked(item.id)" class="checkBtn"></el-checkbox>
                         </div>
                         <div class="personType" :class="item.type === '车辆'? 'carInfo':''" @click.stop="showPersonDetail(item ,'车船信息')">
-                            <img src="../../../../static/img/broadcastCard.png" alt="">
+                            <img src="../../../../static/img/boatCartCard.png" alt="">
                             <span class="type">
                                   {{item.vehicle.type | boatFilter}}信息
                                 </span>
