@@ -63,11 +63,21 @@
                 isshowHead:true
             }
         },
-        // created () {
-        //     api.analyze.getControlData().then((res)=>{
-        //         console.log(res, 'ioioioioioooo')
-        //     })
-        // },
+        created () {
+            let route = this.$route.path;
+            if (route.includes('deploy/')){
+                this.activeIndex = 3
+            }
+            if (route.includes('controler/')){
+                this.activeIndex = 0
+            }
+            if (route.includes('facility/')){
+                this.activeIndex = 1
+            }
+            if (route.includes('analyze/')){
+                this.activeIndex = 2
+            }
+        },
         filters: {
             timeFiler(item) {
                 // console.log(item, '9090')
@@ -160,7 +170,10 @@
             margin-top: rem(-4);
             margin-left: rem(5);
         }
-        .el-submenu.is-active,.el-submenu__title{
+        .el-menu--horizontal>.el-submenu.is-active .el-submenu__title{
+            border-bottom-color: transparent;
+        }
+        .el-submenu.is-active .el-submenu__title{
             border-bottom-color: transparent;
         }
     }

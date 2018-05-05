@@ -27,6 +27,8 @@ import scheduleled from './scheduleled'
 import roat from './roat'
 import purifier from './schedulepurifier'
 import patrol from './patrol'
+import plant from './plant'
+import build from './build'
 
 
 export default {
@@ -55,5 +57,7 @@ export default {
     scheduleled,
     roat,
     purifier,
-    patrol
+    patrol,
+    plant,
+    build
 }

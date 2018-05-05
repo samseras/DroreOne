@@ -181,7 +181,13 @@
             margin-top: rem(-4);
             margin-left: rem(5);
         }
-        .el-submenu.is-active,.el-submenu__title{
+        .el-menu--horizontal{
+            border-bottom: none;
+        }
+        .el-menu--horizontal>.el-submenu.is-active .el-submenu__title{
+            border-bottom-color: transparent;
+        }
+        .el-submenu.is-active .el-submenu__title{
             border-bottom-color: transparent;
         }
         .el-container{

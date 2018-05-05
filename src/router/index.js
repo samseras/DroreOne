@@ -80,6 +80,8 @@ import ScenicDeploy from '@/components/propertyChildren/basicDeploy/scenicDeploy
 import ShopDeploy from '@/components/propertyChildren/basicDeploy/shopDeploy'       //商圈
 import ToiletDeploy from '@/components/propertyChildren/basicDeploy/toiletDeploy'       //洗手间
 import TrashDeploy from '@/components/propertyChildren/basicDeploy/trashDeploy'       //垃圾桶
+import PlantDeploy from '@/components/propertyChildren/basicDeploy/plantDeploy'       //植物
+import BuildDeploy from '@/components/propertyChildren/basicDeploy/buildingDeploy'       //建筑
 
 
 import CameraHware from '@/components/propertyChildren/hardwareDeploy/cameraHardware'
@@ -221,7 +223,8 @@ const routes = [
                     {path: '/basic-property/shop-deploy', name: 'ShopDeploy', component: ShopDeploy},
                     {path: '/basic-property/toilet-deploy', name: 'ToiletDeploy', component: ToiletDeploy},
                     {path: '/basic-property/trash-deploy', name: 'TrashDeploy', component: TrashDeploy},
-
+                    {path: '/basic-property/plant-deploy', name: 'PlantDeploy', component: PlantDeploy},
+                    {path: '/basic-property/construction-deploy', name: 'BuildDeploy', component: BuildDeploy},
                 ]
             },
             {

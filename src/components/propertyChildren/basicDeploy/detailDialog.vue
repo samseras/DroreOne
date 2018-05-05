@@ -282,6 +282,70 @@
                     <p class="basicType">人员类型：<input type="text"v-model="job.name">
                     </p>
                 </div>
+                <!--植物-->
+                <div class="personCardContent boatCardContent" v-if="route.includes('plant-deploy')">
+                    <p class="sex">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称：<input type="text"v-model="tree.plant.name"></p>
+                    <p class="name">科&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;目：
+                        <input type="text"v-model="tree.plant.genera">
+                    </p>
+                    <p class="name">高&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;度：
+                        <input type="number"v-model="tree.plant.height"  placeholder="请输入树木高度（数字）">
+                    </p>
+                    <p class="name">年&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;代：
+                        <el-date-picker
+                            v-model="tree.plant.plantYear"
+                            type="date"
+                            placeholder="选择日期">
+                        </el-date-picker>
+                    </p>
+                    <p class="phoneNum">所属片区：
+                        <el-select v-model="tree.regionId" placeholder="请选择">
+                            <el-option
+                                v-for="item in regions"
+                                :key="item.id"
+                                :label="item.name"
+                                :value="item.id">
+                            </el-option>
+                        </el-select>
+                    </p>
+                    <p class="phoneNum">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置：<span>{{tree.location}}</span><i class="el-icon-location-outline" @click="showMapDialog"></i></p>
+                    <p class="type">
+                        描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：<textarea name="" v-model="tree.plant.description" cols="30"
+                                                                               rows="5" placeholder="请输入描述信息"></textarea>
+                    </p>
+                </div>
+                <!--建筑-->
+                <div class="personCardContent boatCardContent" v-if="route.includes('construction')">
+                    <p class="sex">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称：<input type="text"v-model="build.building.name"></p>
+                    <p class="name">层&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;高：
+                        <input type="number"v-model="build.building.layers"  placeholder="请输入树木高度（数字）">
+                    </p>
+                    <p class="name">高&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;度：
+                        <input type="number"v-model="build.building.height"  placeholder="请输入树木高度（数字）">
+                    </p>
+                    <p class="name">年&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;代：
+                        <el-date-picker
+                            v-model="build.building.buildYear"
+                            type="date"
+                            placeholder="选择日期">
+                        </el-date-picker>
+                    </p>
+                    <p class="phoneNum">所属片区：
+                        <el-select v-model="build.regionId" placeholder="请选择">
+                            <el-option
+                                v-for="item in regions"
+                                :key="item.id"
+                                :label="item.name"
+                                :value="item.id">
+                            </el-option>
+                        </el-select>
+                    </p>
+                    <p class="phoneNum">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置：<span>{{build.location}}</span><i class="el-icon-location-outline" @click="showMapDialog"></i></p>
+                    <p class="type">
+                        描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：<textarea name="" v-model="build.building.description" cols="30"
+                                                                               rows="5" placeholder="请输入描述信息"></textarea>
+                    </p>
+                </div>
 
                 <div class="text-center p-2">
                     <file-upload
@@ -410,6 +474,9 @@
                 toilet: {
                     toiletBean: {
                         name:'',
+                        plantYear: '',
+                        height: '',
+                        genera: '',
                     },
                     state:'',
                     location:'',
@@ -425,6 +492,28 @@
                     name: '',
                     location: '',
                     description: '',
+                },
+                tree: {
+                    plant:{
+                        name: '',
+                        genera: '',
+                        height: '',
+                        plantYear: '',
+                        description: ''
+                    },
+                    location:'',
+                    regionId: ''
+                },
+                build: {
+                    building:{
+                        name: '',
+                        height: '',
+                        layers: '',
+                        buildYear: '',
+                        description: ''
+                    },
+                    location:'',
+                    regionId: ''
                 },
                 job: {
                     name: ''
@@ -506,6 +595,10 @@
                     this.area.location = regionLocationStr
                 } else if (this.route.includes('roat')) {
                     this.roat.location = roatLocationStr
+                } else if (this.route.includes('plant-deploy')) {
+                    this.tree.location = locationString
+                } else if (this.route.includes('construction')) {
+                    this.build.location = locationString
                 }
                 this.mapVisible = false
             },
@@ -591,6 +684,10 @@
                     newInfo = this.roat
                 } else if (this.route.includes('personType')) {
                     newInfo = this.job
+                } else if (this.route.includes('plant-deploy')) {
+                    newInfo = this.tree
+                } else if (this.route.includes('construction')) {
+                    newInfo = this.build
                 }
                 newInfo.status = true
                 newInfo.checked = false
@@ -733,6 +830,10 @@
                 this.roat = this.Info
             } else if (this.route.includes('personType')) {
                 this.job = this.Info
+            } else if (this.route.includes('plant-deploy')) {
+                this.tree = this.Info
+            }  else if (this.route.includes('construction')) {
+                this.build = this.Info
             }
             if (this.Info.id) {
                 console.log(this.Info.id, '这是拿到的Id')
@@ -813,6 +914,9 @@
             box-sizing: border-box;
             font-size: rem(12);
             min-height: rem(150);
+        }
+        .el-input__prefix {
+            left: rem(135);
         }
         .el-dialog__footer{
             padding: 0;

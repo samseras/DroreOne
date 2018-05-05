@@ -8,8 +8,8 @@
                 <router-link to="/basic-property" :class="route.includes('basic')? 'active' : ''">设施</router-link>
                 <router-link to="/hard-property" :class="route.includes('hard')? 'active' : ''">设备</router-link>
                 <router-link to="/person" :class="route.includes('person')? 'active' : ''">人员</router-link>
-                <router-link to="/building" :class="route.includes('build')? 'active' : ''">建筑</router-link>
-                <router-link to="">植物</router-link>
+                <!--<router-link to="/building" :class="route.includes('build')? 'active' : ''">建筑</router-link>-->
+                <!--<router-link to="">植物</router-link>-->
                 <div class="func">
                     <el-menu  class="el-menu-demo" mode="horizontal" router>
                         <el-submenu index="">
@@ -82,7 +82,10 @@
             margin-top: rem(-4);
             margin-left: rem(5);
         }
-        .el-submenu.is-active,.el-submenu__title{
+        .el-menu--horizontal>.el-submenu.is-active .el-submenu__title{
+            border-bottom-color: transparent;
+        }
+        .el-submenu.is-active .el-submenu__title{
             border-bottom-color: transparent;
         }
     }

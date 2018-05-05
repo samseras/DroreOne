@@ -92,10 +92,16 @@
                                 index: '/basic-property/indicator-deploy',
                                 title: '指示牌'
                             },
-                            // {
-                            //     index: '/basic-property/other-deploy',
-                            //     title: '其他'
-                            // },
+                            {
+                                icon: './../../../static/img/plant.svg',
+                                index: '/basic-property/plant-deploy',
+                                title: '植物'
+                            },
+                            {
+                                icon: './../../../static/img/build.svg',
+                                index: '/basic-property/construction-deploy',
+                                title: '建筑'
+                            },
 
                         ]
                     },
