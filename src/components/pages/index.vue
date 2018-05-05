@@ -55,9 +55,11 @@
                         <ul>
 
                             <li class="change">
+                                <router-link to="/gisMap">
                                 <div id="GIS">
-                                    <router-link to="/gisMap">GIS地图<img src="../../../static/img/GIS.png"/></router-link>
+                                    GIS地图<img src="../../../static/img/GIS.png"/>
                                 </div>
+                                </router-link>
                             </li>
                             <li class="change"><a href="/login">官网门户>><img src="../../../static/img/home.png"/></a></li>
                             <li class="change"><a href="/login">电子票务>><img src="../../../static/img/elecTicket.png"/></a></li>
