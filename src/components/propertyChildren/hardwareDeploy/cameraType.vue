@@ -48,6 +48,10 @@
         },
         created(){
             this.getCameraType()
+        },
+        components:{
+            ScrollContainer
+
         }
 
     }

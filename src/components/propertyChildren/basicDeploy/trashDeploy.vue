@@ -68,7 +68,7 @@
                             <el-checkbox v-model="item.checked" @change="checked(item.id)" class="checkBtn"></el-checkbox>
                         </div>
                         <div class="personType" @click.stop="showTrashDetail(item, '垃圾桶信息')">
-                            <img :src="item.picturePath" alt="">
+                            <img src="../../../../static/img/wasteCard.png" alt="">
                             <span class="type">
                                   {{item.dustbinBean.type | typeFilter}}垃圾桶
                                 </span>
@@ -228,8 +228,8 @@
             },
             async fixInfo (info) {
                 let index = info.location.includes(',')?info.location.indexOf(','):info.location.indexOf('，')
-                let latitude = info.location.substring(0, index)
-                let longitude = info.location.substring(index + 1)
+                let longitude= info.location.substring(0, index)
+                let latitude = info.location.substring(index + 1)
                 let trashObj = {
                     id: info.dustbinBean.id,
                     name: info.dustbinBean.name,
@@ -251,8 +251,8 @@
             },
             async addNewTrash (info) {
                 let index = info.location.includes(',')?info.location.indexOf(','):info.location.indexOf('，')
-                let latitude = info.location.substring(0, index)
-                let longitude = info.location.substring(index + 1)
+                let longitude= info.location.substring(0, index)
+                let latitude = info.location.substring(index + 1)
                 let trashObj = {
                     name: info.dustbinBean.name,
                     dustbinCount: info.dustbinBean.dustbinCount,
@@ -298,7 +298,7 @@
                     this.isShowLoading = false
                     this.trashList = res
                     for (let i = 0; i < this.trashList.length; i++) {
-                        this.trashList[i].location = `${this.trashList[i].latitude},${this.trashList[i].longitude}`
+                        this.trashList[i].location = `${this.trashList[i].longitude},${this.trashList[i].latitude}`
                         this.trashList[i].checked = false
                         this.trashList[i].status = true
                         this.trashList[i].id = this.trashList[i].dustbinBean.id
@@ -340,8 +340,7 @@
             padding: rem(16) 0 rem(17) rem(15);
             box-sizing: border-box;
             font-size: rem(16);
-            color: #0086b3;
-            font-weight: 600;
+            color: #26bbf0;
             border-bottom:  1px solid #ccc;
         }
         .personContent{
@@ -356,7 +355,7 @@
                 width: 100%;
                 height: rem(30);
                 margin-top: rem(10);
-                border-bottom: 1px solid #a13309;
+                border-bottom: 2px solid #e44b4e;
             }
             .personList{
                 width: 100%;
@@ -403,7 +402,7 @@
                             position: absolute;
                             left: rem(15);
                             top: rem(-10);
-                            background: red;
+
                         }
                         span{
                             float: right;

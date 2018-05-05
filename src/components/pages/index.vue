@@ -10,7 +10,23 @@
             <a class="indexExit" href="login" ></a>
         </header>
 		<div class="main">
-            <div class="search"><input type="text" placeholder="请输入关键字"><button>搜索</button></div>
+            <div class="search">
+                <input type="text" placeholder="请输入关键字" v-model="searchContent" @focus="searchAnything" @blur="noSearch" @keyup="importAnything"><button @click="search">搜索</button>
+
+                <div class="searchContent" v-if="searchList.length > 0" >
+                    <ul ref="dev">
+                        <li class="cont"
+                            v-for="(item,index) in searchList"
+                            :class="activeIndex === index? 'active': ''"
+                            :ref="isCur(index) && 'searchContent'"
+                            @click="goPage(item.route)">
+                            {{item.title}}
+                        </li>
+                    </ul>
+
+                </div>
+
+            </div>
             <el-carousel indicator-position="outside" trigger="click" class="" height="500px" :autoplay="false" arrow="never">
                 <el-carousel-item>
                     <div id="top" class="entrence-cont">
@@ -25,7 +41,7 @@
                             <li class="two">
                                 <div class="bigData">
                                     <div class="change"><a target="_blank" href="http://192.168.0.150:9527/analysis">大数据分析>><img src="../../../static/img/bagData.png"/></a></div>
-                                    <div class="dataCenter change" id="dataCenter"><a href="">数据中心>><img src="../../../static/img/dataCenter.png"/></a></div>
+                                    <div class="dataCenter change" id="dataCenter"><router-link to="/property">数据中心>><img src="../../../static/img/dataCenter.png"/></router-link></div>
                                 </div>
                                 <div class="eye">
                                     <router-link to="/eye"  id="eye" class="change">全视之眼>><img src="../../../static/img/eye.png"/></router-link>
@@ -52,7 +68,8 @@
                 </el-carousel-item>
                 <el-carousel-item>
                     <div class="conversion">
-                        <router-link to="/property"  id="property" class="change">资产>><img src="../../../static/img/eye.png"/></router-link>
+                        <!--<router-link to="/property">资产>><img src="../../../static/img/eye.png"/></router-link>-->
+
                     </div>
                 </el-carousel-item>
                 <el-carousel-item>
@@ -67,11 +84,32 @@
 
 <script>
     import moment from 'moment'
+    import ScrollContainer from '@/components/ScrollContainer'
 	export default {
 		data() {
 	        return {
-                currTime: new Date()  //当前时间
-			       }
+                currTime: new Date(),  //当前时间
+                searchContent: '',
+                searchList: [],
+                routeList: [],
+                list: [
+                    {title: '全视之眼', route: '/eye'},
+                    {title: '数据中心', route: '/property'},
+                    {title: '大数据分析', route: 'http://192.168.0.150:9527/analysis'},
+                    {title: 'GIS地图', route: ''},
+                    {title: '物业管理', route: ''},
+                    {title: '第三方应用', route: ''},
+                    {title: '系统配置', route: ''},
+                    {title: '舆情分析', route: ''},
+                    {title: '物联网', route: ''},
+                    {title: '官网门户', route: ''},
+                    {title: '电子票务', route: ''},
+                    {title: '微信公众号', route: ''},
+                    {title: '电子商圈', route: ''},
+
+                ],
+                activeIndex: 0
+			}
 	   },
         filters: {
             timeFiler(item) {
@@ -85,13 +123,89 @@
                 })
                 return `星期${week[0]}`
             }
+        },
+        methods: {
+            isCur(index) {
+                return index === this.activeIndex
+            },
+            noSearch () {
+                this.searchList = []
+            },
+		    search (e) {
+            },
+            searchAnything () {
+                if (this.searchContent.trim() !== ''){
+                    this.importAnything()
+                } else {
+                    this.searchList = this.list
+                }
+            },
+            importAnything (e) {
+                this.searchList = this.list.filter(item => {
+                    if (item.title.includes(this.searchContent)) {
+                        return item
+                    }
+                    this.activeIndex = 0
+                })
+                if (e.keyCode === 38) {//上
+                    e.preventDefault()
+                    e.stopPropagation()
+                    if (this.activeIndex > 0) {
+                        this.activeIndex--;
+                        if (this.searchList.length > 4) {
+                            this.$refs.dev.style.top = (-this.activeIndex * 24)+ 'px'
+                        }
+                        if (this.activeIndex > this.searchList.length - 4) {
+                            this.$refs.dev.style.top = (-(this.searchList.length - 4) * 24)+ 'px'
+                        }
+                    }
+                    console.log(this.$refs.dev.style.top, 'opopoppoppp')
+                }
+                if (e.keyCode === 40) {//下
+                    e.preventDefault()
+                    e.stopPropagation()
+                    if (this.activeIndex < this.searchList.length - 1) {
+                        console.log(this.activeIndex, '*********',this.searchList.length)
+                        this.activeIndex++;
+                        if (this.searchList.length > 4) {
+                            this.$refs.dev.style.top = (-this.activeIndex * 24)+ 'px'
+                        }
+                        if (this.activeIndex > this.searchList.length - 4 && this.searchList.length > 4) {
+                            console.log(8888)
+                            this.$refs.dev.style.top = (-(this.searchList.length - 4) * 24)+ 'px'
+                        }
+                    } else {
+                        this.activeIndex = this.searchList.length - 1
+                    }
+                }
+                if (e.keyCode === 13) {
+                    e.preventDefault()
+                    e.stopPropagation()
+                    let info = this.searchList.filter((item,index)=> {
+                       if(index === this.activeIndex) {
+                           return item
+                       }
+                    })
+                    this.goPage(info[0].route)
+                }
+
+            },
+            goPage (url) {
+                console.log(333)
+                if (url.includes('http')) {
+                    window.location.href = url
+                } else {
+                    this.$router.push(url)
+                }
+            },
+        },
+        components: {
+            ScrollContainer
         }
 
 	}
 </script>
-<style scoped>
-	*{margin: 0;padding:0;box-sizing: border-box;}
-	li{list-style: none;}
+<style scoped lang="scss" type="text/scss">
 	a{text-decoration: none;color: #fff;font-size: 12px;}
 	#entrence{width: 100%;height:100%;min-width:1450px;min-height:650px;position:relative;background: url('../../../static/img/index-bg.png') no-repeat;background-size:cover;display: flex;flex-direction: column;}
     header{width:100%;height: 50px;font-size: 20px;color: #fff;background: url('../../../static/img/index-top.png') no-repeat;}
@@ -144,7 +258,7 @@
    .change{box-shadow:0px 3px 8px rgba(0, 0, 0, 0.3);position: relative;}
    img{position: absolute;left: 40%;top: 40%;width: 25px;height: 25px;}
    #eye img{left: 33%;width: 100px;height: 30px;}
-   #dataCenter img{left: 40%;}
+   #property img{left: 40%;}
    #bee img{top: 44%;}
    .estate img,#dataCenter img,#GIS img{left:47%;}
 
@@ -158,5 +272,60 @@
         width: 100%;
         height: 100%;
         margin-top: 30px;
+    }
+    .search {
+        position: relative;
+        .searchContent {
+            background: rgba(225,225,225,.6);
+            position: absolute;
+            width: 100%;
+            height: auto;
+            height: rem(100);
+            z-index: 9;
+            border-bottom-left-radius: rem(5);
+            border-bottom-right-radius: rem(5);
+            overflow-y: auto;
+            &::-webkit-scrollbar {
+                width: 11px;
+                height: 11px;
+            }
+            &::-webkit-scrollbar-track {
+                background-color: #F5F5F5;
+            }
+            &::-webkit-scrollbar-thumb {
+                min-height: 36px;
+                border: 2px solid transparent;
+                border-top: 3px solid transparent;
+                border-bottom: 3px solid transparent;
+                background-clip: padding-box;
+                border-radius: 7px;
+                // background-color: rgba(0, 0, 0, 0.2);
+                background-color: #C4C4C4;
+            }
+            ul{
+                width: 100%;
+                /*height: 100%;*/
+                padding: rem(5) rem(10);
+                box-sizing: border-box;
+                position: absolute;
+                li{
+                    width: 100%;
+                    height: rem(24);
+                    line-height: rem(24);
+                    text-align: left;
+                    font-size: rem(12);
+                    cursor: pointer;
+                    &:hover{
+                        background: rgba(58,142,230,.6);
+                        color: #fff;
+                    }
+                }
+                .active{
+                    background: rgba(58,142,230,.6);
+                    color: #fff;
+                }
+            }
+
+        }
     }
 </style>

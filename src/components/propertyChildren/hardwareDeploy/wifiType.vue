@@ -57,6 +57,10 @@
         },
         created(){
             this.getWifiType()
+        },
+        components:{
+            ScrollContainer
+
         }
     }
 

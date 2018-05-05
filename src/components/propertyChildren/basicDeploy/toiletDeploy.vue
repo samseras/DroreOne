@@ -61,7 +61,7 @@
                             <el-checkbox v-model="item.checked" @change="checked(item.id)" class="checkBtn"></el-checkbox>
                         </div>
                         <div class="personType" @click.stop="showPersonDetail(item, '卫生间信息')">
-                            <img :src="item.picturePath" alt="">
+                            <img src="../../../../static/img/toiletCard.png" alt="">
                             <span class="type">
                                   {{item.toiletBean.name}}
                                 </span>
@@ -215,8 +215,8 @@
             },
             async fixInfo (info) {
                 let index = info.location.includes(',')?info.location.indexOf(','):info.location.indexOf('，')
-                let latitude = info.location.substring(0, index)
-                let longitude = info.location.substring(index + 1)
+                let longitude = info.location.substring(0, index)
+                let latitude = info.location.substring(index + 1)
                 let toiletObj = {
                     id: info.toiletBean.id,
                     name: info.toiletBean.name,
@@ -236,8 +236,8 @@
             },
            async addNewToilet (info) {
                 let index = info.location.includes(',')?info.location.indexOf(','):info.location.indexOf('，')
-                let latitude = info.location.substring(0, index)
-                let longitude = info.location.substring(index + 1)
+                let longitude = info.location.substring(0, index)
+                let latitude = info.location.substring(index + 1)
                 let toiletObj = {
                     name: info.toiletBean.name,
                     regionId: info.regionId,
@@ -282,7 +282,7 @@
                     for (let i = 0; i < this.toiletList.length; i++) {
                         this.toiletList[i].checked = false
                         this.toiletList[i].status = true
-                        this.toiletList[i].location = `${this.toiletList[i].latitude},${this.toiletList[i].longitude}`
+                        this.toiletList[i].location = `${this.toiletList[i].longitude},${this.toiletList[i].latitude}`
                         this.toiletList[i].id = this.toiletList[i].toiletBean.id
                         this.toiletList[i].state = '正常'
                     }
@@ -319,8 +319,7 @@
             padding: rem(16) 0 rem(17) rem(15);
             box-sizing: border-box;
             font-size: rem(16);
-            color: #0086b3;
-            font-weight: 600;
+            color: #26bbf0;
             border-bottom:  1px solid #ccc;
         }
         .personContent{
@@ -335,7 +334,7 @@
                 width: 100%;
                 height: rem(30);
                 margin-top: rem(10);
-                border-bottom: 1px solid #a13309;
+                border-bottom: 2px solid #e44b4e;
             }
             .personList{
                 width: 100%;
@@ -382,7 +381,7 @@
                             position: absolute;
                             left: rem(15);
                             top: rem(-10);
-                            background: red;
+
                         }
                         span{
                             float: right;

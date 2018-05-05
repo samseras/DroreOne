@@ -73,7 +73,7 @@
                                          class="checkBtn"></el-checkbox>
                         </div>
                         <div class="personType" @click.stop="showPersonDetail(item, '人员信息')">
-                            <img :src="item.picturePath" alt="">
+                            <img :src="getUrl(item.pictureId,item.jobId)" alt="">
                             <span class="type">
                                   {{item.jobName}}
                                 </span>
@@ -126,6 +126,40 @@
             }
         },
         methods: {
+            getUrl (url,id) {
+                if (url === '') {
+                    console.log(url, 'ioioioio')
+                    switch (id) {
+                        case '1': {
+                            return './../../../static/img/driveCard.png';
+                            break
+                        }
+                        case '2': {
+                            return './../../../static/img/boatCard.png';
+                            break
+                        }
+                        case '3': {
+                            return './../../../static/img/clearCard.png';
+                            break
+                        }
+                        case '4': {
+                            return './../../../static/img/clearCard.png';
+                            break
+                        }
+                        case '5': {
+                            return './../../../static/img/saleTrickCard.png';
+                            break
+                        }
+                        case '6': {
+                            return './../../../static/img/trickCard.png';
+                            break
+                        }
+
+                    }
+                } else {
+                    return url
+                }
+            },
             handleSelectionChange(val) {
                 this.multipleSelection = val;
             },
@@ -365,14 +399,13 @@
         height: 100%;
         display: flex;
         flex-direction: column;
-        .title {
+        .title{
             width: 100%;
             padding: rem(16) 0 rem(17) rem(15);
             box-sizing: border-box;
             font-size: rem(16);
-            color: #0086b3;
-            font-weight: 600;
-            border-bottom: 1px solid #ccc;
+            color: #26bbf0;
+            border-bottom:  1px solid #ccc;
         }
         .personContent {
             flex: 1;
@@ -386,7 +419,7 @@
                 width: 100%;
                 height: rem(30);
                 margin-top: rem(10);
-                border-bottom: 1px solid #a13309;
+                border-bottom: 2px solid #e44b4e;
             }
             .personList {
                 width: 100%;

@@ -73,8 +73,8 @@
                         <div class="checkBox">
                             <el-checkbox v-model="item.checked" @change="checked(item.id)" class="checkBtn"></el-checkbox>
                         </div>
-                        <div class="personType" @click.stop="showPersonDetail(item, '商圈信息')">
-                            <img :src="item.picturePath" alt="">
+                        <div class="personType" :class="getClass(item.businessBean.businessTypeId)" @click.stop="showPersonDetail(item, '商圈信息')">
+                            <img src="../../../../static/img/businesCard.png" alt="">
                             <span class="type">
                                   {{item.businessBean.name}}
                                 </span>
@@ -125,6 +125,35 @@
             }
         },
         methods: {
+            getClass (type) {
+               switch (type) {
+                   case 1 :{
+                       return 'superMarket';
+                       break
+                   }
+                   case 3 :{
+                       return 'hotel';
+                       break
+                   }
+                   case 4 :{
+                       return 'store';
+                       break
+                   }
+                   case 5 :{
+                       return 'coffee';
+                       break
+                   }
+                   case 6 :{
+                       return 'tea';
+                       break
+                   }
+                   default:{
+                       return ''
+                   }
+
+               }
+
+            },
             handleSelectionChange(val) {
                 this.multipleSelection = val;
             },
@@ -228,8 +257,8 @@
             },
             async fixInfo (info) {
                 let index = info.location.includes(',')?info.location.indexOf(','):info.location.indexOf('，')
-                let latitude = info.location.substring(0, index)
-                let longitude = info.location.substring(index + 1)
+                let longitude= info.location.substring(0, index)
+                let latitude = info.location.substring(index + 1)
                 let shopObj = {
                     id: info.businessBean.id,
                     name: info.businessBean.name,
@@ -252,8 +281,8 @@
             },
             async addNewPerson (info) {
                 let index = info.location.includes(',')?info.location.indexOf(','):info.location.indexOf('，')
-                let latitude = info.location.substring(0, index)
-                let longitude = info.location.substring(index + 1)
+                let longitude= info.location.substring(0, index)
+                let latitude = info.location.substring(index + 1)
                 let shopObj = {
                     name: info.businessBean.name,
                     capacity: info.businessBean.capacity,
@@ -302,7 +331,7 @@
                         this.shopList[i].checked = false
                         this.shopList[i].status = true
                         this.shopList[i].id = this.shopList[i].businessBean.id
-                        this.shopList[i].location = `${this.shopList[i].latitude},${this.shopList[i].longitude}`
+                        this.shopList[i].location = `${this.shopList[i].longitude},${this.shopList[i].latitude}`
                         this.shopList[i].businessBean.currentNum = this.currentNum
                         if (this.shopList[i].businessBean.capacity == 0 ){
                             this.shopList[i].businessBean.state = '已满'
@@ -344,8 +373,7 @@
             padding: rem(16) 0 rem(17) rem(15);
             box-sizing: border-box;
             font-size: rem(16);
-            color: #0086b3;
-            font-weight: 600;
+            color: #26bbf0;
             border-bottom:  1px solid #ccc;
         }
         .personContent{
@@ -360,7 +388,7 @@
                 width: 100%;
                 height: rem(30);
                 margin-top: rem(10);
-                border-bottom: 1px solid #a13309;
+                border-bottom: 2px solid #e44b4e;
             }
             .personList{
                 width: 100%;
@@ -407,7 +435,7 @@
                             position: absolute;
                             left: rem(15);
                             top: rem(-10);
-                            background: red;
+
                         }
                         span{
                             float: right;
@@ -415,6 +443,24 @@
                             line-height: rem(20);
                             color: #fff;
                         }
+                    }
+                    .superMarket{
+                        background: #e44b4e;
+                    }
+                    .food{
+                        background: #f0c30e;
+                    }
+                    .hotel{
+                        background: #4aa3df;
+                    }
+                    .store{
+                        background: #1bbc9b;
+                    }
+                    .coffee{
+                        background: #9b58b5;
+                    }
+                    .tea{
+                        background: #94a4a4;
                     }
                     .specificInfo{
                         margin-top: rem(10);

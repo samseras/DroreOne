@@ -11,7 +11,7 @@ module.exports = {
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
     proxyTable: {//做跨域配置
-        '/droreone': {
+        '/v1': {
             target: 'http://192.168.0.150:8090/',
             changeOrigin: true,
             // pathRewrite: {

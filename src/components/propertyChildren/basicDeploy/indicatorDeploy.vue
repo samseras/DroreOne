@@ -59,8 +59,8 @@
                         <div class="checkBox">
                             <el-checkbox v-model="item.checked" @change="checked(item.id)" class="checkBtn"></el-checkbox>
                         </div>
-                        <div class="personType" @click.stop="showPersonDetail(item, '指示牌信息')">
-                            <img :src="item.picturePath" alt="">
+                        <div class="personType":class="getClass(item.signboardBean.type)" @click.stop="showPersonDetail(item, '指示牌信息')">
+                            <img src="../../../../static/img/indicatorCard.png" alt="">
                             <span class="type">
                                 {{item.signboardBean.type | typeFilter}}
                             </span>
@@ -108,6 +108,15 @@
             }
         },
         methods: {
+            getClass(type){
+                if (type == 0){
+                    return 'slogan'
+                } else if (type == 1){
+                   return ''
+                } else{
+                    return 'facility'
+                }
+            },
             handleSelectionChange(val) {
                 this.multipleSelection = val;
             },
@@ -218,8 +227,8 @@
             },
             async fixInfo (info) {
                 let index = info.location.includes(',')?info.location.indexOf(','):info.location.indexOf('，')
-                let latitude = info.location.substring(0, index)
-                let longitude = info.location.substring(index + 1)
+                let longitude= info.location.substring(0, index)
+                let latitude = info.location.substring(index + 1)
                 let indicatorObj = {
                     id: info.signboardBean.id,
                     type: info.signboardBean.type,
@@ -239,8 +248,8 @@
             },
             async addNewIndicator (info) {
                 let index = info.location.includes(',')?info.location.indexOf(','):info.location.indexOf('，')
-                let latitude = info.location.substring(0, index)
-                let longitude = info.location.substring(index + 1)
+                let longitude = info.location.substring(0, index)
+                let latitude = info.location.substring(index + 1)
                 let indicatorObj = {
                     type: info.signboardBean.type,
                     regionId: info.regionId,
@@ -286,7 +295,7 @@
                         this.indicatorList[i].checked = false
                         this.indicatorList[i].status = true
                         this.indicatorList[i].id = this.indicatorList[i].signboardBean.id
-                        this.indicatorList[i].location = `${this.indicatorList[i].latitude},${this.indicatorList[i].longitude}`
+                        this.indicatorList[i].location = `${this.indicatorList[i].longitude},${this.indicatorList[i].latitude}`
                     }
                 }).catch(err => {
                     console.log(err)
@@ -327,8 +336,7 @@
             padding: rem(16) 0 rem(17) rem(15);
             box-sizing: border-box;
             font-size: rem(16);
-            color: #0086b3;
-            font-weight: 600;
+            color: #26bbf0;
             border-bottom:  1px solid #ccc;
         }
         .indicatorContent{
@@ -343,7 +351,7 @@
                 width: 100%;
                 height: rem(30);
                 margin-top: rem(10);
-                border-bottom: 1px solid #a13309;
+                border-bottom: 2px solid #e44b4e;
             }
             .personList{
                 width: 100%;
@@ -390,7 +398,7 @@
                             position: absolute;
                             left: rem(15);
                             top: rem(-10);
-                            background: red;
+
                         }
                         span{
                             float: right;
@@ -398,6 +406,12 @@
                             line-height: rem(20);
                             color: #fff;
                         }
+                    }
+                    .facility{
+                        background: #f39943;
+                    }
+                    .slogan{
+                        background: #f36a5a;
                     }
                     .specificInfo{
                         margin-top: rem(10);

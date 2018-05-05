@@ -68,7 +68,7 @@
                             <el-checkbox v-model="item.checked" @change="checked(item.id)" class="checkBtn"></el-checkbox>
                         </div>
                         <div class="personType" @click.stop="showPersonDetail(item, '景点信息')">
-                            <img :src="item.picturePath" alt="">
+                            <img src="../../../../static/img/scenicCard.png" alt="">
                             <span class="type">
                                   {{item.scenicspotBean.name}}
                                 </span>
@@ -224,8 +224,8 @@
             },
             async fixInfo (info) {
                 let index = info.location.includes(',')?info.location.indexOf(','):info.location.indexOf('，')
-                let latitude = info.location.substring(0, index)
-                let longitude = info.location.substring(index + 1)
+                let longitude = info.location.substring(0, index)
+                let latitude = info.location.substring(index + 1)
                 let scenicObj = {
                     id: info.scenicspotBean.id,
                     name: info.scenicspotBean.name,
@@ -244,8 +244,8 @@
             },
             async addNewPerson (info) {
                 let index = info.location.includes(',')?info.location.indexOf(','):info.location.indexOf('，')
-                let latitude = info.location.substring(0, index)
-                let longitude = info.location.substring(index + 1)
+                let longitude = info.location.substring(0, index)
+                let latitude = info.location.substring(index + 1)
                 let scenicObj = {
                     name: info.scenicspotBean.name,
                     capacity: info.scenicspotBean.capacity,
@@ -291,7 +291,7 @@
                         this.scenicList[i].checked = false
                         this.scenicList[i].status = true
                         this.scenicList[i].id = this.scenicList[i].scenicspotBean.id
-                        this.scenicList[i].location = `${this.scenicList[i].latitude},${this.scenicList[i].longitude}`
+                        this.scenicList[i].location = `${this.scenicList[i].longitude},${this.scenicList[i].latitude}`
                         this.scenicList[i].scenicspotBean.currentNum = this.currentNum
                         // scenicspotBean.status
                         if (this.scenicList[i].scenicspotBean.capacity == 0) {
@@ -331,11 +331,10 @@
         flex-direction: column;
         .title{
             width: 100%;
-            padding: rem(16) 0 rem(17) rem(15);;
+            padding: rem(16) 0 rem(17) rem(15);
             box-sizing: border-box;
             font-size: rem(16);
-            color: #0086b3;
-            font-weight: 600;
+            color: #26bbf0;
             border-bottom:  1px solid #ccc;
         }
         .personContent{
@@ -350,7 +349,7 @@
                 width: 100%;
                 height: rem(30);
                 margin-top: rem(10);
-                border-bottom: 1px solid #a13309;
+                border-bottom: 2px solid #e44b4e;
             }
             .personList{
                 width: 100%;
@@ -397,7 +396,7 @@
                             position: absolute;
                             left: rem(15);
                             top: rem(-10);
-                            background: red;
+
                         }
                         span{
                             float: right;

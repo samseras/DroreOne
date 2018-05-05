@@ -5,16 +5,16 @@
                 <template v-for="item in items">
                     <template v-if="item.subs">
                         <el-submenu :index="item.index">
-                            <template slot="title"><i :class="item.icon"></i>{{ item.title }}</template>
+                            <template slot="title"><img :src="item.icon" alt="">{{ item.title }}</template>
                             <el-menu-item v-for="(subItem,i) in item.subs" :key="i" :index="subItem.index">
-                                <img src="" alt="">
+                                <img :src="subItem.icon" alt="">
                                 {{ subItem.title }}
                             </el-menu-item>
                         </el-submenu>
                     </template>
                     <template v-else>
                         <el-menu-item :index="item.index">
-                            <i :class="item.icon"></i>{{ item.title }}
+                            <img :src="item.icon" alt="">{{ item.title }}
                         </el-menu-item>
                     </template>
                 </template>
@@ -37,60 +37,65 @@
             return{
                 items: [
                     {
-                        icon: 'el-icon-setting',
+                        icon: './../../../static/img/basictype.svg',
                         index: '/basic-property/basictype',
                         title: '设施类型',
                     },
                     {
-                        icon: 'el-icon-setting',
+                        icon: './../../../static/img/basicInfo.svg',
                         index: '2',
                         title: '设施信息',
                         subs: [
-                            // {
-                            //     index: '/basic-property/person-deploy',
-                            //     title: '人员信息'
-                            // },
                             {
+                                icon: './../../../static/img/basicInfo.svg',
                                 index: '/basic-property/boat-deploy',
                                 title: '车船'
                             },
                             {
+                                icon: './../../../static/img/roat.svg',
                                 index: '/basic-property/roat-deploy',
                                 title: '路网'
                             },
                             {
+                                icon: './../../../static/img/area.svg',
                                 index: '/basic-property/area-deploy',
                                 title: '片区'
                             },
                             {
+                                icon: './../../../static/img/toilet.svg',
                                 index: '/basic-property/toilet-deploy',
                                 title: '卫生间'
                             },
                             {
+                                icon: './../../../static/img/park.svg',
                                 index: '/basic-property/park-deploy',
                                 title: '停车场'
                             },
                             {
+                                icon: './../../../static/img/shop.svg',
                                 index: '/basic-property/shop-deploy',
                                 title: '商圈'
                             },
                             {
+                                icon: './../../../static/img/scenic.svg',
                                 index: '/basic-property/scenic-deploy',
                                 title: '景点'
                             },
 
                             {
+                                icon: './../../../static/img/trash.svg',
                                 index: '/basic-property/trash-deploy',
                                 title: '垃圾桶'
                             },
                             {
+                                icon: './../../../static/img/indicator.svg',
                                 index: '/basic-property/indicator-deploy',
                                 title: '指示牌'
                             },
-                            {
-                                index: '/basic-property/other-deploy',
-                                title: '其他'
-                            },
+                            // {
+                            //     index: '/basic-property/other-deploy',
+                            //     title: '其他'
+                            // },
 
                         ]
                     },
@@ -155,21 +160,37 @@
         padding: rem(0) !important;
         padding-left: rem(20) !important;
         font-size: rem(14);
-        img {
+        img{
             display: inline-block;
-            width: rem(20);
-            height: rem(20);
+            width: rem(18);
+            height: rem(18);
             vertical-align: middle;
-            background: red;
             margin-right: rem(5);
+            margin-left: rem(5);
+            margin-top: rem(-4);
         }
     }
-
+    .basicMenu .el-submenu__title{
+        img{
+            width: rem(25);
+            height: rem(25);
+            display: inline-block;
+            vertical-align: middle;
+            margin-right: rem(10);
+        }
+    }
     .basicMenu .el-menu-item {
         width: 100%;
         height: rem(55);
         line-height: rem(55);
         border-bottom: 1px solid #e0e0e0;
+        img{
+            width: rem(25);
+            height: rem(25);
+            display: inline-block;
+            vertical-align: middle;
+            margin-right: rem(10);
+        }
     }
 
     .basicMenu .el-menu .el-menu--inline {

@@ -1,5 +1,5 @@
 <template>
-    <div class="detailDialog">
+    <div class="dmisDialog">
         <el-dialog
             :title="title"
             :visible="visible"
@@ -10,16 +10,16 @@
             <div class="card">
                 <!--巡更路线-->
                 <div class="personCardContent" v-if="route.includes('security')">
-                    <p class="sex">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 称：<input type="text"v-model="security.name"class="inputText"></p>
+                    <p class="sex">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 称：<input type="text"v-model="security.inspectionSchedule.name"class="inputText"></p>
                     <p class="time">时&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 间：
-                        <el-checkbox-group v-model="filterList" @change="weekDay">
-                            <el-checkbox v-for="item in week" :label="item.type"></el-checkbox>
+                        <el-checkbox-group v-model = "filterList" @change="security.inspectionSchedule.customizedDays = false">
+                            <el-checkbox v-for="item in week" :label="item.id" :key="item.id">{{item.type}}</el-checkbox>
                         </el-checkbox-group>
-                        <el-checkbox label="自定义" @change="weekCustom" v-model="weekcustom"></el-checkbox>
+                        <el-checkbox label="自定义" @change="weekCustom(security.inspectionSchedule.customizedDays)" v-model="security.inspectionSchedule.customizedDays"></el-checkbox>
                     </p>
-                    <p class="time" v-if="weekTime">选择时间：
+                    <p class="time" v-if="security.inspectionSchedule.customizedDays">选择时间：
                         <el-date-picker
-                            v-model="definedDay"
+                            v-model="security.inspectionSchedule.time"
                             size ="mini"
                             type="daterange"
                             range-separator="至"
@@ -28,13 +28,13 @@
                         </el-date-picker>
                     </p>
                     <p class="time">班&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 次：
-                        <el-checkbox-group v-model="classesList" @change="classesDay">
-                            <el-checkbox v-for="item in classes" :label="item.type"></el-checkbox>
+                        <el-checkbox-group v-model="classesList" @change="security.inspectionSchedule.customizedShift = false">
+                            <el-checkbox v-for="item in classes" :label="item.id" :key="item.id">{{item.type}}</el-checkbox>
                         </el-checkbox-group>
-                        <el-checkbox label="自定义" @change="dayCustom" v-model="daycustom"></el-checkbox>
-                        <el-time-picker v-if="dayTime"
+                        <el-checkbox label="自定义" @change="dayCustom(security.inspectionSchedule.customizedShift)" v-model="security.inspectionSchedule.customizedShift"></el-checkbox>
+                        <el-time-picker v-if="security.inspectionSchedule.customizedShift"
                             is-range
-                            v-model="definedTime"
+                            v-model="security.inspectionSchedule.classTime"
                             range-separator="至"
                             start-placeholder="开始时间"
                             end-placeholder="结束时间"
@@ -42,9 +42,9 @@
                         </el-time-picker>
                     </p>
                     <p class="name">人&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 员：
-                        <el-select v-model="security.people" size="mini" class="" multiple placeholder="请选择">
+                        <el-select v-model="security.securityIds" size="mini" class="" multiple placeholder="请选择">
                             <el-option
-                                v-for="item in options"
+                                v-for="item in personList"
                                 :key="item.id"
                                 :label="item.name"
                                 :value="item.id">
@@ -55,24 +55,35 @@
                         <!--<el-radio v-model="radio" label="1">是</el-radio>-->
                         <!--<el-radio v-model="radio" label="0">否</el-radio>-->
                     <!--</p>-->
-                    <p class="phoneNum">线路绘制：<input type="text"v-model="security.location" class="location" @click="showMapDialog"><img src="" alt="" @click="showMapDialog"></p>
+                    <p class="phoneNum">线路绘制：
+                        <!--<input type="text"v-model="security.location" class="location">-->
+                        <el-select v-model="security.inspectionSchedule.routeId" placeholder="请选择">
+                            <el-option
+                                v-for="item in options"
+                                :key="item.id"
+                                :label="item.name"
+                                :value="item.id">
+                            </el-option>
+                        </el-select>
+                        <i class="el-icon-location-outline" @click="showMapDialog"></i>
+                    </p>
                     <p class="type">
-                        描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：<textarea name="" v-model="security.describe" cols="30"
+                        描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：<textarea name="" v-model="security.inspectionSchedule.description" cols="30"
                                                                                rows="5" placeholder="请输入描述信息" style="background: #fafafa"></textarea>
                     </p>
                 </div>
                 <!--广播-->
                 <div class="personCardContent" v-if="route.includes('broadcast')">
-                    <p class="sex">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 称：<input type="text"v-model="broadcast.name" class="inputText"></p>
+                    <p class="sex">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 称：<input type="text"v-model="broadList.broadcastSchedule.name" class="inputText"></p>
                     <p class="time">时&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 间：
-                        <el-checkbox-group v-model="filterList" @change="weekDay">
-                            <el-checkbox v-for="item in week" :label="item.type"></el-checkbox>
+                        <el-checkbox-group v-model="filterList" @change="broadList.broadcastSchedule.customizedDays = false">
+                            <el-checkbox v-for="item in week" :label="item.id" :key="item.id">{{item.type}}</el-checkbox>
                         </el-checkbox-group>
-                        <el-checkbox label="自定义" @change="weekCustom" v-model="weekcustom"></el-checkbox>
+                        <el-checkbox label="自定义" @change="weekCustom(broadList.broadcastSchedule.customizedDays)" v-model="broadList.broadcastSchedule.customizedDays"></el-checkbox>
                     </p>
-                    <p class="time" v-if="weekTime">选择时间：
+                    <p class="time" v-if="broadList.broadcastSchedule.customizedDays">选择时间：
                         <el-date-picker
-                            v-model="definedDay"
+                            v-model="broadList.broadcastSchedule.time"
                             size ="mini"
                             type="daterange"
                             range-separator="至"
@@ -82,7 +93,7 @@
                     </p>
                     <p class="Hardware">执行时间：
                         <el-time-picker is-range
-                                        v-model="definedTime"
+                                        v-model="broadList.broadcastSchedule.watchTime"
                                         range-separator="至"
                                         start-placeholder="开始时间"
                                         end-placeholder="结束时间"
@@ -90,7 +101,7 @@
                         </el-time-picker>
                     </p>
                     <p class="name">关联广播：
-                        <el-select v-model="broadcast.associatedradio" size="mini" multiple placeholder="请选择">
+                        <el-select v-model="broadList.broadcastIds" size="mini" multiple placeholder="请选择">
                             <el-option
                                 v-for="item in options"
                                 :key="item.id"
@@ -104,26 +115,26 @@
                         <!--<el-radio v-model="radio" label="0">否</el-radio>-->
                     <!--</p>-->
                     <p class="uploadText">定义内容：
-                        <input type="text"v-model="broadcast.musicIds" class="inputText">
+                        <input type="text"v-model="broadList.musicIds" class="inputText">
                         <el-button slot="trigger" size="small" type="primary" @click="showBroadcastDialog" :disabled='isDisabled'>曲目编辑</el-button>
                     </p>
                     <p class="type">
-                        描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：<textarea name="" v-model="broadcast.describe" cols="30"
+                        描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：<textarea name="" v-model="broadList.broadcastSchedule.description" cols="30"
                                                                                rows="5" placeholder="请输入描述信息"></textarea>
                     </p>
                 </div>
                 <!--路灯-->
                 <div class="personCardContent" v-if="route.includes('lamppost')">
-                    <p class="sex">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 称：<input type="text" v-model="lamppost.name" class="inputText"></p>
+                    <p class="sex">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 称：<input type="text" v-model="lamppost.lightSchedule.name" class="inputText"></p>
                     <p class="time">时&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 间：
-                        <el-checkbox-group v-model="filterList" @change="weekDay">
-                            <el-checkbox v-for="item in week" :label="item.type"></el-checkbox>
+                        <el-checkbox-group v-model="filterList" @change="lamppost.lightSchedule.customizedDays = false">
+                            <el-checkbox v-for="item in week" :label="item.id" :key="item.id">{{item.type}}</el-checkbox>
                         </el-checkbox-group>
-                        <el-checkbox label="自定义" @change="weekCustom" v-model="weekcustom"></el-checkbox>
+                        <el-checkbox label="自定义" @change="weekCustom(lamppost.lightSchedule.customizedDays)" v-model="lamppost.lightSchedule.customizedDays"></el-checkbox>
                     </p>
-                    <p class="time" v-if="weekTime">选择时间：
+                    <p class="time" v-if="lamppost.lightSchedule.customizedDays">选择时间：
                         <el-date-picker
-                            v-model="definedDay"
+                            v-model="lamppost.lightSchedule.time"
                             size ="mini"
                             type="daterange"
                             range-separator="至"
@@ -133,7 +144,7 @@
                     </p>
                     <p class="Hardware">执行时间：
                         <el-time-picker is-range
-                                        v-model="definedTime"
+                                        v-model="lamppost.lightSchedule.watchTime"
                                         range-separator="至"
                                         start-placeholder="开始时间"
                                         end-placeholder="结束时间"
@@ -141,36 +152,31 @@
                         </el-time-picker>
                     </p>
                     <p class="name">关联路灯：
-                        <el-select v-model="selectLight" size="mini" multiple placeholder="请选择">
+                        <el-select v-model="lamppost.lightIds" size="mini" multiple placeholder="请选择">
                             <el-option
-                                v-for="item in options"
-                                :key="item.id"
-                                :label="item.name"
-                                :value="item.id">
+                                v-for="light in options"
+                                :label="light.name"
+                                :value="light.id">
                             </el-option>
                         </el-select>
                     </p>
-                    <!--<p class="idNum">重复调度：-->
-                        <!--<el-radio v-model="radio" label="1">是</el-radio>-->
-                        <!--<el-radio v-model="radio" label="0">否</el-radio>-->
-                    <!--</p>-->
                     <p class="type">
-                        描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：<textarea name="" v-model="lamppost.description" cols="30"
+                        描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：<textarea name="" v-model="lamppost.lightSchedule.description" cols="30"
                                                                                rows="5" placeholder="请输入描述信息"></textarea>
                     </p>
                 </div>
                 <!--保洁-->
                 <div class="personCardContent" v-if="route.includes('purifier')">
-                    <p class="sex">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 称：<input type="text"v-model="purifier.name"class="inputText"></p>
+                    <p class="sex">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 称：<input type="text"v-model="purifier.cleanSchedule.name"class="inputText"></p>
                     <p class="time">时&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 间：
-                        <el-checkbox-group v-model="filterList" @change="weekDay">
-                            <el-checkbox v-for="item in week" :label="item.type"></el-checkbox>
+                        <el-checkbox-group v-model="filterList" @change="purifier.cleanSchedule.customizedDays = false">
+                            <el-checkbox v-for="item in week" :label="item.id" :key="item.id">{{item.type}}</el-checkbox>
                         </el-checkbox-group>
-                        <el-checkbox label="自定义" @change="weekCustom" v-model="weekcustom"></el-checkbox>
+                        <el-checkbox label="自定义" @change="weekCustom(purifier.cleanSchedule.customizedDays)" v-model="purifier.cleanSchedule.customizedDays"></el-checkbox>
                     </p>
-                    <p class="time" v-if="weekTime">选择时间：
+                    <p class="time" v-if="purifier.cleanSchedule.customizedDays">选择时间：
                         <el-date-picker
-                            v-model="definedDay"
+                            v-model="purifier.cleanSchedule.time"
                             size ="mini"
                             type="daterange"
                             range-separator="至"
@@ -179,13 +185,13 @@
                         </el-date-picker>
                     </p>
                     <p class="time">班&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 次：
-                        <el-checkbox-group v-model="classesList" @change="classesDay">
-                            <el-checkbox v-for="item in classes" :label="item.type"></el-checkbox>
+                        <el-checkbox-group v-model="classesList" @change="purifier.cleanSchedule.customizedShift = false">
+                            <el-checkbox v-for="item in classes" :label="item.id" :key="item.id">{{item.type}}</el-checkbox>
                         </el-checkbox-group>
-                        <el-checkbox label="自定义" @change="dayCustom" v-model="daycustom"></el-checkbox>
-                        <el-time-picker v-if="dayTime"
+                        <el-checkbox label="自定义" @change="dayCustom(purifier.cleanSchedule.customizedShift)" v-model="purifier.cleanSchedule.customizedShift"></el-checkbox>
+                        <el-time-picker v-if="purifier.cleanSchedule.customizedShift"
                                         is-range
-                                        v-model="definedTime"
+                                        v-model="purifier.cleanSchedule.classTime"
                                         range-separator="至"
                                         start-placeholder="开始时间"
                                         end-placeholder="结束时间"
@@ -193,12 +199,12 @@
                         </el-time-picker>
                     </p>
                     <p class="name">人&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 员：
-                        <el-select v-model="purifier.people" size="mini" class="" multiple placeholder="请选择">
+                        <el-select v-model="purifier.cleanerIds" size="mini" class="" multiple placeholder="请选择">
                             <el-option
-                                v-for="item in options"
-                                :key="item.type"
-                                :label="item.type"
-                                :value="item.type">
+                                v-for="item in personList"
+                                :key="item.id"
+                                :label="item.name"
+                                :value="item.id">
                             </el-option>
                         </el-select>
                     </p>
@@ -207,33 +213,32 @@
                         <!--<el-radio v-model="radio" label="0">否</el-radio>-->
                     <!--</p>-->
                     <p class="name">片&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 区：
-                        <el-select v-model="purifier.people" size="mini" class="" multiple placeholder="请选择">
+                        <el-select v-model="purifier.regionIds" size="mini" class="" multiple placeholder="请选择">
                             <el-option
                                 v-for="item in options"
-                                :key="item.type"
-                                :label="item.type"
-                                :value="item.type">
+                                :key="item.id"
+                                :label="item.name"
+                                :value="item.id">
                             </el-option>
                         </el-select>
                     </p>
                     <p class="type">
-                        描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：<textarea name="" v-model="purifier.describe" cols="30"
+                        描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：<textarea name="" v-model="purifier.cleanSchedule.description" cols="30"
                                                                                rows="5" placeholder="请输入描述信息" style="background: #fafafa"></textarea>
                     </p>
                 </div>
                 <!--LED-->
                 <div class="personCardContent" v-if="route.includes('screen')">
-
-                    <p class="sex">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 称：<input type="text"v-model="screen.name" class="inputText"></p>
+                    <p class="sex">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 称：<input type="text"v-model="screen.ledSchedule.name" class="inputText"></p>
                     <p class="time">时&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 间：
-                        <el-checkbox-group v-model="filterList" @change="weekDay">
-                            <el-checkbox v-for="item in week" :label="item.type"></el-checkbox>
+                        <el-checkbox-group v-model="filterList" @change="screen.ledSchedule.customizedDays = false">
+                            <el-checkbox v-for="item in week" :label="item.id" :key="item.id">{{item.type}}</el-checkbox>
                         </el-checkbox-group>
-                        <el-checkbox label="自定义" @change="weekCustom" v-model="weekcustom"></el-checkbox>
+                        <el-checkbox label="自定义" @change="weekCustom(screen.ledSchedule.customizedDays)" v-model="screen.ledSchedule.customizedDays"></el-checkbox>
                     </p>
-                    <p class="time" v-if="weekTime">选择时间：
+                    <p class="time" v-if="screen.ledSchedule.customizedDays">选择时间：
                         <el-date-picker
-                            v-model="definedDay"
+                            v-model="screen.ledSchedule.time"
                             size ="mini"
                             type="daterange"
                             range-separator="至"
@@ -243,15 +248,15 @@
                     </p>
                     <p class="Hardware">执行时间：
                         <el-time-picker is-range
-                                        v-model="definedTime"
+                                        v-model="screen.ledSchedule.watchTime"
                                         range-separator="至"
                                         start-placeholder="开始时间"
                                         end-placeholder="结束时间"
                                         placeholder="选择时间范围">
                         </el-time-picker>
                     </p>
-                    <p class="name">关联广播：
-                        <el-select v-model="screen.associatedradio" size="mini" multiple placeholder="请选择">
+                    <p class="name">关联大屏：
+                        <el-select v-model="screen.ledIds" size="mini" multiple placeholder="请选择">
                             <el-option
                                 v-for="item in options"
                                 :key="item.id"
@@ -265,11 +270,11 @@
                         <!--<el-radio v-model="radio" label="0">否</el-radio>-->
                     <!--</p>-->
                     <p class="uploadText">定义内容：
-                        <input type="text"v-model="screen.uploadText" class="inputText">
+                        <span v-for="item in screen.contents">{{item.content}}</span>
                         <el-button slot="trigger" size="small" type="primary" @click = "showScreenDialog" :disabled='isDisabled'>定义内容</el-button>
                     </p>
                     <p class="type">
-                        描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：<textarea name="" v-model="screen.describe" cols="30"
+                        描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：<textarea name="" v-model="screen.ledSchedule.description" cols="30"
                                                                                rows="5" placeholder="请输入描述信息"></textarea>
                     </p>
                 </div>
@@ -281,7 +286,7 @@
         </el-dialog>
         <MapDialog v-if="mapVisible" :visible="mapVisible" class="map" @closeMapDialog = 'closeMapDialog'></MapDialog>
         <broadcastDialog v-if="broadcastVisible" :visible="broadcastVisible" class="broadcastContent" @closeBroadcastDialog = 'closeBroadcastDialog' @saveMusicList = "musicList"></broadcastDialog>
-        <ScreenDialog v-if="screenVisible" :visible="screenVisible" class="screenContent" @closeScreenDialog = 'closeScreenDialog'></ScreenDialog>
+        <ScreenDialog v-if="screenVisible" :visible="screenVisible" class="screenContent" @closeScreenDialog = 'closeScreenDialog' @saveContent="saveContent"></ScreenDialog>
     </div>
 </template>
 
@@ -308,34 +313,71 @@
                 mapVisible: false,
                 broadcastVisible:false,
                 screenVisible:false,
-                broadcast: {},
+                broadList: {
+                    broadcastSchedule:{
+                        id:"",
+                        name:"",
+                        customizedDays:true,
+                        days:[],
+                        description:"",
+                        time: [],
+                        watchTime: []
+                    },
+                    broadcastIds: [],
+                    musicIds: []
+                },
                 lamppost:{
-                    id:"",
-                    name:"",
-                    customizedDays:false,
-                    days:[],
-                    startDate:"",
-                    endDate:"",
-                    startTime:"",
-                    endTime:"",
-                    type:5,
-                    enabled:true,
-                    description:"",
+                    lightSchedule: {
+                        id:"",
+                        name:"",
+                        customizedDays:true,
+                        days:[],
+                        description:"",
+                        time: [],
+                        watchTime: []
+                    },
                     lightIds:[]
                 },
-                security:{},
-                purifier:{},
-                screen:{},
                 label:{},
+                security:{
+                    inspectionSchedule: {
+                        name: '',
+                        id: '',
+                        customizedDays: '',
+                        customizedShift: '',
+                        description: '',
+                        classTime: [],
+                        days: []
+                    },
+                    securityIds: []
+                },
+                purifier:{
+                    cleanSchedule: {
+                        name: '',
+                        id: '',
+                        customizedDays: '',
+                        customizedShift: '',
+                        description: '',
+                        classTime: [],
+                        days: []
+                    },
+                    cleanerIds: [],
+                    regionIds: []
+                },
+                screen:{
+                    ledSchedule:{
+                        id:"",
+                        name:"",
+                        customizedDays:true,
+                        days:[],
+                        description:"",
+                        time: [],
+                        watchTime: [],
+                    },
+                    ledIds: [],
+                    contents: []
+                },
                 options: [
-                    // { name: '保洁1'},
-                    // { name: '保洁2'},
-                    // { name: '保洁3'},
-                    // { name: '保洁4'},
-                    // {name: 'A-GB001'},
-                    // {name: 'A-GB002'},
-                    // {name: 'A-GB003'},
-                    // {name: 'A-GB004'}
                 ],
                 associatedRadio:true,
                 associatedScreen:false,
@@ -347,20 +389,20 @@
                 weekTime:false,
                 filterList:[],
                 week: [
-                    {type: '周一'},
-                    {type: '周二'},
-                    {type: '周三'},
-                    {type: '周四'},
-                    {type: '周五'},
-                    {type: '周六'},
-                    {type: '周日'}
+                    {type: '周一',id:'1'},
+                    {type: '周二',id:'2'},
+                    {type: '周三',id:'3'},
+                    {type: '周四',id:'4'},
+                    {type: '周五',id:'5'},
+                    {type: '周六',id:'6'},
+                    {type: '周日',id:'7'}
                 ],
                 dayTime:false,
                 classesList:[],
                 classes: [
-                    {type: '早班'},
-                    {type: '中班'},
-                    {type: '晚班'}
+                    {type: '早班',id:'1'},
+                    {type: '中班',id:'2'},
+                    {type: '晚班',id:'3'}
                 ],
                 daycustom:false,
                 definedTime:[new Date(2016, 9, 10, 8, 40), new Date(2016, 9, 10, 9, 40)],
@@ -368,42 +410,13 @@
                 importFileUrl: 'http:dtc.com/cpy/add',
                 fileList:[],
                 uploadText:false,
+                personList: []
             }
         },
         methods: {
-            addfile() {
-                this.$refs.fileUpload.click()
-            },
-            fi (e) {
-                this.file = e.target.files[0]
-            },
-            timeDateFiler(item) {
-                return  moment(item).format('YYYY-MM-DD');
-            },
-            timeTimeFiler(item) {
-                return moment(item).format('YY:MM:DD');
-            },
-            days(weeks){
-                let arr = [];
-                weeks = weeks.filter((item)=>{
-                    if(item == "周一"){
-                        arr.push("1");
-                    }else if(item == "周二"){
-                        arr.push("2");
-                    }else if(item == "周三"){
-                        arr.push("3");
-                    }else if(item == "周四"){
-                        arr.push("4");
-                    }else if(item == "周五"){
-                        arr.push("5");
-                    }else if(item == "周六"){
-                        arr.push("6");
-                    }else if(item == "周日"){
-                        arr.push("7");
-                    }
-                    return arr;
-                })
-                console.log(arr,"[[[[[[[[[[[[[")
+            saveContent (info) {
+                this.screen.contents = info
+                this.closeScreenDialog()
             },
             closeDialog () {
                 this.$emit('closeInfoDialog')
@@ -411,32 +424,35 @@
             addNewInfo () {
                 let newInfo = {}
                 if (this.route.includes('security')) {
+                    if (!this.security.inspectionSchedule.customizedDays) {
+                        this.security.inspectionSchedule.days = this.filterList.join()
+                    }
+                    if (!this.security.inspectionSchedule.customizedShift) {
+                        this.security.inspectionSchedule.shifts = this.classesList.join()
+                    }
                     newInfo = this.security
                 } else if(this.route.includes('broadcast')) {
-                    this.broadcast.executetime = this.definedTime;
-                    newInfo = this.broadcast
-                } else if(this.route.includes('lamppost')) {
-                    console.log(this.lamppost,"{}}}}}}}{{}}{}{")
-                    this.lamppost.executetime = this.definedTime;
-                    this.lamppost.type = "5";
-                    if(this.filterList == []){
-                        this.lamppost.customizedDays = false
-                        this.lamppost.time = this.filterList;
-                        this.lamppost.days = this.days(this.filterList);
-                    }else {
-                        this.lamppost.customizedDays = true
-                        this.lamppost.time = this.definedDay;
-                        this.lamppost.startDate = this.timeDateFiler(this.definedDay[0]);
-                        this.lamppost.endDate = this.timeDateFiler(this.definedDay[1]);
-                        this.lamppost.days = [];
+                    if (!this.broadList.broadcastSchedule.customizedDays) {
+                        this.broadList.broadcastSchedule.days = this.filterList.join()
                     }
-                    // console.log(this.filterList,"qqqqqqqqq")
-                    // console.log(this.definedDay,"12345")
-                    // console.log(this.lamppost,"要保存的路灯数据")
+                    newInfo = this.broadList
+                } else if(this.route.includes('lamppost')) {
+                    if (!this.lamppost.lightSchedule.customizedDays) {
+                        this.lamppost.lightSchedule.days = this.filterList.join()
+                    }
                     newInfo = this.lamppost
                 } else if(this.route.includes('purifier')) {
+                    if (!this.purifier.cleanSchedule.customizedDays) {
+                        this.purifier.cleanSchedule.days = this.filterList.join()
+                    }
+                    if (!this.purifier.cleanSchedule.customizedShift) {
+                        this.purifier.cleanSchedule.shifts = this.classesList.join()
+                    }
                     newInfo = this.purifier
                 } else if(this.route.includes('screen')) {
+                    if (!this.screen.ledSchedule.customizedDays) {
+                        this.screen.ledSchedule.days = this.filterList.join()
+                    }
                     newInfo = this.screen
                 }
                 newInfo.status = true
@@ -450,25 +466,17 @@
                 }
                 this.closeDialog()
             },
-            weekCustom(){
-                if(this.weekTime === true){
-                    this.weekTime  = false;
-                }else {
-                    this.weekTime  = true;
+            weekCustom(state){
+                if (state) {
                     this.filterList = [];
-                    console.log(this.definedTime)
                 }
             },
-            weekDay(){
+            weekDay(state){
                 console.log(this.filterList)
-                this.weekTime  = false;
-                this.weekcustom =false;
+                state = false
             },
-            dayCustom(){
-                if(this.dayTime === true){
-                    this.dayTime  = false;
-                }else {
-                    this.dayTime  = true;
+            dayCustom(state){
+                if (state) {
                     this.classesList = [];
                 }
             },
@@ -494,69 +502,18 @@
             closeScreenDialog(){
                 this.screenVisible = false
             },
-            editSave() {
-                this.edit = false
-                let oldFile = this.files[0]
-                console.log(this.files[0] ,'4567890')
-                let binStr = atob(this.cropper.getCroppedCanvas().toDataURL(oldFile.type).split(',')[1])
-                let arr = new Uint8Array(binStr.length)
-                for (let i = 0; i < binStr.length; i++) {
-                    arr[i] = binStr.charCodeAt(i)
-                }
-                let file = new File([arr], oldFile.name, { type: oldFile.type })
-                this.$refs.upload.update(oldFile.id, {
-                    file,
-                    type: file.type,
-                    size: file.size,
-                    active: true,
-                })
-                console.log(file, '这是截取后的图片')
-                let that = this
-                let reader = new FileReader();
-                reader.readAsDataURL(file);
-                this.src = reader.onload = function(event){
-                    let txt = event.target.result;
-                    that.src = txt
-                }
-            },
-            alert(message) {
-                alert(message)
-            },
-            inputFile(newFile, oldFile, prevent) {
-                if (newFile && !oldFile) {
-                    this.$nextTick(function () {
-                        this.edit = true
-                    })
-                }
-                if (!newFile && oldFile) {
-                    this.edit = false
-                }
-            },
-            async getAllLight (data){
-                // this.isShowLoading = true
+            async getAllLight (){
                 await api.light.getAllLight().then(res => {
-                    // this.isShowLoading = false
                     console.log(res, '这是请求回来所有路灯列表')
                      this.options = res.devices;
                     console.log(res.devices)
-                    this.selectLight = data.lightIds;
-                    // for(let i=0;i<data.lightIds.length;i++){
-                    //     for(let j=0;j<res.devices.length;j++){
-                    //         if(res.devices[j].id == data.lightIds[i]){
-                    //             this.selectLight.push(res.devices[j].name);
-                    //         }
-                    //     }
-                    // }
-                    console.log(this.selectLight,"wwwwwwwwwwwwww")
                 }).catch(err => {
                     console.log(err, '请求失败')
                     this.isShowLoading = false
                 })
             },
             async getAllBroadcast (){
-                // this.isShowLoading = true
                 await api.broadcast.getAllBroadcast().then(res => {
-                    // this.isShowLoading = false
                     console.log(res, '这是请求回来所有广播列表')
                     this.options = res.devices;
                 }).catch(err => {
@@ -565,9 +522,7 @@
                 })
             },
             async getAllLed (){
-                // this.isShowLoading = true
                 await api.led.getAllLed().then(res => {
-                    // this.isShowLoading = false
                     console.log(res, '这是请求回来所有LED列表')
                     this.options = res.devices;
                 }).catch(err => {
@@ -579,118 +534,77 @@
                 let jobId = 3
                 await api.person.getJobPerson(jobId).then(res => {
                     console.log(res, '安保人员')
-                    this.options = res;
+                    this.personList = res;
                 }).catch(err => {
                     console.log(err, '请求失败')
                 })
             },
-            inputFilter(newFile, oldFile, prevent) {
-                if (newFile && !oldFile) {
-                    if (!/\.(gif|jpg|jpeg|png|webp)$/i.test(newFile.name)) {
-                        this.alert('Your choice is not a picture')
-                        return prevent()
-                    }
-                }
-                if (newFile && (!oldFile || newFile.file !== oldFile.file)) {
-                    newFile.url = ''
-                    let URL = window.URL || window.webkitURL
-                    if (URL && URL.createObjectURL) {
-                        newFile.url = URL.createObjectURL(newFile.file)
-                    }
-                }
+            async getAllPurifierPerson () {
+                let jobId = 4;
+                await api.person.getJobPerson(jobId).then(res => {
+                    console.log(res, '保洁人员')
+                    this.personList = res
+                }).catch(err => {
+                    console.log(err, '请求人员失败')
+                })
             },
-            hardwareType(vId){
-                if(vId === '广播'){
-                    this.upload = true;
-                    this.uploadText = false;
-                    this.associatedRadio = true;
-                    this.associatedScreen = false;
-                    this.associatedStreet = false;
-                }else if(vId === 'LED'){
-                    this.upload = false;
-                    this.uploadText = true;
-                    this.associatedRadio = false;
-                    this.associatedScreen = true;
-                    this.associatedStreet = false;
-                }else if(vId === '路灯'){
-                    this.upload = false;
-                    this.uploadText = false;
-                    this.associatedRadio = false;
-                    this.associatedScreen = false;
-                    this.associatedStreet = true;
-                }
+            async getAllRegion () {
+              await api.area.getAllRegion().then(res => {
+                  console.log(res, '片区请求成功')
+                  this.options = res
+              }).catch(err => {
+                  console.log(err, '请求片区失败')
+              })
+            },
+            async getAllRouteLine () {
+                await api.roat.getAllRoat().then(res => {
+                    console.log(res, '请求成功')
+                    this.options = res
+                }).catch(err => {
+                    console.log(err, '请求失败')
+                })
             }
-
         },
         async created () {
             this.route = this.$route.path
             console.log(this.Info,'  opopop')
             if (this.route.includes('security')) {
+                await this.getSafePerson()
+                await this.getAllRouteLine()
                 this.security = this.Info;
-                this.getSafePerson()
-                if(this.security.isCustomizedDays){
-                    this.definedDay = this.security.time;
-                    this.weekTime = true;
-                    this.weekcustom = true;
-                }else {
-                    this.filterList = this.security.time;
+                if (this.security.inspectionSchedule.customizedDays === false) {
+                    this.filterList = this.security.inspectionSchedule.days;
                 }
-                if(this.security.isCustomizedShift){
-                    this.definedTime = this.security.shift;
-                    this.dayTime = true;
-                    this.daycustom = true;
-                }else{
-                    this.classesList = this.security.shift;
+                if (this.security.inspectionSchedule.customizedShift === false) {
+                    this.classesList = this.security.inspectionSchedule.shifts
                 }
             } else if(this.route.includes('broadcast')) {
                 this.getAllBroadcast()
-                this.broadcast = this.Info;
-                this.definedTime = this.broadcast.executetime;
-                if(this.broadcast.isCustomizedDays){
-                    this.definedDay = this.broadcast.time;
-                    this.weekTime = true;
-                    this.weekcustom = true;
-                }else {
-                    this.filterList = this.broadcast.time;
+                this.broadList = this.Info;
+                if(this.broadList.broadcastSchedule.customizedDays === false) {
+                    this.filterList = this.broadList.broadcastSchedule.days;
                 }
             } else if(this.route.includes('lamppost')) {
+                this.getAllLight()
                 this.lamppost = this.Info;
-                console.log(this.lamppost,"[][][][]][[][]")
-                this.getAllLight(this.lamppost)
-                this.definedTime = this.lamppost.executetime;
-                if(this.lamppost.customizedDays){
-                    this.definedDay = this.lamppost.time;
-                    this.weekTime = true;
-                    this.weekcustom = true;
-                }else {
-                    this.filterList = this.lamppost.time;
+                if(this.lamppost.lightSchedule.customizedDays === false) {
+                    this.filterList = this.lamppost.lightSchedule.days;
                 }
             } else if(this.route.includes('purifier')) {
+                this.getAllPurifierPerson()
+                this.getAllRegion()
                 this.purifier = this.Info;
-                if(this.purifier.isCustomizedDays){
-                    this.definedDay = this.purifier.time;
-                    this.weekTime = true;
-                    this.weekcustom = true;
-                }else {
-                    this.filterList = this.purifier.time;
+                if (this.purifier.cleanSchedule.customizedDays === false) {
+                    this.filterList = this.purifier.cleanSchedule.days;
                 }
-                if(this.purifier.isCustomizedShift){
-                    this.definedTime = this.purifier.shift;
-                    this.dayTime = true;
-                    this.daycustom = true;
-                }else{
-                    this.classesList = this.purifier.shift;
+                if (this.purifier.cleanSchedule.customizedShift === false) {
+                    this.classesList = this.purifier.cleanSchedule.shifts
                 }
             } else if(this.route.includes('screen')) {
                 this.getAllLed()
                 this.screen = this.Info;
-                this.definedTime = this.screen.executetime;
-                if(this.screen.isCustomizedDays){
-                    this.definedDay = this.screen.time;
-                    this.weekTime = true;
-                    this.weekcustom = true;
-                }else {
-                    this.filterList = this.screen.time;
+                if(this.screen.ledSchedule.customizedDays === false) {
+                    this.filterList = this.screen.ledSchedule.days;
                 }
             } else if(this.route.includes('label')){
                 this.label = this.Info;
@@ -726,7 +640,7 @@
     }
 </script>
 <style lang="scss">
-    .detailDialog{
+    .dmisDialog{
         width: 100%;
         height: 100%;
         .el-dialog .el-dialog--center{
@@ -853,345 +767,20 @@
             border-top: 1px solid #ccc;
             margin-top: rem(15);
         }
-    }
-    .el-select-dropdown__item span{
-        font-size: rem(12);
-    }
-</style>
-<style>
-    .example-avatar .avatar-upload .rounded-circle {
-        width: 200px;
-        height: 200px;
-    }
-    .example-avatar .text-center .btn {
-        margin: 0 .5rem
-    }
-    .example-avatar .avatar-edit-image {
-        max-width: 100%
-    }
-    .avatar-edit-image{
-        height: 255px !important;
-    }
-    .example-avatar .drop-active {
-        top: 0;
-        bottom: 0;
-        right: 0;
-        left: 0;
-        position: fixed;
-        z-index: 9999;
-        opacity: .6;
-        text-align: center;
-        background: #000;
-    }
-    .example-avatar .drop-active h3 {
-        margin: -.5em 0 0;
-        position: absolute;
-        top: 50%;
-        left: 0;
-        right: 0;
-        -webkit-transform: translateY(-50%);
-        -ms-transform: translateY(-50%);
-        transform: translateY(-50%);
-        font-size: 40px;
-        color: #fff;
-        padding: 0;
-    }
-    /*!
- * Cropper.js v1.3.3
- * https://github.com/fengyuanchen/cropperjs
- *
- * Copyright (c) 2015-2018 Chen Fengyuan
- * Released under the MIT license
- *
- * Date: 2018-03-18T03:19:07.619Z
- */
-    .cropper-container {
-        direction: ltr;
-        font-size: 0;
-        line-height: 0;
-        position: relative;
-        -ms-touch-action: none;
-        touch-action: none;
-        -webkit-user-select: none;
-        -moz-user-select: none;
-        -ms-user-select: none;
-        user-select: none
-    }
-
-    .cropper-container img {
-        display: block;
-        height: 100%;
-        image-orientation: 0deg;
-        max-height: none !important;
-        max-width: none !important;
-        min-height: 0 !important;
-        min-width: 0 !important;
-        width: 100%
-    }
-
-    .cropper-wrap-box, .cropper-canvas, .cropper-drag-box, .cropper-crop-box, .cropper-modal {
-        bottom: 0;
-        left: 0;
-        position: absolute;
-        right: 0;
-        top: 0
-    }
-
-    .cropper-wrap-box, .cropper-canvas {
-        overflow: hidden
-    }
-
-    .cropper-drag-box {
-        background-color: #fff;
-        opacity: 0
-    }
-
-    .cropper-modal {
-        background-color: #000;
-        opacity: .5
-    }
-
-    .cropper-view-box {
-        display: block;
-        height: 100%;
-        outline-color: rgba(51, 153, 255, 0.75);
-        outline: 1px solid #39f;
-        overflow: hidden;
-        width: 100%
-    }
-
-    .cropper-dashed {
-        border: 0 dashed #eee;
-        display: block;
-        opacity: .5;
-        position: absolute
-    }
-
-    .cropper-dashed.dashed-h {
-        border-bottom-width: 1px;
-        border-top-width: 1px;
-        height: 33.33333%;
-        left: 0;
-        top: 33.33333%;
-        width: 100%
-    }
-
-    .cropper-dashed.dashed-v {
-        border-left-width: 1px;
-        border-right-width: 1px;
-        height: 100%;
-        left: 33.33333%;
-        top: 0;
-        width: 33.33333%
-    }
-
-    .cropper-center {
-        display: block;
-        height: 0;
-        left: 50%;
-        opacity: .75;
-        position: absolute;
-        top: 50%;
-        width: 0
-    }
-
-    .cropper-center:before, .cropper-center:after {
-        background-color: #eee;
-        content: ' ';
-        display: block;
-        position: absolute
-    }
-
-    .cropper-center:before {
-        height: 1px;
-        left: -3px;
-        top: 0;
-        width: 7px
-    }
-
-    .cropper-center:after {
-        height: 7px;
-        left: 0;
-        top: -3px;
-        width: 1px
-    }
-
-    .cropper-face, .cropper-line, .cropper-point {
-        display: block;
-        height: 100%;
-        opacity: .1;
-        position: absolute;
-        width: 100%
-    }
-
-    .cropper-face {
-        background-color: #fff;
-        left: 0;
-        top: 0
-    }
-
-    .cropper-line {
-        background-color: #39f
-    }
-
-    .cropper-line.line-e {
-        cursor: ew-resize;
-        right: -3px;
-        top: 0;
-        width: 5px
-    }
-
-    .cropper-line.line-n {
-        cursor: ns-resize;
-        height: 5px;
-        left: 0;
-        top: -3px
-    }
-
-    .cropper-line.line-w {
-        cursor: ew-resize;
-        left: -3px;
-        top: 0;
-        width: 5px
-    }
-
-    .cropper-line.line-s {
-        bottom: -3px;
-        cursor: ns-resize;
-        height: 5px;
-        left: 0
-    }
-
-    .cropper-point {
-        background-color: #39f;
-        height: 5px;
-        opacity: .75;
-        width: 5px
-    }
-
-    .cropper-point.point-e {
-        cursor: ew-resize;
-        margin-top: -3px;
-        right: -3px;
-        top: 50%
-    }
-
-    .cropper-point.point-n {
-        cursor: ns-resize;
-        left: 50%;
-        margin-left: -3px;
-        top: -3px
-    }
-
-    .cropper-point.point-w {
-        cursor: ew-resize;
-        left: -3px;
-        margin-top: -3px;
-        top: 50%
-    }
-
-    .cropper-point.point-s {
-        bottom: -3px;
-        cursor: s-resize;
-        left: 50%;
-        margin-left: -3px
-    }
-
-    .cropper-point.point-ne {
-        cursor: nesw-resize;
-        right: -3px;
-        top: -3px
-    }
-
-    .cropper-point.point-nw {
-        cursor: nwse-resize;
-        left: -3px;
-        top: -3px
-    }
-
-    .cropper-point.point-sw {
-        bottom: -3px;
-        cursor: nesw-resize;
-        left: -3px
-    }
-
-    .cropper-point.point-se {
-        bottom: -3px;
-        cursor: nwse-resize;
-        height: 20px;
-        opacity: 1;
-        right: -3px;
-        width: 20px
-    }
-
-    @media (min-width: 768px) {
-        .cropper-point.point-se {
-            height: 15px;
-            width: 15px
+        .el-checkbox__label{
+            font-size: rem(12);
+            padding-left: rem(7);
+        }
+        .el-checkbox+.el-checkbox{
+            margin-left: rem(10);
+        }
+        .el-select-dropdown__item span{
+            font-size: rem(12);
         }
     }
-
-    @media (min-width: 992px) {
-        .cropper-point.point-se {
-            height: 10px;
-            width: 10px
-        }
-    }
-
-    @media (min-width: 1200px) {
-        .cropper-point.point-se {
-            height: 5px;
-            opacity: .75;
-            width: 5px
-        }
-    }
-
-    .cropper-point.point-se:before {
-        background-color: #39f;
-        bottom: -50%;
-        content: ' ';
-        display: block;
-        height: 200%;
-        opacity: 0;
-        position: absolute;
-        right: -50%;
-        width: 200%
-    }
-
-    .cropper-invisible {
-        opacity: 0
-    }
-
-    .cropper-bg {
-        background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQAQMAAAAlPW0iAAAAA3NCSVQICAjb4U/gAAAABlBMVEXMzMz////TjRV2AAAACXBIWXMAAArrAAAK6wGCiw1aAAAAHHRFWHRTb2Z0d2FyZQBBZG9iZSBGaXJld29ya3MgQ1M26LyyjAAAABFJREFUCJlj+M/AgBVhF/0PAH6/D/HkDxOGAAAAAElFTkSuQmCC')
-    }
-
-    .cropper-hide {
-        display: block;
-        height: 0;
-        position: absolute;
-        width: 0
-    }
-
-    .cropper-hidden {
-        display: none !important
-    }
-
-    .cropper-move {
-        cursor: move
-    }
-
-    .cropper-crop {
-        cursor: crosshair
-    }
-
-    .cropper-disabled .cropper-drag-box, .cropper-disabled .cropper-face, .cropper-disabled .cropper-line, .cropper-disabled .cropper-point {
-        cursor: not-allowed
-    }
-
 </style>
 <style lang="scss" scoped type="text/scss">
-    .detailDialog{
+    .dmisDialog{
         .card{
             width: 100%;
             height: 100%;
@@ -1248,21 +837,25 @@
                         line-height: rem(28);
                         width: rem(490);
                     }
+                    i{
+                        font-size: rem(16);
+                    }
                 }
-                .img{
-                    width: rem(100);
-                    height: rem(60);
-                    position: absolute;
-                    top: rem(0);
-                    right: rem(0);
-                    background: #fff;
-                    img{
-                        width: rem(55);
-                        height: rem(55);
-                        display: inline-block;
-                        background: red;
-                        border-radius: 50%;
-                        margin-left: rem(25);
+                .uploadText{
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    white-space: nowrap;
+                    height: rem(30);
+                    margin-top: 0;
+                    padding-top: rem(10);
+                    padding-right:rem(85);
+                    span{
+                        margin-right: rem(10);
+                    }
+                    button{
+                        float: right;
+                        margin-right: rem(-80);
+                        margin-top: rem(-5);
                     }
                 }
             }
@@ -1285,11 +878,5 @@
     }
 </style>
 <style lang="scss">
-    .el-checkbox__label{
-        font-size: rem(12);
-        padding-left: rem(7);
-    }
-    .el-checkbox+.el-checkbox{
-        margin-left: rem(10);
-    }
+
 </style>

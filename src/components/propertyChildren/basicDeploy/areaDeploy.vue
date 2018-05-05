@@ -8,6 +8,7 @@
                 <Header @addNewInfo = "addNewInfo"
                         @deletInfo = "deletInfo"
                         @toggleList = "toggleList"
+                        @choseType = 'choseType'
                         @selectedAll = 'selectedAll'
                         @fixedInfo = 'fixedInfo'>
                 </Header>
@@ -62,7 +63,8 @@
                             <el-checkbox v-model="item.checked" @change="checked(item.id)" class="checkBtn"></el-checkbox>
                         </div>
                         <div class="personType" @click.stop="showPersonDetail(item, '片区信息')">
-                            <img :src="item.picturePath" alt="">
+
+                            <img src="../../../../static/img/areaCard.png" alt="">
                             <span class="type">
                                   {{item.name}}
                                 </span>
@@ -180,6 +182,25 @@
                     this.choseInfoId.push(id)
                 }
             },
+            choseType (type) {
+                console.log(type)
+                if (type.length === 0){
+                    this.areaList = this.areaList.filter((item) => {
+                        item.status = true
+                        return item.status === true
+                    })
+                } else {
+                    this.choseList = this.areaList.filter((item,index) => {
+                        if (type.includes(item.type)){
+                            item.status = true
+                        } else if(!type.includes(item.type)){
+                            item.status = false
+                            console.log(item.type, 'p[p[p[');
+                        }
+                        return item.status === true
+                    })
+                }
+            },
             selectedAll (state) {
                 console.log(state, 'opopopopop')
                 this.areaList = this.areaList.filter((item) => {
@@ -199,11 +220,7 @@
                 let aresObj = {
                     id: info.id,
                     name: info.name,
-                    description: info.description,
-                    geo: {
-                        type:"Polygon",
-                        coordinates: info.location
-                    }
+                    description: info.description
                 }
                 api.area.updateRegion(JSON.stringify(aresObj)).then(res => {
                     console.log(res, '创建成功')
@@ -215,14 +232,9 @@
                 })
             },
             async addNewPerson (info) {
-                console.log(info.location, 'p[p[p[p[p[p[p[p[p[')
                 let aresObj = {
                     name: info.name,
-                    description: info.description,
-                    geo: {
-                        type:"Polygon",
-                        coordinates: info.location
-                    }
+                    description: info.description
                 }
                 if (info.imgUrl !== '') {
                     await api.person.updataAva(info.imgUrl).then(res => {
@@ -248,7 +260,6 @@
                 }
                 if (this.choseInfoId.length > 1) {
                     this.$message.warning('至多选择一个数据修改')
-                    return
                 }
                 if (this.choseInfoId.length > 0) {
                     this.areaList.map((item) => {
@@ -271,7 +282,6 @@
                     for (let i = 0; i < this.areaList.length; i++) {
                         this.areaList[i].checked = false
                         this.areaList[i].status = true
-                        this.areaList[i].location = this.areaList[i].geo
                     }
                 }).catch(err => {
                     console.log(err, '失败')
@@ -302,8 +312,7 @@
             padding: rem(16) 0 rem(17) rem(15);
             box-sizing: border-box;
             font-size: rem(16);
-            color: #0086b3;
-            font-weight: 600;
+            color: #26bbf0;
             border-bottom:  1px solid #ccc;
         }
         .personContent{
@@ -318,7 +327,7 @@
                 width: 100%;
                 height: rem(30);
                 margin-top: rem(10);
-                border-bottom: 1px solid #a13309;
+                border-bottom: 2px solid #e44b4e;
             }
             .personList{
                 width: 100%;
@@ -365,7 +374,6 @@
                             position: absolute;
                             left: rem(15);
                             top: rem(-10);
-                            background: red;
                         }
                         span{
                             float: right;

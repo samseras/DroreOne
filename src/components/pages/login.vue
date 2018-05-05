@@ -84,7 +84,7 @@
 				}*/
 
 
-				location.href = "/index";
+				location.href = "/droreone";
 			}
 		},
 		mounted:function(){

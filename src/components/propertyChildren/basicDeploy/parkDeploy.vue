@@ -76,7 +76,7 @@
                             <el-checkbox v-model="item.checked" @change="checked(item.id)" class="checkBtn"></el-checkbox>
                         </div>
                         <div class="personType" @click.stop="showParkDetail(item, '停车场信息')">
-                            <img :src="item.picturePath" alt="">
+                            <img src="../../../../static/img/parkCard.png" alt="">
                             <span class="type">
                                   {{item.parkingBean.name}}
                                 </span>
@@ -237,8 +237,8 @@
             },
             async fixInfo (info) {
                 let index = info.location.includes(',')?info.location.indexOf(','):info.location.indexOf('，')
-                let latitude = info.location.substring(0, index)
-                let longitude = info.location.substring(index + 1)
+                let longitude = info.location.substring(0, index)
+                let latitude = info.location.substring(index + 1)
                 let parkObj = {
                     id: info.parkingBean.id,
                     name: info.parkingBean.name,
@@ -259,8 +259,8 @@
             },
             async addNewPark (info) {
                 let index = info.location.includes(',')?info.location.indexOf(','):info.location.indexOf('，')
-                let latitude = info.location.substring(0, index)
-                let longitude = info.location.substring(index + 1)
+                let longitude = info.location.substring(0, index)
+                let latitude = info.location.substring(index + 1)
                 let parkObj = {
                     name: info.parkingBean.name,
                     capacity: info.parkingBean.capacity,
@@ -310,7 +310,7 @@
                         this.parkList[i].id = this.parkList[i].parkingBean.id
                         this.parkList[i].parkingBean.currentNum = this.currentNum
                         this.parkList[i].parkingBean.surplusNum = this.parkList[i].parkingBean.capacity - this.parkList[i].parkingBean.currentNum
-                        this.parkList[i].location = `${this.parkList[i].latitude},${this.parkList[i].longitude}`
+                        this.parkList[i].location = `${this.parkList[i].longitude},${this.parkList[i].latitude}`
                         if (this.parkList[i].parkingBean.capacity == 0 ){
                             this.parkList[i].parkingBean.state = '已满'
                         } else {
@@ -353,8 +353,7 @@
             padding: rem(16) 0 rem(17) rem(15);
             box-sizing: border-box;
             font-size: rem(16);
-            color: #0086b3;
-            font-weight: 600;
+            color: #26bbf0;
             border-bottom:  1px solid #ccc;
         }
         .personContent{
@@ -369,7 +368,7 @@
                 width: 100%;
                 height: rem(30);
                 margin-top: rem(10);
-                border-bottom: 1px solid #a13309;
+                border-bottom: 2px solid #e44b4e;
             }
             .personList{
                 width: 100%;
@@ -416,7 +415,7 @@
                             position: absolute;
                             left: rem(15);
                             top: rem(-10);
-                            background: red;
+
                         }
                         span{
                             float: right;

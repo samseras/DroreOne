@@ -48,6 +48,10 @@
         },
         created(){
             this.getLightType()
+        },
+        components:{
+            ScrollContainer
+
         }
 
     }

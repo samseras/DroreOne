@@ -5,16 +5,16 @@
                 <template v-for="item in items">
                     <template v-if="item.subs">
                         <el-submenu :index="item.index">
-                            <template slot="title"><i :class="item.icon"></i>{{ item.title }}</template>
+                            <template slot="title"><img :src="item.icon" alt="">{{ item.title }}</template>
                             <el-menu-item v-for="(subItem,i) in item.subs" :key="i" :index="subItem.index">
-                                <img src="" alt="">
+                                <img :src="subItem.icon" alt="">
                                 {{ subItem.title }}
                             </el-menu-item>
                         </el-submenu>
                     </template>
                     <template v-else>
                         <el-menu-item :index="item.index">
-                            <i :class="item.icon"></i>{{ item.title }}
+                            <img :src="item.icon" alt="">{{ item.title }}
                         </el-menu-item>
                     </template>
                 </template>
@@ -33,34 +33,39 @@
             return {
                 items: [
                     {
-                        icon: 'el-icon-document',
+                        icon: './../../static/img/dmis.svg',
                         index: '3',
                         title: '调度管理',
                         subs: [
                             {
+                                icon: './../../static/img/broadcast.svg',
                                 index: '/deploy/broadcast-Dmis',
                                 title: '广播'
                             },
                             {
+                                icon: './../../static/img/light.svg',
                                 index: '/deploy/lamppost-Dmis',
                                 title: '路灯'
                             },
                             {
+                                icon: './../../static/img/led.svg',
                                 index: '/deploy/screen-Dmis',
                                 title: 'LED'
                             },
                             {
+                                icon: './../../static/img/clearer.svg',
                                 index: '/deploy/purifier-Dmis',
                                 title: '保洁'
                             },
                             {
+                                icon: './../../static/img/roat.svg',
                                 index: '/deploy/security-Dmis',
                                 title: '巡更路线'
                             }
                         ]
                     },
                     {
-                        icon: 'el-icon-document',
+                        icon: './../../static/img/record.svg',
                         index: '4',
                         title: '调度记录',
                         subs: [
@@ -95,11 +100,21 @@
         font-size: rem(14);
         img{
             display: inline-block;
-            width: rem(20);
-            height: rem(20);
+            width: rem(18);
+            height: rem(18);
             vertical-align: middle;
-            background: red;
             margin-right: rem(5);
+            margin-left: rem(5);
+            margin-top: rem(-4);
+        }
+    }
+    .deploy .el-submenu__title{
+        img{
+            width: rem(25);
+            height: rem(25);
+            display: inline-block;
+            vertical-align: middle;
+            margin-right: rem(10);
         }
     }
     .deploy .el-menu-item{
@@ -107,6 +122,13 @@
         height: rem(30);
         line-height: rem(30);
         /*border-bottom: 1px solid #ccc;*/
+        img{
+            width: rem(25);
+            height: rem(25);
+            display: inline-block;
+            vertical-align: middle;
+            margin-right: rem(10);
+        }
     }
     .deploy .el-menu .el-menu--inline{
         width: 100%;

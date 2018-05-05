@@ -7,17 +7,16 @@
             <div class="funcTitle">
                 <Header @addNewInfo = "addNewInfo"
                         @deletInfo = "deletInfo"
-                        @choseType = 'choseType'
                         @selectedAll = 'selectedAll'
                         @fixedInfo = 'fixedInfo'>
                 </Header>
             </div>
-            <div class="personList">
+            <div class="personList" v-loading="isShowloading">
                 <ScrollContainer>
                     <el-table
                         v-if="isShowAreaCard"
                         ref="multipleTable"
-                        :data="areaList"
+                        :data="broadCastList"
                         tooltip-effect="dark"
                         style="width: 100%"
                         @selection-change="handleSelectionChange">
@@ -27,27 +26,27 @@
                                 <el-checkbox v-model="scope.row.checked" @change="checked(scope.row)" class="checkBoxBtn"></el-checkbox>
                             </template>
                         </el-table-column>
+
                         <el-table-column
-                            prop="name"
-                            label="调度硬件"
-                            sortable
-                            width="120">
-                        </el-table-column>
-                        <el-table-column
-                            prop="type"
+                            prop="broadcastSchedule.name"
                             label="名称">
                         </el-table-column>
                         <el-table-column
-                            prop="number"
+                            prop="broadcastIds.length"
                             label="硬件总数">
                         </el-table-column>
                         <el-table-column
-                            prop="time"
                             label="时间">
+                            <template slot-scope="scope">
+                                <span v-if="scope.row.broadcastSchedule.customizedDays">{{scope.row.broadcastSchedule.startDate}}~{{scope.row.broadcastSchedule.endDate}}</span>
+                                <span v-if="!scope.row.broadcastSchedule.customizedDays">{{scope.row.broadcastSchedule.days | weekFilter}}</span>
+                            </template>
                         </el-table-column>
                         <el-table-column
-                            prop="executetime"
                             label="执行时间">
+                            <template slot-scope="scope">
+                                <span>{{scope.row.broadcastSchedule.startTime}}~{{scope.row.broadcastSchedule.endTime}}</span>
+                            </template>
                         </el-table-column>
                         <!--<el-table-column-->
                             <!--prop="repetition"-->
@@ -56,7 +55,7 @@
                         <!--</el-table-column>-->
                         <el-table-column label="操作" width="200">
                             <template slot-scope="scope">
-                                <span @click="fixedInfo(scope.row.id,'广播编辑')" class="edit">编辑</span> |
+                                <span @click="fixedInfo(scope.row,'广播编辑')" class="edit">编辑</span> |
                                 <span @click="stop(scope.row,'片区信息')" v-if="scope.row.isStop">停止 |</span>
                                 <span @click="start(scope.row,'片区信息')" v-else="scope.row.isStart">开始 |</span>
                                 <span @click="showPersonDetail(scope.row,'广播信息')">查看</span> |
@@ -67,12 +66,12 @@
                 </ScrollContainer>
                 <PersonDetail v-if="visible"
                               :visible="visible"
-                              :Info="areaInfo"
+                              :Info="broadCastInfo"
                               :isDisabled="isDisabled"
                               @closeInfoDialog ="visible = false"
                               @fixInfo = "fixInfo"
                               :title = "title"
-                              @addNewInfo="addNewPerson">
+                              @saveNewInfo="addNewPerson">
                 </PersonDetail>
 
             </div>
@@ -92,14 +91,9 @@
                 isShowAreaCard: true,
                 checkList: [],
                 filterList: [],
-                areaList: [
-                    {id:1,type: '下班音乐',name: '广播1',isCustomizedDays:true,days:'1,2',number: '10个',startDate: '2018.02.03',endDate:'2018.03.11',startTime :'18:00:00',endTime:'18:30:00',playOrder:'3',volume:'4',isEnabled:true,description :'',broadcastIds:["A-GB001","A-GB002"],musicIds:["1","2"]},
-                    {id:2,type: '上班',name: '广播2',isCustomizedDays:true,days:'2,5',number: '10个',startDate: '2018.02.03',endDate:'2018.03.11',startTime :'18:00:00',endTime:'18:30:00',playOrder:'3',volume:'4',isEnabled:true,description :'',broadcastIds:["A-GB001","A-GB002"],musicIds:["1","2"]},
-                    {id:3,type: '午间',name: '广播3',isCustomizedDays:false,days:'1,2,3,4,5',number: '10个',startDate: '2018.02.03',endDate:'2018.03.11',startTime :'18:00:00',endTime:'18:30:00',playOrder:'3',volume:'4',isEnabled:true,description :'',broadcastIds:["A-GB001","A-GB002"],musicIds:["1","2"]},
-                    {id:8,type: '早操',name: '广播4',isCustomizedDays:false,days:'1,4',number: '10个',startDate: '2018.02.03',endDate:'2018.03.11',startTime :'18:00:00',endTime:'18:30:00',playOrder:'3',volume:'4',isEnabled:true,description :'',broadcastIds:["A-GB001","A-GB002"],musicIds:["1","2"]}
-                ],
+                broadCastList: [],
                 visible: false,
-                areaInfo: {},
+                broadCastInfo: {},
                 choseInfoId: [],
                 choseId:[],
                 choseChecked:[],
@@ -108,7 +102,8 @@
                 title:'',
                 // isStart:false,
                 // isStop:true,
-                selection:[]
+                selection:[],
+                isShowloading: false
             }
         },
         methods: {
@@ -117,202 +112,79 @@
                     return item.id
                 })
             },
-            // async getBroadcastList (){
-            //     // this.isShowLoading = true
-            //     await api.schedulebroadcast.getbroadcastList().then(res => {
-            //         // this.isShowLoading = false
-            //         console.log(res, '这是请求回来的')
-            //         let that = this;
-            //         res.forEach(function(item){
-            //             item.light.lightIds = item.lightIds;
-            //             that.areaList.push(item.light);
-            //         })
-            //         console.log(that.areaList, '这是请求回来的')
-            //         that.init()
-            //     }).catch(err => {
-            //         console.log(err, '请求失败')
-            //         this.isShowLoading = false
-            //     })
-            // },
-            init(){
-                this.areaList.forEach(function(item){
-                    let executetime = item.startTime + "~" + item.endTime;
-                    let date = item.startDate + "~" + item.endDate;
-                    item.executetime = executetime;
-                    item.date = date;
-                    item.checked = false;
-                    item.isStop = true;
-                    item.isStart = false;
-                    if(item.isCustomizedDays === true){
-                        item.time = item.startDate + "~" + item.endDate;
-                    }else {
-                        let shift=new Array();
-                        let str = item.days;
-                        let attr = str.split(",")
-                        attr = attr.filter(function(num){
-                            if(num == "1"){
-                                shift.push("周一 ");
-                            }else if(num == "2"){
-                                shift.push("周二 ");
-                            }else if(num == "3"){
-                                shift.push("周三 ");
-                            }else if(num == "4"){
-                                shift.push("周四 ");
-                            }else if(num == "5"){
-                                shift.push("周五 ");
-                            }else if(num == "6"){
-                                shift.push("周六 ");
-                            }else if(num == "7"){
-                                shift.push("周日");
-                            }
-                            return shift
-                        })
-                        item.time = shift
-                    }
-                })
-            },
-            timeTr(dates){
-                let arr = dates.split("~");
-                let d1 = arr[0].split(".");
-                let d2 = arr[1].split(".");
-                return [new Date(d1[0], d1[1], d1[2]), new Date(d2[0], d2[1], d2[2])];
-            },
-            timeD(dates,times){
-                let arr1 = dates.split("~");
-                let arr2 = times.split("~");
-                let d1 = arr1[0].split(".");
-                let d2 = arr1[1].split(".");
-                let a1 = arr2[0].split(":");
-                let a2 = arr2[1].split(":");
-                return [new Date(d1[0], d1[1], d1[2],a1[0],a1[1],a1[2]), new Date(d2[0], d2[1], d2[2],a2[0],a2[1],a2[2])];
-            },
-            showPersonDetail (info,title) {
-                this.areaInfo = info;
+            showPersonDetail (info,title,state) {
+                this.broadCastInfo = info;
                 this.visible = true;
                 this.title = title;
-                this.isDisabled = true;
-                console.log("1234567yuiol;'")
+                this.isDisabled = state
             },
             addNewInfo () {
-                this.showPersonDetail({}, '添加广播播放')
+                this.showPersonDetail({broadcastSchedule:{}}, '添加广播播放',false)
                 this.isDisabled = false
             },
-            deletChose(id){
-                this.$confirm('此操作将永久删除该数据, 是否继续?', '提示', {
-                    confirmButtonText: '确定',
-                    cancelButtonText: '取消',
-                    type: 'warning'
-                }).then(() => {
-                    //  api.camera.deleteCamera(this.choseInfoId).then(res => {
-                    for (let i = 0; i < this.choseInfoId.length; i++) {
-                        this.areaList = this.areaList.filter((item, index) => {
-                            if (item.id === this.choseInfoId[i]) {
-                                this.areaList[index].checked = false
-                            }
-                            return item.id !== this.choseInfoId[i]
-                        })
-                    }
-                    this.$message.success('删除成功')
-                    this.choseInfoId = []
-                    // }).catch(err=>{
-                    //             console.log(err)
-                    //             this.$message.error('删除失败，请稍后重试')
-                }).catch(() => {
-                    this.$message.info('取消删除')
-                })
-                //   })
-            },
             deletInfo (id) {
-                if(id === undefined){
-                    if (this.choseInfoId.length > 0) {
-                        this.deletChose(id)
-                    }else{
-                        this.$message.warning("请选择要删除的项")
-                    }
-                }else {
-                    this.choseId.push(id);
+                if (id) {
+                    this.choseInfoId = [id]
+                }
+                if (this.choseInfoId.length > 0) {
                     this.$confirm('此操作将永久删除该数据, 是否继续?', '提示', {
                         confirmButtonText: '确定',
                         cancelButtonText: '取消',
                         type: 'warning'
                     }).then(() => {
-                        //  api.camera.deleteCamera(this.choseInfoId).then(res => {
-                        this.areaList = this.areaList.filter((item, index) => {
-                            if (item.id === this.choseId[0]) {
-                                this.areaList[index].checked = false
+                        api.schedulebroadcast.deleteBroadcast(this.choseInfoId).then(res => {
+                            console.log(res, '删除成功')
+                            this.$message.success('删除成功')
+                            for (let i = 0; i < this.choseInfoId.length; i++) {
+                                this.broadCastList = this.broadCastList.filter((item, index) => {
+                                    if (item.id === this.choseInfoId[i]){
+                                        this.broadCastList[index].checked = false
+                                        this.broadCastList[index].status = false
+                                    }
+                                    return item.status !== false
+                                })
                             }
-                            return item.id !== this.choseId[0]
+                            this.choseInfoId = []
+                        }).catch(err => {
+                            this.$message.error('删除失败，请稍后重试')
+                            console.log(err)
+                            this.choseInfoId = []
                         })
-                        this.$message.success('删除成功')
-                        this.choseId = [];
-                        // }).catch(err=>{
-                        //             console.log(err)
-                        //             this.$message.error('删除失败，请稍后重试')
                     }).catch(() => {
                         this.$message.info('取消删除')
                     })
-                    //   })
+                } else {
+                    this.$message.error('请选择要删除的数据')
+                    return
                 }
             },
-            checked (Info) {
-                //选中状态change
-                console.log(Info.id)
-                this.areaList = this.areaList.filter(item =>{
-                    if(item.id ===Info.id){
+            checked (id) {
+                this.broadCastList = this.broadCastList.filter(item => {
+                    if (item.id === id) {
                         item.checked = item.checked
                     }
                     return item
                 })
-                if(this.choseInfoId.includes(Info.id)){
-                    let index = this.choseInfoId.indexOf(Info.id);
-                    this.choseInfoId = this.choseInfoId.filter((item)=>{
-                        return item!== Info.id
-                    })
-                    this.choseChecked.splice(index,1);
-                }else{
-                    this.choseInfoId.push(Info.id)
-                    this.choseChecked.push(Info.checked)
-                }
-
-                console.log(this.choseInfoId)
-                console.log(this.choseChecked)
-            },
-            choseType (type) {
-                console.log(type)
-                if (type.length === 0){
-                    this.choseList = this.areaList.filter((item) => {
-                        item.status = true
-                        return item.status === true
+                if (this.choseInfoId.includes(id)) {
+                    this.choseInfoId = this.choseInfoId.filter((item) =>{
+                        return item !== id
                     })
                 } else {
-                    this.choseList = this.areaList.filter((item,index) => {
-                        if (type.includes(item.type)){
-                            item.status = true
-                        } else if(!type.includes(item.type)){
-                            item.status = false
-                            console.log(item.type, 'p[p[p[');
-                        }
-                        return item.status === true
-                    })
+                    this.choseInfoId.push(id)
                 }
             },
             selectedAll (state) {
-                console.log(state, 'opopopopop')
-                this.choseList = this.areaList.filter((item) => {
+                this.broadCastList = this.broadCastList.filter((item) => {
                     if (state === true) {
                         item.checked = true
                         this.choseInfoId.push(item.id)
-                        this.choseChecked.push(item.checked)
-                        return
+                        return item.checked === true
                     } else {
-                        console.log('进入这个判断吗')
                         item.checked = false
                         this.choseInfoId = []
-                        this.choseChecked = []
-                        return
+                        return item.checked === false
                     }
                 })
-                console.log(this.choseInfoId, 'opopop')
             },
             fixInfo (info) {
                 console.log(info, 'wertyuio')
@@ -326,32 +198,11 @@
                 this.choseList = this.areaList
             },
             addNewPerson (info) {
-                console.log(info)
-                info.id = new Date().getTime()
-                this.areaList.push(info)
-                this.choseList = this.areaList
+                console.log(info, '这是要添加的')
             },
-            fixedInfo (id,title) {
-                    console.log(this.choseInfoId)
-                    this.choseId.push(id)
-                    this.areaList.map((item)=>{
-                        if(item.id === this.choseId[0]){
-                            this.areaInfo=item;
-                            if(this.areaInfo.isCustomizedDays){
-                                this.areaInfo.time = this.timeTr(item.time);
-                            }else {
-                                for(let i=0; i< this.areaInfo.time.length; i++) {
-                                    if (this.areaInfo.time[i].includes(' ')){
-                                        this.areaInfo.time[i] = this.areaInfo.time[i].substring(0,this.areaInfo.time[i].length -1)
-                                    }
-                                }
-                            }
-                            this.areaInfo.executetime = this.timeD(item.date,item.executetime);
-                            this.showPersonDetail(this.areaInfo,title)
-                            this.isDisabled=false
-                            this.choseId = [];
-                        }
-                    })
+            fixedInfo (info,title) {
+                this.broadCastInfo = info
+                this.showPersonDetail(info, title)
             },
             stop(Info){
                 Info.isStart = true;
@@ -360,25 +211,36 @@
             start(Info){
                 Info.isStart = false;
                 Info.isStop = true;
+            },
+            async getAllBroadcast () {
+                this.isShowLoading = true
+                await api.schedulebroadcast.getAllBroadcast().then(res => {
+                    console.log(res, '请求成功')
+                    this.isShowLoading = false
+                    this.broadCastList = res
+                    this.broadCastList.forEach(item => {
+                        item.checked = false;
+                        item.broadcastSchedule.time = [item.broadcastSchedule.startDate,item.broadcastSchedule.endDate]
+                        item.broadcastSchedule.watchTime = [`2018-04-25,${item.broadcastSchedule.startTime}`,`2018-04-25,${item.broadcastSchedule.endTime}`]
+                        item.id = item.broadcastSchedule.id
+                        if (!item.broadcastSchedule.customizedDays) {
+                            item.broadcastSchedule.days = item.broadcastSchedule.days.split(',')
+                        }
+                    })
+                }).catch(err => {
+                    console.log(err, '请求失败')
+                    this.isShowLoading = false
+                })
             }
         },
         created () {
-            for (let i = 0; i < this.areaList.length; i++) {
-                this.areaList[i].checked = false
-                this.areaList[i].status = true
-            }
-            this.choseList = this.areaList
+            this.getAllBroadcast()
         },
         components: {
             ScrollContainer,
             Header,
             PersonDetail
         },
-        mounted:function(){
-           // this.getBroadcastList()
-            this.init();
-            console.log(this.areaList)
-        }
     }
 
 </script>
@@ -391,11 +253,10 @@
         flex-direction: column;
         .title{
             width: 100%;
-            padding: rem(5) 0 rem(5) rem(15);
+            padding: rem(16) 0 rem(17) rem(15);
             box-sizing: border-box;
             font-size: rem(16);
-            color: #0086b3;
-            font-weight: 600;
+            color: #26bbf0;
             border-bottom:  1px solid #ccc;
         }
         .personContent{
@@ -410,7 +271,7 @@
                 width: 100%;
                 height: rem(30);
                 margin-top: rem(10);
-                border-bottom: 1px solid #a13309;
+                border-bottom: 2px solid #e44b4e;
             }
             .personList{
                 width: 100%;

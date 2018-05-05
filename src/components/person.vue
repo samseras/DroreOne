@@ -6,16 +6,16 @@
                     <template v-for="item in items">
                         <template v-if="item.subs">
                             <el-submenu :index="item.index">
-                                <template slot="title"><i :class="item.icon"></i>{{ item.title }}</template>
+                                <template slot="title"><img :src="item.icon" alt="">{{ item.title }}</template>
                                 <el-menu-item v-for="(subItem,i) in getJobTypeList" :key="i" :index="'/person/' + subItem.id">
-                                    <img src="" alt="">
+                                    <img :src="imgUrl(subItem.id)" alt="">
                                     {{ subItem.name }}
                                 </el-menu-item>
                             </el-submenu>
                         </template>
                         <template v-else>
                             <el-menu-item :index="item.index">
-                                <i :class="item.icon"></i>{{ item.title }}
+                                <img :src="item.icon" alt="">{{ item.title }}
                             </el-menu-item>
                         </template>
                     </template>
@@ -43,12 +43,12 @@
                 isActive: false,
                 items: [
                 {
-                    icon: 'el-icon-setting',
+                    icon: './../../static/img/peopleType.svg',
                     index: '/person/personType',
                     title: '职业',
                 },
                 {
-                    icon: 'el-icon-setting',
+                    icon: './../../static/img/peopleInfo.svg',
                     index: '2',
                     title: '人员',
                     subs: []
@@ -63,7 +63,35 @@
         methods: {
             ...mapActions([
                 'getJobType'
-            ])
+            ]),
+            imgUrl (id) {
+                switch (id) {
+                    case '1': {
+                        return './../../static/img/driver.svg';
+                        break
+                    }
+                    case '2': {
+                        return './../../static/img/seaman.svg';
+                        break
+                    }
+                    case '3': {
+                        return './../../static/img/safe.svg';
+                        break
+                    }
+                    case '4': {
+                        return './../../static/img/clearer.svg';
+                        break
+                    }
+                    case '5': {
+                        return './../../static/img/saleticket.svg';
+                        break
+                    }
+                    case '6': {
+                        return './../../static/img/teller.svg';
+                        break
+                    }
+                }
+            }
         },
         async created () {
             this.getJobType()
@@ -87,21 +115,37 @@
         padding: rem(0) !important;
         padding-left: rem(20) !important;
         font-size: rem(14);
-        img {
+        img{
             display: inline-block;
-            width: rem(20);
-            height: rem(20);
+            width: rem(18);
+            height: rem(18);
             vertical-align: middle;
-            background: red;
             margin-right: rem(5);
+            margin-left: rem(5);
+            margin-top: rem(-4);
         }
     }
-
+    .person .el-submenu__title{
+        img{
+            width: rem(25);
+            height: rem(25);
+            display: inline-block;
+            vertical-align: middle;
+            margin-right: rem(10);
+        }
+    }
     .person .el-menu-item {
         width: 100%;
         height: rem(55);
         line-height: rem(55);
         border-bottom: 1px solid #e0e0e0;
+        img{
+            width: rem(25);
+            height: rem(25);
+            display: inline-block;
+            vertical-align: middle;
+            margin-right: rem(10);
+        }
     }
 
     .person .el-menu .el-menu--inline {

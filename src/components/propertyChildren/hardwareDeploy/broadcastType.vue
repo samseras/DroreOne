@@ -57,6 +57,10 @@
         },
         created(){
             this.getBroadcastType()
+        },
+        components:{
+            ScrollContainer
+
         }
     }
 
