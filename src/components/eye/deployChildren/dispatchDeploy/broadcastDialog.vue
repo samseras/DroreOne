@@ -35,13 +35,16 @@
                         </li>
                     </ul>
                 </div>
-                <el-upload
-                    class="upload-demo"
-                    action="https://jsonplaceholder.typicode.com/posts/"
-                    multiple
-                    :limit="3">
-                    <i size="small" type="primary" class="el-icon-message"></i>
-                </el-upload>
+                <!--<el-upload-->
+                    <!--class="upload-demo"-->
+                    <!--action="https://jsonplaceholder.typicode.com/posts/"-->
+                    <!--multiple-->
+                    <!--:limit="3">-->
+                <div class="el-upload">
+                    <i size="small" type="primary" class="el-icon-message" @click="$refs.uploadMusic.click()"></i>
+                    <input type="file" ref="uploadMusic" class="musicFile">
+                </div>
+                <!--</el-upload>-->
             </div>
             <div class=""slot="footer" class="dialog-footer cardFooter">
                 <el-button size="mini" class="hold" @click="saveBroadMusicList">保存</el-button>
@@ -328,8 +331,13 @@
             }
             .el-upload{
                 position: absolute;
-                top: rem(82);
+                top: rem(80);
                 right: rem(40);
+                .musicFile{
+                    width: 0;
+                    height: 0;
+                    display: none;
+                }
             }
         }
     }
