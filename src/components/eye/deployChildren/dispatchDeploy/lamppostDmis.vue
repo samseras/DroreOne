@@ -1,5 +1,5 @@
 <template>
-    <div class="areaDeploy">
+    <div class="lamppostDmis">
         <div class="title">
             路灯
         </div>
@@ -344,7 +344,7 @@
 </script>
 
 <style lang="scss" scoped type="text/scss">
-    .areaDeploy{
+    .lamppostDmis{
         width: 100%;
         height: 100%;
         display: flex;

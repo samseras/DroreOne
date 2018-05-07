@@ -1,5 +1,5 @@
 <template>
-    <div class="areaDeploy">
+    <div class="securityDmis">
         <div class="title">
             巡更路线        </div>
         <div class="personContent">
@@ -367,7 +367,7 @@
 </script>
 
 <style lang="scss" scoped type="text/scss">
-    .areaDeploy{
+    .securityDmis{
         width: 100%;
         height: 100%;
         display: flex;
