@@ -46,139 +46,20 @@
 </script>
 <style lang="scss">
     .showMapDialog{
-        width: 100%;
-        height: 100%;
-        .el-dialog .el-dialog--center{
-            width: 100%;
-        }
-        .el-dialog--center{
-            padding: 0;
-            /*height: rem(300);*/
-        }
         .el-dialog__header{
-            padding: rem(10) 0 rem(5) rem(20);
-            text-align: left;
-            border-bottom: 1px solid #ccc;
-        }
-        .el-dialog__title{
-            font-size: rem(14);
-        }
-        .el-dialog__headerbtn {
-            top: rem(12);
+            position: relative;
+            .el-dialog__headerbtn{
+                position: absolute;
+                top: 50%;
+                transform: translateY(-50%);
+            }
         }
         .el-dialog__body{
-            padding: rem(10) rem(20) 0 rem(20);
-            box-sizing: border-box;
-            font-size: rem(12);
-            min-height: rem(150);
-            .el-select{
-                width:rem(475);
-                .el-input--suffix .el-input__inner{
-                    border: none;
-                }
-                .el-tag__close.el-icon-close{
-                    top:rem(-2);
-                }
-            }
-            .el-checkbox-group{
-                display: inline-block;
-                padding-right: rem(10);
-            }
-            .el-range-editor--mini.el-input__inner{
-                width: rem(475);
-                border: none;
-                padding: 0 rem(10);
-                height: rem(24);
-                line-height: rem(24);
-                .el-range-separator{
-                    line-height: rem(24);
-                }
-            }
-            .el-date-editor--timerange{
-                border: none;
-                float: right;
-                width: rem(250);
-                padding: 0 rem(10);
-                height: rem(24);
-                line-height: rem(24);
-            }
-            .Hardware .el-date-editor--timerange{
-                float: inherit;
-            }
-            .el-date-editor{
-                .el-range-input,.el-range-separator{
-                    font-size: rem(12);
-                }
-                .el-range__icon,.el-range-separator{
-                    height: rem(24);
-                    line-height: rem(24);
-                }
-            }
-            .el-radio{
-                .el-radio__input{
-                    /*.el-radio__inner{*/
-                        /*width: rem(12);*/
-                        /*height: rem(12);*/
-                    /*}*/
-                }
-                .el-radio__label{
-                    font-size: rem(12);
-                }
-            }
-            .el-tag--mini{
-                line-height: rem(21);
-
-            }
-            .inputText{
-                width: rem(400);
-            }
-            .upload-demo{
-                display: inline-block;
-                width: rem(470);
-                height: rem(22);
-                line-height: rem(22);
-                overflow: hidden;
-                .el-upload{
-                    float: right;
-                    .el-button--small, .el-button--small.is-round{
-                        padding: rem(4) rem(10);
-                    }
-                }
-                .el-upload-list{
-                    display: inline-block;
-                    height: rem(24);
-                    line-height: rem(24);
-                    .el-upload-list__item{
-                        margin-top: 0;
-                        display: inline-block;
-                        width: inherit;
-                        margin-right: rem(10);
-                        height: rem(24);
-                        line-height: rem(24);
-                        .el-upload-list__item-name{
-                            font-size: rem(12);
-                        }
-                    }
-                }
-            }
+            padding:0;
         }
-        .el-dialog__footer{
-            padding: 0;
-            padding: rem(5) 0;
-            text-align: right;
-            padding-right: rem(15);
-            border-top: 1px solid #ccc;
-            margin-top: rem(15);
+        .el-dialog__wrapper{
+            overflow:hidden;
         }
-        .el-dialog--center{
-            text-align: right;
-            padding-right: rem(15);
-            border-top: 1px solid #ccc;
-            /*margin-top: rem(15);*/
-        }
-    }
-    .el-select-dropdown__item span{
-        font-size: rem(12);
     }
 </style>
 <style>
@@ -521,91 +402,10 @@
             width:100%;
             background: yellowgreen;
         }
+
         .card{
             width: 100%;
             height: 100%;
-
-            .personCardContent {
-                width: 100%;
-                height: 100%;
-                position: relative;
-                p{
-                    margin-top: rem(8);
-                    border-bottom: 1px solid #ccc;
-                    font-size: rem(12);
-                    input{
-                        border: none;
-                        list-style: none;
-                        outline: none;
-                        font-size: rem(12);
-                    }
-                    select{
-                        border: none;
-                        outline: none;
-                        width: rem(100);
-                        font-size: rem(12);
-                        option{
-                            appearance:none;
-                            list-style: none;
-                            border: none;
-                            width: 100%;
-                            outline: none;
-                            padding: 0;
-                            margin: 0;
-                            /*border:  1px solid #ccc;*/
-                            background: #fff;
-
-                        }
-                    }
-                    img {
-                        display: inline-block;
-                        width: rem(20);
-                        height: rem(20);
-                        border-radius: 50%;
-                        background: red;
-                        vertical-align: middle;
-                    }
-                    .location{
-                        width: rem(470);
-                    }
-                    textarea{
-                        resize: none;
-                        outline: none;
-                        padding: rem(3);
-                        box-sizing: border-box;
-                        border-radius: rem(5);
-                        border: 1px solid #ccc;
-                        line-height: rem(28);
-                        width: rem(490);
-                    }
-                }
-                .img{
-                    width: rem(100);
-                    height: rem(60);
-                    position: absolute;
-                    top: rem(0);
-                    right: rem(0);
-                    background: #fff;
-                    img{
-                        width: rem(55);
-                        height: rem(55);
-                        display: inline-block;
-                        background: red;
-                        border-radius: 50%;
-                        margin-left: rem(25);
-                    }
-                }
-            }
-            .cardFooter {
-                width: 100%;
-                padding: rem(5) rem(10);
-                box-sizing: border-box;
-                border-top: 1px solid #ccc;
-                .el-button{
-                    padding: 0;
-                    padding: rem(4) rem(6);
-                }
-            }
 
         }
 

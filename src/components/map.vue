@@ -34,6 +34,8 @@
                 this.getAllShop();//商圈现有标注
                 this.getAllPark();//停车场现有标注
                 this.getAllToilet();//卫生间现有标注
+                this.getAllTree();//植物现有标注
+                this.getAllBuild();//建筑现有标注
                 this.overView();//鹰眼
             }else if (route.includes('broad')) {
                 droreMap.interaction.enableMapClick = true
@@ -56,10 +58,10 @@
                 }
             } else if (route.includes('roat-deploy') || route.includes('security-Dmis')) {
                 if(!this.getLocationId){
-                    this.roadList();// 路线输出
+                    this.getAllRoat();// 路线输出
                     this.road(); // 路线打点
                 }else {
-                    this.roadListEidt();//修改路线
+                    this.getAllRoatedit();//修改路线
                 }
             } else if (route.includes('indicator-deploy'))  {
                 if(!this.getLocationId) {
@@ -159,8 +161,22 @@
                 }else {
                     this.getAllCameraEdit();// 摄像头修改
                 }
+            }else if (route.includes('plant-deploy'))  {
+                if(!this.getLocationId) {
+                    this.getAllTree();//植物现有标注
+                    this.labelDot();// 植物打点
+                }else {
+                    this.getAllTreeEdit();// 植物修改
+                }
+            }else if (route.includes('construction-deploy'))  {
+                if(!this.getLocationId) {
+                    this.getAllBuild();//建筑现有标注
+                    this.labelDot();// 建筑打点
+                }else {
+                    this.getAllBuildEdit();// 建筑修改
+                }
             }else {
-                this.labelDot();// 路灯打点
+                this.labelDot();// 打点
             }
         },
         methods:{
@@ -1026,6 +1042,121 @@
                     console.log(err)
                 })
             },
+            async getAllTree () { //植物现有展示
+                await api.plant.getAllPlant().then(res => {
+                    this.treeList = res
+                    for (let i = 0; i < this.treeList.length; i++) {
+                        this.treeList[i].location = [this.treeList[i].longitude, this.treeList[i].latitude]
+                        var icon1 = new droreMap.icon.Marker({
+                            coordinate: droreMap.trans.transFromWgsToLayer(this.treeList[i].location),
+                            name: this.treeList[i].plant.name,
+                            subtype: "droreMapinit",
+                            id: this.treeList[i].plant.id,
+                            url: "http://label.drore.com/gisLabelTabImage/public/defaults/24*24/gushumingmu.png"
+                        });
+                        droreMap.icon.addChild(icon1);
+                    }
+                }).catch(err => {
+                    console.log(err, '请求失败')
+                })
+            },
+            async getAllTreeEdit () { //植物现有展示修改
+                await api.plant.getAllPlant().then(res => {
+                    this.treeList = res
+                    for (let i = 0; i < this.treeList.length; i++) {
+                        if(this.treeList[i].plant.id === this.getLocationId){
+                            this.treeList[i].location = [this.treeList[i].longitude,this.treeList[i].latitude]
+                            var iconedit = new droreMap.icon.Marker({
+                                coordinate: droreMap.trans.transFromWgsToLayer(this.treeList[i].location),
+                                name: this.treeList[i].plant.name,
+                                subtype: "droreMapinit",
+                                id: this.treeList[i].plant.id,
+                                url: "/static/img/location_on.png"
+                            });
+                            droreMap.icon.addChild(iconedit);
+                            droreMap.interaction.ifDrag = true;
+                            let that =this
+                            droreMap.event.DragEvent(function(tabInfor) {
+                                var data = tabInfor.data
+                                if(data.data.id === that.getLocationId){
+                                    console.log(droreMap.trans.transLayerToWgs(data.end));
+                                    that.$store.commit('MAP_LOCATION', droreMap.trans.transLayerToWgs(data.end))
+                                }
+                            })
+                        }else {
+                            this.treeList[i].location = [this.treeList[i].longitude, this.treeList[i].latitude]
+                            var icon1 = new droreMap.icon.Marker({
+                                coordinate: droreMap.trans.transFromWgsToLayer(this.treeList[i].location),
+                                name: this.treeList[i].plant.name,
+                                subtype: "droreMapinit",
+                                id: this.treeList[i].plant.id,
+                                url: "http://label.drore.com/gisLabelTabImage/public/defaults/24*24/gushumingmu.png"
+                            });
+                            droreMap.icon.addChild(icon1);
+                        }
+                    }
+                }).catch(err => {
+                    console.log(err, '请求失败')
+                })
+            },
+            async getAllBuild () {//建筑标注展示
+                await api.build.getAllBuild().then(res => {
+                    this.buildList = res
+                    for (let i = 0; i < this.buildList.length; i++) {
+                        this.buildList[i].location = [this.buildList[i].longitude, this.buildList[i].latitude]
+                        var icon1 = new droreMap.icon.Marker({
+                            coordinate: droreMap.trans.transFromWgsToLayer(this.buildList[i].location),
+                            name: this.buildList[i].building.name,
+                            subtype: "droreMapinit",
+                            id: this.buildList[i].building.id,
+                            url: "http://label.drore.com/gisLabelTabImage/public/defaults/24*24/fuwuzhongxin.png"
+                        });
+                        droreMap.icon.addChild(icon1);
+                    }
+                }).catch(err => {
+                    console.log(err, '请求失败')
+                })
+            },
+            async getAllBuildEdit () {//建筑标注展示修改
+                await api.build.getAllBuild().then(res => {
+                    this.buildList = res
+                    for (let i = 0; i < this.buildList.length; i++) {
+                        if(this.buildList[i].building.id === this.getLocationId){
+                            this.buildList[i].location = [this.buildList[i].longitude,this.buildList[i].latitude]
+                            var iconedit = new droreMap.icon.Marker({
+                                coordinate: droreMap.trans.transFromWgsToLayer(this.buildList[i].location),
+                                name: this.buildList[i].building.name,
+                                subtype: "droreMapinit",
+                                id: this.buildList[i].building.id,
+                                url: "/static/img/location_on.png"
+                            });
+                            droreMap.icon.addChild(iconedit);
+                            droreMap.interaction.ifDrag = true;
+                            let that =this
+                            droreMap.event.DragEvent(function(tabInfor) {
+                                var data = tabInfor.data
+                                if(data.data.id === that.getLocationId){
+                                    console.log(droreMap.trans.transLayerToWgs(data.end));
+                                    that.$store.commit('MAP_LOCATION', droreMap.trans.transLayerToWgs(data.end))
+                                }
+                            })
+                        }else {
+                            this.buildList[i].location = [this.buildList[i].longitude, this.buildList[i].latitude]
+                            var icon1 = new droreMap.icon.Marker({
+                                coordinate: droreMap.trans.transFromWgsToLayer(this.buildList[i].location),
+                                name: this.buildList[i].building.name,
+                                subtype: "droreMapinit",
+                                id: this.buildList[i].building.id,
+                                url: "http://label.drore.com/gisLabelTabImage/public/defaults/24*24/fuwuzhongxin.png"
+                            });
+                            droreMap.icon.addChild(icon1);
+                        }
+                    }
+                }).catch(err => {
+                    console.log(err, '请求失败')
+                })
+            },
+
 
             districtList(){//区域划分列表
                 var areaEvets =new droreMap.area.DrawLayer("areaList",'rgba(255, 255, 255, 0.2)',"red")
@@ -1104,9 +1235,6 @@
                 }).catch(err => {
                     console.log(err, '请求失败')
                 })
-            },
-            roadList(){//路线列表
-                this.getAllRoat()
             },
             road(){//路网绘画
                 var that = this
@@ -1204,9 +1332,6 @@
                 }).catch(err => {
                     console.log(err, '请求失败')
                 })
-            },
-            roadListEidt(){//路线列表
-                this.getAllRoatedit()
             },
             overView() {//鹰眼图
                 var overView = new droreMap.control.OverviewMap({'url': '/static/img/xxsd.jpg'});

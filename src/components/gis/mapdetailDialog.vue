@@ -59,8 +59,29 @@
                     </p>
                 </div>
 
-                <div class="map" v-if="route.includes('map')">
-                    <Map></Map>
+                <!--地图详情-->
+                <div class="mapDataDetail" v-if="route.includes('map')">
+
+                    <p>   <span class="sex">景区名称：<input type="text" v-model="mapData.type" class="inputText"></span></p>
+                    <p>  <span class="sex">检索首字母：<input type="text" v-model="mapData.firstLetter" class="inputText"></span></p>
+                    <p>  <span class="sex">高清图片路径：<input type="text" v-model="mapData.imgSrc" class="inputText"></span></p>
+                    <p>  <span class="sex">webp图片路径：<input type="text" v-model="mapData.webSrc" class="inputText"></span></p>
+
+                    <p> <span class="sex">版本：<input type="text" v-model="mapData.version" class="inputText"></span></p>
+                    <p>  <span class="sex">图片高度：<input type="text" v-model="mapData.height" class="inputText"></span></p>
+                    <p>  <span class="sex">图片宽度：<input type="text" v-model="mapData.width" class="inputText"></span></p>
+                    <p> <span class="sex">景区地图等级：<input type="text" v-model="mapData.level" class="inputText"></span></p>
+
+                    <p>  <span class="sex">地图匹配Google地图需要缩放：<input type="text" v-model="mapData.zoom" class="inputText"></span></p>
+                    <p>  <span class="sex">初始显示等级：<input type="text" v-model="mapData.initLevel" class="inputText"></span></p>
+                    <p>   <span class="sex">全景地址：<input type="text" v-model="mapData.allSrc" class="inputText"></span></p>
+                    <p>   <span class="sex">地图类型：<input type="text" v-model="mapData.mapType" class="inputText"></span></p>
+
+
+                    <p>   <span class="sex">鹰眼地图路径：<input type="text" v-model="mapData.eyeSrc" class="inputText"></span></p>
+                    <p>  <span class="sex">路网数据：<input type="text" v-model="mapData.netData" class="inputText"></span></p>
+                    <p>  <span class="sex">3d地图高度：<input type="text" v-model="mapData.dHeight" class="inputText"></span></p>
+                    <p>   <span class="sex">3d宽度：<input type="text" v-model="mapData.dWidth" class="inputText"></span></p>
                 </div>
             </div>
 
@@ -73,88 +94,19 @@
 </template>
 
 <script>
-    import Map from '@/components/map'
+
     export default {
         name: "person-detail",
         props: ['visible', 'Info','isDisabled','title'],
         data () {
             return {
-                files: [],
-                selectLight:[],
                 edit: false,
-                cropper: false,
-                src: '',
-                radio: '1',
-                isShowMapDialog: false,
-                mapVisible: false,
-                broadcastVisible:false,
-                screenVisible:false,
-                broadcast: {},
-                lamppost:{
-                    id:"",
-                    name:"",
-                    customizedDays:false,
-                    days:[],
-                    startDate:"",
-                    endDate:"",
-                    startTime:"",
-                    endTime:"",
-                    type:5,
-                    enabled:true,
-                    description:"",
-                    lightIds:[]
-                },
-                security:{},
-                purifier:{},
-                screen:{},
-                label:{},
-                options: [
-                    // { name: '保洁1'},
-                    // { name: '保洁2'},
-                    // { name: '保洁3'},
-                    // { name: '保洁4'},
-                    // {name: 'A-GB001'},
-                    // {name: 'A-GB002'},
-                    // {name: 'A-GB003'},
-                    // {name: 'A-GB004'}
-                ],
-                associatedRadio:true,
-                associatedScreen:false,
-                associatedStreet:false,
-                route: '',
-                file: {},
-                definedDay: [new Date(2016, 9, 10), new Date(2016, 9, 12)],
-                weekcustom:false,
-                weekTime:false,
-                filterList:[],
-                week: [
-                    {type: '周一'},
-                    {type: '周二'},
-                    {type: '周三'},
-                    {type: '周四'},
-                    {type: '周五'},
-                    {type: '周六'},
-                    {type: '周日'}
-                ],
-                dayTime:false,
-                classesList:[],
-                classes: [
-                    {type: '早班'},
-                    {type: '中班'},
-                    {type: '晚班'}
-                ],
-                daycustom:false,
-                definedTime:[new Date(2016, 9, 10, 8, 40), new Date(2016, 9, 10, 9, 40)],
-                upload:true,
-                importFileUrl: 'http:dtc.com/cpy/add',
-                fileList:[],
-                uploadText:false,
+                mapVisible: false
             }
         },
         methods: {
             handleSuccess(response,file,fileList){
-                console.log('上传文件成功2', file)
-                console.log('222',fileList)
+                console.log('上传文件成功', file)
             },
             beforeUpload(file){
                 console.log('上传之前',file);
@@ -214,36 +166,13 @@
             console.log(this.route);
             if (this.route.includes('label')) {
                 this.label = this.Info;
+            }else if(this.route.includes('map')){
+                this.mapData = this.Info;
+                console.log(this.mapData)
             }
         },
         components: {
-            // FileUpload,
-            // MapDialog,
-            // broadcastDialog,
-            // ScreenDialog
-            Map
-        },
-        watch: {
-            edit(value) {
-                if (value) {
-                    this.$nextTick(function () {
-                        if (!this.$refs.editImage) {
-                            return
-                        }
-                        let cropper = new Cropper(this.$refs.editImage, {
-                            aspectRatio: 1 / 1,
-                            viewMode: 1,
-                        })
-                        this.cropper = cropper
-                    })
-                } else {
-                    if (this.cropper) {
-                        this.cropper.destroy()
-                        this.cropper = false
-                    }
-                }
-            }
-        },
+        }
     }
 </script>
 <style lang="scss">
@@ -252,7 +181,9 @@
         height: 100%;
         .el-dialog .el-dialog--center{
             width: 100%;
+
         }
+
         .el-dialog--center{
             padding: 0;
             /*height: rem(300);*/
@@ -723,7 +654,7 @@
             width: 100%;
             height: 100%;
 
-            .personCardContent ,.boatCardContent {
+            .personCardContent{
                 width: 100%;
                 height: 100%;
                 position: relative;
@@ -791,6 +722,40 @@
                         background: red;
                         border-radius: 50%;
                         margin-left: rem(25);
+                    }
+                }
+            }
+            .mapDataDetail {
+                width: 100%;
+                height: 100%;
+                position: relative;
+                p{
+                    margin-top: rem(8);
+                    border-bottom: 1px solid #ccc;
+                    font-size: rem(12);
+                    input{
+                        border: none;
+                        list-style: none;
+                        outline: none;
+                        font-size: rem(12);
+                    }
+                    select{
+                        border: none;
+                        outline: none;
+                        width: rem(100);
+                        font-size: rem(12);
+                        option{
+                            appearance:none;
+                            list-style: none;
+                            border: none;
+                            width: 100%;
+                            outline: none;
+                            padding: 0;
+                            margin: 0;
+                            /*border:  1px solid #ccc;*/
+                            background: #fff;
+
+                        }
                     }
                 }
             }

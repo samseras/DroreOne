@@ -150,11 +150,11 @@
     }
 </script>
 
-<style lang="scss">
+<style lang="scss" type="text/scss">
     .hardwareMenu .el-submenu .el-menu-item {
         width: 100%;
-        height: rem(30);
-        line-height: rem(30);
+        height: rem(40);
+        line-height: rem(40);
         padding: rem(0) !important;
         padding-left: rem(20) !important;
         font-size: rem(14);
@@ -166,7 +166,7 @@
         margin-right: rem(5);
         margin-left: rem(5);
         margin-top: rem(-4);
-    }
+        }
     }
     .hardwareMenu .el-submenu__title{
         img{
@@ -179,9 +179,9 @@
     }
     .hardwareMenu .el-menu-item {
         width: 100%;
-        height: rem(30);
-        line-height: rem(30);
-        /*border-bottom: 1px solid #ccc;*/
+        height: rem(55);
+        line-height: rem(55);
+        border-bottom:1px solid #e0e0e0;
         img{
             width: rem(25);
             height: rem(25);
