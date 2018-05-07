@@ -2,7 +2,8 @@
     <div class="property">
         <div class="pro_menu">
             <div class="pro_title">
-                <img src="./../../static/img/data.png" alt="">
+                <img src="./../../static/img/logo.svg" alt="">
+                <span>云数据中心</span>
             </div>
             <div class="pro_router">
                 <router-link to="/basic-property" :class="route.includes('basic')? 'active' : ''">设施</router-link>
@@ -109,13 +110,14 @@
                 width: 15%;
                 text-align: center;
                 background: #34495E;
+                font-family: '微软雅黑';
                 img{
                     display: inline-block;
                     width: rem(140);
                     height: rem(35);
                     vertical-align: middle;
                     margin-left: rem(-35);
-                    margin-right: rem(10);
+                    margin-right: rem(-25);
                 }
             }
             .pro_router{
