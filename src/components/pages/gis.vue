@@ -4,7 +4,7 @@
             <el-header>
                 <el-row :gutter="10" class="gisTop">
                     <el-col :xs="6" :sm="7" :md="7" :lg="5" :xl="4">
-                        GIS管理平台
+                        <img src="../../../static/img/gis.svg"/>GIS管理平台
                     </el-col>
                     <el-col :xs="15" :sm="14" :md="14" :lg="16" :xl="17">
                         <div></div>
@@ -246,6 +246,13 @@
             display: flex;
         }
 
+         .el-col:first-child img {
+            margin-top: 15px;
+            width: 60px;
+            height: 30px;
+            padding-right: 10px;
+            vertical-align: middle;
+        }
         .gis{
             display:flex;
             width:100%;
@@ -258,6 +265,7 @@
                 height: 100%;
             }
         }
+
 
         .gisTop .el-col:first-child {
             font-size: 22px;

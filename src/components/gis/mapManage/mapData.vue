@@ -60,12 +60,13 @@
                                    :visible="mapVisible"
                                    @closeInfoDialog ="mapVisible = false">
                     </ShowMapDialog>
-                    <!--<DetailDialog v-if="visible"-->
-                                  <!--:visible="visible"-->
-                                  <!--:isDisabled="isDisabled"-->
-                                  <!--@closeInfoDialog ="visible = false"-->
-                                  <!--:title = "title">-->
-                    <!--</DetailDialog>-->
+                    <MapdetailDialog v-if="visible"
+                                  :visible="visible"
+                                  :isDisabled="isDisabled"
+                                  @closeInfoDialog ="visible = false"
+                                  :title = "title"
+                                     :Info="areaInfo">
+                    </MapdetailDialog>
                 </div>
             </div>
         </div>
@@ -74,8 +75,8 @@
 
 <script>
     import ScrollContainer from '@/components/ScrollContainer'
-    // import DetailDialog from '@/components/gis/DetailDialog'
-    import ShowMapDialog from '@/components/gis/ShowMapDialog'
+    import MapdetailDialog from '@/components/gis/mapdetailDialog'
+    import ShowMapDialog from '@/components/gis/showMapDialog'
 
     export default {
         name: 'area-deploy',
@@ -86,7 +87,10 @@
                 checkList: [],
                 filterList: [],
                 areaList: [
-                    {id:1,type: '千岛湖',name: '千岛湖',height:'38734',width:'1102',level:'5',description :''},
+                    {id:1,type: '西溪湿地',name: '西溪湿地',height:'38734',width:'1102',level:'5',description :'',
+                        firstLetter:'',imgSrc:'',webSrc:'',version:'',level:'',zoom:'',initLevel:'',allSrc:'',mapType:'',
+                        eyeSrc:'',netData:'',dHeight:'',dWidth:''
+                    },
                 ],
                 visible: false,
                 areaInfo: {},
@@ -263,16 +267,7 @@
                 this.areaList.map((item)=>{
                     if(item.id === this.choseId[0]){
                         this.areaInfo=item;
-                        if(this.areaInfo.isCustomizedDays){
-                            this.areaInfo.time = this.timeTr(item.time);
-                        }else {
-                            for(let i=0; i< this.areaInfo.time.length; i++) {
-                                if (this.areaInfo.time[i].includes(' ')){
-                                    this.areaInfo.time[i] = this.areaInfo.time[i].substring(0,this.areaInfo.time[i].length -1)
-                                }
-                            }
-                        }
-                        this.areaInfo.executetime = this.timeD(item.date,item.executetime);
+
                         this.showPersonDetail(this.areaInfo,title)
                         this.isDisabled=false
                         this.choseId = [];
@@ -302,7 +297,7 @@
         },
         components: {
             ScrollContainer,
-            // DetailDialog,
+            MapdetailDialog,
             ShowMapDialog
         },
         mounted:function(){
