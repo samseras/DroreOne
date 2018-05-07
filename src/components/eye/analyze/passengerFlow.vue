@@ -91,7 +91,7 @@
                 for(let i=0;i<this.echatList.length;i++){
                     changeH = this.echatList[i].pos_height/100;
                     changeW = this.echatList[i].pos_width/100;
-                    $($(".echatsContent")[i]).css({"height":this.fullHeight*changeH+"px","width":this.fullWidth*changeW-12+"px"});
+                    $($(".echatsContent")[i]).css({"height":this.fullHeight*changeH-42+"px","width":this.fullWidth*changeW-12+"px"});
                 };
                 this.moveChart();
             },
@@ -426,17 +426,19 @@
                     rose0ption={
                             title : {
                                 text: '',
-                                x:'center'
+                                    x:'center'
                             },
                             tooltip : {
                                 trigger: 'item',
                                 formatter: "{a} <br/>{b} : {c} ({d}%)"
                             },
                             legend: {
-                                left:'5%',
-                                top:'8%',
+                                left:'3%',
+                                top:'5%',
+                                bottom:'5%',
+                                x : 'center',
                                 data:legendData,
-                                orient: 'vertical'
+                                // orient: 'vertical'
                             },
                             calculable : true,
                             series : [
