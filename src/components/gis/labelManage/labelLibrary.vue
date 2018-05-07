@@ -69,7 +69,9 @@
 
 <script>
     import ScrollContainer from '@/components/ScrollContainer'
-    import DetailDialog from '@/components/gis/DetailDialog'
+
+    import DetailDialog from '@/components/gis/mapdetailDialog'
+
     export default {
         name: 'area-deploy',
         data(){
@@ -196,10 +198,6 @@
                 this.title = title;
                 this.isDisabled = true;
                 console.log("1234567yuiol;'")
-            },
-            addNewInfo () {
-                this.showPersonDetail({}, '添加广播播放')
-                this.isDisabled = false
             },
             deletChose(id){
                 this.$confirm('此操作将永久删除该数据, 是否继续?', '提示', {
