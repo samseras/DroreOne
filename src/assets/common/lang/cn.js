@@ -3,5 +3,5 @@ export const  message = {
     control : '管控 ',
     facility: '设施',
     analyze: '分析',
-    deploy: '配置'
+    deploy: '调度'
 }

@@ -68,7 +68,7 @@
                         <div class="checkBox">
                             <el-checkbox v-model="item.checked" @change="checked(item.id)" class="checkBtn"></el-checkbox>
                         </div>
-                        <div class="personType" @click.stop="showPersonDetail(item, '卫生间信息')">
+                        <div class="personType" @click.stop="showPersonDetail(item, '建筑信息', false)">
                             <img src="../../../../static/img/bulidCard.png" alt="">
                             <span class="type">
                                   {{item.building.name}}
@@ -129,7 +129,7 @@
                 this.title = title
             },
             addNewInfo () {
-                this.showPersonDetail({building:{}}, '添加卫生间信息')
+                this.showPersonDetail({building:{}}, '添加建筑信息')
                 this.isDisabled = false
             },
             deletInfo (id) {
@@ -163,7 +163,7 @@
                         this.$message.info('取消删除')
                     })
                 } else {
-                    this.$message.error('请选择要删除的卫生间信息')
+                    this.$message.error('请选择要删除的建筑信息')
                 }
             },
             toggleList (type) {
@@ -287,7 +287,7 @@
                             this.buildInfo = item
                         }
                     })
-                    this.showPersonDetail(this.buildInfo, '修改卫生间信息')
+                    this.showPersonDetail(this.buildInfo, '修改建筑信息')
                     this.isDisabled = false
                     this.choseInfoId = []
                 } else {

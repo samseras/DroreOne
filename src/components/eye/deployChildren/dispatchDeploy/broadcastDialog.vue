@@ -14,13 +14,13 @@
                         <!--<p>信仰</p>-->
                     <!--</div>-->
                     <a-player ref="aplayer" id="aplayer" class="aplayer-withlist"
-                              :showlrc="true"
+                              :show-lrc="true"
                               :music="playMusicList[0]"
                               :mode="mode"
                               @ended="musicEnd"
                               :list="playMusicList"
                               @play="playMusic"
-                              autoplay>
+                              autoPlay>
                     </a-player>
                   <!--<div class="aplayer" v-show="playList.length>0">-->
                       <!--<div class="aplayer-button"></div>-->
@@ -28,10 +28,10 @@
                 </div>
                 <div class="broadcastBottom">
                     <ul>
-                        <li v-for="(item,idx) in songList" :id="item.id" :musicSrc="item.src">
+                        <li v-for="(item,idx) in songList" :id="item.id" :musicSrc="item.src" :key="item.id">
                             <el-checkbox v-model="item.checked" @change="checked(item,idx)" class="checkBoxBtn"></el-checkbox>
                             <p @click="selectPlayMusic(item)">{{item.title}}</p>
-                            <i class="el-icon-close" @click="deleteMuisc(item,idx)"></i>
+                            <i class="el-icon-close" @click="deleteMuisc(item.id)"></i>
                         </li>
                     </ul>
                 </div>
@@ -62,48 +62,7 @@
         name: "map-dialog",
         data () {
             return{
-                songList:[
-                    {
-                        id:1,
-                        checked:true,
-                        title: 'secret base~君がくれたもの~',
-                        author: '',
-                        url: 'https://moeplayer.b0.upaiyun.com/aplayer/secretbase.mp3',
-                        pic: 'https://moeplayer.b0.upaiyun.com/aplayer/secretbase.jpg'
-                    },
-                    {
-                        id:2,
-                        checked:true,
-                        title: '下个路口见',
-                        author: '李宇春',
-                        url: '../../../../../static/李宇春 - 下个路口见.mp3',
-                        pic: 'cover.jpg'
-                    },
-                    {
-                        id:3,
-                        checked:true,
-                        title:"信仰",
-                        author:"张信哲",
-                        url:"../../../../../static/信仰.mp3",
-                        pic:""
-                    },
-                    {
-                        id:4,
-                        checked:false,
-                        title:"泡沫",
-                        author:"邓紫棋",
-                        url:"https://moeplayer.b0.upaiyun.com/aplayer/secretbase.mp3",
-                        pic:""
-                    },
-                    {
-                        id:5,
-                        checked:true,
-                        title:"花火",
-                        author:"丁当",
-                        url:"../../../../../static/丁当 - 花火.mp3",
-                        pic:""
-                    }
-                ],//播放列表
+                songList:[],//播放列表
                 songNameList:[],
                 selectNameList:["信仰"],
                 flag:false,
@@ -112,9 +71,9 @@
                     {
                         id:3,
                         checked:true,
-                        title:"信仰",
-                        author:"张信哲",
-                        url:"../../../../../static/信仰.mp3",
+                        title:"请选择要播放的音乐",
+                        artist:"drore",
+                        src:"../../../../../static/信仰.mp3",
                         pic:""
                     }
                 ],
@@ -202,35 +161,53 @@
                     this.playMusicList.unshift(item);
                 }
                 //this.playMusicList.unshift(item);
-                // this.play();
+                this.playMusic();
                 console.log(this.playMusicList)
                 console.log(this.num)
             },
             closeBroadcastDialog () {
                 this.$emit('closeBroadcastDialog')
             },
-            deleteMuisc(item,idx){
-                console.log(this.num)
-                if(this.num > 0){
-                    this.playMusicList.splice(0,1);
+            deleteMuisc(id){
+                if (id) {
+                    this.choseInfoId = [id]
                 }
-                this.songList.splice(idx,1);
-                if(this.selectNameList.indexOf(item.title) !== -1){
-                    let index = this.selectNameList.indexOf(item.title);
-                    this.selectNameList.splice(index,1);
-                    this.playMusicList.splice(index,1);
-                }
-                console.log(this.playMusicList)
-                console.log(this.selectNameList)
+                    this.$confirm('此操作将永久删除该数据, 是否继续?', '提示', {
+                        confirmButtonText: '确定',
+                        cancelButtonText: '取消',
+                        type: 'warning'
+                    }).then(() => {
+                        api.schedulebroadcast.deletMusic([id]).then(res => {
+                            console.log(res, '删除成功')
+                            this.$message.success('删除成功')
+                           this.songList = this.songList.filter(item => {
+                               return item.id !== id
+                           })
+                        }).catch(err => {
+                            this.$message.error('删除失败，请稍后重试')
+                            console.log(err)
+                            this.choseInfoId = []
+                        })
+                    }).catch(() => {
+                        this.$message.info('取消删除')
+                    })
             },
             saveBroadMusicList(){
                 let musicList = this.playMusicList;
                 this.$emit('saveMusicList',musicList)
                 console.log(musicList)
             },
-            getAllMusic () {
-                api.schedulebroadcast.getAllMusic().then(res => {
+            async getAllMusic () {
+                await api.schedulebroadcast.getAllMusic().then(res => {
                     console.log(res, '请求成功')
+                    this.songList = res
+                    this.songList.forEach(item => {
+                        item.src = item.path
+                        item.title = item.path.substring(16,25)
+                        item.checked =false
+                        item.pic = ''
+                        item.artist = 'drore'
+                    })
                 }).catch(err => {
                     console.log(err, '请求失败')
                 })
@@ -239,7 +216,7 @@
         watch:{
 
         },
-        created () {
+        async created () {
             this.getAllMusic()
         },
         components : {
@@ -255,8 +232,6 @@
             // console.log(aplayer.musicList, '这是当前的music')
             //  this.playMusicList.push(this.currentMusic);
             // console.log(this.playMusicList)
-
-
         }
     }
 </script>

@@ -52,7 +52,7 @@
                         <el-table-column
                             label="操作">
                             <template slot-scope="scope">
-                                <span @click="showPersonDetail(scope.row, '卫生间信息')">查看</span>
+                                <span @click="showPersonDetail(scope.row, '植物信息')">查看</span>
                                 <span class="line">|</span>
                                 <span @click="fixedInfo(scope.row.id )">编辑</span>
                                 <span class="line">|</span>
@@ -125,7 +125,7 @@
                 this.title = title
             },
             addNewInfo () {
-                this.showPersonDetail({plant:{}}, '添加卫生间信息')
+                this.showPersonDetail({plant:{}}, '添加植物信息')
                 this.isDisabled = false
             },
             deletInfo (id) {
@@ -159,7 +159,7 @@
                         this.$message.info('取消删除')
                     })
                 } else {
-                    this.$message.error('请选择要删除的卫生间信息')
+                    this.$message.error('请选择要删除的植物信息')
                 }
             },
             toggleList (type) {
@@ -283,7 +283,7 @@
                             this.treeInfo = item
                         }
                     })
-                    this.showPersonDetail(this.treeInfo, '修改卫生间信息')
+                    this.showPersonDetail(this.treeInfo, '修改植物信息')
                     this.isDisabled = false
                     this.choseInfoId = []
                 } else {

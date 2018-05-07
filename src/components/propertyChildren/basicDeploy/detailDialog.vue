@@ -318,10 +318,10 @@
                 <div class="personCardContent boatCardContent" v-if="route.includes('construction')">
                     <p class="sex">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称：<input type="text"v-model="build.building.name"></p>
                     <p class="name">层&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;高：
-                        <input type="number"v-model="build.building.layers"  placeholder="请输入树木高度（数字）">
+                        <input type="number"v-model="build.building.layers"  placeholder="请输入建筑层高（数字）">
                     </p>
                     <p class="name">高&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;度：
-                        <input type="number"v-model="build.building.height"  placeholder="请输入树木高度（数字）">
+                        <input type="number"v-model="build.building.height"  placeholder="请输入建筑高度（数字）">
                     </p>
                     <p class="name">年&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;代：
                         <el-date-picker

@@ -52,13 +52,13 @@ const schedulebroadcast = {
     getAllMusic () {
         return axios ({
             method: 'GET',
-            url: getUrl('/resource/music')
+            url: getUrl('/resource?type=2')
         })
     },
     deletMusic (params) {
         return axios ({
             method: 'DELETE',
-            url: getUrl('/resource/music'),
+            url: getUrl('/resource'),
             data:{
                 ids:params
             }
