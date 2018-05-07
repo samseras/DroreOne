@@ -73,7 +73,7 @@
         props:['listName'],
         methods: {
             getscreen(){
-                 this.fullHeight = window.innerHeight-40;
+                 this.fullHeight = window.innerHeight+67;
                  this.fullWidth = window.innerWidth-70;
             },
             fullscreen(){
@@ -87,12 +87,13 @@
                 this.$emit('hideList',data);//fullscreen事件触发后，自动触发hideList事件 var docElm = document.documentElement;
                 this.requestFullScreen();
                 let changeH,changeW;
+                console.log(this.fullHeight);
                 for(let i=0;i<this.echatList.length;i++){
                     changeH = this.echatList[i].pos_height/100;
                     changeW = this.echatList[i].pos_width/100;
-                    $($(".echatsContent")[i]).css({"height":this.fullHeight*changeH-22+"px","width":this.fullWidth*changeW-12+"px"});
-                    this.moveChart();
+                    $($(".echatsContent")[i]).css({"height":this.fullHeight*changeH+"px","width":this.fullWidth*changeW-12+"px"});
                 };
+                this.moveChart();
             },
             showList(){
                 if(!this.checkFull()){
@@ -108,8 +109,8 @@
                         changeH = this.echatList[i].pos_height/100;
                         changeW = this.echatList[i].pos_width/100;
                             $($(".echatsContent")[i]).css({"height":this.chartH*changeH-42+"px","width":this.chartW*changeW-7+"px"});
-                        this.moveChart();
                     };
+                    this.moveChart();
                 }
             },
             checkFull(){
@@ -183,8 +184,8 @@
                          chartDomH = this.echatList[i].pos_height/100;
                         this.getchartKind(scenarioId,chartDomH);
                     };
-                    this.moveChart();
                 })
+                this.moveChart();
             },
             showBigEchat (index,item,id) {
               //  this.isActive = index
@@ -254,12 +255,10 @@
                     this.kind = res.result;
                      let kindName = res.result;
                      if(this.isBigScreen){
-                          chartDomHpx = this.fullHeight*chartDomH-22+"px";
-                         console.log('全屏')
-                     }else {
-                         console.log('小品')
-                          chartDomHpx = this.chartH*chartDomH-42+"px";
-                     }
+                         chartDomHpx = this.fullHeight*chartDomH-42+"px";
+                    }else {
+                         chartDomHpx = this.chartH*chartDomH-42+"px";
+                    }
                     $("#"+scenarioId).css("height",chartDomHpx);
                     switch(kindName) {
                         case "component_sink_bar":
@@ -314,7 +313,6 @@
                     }else {
                         var color = barResult.subtitle;
                         var colors = color.split(",");
-                        console.log(colors);
                     }
                     $("#"+scenarioId).prev().find(".title").text(barResult.title);
                     this.barDom = this.$echarts.init(document.getElementById(scenarioId));
@@ -323,8 +321,14 @@
                             text: '',
                         },
                         color: colors,
+                        grid: {
+                            left: '3%',
+                            right: '4%',
+                            bottom: '3%',
+                            containLabel: true
+                        },
                         legend: {
-                            data: valueNames,
+                                data: valueNames,
                             align: 'left'
                         },
                         tooltip: {},
@@ -934,14 +938,14 @@
         .content{
             flex: 1;
             position: relative;
-            height: 96%;
+            height: 100%;
             /*display: flex;*/
             min-height: rem(545);
             /*flex-direction: column;*/
             .rankBtn{
                 position: fixed;
                 top:rem(70);
-                right: rem(10);
+                right: rem(5);
                 width: rem(25);
                 height: rem(25);
                 padding: 0;
@@ -980,7 +984,7 @@
              //   flex: 1;
                 height: 100%;
                 position: relative;
-                margin-top: rem(20);
+                /*margin-top: rem(20);*/
                 cursor: pointer;
                 /*.active{*/
                     /*position: fixed !important;*/
