@@ -69,7 +69,9 @@
 
 <script>
     import ScrollContainer from '@/components/ScrollContainer'
-    import DetailDialog from '@/components/gis/mapDetailDialog'
+
+    import DetailDialog from '@/components/gis/mapdetailDialog'
+
     export default {
         name: 'area-deploy',
         data(){
