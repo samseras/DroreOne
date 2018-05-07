@@ -3,8 +3,8 @@
  	<div class="login">
  		<div class="login-content">
  			<header class="top">
- 	    		<img src="../../../static/img/logo.png"/>
- 	    		<span style="padding-right: 10px;">Drore One</span>
+ 	    		<img src="../../../static/img/logo2.svg"/>
+ 	    		<!--<span style="padding-right: 10px;">Drore One</span>-->
  	    		<span>智慧旅游 · 云</span>
  	    	</header>
  	    	<section class="mian-con">
@@ -98,7 +98,13 @@
 	.login{min-width: 1380px;width: 100%;height:100%;min-height: 650px;background: url('../../../static/img/1.png') no-repeat;background-size:cover;}
     .login-content{display: flex;flex-direction:column;box-sizing:border-box;margin:0 auto;background: url('../../../static/img/2.png') no-repeat;background-size:960px;background-position:center 100px;padding-top: 200px;padding-bottom: 100px;}
 	.top{width: 600px;height: 26px;display: flex;margin: 0 auto;padding-top: 20px;}
-	.top img{width: 40px;height:26px;margin-right: 15px;}
+	.top img{
+        width: 120px;
+        height:55px;
+        vertical-align: middle;
+        margin-top: -10px;
+        margin-right: -8px;
+    }
 	.top span{display: block;line-height: 26px; font-size: 18px;color: #607d8b;border-right: 1px solid #a1b3bb;}
     .top span:last-child{padding-left: 10px;border:none;}
 
