@@ -73,7 +73,7 @@
         props:['listName'],
         methods: {
             getscreen(){
-                 this.fullHeight = window.innerHeight-40;
+                 this.fullHeight = window.innerHeight+67;
                  this.fullWidth = window.innerWidth-70;
             },
             fullscreen(){
@@ -87,12 +87,13 @@
                 this.$emit('hideList',data);//fullscreen事件触发后，自动触发hideList事件 var docElm = document.documentElement;
                 this.requestFullScreen();
                 let changeH,changeW;
+                console.log(this.fullHeight);
                 for(let i=0;i<this.echatList.length;i++){
                     changeH = this.echatList[i].pos_height/100;
                     changeW = this.echatList[i].pos_width/100;
-                    $($(".echatsContent")[i]).css({"height":this.fullHeight*changeH-22+"px","width":this.fullWidth*changeW-12+"px"});
-                    this.moveChart();
+                    $($(".echatsContent")[i]).css({"height":this.fullHeight*changeH-42+"px","width":this.fullWidth*changeW-12+"px"});
                 };
+                this.moveChart();
             },
             showList(){
                 if(!this.checkFull()){
@@ -108,8 +109,8 @@
                         changeH = this.echatList[i].pos_height/100;
                         changeW = this.echatList[i].pos_width/100;
                             $($(".echatsContent")[i]).css({"height":this.chartH*changeH-42+"px","width":this.chartW*changeW-7+"px"});
-                        this.moveChart();
                     };
+                    this.moveChart();
                 }
             },
             checkFull(){
@@ -184,6 +185,7 @@
                         this.getchartKind(scenarioId,chartDomH);
                     };
                 })
+                this.moveChart();
             },
             showBigEchat (index,item,id) {
               //  this.isActive = index
@@ -253,12 +255,10 @@
                     this.kind = res.result;
                      let kindName = res.result;
                      if(this.isBigScreen){
-                          chartDomHpx = this.fullHeight*chartDomH-22+"px";
-                         console.log('全屏')
-                     }else {
-                         console.log('小品')
-                          chartDomHpx = this.chartH*chartDomH-42+"px";
-                     }
+                         chartDomHpx = this.fullHeight*chartDomH-42+"px";
+                    }else {
+                         chartDomHpx = this.chartH*chartDomH-42+"px";
+                    }
                     $("#"+scenarioId).css("height",chartDomHpx);
                     switch(kindName) {
                         case "component_sink_bar":
@@ -304,99 +304,40 @@
                     barResult = JSON.parse(res.result);
                     // console.log(barResult, 'sdsdfhdsfhsdf')
                     var title = barResult.title;
-                    var subtitle = barResult.subtitle;
+                    //var subtitle = chartData.subtitle;
                     var legendData = barResult.legendData;
                     var seriesData = barResult.seriesData;
-                    var valueName = barResult.valueName;
-                    var nameArray = new Array();
-                    nameArray[0] = valueName;
+                    var valueNames = barResult.valueNames;
                     if(barResult.subtitle==''){
-                        var colors = ['#5abdff'];
+                        var colors = ['#C1232B', '#B5C334', '#FCCE10', '#ff6600'];
                     }else {
-                        var colors = barResult.subtitle;
+                        var color = barResult.subtitle;
+                        var colors = color.split(",");
                     }
                     $("#"+scenarioId).prev().find(".title").text(barResult.title);
                     this.barDom = this.$echarts.init(document.getElementById(scenarioId));
                     bar0ption={
-                        title:{
-                            text:'',
-                            subtext:'',
-                            textStyle : {
-                                color: '#fff',
-                                fontSize:18
-                            }
+                        title: {
+                            text: '',
                         },
-                        tooltip : {
-                            trigger: 'axis',
-                            axisPointer : {            // 坐标轴指示器，坐标轴触发有效
-                                type : 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
-                            }
-                        },
-                        legend:{//图例组件
-                            /* orient:'vertical',*/
-                            data:nameArray,
-                            top:'5px',
-                            right:'5px',
-                            textStyle:{
-                                color:"#949494"
-                            }
-                        },
+                        color: colors,
                         grid: {
-                            left: '5%',
-                            right: '5%',
-                            bottom: '10%',
-                            top:'15%',
+                            left: '3%',
+                            right: '4%',
+                            bottom: '3%',
                             containLabel: true
                         },
-                        xAxis :
-                            {
-                                type: 'category',
-                                boundaryGap: [0, 0.03],
-                                data:legendData,
-                                axisLine:{
-                                    lineStyle:{
-                                        color:'#949494',
-                                        width:0.1
-                                    }
-                                },
-                                nameTextStyle:{
-                                    fontSize:12,
-                                    fontStyle:"lighter"
-                                }
-                            },
-                        yAxis :
-                            {
-                                type : 'value',
-                                axisLine:{//坐标轴轴线设置
-                                    lineStyle:{
-                                        color:"#949494",
-                                        width:0.5,
-                                    }
-                                }
-                            },
-                        series : [
-                            {
-                                name:valueName,
-                                type:'bar',
-                                barWidth: '30%',
-                                data:seriesData,
-                                itemStyle:{
-                                    normal:{
-                                        color: colors,
-                                        borderType:'dotted',
-                                        barBorderRadius:5
-                                    }
-                                },
-                                // //图形上的文本标签
-                                // label:{
-                                //     normal:{
-                                //         show:true,
-                                //         position:'top',
-                                //         color:'#949494'
-                                //     }
-                                // }
-                            }
-                        ]
+                        legend: {
+                                data: valueNames,
+                            align: 'left'
+                        },
+                        tooltip: {},
+                        xAxis: {
+                            data: legendData
+                        },
+                        yAxis: {
+                        },
+                        series: seriesData
                     };
                     this.barDom.setOption(bar0ption);
                 })
@@ -406,7 +347,7 @@
                 api.analyze.getScenarioMapData(scenarioId).then(res=>{
                     this.echatData = res.result;
                     pieResult = JSON.parse(res.result);
-                   console.log(pieResult,"这是返回的pie数据");
+                   // console.log(pieResult,"这是返回的pie数据");
                     var title = pieResult.title;
                     var subtitle = pieResult.subtitle;
                     var legendData = pieResult.legendData;
@@ -485,17 +426,19 @@
                     rose0ption={
                             title : {
                                 text: '',
-                                x:'center'
+                                    x:'center'
                             },
                             tooltip : {
                                 trigger: 'item',
                                 formatter: "{a} <br/>{b} : {c} ({d}%)"
                             },
                             legend: {
-                                left:'5%',
-                                top:'8%',
+                                left:'3%',
+                                top:'5%',
+                                bottom:'5%',
+                                x : 'center',
                                 data:legendData,
-                                orient: 'vertical'
+                                // orient: 'vertical'
                             },
                             calculable : true,
                             series : [
@@ -997,14 +940,14 @@
         .content{
             flex: 1;
             position: relative;
-            height: 96%;
+            height: 100%;
             /*display: flex;*/
             min-height: rem(545);
             /*flex-direction: column;*/
             .rankBtn{
                 position: fixed;
                 top:rem(70);
-                right: rem(10);
+                right: rem(5);
                 width: rem(25);
                 height: rem(25);
                 padding: 0;
@@ -1043,7 +986,7 @@
              //   flex: 1;
                 height: 100%;
                 position: relative;
-                margin-top: rem(20);
+                /*margin-top: rem(20);*/
                 cursor: pointer;
                 /*.active{*/
                     /*position: fixed !important;*/

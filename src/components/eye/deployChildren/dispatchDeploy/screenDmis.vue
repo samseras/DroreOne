@@ -1,5 +1,5 @@
 <template>
-    <div class="areaDeploy">
+    <div class="screenDmise">
         <div class="title">
             LED
         </div>
@@ -345,7 +345,7 @@
 </script>
 
 <style lang="scss" scoped type="text/scss">
-    .areaDeploy{
+    .screenDmise{
         width: 100%;
         height: 100%;
         display: flex;

@@ -39,6 +39,32 @@ const schedulebroadcast = {
             data:info
         })
     },
+    createMusic (params) {
+        console.log(params, 'formdata')
+        return axios({
+            method: 'POST',
+            url: getUrl('/resource/music'),
+            processData : false,
+            contentType : false,
+            data:params,
+        })
+    },
+    getAllMusic () {
+        return axios ({
+            method: 'GET',
+            url: getUrl('/resource/music')
+        })
+    },
+    deletMusic (params) {
+        return axios ({
+            method: 'DELETE',
+            url: getUrl('/resource/music'),
+            data:{
+                ids:params
+            }
+
+        })
+    },
 }
 
 export default schedulebroadcast

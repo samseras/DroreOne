@@ -246,7 +246,7 @@
 	#top li:last-child{background: #44bccd;margin-right: 0;}
 
 	#top .one>div:first-child{width: 100%;height: 48%;margin-bottom:10px;background: #008dd4;}
-	ul a{display: block;width: 100%;height: 100%;    padding-top: 10px; padding-left: 14px;}
+	ul a{display: block;width: 100%;height: 100%;    padding-top: 10px; padding-left: 14px; box-sizing: border-box}
 
 	#bottom{margin-top: 0;height: 31%;}
     #bottom ul{width: 100%;display: flex;height: 100%;}
