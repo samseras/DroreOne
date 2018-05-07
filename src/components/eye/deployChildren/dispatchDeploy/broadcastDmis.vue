@@ -1,5 +1,5 @@
 <template>
-    <div class="areaDeploy">
+    <div class="broadcastDmise">
         <div class="title">
             广播
         </div>
@@ -246,7 +246,7 @@
 </script>
 
 <style lang="scss" scoped type="text/scss">
-    .areaDeploy{
+    .broadcastDmise{
         width: 100%;
         height: 100%;
         display: flex;

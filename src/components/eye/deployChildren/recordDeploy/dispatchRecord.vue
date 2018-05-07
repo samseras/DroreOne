@@ -1,5 +1,5 @@
 <template>
-    <div class="areaDeploy">
+    <div class="dispatch">
         <div class="title">
             调度统计
         </div>
@@ -165,7 +165,7 @@
 </script>
 
 <style lang="scss" scoped type="text/scss">
-    .areaDeploy{
+    .dispatch{
         width: 100%;
         height: 100%;
         display: flex;
