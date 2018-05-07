@@ -220,7 +220,11 @@
                 let aresObj = {
                     id: info.id,
                     name: info.name,
-                    description: info.description
+                    description: info.description,
+                    geo: {
+                        type:"Polygon",
+                        coordinates: info.location
+                    }
                 }
                 api.area.updateRegion(JSON.stringify(aresObj)).then(res => {
                     console.log(res, '创建成功')
@@ -234,7 +238,11 @@
             async addNewPerson (info) {
                 let aresObj = {
                     name: info.name,
-                    description: info.description
+                    description: info.description,
+                    geo: {
+                        type:"Polygon",
+                        coordinates: info.location
+                    }
                 }
                 if (info.imgUrl !== '') {
                     await api.person.updataAva(info.imgUrl).then(res => {
