@@ -1,5 +1,5 @@
 <template>
-    <div class="controler">
+    <div class="mapManage">
         <div class="map">
             <mapData></mapData>
        </div>
@@ -23,7 +23,7 @@
 </script>
 
 <style lang="scss" scoped type="text/scss">
-    .controler{
+    .mapManage{
         width: 100%;
         height: 100%;
         display: flex;

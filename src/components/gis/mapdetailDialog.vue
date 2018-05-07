@@ -1,24 +1,72 @@
 <template>
-    <div class="showMapDialog">
+    <div class="mapdetailDialog">
         <el-dialog
             :title="title"
             :visible="visible"
             :before-close="closeDialog"
-            top = "0px"
-            width="100%"
+            width="600px"
+            class="dialog echatDialog"
             center>
             <div class="card">
-                <!--地图-->
-                <!--<div class="personCardContent" v-if="route.includes('map')">-->
-                    <!--&lt;!&ndash;<div class="map">&ndash;&gt;-->
-                        <!--&lt;!&ndash;<Map></Map>&ndash;&gt;-->
-                    <!--&lt;!&ndash;</div>&ndash;&gt;-->
-                    <!--<Map></Map>-->
-                <!--</div>-->
+                <!--标签-->
+                <div class="personCardContent" v-if="route.includes('label')">
+                    <p class="sex">名称：<input type="text" v-model="label.name" class="inputText"></p>
+                    <p class="id">编码：<input type="text" v-model="label.id" class="inputText"></p>
+                    <p class="type">标签分类：
+                        <el-select size="mini"  v-model="label.type" placeholder="请选择">
+                            <el-option
+                                v-for="item in label.options"
+                                :key="item.value"
+                                :label="item.name"
+                                :value="item.value">
+                            </el-option>
+                        </el-select>
+                    </p>
+                    <p class="Hardware">点位图标地址（24*24）：
+                        <el-upload
+                            class="upload-demo"
+                            action="https://jsonplaceholder.typicode.com/posts/"
+                            :on-remove="handleRemove"
+                            :on-success="handleSuccess"
+                            :before-remove="beforeRemove"
+                            :before-upload="beforeUpload"
+                            :limit="1"
+                            :on-exceed="handleExceed"
+                            :file-list="fileList">
+                            <el-button size="small" type="primary">上传图片</el-button>
+                        </el-upload>
+                    </p>
+                    <p class="name">标签类型地址（48*48）：
+                        <el-upload
+                            class="upload-demo"
+                            action="https://jsonplaceholder.typicode.com/posts/"
+                            :on-remove="handleRemove"
+                            :on-success="handleSuccess"
+                            :before-remove="beforeRemove"
+                            :before-upload="beforeUpload"
+                            :limit="1"
+                            :on-exceed="handleExceed"
+                            :file-list="fileList">
+                            <el-button size="small" type="primary">上传图片</el-button>
+                        </el-upload>
+                    </p>
+                    <p class="sort">排序：<input type="text" v-model="label.sort" class="inputText"></p>
+                    <p class="uploadText">y轴坐标偏移：
+                        <input type="text"v-model="label.xAxis" class="inputText">
+                    </p>
+                    <p class="type">x轴坐标偏移：
+                        <input type="text"v-model="label.yAxis" class="inputText">
+                    </p>
+                </div>
 
                 <div class="map" v-if="route.includes('map')">
                     <Map></Map>
                 </div>
+            </div>
+
+            <div class=""slot="footer" class="dialog-footer cardFooter">
+                <el-button size="mini" class="hold" @click="addNewInfo" :disabled='isDisabled'>保存</el-button>
+                <el-button size="mini" @click = 'closeDialog' :disabled='isDisabled'>取消</el-button>
             </div>
         </el-dialog>
     </div>
@@ -31,13 +79,134 @@
         props: ['visible', 'Info','isDisabled','title'],
         data () {
             return {
-
+                files: [],
+                selectLight:[],
+                edit: false,
+                cropper: false,
+                src: '',
+                radio: '1',
+                isShowMapDialog: false,
+                mapVisible: false,
+                broadcastVisible:false,
+                screenVisible:false,
+                broadcast: {},
+                lamppost:{
+                    id:"",
+                    name:"",
+                    customizedDays:false,
+                    days:[],
+                    startDate:"",
+                    endDate:"",
+                    startTime:"",
+                    endTime:"",
+                    type:5,
+                    enabled:true,
+                    description:"",
+                    lightIds:[]
+                },
+                security:{},
+                purifier:{},
+                screen:{},
+                label:{},
+                options: [
+                    // { name: '保洁1'},
+                    // { name: '保洁2'},
+                    // { name: '保洁3'},
+                    // { name: '保洁4'},
+                    // {name: 'A-GB001'},
+                    // {name: 'A-GB002'},
+                    // {name: 'A-GB003'},
+                    // {name: 'A-GB004'}
+                ],
+                associatedRadio:true,
+                associatedScreen:false,
+                associatedStreet:false,
+                route: '',
+                file: {},
+                definedDay: [new Date(2016, 9, 10), new Date(2016, 9, 12)],
+                weekcustom:false,
+                weekTime:false,
+                filterList:[],
+                week: [
+                    {type: '周一'},
+                    {type: '周二'},
+                    {type: '周三'},
+                    {type: '周四'},
+                    {type: '周五'},
+                    {type: '周六'},
+                    {type: '周日'}
+                ],
+                dayTime:false,
+                classesList:[],
+                classes: [
+                    {type: '早班'},
+                    {type: '中班'},
+                    {type: '晚班'}
+                ],
+                daycustom:false,
+                definedTime:[new Date(2016, 9, 10, 8, 40), new Date(2016, 9, 10, 9, 40)],
+                upload:true,
+                importFileUrl: 'http:dtc.com/cpy/add',
+                fileList:[],
+                uploadText:false,
             }
         },
         methods: {
+            handleSuccess(response,file,fileList){
+                console.log('上传文件成功2', file)
+                console.log('222',fileList)
+            },
+            beforeUpload(file){
+                console.log('上传之前',file);
+            },
+            handleRemove(file, fileList) {
+                console.log(file, fileList);
+
+            },
+            handleExceed(files, fileList) {
+                this.$message.warning(`当前限制选择 1 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`);
+            },
+            beforeRemove(file, fileList) {
+                return this.$confirm(`确定移除 ${ file.name }？`);
+            },
             closeDialog () {
                 this.$emit('closeInfoDialog')
+            },
+            addNewInfo () {
+                let newInfo = this.Info
+
+                console.log(newInfo,"返回的数据")
+                this.$emit('fixInfo', newInfo)
+
+                this.closeDialog()
+            },
+            editSave() {
+                this.edit = false
+                let oldFile = this.files[0]
+                console.log(this.files[0] ,'4567890')
+                let binStr = atob(this.cropper.getCroppedCanvas().toDataURL(oldFile.type).split(',')[1])
+                let arr = new Uint8Array(binStr.length)
+                for (let i = 0; i < binStr.length; i++) {
+                    arr[i] = binStr.charCodeAt(i)
+                }
+                let file = new File([arr], oldFile.name, { type: oldFile.type })
+                this.$refs.upload.update(oldFile.id, {
+                    file,
+                    type: file.type,
+                    size: file.size,
+                    active: true,
+                })
+                console.log(file, '这是截取后的图片')
+                let that = this
+                let reader = new FileReader();
+                reader.readAsDataURL(file);
+                this.src = reader.onload = function(event){
+                    let txt = event.target.result;
+                    that.src = txt
+                }
             }
+
+
         },
         async created () {
             this.route = this.$route.path
@@ -48,12 +217,37 @@
             }
         },
         components: {
+            // FileUpload,
+            // MapDialog,
+            // broadcastDialog,
+            // ScreenDialog
             Map
-        }
+        },
+        watch: {
+            edit(value) {
+                if (value) {
+                    this.$nextTick(function () {
+                        if (!this.$refs.editImage) {
+                            return
+                        }
+                        let cropper = new Cropper(this.$refs.editImage, {
+                            aspectRatio: 1 / 1,
+                            viewMode: 1,
+                        })
+                        this.cropper = cropper
+                    })
+                } else {
+                    if (this.cropper) {
+                        this.cropper.destroy()
+                        this.cropper = false
+                    }
+                }
+            }
+        },
     }
 </script>
 <style lang="scss">
-    .detailDialog{
+    .mapdetailDialog{
         width: 100%;
         height: 100%;
         .el-dialog .el-dialog--center{
@@ -173,16 +367,12 @@
         .el-dialog__footer{
             padding: 0;
             padding: rem(5) 0;
+        }
+        .el-dialog--center .el-dialog__footer{
             text-align: right;
             padding-right: rem(15);
             border-top: 1px solid #ccc;
             margin-top: rem(15);
-        }
-        .el-dialog--center{
-            text-align: right;
-            padding-right: rem(15);
-            border-top: 1px solid #ccc;
-            /*margin-top: rem(15);*/
         }
     }
     .el-select-dropdown__item span{
@@ -522,7 +712,7 @@
 
 </style>
 <style lang="scss" scoped type="text/scss">
-    .showMapDialog{
+    .mapdetailDialog{
         .map{
             flex: 1;
             height: 100%;
@@ -533,7 +723,7 @@
             width: 100%;
             height: 100%;
 
-            .personCardContent {
+            .personCardContent ,.boatCardContent {
                 width: 100%;
                 height: 100%;
                 position: relative;
