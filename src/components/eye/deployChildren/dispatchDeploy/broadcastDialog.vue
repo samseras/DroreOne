@@ -42,7 +42,7 @@
                     <!--:limit="3">-->
                 <div class="el-upload">
                     <i size="small" type="primary" class="el-icon-message" @click="$refs.uploadMusic.click()"></i>
-                    <input type="file" ref="uploadMusic" class="musicFile">
+                    <input type="file" ref="uploadMusic" class="musicFile" @change="selectMusic">
                 </div>
                 <!--</el-upload>-->
             </div>
@@ -56,6 +56,7 @@
 
 <script>
      import VueAplayer from 'vue-aplayer'
+     import api from '@/api'
     export default {
         props: ['visible'],
         name: "map-dialog",
@@ -124,6 +125,24 @@
             }
         },
         methods: {
+            selectMusic (e) {
+                console.log(e.target.files[0], 'opopopopopops')
+                let file = e.target.files[0]
+                if (!file.type.includes('mp3')) {
+                    this.$message.error('请上传MP3格式文件，谢谢！');
+                    return
+                } else {
+                    var form = new FormData();
+                    form.append('f1',file);
+                    console.log(form, 'opopopopoppopop')
+                    api.schedulebroadcast.createMusic(form).then(res => {
+                        console.log(res, '上传成功')
+                    }).catch(err => {
+                        this.$message.error('上传失败，请稍后重试')
+                        console.log(err, '上传失败')
+                    })
+                }
+            },
             musicEnd () {
                 console.log('ende')
             },
@@ -208,13 +227,20 @@
                 let musicList = this.playMusicList;
                 this.$emit('saveMusicList',musicList)
                 console.log(musicList)
+            },
+            getAllMusic () {
+                api.schedulebroadcast.getAllMusic().then(res => {
+                    console.log(res, '请求成功')
+                }).catch(err => {
+                    console.log(err, '请求失败')
+                })
             }
         },
         watch:{
 
         },
         created () {
-
+            this.getAllMusic()
         },
         components : {
              'a-player': VueAplayer

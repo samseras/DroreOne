@@ -1,5 +1,5 @@
 <template>
-    <div class="detailDialog">
+    <div class="lamppostDialog">
         <el-dialog
             :title="title"
             :visible="visible"
@@ -71,7 +71,7 @@
     }
 </script>
 <style lang="scss">
-    .detailDialog {
+    .lamppostDialog {
         width: 100%;
         height: 100%;
         .el-dialog .el-dialog--center {
@@ -191,7 +191,7 @@
     }
 </style>
 <style lang="scss" scoped type="text/scss">
-    .detailDialog {
+    .lamppostDialog{
         .lamppostCheck {
             p {
                 textarea {
