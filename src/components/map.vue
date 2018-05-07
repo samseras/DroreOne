@@ -55,6 +55,7 @@
                     this.district(); // 片区打点
                 }else {
                     this.districtList();// 片区输出
+                    this.district(); // 片区打点
                 }
             } else if (route.includes('roat-deploy') || route.includes('security-Dmis')) {
                 if(!this.getLocationId){

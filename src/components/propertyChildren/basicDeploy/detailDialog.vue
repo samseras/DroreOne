@@ -249,7 +249,7 @@
                 <div class="personCardContent boatCardContent" v-if="route.includes('area')">
                     <p class="sex">片区名称：<input type="text" v-model="area.name" required="required"></p>
                     <p class="phoneNum" v-if="false">所在景区：<input type="text"v-model="area.placeScenic"></p>
-                    <p class="phoneNum">位置范围：<span>{{area.location}}</span><i class="el-icon-location-outline" @click="showMapDialog"></i></p>
+                    <p class="phoneNum">位置范围：<span>{{area.geo}}</span><i class="el-icon-location-outline" @click="showMapDialog"></i></p>
                     <p class="type">
                         描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：<textarea name="" v-model="area.description" cols="30"
                                                                                rows="5" placeholder="请输入描述信息"></textarea>
