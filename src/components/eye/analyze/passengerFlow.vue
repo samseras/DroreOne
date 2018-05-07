@@ -91,7 +91,7 @@
                 for(let i=0;i<this.echatList.length;i++){
                     changeH = this.echatList[i].pos_height/100;
                     changeW = this.echatList[i].pos_width/100;
-                    $($(".echatsContent")[i]).css({"height":this.fullHeight*changeH+"px","width":this.fullWidth*changeW-12+"px"});
+                    $($(".echatsContent")[i]).css({"height":this.fullHeight*changeH-42+"px","width":this.fullWidth*changeW-12+"px"});
                 };
                 this.moveChart();
             },
