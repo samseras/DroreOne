@@ -58,10 +58,10 @@
                 }
             } else if (route.includes('roat-deploy') || route.includes('security-Dmis')) {
                 if(!this.getLocationId){
-                    this.roadList();// 路线输出
+                    this.getAllRoat();// 路线输出
                     this.road(); // 路线打点
                 }else {
-                    this.roadListEidt();//修改路线
+                    this.getAllRoatedit();//修改路线
                 }
             } else if (route.includes('indicator-deploy'))  {
                 if(!this.getLocationId) {
@@ -1236,9 +1236,6 @@
                     console.log(err, '请求失败')
                 })
             },
-            roadList(){//路线列表
-                this.getAllRoat()
-            },
             road(){//路网绘画
                 var that = this
                 var areaEvt = new droreMap.road.RoadLayer('ROUTE_DEMO', '#fb9000')
@@ -1335,9 +1332,6 @@
                 }).catch(err => {
                     console.log(err, '请求失败')
                 })
-            },
-            roadListEidt(){//路线列表
-                this.getAllRoatedit()
             },
             overView() {//鹰眼图
                 var overView = new droreMap.control.OverviewMap({'url': '/static/img/xxsd.jpg'});
