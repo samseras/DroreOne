@@ -414,6 +414,9 @@
             }
         },
         methods: {
+            musicList () {
+
+            },
             saveContent (info) {
                 this.screen.contents = info
                 this.closeScreenDialog()
