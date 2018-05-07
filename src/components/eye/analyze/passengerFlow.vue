@@ -426,17 +426,19 @@
                     rose0ption={
                             title : {
                                 text: '',
-                                x:'center'
+                                    x:'center'
                             },
                             tooltip : {
                                 trigger: 'item',
                                 formatter: "{a} <br/>{b} : {c} ({d}%)"
                             },
                             legend: {
-                                left:'5%',
-                                top:'8%',
+                                left:'3%',
+                                top:'5%',
+                                bottom:'5%',
+                                x : 'center',
                                 data:legendData,
-                                orient: 'vertical'
+                                // orient: 'vertical'
                             },
                             calculable : true,
                             series : [
