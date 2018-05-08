@@ -1,6 +1,6 @@
 <template>
     <div class="hardwareMenu">
-        <el-menu default-active="/hard-property/hardwaretype" router>
+        <el-menu default-active="/hard-property/camera-Hware" router>
 
             <ScrollContainer>
                 <template v-for="item in items">

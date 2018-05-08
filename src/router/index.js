@@ -230,7 +230,7 @@ const routes = [
             {
                 path: '/hard-property',
                 name: 'HardWareMenu',
-                redirect: '/hard-property/cameraType',
+                redirect: '/hard-property/camera-Hware',
                 component: HardWareMenu,
                 children: [
                     {path: '/hard-property/cameraType', name: 'cameraType', component: cameraType},

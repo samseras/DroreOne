@@ -21,22 +21,22 @@
         <!--</div>-->
         <div class="filite" v-if="route.includes('indicator')">
             <el-checkbox-group v-model="filterList" @change="choseType">
-                <el-checkbox v-for="item in indicatorType" :label="item.type"></el-checkbox>
+                <el-checkbox v-for="item in indicatorType" :label="item.type" :key="item.type"></el-checkbox>
             </el-checkbox-group>
         </div>
         <div class="filite" v-if="route.includes('trash')">
             <el-checkbox-group v-model="filterList" @change="choseType">
-                <el-checkbox v-for="item in trashType" :label="item.type"></el-checkbox>
+                <el-checkbox v-for="item in trashType" :label="item.type" :key="item.type"></el-checkbox>
             </el-checkbox-group>
         </div>
         <div class="filite" v-if="route.includes('shop')">
             <el-checkbox-group v-model="filterList" @change="choseType">
-                <el-checkbox v-for="item in shopType" :label="item.businessType.name"></el-checkbox>
+                <el-checkbox v-for="item in shopType" :label="item.businessType.name" :key="item.businessType.id"></el-checkbox>
             </el-checkbox-group>
         </div>
         <div class="filite" v-if="route.includes('park')">
             <el-checkbox-group v-model="filterList" @change="choseType">
-                <el-checkbox v-for="item in parkType" :label="item.type | packFilter"></el-checkbox>
+                <el-checkbox v-for="item in parkType" :label="item.type | packFilter" :key="item.type"></el-checkbox>
             </el-checkbox-group>
         </div>
         <div class="page" v-if="isShowHeader">

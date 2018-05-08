@@ -73,7 +73,6 @@
                               :title = "title"
                               @saveNewInfo="addNewPerson">
                 </PersonDetail>
-
             </div>
         </div>
     </div>
@@ -84,6 +83,7 @@
     import api from '@/api'
     import Header from './dmisHeader'
     import PersonDetail from './dmisDialog'
+    import moment from 'moment'
     export default {
         name: 'area-deploy',
         data(){
@@ -187,18 +187,62 @@
                 })
             },
             fixInfo (info) {
-                console.log(info, 'wertyuio')
-                console.log(this.areaList, 'wertyuio')
-                let list = this.areaList
-                for(let i = 0;i< list.length; i++){
-                    if (info.id === list[i].id) {
-                        this.areaList[i] = info
-                    }
+                let musicIds = info.musicIds.map(item => {
+                    return item.id
+                })
+                let obj = {
+                    id: info.broadcastSchedule.id,
+                    name: info.broadcastSchedule.name,
+                    customizedDays: info.broadcastSchedule.customizedDays,
+                    startTime: moment(info.broadcastSchedule.watchTime[0]).format('HH:mm:ss'),
+                    endTime: moment(info.broadcastSchedule.watchTime[1]).format('HH:mm:ss'),
+                    description: info.broadcastSchedule.description,
+                    broadcastIds: info.broadcastIds,
+                    musicIds: musicIds
                 }
-                this.choseList = this.areaList
+                if (info.broadcastSchedule.customizedDays) {
+                    obj.startDate = moment(info.broadcastSchedule.time[0]).format('YYYY-MM-DD')
+                    obj.endDate = moment(info.broadcastSchedule.time[1]).format('YYYY-MM-DD')
+                } else {
+                    obj.days = info.broadcastSchedule.days
+                }
+                api.schedulebroadcast.updataBroadcast(JSON.stringify(obj)).then(res => {
+                    console.log(res, '创建成功')
+                    this.getAllBroadcast()
+                    this.$message.success('创建成功')
+                }).catch(err => {
+                    console.log(err, '创建失败')
+                    this.$message.error('创建失败，请稍后重试')
+                })
             },
             addNewPerson (info) {
                 console.log(info, '这是要添加的')
+                let musicIds = info.musics.map(item => {
+                    return item.id
+                })
+                let obj = {
+                    name: info.broadcastSchedule.name,
+                    customizedDays: info.broadcastSchedule.customizedDays,
+                    startTime: moment(info.broadcastSchedule.watchTime[0]).format('HH:mm:ss'),
+                    endTime: moment(info.broadcastSchedule.watchTime[1]).format('HH:mm:ss'),
+                    description: info.broadcastSchedule.description,
+                    broadcastIds: info.broadcastIds,
+                    musicIds: musicIds
+                }
+                if (info.broadcastSchedule.customizedDays) {
+                    obj.startDate = moment(info.broadcastSchedule.time[0]).format('YYYY-MM-DD')
+                    obj.endDate = moment(info.broadcastSchedule.time[1]).format('YYYY-MM-DD')
+                } else {
+                    obj.days = info.broadcastSchedule.days
+                }
+                api.schedulebroadcast.createdBroadcast(JSON.stringify(obj)).then(res => {
+                    console.log(res, '创建成功')
+                    this.getAllBroadcast()
+                    this.$message.success('创建成功')
+                }).catch(err => {
+                    console.log(err, '创建失败')
+                    this.$message.error('创建失败，请稍后重试')
+                })
             },
             fixedInfo (info,title) {
                 this.broadCastInfo = info
@@ -225,6 +269,14 @@
                         item.id = item.broadcastSchedule.id
                         if (!item.broadcastSchedule.customizedDays) {
                             item.broadcastSchedule.days = item.broadcastSchedule.days.split(',')
+                        }
+                        if (item.musics.length > 0) {
+                            item.musics.forEach(item => {
+                                let endNum = item.musicPath.lastIndexOf('_')
+                                let startNum = item.musicPath.lastIndexOf('/') + 1
+                                item.title = item.musicPath.substring(startNum,endNum)
+                                item.id = item.musicId
+                            })
                         }
                     })
                 }).catch(err => {
