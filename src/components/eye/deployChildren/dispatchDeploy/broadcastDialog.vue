@@ -26,10 +26,10 @@
                       <!--<div class="aplayer-button"></div>-->
                   <!--</div>-->
                 </div>
-                <div class="broadcastBottom">
+                <div class="broadcastBottom" v-loading="isShowLoading">
                     <ul>
                         <li v-for="(item,idx) in songList" :id="item.id" :musicSrc="item.src" :key="item.id">
-                            <el-checkbox v-model="item.checked" @change="checked(item,idx)" class="checkBoxBtn"></el-checkbox>
+                            <el-checkbox v-model="item.checked" @change="checked(item.id)" class="checkBoxBtn"></el-checkbox>
                             <p @click="selectPlayMusic(item)">{{item.title}}</p>
                             <i class="el-icon-close" @click="deleteMuisc(item.id)"></i>
                         </li>
@@ -64,7 +64,7 @@
             return{
                 songList:[],//播放列表
                 songNameList:[],
-                selectNameList:["信仰"],
+                selectNameList:[],
                 flag:false,
                 autoPlay:false,
                 playMusicList:[
@@ -79,8 +79,8 @@
                 ],
                 playing:false, //是否播放
                 mode:"order",
-                num:0
-
+                num:0,
+                isShowLoading: false
             }
         },
         methods: {
@@ -97,7 +97,7 @@
                     api.schedulebroadcast.createMusic(form).then(res => {
                         console.log(res, '上传成功')
                     }).catch(err => {
-                        this.$message.error('上传失败，请稍后重试')
+                        this.$message.error('上传音频失败，请稍后重试')
                         console.log(err, '上传失败')
                     })
                 }
@@ -109,28 +109,22 @@
                 this.autoPlay = true;
                   console.log(this.autoPlay)
             },
-            checked (item,idx) {
-                console.log(this.num)
-                if(this.num > 0){
-                    this.playMusicList.splice(0,1);
-                }
-                if(item.checked){
-                    if(this.selectNameList.indexOf(item.title) === -1){
-                        item.checked = true;
-                        this.selectNameList.push(item.title)
-                        this.playMusicList.push(item)
+            checked (id) {
+                this.songList = this.songList.filter(item => {
+                    if (item.id === id) {
+                        item.checked = item.checked
                     }
-                }else {
-                    if(this.selectNameList.indexOf(item.title) !== -1){
-                        item.checked = false;
-                        let index = this.selectNameList.indexOf(item.title);
-                        this.selectNameList.splice(index,1);
-                        this.playMusicList.splice(index,1);
-                    }
+                    return item
+                })
+                if (this.selectNameList.includes(id)) {
+                    this.selectNameList = this.selectNameList.filter((item) =>{
+                        return item !== id
+                    })
+                } else {
+                    this.selectNameList.push(id)
                 }
-                // console.log(item.checked)
-                // console.log(idx)
-                 console.log(this.playMusicList)
+               console.log(this.selectNameList)
+
             },
              init () {
                 let that = this;
@@ -193,22 +187,36 @@
                     })
             },
             saveBroadMusicList(){
-                let musicList = this.playMusicList;
+                let musicList
+                for (let i = 0; i < this.selectNameList.length; i++) {
+                    musicList = this.songList.filter((item, index) => {
+                        if (item.id === this.selectNameList[i]){
+                            this.songList[index].status = true
+                        }
+                        return item.status === true
+                    })
+                }
                 this.$emit('saveMusicList',musicList)
                 console.log(musicList)
             },
             async getAllMusic () {
+                this.isShowLoading = true
                 await api.schedulebroadcast.getAllMusic().then(res => {
+                    this.isShowLoading = false
                     console.log(res, '请求成功')
                     this.songList = res
                     this.songList.forEach(item => {
+                        let endNum = item.path.lastIndexOf('_')
+                        let startNum = item.path.lastIndexOf('/') + 1
+                        // console.log(, 'ioioioioi')
                         item.src = item.path
-                        item.title = item.path.substring(16,25)
+                        item.title = item.path.substring(startNum,endNum)
                         item.checked =false
                         item.pic = ''
                         item.artist = 'drore'
                     })
                 }).catch(err => {
+                    this.isShowLoading = false
                     console.log(err, '请求失败')
                 })
             }
@@ -413,6 +421,7 @@
                             display: flex;
                             line-height: rem(35);
                             border-bottom: 1px dashed #b1b1b1 ;
+                            cursor: pointer;
                             p{
                                 width: 90%;
                                 margin-left: rem(10);
