@@ -5,14 +5,14 @@
                 地图列表
             </div>
             <div class="personContent">
-                <!--<div class="funcTitle">-->
-                <!--<Header @addNewInfo = "addNewInfo"-->
-                <!--@deletInfo = "deletInfo"-->
-                <!--@choseType = 'choseType'-->
-                <!--@selectedAll = 'selectedAll'-->
-                <!--@fixedInfo = 'fixedInfo'>-->
-                <!--</Header>-->
-                <!--</div>-->
+                <div class="funcTitle">
+                    <Header @addNewInfo = "addNewInfo"
+                    @deletInfo = "deletInfo"
+                    @choseType = 'choseType'
+                    @selectedAll = 'selectedAll'
+                    @fixedInfo = 'fixedInfo'>
+                    </Header>
+                </div>
                 <div class="personList">
                     <ScrollContainer>
                         <el-table
@@ -20,14 +20,14 @@
                             ref="multipleTable"
                             :data="areaList"
                             tooltip-effect="dark"
-                            border
                             style="width: 100%"
                             @selection-change="handleSelectionChange">
 
                             <el-table-column
-                                type="index"
-                                label="序号"
-                                width="120">
+                                width="50">
+                                <template slot-scope="scope">
+                                    <el-checkbox v-model="scope.row.checked" @change="checked(scope.row)" class="checkBoxBtn"></el-checkbox>
+                                </template>
                             </el-table-column>
 
                             <el-table-column
@@ -65,7 +65,8 @@
                                   :isDisabled="isDisabled"
                                   @closeInfoDialog ="visible = false"
                                   :title = "title"
-                                     :Info="areaInfo">
+                                     :Info="areaInfo"
+                                     @fixInfo="fixInfo">
                     </MapdetailDialog>
                 </div>
             </div>
@@ -77,6 +78,7 @@
     import ScrollContainer from '@/components/ScrollContainer'
     import MapdetailDialog from '@/components/gis/mapdetailDialog'
     import ShowMapDialog from '@/components/gis/showMapDialog'
+    import Header from '@/components/gis/mapHeader'
 
     export default {
         name: 'area-deploy',
@@ -116,12 +118,14 @@
                 })
             },
 
-            showPersonDetail (info,title) {
+            showPersonDetail (info,title,state) {
                 this.areaInfo = info;
                 this.visible = true;
                 this.title = title;
-                this.isDisabled = true;
-                console.log("1234567yuiol;'")
+                this.isDisabled = state;
+            },
+            addNewInfo () {
+                this.showPersonDetail({}, '添加地图主数据',false)
             },
 
             deletChose(id){
@@ -150,6 +154,7 @@
                 //   })
             },
             deletInfo (id) {
+                console.log(id)
                 if(id === undefined){
                     if (this.choseInfoId.length > 0) {
                         this.deletChose(id)
@@ -183,7 +188,7 @@
             },
             checked (Info) {
                 //选中状态change
-                console.log(Info.id)
+                console.log(Info)
                 this.areaList = this.areaList.filter(item =>{
                     if(item.id ===Info.id){
                         item.checked = item.checked
@@ -203,6 +208,7 @@
 
                 console.log(this.choseInfoId)
                 console.log(this.choseChecked)
+
             },
             choseType (type) {
                 console.log(type)
@@ -224,22 +230,21 @@
                 }
             },
             selectedAll (state) {
-                console.log(state, 'opopopopop')
-                this.choseList = this.areaList.filter((item) => {
+                console.log(this.choseList)
+                console.log(this.areaList)
+                this.areaList = this.areaList.filter((item) => {
                     if (state === true) {
                         item.checked = true
                         this.choseInfoId.push(item.id)
                         this.choseChecked.push(item.checked)
-                        return
+                        return item.checked === true
                     } else {
-                        console.log('进入这个判断吗')
                         item.checked = false
                         this.choseInfoId = []
                         this.choseChecked = []
-                        return
+                        return item.checked === false
                     }
                 })
-                console.log(this.choseInfoId, 'opopop')
             },
             fixInfo (info) {
                 console.log(info, 'wertyuio')
@@ -298,7 +303,8 @@
         components: {
             ScrollContainer,
             MapdetailDialog,
-            ShowMapDialog
+            ShowMapDialog,
+            Header
         },
         mounted:function(){
             // this.getBroadcastList()
