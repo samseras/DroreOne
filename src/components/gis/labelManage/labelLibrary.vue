@@ -4,6 +4,14 @@
             标签库
         </div>
         <div class="personContent">
+            <div class="funcTitle">
+                <Header @addNewInfo = "addNewInfo"
+                        @deletInfo = "deletInfo"
+                        @choseType = 'choseType'
+                        @selectedAll = 'selectedAll'
+                        @fixedInfo = 'fixedInfo'>
+                </Header>
+            </div>
             <div class="personList">
                 <ScrollContainer>
                     <el-table
@@ -11,19 +19,14 @@
                         ref="multipleTable"
                         :data="areaList"
                         tooltip-effect="dark"
-                        border
                         style="width: 100%"
                         @selection-change="handleSelectionChange">
+
                         <el-table-column
                             width="50">
                             <template slot-scope="scope">
                                 <el-checkbox v-model="scope.row.checked" @change="checked(scope.row)" class="checkBoxBtn"></el-checkbox>
                             </template>
-                        </el-table-column>
-                        <el-table-column
-                            type="index"
-                            label="序号"
-                            width="120">
                         </el-table-column>
 
                         <el-table-column
@@ -71,7 +74,7 @@
     import ScrollContainer from '@/components/ScrollContainer'
 
     import DetailDialog from '@/components/gis/mapdetailDialog'
-
+    import Header from '@/components/gis/mapHeader'
     export default {
         name: 'area-deploy',
         data(){
@@ -192,12 +195,14 @@
             init(){
                 this.areaList.forEach(function(item){})
             },
-            showPersonDetail (info,title) {
+            showPersonDetail (info,title,state) {
                 this.areaInfo = info;
                 this.visible = true;
                 this.title = title;
-                this.isDisabled = true;
-                console.log("1234567yuiol;'")
+                this.isDisabled = state;
+            },
+            addNewInfo () {
+                this.showPersonDetail({}, '添加标签',false)
             },
             deletChose(id){
                 this.$confirm('此操作将永久删除该数据, 是否继续?', '提示', {
@@ -299,25 +304,22 @@
                 }
             },
             selectedAll (state) {
-                console.log(state, 'opopopopop')
-                this.choseList = this.areaList.filter((item) => {
-                    if (state === true) {
-                        item.checked = true
-                        this.choseInfoId.push(item.id)
-                        this.choseChecked.push(item.checked)
-                        return
-                    } else {
-                        console.log('进入这个判断吗')
-                        item.checked = false
-                        this.choseInfoId = []
-                        this.choseChecked = []
-                        return
-                    }
-                })
-                console.log(this.choseInfoId, 'opopop')
+                    this.areaList = this.areaList.filter((item) => {
+                        if (state === true) {
+                            item.checked = true
+                            this.choseInfoId.push(item.id)
+                            this.choseChecked.push(item.checked)
+                            return item.checked === true
+                        } else {
+                            item.checked = false
+                            this.choseInfoId = []
+                            this.choseChecked = []
+                            return item.checked === false
+                        }
+                    })
             },
             fixInfo (info) {
-                console.log(this.areaList, 'xxxxx')
+                console.log(this.areaList)
                 let list = this.areaList
                 for(let i = 0;i< list.length; i++){
                     if (info.id === list[i].id) {
@@ -327,17 +329,12 @@
                 this.choseList = this.areaList
             },
             addNewPerson (info) {
-                console.log('1111111')
                 console.log(info)
                 info.id = new Date().getTime()
                 this.areaList.push(info)
                 this.choseList = this.areaList
             },
             fixedInfo (id,title) {
-                    // console.log(this.choseInfoId)
-                    console.log(id);
-                    console.log(this.areaList);
-                    console.log(this.choseId);
                     this.choseId.push(id);
                     this.areaList.map((item)=>{
                         if(item.id === this.choseId[0]){
@@ -362,7 +359,8 @@
         },
         components: {
             ScrollContainer,
-            DetailDialog
+            DetailDialog,
+            Header
         },
         mounted:function(){
            // this.getBroadcastList()

@@ -260,6 +260,15 @@
                     <p class="sex">路线名称：<input type="text"v-model="roat.name"></p>
                     <p class="phoneNum">位置范围：<span>{{roat.location}}</span><i class="el-icon-location-outline" @click="showMapDialog"></i></p>
                     <p class="type">
+                        路线类型：
+                        <el-select v-model="roat.type" placeholder="请选择">
+                            <el-option label="水路" :value="1"></el-option>
+                            <el-option label="公交道路" :value="2"></el-option>
+                            <el-option label="步行道路" :value="3"></el-option>
+                            <el-option label="驾车路线" :value="4"></el-option>
+                        </el-select>
+                    </p>
+                    <p class="type">
                         描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：<textarea name=""v-model="roat.description" cols="30"
                                                                                rows="5" placeholder="请输入描述信息"></textarea>
                     </p>
@@ -492,6 +501,7 @@
                     name: '',
                     location: '',
                     description: '',
+                    type: ''
                 },
                 tree: {
                     plant:{
@@ -802,6 +812,10 @@
                     api.person.getJobPerson(jobId).then(res => {
                         console.log(res, '成功')
                         this.driverList = res
+                        this.driverList.forEach(item => {
+                            item.id = item.personBean.id
+                            item.name = item.personBean.name
+                        })
                     }).catch(err => {
                         console.log(err, '失败')
                     })

@@ -891,7 +891,6 @@
         },
         mounted: function () {
             setInterval(this.getRefreshTime,this.getRefresh)
-            console.log(this.getRefresh,'qweqwe')
             this.chartH = this.$refs.content.getBoundingClientRect().height;
             this.chartW = this.$refs.content.getBoundingClientRect().width-15;
             let that=this

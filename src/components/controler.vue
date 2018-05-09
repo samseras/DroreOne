@@ -69,7 +69,11 @@
             /*width: rem(300);*/
             height: 100%;
             display: flex;
-            float: right;
+            position: fixed;
+            right: 0px;
+            top:0px;
+            padding-top: rem(60);
+            box-sizing: border-box;
             .right{
                 width: rem(50);
                 height: 100%;
@@ -84,6 +88,7 @@
                     line-height: rem(40);
                     font-size: rem(20);
                     cursor: pointer;
+                    background: #fff;
                 }
                 ul{
                     width: 100%;
@@ -116,6 +121,7 @@
             .left{
                 width: rem(250);
                 height: 100%;
+                background: #fff;
             }
         }
         .map{
