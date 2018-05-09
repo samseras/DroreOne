@@ -20,6 +20,7 @@
                     <p class="manufacturer">型&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;号：
                         <el-select name="" v-model="camera.model" @change="choseModel(camera.model)">
                             <el-option v-for="item in modelType"
+                                       :key="item.id"
                                        :value="item.id"
                                        :label="item.name">
                             </el-option>
@@ -36,6 +37,7 @@
                         <el-select name="" v-model="camera.regionId">
                             <el-option
                                 v-for="item in regions"
+                                :key="item.id"
                                 :value="item.id"
                                 :label="item.name">
                             </el-option>
@@ -62,6 +64,7 @@
 
                         <el-select name="" v-model="broadCast.model">
                             <el-option v-for="item in modelType"
+                                       :key="item.id"
                                        :value="item.id"
                                         :label="item.name">
                             </el-option>
@@ -108,6 +111,7 @@
 
                         <el-select v-model="led.model">
                             <el-option v-for="item in modelType"
+                                       :key="item.id"
                                        :value="item.id"
                                        :label="item.name">
                             </el-option>
@@ -155,6 +159,7 @@
                     <p class="version">型&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;号:
                         <el-select name="" v-model="wifi.model" @change="choseModel(wifi.model)">
                             <el-option v-for="item in modelType"
+                                       :key="item.id"
                                        :value="item.id"
                                        :label="item.name">
                             </el-option>
@@ -202,6 +207,7 @@
                     <p class="version">型&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;号:
                         <el-select name="" v-model="monitors.model">
                             <el-option v-for="item in modelType"
+                                       :key="item.id"
                                        :value="item.id"
                                        :label="item.name">
                             </el-option>
@@ -248,6 +254,7 @@
                     <p class="version">型&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;号:
                         <el-select  v-model="Light.model">
                             <el-option v-for="item in modelType"
+                                       :key="item.id"
                                        :value="item.id"
                                        :label="item.name">
                             </el-option>
@@ -288,6 +295,7 @@
                     <p class="version">型&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;号：
                         <el-select  v-model="gate.model">
                             <el-option v-for="item in modelType"
+                                       :key="item.id"
                                        :value="item.id"
                                        :label="item.name">
                             </el-option>
@@ -327,6 +335,7 @@
                     <p class="version">型&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;号:
                         <el-select name="" v-model="police.model">
                             <el-option v-for="item in modelType"
+                                       :key="item.id"
                                         :value="item.id"
                                         :label="item.name">
 

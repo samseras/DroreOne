@@ -43,10 +43,6 @@
                             </template>
                         </el-table-column>
 
-                        <el-table-column
-                            prop="manufactor"
-                            label="厂家">
-                        </el-table-column>
 
                         <el-table-column
                             prop="regionName"
