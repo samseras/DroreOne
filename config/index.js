@@ -27,7 +27,7 @@ module.exports = {
         //     changeOrigin: true
         // },
         '/info':{
-            target:'http://192.168.0.150:8250/',
+            target:'http://192.168.0.150:8050/',
             changeOrigin: true
             },
         '/dsp': {
