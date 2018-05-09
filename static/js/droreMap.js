@@ -2394,13 +2394,10 @@ define(function(require, exports, module) {
             _listeners: {},
             // 添加
             addEvent: function(type, fn) {
-
                 if(typeof this._listeners[type] === "undefined") {
                     this._listeners[type] = [];
                 }
-
                 if(typeof fn === "function") {
-                    console.log(this._listeners[type])
                     this._listeners[type].push(fn);
                 }
                 return this;
@@ -2543,6 +2540,10 @@ define(function(require, exports, module) {
                         console.log(333333);
                     }
                 });
+                CustomEvent.removeEvent("click");
+                CustomEvent.removeEvent("dragup");
+                CustomEvent.removeEvent("modify");
+                CustomEvent.removeEvent("iconOver");
             },
             status: {
                 _limitExtent: false,
