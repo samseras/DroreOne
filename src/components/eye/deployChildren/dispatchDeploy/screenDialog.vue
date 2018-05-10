@@ -3,6 +3,7 @@
         <el-dialog
             :visible="visible"
             title="定义内容"
+            :close-on-click-modal = false
             :before-close="closeScreenDialog"
             width="40%"
             class="dialog screen_Dialog"

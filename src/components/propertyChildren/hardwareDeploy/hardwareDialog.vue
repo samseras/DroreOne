@@ -3,6 +3,7 @@
         <el-dialog
             :title="title"
             :visible="visible"
+            :close-on-click-modal = false
             :before-close="closeDialog"
             width="25%"
             class="dialog echatDialog"

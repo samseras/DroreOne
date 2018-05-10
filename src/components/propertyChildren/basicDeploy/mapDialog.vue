@@ -2,6 +2,7 @@
     <div class="mapDialog">
         <el-dialog
             :visible="visible"
+            :close-on-click-modal = false
             title="添加片区范围"
             :before-close="closeMapDialog"
             width="50%"

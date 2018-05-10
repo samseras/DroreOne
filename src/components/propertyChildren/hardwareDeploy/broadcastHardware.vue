@@ -8,6 +8,7 @@
                 <Header @addNewInfo="addNewInfo"
                         @deletInfo="deletInfo"
                         @selectedAll="selectedAll"
+                        @search="search"
                         @fixedInfo="fixedInfo"
                         @choseType="choseType"
                         @toggleList="toggleList">
@@ -108,6 +109,7 @@
     export default{
         data(){
             return{
+                key:'',
                 isShowBroadCard:true,
                 visible:false,
                 broadList:[
@@ -120,6 +122,7 @@
                 choseList:[],
                 isDisabled:true,
                 filterList: [],
+
                 title:'',
                 isShowLoading:false
             }
@@ -127,6 +130,22 @@
         methods:{
             handleSelectionChange(val) {
                 this.multipleSelection = val;
+            },
+            search(info){
+                if(info.trim() !== ''){
+
+                    this.broadList= this.broadList.filter((item) =>{
+                         return Object.keys(item).some((key) =>{
+                            return String(item[key]).toLowerCase().indexOf(info) > -1
+                        })
+                    })
+//                    this.broadList = this.broadList.filter((item) =>{
+//                        if (item.name.includes(info)) {
+//                            return item
+//                        }
+//                    })
+                }
+                return this.broadList
             },
             addNewInfo(){
                 this.showBroadDetail({},'添加广播信息')
@@ -340,6 +359,9 @@
         },
         created (){
             this.getAllBroadcast()
+        },
+        computed:{
+
         },
         filters:{
           changeStatus(item){
