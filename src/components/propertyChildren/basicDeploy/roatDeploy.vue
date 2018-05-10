@@ -34,6 +34,13 @@
                             width="120">
                         </el-table-column>
                         <el-table-column
+                            label="路线类型"
+                            width="120">
+                            <template slot-scope="scope">
+                                <span>{{scope.row.type | typeFilter}}</span>
+                            </template>
+                        </el-table-column>
+                        <el-table-column
                             prop="description"
                             label="描述">
                         </el-table-column>
@@ -59,6 +66,7 @@
                                 </span>
                         </div>
                         <div class="specificInfo">
+                            <p class="sex">路线类型：<span>{{item.type | typeFilter}}</span></p>
                             <p class="sex">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：<span>{{item.description}}</span></p>
                         </div>
                     </div>
@@ -103,13 +111,14 @@
             handleSelectionChange(val) {
                 this.multipleSelection = val;
             },
-            showPersonDetail (info,title) {
+            showPersonDetail (info,title,state) {
                 this.roatInfo = info
                 this.visible = true
                 this.title = title
+                this.isDisabled = state
             },
             addNewInfo () {
-                this.showPersonDetail({}, '添加路网信息')
+                this.showPersonDetail({}, '添加路网信息', false)
                 this.isDisabled = false
             },
             deletInfo (id) {
@@ -122,7 +131,7 @@
                         cancelButtonText: '取消',
                         type: 'warning'
                     }).then(() => {
-                        api.roat.deleteRoat(this.choseInfoId).then(res => {
+                        api.deployRoad.deleteRoute(this.choseInfoId).then(res => {
                             console.log(res, '删除成功')
                             this.$message.success('删除成功')
                             for (let i = 0; i < this.choseInfoId.length; i++) {
@@ -206,6 +215,11 @@
                 console.log(this.choseInfoId, 'opopop')
             },
             fixInfo (info) {
+                console.log()
+                if (typeof info.location === 'string') {
+                    info.location = JSON.parse(info.location)
+                }
+                console.log(info.location, 'opopop')
                 let roatObj = {
                     id: info.id,
                     name: info.name,
@@ -213,9 +227,10 @@
                     geo: {
                         type:"LineString",
                         coordinates: info.location
-                    }
+                    },
+                    type: info.type
                 }
-                api.roat.updateRoat(JSON.stringify(roatObj)).then(res => {
+                api.deployRoad.updateRoute(JSON.stringify(roatObj)).then(res => {
                     console.log(res, '创建成功')
                     this.$message.success('修改成功')
                     this.choseInfoId = []
@@ -231,19 +246,10 @@
                     geo: {
                         type:"LineString",
                         coordinates: info.location
-                    }
+                    },
+                    type: info.type
                 }
-                if (info.imgUrl !== '') {
-                    await api.person.updataAva(info.imgUrl).then(res => {
-                        console.log(res, '上传成功')
-                        aresObj.pictureId = res.id
-                    }).catch(err => {
-                        console.log(err, '上传失败')
-                        this.$message.error('上传失败，请稍后重试')
-                        return
-                    })
-                }
-                api.roat.createRoat(JSON.stringify(roatObj)).then(res => {
+                api.deployRoad.createRoute(JSON.stringify(roatObj)).then(res => {
                     console.log(res, '创建成功')
                     this.$message.success('创建成功')
                     this.getAllRoat()
@@ -258,7 +264,7 @@
                             this.roatInfo = item
                         }
                     })
-                    this.showPersonDetail(this.roatInfo, '修改路网信息')
+                    this.showPersonDetail(this.roatInfo, '修改路网信息', false)
                     this.isDisabled = false
                 } else {
                     this.$message.error('请选择要修改的人员')
@@ -266,7 +272,7 @@
             },
             async getAllRoat () {
                 this.isShowLoading = true
-                await api.roat.getAllRoat().then(res => {
+                await api.deployRoad.getAllRoute().then(res => {
                     console.log(res, '请求路网成功')
                     this.isShowLoading = false
                     this.roatList = res
@@ -287,6 +293,22 @@
             //     this.roatList[i].status = true
             // }
             // this.choseList = this.roatList
+        },
+        filters: {
+            typeFilter (item) {
+                if (item == 1) {
+                    return '水路'
+                }
+                if (item == 2) {
+                    return '公交道路'
+                }
+                if (item == 3) {
+                    return '步行道路'
+                }
+                if (item == 4) {
+                    return '驾车路线'
+                }
+            }
         },
         components: {
             ScrollContainer,

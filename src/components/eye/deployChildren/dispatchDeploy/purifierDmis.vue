@@ -311,7 +311,7 @@
                         item.id = item.cleanSchedule.id
                         item.checked = false;
                         if (item.cleanSchedule.customizedDays) {
-                            item.cleanSchedule.time = [item.cleanSchedule.startDate,item.clean.endDate]
+                            item.cleanSchedule.time = [item.cleanSchedule.startDate,item.cleanSchedule.endDate]
                         } else {
                             item.cleanSchedule.days = item.cleanSchedule.days.split(',')
                         }

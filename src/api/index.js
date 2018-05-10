@@ -29,6 +29,7 @@ import purifier from './schedulepurifier'
 import patrol from './patrol'
 import plant from './plant'
 import build from './build'
+import deployRoad from './deployRoad'
 
 
 export default {
@@ -59,5 +60,6 @@ export default {
     purifier,
     patrol,
     plant,
-    build
+    build,
+    deployRoad
 }

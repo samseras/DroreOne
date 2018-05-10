@@ -45,9 +45,9 @@
                         <el-select v-model="security.securityIds" size="mini" class="" multiple placeholder="请选择">
                             <el-option
                                 v-for="item in personList"
-                                :key="item.id"
-                                :label="item.name"
-                                :value="item.id">
+                                :key="item.personBean.id"
+                                :label="item.personBean.name"
+                                :value="item.personBean.id">
                             </el-option>
                         </el-select>
                     </p>
@@ -59,10 +59,10 @@
                         <!--<input type="text"v-model="security.location" class="location">-->
                         <el-select v-model="security.inspectionSchedule.routeId" placeholder="请选择">
                             <el-option
-                                v-for="item in options"
-                                :key="item.id"
-                                :label="item.name"
-                                :value="item.id">
+                                v-for="ite in options"
+                                :key="ite.id"
+                                :label="ite.name"
+                                :value="ite.id">
                             </el-option>
                         </el-select>
                         <i class="el-icon-location-outline" @click="showMapDialog"></i>
@@ -115,7 +115,8 @@
                         <!--<el-radio v-model="radio" label="0">否</el-radio>-->
                     <!--</p>-->
                     <p class="uploadText">定义内容：
-                        <input type="text"v-model="broadList.musicIds" class="inputText">
+                        <!--<input type="text"v-model="broadList.musicIds" class="inputText">-->
+                        <span v-for="item in broadList.musics" :key="item.id">{{item.title}}</span>
                         <el-button slot="trigger" size="small" type="primary" @click="showBroadcastDialog" :disabled='isDisabled'>曲目编辑</el-button>
                     </p>
                     <p class="type">
@@ -156,6 +157,7 @@
                             <el-option
                                 v-for="light in options"
                                 :label="light.name"
+                                :key="light.id"
                                 :value="light.id">
                             </el-option>
                         </el-select>
@@ -202,9 +204,9 @@
                         <el-select v-model="purifier.cleanerIds" size="mini" class="" multiple placeholder="请选择">
                             <el-option
                                 v-for="item in personList"
-                                :key="item.id"
-                                :label="item.name"
-                                :value="item.id">
+                                :key="item.personBean.id"
+                                :label="item.personBean.name"
+                                :value="item.personBean.id">
                             </el-option>
                         </el-select>
                     </p>
@@ -270,7 +272,7 @@
                         <!--<el-radio v-model="radio" label="0">否</el-radio>-->
                     <!--</p>-->
                     <p class="uploadText">定义内容：
-                        <span v-for="item in screen.contents">{{item.content}}</span>
+                        <span v-for="item in screen.contents" :key="item.id">{{item.content}}</span>
                         <el-button slot="trigger" size="small" type="primary" @click = "showScreenDialog" :disabled='isDisabled'>定义内容</el-button>
                     </p>
                     <p class="type">
@@ -324,7 +326,7 @@
                         watchTime: []
                     },
                     broadcastIds: [],
-                    musicIds: []
+                    musics: []
                 },
                 lamppost:{
                     lightSchedule: {
@@ -414,8 +416,9 @@
             }
         },
         methods: {
-            musicList () {
-
+            musicList (list) {
+                this.broadList.musics = list
+                this.closeBroadcastDialog()
             },
             saveContent (info) {
                 this.screen.contents = info
@@ -537,7 +540,11 @@
                 let jobId = 3
                 await api.person.getJobPerson(jobId).then(res => {
                     console.log(res, '安保人员')
-                    this.personList = res;
+                    this.personList = res
+                    // this.personList.forEach(item => {
+                    //     item.id = item.personBean.id;
+                    //     item.name = item.personBean.name
+                    // })
                 }).catch(err => {
                     console.log(err, '请求失败')
                 })
@@ -547,6 +554,10 @@
                 await api.person.getJobPerson(jobId).then(res => {
                     console.log(res, '保洁人员')
                     this.personList = res
+                    // this.personList.forEach(item => {
+                    //     item.id = item.personBean.id
+                    //     item.name = item.personBean.name
+                    // })
                 }).catch(err => {
                     console.log(err, '请求人员失败')
                 })
@@ -572,8 +583,8 @@
             this.route = this.$route.path
             console.log(this.Info,'  opopop')
             if (this.route.includes('security')) {
-                await this.getSafePerson()
-                await this.getAllRouteLine()
+                this.getSafePerson()
+                this.getAllRouteLine()
                 this.security = this.Info;
                 if (this.security.inspectionSchedule.customizedDays === false) {
                     this.filterList = this.security.inspectionSchedule.days;
@@ -620,25 +631,25 @@
             ScreenDialog
         },
         watch: {
-            edit(value) {
-                if (value) {
-                    this.$nextTick(function () {
-                        if (!this.$refs.editImage) {
-                            return
-                        }
-                        let cropper = new Cropper(this.$refs.editImage, {
-                            aspectRatio: 1 / 1,
-                            viewMode: 1,
-                        })
-                        this.cropper = cropper
-                    })
-                } else {
-                    if (this.cropper) {
-                        this.cropper.destroy()
-                        this.cropper = false
-                    }
-                }
-            }
+            // edit(value) {
+            //     if (value) {
+            //         this.$nextTick(function () {
+            //             if (!this.$refs.editImage) {
+            //                 return
+            //             }
+            //             let cropper = new Cropper(this.$refs.editImage, {
+            //                 aspectRatio: 1 / 1,
+            //                 viewMode: 1,
+            //             })
+            //             this.cropper = cropper
+            //         })
+            //     } else {
+            //         if (this.cropper) {
+            //             this.cropper.destroy()
+            //             this.cropper = false
+            //         }
+            //     }
+            // }
         },
     }
 </script>
@@ -824,7 +835,6 @@
                         width: rem(20);
                         height: rem(20);
                         border-radius: 50%;
-                        background: red;
                         vertical-align: middle;
                     }
                     .location{
@@ -842,6 +852,10 @@
                     }
                     i{
                         font-size: rem(16);
+                    }
+                    span{
+                        background: #f0f2f5;
+                        color: #909399;
                     }
                 }
                 .uploadText{

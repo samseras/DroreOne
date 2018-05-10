@@ -1611,8 +1611,8 @@ define(function(require, exports, module) {
                 /**
                  * 名称字体大小
                  */
-                var _size = 10;
-                Object.defineProperty(this, "size", {
+                var _size = 12;
+                    Object.defineProperty(this, "size", {
                     set: function(val) {
                         if(typeof val != "number") {
                             throw new Error("invalid value")
@@ -1686,14 +1686,14 @@ define(function(require, exports, module) {
                         offsetX: '0',
                         offsetY: -width / 2 - _size / 2 - 5,
                         stroke: new ol.style.Stroke({
-                            color: 'red',
-                            width: 0.25
+                            color: 'black',
+                            width: 8
                         })
                     });
                     if(val) {
                         self.style.setText(text);
                         self.feature.setStyle(self.style);
-                        self.style.setZIndex(999)
+                        self.style.setZIndex(9999)
                     } else {
                         //					self.feature.setStyle(null);
                         self.style.setText(null);
@@ -2540,6 +2540,10 @@ define(function(require, exports, module) {
                         console.log(333333);
                     }
                 });
+                CustomEvent.removeEvent("click");
+                CustomEvent.removeEvent("dragup");
+                CustomEvent.removeEvent("modify");
+                CustomEvent.removeEvent("iconOver");
             },
             status: {
                 _limitExtent: false,
