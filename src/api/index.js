@@ -30,6 +30,7 @@ import patrol from './patrol'
 import plant from './plant'
 import build from './build'
 import deployRoad from './deployRoad'
+import publi from './public'
 
 
 export default {
@@ -61,5 +62,6 @@ export default {
     patrol,
     plant,
     build,
-    deployRoad
+    deployRoad,
+    publi
 }

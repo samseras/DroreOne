@@ -8,7 +8,8 @@ const map = {
         roatLocation: [],// 路网
         isSaveRegionLocation: false,
         isSaveRoatLocation: false,
-        locationId: ''
+        locationId: '',
+        searchInfo: {}
     },
     getters: {
         getLocation (state) {
@@ -28,6 +29,9 @@ const map = {
         },
         getLocationId (state) {
             return state.locationId
+        },
+        getSearchInfo () {
+            return state.searchInfo
         }
     },
     setters: {},
@@ -52,6 +56,10 @@ const map = {
         [types.LOCATION_ID] (state, data) {
             state.locationId = data
             console.log(state.locationId,'1231123123')
+        },
+        [types.SEARCH_INFO] (state, data) {
+            state.searchInfo = data
+            console.log(state.searchInfo,'1231123123')
         },
     },
     actions: {
