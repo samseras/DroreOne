@@ -52,6 +52,7 @@
                 position: absolute;
                 top: 50%;
                 transform: translateY(-50%);
+                font-size: rem(25);
             }
         }
         .el-dialog__body{
