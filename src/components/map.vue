@@ -56,12 +56,19 @@
                 }else {
                     this.getAllAreaEdit();// 片区输出修改
                 }
-            } else if (route.includes('roat-deploy') || route.includes('security-Dmis')) {
+            } else if (route.includes('roat-deploy')) {
                 if(!this.getLocationId){
                     this.getAllRoat();// 路线输出
                     this.road(); // 路线打点
                 }else {
                     this.getAllRoatedit();//修改路线
+                }
+            }else if (route.includes('security-Dmis')) {
+                if(!this.getLocationId){
+                    this.getAllRoute();// 调度路线输出
+                    this.road(); // 路线打点
+                }else {
+                    this.getAllRouteedit();//修改路线调度
                 }
             } else if (route.includes('indicator-deploy'))  {
                 if(!this.getLocationId) {
@@ -1217,25 +1224,20 @@
                 })
                 areaEvet.addEventListener(Event.SELECT_EVENT, "select", function(e) {
                     if(e.select){
-                        console.log('编辑已创建区域')
-                        console.log(e.select.area);
                         that.$store.commit('REGION_LOCATION_STATE',false)
                     }else if(e.unSelect){
-                        console.log('完成编辑已创建区域')
-                        if (!e.unSelect.id){
-                            let ol=e.unSelect.area[0];
-                            let arrayObj = new Array();
-                            for(var i = 0; i < ol.length; i++) {
-                                let wgs=droreMap.trans.transLayerToWgs(ol[i])
-                                arrayObj.push(wgs);
-                            }
-                            let arrayObjList= new Array();
-                            arrayObjList.push(arrayObj);
-                            that.$store.commit('MAP_REGION_LOCATION',arrayObjList )
-                            console.log(arrayObjList, '冲洗你编辑的');
-                            that.$store.commit('REGION_LOCATION_STATE',true)
+                        console.log(e.unSelect)
+                        let ol=e.unSelect.area[0];
+                        let arrayObj = new Array();
+                        for(var i = 0; i < ol.length; i++) {
+                            let wgs=droreMap.trans.transLayerToWgs(ol[i])
+                            arrayObj.push(wgs);
                         }
-
+                        let arrayObjList= new Array();
+                        arrayObjList.push(arrayObj);
+                        that.$store.commit('MAP_REGION_LOCATION',arrayObjList )
+                        console.log(arrayObjList, '冲洗你编辑的');
+                        that.$store.commit('REGION_LOCATION_STATE',true)
                     }
                 })
             },
@@ -1283,8 +1285,6 @@
                         if(e.select){
                             that.$store.commit('REGION_LOCATION_STATE',false)
                         }else if(e.unSelect){
-                            console.log('完成编辑已创建区域')
-                            console.log(e.unSelect)
                             if (e.unSelect.id === that.getLocationId){
                                 let ol=e.unSelect.area[0];
                                 let arrayObj = new Array();
@@ -1307,7 +1307,7 @@
 
 
             async getAllRoat () {
-                await api.roat.getAllRoat().then(res => {
+                await api.deployRoad.getAllRoute().then(res => {
                     console.log(res, '请求路网成功')
                     for (var i = 0; i < res.length; i++) {
                         var areaEvtList =new droreMap.road.RoadLayer('ROUTE_list', 'blue', 'blue')
@@ -1371,7 +1371,7 @@
                 })
             },
             async getAllRoatedit () {
-                await api.roat.getAllRoat().then(res => {
+                await api.deployRoad.getAllRoute().then(res => {
                     for (var i = 0; i < res.length; i++) {
                         if(res[i].id === this.getLocationId){
                             var areaEvts =new droreMap.road.RoadLayer('ROUTE_show', 'red', 'red')
@@ -1416,6 +1416,77 @@
                                 console.log(arrayObj);
                                 that.$store.commit('MAP_ROAT_LOCATION', arrayObj)
                                 that.$store.commit('ROAT_LOCATION_STATE', true)
+                        }
+                    })
+                }).catch(err => {
+                    console.log(err, '请求失败')
+                })
+            },
+
+            async getAllRoute () {
+                await api.roat.getAllRoat().then(res => {
+                    for (var i = 0; i < res.length; i++) {
+                        var areaEvtList =new droreMap.road.RoadLayer('ROUTE_list', 'blue', 'blue')
+                        let geo =JSON.parse(res[i].geo);
+                        let area = [];
+                        for(var j = 0; j < geo.length; j++) {
+                            let wgs=droreMap.trans.transFromWgsToLayer(geo[j])
+                            area.push(wgs);
+                        }
+                        var data = {"id": res[i].id, "name": res[i].name,"constructor":''}
+                        areaEvtList.addRoad(area, data)
+                        droreMap.road.addRoadLayer(areaEvtList)
+                    }
+                }).catch(err => {
+                    console.log(err, '请求失败')
+                })
+            },
+            async getAllRouteedit () {
+                await api.roat.getAllRoat().then(res => {
+                    for (var i = 0; i < res.length; i++) {
+                        if(res[i].id === this.getLocationId){
+                            var areaEvts =new droreMap.road.RoadLayer('ROUTE_show', 'red', 'red')
+                            let geo =JSON.parse(res[i].geo);
+                            let area = [];
+                            for(var j = 0; j < geo.length; j++) {
+                                let wgs=droreMap.trans.transFromWgsToLayer(geo[j])
+                                area.push(wgs);
+                            }
+                            var data = {"id": res[i].id, "name": res[i].name,"constructor":''}
+                            areaEvts.addRoad(area, data)
+                            droreMap.road.addRoadLayer(areaEvts)
+                        }else{
+                            var areaEvtList =new droreMap.road.RoadLayer('ROUTE_list', 'blue', 'blue')
+                            let geo =JSON.parse(res[i].geo);
+                            let area = [];
+                            for(var j = 0; j < geo.length; j++) {
+                                let wgs=droreMap.trans.transFromWgsToLayer(geo[j])
+                                area.push(wgs);
+                            }
+                            var data = {"id": res[i].id, "name": res[i].name,"constructor":''}
+                            areaEvtList.addRoad(area, data)
+                            droreMap.road.addRoadLayer(areaEvtList)
+                        }
+                    }
+                    let that =this
+                    areaEvts.ifModify = true;
+                    areaEvts.ifSelect = true;
+                    areaEvts.addEventListener('select', "select", function(e) {
+                        if(e.select){
+                            that.$store.commit('ROAT_LOCATION_STATE', false)
+                            if(e.select.type == 'Point') {
+                                //点击路网中的点，出现面板，包括延长、拆分和关键点
+                                alert('请点击路网进行拖拽编辑！')
+                            }
+                        }else if(e.unSelect){
+                            let arrayObj = new Array();
+                            for (var i = 0; i < e.unSelect.area.length; i++) {
+                                let wgs = droreMap.trans.transLayerToWgs(e.unSelect.area[i])
+                                arrayObj.push(wgs);
+                            }
+                            console.log(arrayObj);
+                            that.$store.commit('MAP_ROAT_LOCATION', arrayObj)
+                            that.$store.commit('ROAT_LOCATION_STATE', true)
                         }
                     })
                 }).catch(err => {

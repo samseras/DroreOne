@@ -50,7 +50,6 @@
               this.$store.commit('REFRESH_DATA_TYPE', refresh)
         },
         async getDashboradList(){
-           // debugger
            await api.analyze.getDashboradList().then(res => {
                 this.sidebarList = res.result
                //  this.sidebarList = this.sidebarList.map(item => {
@@ -58,9 +57,16 @@
                //     return item
                // })
                // console.log(this.sidebarList,"11111111111")
-            })
+            }).catch(err => {
+                console.log(err)
+           })
         }
 
+      },
+      watch: {
+  	    '$route' () {
+  	        clearInterval(window.SETTIMER)
+        }
       },
     mounted(){
 
