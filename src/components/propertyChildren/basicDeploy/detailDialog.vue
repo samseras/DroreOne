@@ -2,6 +2,7 @@
     <div class="detailDialog">
         <el-dialog
             :title="title"
+            :close-on-click-modal = false
             :visible="visible"
             :before-close="closeDialog"
             width="23%"

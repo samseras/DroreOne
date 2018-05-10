@@ -128,62 +128,43 @@
                 this.showPersonDetail({}, '添加地图主数据',false)
             },
 
-            deletChose(id){
-                this.$confirm('此操作将永久删除该数据, 是否继续?', '提示', {
-                    confirmButtonText: '确定',
-                    cancelButtonText: '取消',
-                    type: 'warning'
-                }).then(() => {
-                    //  api.camera.deleteCamera(this.choseInfoId).then(res => {
-                    for (let i = 0; i < this.choseInfoId.length; i++) {
-                        this.areaList = this.areaList.filter((item, index) => {
-                            if (item.id === this.choseInfoId[i]) {
-                                this.areaList[index].checked = false
-                            }
-                            return item.id !== this.choseInfoId[i]
-                        })
-                    }
-                    this.$message.success('删除成功')
-                    this.choseInfoId = []
-                    // }).catch(err=>{
-                    //             console.log(err)
-                    //             this.$message.error('删除失败，请稍后重试')
-                }).catch(() => {
-                    this.$message.info('取消删除')
-                })
-                //   })
-            },
             deletInfo (id) {
+                debugger
                 console.log(id)
-                if(id === undefined){
-                    if (this.choseInfoId.length > 0) {
-                        this.deletChose(id)
-                    }else{
-                        this.$message.warning("请选择要删除的项")
-                    }
-                }else {
-                    this.choseId.push(id);
+                console.log(this.choseInfoId)
+                if (id) {
+                    this.choseInfoId = [id]
+                }
+                if (this.choseInfoId.length > 0) {
                     this.$confirm('此操作将永久删除该数据, 是否继续?', '提示', {
                         confirmButtonText: '确定',
                         cancelButtonText: '取消',
                         type: 'warning'
                     }).then(() => {
-                        //  api.camera.deleteCamera(this.choseInfoId).then(res => {
-                        this.areaList = this.areaList.filter((item, index) => {
-                            if (item.id === this.choseId[0]) {
-                                this.areaList[index].checked = false
-                            }
-                            return item.id !== this.choseId[0]
-                        })
-                        this.$message.success('删除成功')
-                        this.choseId = [];
-                        // }).catch(err=>{
-                        //             console.log(err)
-                        //             this.$message.error('删除失败，请稍后重试')
+                        // api.schedulebroadcast.deleteBroadcast(this.choseInfoId).then(res => {
+                        //     console.log(res, '删除成功')
+                        //     this.$message.success('删除成功')
+                        //     for (let i = 0; i < this.choseInfoId.length; i++) {
+                        //         this.broadCastList = this.broadCastList.filter((item, index) => {
+                        //             if (item.id === this.choseInfoId[i]){
+                        //                 this.broadCastList[index].checked = false
+                        //                 this.broadCastList[index].status = false
+                        //             }
+                        //             return item.status !== false
+                        //         })
+                        //     }
+                        //     this.choseInfoId = []
+                        // }).catch(err => {
+                        //     this.$message.error('删除失败，请稍后重试')
+                        //     console.log(err)
+                        //     this.choseInfoId = []
+                        // })
                     }).catch(() => {
                         this.$message.info('取消删除')
                     })
-                    //   })
+                } else {
+                    this.$message.error('请选择要删除的数据')
+                    return
                 }
             },
             checked (Info) {
@@ -208,7 +189,6 @@
 
                 console.log(this.choseInfoId)
                 console.log(this.choseChecked)
-
             },
             choseType (type) {
                 console.log(type)

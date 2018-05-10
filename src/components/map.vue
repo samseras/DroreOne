@@ -1224,25 +1224,20 @@
                 })
                 areaEvet.addEventListener(Event.SELECT_EVENT, "select", function(e) {
                     if(e.select){
-                        console.log('编辑已创建区域')
-                        console.log(e.select.area);
                         that.$store.commit('REGION_LOCATION_STATE',false)
                     }else if(e.unSelect){
-                        console.log('完成编辑已创建区域')
-                        if (!e.unSelect.id){
-                            let ol=e.unSelect.area[0];
-                            let arrayObj = new Array();
-                            for(var i = 0; i < ol.length; i++) {
-                                let wgs=droreMap.trans.transLayerToWgs(ol[i])
-                                arrayObj.push(wgs);
-                            }
-                            let arrayObjList= new Array();
-                            arrayObjList.push(arrayObj);
-                            that.$store.commit('MAP_REGION_LOCATION',arrayObjList )
-                            console.log(arrayObjList, '冲洗你编辑的');
-                            that.$store.commit('REGION_LOCATION_STATE',true)
+                        console.log(e.unSelect)
+                        let ol=e.unSelect.area[0];
+                        let arrayObj = new Array();
+                        for(var i = 0; i < ol.length; i++) {
+                            let wgs=droreMap.trans.transLayerToWgs(ol[i])
+                            arrayObj.push(wgs);
                         }
-
+                        let arrayObjList= new Array();
+                        arrayObjList.push(arrayObj);
+                        that.$store.commit('MAP_REGION_LOCATION',arrayObjList )
+                        console.log(arrayObjList, '冲洗你编辑的');
+                        that.$store.commit('REGION_LOCATION_STATE',true)
                     }
                 })
             },
@@ -1290,8 +1285,6 @@
                         if(e.select){
                             that.$store.commit('REGION_LOCATION_STATE',false)
                         }else if(e.unSelect){
-                            console.log('完成编辑已创建区域')
-                            console.log(e.unSelect)
                             if (e.unSelect.id === that.getLocationId){
                                 let ol=e.unSelect.area[0];
                                 let arrayObj = new Array();

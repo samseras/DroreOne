@@ -1,8 +1,8 @@
 <template>
     <div class="cameraTitle">
         <div class="titleSearch">
-            <input type="text" placeholder="Search Anything">
-            <i class="el-icon-search"></i>
+            <input type="text" placeholder="Search Anything" v-model="searchKeys">
+            <i class="el-icon-search" @click="search"></i>
         </div>
         <div class="titleBtn">
             <el-button size="mini" plain @click="addNewInfo"><i class="el-icon-circle-plus"></i>添加</el-button>
@@ -58,6 +58,7 @@
     export default{
         data(){
             return{
+                searchKeys:'',
                 filterList:[],
                 cameraList:[
                     {type:'室内'},
@@ -79,9 +80,11 @@
             }
         },
         methods:{
+            search(){
+                this.$emit('search', this.searchKeys)
+            },
             addNewInfo(){
                 this.$emit('addNewInfo')
-//                alert('1')
             },
             deleteCard(){
                 this.$emit('deletInfo')

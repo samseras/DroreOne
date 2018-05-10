@@ -486,6 +486,10 @@
                 await api.analyze.getScenarioMapData(scenarioId).then(res=>{
                     this.echatData = res.result;
                     funnelResult = JSON.parse(res.result);
+                    var title = funnelResult.title;
+                    var nameColumn = funnelResult.nameColumn;
+                    var legendData = funnelResult.legendData;
+                    var seriesData = funnelResult.seriesData;
                 //    console.log(res,"这是返回的funnel数据");
                     $("#"+scenarioId).prev().find(".title").text(funnelResult.title);
                     this.funnelDom = this.$echarts.init(document.getElementById(scenarioId));
@@ -498,24 +502,23 @@
                             formatter: "{a} <br/>{b} : {c}%"
                         },
                         legend: {
-                            data: funnelResult.name,
-                            orient: 'vertical',
-                            left:'5%',
-                            top:'8%'
+                            data: legendData
                         },
                         calculable: true,
                         series: [
                             {
-                                name:'漏斗图',
+                                name:nameColumn,
                                 type:'funnel',
-                                left: '18%',
+                                left: '10%',
                                 top: 30,
+                                //x2: 80,
                                 bottom: 30,
                                 width: '80%',
+                                // height: {totalHeight} - y - y2,
                                 min: 0,
-                                max: 100,
+                                max: 1000,
                                 minSize: '0%',
-                                maxSize: '70%',
+                                maxSize: '100%',
                                 sort: 'descending',
                                 gap: 2,
                                 label: {
@@ -544,7 +547,7 @@
                                         borderWidth: 1
                                     }
                                 },
-                                data: funnelResult.value
+                                data: seriesData
                             }
                         ],
                         color:['#68c6e0','#9acc5d','#f98860','#ffcc79','#f8bfdf']
@@ -563,23 +566,26 @@
                     var title = lineResult.title;
                     var legendData = lineResult.legendData;
                     var seriesData = lineResult.seriesData;
+                    var valueColumns = lineResult.valueColumns;
                     $("#"+scenarioId).prev().find(".title").text(lineResult.title);
                     this.lineDom = this.$echarts.init(document.getElementById(scenarioId));
                     line0ption = {
-                        title: {
-                            text: '',
-                            //subtext: subtitle,
-                            x: 'center'
-                        },
                         tooltip: {
                             trigger: 'axis'
                         },
+                        legend: {
+                            data:valueColumns
+                        },
                         grid: {
-                            left: '5%',
-                            right: '5%',
-                            bottom: '7%',
-                            top:'18%',
+                            left: '3%',
+                            right: '4%',
+                            bottom: '3%',
                             containLabel: true
+                        },
+                        toolbox: {
+                            feature: {
+                                saveAsImage: {}
+                            }
                         },
                         xAxis: {
                             type: 'category',
@@ -589,17 +595,7 @@
                         yAxis: {
                             type: 'value'
                         },
-                        series: [{
-                            name:title,
-                            data: seriesData,
-                            type: 'line',
-                            markPoint: {
-                                data: [
-                                    {type: 'max', name: '最大值'},
-                                    {type: 'min', name: '最小值'}
-                                ]
-                            }
-                        }]
+                        series: seriesData
                     };
                     this.lineDom.setOption(line0ption);
                 }).catch(err => {
@@ -612,22 +608,27 @@
                     this.echatData = res.result;
                 //    console.log(res,"这是返scatter回的scatter数据");
                     scatterResult = JSON.parse(res.result);
+                    var title = scatterResult.title;
+                    var xColumn = scatterResult.xColumn;
+                    var yColumn = scatterResult.yColumn;
+                    var seriesData = scatterResult.seriesData;
                     $("#"+scenarioId).prev().find(".title").text(scatterResult.title);
                     this.scatterDom = this.$echarts.init(document.getElementById(scenarioId));
                     scatter0ption = {
+                        tooltip: {trigger: 'axis'},
                         grid: {
-                            left: '3%',
-                            right: '5%',
+                            left: '5%',
+                            right: '20%',
                             bottom: '5%',
-                            top:'10%',
+                            top:'15%',
                             containLabel: true
                         },
-                        xAxis: {},
-                        yAxis: {},
+                        xAxis: {name:xColumn},
+                        yAxis: {name:yColumn},
                         series: [{
                             type: 'scatter',
-                            symbolSize: 12,
-                            data:scatterResult.value,
+                            symbolSize: 20,
+                            data:seriesData
                         }]
                     };
                     this.scatterDom.setOption(scatter0ption);
@@ -777,19 +778,33 @@
                     this.echatData = res.result;
                   //  console.log(res,"这是返回的gauge数据");
                     gaugeResult = JSON.parse(res.result);
+                    var title = gaugeResult.title;
+                    var nameColumn = gaugeResult.nameColumn;
+                    var minValue = gaugeResult.minValue;
+                    var maxValue = gaugeResult.maxValue;
+                    var seriesData = gaugeResult.seriesData;
                     $("#"+scenarioId).prev().find(".title").text(gaugeResult.title);
                     this.gaugeDom = this.$echarts.init(document.getElementById(scenarioId));
                     gauge0ption = {
                         tooltip : {
                             formatter: "{a} <br/>{b} : {c}%"
                         },
+                        toolbox: {
+                            feature: {
+                                restore: {},
+                                saveAsImage: {}
+                            }
+                        },
                         series: [
                             {
-                                radius:'70%',
-                                name: '业务指标',
+                                name: nameColumn,
                                 type: 'gauge',
-                                detail: {formatter:'{value}%'},
-                                data: gaugeResult.value
+                                min: minValue,
+                                max: maxValue,
+                                detail: {
+                                    formatter:'{value}%'
+                                },
+                                data: seriesData
                             }
                         ]
                     };
@@ -808,9 +823,16 @@
                     this.echatData = res.result;
                 //    console.log(res,"这是返回的candlestick数据");
                     candlestickResult = JSON.parse(res.result);
+                    var title = candlestickResult.title;
+                    var legendData = candlestickResult.legendData;
+                    var seriesData = candlestickResult.seriesData;
                     $("#"+scenarioId).prev().find(".title").text(candlestickResult.title);
                     this.candlestickDom = this.$echarts.init(document.getElementById(scenarioId));
                     candlestick0ption = {
+                        title:
+                            {
+                                text: ''
+                            },
                         grid: {
                             left: '5%',
                             right: '5%',
@@ -818,14 +840,18 @@
                             top:'10%',
                             containLabel: true
                         },
-                        xAxis: {
-                            data: candlestickResult.name
-                        },
+                        xAxis:
+                            {
+                                data: legendData
+                            },
                         yAxis: {},
-                        series: [{
-                            type: 'k',
-                            data: candlestickResult.value
-                        }]
+                        series:
+                            [
+                                {
+                                    type: 'k',
+                                    data: seriesData
+                                }
+                            ]
                     };
                     this.candlestickDom.setOption(candlestick0ption);
                 }).catch(err => {

@@ -2,6 +2,7 @@
     <div class="broadcastDialog">
         <el-dialog
             :visible="visible"
+            :close-on-click-modal = false
             title="播放编辑"
             :before-close="closeBroadcastDialog"
             width="40%"

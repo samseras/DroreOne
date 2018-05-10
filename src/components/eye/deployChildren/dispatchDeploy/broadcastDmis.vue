@@ -123,6 +123,8 @@
                 this.isDisabled = false
             },
             deletInfo (id) {
+                console.log(id)
+                console.log(this.choseInfoId)
                 if (id) {
                     this.choseInfoId = [id]
                 }
