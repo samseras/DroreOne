@@ -31,6 +31,7 @@ const map = {
             return state.locationId
         },
         getSearchInfo (state) {
+            console.log(state.searchInfo,"123123")
             return state.searchInfo
         }
     },

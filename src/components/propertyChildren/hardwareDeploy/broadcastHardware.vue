@@ -8,6 +8,8 @@
                 <Header @addNewInfo="addNewInfo"
                         @deletInfo="deletInfo"
                         @selectedAll="selectedAll"
+                        @uploadInfo="uploadInfo"
+                        @downloadInfo="downloadInfo"
                         @search="search"
                         @fixedInfo="fixedInfo"
                         @choseType="choseType"
@@ -132,19 +134,20 @@
                 this.multipleSelection = val;
             },
             search(info){
-                if(info.trim() !== ''){
-
+                if(info !== ''){
                     this.broadList= this.broadList.filter((item) =>{
-                         return Object.keys(item).some((key) =>{
-                            return String(item[key]).toLowerCase().indexOf(info) > -1
-                        })
+                       if(item.name.indexOf(info) > -1) {
+                           return item
+                       }
                     })
+                }
+//                if(info.trim() !== ''){
 //                    this.broadList = this.broadList.filter((item) =>{
 //                        if (item.name.includes(info)) {
 //                            return item
 //                        }
 //                    })
-                }
+//                }
                 return this.broadList
             },
             addNewInfo(){
