@@ -160,6 +160,16 @@
                 this.title=title
 
             },
+            downloadInfo(){
+                api.broadcast.exportBroadcast().then((res) =>{
+                    console.log(res,'niaho')
+                    this.$message.success('导出成功')
+                }).catch(err =>{
+                    this.$message.error('导出失败，请稍后再试')
+                })
+            },
+
+
             fixInfo(info){
                 let index = info.location.includes(',')?info.location.indexOf(','):info.location.indexOf('，')
                 let longitude = info.location.substring(0, index)
