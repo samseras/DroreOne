@@ -28,26 +28,27 @@
             let route = this.$route.path
             if (route.includes('facility')) {
                 droreMap.interaction.showMove()
-                this.getAllIndicator();//指示牌现有标注
-                this.getAllTrash();//垃圾桶现有标注
-                this.getAllScenic();//景点现有标注
-                this.getAllShop();//商圈现有标注
-                this.getAllPark();//停车场现有标注
-                this.getAllToilet();//卫生间现有标注
-                this.getAllTree();//植物现有标注
-                this.getAllBuild();//建筑现有标注
+                // this.getAllIndicator();//指示牌现有标注
+                // this.getAllTrash();//垃圾桶现有标注
+                // this.getAllScenic();//景点现有标注
+                // this.getAllShop();//商圈现有标注
+                // this.getAllPark();//停车场现有标注
+                // this.getAllToilet();//卫生间现有标注
+                // this.getAllTree();//植物现有标注
+                // this.getAllBuild();//建筑现有标注
                 this.overView();//鹰眼
             }else if (route.includes('controler')) {
                 droreMap.interaction.enableMapClick = true
                 droreMap.interaction.showMove()
+                this.searchShow();//搜索
                 this.getAllLight();//路灯现有标注
-                this.getAllGate();//闸机现有标注
-                this.getAllWifi();//wifi现有标注
-                this.getAllLed();//Led现有标注
-                this.getAllPolice();//报警柱现有标注
-                this.getAllMonitor();//传感器现有标注
-                this.getAllBroadcast();//广播现有标注
-                this.getAllCamera();//摄像头现有标注
+                // this.getAllGate();//闸机现有标注
+                // this.getAllWifi();//wifi现有标注
+                // this.getAllLed();//Led现有标注
+                // this.getAllPolice();//报警柱现有标注
+                // this.getAllMonitor();//传感器现有标注
+                // this.getAllBroadcast();//广播现有标注
+                // this.getAllCamera();//摄像头现有标注
                 this.overView();//鹰眼
             } else if (route.includes('area-deploy')) {
                 if(!this.getLocationId){
@@ -1498,6 +1499,9 @@
                 droreMap.control.addControl(overView);
                 overView.setBoxColor("#f60")
                 overView.setRect('270px','150px')
+            },
+            searchShow() {//搜索
+                console.log('搜索');
             },
         },
         components: {

@@ -302,6 +302,8 @@
             width: 100%;
             height: rem(60) !important;
             padding-right: 0;
+            position: relative;
+            z-index: 9;
         }
         .el-row{
             width: 100%;
@@ -312,6 +314,7 @@
         }
         .el-menu-demo,.el-menu--horizontal,.el-menu{
             background-color: transparent;
+            border: none;
         }
         /*.el-menu-demo,.el-menu--horizontal,.el-menu:hover{*/
         /*background-color: transparent;*/
