@@ -41,7 +41,7 @@
                 droreMap.interaction.enableMapClick = true
                 droreMap.interaction.showMove()
                 this.searchShow();//搜索
-                this.getAllLight();//路灯现有标注
+                // this.getAllLight();//路灯现有标注
                 // this.getAllGate();//闸机现有标注
                 // this.getAllWifi();//wifi现有标注
                 // this.getAllLed();//Led现有标注
