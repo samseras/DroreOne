@@ -1501,7 +1501,7 @@
                 overView.setRect('270px','150px')
             },
             searchShow() {//搜索
-                console.log('搜索');
+                console.log(this.getSearchInfo,'qweqweqweqwe');
             },
         },
         components: {
