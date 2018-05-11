@@ -9,13 +9,14 @@
 
             <el-checkbox v-model="isSelected" @change="selectedAll"  class='selectedAll' >全选</el-checkbox>
 
+            <el-button size="mini"plain @click="deleteCard"><i class="el-icon-delete"></i>删除</el-button>
+            <el-button size="mini"plain @click="fixCard"><i class="el-icon-edit-outline"></i>修改</el-button>
             <div class="el-upload">
                 <el-button size="mini" plain @click="$refs.uploadFile.click()">导入</el-button>
                 <input type="file" ref="uploadFile" class="importFile" @change="selectFile">
             </div>
-            <el-button size="mini" plain @click="downloadFile">导出</el-button>
-            <el-button size="mini"plain @click="deleteCard"><i class="el-icon-delete"></i>删除</el-button>
-            <el-button size="mini"plain @click="fixCard"><i class="el-icon-edit-outline"></i>修改</el-button>
+            <el-button size="mini" plain @click="downloadFile"><i class="el-icon-download"></i>导出</el-button>
+
         </div>
         <div class="titleCheck" v-if="route.includes('camera')" >
             <el-checkbox-group v-model="filterList" @change="choseType">

@@ -12,6 +12,12 @@ const broadcast={
           url:'/info/device/model?type=1'
       })
     },
+    exportBroadcast(){
+        return axios({
+            method:'GET',
+            url:'/device/export/file?deviceType=1'
+        })
+    },
 
     getAllBroadcast(){
         return axios({
