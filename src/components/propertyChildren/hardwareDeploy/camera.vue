@@ -8,7 +8,11 @@
             <el-button size="mini" plain @click="addNewInfo"><i class="el-icon-circle-plus"></i>添加</el-button>
 
             <el-checkbox v-model="isSelected" @change="selectedAll"  class='selectedAll' >全选</el-checkbox>
-            <el-button size="mini" plain @click="uploadFile">导入</el-button>
+
+            <div class="el-upload">
+                <el-button size="mini" plain @click="$refs.uploadFile.click()">导入</el-button>
+                <input type="file" ref="uploadFile" class="importFile" @change="selectFile">
+            </div>
             <el-button size="mini" plain @click="downloadFile">导出</el-button>
             <el-button size="mini"plain @click="deleteCard"><i class="el-icon-delete"></i>删除</el-button>
             <el-button size="mini"plain @click="fixCard"><i class="el-icon-edit-outline"></i>修改</el-button>
@@ -89,10 +93,27 @@
             deleteCard(){
                 this.$emit('deletInfo')
             },
-            uploadFile(){
-                this.$emit('uploadInfo')
+            selectFile(e){
+                console.log(e.target.files[0], 'opopopopopops')
+                let file = e.target.files[0]
+                if (!file.type.includes('csv')) {
+                    this.$message.error('请上传CSV格式文件，谢谢！');
+                    return
+                } else {
+                    var form = new FormData();
+                    form.append('f1',file);
+                    console.log(form, 'opopopopoppopop')
+                    api.schedulebroadcast.createMusic(form).then(res => {
+                        console.log(res, '导入成功')
+                    }).catch(err => {
+                        this.$message.error('导入失败，请稍后重试')
+                        console.log(err, '导入失败')
+                    })
+                }
             },
+
             downloadFile(id){
+                console.log(id);
                 this.$emit('downloadInfo',id)
             },
             toggleList(type){
@@ -132,6 +153,11 @@
         .el-checkbox__inner{
             margin-top: rem(2);
             margin-right: rem(2);
+        }
+        .importFile{
+            width: 0;
+            height: 0;
+            display: none;
         }
     }
 </style>
