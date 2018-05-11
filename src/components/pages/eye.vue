@@ -1,5 +1,5 @@
 <template>
-    <div class="eye">
+    <div class="eye" @click="closeSearch">
         <el-container>
             <el-header  v-show = "isshowHead">
                 <el-row :gutter="10" class="alleye">
@@ -24,7 +24,7 @@
                                         v-for="(item,index) in searchList"
                                         :class="searchIndex === index? 'active': ''"
                                         :ref="isCur(index) && 'searchContent'"
-                                        @click="position(item)">
+                                        @click.stop="position(item)">
                                         {{item.name}}-（{{item.entityType | searchTypeFilter}}）</li>
                                 </ul>
                             </div>
@@ -217,8 +217,10 @@
             isCur(index) {
                 return index === this.activeIndex
             },
-            noSearch () {
+            closeSearch () {
                 this.searchList = []
+            },
+            noSearch () {
             },
             search (e) {
                 let isRefish = true
@@ -429,11 +431,12 @@
                 width: 100%;
                 height: rem(60);
                 padding: rem(18) 0;
+                padding-left: rem(30);
                 box-sizing: border-box;
                 display: inline-block;
                 overflow: hidden;
                 input{
-                    width: 70%;
+                    width: 78%;
                     height: 100%;
                     outline: none;
                     padding: rem(2) rem(5);
@@ -441,7 +444,8 @@
                     font-size: rem(12);
                     border: none;
                     border-radius: rem(2) 0 0 rem(2);
-                    display: inline-block;
+                    /*display: inline-block;*/
+                    float: left;
                     line-height: rem(20);
                 }
                 .btn{
@@ -454,6 +458,8 @@
                     border-radius: 0 rem(2) rem(2) 0;
                     background: #fff;
                     vertical-align: middle;
+                    float: left;
+                    cursor: pointer;
                     i{
                         font-size: rem(14);
                     }
