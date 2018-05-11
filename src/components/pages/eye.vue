@@ -12,8 +12,23 @@
                         </div>
                     </el-col>
                     <el-col :xs="5" :sm="5" :md="5" :lg="5" :xl="6" id="getTime">
-                        {{currTime | timeFiler}} ({{currTime | weekFiler}})
-                        <div @click="changeLanguage" v-if="false">切换语言</div>
+                        <!--{{currTime | timeFiler}} ({{currTime | weekFiler}})-->
+                        <!--<div @click="changeLanguage" v-if="false">切换语言</div>-->
+                        <div class="search">
+                            <div class="searchInput">
+                                <input type="text" v-model="searchContent" @blur="noSearch" placeholder="请输入设备,设施,安保人员名称" @keyup="search"><button class="btn " @click="goPosition"><i class="el-icon-search"></i></button>
+                            </div>
+                            <div class="searchContent" v-if="searchList.length>0" v-loading="isShowloading">
+                                <ul ref="dev">
+                                    <li
+                                        v-for="(item,index) in searchList"
+                                        :class="searchIndex === index? 'active': ''"
+                                        :ref="isCur(index) && 'searchContent'"
+                                        @click="position(item)">
+                                        {{item.name}}-（{{item.entityType | searchTypeFilter}}）</li>
+                                </ul>
+                            </div>
+                        </div>
                     </el-col>
 
                     <el-col :xs="7" :sm="6" :md="5" :lg="3" :xl="2">
@@ -51,7 +66,8 @@
 
 <script>
     import moment from 'moment'
-    // import api from '@/api'
+    import api from '@/api'
+    import {mapMutations} from 'vuex'
 
     export default {
         data() {
@@ -60,7 +76,12 @@
                 currTime: new Date(),   //当前时间
                 title: ["&#xe8c0;", "&#xe627;", "&#xe647;"],
                 activeIndex: 1,
-                isshowHead:true
+                isshowHead:true,
+                searchList: [],
+                standby: [],
+                searchContent: '',
+                searchIndex: 0,
+                isShowloading: false
             }
         },
         created () {
@@ -90,10 +111,79 @@
                     return index === day
                 })
                 return `星期${week[0]}`
+            },
+            searchTypeFilter (item) {
+                if (item == 1) {
+                    return '建筑'
+                }
+                if (item == 2) {
+                    return '商圈'
+                }if (item == 301) {
+                    return '广播'
+                }
+                if (item == 302) {
+                    return '摄像头'
+                }
+                if (item == 303) {
+                    return '闸机'
+                }
+                if (item == 304) {
+                    return 'LED大屏'
+                }
+                if (item == 305) {
+                    return '路灯'
+                }
+                if (item == 306) {
+                    return '传感器'
+                }
+                if (item == 307) {
+                    return 'wifi'
+                }
+                if (item == 308) {
+                    return '报警柱'
+                }
+                if (item == 309) {
+                    return 'GPS'
+                }
+                if (item == 4) {
+                    return '垃圾箱'
+                }
+                if (item == 5) {
+                    return '停车场'
+                }
+                if (item == 6) {
+                    return '景点'
+                }
+                if (item == 7) {
+                    return '人员'
+                }
+                if (item == 8) {
+                    return '植物'
+                }
+                if (item == 9) {
+                    return '指示牌'
+                }
+                if (item == 10) {
+                    return '卫生间'
+                }
+                if (item == 11) {
+                    return '车船'
+                }
+                if (item == 12) {
+                    return '路网'
+                }
+                if (item == 13) {
+                    return '巡更路线'
+                }
+                if (item == 14) {
+                    return '片区'
+                }
+
             }
         },
         methods: {
-            changeLanguage () {
+            ...mapMutations(['SEARCH_INFO']),
+            changeLanguage () {// 语言切换
                 if (this.$i18n.locale === 'CN'){
                     this.$i18n.locale = 'EN'
                 } else {
@@ -123,6 +213,76 @@
                         this.$router.push({path: '/deploy'});
                         break;
                 }
+            },
+            isCur(index) {
+                return index === this.activeIndex
+            },
+            noSearch () {
+                this.searchList = []
+            },
+            search (e) {
+                let isRefish = true
+                if (e.keyCode === 38 || e.keyCode === 40) {
+                    isRefish = false
+                }
+                if (this.searchContent && this.searchContent.trim() !== '' && isRefish) {
+                    console.log(this.searchContent, '-=-=-=-=-=-=-=')
+                    this.isShowloading = true
+                    api.publi.getSearch(this.searchContent).then(res => {
+                        this.isShowloading = false
+                        console.log(res)
+                        this.searchList = res
+                        this.standby = this.searchList
+                    }).catch(err => {
+                        this.isShowloading = false
+                        console.log(err,'搜索失败')
+                    })
+                } else if (isRefish){
+                    this.searchList =[]
+                } else if (e.keyCode === 38) {// 上
+                    if (this.searchIndex > 0) {
+                        this.searchIndex--;
+                        if (this.searchList.length > 4) {
+                            console.log(90000)
+                            this.$refs.dev.style.top = (-this.searchIndex * 24)+ 'px'
+                        }
+                        if (this.searchIndex > this.searchList.length - 4 && this.searchList.length > 4) {
+                            console.log(8000)
+                            this.$refs.dev.style.top = (-(this.searchList.length - 4) * 24)+ 'px'
+                        }
+                        this.searchContent = this.searchList[this.searchIndex].name
+                    }
+                } else if (e.keyCode === 40) {//下
+                    if (this.searchIndex < this.searchList.length - 1) {
+                        console.log(this.searchIndex, '*********',this.searchList.length)
+                        this.searchIndex++;
+                        if (this.searchList.length > 4) {
+                            this.$refs.dev.style.top = (-this.searchIndex * 24)+ 'px'
+                        }
+                        if (this.searchIndex > this.searchList.length - 4 && this.searchList.length > 4) {
+                            this.$refs.dev.style.top = (-(this.searchList.length - 4) * 24)+ 'px'
+                        }
+                    } else {
+                        this.searchIndex = this.searchList.length - 1
+                    }
+                    this.searchContent = this.searchList[this.searchIndex].name
+                }
+                if (e.keyCode === 13) {
+                    let info = this.searchList[this.searchIndex]
+                    this.position(info)
+                }
+            },
+            goPosition () {
+                if (this.standby.length > 0) {
+                    let info = this.standby[this.searchIndex]
+                    this.position(info)
+                }
+            },
+            position (item) {
+                console.log(item, '[][][][]]]')
+                this.searchContent = item.name
+                this.$store.commit('SEARCH_INFO', item)
+                this.searchList = []
             }
         },
         components: {}
@@ -229,12 +389,12 @@
         }
         .control div {
             margin: 0 5px;
-            line-height: 60px;
+            /*line-height: 60px;*/
             cursor: pointer;
         }
 
         #getTime {
-            line-height: 60px;
+            line-height: 0px;
             font-size: 16px;
             text-align: center;
         }
@@ -246,7 +406,7 @@
 
         .alleye > .el-col:last-child div a {
             display: block;
-            line-height: 60px;
+            /*line-height: 60px;*/
         }
 
         .el-main {
@@ -260,6 +420,97 @@
         .active{
             /*color: #0086b3;*/
             background: rgba(115,108,108,0.5);
+        }
+        .search{
+            width: 100%;
+            height: 100%;
+            position: relative;
+            .searchInput{
+                width: 100%;
+                height: rem(60);
+                padding: rem(18) 0;
+                box-sizing: border-box;
+                display: inline-block;
+                overflow: hidden;
+                input{
+                    width: 70%;
+                    height: 100%;
+                    outline: none;
+                    padding: rem(2) rem(5);
+                    box-sizing: border-box;
+                    font-size: rem(12);
+                    border: none;
+                    border-radius: rem(2) 0 0 rem(2);
+                    display: inline-block;
+                    line-height: rem(20);
+                }
+                .btn{
+                    display: inline-block;
+                    width: rem(30);
+                    /*border: none;*/
+                    border:2px solid #fff;
+                    outline: none;
+                    height: 100%;
+                    border-radius: 0 rem(2) rem(2) 0;
+                    background: #fff;
+                    vertical-align: middle;
+                    i{
+                        font-size: rem(14);
+                    }
+                }
+            }
+            .searchContent{
+                position: absolute;
+                width: 80%;
+                background: rgba(161, 187, 79, 0.6);
+                border-bottom-left-radius: rem(5);
+                border-bottom-right-radius: rem(5);
+                z-index: 9;
+                top: rem(42);
+                left: rem(30);
+                height: rem(100);
+                overflow-y: auto;
+                &::-webkit-scrollbar {
+                    width: 11px;
+                    height: 11px;
+                }
+                &::-webkit-scrollbar-track {
+                    background-color: #F5F5F5;
+                }
+                &::-webkit-scrollbar-thumb {
+                    min-height: 36px;
+                    border: 2px solid transparent;
+                    border-top: 3px solid transparent;
+                    border-bottom: 3px solid transparent;
+                    background-clip: padding-box;
+                    border-radius: 7px;
+                    background-color: #C4C4C4;
+                }
+                ul{
+                    width: 100%;
+                    /*height: 100%;*/
+                    position: absolute;
+                    li{
+                        width: 100%;
+                        height: rem(24);
+                        font-size: rem(12);
+                        text-align: left;
+                        padding: rem(3) rem(5);
+                        box-sizing: border-box;
+                        line-height: rem(24);
+                        cursor: pointer;
+                        &:hover{
+                            background: rgba(58,142,230,.6);
+                            color: #fff;
+                        }
+                    }
+                    .active{
+                        background: rgba(58,142,230,.6);
+                        color: #fff;
+                    }
+
+                }
+            }
         }
     }
 </style>

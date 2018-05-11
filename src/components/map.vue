@@ -1504,7 +1504,10 @@
             Scrollcontainer
         },
         computed: {
-            ...mapGetters(['getLocationId'])
+            ...mapGetters([
+                'getLocationId',
+                'getSearchInfo'
+            ])
         }
     }
 </script>
