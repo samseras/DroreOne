@@ -81,7 +81,30 @@
                 standby: [],
                 searchContent: '',
                 searchIndex: 0,
-                isShowloading: false
+                isShowloading: false,
+                facilityType: [
+                    {type: 1,route: '/facility/build'},
+                    {type: 2,route: '/facility/shop'},
+                    {type: 4,route: '/facility/dustbin'},
+                    {type: 5,route: '/facility/park'},
+                    {type: 6,route: '/facility/scenicName'},
+                    {type: 8,route: '/facility/build'},//植物
+                    {type: 9,route: '/facility/build'},//指示牌
+                    {type: 10,route: '/facility/build'},//卫生间
+                    {type: 12,route: '/facility/road'},
+                    {type: 14,route: '/facility/build'},//片区
+                    {type: 301,route: '/controler/broad'},//广播
+                    {type: 302,route: '/controler/camera'},//摄像头
+                    {type: 303,route: '/controler/broad'},//闸机
+                    {type: 304,route: '/controler/screen'},//大屏
+                    {type: 305,route: '/controler/broad'},//路灯
+                    {type: 306,route: '/controler/environment'},//传感器
+                    {type: 307,route: '/controler/wifi'},//wifi
+                    {type: 308,route: '/controler/warn'},//告警
+                    {type: 309,route: '/controler/broad'},//gps
+                    {type: 7,route: '/controler/person'},//人
+                    {type: 11,route: '/controler/car'},//车船
+                ],
             }
         },
         created () {
@@ -285,6 +308,11 @@
                 this.searchContent = item.name
                 this.$store.commit('SEARCH_INFO', item)
                 this.searchList = []
+                for (let i = 0; i<this.facilityType.length; i++) {
+                    if (item.entityType === this.facilityType[i].type ) {
+                        this.$router.push(this.facilityType[i].route)
+                    }
+                }
             }
         },
         components: {}
