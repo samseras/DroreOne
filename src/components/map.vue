@@ -1507,6 +1507,11 @@
         components: {
             Scrollcontainer
         },
+        watch: {
+            getSearchInfo () {
+                console.log(this.getSearchInfo, 'p[p[p[p[[p[')
+            }
+        },
         computed: {
             ...mapGetters([
                 'getLocationId',
