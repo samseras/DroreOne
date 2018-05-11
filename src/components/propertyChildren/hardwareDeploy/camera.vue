@@ -60,6 +60,8 @@
 </template>
 
 <script>
+    import api from '@/api'
+
     export default{
         data(){
             return{
@@ -97,14 +99,14 @@
             selectFile(e){
                 console.log(e.target.files[0], 'opopopopopops')
                 let file = e.target.files[0]
-                if (!file.type.includes('csv')) {
+                if (!file.type.includes('vnd.ms-excel')) {
                     this.$message.error('请上传CSV格式文件，谢谢！');
                     return
                 } else {
                     var form = new FormData();
                     form.append('f1',file);
                     console.log(form, 'opopopopoppopop')
-                    api.schedulebroadcast.createMusic(form).then(res => {
+                    api.importfile.importFileData(form).then(res => {
                         console.log(res, '导入成功')
                     }).catch(err => {
                         this.$message.error('导入失败，请稍后重试')
