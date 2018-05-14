@@ -186,6 +186,9 @@
             }else {
                 this.labelDot();// 打点
             }
+            if(this.getSearchInfo.id){
+                this.searchShow();
+            }
         },
         methods:{
             ...mapMutations([
@@ -1538,94 +1541,120 @@
                 if(this.getSearchInfo.entityType == '1'){
                     var urlImg ="http://label.drore.com/gisLabelTabImage/public/defaults/24*24/fuwuzhongxin.png"
                     var iconType ="建筑"
-                    this.searchShowIcon(urlImg,iconType)
+                    var subtype ="fuwuzhongxin"
+                    this.searchShowIcon(urlImg,iconType,subtype)
                 }else if(this.getSearchInfo.entityType == '2'){
                     var urlImg ="http://label.drore.com/gisLabelTabImage/public/defaults/24*24/shangchang.png"
                     var iconType ="商圈"
-                    this.searchShowIcon(urlImg,iconType)
+                    var subtype ="shangchang"
+                    this.searchShowIcon(urlImg,iconType,subtype)
                 }else if(this.getSearchInfo.entityType == '3'){
                     var urlImg ="http://label.drore.com/gisLabelTabImage/public/defaults/24*24/shebeixiang.png"
                     var iconType ="设备"
-                    this.searchShowIcon(urlImg,iconType)
+                    var subtype ="shebeixiang"
+                    this.searchShowIcon(urlImg,iconType,subtype)
                 }else if(this.getSearchInfo.entityType == '301'){
                     var urlImg ="http://label.drore.com/gisLabelTabImage/public/defaults/24*24/guangboshebei.png"
                     var iconType ="广播"
-                    this.searchShowIcon(urlImg,iconType)
+                    var subtype ="guangboshebei"
+                    this.searchShowIcon(urlImg,iconType,subtype)
                 }else if(this.getSearchInfo.entityType == '302'){
                     var urlImg ="http://label.drore.com/gisLabelTabImage/public/defaults/24*24/shexiangtou.png"
                     var iconType ="摄像头"
-                    this.searchShowIcon(urlImg,iconType)
+                    var subtype ="shexiangtou"
+                    this.searchShowIcon(urlImg,iconType,subtype)
                 }else if(this.getSearchInfo.entityType == '303'){
                     var urlImg ="http://label.drore.com/gisLabelTabImage/public/defaults/24*24/zhaji.png"
                     var iconType ="闸机"
-                    this.searchShowIcon(urlImg,iconType)
+                    var subtype ="zhaji"
+                    this.searchShowIcon(urlImg,iconType,subtype)
                 }else if(this.getSearchInfo.entityType == '304'){
                     var urlImg ="http://label.drore.com/gisLabelTabImage/public/defaults/24*24/dianziping.png"
                     var iconType ="LED大屏"
-                    this.searchShowIcon(urlImg,iconType)
+                    var subtype ="dianziping"
+                    this.searchShowIcon(urlImg,iconType,subtype)
                 }else if(this.getSearchInfo.entityType == '305'){
                     var urlImg ="http://label.drore.com/gisLabelTabImage/public/defaults/24*24/ludeng.png"
                     var iconType ="路灯"
+                    var subtype ="ludeng"
+                    this.searchShowIcon(urlImg,iconType,subtype)
                 }else if(this.getSearchInfo.entityType == '306'){
                     var urlImg ="http://label.drore.com/gisLabelTabImage/public/defaults/24*24/huanjingjiance.png"
                     var iconType ="传感器"
-                    this.searchShowIcon(urlImg,iconType)
+                    var subtype ="huanjingjiance"
+                    this.searchShowIcon(urlImg,iconType,subtype)
                 }else if(this.getSearchInfo.entityType == '307'){
                     var urlImg ="http://label.drore.com/gisLabelTabImage/public/defaults/24*24/wifi.png"
                     var iconType ="wifi"
-                    this.searchShowIcon(urlImg,iconType)
+                    var subtype ="wifi"
+                    this.searchShowIcon(urlImg,iconType,subtype)
                 }else if(this.getSearchInfo.entityType == '308'){
                     var urlImg ="http://label.drore.com/gisLabelTabImage/public/defaults/24*24/baojingtingqianyi.png"
                     var iconType ="报警器"
-                    this.searchShowIcon(urlImg,iconType)
+                    var subtype ="baojingtingqianyi"
+                    this.searchShowIcon(urlImg,iconType,subtype)
                 }else if(this.getSearchInfo.entityType == '309'){
                     var urlImg ="http://label.drore.com/gisLabelTabImage/public/defaults/24*24/chezaigps.png"
                     var iconType ="GPS"
-                    this.searchShowIcon(urlImg,iconType)
+                    var subtype ="chezaigps"
+                    this.searchShowIcon(urlImg,iconType,subtype)
                 }else if(this.getSearchInfo.entityType == '4'){
                     var urlImg ="http://label.drore.com/gisLabelTabImage/public/defaults/24*24/lajitong.png"
                     var iconType ="垃圾箱"
-                    this.searchShowIcon(urlImg,iconType)
+                    var subtype ="lajitong"
+                    this.searchShowIcon(urlImg,iconType,subtype)
                 }else if(this.getSearchInfo.entityType == '5'){
                     var urlImg ="http://label.drore.com/gisLabelTabImage/public/defaults/24*24/tingchechang.png"
                     var iconType ="停车场"
-                    this.searchShowIcon(urlImg,iconType)
+                    var subtype ="tingchechang"
+                    this.searchShowIcon(urlImg,iconType,subtype)
                 }else if(this.getSearchInfo.entityType == '6'){
                     var urlImg ="http://label.drore.com/gisLabelTabImage/public/defaults/24*24/jingdian.png"
                     var iconType ="景点"
-                    this.searchShowIcon(urlImg,iconType)
+                    var subtype ="jingdian"
+                    this.searchShowIcon(urlImg,iconType,subtype)
                 }else if(this.getSearchInfo.entityType == '7'){
                     var urlImg ="http://label.drore.com/gisLabelTabImage/public/defaults/24*24/anbaorenyuan.png"
                     var iconType ="人员"
-                    this.searchShowIcon(urlImg,iconType)
+                    var subtype ="anbaorenyuan"
+                    this.searchShowIcon(urlImg,iconType,subtype)
                 }else if(this.getSearchInfo.entityType == '8'){
                     var urlImg ="http://label.drore.com/gisLabelTabImage/public/defaults/24*24/gushumingmu.png"
                     var iconType ="植物"
-                    this.searchShowIcon(urlImg,iconType)
+                    var subtype ="gushumingmu"
+                    this.searchShowIcon(urlImg,iconType,subtype)
                 }else if(this.getSearchInfo.entityType == '9'){
                     var urlImg ="http://label.drore.com/gisLabelTabImage/public/defaults/24*24/zhilupai.png"
                     var iconType ="指示牌"
-                    this.searchShowIcon(urlImg,iconType)
+                    var subtype ="zhilupai"
+                    this.searchShowIcon(urlImg,iconType,subtype)
                 }else if(this.getSearchInfo.entityType == '10'){
                     var urlImg ="http://label.drore.com/gisLabelTabImage/public/defaults/24*24/cesuo.png"
                     var iconType ="卫生间"
-                    this.searchShowIcon(urlImg,iconType)
+                    var subtype ="cesuo"
+                    this.searchShowIcon(urlImg,iconType,subtype)
                 }else if(this.getSearchInfo.entityType == '11'){
                     var urlImg ="http://label.drore.com/gisLabelTabImage/public/defaults/24*24/youchuan.png"
                     var iconType ="车船"
-                    this.searchShowIcon(urlImg,iconType)
+                    var subtype ="youchuan"
+                    this.searchShowIcon(urlImg,iconType,subtype)
                 }else if(this.getSearchInfo.entityType == '12'){
                     var iconType ="路网"
+                    this.searchShowLine(iconType)
                 }else if(this.getSearchInfo.entityType == '13'){
                     var iconType ="线路"
+                    this.searchShowLine(iconType)
+                }else if(this.getSearchInfo.entityType == '14'){
+                    var iconType ="片区"
+                    this.searchShowArea(iconType)
                 }
             },
-            searchShowIcon(urlImg,iconType){
+            searchShowIcon(urlImg,iconType,subtype){
                 this.getSearchInfo.location = [this.getSearchInfo.longitude, this.getSearchInfo.latitude]
                 var searchShow = new droreMap.icon.Marker({
                     coordinate: droreMap.trans.transFromWgsToLayer(this.getSearchInfo.location),
                     name: this.getSearchInfo.name,
-                    subtype: "search",
+                    subtype: subtype,
                     id: this.getSearchInfo.id,
                     url: urlImg
                 });
@@ -1635,6 +1664,36 @@
                 searchShow.onclick(function(e) {
                     alert(iconType+"，id是"+e.data.id);
                 });
+            },
+            searchShowLine(iconType){
+                var areaEvtList =new droreMap.road.RoadLayer(iconType, 'blue', 'blue')
+                let geo =JSON.parse(this.getSearchInfo.geoText);
+                let area = [];
+                for(var j = 0; j < geo.length; j++) {
+                    let wgs=droreMap.trans.transFromWgsToLayer(geo[j])
+                    area.push(wgs);
+                }
+                var data = {"id": this.getSearchInfo.id, "name": this.getSearchInfo.name,"constructor":''}
+                areaEvtList.addRoad(area, data)
+                droreMap.road.addRoadLayer(areaEvtList)
+                droreMap.map.panToCoord(droreMap.trans.transFromWgsToLayer(geo[0]));
+            },
+            searchShowArea(iconType){
+                var areaEvets =new droreMap.area.DrawLayer(iconType,'rgba(255, 255, 255, 0.3)',"blue")
+                let geo =JSON.parse(this.getSearchInfo.geoText);
+                let ol=geo[0];
+                let arrayObj = new Array();
+                for(var j = 0; j < ol.length; j++) {
+                    let wgs=droreMap.trans.transFromWgsToLayer(ol[j])
+                    arrayObj.push(wgs);
+                }
+                let area= new Array();
+                area.push(arrayObj);
+                var data = {"id": this.getSearchInfo.id, "name": this.getSearchInfo.name,"constructor":''}
+                areaEvets.addArea(area,data)
+                areaEvets.setVisible(true)
+                droreMap.area.addChild(areaEvets)
+                droreMap.map.panToCoord(droreMap.trans.transFromWgsToLayer(ol[0]));
             }
         },
         components: {
@@ -1642,6 +1701,7 @@
         },
         watch: {
             getSearchInfo () {
+                console.log(this.getSearchInfo,"qweqweqweqweqwe");
                 this.requestGisMain();
                 this.searchShow();
             }
