@@ -40,7 +40,6 @@
             }else if (route.includes('controler')) {
                 droreMap.interaction.enableMapClick = true
                 droreMap.interaction.showMove()
-                this.searchShow();//搜索
                 // this.getAllLight();//路灯现有标注
                 // this.getAllGate();//闸机现有标注
                 // this.getAllWifi();//wifi现有标注
@@ -1501,7 +1500,22 @@
                 overView.setRect('270px','150px')
             },
             searchShow() {//搜索
-                console.log(this.getSearchInfo,'qweqweqweqwe');
+                this.getSearchInfo.location = [this.getSearchInfo.longitude, this.getSearchInfo.latitude]
+                var searchShow = new droreMap.icon.Marker({
+                    coordinate: droreMap.trans.transFromWgsToLayer(this.getSearchInfo.location),
+                    name: this.getSearchInfo.name,
+                    subtype: "search",
+                    id: this.getSearchInfo.id,
+                    url: "http://label.drore.com/gisLabelTabImage/public/defaults/24*24/fuwuzhongxin.png"
+                });
+                droreMap.icon.addChild(searchShow);
+                droreMap.map.panToCoord(droreMap.trans.transFromWgsToLayer(this.getSearchInfo.location));
+                searchShow.onclick(function(e) {
+                    alert("这是环境监测，id是"+e.data.id);
+                });
+                // if(this.getSearchInfo.entityType === '1'){
+                //     let img ="http://label.drore.com/gisLabelTabImage/public/defaults/24*24/fuwuzhongxin.png"
+                // }
             },
         },
         components: {
@@ -1509,7 +1523,8 @@
         },
         watch: {
             getSearchInfo () {
-                console.log(this.getSearchInfo, 'p[p[p[p[[p[')
+                console.log(this.getSearchInfo,'123123')
+                this.searchShow();
             }
         },
         computed: {
