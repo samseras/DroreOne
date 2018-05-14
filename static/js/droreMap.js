@@ -2529,10 +2529,10 @@ define(function(require, exports, module) {
                 //opt和default要深拷贝后合并一次
                 mapData.initMap(option);
                 mapData.initRectify(rectifyData);
-                // CustomEvent.removeEvent("click");
-                // CustomEvent.removeEvent("dragup");
-                // CustomEvent.removeEvent("modify");
-                // CustomEvent.removeEvent("iconOver");
+                CustomEvent.removeEvent("click");
+                CustomEvent.removeEvent("dragup");
+                CustomEvent.removeEvent("modify");
+                CustomEvent.removeEvent("iconOver");
             },
             // init: function(opt, rectifyData) {
             //     $.ajax({

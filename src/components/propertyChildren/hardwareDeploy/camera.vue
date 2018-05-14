@@ -103,6 +103,7 @@
                 this.$emit('deletInfo')
             },
             selectFile(e){
+                console.log(this.$route.path)
                 console.log(e.target.files[0], 'opopopopopops')
                 let file = e.target.files[0]
                 if (!file.type.includes('vnd.ms-excel')) {
@@ -164,10 +165,10 @@
             margin-right: rem(2);
         }
         .importFile{
-            width: 0;
-            height: 0;
-            display: none;
-        }
+             width: 0;
+             height: 0;
+             display: none;
+         }
     }
 </style>
 
