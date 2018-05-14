@@ -304,15 +304,15 @@
                 }
             },
             position (item) {
-                console.log(item, '[][][][]]]')
-                this.searchContent = item.name
-                this.$store.commit('SEARCH_INFO', item)
-                this.searchList = []
                 for (let i = 0; i<this.facilityType.length; i++) {
                     if (item.entityType === this.facilityType[i].type ) {
                         this.$router.push(this.facilityType[i].route)
                     }
                 }
+                console.log(item, '[][][][]]]')
+                this.searchContent = item.name
+                this.$store.commit('SEARCH_INFO', item)
+                this.searchList = []
             }
         },
         components: {}

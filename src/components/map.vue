@@ -1,6 +1,6 @@
 <template>
     <Scrollcontainer>
-        <div id="map">
+        <div id="map" class="map">
 
         </div>
     </Scrollcontainer>
@@ -23,7 +23,8 @@
 
         },
         mounted() {
-            droreMap.init();
+            // droreMap.init();
+            this.requestGisMain();//加载地图
             droreMap.object.getMap().getLayers().getArray()[1].setVisible(false)
             let route = this.$route.path
             if (route.includes('facility')) {
@@ -194,6 +195,32 @@
                 'ROAT_LOCATION_STATE',
                 'MAP_ROAT_LOCATION'
             ]),
+            requestGisMain() {
+                document.getElementById('map').innerHTML = ""
+                $.ajax({
+                    type: "get",
+                    url: "/static/xxsd_mapData.json",
+                    async: false,
+                    success: function(data) {
+                        console.log(data);
+                        var obj = data.data;
+                        var mapdata = {
+                            "olTileX": obj.olTileX,
+                            "olTileY": obj.olTileY,
+                            "centerX": obj.sceinitx,//120.07951802513782
+                            "centerY": obj.sceinity,//30.267776483960148
+                            "path": "/static/map_xxsd/map{z}/{x},{y}.jpg",
+                            "curZoom": obj.scefit + obj.initlevel,
+                            "minZoom": obj.scefit,
+                            "maxZoom": obj.scefit + obj.zoom - 1
+                        }
+                        droreMap.init(mapdata, data.data);
+                    },
+                    error: function(e) {
+                        console.log(e);
+                    }
+                });
+            },
             labelDot(){//打点标注
                 let that = this
                 var icon = new droreMap.icon.Marker({
@@ -1499,31 +1526,123 @@
                 overView.setBoxColor("#f60")
                 overView.setRect('270px','150px')
             },
+            interaction(){//初始化辅助显示
+                droreMap.object.getMap().getLayers().getArray()[1].setVisible(false)
+                droreMap.interaction.enableMapClick = true
+                droreMap.interaction.showMove()
+                this.overView();//鹰眼
+            },
             searchShow() {//搜索
+                this.interaction();
+                console.log(this.getSearchInfo.entityType);
+                if(this.getSearchInfo.entityType == '1'){
+                    var urlImg ="http://label.drore.com/gisLabelTabImage/public/defaults/24*24/fuwuzhongxin.png"
+                    var iconType ="建筑"
+                    this.searchShowIcon(urlImg,iconType)
+                }else if(this.getSearchInfo.entityType == '2'){
+                    var urlImg ="http://label.drore.com/gisLabelTabImage/public/defaults/24*24/shangchang.png"
+                    var iconType ="商圈"
+                    this.searchShowIcon(urlImg,iconType)
+                }else if(this.getSearchInfo.entityType == '3'){
+                    var urlImg ="http://label.drore.com/gisLabelTabImage/public/defaults/24*24/shebeixiang.png"
+                    var iconType ="设备"
+                    this.searchShowIcon(urlImg,iconType)
+                }else if(this.getSearchInfo.entityType == '301'){
+                    var urlImg ="http://label.drore.com/gisLabelTabImage/public/defaults/24*24/guangboshebei.png"
+                    var iconType ="广播"
+                    this.searchShowIcon(urlImg,iconType)
+                }else if(this.getSearchInfo.entityType == '302'){
+                    var urlImg ="http://label.drore.com/gisLabelTabImage/public/defaults/24*24/shexiangtou.png"
+                    var iconType ="摄像头"
+                    this.searchShowIcon(urlImg,iconType)
+                }else if(this.getSearchInfo.entityType == '303'){
+                    var urlImg ="http://label.drore.com/gisLabelTabImage/public/defaults/24*24/zhaji.png"
+                    var iconType ="闸机"
+                    this.searchShowIcon(urlImg,iconType)
+                }else if(this.getSearchInfo.entityType == '304'){
+                    var urlImg ="http://label.drore.com/gisLabelTabImage/public/defaults/24*24/dianziping.png"
+                    var iconType ="LED大屏"
+                    this.searchShowIcon(urlImg,iconType)
+                }else if(this.getSearchInfo.entityType == '305'){
+                    var urlImg ="http://label.drore.com/gisLabelTabImage/public/defaults/24*24/ludeng.png"
+                    var iconType ="路灯"
+                }else if(this.getSearchInfo.entityType == '306'){
+                    var urlImg ="http://label.drore.com/gisLabelTabImage/public/defaults/24*24/huanjingjiance.png"
+                    var iconType ="传感器"
+                    this.searchShowIcon(urlImg,iconType)
+                }else if(this.getSearchInfo.entityType == '307'){
+                    var urlImg ="http://label.drore.com/gisLabelTabImage/public/defaults/24*24/wifi.png"
+                    var iconType ="wifi"
+                    this.searchShowIcon(urlImg,iconType)
+                }else if(this.getSearchInfo.entityType == '308'){
+                    var urlImg ="http://label.drore.com/gisLabelTabImage/public/defaults/24*24/baojingtingqianyi.png"
+                    var iconType ="报警器"
+                    this.searchShowIcon(urlImg,iconType)
+                }else if(this.getSearchInfo.entityType == '309'){
+                    var urlImg ="http://label.drore.com/gisLabelTabImage/public/defaults/24*24/chezaigps.png"
+                    var iconType ="GPS"
+                    this.searchShowIcon(urlImg,iconType)
+                }else if(this.getSearchInfo.entityType == '4'){
+                    var urlImg ="http://label.drore.com/gisLabelTabImage/public/defaults/24*24/lajitong.png"
+                    var iconType ="垃圾箱"
+                    this.searchShowIcon(urlImg,iconType)
+                }else if(this.getSearchInfo.entityType == '5'){
+                    var urlImg ="http://label.drore.com/gisLabelTabImage/public/defaults/24*24/tingchechang.png"
+                    var iconType ="停车场"
+                    this.searchShowIcon(urlImg,iconType)
+                }else if(this.getSearchInfo.entityType == '6'){
+                    var urlImg ="http://label.drore.com/gisLabelTabImage/public/defaults/24*24/jingdian.png"
+                    var iconType ="景点"
+                    this.searchShowIcon(urlImg,iconType)
+                }else if(this.getSearchInfo.entityType == '7'){
+                    var urlImg ="http://label.drore.com/gisLabelTabImage/public/defaults/24*24/anbaorenyuan.png"
+                    var iconType ="人员"
+                    this.searchShowIcon(urlImg,iconType)
+                }else if(this.getSearchInfo.entityType == '8'){
+                    var urlImg ="http://label.drore.com/gisLabelTabImage/public/defaults/24*24/gushumingmu.png"
+                    var iconType ="植物"
+                    this.searchShowIcon(urlImg,iconType)
+                }else if(this.getSearchInfo.entityType == '9'){
+                    var urlImg ="http://label.drore.com/gisLabelTabImage/public/defaults/24*24/zhilupai.png"
+                    var iconType ="指示牌"
+                    this.searchShowIcon(urlImg,iconType)
+                }else if(this.getSearchInfo.entityType == '10'){
+                    var urlImg ="http://label.drore.com/gisLabelTabImage/public/defaults/24*24/cesuo.png"
+                    var iconType ="卫生间"
+                    this.searchShowIcon(urlImg,iconType)
+                }else if(this.getSearchInfo.entityType == '11'){
+                    var urlImg ="http://label.drore.com/gisLabelTabImage/public/defaults/24*24/youchuan.png"
+                    var iconType ="车船"
+                    this.searchShowIcon(urlImg,iconType)
+                }else if(this.getSearchInfo.entityType == '12'){
+                    var iconType ="路网"
+                }else if(this.getSearchInfo.entityType == '13'){
+                    var iconType ="线路"
+                }
+            },
+            searchShowIcon(urlImg,iconType){
                 this.getSearchInfo.location = [this.getSearchInfo.longitude, this.getSearchInfo.latitude]
                 var searchShow = new droreMap.icon.Marker({
                     coordinate: droreMap.trans.transFromWgsToLayer(this.getSearchInfo.location),
                     name: this.getSearchInfo.name,
                     subtype: "search",
                     id: this.getSearchInfo.id,
-                    url: "http://label.drore.com/gisLabelTabImage/public/defaults/24*24/fuwuzhongxin.png"
+                    url: urlImg
                 });
                 droreMap.icon.addChild(searchShow);
+                console.log(droreMap.icon);
                 droreMap.map.panToCoord(droreMap.trans.transFromWgsToLayer(this.getSearchInfo.location));
                 searchShow.onclick(function(e) {
-                    alert("这是环境监测，id是"+e.data.id);
+                    alert(iconType+"，id是"+e.data.id);
                 });
-                // if(this.getSearchInfo.entityType === '1'){
-                //     let img ="http://label.drore.com/gisLabelTabImage/public/defaults/24*24/fuwuzhongxin.png"
-                // }
-            },
+            }
         },
         components: {
             Scrollcontainer
         },
         watch: {
             getSearchInfo () {
-                console.log(this.getSearchInfo,'123123')
+                this.requestGisMain();
                 this.searchShow();
             }
         },
