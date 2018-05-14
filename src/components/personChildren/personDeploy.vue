@@ -10,7 +10,8 @@
                         @toggleList="toggleList"
                         @choseType='choseType'
                         @selectedAll='selectedAll'
-                        @fixedInfo='fixedInfo'>
+                        @fixedInfo='fixedInfo'
+                        @searchAnything="searchAnything">
                 </Header>
             </div>
             <div class="personList" v-loading="isShowLoading">
@@ -125,6 +126,21 @@
             }
         },
         methods: {
+            searchAnything (info) {
+                console.log(info, '这是要过滤的')
+                if (info.trim() !== '') {
+                    this.personList = this.checkList.filter(item => {
+                        if (item.personBean.name.includes(info)) {
+                            return item
+                        }
+                        if (item.phone.includes(info)) {
+                            return item
+                        }
+                    })
+                } else {
+                    this.getAllPerson()
+                }
+            },
             imgError (e) {
                 e.target.src = this.getUrl(null);
             },
@@ -157,7 +173,6 @@
                             break
                         }
                     }
-                    console.log(imgSrc, 'opopopopopopopo')
                     return imgSrc
                 } else {
                     return url
@@ -363,6 +378,7 @@
                         this.personList[i].name = this.personList[i].personBean.name
                         this.personList[i].phone = this.personList[i].personBean.phone
                     }
+                    this.checkList = this.personList
                 }).catch(err => {
                     console.log(err)
                     this.isShowLoading = false

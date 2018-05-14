@@ -10,7 +10,8 @@
                         @toggleList = "toggleList"
                         @choseType = 'choseType'
                         @selectedAll = 'selectedAll'
-                        @fixedInfo = 'fixedInfo'>
+                        @fixedInfo = 'fixedInfo'
+                        @searchAnything="searchAnything">
                 </Header>
             </div>
             <div class="personList" v-loading="isShowLoading">
@@ -116,6 +117,24 @@
             }
         },
         methods: {
+            searchAnything (info) {
+                console.log(info, '这是要过滤的')
+                if (info.trim() !== '') {
+                    this.treeList = this.checkList.filter(item => {
+                        if (item.regionName.includes(info)) {
+                            return item
+                        }
+                        if (item.plant.genera.includes(info)) {
+                            return item
+                        }
+                        if (item.plant.name.includes(info)) {
+                            return item
+                        }
+                    })
+                } else {
+                    this.getAllTree()
+                }
+            },
             handleSelectionChange(val) {
                 this.multipleSelection = val;
             },
@@ -303,6 +322,7 @@
                         this.treeList[i].id = this.treeList[i].plant.id
                         // this.treeList[i].state = '正常'
                     }
+                    this.checkList = this.treeList
                 }).catch(err => {
                     console.log(err, '请求失败')
                     this.isShowLoading = false

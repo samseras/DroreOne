@@ -10,7 +10,8 @@
                         @toggleList = "toggleList"
                         @choseType = 'choseType'
                         @selectedAll = 'selectedAll'
-                        @fixedInfo = 'fixedInfo'>
+                        @fixedInfo = 'fixedInfo'
+                        @searchAnything="searchAnything">
                 </Header>
             </div>
             <div class="personList" v-loading="isShowLoading">
@@ -120,6 +121,24 @@
             }
         },
         methods: {
+            searchAnything (info) {
+                // console.log(info, '这是要过滤的')
+                // if (info.trim() !== '') {
+                //     this.boatCarList = this.checkList.filter(item => {
+                //         if (item.driverName.includes(info)) {
+                //             return item
+                //         }
+                //         if (item.driverPhone.includes(info)) {
+                //             return item
+                //         }
+                //         if (item.vehicle.serialNum.includes(info)) {
+                //             return item
+                //         }
+                //     })
+                // } else {
+                //     this.getAllBuild()
+                // }
+            },
             handleSelectionChange(val) {
                 this.multipleSelection = val;
             },

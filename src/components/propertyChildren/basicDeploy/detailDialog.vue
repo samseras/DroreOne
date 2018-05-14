@@ -78,7 +78,7 @@
                             </el-option>
                         </el-select>
                     </p>
-                    <p class="phoneNum" v-if="isDisabled">联系电话：<input type="text"v-model="boatCar.phone"></p>
+                    <p class="phoneNum" v-if="isDisabled">联系电话：<input type="text"v-model="boatCar.driverPhone"></p>
                     <p class="phoneNum">设备号码：<input type="text"v-model="boatCar.vehicle.model"></p>
                 </div>
                 <!--指示牌-->
@@ -419,6 +419,7 @@
                 },
                 boatCar: {
                     driverId: '',
+                    driverPhone: '',
                     vehicle: {
                         capacity:'',
                         driverId: "",
@@ -782,6 +783,10 @@
                 api.person.getJobPerson(jobId).then(res => {
                     console.log(res, '成功')
                     this.driverList = res
+                    this.driverList.forEach(item => {
+                        item.id = item.personBean.id
+                        item.name = item.personBean.name
+                    })
                 }).catch(err => {
                     console.log(err, '失败')
                 })
@@ -817,6 +822,7 @@
                             item.id = item.personBean.id
                             item.name = item.personBean.name
                         })
+                        console.log(this.driverList)
                     }).catch(err => {
                         console.log(err, '失败')
                     })

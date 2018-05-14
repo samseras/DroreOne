@@ -1,7 +1,7 @@
 <template>
     <div class="cameraTitle">
         <div class="titleSearch">
-            <input type="text" placeholder="Search Anything" v-model="searchKeys">
+            <input type="text" placeholder="请输入搜索内容" v-model="searchContent" @keyup="startSearch">
             <i class="el-icon-search" @click="search"></i>
         </div>
         <div class="titleBtn">
@@ -83,10 +83,16 @@
                 ],
                 route:'',
                 isSelected:false,
-                isShowJobType:true
+                isShowJobType:true,
+                searchContent:''
             }
         },
         methods:{
+            startSearch () {
+                // if (this.searchContent !== '') {
+                this.$emit('searchAnything', this.searchContent)
+                // }
+            },
             search(){
                 this.$emit('search', this.searchKeys)
             },

@@ -9,6 +9,7 @@
                         @deletInfo="deletInfo"
                         @selectedAll="selectedAll"
                         @fixedInfo="fixedInfo"
+                        @searchAnything="searchAnything"
                         @choseType="choseType"
                         @toggleList="toggleList">
                 </Header>
@@ -117,7 +118,6 @@
                 isShowWifiCard:true,
                 visible:false,
                 wifiList:[
-
                 ],
                 checkList:[],
                 isSelected:false,
@@ -131,6 +131,27 @@
             }
         },
         methods:{
+            searchAnything (info) {
+                console.log(info, '这是要过滤的')
+                if (info.trim() !== '') {
+                    this.wifiList = this.checkList.filter(item => {
+                        if (item.regionName.includes(info)) {
+                            return item
+                        }
+                        if (item.name.includes(info)) {
+                            return item
+                        }
+                        if (item.modelName && item.modelName.includes(info)) {
+                            return item
+                        }
+                        if (item.description && item.description.includes(info)) {
+                            return item
+                        }
+                    })
+                } else {
+                    this.getAllWifi()
+                }
+            },
             handleSelectionChange(val) {
                 this.multipleSelection = val;
             },
@@ -324,6 +345,7 @@
                         this.wifiList[i].id=this.wifiList[i].id
                         this.wifiList[i].location=`${this.wifiList[i].longitude},${this.wifiList[i].latitude}`
                     }
+                    this.checkList = this.wifiList
                 }).catch((err)=>{
                     console.log(err)
                 })

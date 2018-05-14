@@ -10,7 +10,8 @@
                         @toggleList = "toggleList"
                         @choseType = 'choseType'
                         @selectedAll = 'selectedAll'
-                        @fixedInfo = 'fixedInfo'>
+                        @fixedInfo = 'fixedInfo'
+                        @searchAnything="searchAnything">
                 </Header>
             </div>
             <div class="personList" v-loading="isShowLoading">
@@ -110,6 +111,21 @@
             }
         },
         methods: {
+            searchAnything (info) {
+                console.log(info, '这是要过滤的')
+                if (info.trim() !== '') {
+                    this.toiletList = this.checkList.filter(item => {
+                        if (item.regionName.includes(info)) {
+                            return item
+                        }
+                        if (item.toiletBean.name.includes(info)) {
+                            return item
+                        }
+                    })
+                } else {
+                    this.getAllToilet()
+                }
+            },
             handleSelectionChange(val) {
                 this.multipleSelection = val;
             },
@@ -286,6 +302,7 @@
                         this.toiletList[i].id = this.toiletList[i].toiletBean.id
                         this.toiletList[i].state = '正常'
                     }
+                    this.checkList = this.toiletList
                 }).catch(err => {
                     console.log(err, '请求失败')
                     this.isShowLoading = false
