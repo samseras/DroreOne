@@ -2514,37 +2514,58 @@ define(function(require, exports, module) {
 
         return { //返回一个对象
             init: function(opt, rectifyData) {
-                $.ajax({
-                    type: "get",
-                    url: "/static/xxsd_mapData.json",
-                    async: false,
-                    success: function(data) {
-                        console.log(data);
-                        var obj = data.data;
-                        var mapdata = {
-                            "olTileX": obj.olTileX,
-                            "olTileY": obj.olTileY,
-                            "centerX": obj.sceinitx,//120.07951802513782
-                            "centerY": obj.sceinity,//30.267776483960148
-                            "path": "/static/map_xxsd/map{z}/{x},{y}.jpg",
-                            "curZoom": obj.scefit + obj.initlevel,
-                            "minZoom": obj.scefit,
-                            "maxZoom": obj.scefit + obj.zoom - 1
-                        }
-                        console.log(mapdata);
-                        maxZoom = mapdata.maxZoom;//设置最大缩放层级
-                        mapData.initMap(mapdata);//初始化地图
-                        mapData.initRectify(obj);
-                    },
-                    error: function(e) {
-                        console.log(333333);
-                    }
-                });
-                CustomEvent.removeEvent("click");
-                CustomEvent.removeEvent("dragup");
-                CustomEvent.removeEvent("modify");
-                CustomEvent.removeEvent("iconOver");
+                var defaultData = {
+                    "olTileX": 54874,
+                    "olTileY": 27040,
+                    "centerX": 121.43497144063807,
+                    "centerY": 29.995888023356642,
+                    "path": "http://img.weyoo.cn/map/map_sec_zhejiang0131/map{z}/{x},{y}.jpg",
+                    "webpPath": "http://img.weyoo.cn/map/map_sec_zhejiang0027ys/map{z}/{x},{y}.webp",
+                    "curZoom": 16,
+                    "minZoom": 16,
+                    "maxZoom": 19
+                }
+                var option = $.extend(true, defaultData, opt);
+                //opt和default要深拷贝后合并一次
+                mapData.initMap(option);
+                mapData.initRectify(rectifyData);
+                // CustomEvent.removeEvent("click");
+                // CustomEvent.removeEvent("dragup");
+                // CustomEvent.removeEvent("modify");
+                // CustomEvent.removeEvent("iconOver");
             },
+            // init: function(opt, rectifyData) {
+            //     $.ajax({
+            //         type: "get",
+            //         url: "/static/xxsd_mapData.json",
+            //         async: false,
+            //         success: function(data) {
+            //             console.log(data);
+            //             var obj = data.data;
+            //             var mapdata = {
+            //                 "olTileX": obj.olTileX,
+            //                 "olTileY": obj.olTileY,
+            //                 "centerX": obj.sceinitx,//120.07951802513782
+            //                 "centerY": obj.sceinity,//30.267776483960148
+            //                 "path": "/static/map_xxsd/map{z}/{x},{y}.jpg",
+            //                 "curZoom": obj.scefit + obj.initlevel,
+            //                 "minZoom": obj.scefit,
+            //                 "maxZoom": obj.scefit + obj.zoom - 1
+            //             }
+            //             console.log(mapdata);
+            //             maxZoom = mapdata.maxZoom;//设置最大缩放层级
+            //             mapData.initMap(mapdata);//初始化地图
+            //             mapData.initRectify(obj);
+            //         },
+            //         error: function(e) {
+            //             console.log(333333);
+            //         }
+            //     });
+            //     CustomEvent.removeEvent("click");
+            //     CustomEvent.removeEvent("dragup");
+            //     CustomEvent.removeEvent("modify");
+            //     CustomEvent.removeEvent("iconOver");
+            // },
             status: {
                 _limitExtent: false,
                 get limitExtent() {

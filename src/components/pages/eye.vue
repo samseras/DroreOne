@@ -320,6 +320,10 @@
                         }
                     }
                 }
+                console.log(item, '[][][][]]]')
+                this.searchContent = item.name
+                this.$store.commit('SEARCH_INFO', item)
+                this.searchList = []
             }
         },
         components: {}
