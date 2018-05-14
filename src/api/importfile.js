@@ -3,14 +3,16 @@
 * */
 import axios from '@/http'
 
-const importFile={
-    getCameraType(){
-      return axios({
-          method:'GET',
-          url:'/device/import/file'
-      })
+const importfile={
+    importFileData(params){
+        console.log(params, 'formdata')
+        return axios({
+            method:'POST',
+            url:'/device/import/file',
+            processData : false,
+            contentType : false,
+            data:params
+        })
     }
-
-
 }
-export default importFile
+export default importfile
