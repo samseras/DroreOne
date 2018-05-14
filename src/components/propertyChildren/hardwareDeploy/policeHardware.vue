@@ -78,8 +78,7 @@
                         </div>
                         <div class="specificInfo" >
                             <p class="name">所属区域：<span>{{item.regionName}}</span></p>
-                            <p class="sex">类&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;型：<span>{{item.sensorType | changeStatus
-}}</span></p>
+                            <p class="sex">类&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;型：<span>{{item.sensorType | changeStatus}}</span></p>
                             <p class="sex text">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：<span>{{item.description}}</span></p>
 
                         </div>

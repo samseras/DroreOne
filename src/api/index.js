@@ -31,6 +31,7 @@ import plant from './plant'
 import build from './build'
 import deployRoad from './deployRoad'
 import publi from './public'
+import importfile from './importfile'
 
 
 export default {
@@ -63,5 +64,6 @@ export default {
     plant,
     build,
     deployRoad,
-    publi
+    publi,
+    importfile
 }
