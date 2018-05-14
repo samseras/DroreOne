@@ -57,6 +57,8 @@
             this.$store.commit('SHOW_SEARCH', this.isShowControler)
         },
         goRouteModule (index) {
+            this.isShowControler = true
+            this.$store.commit('SHOW_SEARCH', this.isShowControler)
           this.activeIndex = index
         }
     },
