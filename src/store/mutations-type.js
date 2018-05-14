@@ -14,3 +14,5 @@ export const REFRESH_DATA_TYPE = 'REFRESH_DATA_TYPE'
  export const ROAT_LOCATION_STATE = 'ROAT_LOCATION_STATE'
  export const LOCATION_ID = 'LOCATION_ID'
  export const SEARCH_INFO = 'SEARCH_INFO'
+ export const SHOW_SEARCH = 'SHOW_SEARCH'
+
