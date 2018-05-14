@@ -9,7 +9,8 @@ const map = {
         isSaveRegionLocation: false,
         isSaveRoatLocation: false,
         locationId: '',
-        searchInfo: {}
+        searchInfo: {},
+        isShowSearch: false
     },
     getters: {
         getLocation (state) {
@@ -32,6 +33,9 @@ const map = {
         },
         getSearchInfo (state) {
             return state.searchInfo
+        },
+        getSearchState(state) {
+            return state.isShowSearch
         }
     },
     setters: {},
@@ -60,6 +64,10 @@ const map = {
         [types.SEARCH_INFO] (state, data) {
             state.searchInfo = data
             console.log(state.searchInfo,'1231123123')
+        },
+        [types.SHOW_SEARCH] (state, data) {
+            state.isShowSearch = data
+            console.log(state.isShowSearch,'1231123123')
         },
     },
     actions: {

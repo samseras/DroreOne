@@ -4,7 +4,7 @@
             <Map></Map>
         </div>
         <div class="menu">
-            <div class="left" v-if="isShowControler">
+            <div class="left" v-if="isShowControler && getSearchState">
                 <router-view/>
             </div>
             <div class="right">
@@ -23,6 +23,7 @@
 
 <script>
     import Map from '@/components/map'
+    import {mapGetters,mapMutations} from 'vuex'
   export default {
     data () {
       return {
@@ -43,15 +44,32 @@
     components:{
         Map
     },
+      created () {
+        if (this.getSearchInfo.id) {
+            this.isShowControler = true
+        }
+      },
     methods:{
+        ...mapMutations(['SHOW_SEARCH']),
         packUpHidden () {
             this.isShowControler = !this.isShowControler
             this.exhibition = !this.exhibition
+            this.$store.commit('SHOW_SEARCH', this.isShowControler)
         },
         goRouteModule (index) {
+            this.isShowControler = true
+            this.$store.commit('SHOW_SEARCH', this.isShowControler)
           this.activeIndex = index
         }
     },
+      watch: {
+          getSearchInfo () {
+              this.isShowControler = true
+          }
+      },
+      computed: {
+          ...mapGetters(['getSearchInfo','getSearchState'])
+      }
   }
 </script>
 <style lang="scss" scoped type="text/scss">

@@ -8,7 +8,6 @@
                 <Header @addNewInfo="addNewInfo"
                         @deletInfo="deletInfo"
                         @selectedAll="selectedAll"
-                        @uploadInfo="uploadInfo"
                         @downloadInfo="downloadInfo"
                         @search="search"
                         @fixedInfo="fixedInfo"
@@ -161,12 +160,53 @@
 
             },
             downloadInfo(){
-                api.broadcast.exportBroadcast().then((res) =>{
-                    console.log(res,'niaho')
-                    this.$message.success('导出成功')
-                }).catch(err =>{
-                    this.$message.error('导出失败，请稍后再试')
-                })
+                if(this.choseInfoId.length >0){
+                    api.broadcast.exportBroadcast(this.choseInfoId).then((res) =>{
+                        console.log(res,'niaho')
+                        const content = res
+                        const blob = new Blob([content])
+                        const fileName = '测试.csv'
+                        if('download' in document.createElement('a')){
+                            const elink = document.createElement('a')
+                            elink.download = fileName
+                            elink.style.display = 'none'
+                            elink.href = URL.createObjectURL(blob)
+                            document.body.appendChild(elink)
+                            elink.click()
+                            URL.revokeObjectURL(elink.href) // 释放URL 对象
+                            document.body.removeChild(elink)
+                        }else{
+                            navigator.msSaveBlob(blob, fileName)
+                        }
+                        this.$message.success('导出成功')
+                        this.choseInfoId=[]
+                    }).catch(err =>{
+                        this.$message.error('导出失败，请稍后再试')
+                    })
+                }else{
+                    api.broadcast.exportAllBroadcast().then((res) =>{
+                        console.log(res,'niaho')
+                        const content = res
+                        const blob = new Blob([content])
+                        const fileName = '测试.csv'
+                        if('download' in document.createElement('a')){
+                            const elink = document.createElement('a')
+                            elink.download = fileName
+                            elink.style.display = 'none'
+                            elink.href = URL.createObjectURL(blob)
+                            document.body.appendChild(elink)
+                            elink.click()
+                            URL.revokeObjectURL(elink.href) // 释放URL 对象
+                            document.body.removeChild(elink)
+                        }else{
+                            navigator.msSaveBlob(blob, fileName)
+                        }
+                        this.$message.success('导出成功')
+                    }).catch(err =>{
+                        this.$message.error('导出失败，请稍后再试')
+                    })
+                }
+
             },
 
 
