@@ -23,7 +23,7 @@ module.exports = {
             changeOrigin: true
         },
         '/device':{
-            target:'http://192.168.0.150:8050/',
+            target:'http://192.168.0.150:8250/',
             changeOrigin: true
         },
         '/info':{
