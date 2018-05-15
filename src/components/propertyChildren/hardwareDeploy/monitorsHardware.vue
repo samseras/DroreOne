@@ -10,7 +10,8 @@
                         @selectedAll="selectedAll"
                         @fixedInfo="fixedInfo"
                         @choseType="choseType"
-                        @toggleList="toggleList">
+                        @toggleList="toggleList"
+                        @getAllMonitor="getAllMonitor">
                 </Header>
             </div>
 

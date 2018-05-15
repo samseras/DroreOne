@@ -97,8 +97,6 @@
                 this.$emit('deletInfo')
             },
             selectFile(e){
-                console.log(this.$route.path)
-                console.log(e.target.files[0], 'opopopopopops')
                 let file = e.target.files[0]
                 if (!file.type.includes('vnd.ms-excel')) {
                     this.$message.error('请上传CSV格式文件，谢谢！');
@@ -108,7 +106,24 @@
                     form.append('f1',file);
                     console.log(form, 'opopopopoppopop')
                     api.importfile.importFileData(form).then(res => {
-                        console.log(res, '导入成功')
+                        this.$message.success('导入成功');
+                        if(this.$route.path.includes("camera")){
+                            this.$emit("getAllCamera");
+                        }else if(this.$route.path.includes("broadcast")) {
+                            this.$emit("getAllBroadcast");
+                        }else if(this.$route.path.includes("monitors")){
+                            this.$emit("getAllMonitor");
+                        }else if(this.$route.path.includes("police")){
+                            this.$emit("getAllPolice");
+                        }else if(this.$route.path.includes("led")){
+                            this.$emit("getAllLed");
+                        }else if(this.$route.path.includes("wifi")){
+                            this.$emit("getAllWifi");
+                        }else if(this.$route.path.includes("gate")){
+                            this.$emit("getAllGate");
+                        }else if(this.$route.path.includes("lampLight")){
+                            this.$emit("getAllLight");
+                        }
                     }).catch(err => {
                         this.$message.error('导入失败，请稍后重试')
                         console.log(err, '导入失败')

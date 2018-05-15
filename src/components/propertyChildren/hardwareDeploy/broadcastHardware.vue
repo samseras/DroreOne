@@ -12,7 +12,8 @@
                         @search="search"
                         @fixedInfo="fixedInfo"
                         @choseType="choseType"
-                        @toggleList="toggleList">
+                        @toggleList="toggleList"
+                        @getAllBroadcast="getAllBroadcast">
                 </Header>
             </div>
 
