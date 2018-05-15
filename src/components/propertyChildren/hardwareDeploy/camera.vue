@@ -111,30 +111,89 @@
                 } else {
                     var form = new FormData();
                     form.append('f1',file);
-                    console.log(form, 'opopopopoppopop')
-                    api.importfile.importFileData(form).then(res => {
-                        this.$message.success('导入成功');
-                        if(this.$route.path.includes("camera")){
+                    if(this.$route.path.includes("broadcast")){
+                        form.append('type','1');
+                        console.log(form, 'opopopopoppopop')
+                        api.importfile.importFileData(form).then(res => {
+                            this.$message.success('导入成功');
                             this.$emit("getAllCamera");
-                        }else if(this.$route.path.includes("broadcast")) {
+                        }).catch(err => {
+                            this.$message.error('导入失败，请稍后重试')
+                            console.log(err, '导入失败')
+                        })
+
+                    }else if(this.$route.path.includes("camera")) {
+                        form.append('type','2');
+                        api.importfile.importFileData(form).then(res => {
+                            this.$message.success('导入成功');
                             this.$emit("getAllBroadcast");
-                        }else if(this.$route.path.includes("monitors")){
+                        }).catch(err => {
+                            this.$message.error('导入失败，请稍后重试')
+                            console.log(err, '导入失败')
+                        })
+
+                    }else if(this.$route.path.includes("monitors")){
+                        form.append('type','6');
+                        api.importfile.importFileData(form).then(res => {
+                            this.$message.success('导入成功');
                             this.$emit("getAllMonitor");
-                        }else if(this.$route.path.includes("police")){
+                        }).catch(err => {
+                            this.$message.error('导入失败，请稍后重试')
+                            console.log(err, '导入失败')
+                        })
+
+                    }else if(this.$route.path.includes("police")){
+                        form.append('type','8');
+                        api.importfile.importFileData(form).then(res => {
+                            this.$message.success('导入成功');
                             this.$emit("getAllPolice");
-                        }else if(this.$route.path.includes("led")){
+                        }).catch(err => {
+                            this.$message.error('导入失败，请稍后重试')
+                            console.log(err, '导入失败')
+                        })
+
+                    }else if(this.$route.path.includes("led")){
+                        form.append('type','4');
+                        api.importfile.importFileData(form).then(res => {
+                            this.$message.success('导入成功');
                             this.$emit("getAllLed");
-                        }else if(this.$route.path.includes("wifi")){
+                        }).catch(err => {
+                            this.$message.error('导入失败，请稍后重试')
+                            console.log(err, '导入失败')
+                        })
+
+                    }else if(this.$route.path.includes("wifi")){
+                        form.append('type','7');
+                        console.log(form, 'opopopopoppopop')
+                        api.importfile.importFileData(form).then(res => {
+                            this.$message.success('导入成功');
                             this.$emit("getAllWifi");
-                        }else if(this.$route.path.includes("gate")){
+                        }).catch(err => {
+                            this.$message.error('导入失败，请稍后重试')
+                            console.log(err, '导入失败')
+                        })
+
+                    }else if(this.$route.path.includes("gate")){
+                        form.append('type','3');
+                        api.importfile.importFileData(form).then(res => {
+                            this.$message.success('导入成功');
                             this.$emit("getAllGate");
-                        }else if(this.$route.path.includes("lampLight")){
+                        }).catch(err => {
+                            this.$message.error('导入失败，请稍后重试')
+                            console.log(err, '导入失败')
+                        })
+
+                    }else if(this.$route.path.includes("lampLight")){
+                        form.append('type','5');
+                        api.importfile.importFileData(form).then(res => {
+                            this.$message.success('导入成功');
                             this.$emit("getAllLight");
-                        }
-                    }).catch(err => {
-                        this.$message.error('导入失败，请稍后重试')
-                        console.log(err, '导入失败')
-                    })
+                        }).catch(err => {
+                            this.$message.error('导入失败，请稍后重试')
+                            console.log(err, '导入失败')
+                        })
+                    }
+
                 }
             },
 
