@@ -58,7 +58,7 @@
                         </el-table-column>
                         <el-table-column>
                             <template slot-scope="scope">
-                                <span @click="showPoliceDetail(scope.row, '报警柱信息')">查看</span>
+                                <span @click="showPoliceDetail(scope.row, '报警柱信息',true)">查看</span>
                                 <span class="line">|</span>
                                 <span @click="fixedInfo(scope.row.id )">编辑</span>
                                 <span class="line">|</span>
@@ -71,7 +71,7 @@
                         <div class="checkBox">
                             <el-checkbox v-model="item.checked" @change="checked(item.id)" class="checkBtn"></el-checkbox>
                         </div>
-                        <div class="personType" @click.stop="showPoliceDetail(item,'报警柱信息')">
+                        <div class="personType" @click.stop="showPoliceDetail(item,'报警柱信息',true)">
                             <img src="../../../../static/img/policeCard.png" alt="">
                             <span class="type">
                                   {{item.name}}
@@ -90,7 +90,7 @@
                           :Info="policeInfo"
                           :title="title"
                           :isDisabled="isDisabled"
-                          @closeInfoDialog="visible=false"
+                          @closeInfoDialog="closeDialog"
                           @addNewInfo="addPolice"
                           @fixInfo="fixInfo">
 
@@ -125,6 +125,9 @@
             }
         },
         methods:{
+            closeDialog () {
+                this.visible = false
+            },
             searchAnything (info) {
                 console.log(info, '这是要过滤的')
                 if (info.trim() !== '') {
@@ -153,12 +156,13 @@
                 this.multipleSelection = val;
             },
             addNewInfo(){
-                this.showPoliceDetail({},'添加报警柱信息')
+                this.showPoliceDetail({},'添加报警柱信息',false)
                 this.isDisabled=false
             },
-            showPoliceDetail(info,title){
+            showPoliceDetail(info,title,state){
                 this.policeInfo=info
                 this.visible=true
+                this.isDisabled = state
                 this.title=title
 
             },
@@ -181,6 +185,7 @@
                     longitude:longitude
                 }]
                 api.police.updatePolice(policeObj).then(res =>{
+                    this.closeDialog()
                   this.$message.success('修改成功')
                   this.choseInfoId = []
                   this.getAllPolice()
@@ -202,7 +207,7 @@
                             this.policeInfo=item
                         }
                     })
-                    this.showPoliceDetail(this.policeInfo,'修改报警柱信息')
+                    this.showPoliceDetail(this.policeInfo,'修改报警柱信息',false)
                     this.isDisabled=false
                 }else{
                     this.$message.error('请选择要修改的报警柱')
@@ -257,6 +262,7 @@
                     longitude:longitude
                 }]
                 api.police.createPolice(policeObj).then(res =>{
+                    this.closeDialog()
                     this.$message.success('添加成功')
                     this.getAllPolice()
                 }).catch(err =>{

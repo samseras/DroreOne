@@ -59,7 +59,7 @@
                         <el-table-column
                             label="操作">
                             <template slot-scope="scope">
-                                <span @click="showBroadDetail(scope.row, '广播信息')">查看</span>
+                                <span @click="showBroadDetail(scope.row, '广播信息', true)">查看</span>
                                 <span class="line">|</span>
                                 <span @click="fixedInfo(scope.row.id )">编辑</span>
                                 <span class="line">|</span>
@@ -73,7 +73,7 @@
                             <!--<input type="checkbox" :checked="item.checked" class="checkBtn" @change="checked(item.id)">-->
                             <el-checkbox v-model="item.checked" @change="checked(item.id)" class="checkBtn"></el-checkbox>
                         </div>
-                        <div class="personType" @click.stop="showBroadDetail(item,'广播信息')">
+                        <div class="personType" @click.stop="showBroadDetail(item,'广播信息',true)">
                             <img src="../../../../static/img/broadcastCard.png" alt="">
                             <span class="name">
                                   {{item.name}}
@@ -92,7 +92,7 @@
                           :Info="broadInfo"
                           :title="title"
                           :isDisabled="isDisabled"
-                          @closeInfoDialog="visible=false"
+                          @closeInfoDialog="closeDialog"
                           @addNewInfo="addBroad"
                           @fixInfo="fixInfo">
                 </HardWare>
@@ -127,6 +127,9 @@
             }
         },
         methods:{
+            closeDialog () {
+                this.visible = false
+            },
             handleSelectionChange(val) {
                 this.multipleSelection = val;
             },
@@ -155,12 +158,13 @@
                 }
             },
             addNewInfo(){
-                this.showBroadDetail({},'添加广播信息')
+                this.showBroadDetail({},'添加广播信息',false)
                 this.isDisabled=false
             },
-            showBroadDetail(info,title){
+            showBroadDetail(info,title, state){
                 this.broadInfo=info
                 this.visible=true
+                this.isDisabled = state
                 this.title=title
 
             },
@@ -233,6 +237,7 @@
                     longitude:longitude
                 }]
                 api.broadcast.updateBroadcast(broadObj).then(res =>{
+                    this.closeDialog()
                     this.$message.success('修改成功')
                     this.choseInfoId=[]
                     this.getAllBroadcast()
@@ -271,7 +276,7 @@
                             this.broadInfo=item
                         }
                     })
-                    this.showBroadDetail(this.broadInfo,'修改广播信息')
+                    this.showBroadDetail(this.broadInfo,'修改广播信息', false)
                     this.isDisabled=false
                 }else{
                     this.$message.error('请选择要修改的广播信息')
@@ -326,6 +331,7 @@
                     longitude:longitude
                 }]
                 api.broadcast.createBroadcast(broadObj).then(res =>{
+                    this.closeDialog()
                     this.$message.success('添加成功')
                     this.getAllBroadcast()
                 }).catch(err =>{

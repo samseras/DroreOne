@@ -48,7 +48,7 @@
                         <el-table-column
                             label="操作">
                             <template slot-scope="scope">
-                                <span @click="showPersonDetail(scope.row,'路网信息')">查看</span>
+                                <span @click="showPersonDetail(scope.row,'路网信息',true)">查看</span>
                                 <span class="line">|</span>
                                 <span @click="fixedInfo(scope.row.id )">编辑</span>
                                 <span class="line">|</span>
@@ -60,7 +60,7 @@
                         <div class="checkBox">
                             <el-checkbox v-model="item.checked" @change="checked(item.id)" class="checkBtn"></el-checkbox>
                         </div>
-                        <div class="personType" @click.stop="showPersonDetail(item, '路网信息')">
+                        <div class="personType" @click.stop="showPersonDetail(item, '路网信息',true)">
                             <img src="../../../../static/img/loadCard.png" alt="">
                             <span class="type">
                                   {{item.name}}
@@ -68,7 +68,7 @@
                         </div>
                         <div class="specificInfo">
                             <p class="sex">路线类型：<span>{{item.type | typeFilter}}</span></p>
-                            <p class="sex">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：<span>{{item.description}}</span></p>
+                            <p class="sex text">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：<span>{{item.description}}</span></p>
                         </div>
                     </div>
                 </ScrollContainer>
@@ -77,7 +77,7 @@
                               :Info="roatInfo"
                               :isDisabled="isDisabled"
                               :title="title"
-                              @closeInfoDialog ="visible = false"
+                              @closeInfoDialog ="closeDialog"
                               @fixInfo = "fixInfo"
                               @addNewInfo="addNewRoat">
                 </PersonDetail>
@@ -109,6 +109,9 @@
             }
         },
         methods: {
+            closeDialog () {
+                this.visible = false
+            },
             searchAnything (info) {
                 console.log(info, '这是要过滤的')
                 if (info.trim() !== '') {
@@ -247,6 +250,7 @@
                     type: info.type
                 }
                 api.deployRoad.updateRoute(JSON.stringify(roatObj)).then(res => {
+                    this.closeDialog()
                     console.log(res, '创建成功')
                     this.$message.success('修改成功')
                     this.choseInfoId = []
@@ -266,6 +270,7 @@
                     type: info.type
                 }
                 api.deployRoad.createRoute(JSON.stringify(roatObj)).then(res => {
+                    this.closeDialog()
                     console.log(res, '创建成功')
                     this.$message.success('创建成功')
                     this.getAllRoat()
@@ -274,6 +279,13 @@
                 })
             },
             fixedInfo () {
+                if (id) {
+                    this.choseInfoId.push(id)
+                }
+                if (this.choseInfoId.length > 1) {
+                    this.$message.warning('至多选择一个数据修改')
+                    return
+                }
                 if (this.choseInfoId.length > 0) {
                     this.roatList.map((item) => {
                         if (item.id === this.choseInfoId[0]){
@@ -283,7 +295,7 @@
                     this.showPersonDetail(this.roatInfo, '修改路网信息', false)
                     this.isDisabled = false
                 } else {
-                    this.$message.error('请选择要修改的人员')
+                    this.$message.error('请选择要修改的信息')
                 }
             },
             async getAllRoat () {
@@ -423,18 +435,39 @@
 
                         }
                         span{
+                            display: inline-block;
+                            width: rem(100);
                             float: right;
-                            margin-right: rem(20);
+                            text-align: right;
+                            padding-right: rem(5);
                             line-height: rem(20);
                             color: #fff;
+                            overflow: hidden;
+                            text-overflow: ellipsis;
+                            white-space: nowrap;
+                            box-sizing: border-box;
                         }
                     }
                     .specificInfo{
                         margin-top: rem(10);
                         font-size: rem(12);
+                        overflow: hidden;
+                        padding: 0 rem(10);
+                        box-sizing: border-box;
                         p{
-                            margin-left: rem(10);
                             line-height: rem(22);
+                        }
+                        .text{
+                            margin-left: 0;
+                            line-height: rem(22);
+                            display: inline-block;
+                            width: 100%;
+                            height: rem(65);
+                            overflow:hidden;
+                            text-overflow:ellipsis;
+                            display:-webkit-box;
+                            -webkit-box-orient:vertical;
+                            -webkit-line-clamp:3;
                         }
                     }
                 }
