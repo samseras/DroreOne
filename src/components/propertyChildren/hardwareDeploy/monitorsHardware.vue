@@ -9,9 +9,11 @@
                         @deletInfo="deletInfo"
                         @selectedAll="selectedAll"
                         @fixedInfo="fixedInfo"
+                        :choseId="choseInfoId"
                         @searchAnything="searchAnything"
                         @choseType="choseType"
-                        @toggleList="toggleList">
+                        @toggleList="toggleList"
+                        @getAllMonitor="getAllMonitor">
                 </Header>
             </div>
 
@@ -342,7 +344,7 @@
                         this.monitorsList[i].id=this.monitorsList[i].id
                         this.monitorsList[i].location=`${this.monitorsList[i].longitude},${this.monitorsList[i].latitude}`
                     }
-                    this.checkList = this,monitorsList
+                    this.checkList = this.monitorsList
                 }).catch((err)=>{
                     console.log(err)
                 })

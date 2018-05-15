@@ -9,9 +9,11 @@
                         @deletInfo="deletInfo"
                         @selectedAll="selectedAll"
                         @searchAnything="searchAnything"
+                        :choseId="choseInfoId"
                         @fixedInfo="fixedInfo"
                         @choseType="choseType"
-                        @toggleList="toggleList">
+                        @toggleList="toggleList"
+                        @getAllCamera="getAllCamera">
                 </Header>
             </div>
 
@@ -331,6 +333,7 @@
                 console.log(this.choseInfoId)
             },
             async getAllCamera () {
+                console.log("aaaaaaaaaaaaaaaaa")
                 this.isShowLoading = true
                 await api.camera.getAllCamera().then((res) => {
                     console.log(res, '这是请求回来的所有数据')

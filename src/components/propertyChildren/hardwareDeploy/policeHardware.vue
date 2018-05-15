@@ -10,8 +10,10 @@
                         @selectedAll="selectedAll"
                         @fixedInfo="fixedInfo"
                         @searchAnything="searchAnything"
+                        :choseId="choseInfoId"
                         @choseType="choseType"
-                        @toggleList="toggleList">
+                        @toggleList="toggleList"
+                        @getAllPolice="getAllPolice">
                 </Header>
             </div>
 
@@ -132,7 +134,7 @@
                 console.log(info, '这是要过滤的')
                 if (info.trim() !== '') {
                     this.policeList = this.checkList.filter(item => {
-                        if (item.regionName.includes(info)) {
+                        if (item.name.includes(info)) {
                             return item
                         }
                         if (item.ip && item.ip.includes(info)) {

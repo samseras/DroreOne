@@ -9,9 +9,12 @@
                         @deletInfo="deletInfo"
                         @selectedAll="selectedAll"
                         @fixedInfo="fixedInfo"
+                        :choseId="choseInfoId"
                         @searchAnything="searchAnything"
+
                         @choseType="choseType"
-                        @toggleList="toggleList">
+                        @toggleList="toggleList"
+                        @getAllLed="getAllLed">
                 </Header>
             </div>
 
