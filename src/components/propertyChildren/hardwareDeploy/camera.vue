@@ -115,7 +115,7 @@
                         console.log(form, 'opopopopoppopop')
                         api.importfile.importFileData(params).then(res => {
                             this.$message.success('导入成功');
-                            this.$emit("getAllCamera");
+                            this.$emit("getAllBroadcast");
                         }).catch(err => {
                             this.$message.error('导入失败，请稍后重试')
                             console.log(err, '导入失败')
@@ -126,7 +126,7 @@
                         params.type = '2';
                         api.importfile.importFileData(params).then(res => {
                             this.$message.success('导入成功');
-                            this.$emit("getAllBroadcast");
+                            this.$emit("getAllCamera");
                         }).catch(err => {
                             this.$message.error('导入失败，请稍后重试')
                             console.log(err, '导入失败')

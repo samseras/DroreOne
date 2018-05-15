@@ -62,7 +62,7 @@
                         <el-table-column
                             label="操作">
                             <template slot-scope="scope">
-                                <span @click="showPersonDetail(scope.row, '商圈信息')">查看</span>
+                                <span @click="showPersonDetail(scope.row, '商圈信息',true )">查看</span>
                                 <sapn class="line">|</sapn>
                                 <span @click="fixedInfo(scope.row.id )">编辑</span>
                                 <sapn class="line">|</sapn>
@@ -74,7 +74,7 @@
                         <div class="checkBox">
                             <el-checkbox v-model="item.checked" @change="checked(item.id)" class="checkBtn"></el-checkbox>
                         </div>
-                        <div class="personType" :class="getClass(item.businessBean.businessTypeId)" @click.stop="showPersonDetail(item, '商圈信息')">
+                        <div class="personType" :class="getClass(item.businessBean.businessTypeId)" @click.stop="showPersonDetail(item, '商圈信息',true)">
                             <img src="../../../../static/img/businesCard.png" alt="">
                             <span class="type">
                                   {{item.businessBean.name}}
@@ -93,7 +93,7 @@
                               :Info="shopInfo"
                               :isDisabled="isDisabled"
                               :title="title"
-                              @closeInfoDialog ="visible = false"
+                              @closeInfoDialog ="closeDialog"
                               @fixInfo = "fixInfo"
                               @addNewInfo="addNewPerson">
                 </PersonDetail>
@@ -126,6 +126,9 @@
             }
         },
         methods: {
+            closeDialog () {
+                this.visible = false
+            },
             searchAnything (info) {
                 console.log(info, '这是要过滤的')
                 if (info.trim() !== '') {
@@ -176,13 +179,14 @@
             handleSelectionChange(val) {
                 this.multipleSelection = val;
             },
-            showPersonDetail (info,title) {
+            showPersonDetail (info,title,state) {
                 this.shopInfo = info
                 this.visible = true
+                this.isDisabled = state
                 this.title = title
             },
             addNewInfo () {
-                this.showPersonDetail({businessBean:{}}, '添加商圈信息')
+                this.showPersonDetail({businessBean:{}}, '添加商圈信息', false)
                 this.isDisabled = false
             },
             deletInfo (id) {
@@ -289,6 +293,7 @@
                 }
                 console.log(shopObj, 'this is trashObj')
                 await api.shop.updateShop(JSON.stringify(shopObj)).then(res => {
+                    this.closeDialog()
                     console.log('修改成功')
                     this.$message.success('修改成功')
                     this.choseInfoId = []
@@ -312,6 +317,7 @@
                 }
                 console.log(shopObj, 'this is trashObj')
                 await api.shop.createShop(JSON.stringify(shopObj)).then(res => {
+                    this.closeDialog()
                     this.$message.success('添加成功')
                     console.log('增加成功')
                     this.getAllShop()
@@ -326,6 +332,7 @@
                 }
                 if (this.choseInfoId.length > 1) {
                     this.$message.warning('至多选择一个数据修改')
+                    return
                 }
                 if (this.choseInfoId.length > 0) {
                     this.shopList.map((item) => {
@@ -333,7 +340,7 @@
                             this.shopInfo = item
                         }
                     })
-                    this.showPersonDetail(this.shopInfo, '修改商圈信息')
+                    this.showPersonDetail(this.shopInfo, '修改商圈信息',false)
                     this.isDisabled = false
                     this.choseInfoId = []
                 } else {
@@ -458,10 +465,17 @@
 
                         }
                         span{
+                            display: inline-block;
+                            width: rem(100);
                             float: right;
-                            margin-right: rem(20);
+                            text-align: right;
+                            padding-right: rem(5);
                             line-height: rem(20);
                             color: #fff;
+                            overflow: hidden;
+                            text-overflow: ellipsis;
+                            white-space: nowrap;
+                            box-sizing: border-box;
                         }
                     }
                     .superMarket{

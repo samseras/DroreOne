@@ -48,7 +48,7 @@
                         <el-table-column
                             label="操作">
                             <template slot-scope="scope">
-                                <span @click="showPersonDetail(scope.row, '指示牌信息')">查看</span>
+                                <span @click="showPersonDetail(scope.row, '指示牌信息',true)">查看</span>
                                 <span class="line">|</span>
                                 <span @click="fixedInfo(scope.row.id )">编辑</span>
                                 <span class="line">|</span>
@@ -60,7 +60,7 @@
                         <div class="checkBox">
                             <el-checkbox v-model="item.checked" @change="checked(item.id)" class="checkBtn"></el-checkbox>
                         </div>
-                        <div class="personType":class="getClass(item.signboardBean.type)" @click.stop="showPersonDetail(item, '指示牌信息')">
+                        <div class="personType":class="getClass(item.signboardBean.type)" @click.stop="showPersonDetail(item, '指示牌信息',true)">
                             <img src="../../../../static/img/indicatorCard.png" alt="">
                             <span class="type">
                                 {{item.signboardBean.type | typeFilter}}
@@ -77,7 +77,7 @@
                               :Info="indicatorInfo"
                               :isDisabled="isDisabled"
                               :title="title"
-                              @closeInfoDialog ="visible = false"
+                              @closeInfoDialog ="closeDialog"
                               @fixInfo = "fixInfo"
                               @addNewInfo="addNewIndicator">
                 </DetailDialog>
@@ -109,6 +109,9 @@
             }
         },
         methods: {
+            closeDialog () {
+                this.visible = false
+            },
             searchAnything (info) {
                 console.log(info, '这是要过滤的')
                 if (info.trim() !== '') {
@@ -133,13 +136,14 @@
             handleSelectionChange(val) {
                 this.multipleSelection = val;
             },
-            showPersonDetail (info, title) {
+            showPersonDetail (info, title, state) {
                 this.indicatorInfo = info
                 this.visible = true
+                this.isDisabled = state
                 this.title = title
             },
             addNewInfo () {
-                this.showPersonDetail({signboardBean:{}}, '添加指示牌信息')
+                this.showPersonDetail({signboardBean:{}}, '添加指示牌信息', false)
                 this.isDisabled = false
             },
             deletInfo (id) {
@@ -251,6 +255,7 @@
                 }
                 console.log(indicatorObj, 'this is trashObj')
                 await api.indicator.updateIndicator(JSON.stringify(indicatorObj)).then(res => {
+                    this.closeDialog()
                     console.log('修改成功')
                     this.$message.success('修改成功')
                     this.choseInfoId = []
@@ -270,6 +275,7 @@
                     longitude: longitude
                 }
                 await api.indicator.createIndicator(JSON.stringify(indicatorObj)).then(res => {
+                    this.closeDialog()
                     console.log('增加成功')
                     this.$message.success('创建成功')
                     this.getAllIndicator()
@@ -284,6 +290,7 @@
                 }
                 if (this.choseInfoId.length > 1) {
                     this.$message.warning('至多选择一个数据修改')
+                    return
                 }
                 if (this.choseInfoId.length > 0) {
                     this.indicatorList.map((item) => {
@@ -291,7 +298,7 @@
                             this.indicatorInfo = item
                         }
                     })
-                    this.showPersonDetail(this.indicatorInfo, '修改指示牌信息')
+                    this.showPersonDetail(this.indicatorInfo, '修改指示牌信息', false)
                     this.isDisabled = false
                     this.choseInfoId = []
                 } else {
@@ -415,10 +422,17 @@
 
                         }
                         span{
+                            display: inline-block;
+                            width: rem(100);
                             float: right;
-                            margin-right: rem(20);
+                            text-align: right;
+                            padding-right: rem(5);
                             line-height: rem(20);
                             color: #fff;
+                            overflow: hidden;
+                            text-overflow: ellipsis;
+                            white-space: nowrap;
+                            box-sizing: border-box;
                         }
                     }
                     .facility{
