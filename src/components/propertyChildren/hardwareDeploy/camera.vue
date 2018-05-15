@@ -63,6 +63,7 @@
     import api from '@/api'
 
     export default{
+        props: ['choseId'],
         data(){
             return{
                 searchKeys:'',
@@ -115,9 +116,61 @@
                 }
             },
 
-            downloadFile(id){
-                console.log(id);
-                this.$emit('downloadInfo',id)
+            downloadFile(){
+//                this.$emit('downloadInfo',id)
+                let type
+                let route = this.$route.path
+                if (route.includes('broadcast')) {
+                    type = 1
+                }else if(route.includes('led')){
+                    type =4
+                }
+                if (this.choseId.length > 0) {
+                    api.exportFile.exportSingle(this.choseId).then((res) =>{
+                        console.log(res,'niaho')
+                        const content = res
+                        const blob = new Blob([content])
+                        const fileName = '测试.csv'
+                        if('download' in document.createElement('a')){
+                            const elink = document.createElement('a')
+                            elink.download = fileName
+                            elink.style.display = 'none'
+                            elink.href = URL.createObjectURL(blob)
+                            document.body.appendChild(elink)
+                            elink.click()
+                            URL.revokeObjectURL(elink.href) // 释放URL 对象
+                            document.body.removeChild(elink)
+                        }else{
+                            navigator.msSaveBlob(blob, fileName)
+                        }
+                        this.$message.success('导出成功')
+                        this.choseId=[]
+                    }).catch(err =>{
+                        this.$message.error('导出失败，请稍后再试')
+                    })
+                } else {
+                    api.exportFile.exportAll(type).then((res) => {
+                        console.log(res,'niaho')
+                        const content = res
+                        const blob = new Blob([content])
+                        const fileName = '测试.csv'
+                        if('download' in document.createElement('a')){
+                            const elink = document.createElement('a')
+                            elink.download = fileName
+                            elink.style.display = 'none'
+                            elink.href = URL.createObjectURL(blob)
+                            document.body.appendChild(elink)
+                            elink.click()
+                            URL.revokeObjectURL(elink.href) // 释放URL 对象
+                            document.body.removeChild(elink)
+                        }else{
+                            navigator.msSaveBlob(blob, fileName)
+                        }
+                        this.$message.success('导出成功')
+                    }).catch(err => {
+                        this.$message.error('导出失败，请稍后再试')
+                    })
+                }
             },
             toggleList(type){
                 this.$emit('toggleList',type)

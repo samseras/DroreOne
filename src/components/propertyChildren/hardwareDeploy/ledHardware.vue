@@ -9,6 +9,7 @@
                         @deletInfo="deletInfo"
                         @selectedAll="selectedAll"
                         @fixedInfo="fixedInfo"
+                        :choseId="choseInfoId"
                         @choseType="choseType"
                         @toggleList="toggleList">
                 </Header>
