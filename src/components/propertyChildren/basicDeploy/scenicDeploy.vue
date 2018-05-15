@@ -318,13 +318,13 @@
                         this.scenicList[i].scenicspotBean.currentNum = this.currentNum
                         // scenicspotBean.status
                         if (this.scenicList[i].scenicspotBean.capacity == 0) {
-                            this.scenicList[i].scenicspotBean.status = '已满'
+                            this.scenicList[i].scenicspotBean.statu = '已满'
                         } else {
                             let parcent = this.scenicList[i].scenicspotBean.currentNum/this.scenicList[i].scenicspotBean.capacity
                             if (parcent < .9){
-                                this.scenicList[i].scenicspotBean.status = '充裕'
+                                this.scenicList[i].scenicspotBean.statu = '充裕'
                             } else {
-                                this.scenicList[i].scenicspotBean.status = '已满'
+                                this.scenicList[i].scenicspotBean.statu = '已满'
                             }
                         }
                     }

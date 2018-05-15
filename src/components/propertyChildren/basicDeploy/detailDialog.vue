@@ -171,7 +171,7 @@
                     </p>
                     <p class="type" v-if="isDisabled">
                         状&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;态：
-                        <el-select v-model="indicator.scenicspotBean.status" placeholder="请选择" :disabled="isDisabled">
+                        <el-select v-model="scenic.scenicspotBean.statu" placeholder="请选择" :disabled="isDisabled">
                             <el-option label="充裕" value="充裕"></el-option>
                             <el-option label="已满" value="已满"></el-option>
                         </el-select>
@@ -905,6 +905,7 @@
             } else if(this.route.includes('indicator')) {
                 this.indicator = this.Info
             } else if(this.route.includes('scenic')) {
+                console.log(this.Info, '[][][][][[][][][')
                 this.scenic = this.Info
             } else if(this.route.includes('shop')) {
                 api.shop.getBusinesstype().then(res => {
