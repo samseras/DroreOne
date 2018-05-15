@@ -104,7 +104,8 @@
                 this.$emit('deletInfo')
             },
             selectFile(e){
-                let file = e.target.files[0]
+                let file = e.target.files[0];
+                let params = {};
                 if (!file.type.includes('vnd.ms-excel')) {
                     this.$message.error('请上传CSV格式文件，谢谢！');
                     return
@@ -112,9 +113,10 @@
                     var form = new FormData();
                     form.append('f1',file);
                     if(this.$route.path.includes("broadcast")){
-                        form.append('type','1');
+                        params.fileParam = form;
+                        params.type = '1';
                         console.log(form, 'opopopopoppopop')
-                        api.importfile.importFileData(form).then(res => {
+                        api.importfile.importFileData(params).then(res => {
                             this.$message.success('导入成功');
                             this.$emit("getAllCamera");
                         }).catch(err => {
@@ -123,8 +125,9 @@
                         })
 
                     }else if(this.$route.path.includes("camera")) {
-                        form.append('type','2');
-                        api.importfile.importFileData(form).then(res => {
+                        params.fileParam = form;
+                        params.type = '2';
+                        api.importfile.importFileData(params).then(res => {
                             this.$message.success('导入成功');
                             this.$emit("getAllBroadcast");
                         }).catch(err => {
@@ -133,8 +136,9 @@
                         })
 
                     }else if(this.$route.path.includes("monitors")){
-                        form.append('type','6');
-                        api.importfile.importFileData(form).then(res => {
+                        params.fileParam = form;
+                        params.type = '6';
+                        api.importfile.importFileData(params).then(res => {
                             this.$message.success('导入成功');
                             this.$emit("getAllMonitor");
                         }).catch(err => {
@@ -143,8 +147,9 @@
                         })
 
                     }else if(this.$route.path.includes("police")){
-                        form.append('type','8');
-                        api.importfile.importFileData(form).then(res => {
+                        params.fileParam = form;
+                        params.type = '8';
+                        api.importfile.importFileData(params).then(res => {
                             this.$message.success('导入成功');
                             this.$emit("getAllPolice");
                         }).catch(err => {
@@ -153,8 +158,9 @@
                         })
 
                     }else if(this.$route.path.includes("led")){
-                        form.append('type','4');
-                        api.importfile.importFileData(form).then(res => {
+                        params.fileParam = form;
+                        params.type = '4';
+                        api.importfile.importFileData(params).then(res => {
                             this.$message.success('导入成功');
                             this.$emit("getAllLed");
                         }).catch(err => {
@@ -163,9 +169,10 @@
                         })
 
                     }else if(this.$route.path.includes("wifi")){
-                        form.append('type','7');
+                        params.fileParam = form;
+                        params.type = '7';
                         console.log(form, 'opopopopoppopop')
-                        api.importfile.importFileData(form).then(res => {
+                        api.importfile.importFileData(params).then(res => {
                             this.$message.success('导入成功');
                             this.$emit("getAllWifi");
                         }).catch(err => {
@@ -174,8 +181,9 @@
                         })
 
                     }else if(this.$route.path.includes("gate")){
-                        form.append('type','3');
-                        api.importfile.importFileData(form).then(res => {
+                        params.fileParam = form;
+                        params.type = '3';
+                        api.importfile.importFileData(params).then(res => {
                             this.$message.success('导入成功');
                             this.$emit("getAllGate");
                         }).catch(err => {
@@ -184,8 +192,9 @@
                         })
 
                     }else if(this.$route.path.includes("lampLight")){
-                        form.append('type','5');
-                        api.importfile.importFileData(form).then(res => {
+                        params.fileParam = form;
+                        params.type = '5';
+                        api.importfile.importFileData(params).then(res => {
                             this.$message.success('导入成功');
                             this.$emit("getAllLight");
                         }).catch(err => {
@@ -193,7 +202,6 @@
                             console.log(err, '导入失败')
                         })
                     }
-
                 }
             },
 
