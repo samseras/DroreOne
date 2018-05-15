@@ -12,7 +12,8 @@
                         @searchAnything="searchAnything"
                         :choseId="choseInfoId"
                         @choseType="choseType"
-                        @toggleList="toggleList">
+                        @toggleList="toggleList"
+                        @getAllGate="getAllGate">
                 </Header>
             </div>
 

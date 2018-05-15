@@ -11,8 +11,9 @@
                         @searchAnything="searchAnything"
                         @fixedInfo="fixedInfo"
                         @choseType="choseType"
-                        :choseId="choseInfoId"
-                        @toggleList="toggleList">
+                        @toggleList="toggleList"
+                        @getAllBroadcast="getAllBroadcast"
+                        :choseId="choseInfoId">
                 </Header>
             </div>
 

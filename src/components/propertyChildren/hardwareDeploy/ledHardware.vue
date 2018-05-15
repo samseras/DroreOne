@@ -13,7 +13,8 @@
                         @searchAnything="searchAnything"
 
                         @choseType="choseType"
-                        @toggleList="toggleList">
+                        @toggleList="toggleList"
+                        @getAllLed="getAllLed">
                 </Header>
             </div>
 
