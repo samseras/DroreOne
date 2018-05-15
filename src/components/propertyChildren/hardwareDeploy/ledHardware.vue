@@ -9,6 +9,9 @@
                         @deletInfo="deletInfo"
                         @selectedAll="selectedAll"
                         @fixedInfo="fixedInfo"
+                        :choseId="choseInfoId"
+                        @searchAnything="searchAnything"
+
                         @choseType="choseType"
                         @toggleList="toggleList"
                         @getAllLed="getAllLed">
@@ -126,6 +129,30 @@
             }
         },
         methods:{
+            searchAnything (info) {
+                console.log(info, '这是要过滤的')
+                if (info.trim() !== '') {
+                    this.ledList = this.checkList.filter(item => {
+                        if (item.regionName.includes(info)) {
+                            return item
+                        }
+                        if (item.ip && item.ip.includes(info)) {
+                            return item
+                        }
+                        if (item.name.includes(info)) {
+                            return item
+                        }
+                        if (item.modelName && item.modelName.includes(info)) {
+                            return item
+                        }
+                        if (item.description && item.description.includes(info)) {
+                            return item
+                        }
+                    })
+                } else {
+                    this.getAllLed()
+                }
+            },
             handleSelectionChange(val) {
                 this.multipleSelection = val;
             },
@@ -325,6 +352,7 @@
                         this.ledList[i].location=`${this.ledList[i].longitude},${this.ledList[i].latitude}`
                         this.ledList[i].area=`${this.ledList[i].screenWidth},${this.ledList[i].screenHeight}`
                     }
+                    this.checkList = this.ledList
                 }).catch((err)=>{
                     console.log(err)
                 })

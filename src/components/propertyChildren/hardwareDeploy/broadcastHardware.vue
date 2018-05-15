@@ -9,11 +9,12 @@
                         @deletInfo="deletInfo"
                         @selectedAll="selectedAll"
                         @downloadInfo="downloadInfo"
-                        @search="search"
+                        @searchAnything="searchAnything"
                         @fixedInfo="fixedInfo"
                         @choseType="choseType"
                         @toggleList="toggleList"
-                        @getAllBroadcast="getAllBroadcast">
+                        @getAllBroadcast="getAllBroadcast"
+                        :choseId="choseInfoId">
                 </Header>
             </div>
 
@@ -114,9 +115,7 @@
                 key:'',
                 isShowBroadCard:true,
                 visible:false,
-                broadList:[
-
-                ],
+                broadList:[],
                 checkList:[],
                 isSelected:false,
                 broadInfo:{},
@@ -124,6 +123,7 @@
                 choseList:[],
                 isDisabled:true,
                 filterList: [],
+                choseId:[],
 
                 title:'',
                 isShowLoading:false
@@ -133,22 +133,29 @@
             handleSelectionChange(val) {
                 this.multipleSelection = val;
             },
-            search(info){
-                if(info !== ''){
-                    this.broadList= this.broadList.filter((item) =>{
-                       if(item.name.indexOf(info) > -1) {
-                           return item
-                       }
+            searchAnything (info) {
+                console.log(info, '这是要过滤的')
+                if (info.trim() !== '') {
+                    this.broadList = this.checkList.filter(item => {
+                        if (item.regionName.includes(info)) {
+                            return item
+                        }
+                        if (item.ip && item.ip.includes(info)) {
+                            return item
+                        }
+                        if (item.name.includes(info)) {
+                            return item
+                        }
+                        if (item.modelName && item.modelName.includes(info)) {
+                            return item
+                        }
+                        if (item.description && item.description.includes(info)) {
+                            return item
+                        }
                     })
+                } else {
+                    this.getAllBroadcast()
                 }
-//                if(info.trim() !== ''){
-//                    this.broadList = this.broadList.filter((item) =>{
-//                        if (item.name.includes(info)) {
-//                            return item
-//                        }
-//                    })
-//                }
-                return this.broadList
             },
             addNewInfo(){
                 this.showBroadDetail({},'添加广播信息')
@@ -160,55 +167,55 @@
                 this.title=title
 
             },
-            downloadInfo(){
-                if(this.choseInfoId.length >0){
-                    api.broadcast.exportBroadcast(this.choseInfoId).then((res) =>{
-                        console.log(res,'niaho')
-                        const content = res
-                        const blob = new Blob([content])
-                        const fileName = '测试.csv'
-                        if('download' in document.createElement('a')){
-                            const elink = document.createElement('a')
-                            elink.download = fileName
-                            elink.style.display = 'none'
-                            elink.href = URL.createObjectURL(blob)
-                            document.body.appendChild(elink)
-                            elink.click()
-                            URL.revokeObjectURL(elink.href) // 释放URL 对象
-                            document.body.removeChild(elink)
-                        }else{
-                            navigator.msSaveBlob(blob, fileName)
-                        }
-                        this.$message.success('导出成功')
-                        this.choseInfoId=[]
-                    }).catch(err =>{
-                        this.$message.error('导出失败，请稍后再试')
-                    })
-                }else{
-                    api.broadcast.exportAllBroadcast().then((res) =>{
-                        console.log(res,'niaho')
-                        const content = res
-                        const blob = new Blob([content])
-                        const fileName = '测试.csv'
-                        if('download' in document.createElement('a')){
-                            const elink = document.createElement('a')
-                            elink.download = fileName
-                            elink.style.display = 'none'
-                            elink.href = URL.createObjectURL(blob)
-                            document.body.appendChild(elink)
-                            elink.click()
-                            URL.revokeObjectURL(elink.href) // 释放URL 对象
-                            document.body.removeChild(elink)
-                        }else{
-                            navigator.msSaveBlob(blob, fileName)
-                        }
-                        this.$message.success('导出成功')
-                    }).catch(err =>{
-                        this.$message.error('导出失败，请稍后再试')
-                    })
-                }
-
-            },
+//            downloadInfo(){
+//                if(this.choseInfoId.length >0){
+//                    api.broadcast.exportBroadcast(this.choseInfoId).then((res) =>{
+//                        console.log(res,'niaho')
+//                        const content = res
+//                        const blob = new Blob([content])
+//                        const fileName = '测试.csv'
+//                        if('download' in document.createElement('a')){
+//                            const elink = document.createElement('a')
+//                            elink.download = fileName
+//                            elink.style.display = 'none'
+//                            elink.href = URL.createObjectURL(blob)
+//                            document.body.appendChild(elink)
+//                            elink.click()
+//                            URL.revokeObjectURL(elink.href) // 释放URL 对象
+//                            document.body.removeChild(elink)
+//                        }else{
+//                            navigator.msSaveBlob(blob, fileName)
+//                        }
+//                        this.$message.success('导出成功')
+//                        this.choseInfoId=[]
+//                    }).catch(err =>{
+//                        this.$message.error('导出失败，请稍后再试')
+//                    })
+//                }else{
+//                    api.broadcast.exportAllBroadcast().then((res) =>{
+//                        console.log(res,'niaho')
+//                        const content = res
+//                        const blob = new Blob([content])
+//                        const fileName = '测试.csv'
+//                        if('download' in document.createElement('a')){
+//                            const elink = document.createElement('a')
+//                            elink.download = fileName
+//                            elink.style.display = 'none'
+//                            elink.href = URL.createObjectURL(blob)
+//                            document.body.appendChild(elink)
+//                            elink.click()
+//                            URL.revokeObjectURL(elink.href) // 释放URL 对象
+//                            document.body.removeChild(elink)
+//                        }else{
+//                            navigator.msSaveBlob(blob, fileName)
+//                        }
+//                        this.$message.success('导出成功')
+//                    }).catch(err =>{
+//                        this.$message.error('导出失败，请稍后再试')
+//                    })
+//                }
+//
+//            },
 
 
             fixInfo(info){
@@ -405,6 +412,7 @@
                         this.broadList[i].id=this.broadList[i].id
                         this.broadList[i].location=`${this.broadList[i].longitude},${this.broadList[i].latitude}`
                     }
+                    this.checkList = this.broadList
                 }).catch((err)=>{
                     console.log(err)
                     this.isShowLoading=false

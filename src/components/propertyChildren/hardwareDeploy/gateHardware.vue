@@ -9,6 +9,7 @@
                         @deletInfo="deletInfo"
                         @selectedAll="selectedAll"
                         @fixedInfo="fixedInfo"
+                        @searchAnything="searchAnything"
                         @choseType="choseType"
                         @toggleList="toggleList"
                         @getAllGate="getAllGate">
@@ -127,6 +128,30 @@
             }
         },
         methods:{
+            searchAnything (info) {
+                console.log(info, '这是要过滤的')
+                if (info.trim() !== '') {
+                    this.gateList = this.checkList.filter(item => {
+                        if (item.regionName.includes(info)) {
+                            return item
+                        }
+                        if (item.ip && item.ip.includes(info)) {
+                            return item
+                        }
+                        if (item.name.includes(info)) {
+                            return item
+                        }
+                        if (item.modelName && item.modelName.includes(info)) {
+                            return item
+                        }
+                        if (item.description && item.description.includes(info)) {
+                            return item
+                        }
+                    })
+                } else {
+                    this.getAllGate()
+                }
+            },
             handleSelectionChange(val){
                 this.multipleSelection = val;
             },
@@ -319,6 +344,7 @@
                         this.gateList[i].status=true
                         this.gateList[i].location=`${this.gateList[i].longitude},${this.gateList[i].latitude}`
                     }
+                    this.checkList = this.gateList
                 }).catch((err)=>{
                     console.log(err)
                 })

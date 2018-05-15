@@ -10,7 +10,8 @@
                         @toggleList = "toggleList"
                         @choseType = 'choseType'
                         @selectedAll = 'selectedAll'
-                        @fixedInfo = 'fixedInfo'>
+                        @fixedInfo = 'fixedInfo'
+                        @searchAnything="searchAnything">
                 </Header>
             </div>
             <div class="personList" v-loading="isShowLoading">
@@ -37,7 +38,7 @@
                             label="路线类型"
                             width="120">
                             <template slot-scope="scope">
-                                <span>{{scope.row.type | typeFilter}}</span>
+                                <span>{{scope.row.routeType}}</span>
                             </template>
                         </el-table-column>
                         <el-table-column
@@ -108,6 +109,21 @@
             }
         },
         methods: {
+            searchAnything (info) {
+                console.log(info, '这是要过滤的')
+                if (info.trim() !== '') {
+                    this.roatList = this.checkList.filter(item => {
+                        if (item.name.includes(info)) {
+                            return item
+                        }
+                        if (item.routeType.includes(info)) {
+                            return item
+                        }
+                    })
+                } else {
+                    this.getAllRoat()
+                }
+            },
             handleSelectionChange(val) {
                 this.multipleSelection = val;
             },
@@ -280,7 +296,20 @@
                         this.roatList[i].checked = false
                         this.roatList[i].status = true
                         this.roatList[i].location = this.roatList[i].geo
+                        if (this.roatList[i].type == 1) {
+                            this.roatList[i].routeType = '水路'
+                        }
+                        if (this.roatList[i].type == 2) {
+                            this.roatList[i].routeType = '公交道路'
+                        }
+                        if (this.roatList[i].type == 3) {
+                            this.roatList[i].routeType = '步行道路'
+                        }
+                        if (this.roatList[i].type == 4) {
+                            this.roatList[i].routeType = '驾车路线'
+                        }
                     }
+                    this.checkList = this.roatList
                 }).catch(err => {
                     console.log(err, '请求失败')
                 })

@@ -1,7 +1,7 @@
 <template>
     <div class="funHeader">
         <div class="searchInfo">
-            <input type="text" placeholder="Search Anything">
+            <input type="text" placeholder="请输入搜索内容" v-model="searchContent" @keyup="startSearch">
             <i class="el-icon-search"></i>
         </div>
         <div class="funcBtn">
@@ -77,10 +77,16 @@
                 ],
                 route: '',
                 isSelected: false,
-                isShowHeader: true
+                isShowHeader: true,
+                searchContent: ''
             }
         },
         methods: {
+            startSearch () {
+                // if (this.searchContent !== '') {
+                    this.$emit('searchAnything', this.searchContent)
+                // }
+            },
             addNewInfo () {
                 // console.log(this.$route.path, 'opop')
                 this.$emit('addNewInfo')
