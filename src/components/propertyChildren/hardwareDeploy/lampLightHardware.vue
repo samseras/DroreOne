@@ -9,6 +9,7 @@
                         @deletInfo="deletInfo"
                         @selectedAll="selectedAll"
                         @fixedInfo="fixedInfo"
+                        @searchAnything="searchAnything"
                         @choseType="choseType"
                         @toggleList="toggleList">
                 </Header>
@@ -115,13 +116,7 @@
             return{
                 isShowLightDetail:true,
                 visible:false,
-                lightList:[
-                    {id:1,name:'路灯编号',type:'已通电',area:'A-片区',describe:'路灯介绍'},
-                    {id:2,name:'路灯编号',type:'已通电',area:'A-片区',describe:'路灯介绍'},
-                    {id:4,name:'路灯编号',type:'已通电',area:'A-片区',describe:'路灯介绍'},
-                    {id:5,name:'路灯编号',type:'已通电',area:'A-片区',describe:'路灯介绍'},
-                    {id:6,name:'路灯编号',type:'已通电',area:'A-片区',describe:'路灯介绍'}
-                ],
+                lightList:[ ],
                 checkList:[],
                 isSelected:false,
                 lightInfo:{},
@@ -134,6 +129,27 @@
             }
         },
         methods:{
+            searchAnything (info) {
+                console.log(info, '这是要过滤的')
+                if (info.trim() !== '') {
+                    this.lightList = this.checkList.filter(item => {
+                        if (item.regionName && item.regionName.includes(info)) {
+                            return item
+                        }
+                        if (item.name.includes(info)) {
+                            return item
+                        }
+                        if (item.modelName && item.modelName.includes(info)) {
+                            return item
+                        }
+                        if (item.description && item.description.includes(info)) {
+                            return item
+                        }
+                    })
+                } else {
+                    this.getAllLight()
+                }
+            },
             handleSelectionChange(val){
                 this.multipleSelection = val;
             },
@@ -318,6 +334,7 @@
 
                         this.lightList[i].location=`${this.lightList[i].longitude},${this.lightList[i].latitude}`
                     }
+                    this.checkList = this.lightList
                 }).catch((err)=>{
                     console.log(err)
                 })

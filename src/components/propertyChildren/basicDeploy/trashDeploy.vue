@@ -10,7 +10,8 @@
                         @toggleList = "toggleList"
                         @choseType = 'choseType'
                         @selectedAll = 'selectedAll'
-                        @fixedInfo = 'fixedInfo'>
+                        @fixedInfo = 'fixedInfo'
+                        @searchAnything="searchAnything">
                 </Header>
             </div>
             <div class="personList" v-loading="isShowLoading">
@@ -74,6 +75,7 @@
                                 </span>
                         </div>
                         <div class="specificInfo">
+                            <p class="name">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称：<span>{{item.dustbinBean.name}}</span></p>
                             <p class="name">所属区域：<span>{{item.regionName}}</span></p>
                             <p class="sex" v-if="false">状&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;态：<span>{{item.dustbinBean.status}}</span></p>
                             <p class="phoneNum">垃圾筒数：<span>{{item.dustbinBean.dustbinCount}}</span></p>
@@ -117,6 +119,21 @@
             }
         },
         methods : {
+            searchAnything (info) {
+                console.log(info, '这是要过滤的')
+                if (info.trim() !== '') {
+                    this.trashList = this.checkList.filter(item => {
+                        if (item.regionName && item.regionName.includes(info)) {
+                            return item
+                        }
+                        if (item.dustbinBean.name.includes(info)) {
+                            return item
+                        }
+                    })
+                } else {
+                    this.getAllTrash()
+                }
+            },
             handleSelectionChange(val) {
                 this.multipleSelection = val;
             },
@@ -303,6 +320,7 @@
                         this.trashList[i].status = true
                         this.trashList[i].id = this.trashList[i].dustbinBean.id
                     }
+                    this.checkList = this.trashList
                 }).catch(err => {
                     console.log(err)
                     this.isShowLoading = false

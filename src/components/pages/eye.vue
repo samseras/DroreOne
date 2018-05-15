@@ -205,7 +205,7 @@
             }
         },
         methods: {
-            ...mapMutations(['SEARCH_INFO']),
+            ...mapMutations(['SEARCH_INFO','SHOW_SEARCH']),
             changeLanguage () {// 语言切换
                 if (this.$i18n.locale === 'CN'){
                     this.$i18n.locale = 'EN'
@@ -218,6 +218,7 @@
             },
             goModule(item, index) {
                 console.log(item,'opo')
+                this.$store.commit('SHOW_SEARCH', false)
                 this.activeIndex = index;
                 switch (item) {
                     case 'message.homePage':
@@ -307,12 +308,22 @@
                 console.log(item, '[][][][]]]')
                 this.searchContent = item.name
                 this.$store.commit('SEARCH_INFO', item)
+                this.$store.commit('SHOW_SEARCH', true)
                 this.searchList = []
                 for (let i = 0; i<this.facilityType.length; i++) {
                     if (item.entityType === this.facilityType[i].type ) {
                         this.$router.push(this.facilityType[i].route)
+                        if (this.facilityType[i].route.includes('facility')) {
+                            this.activeIndex = 1
+                        } else {
+                            this.activeIndex = 0
+                        }
                     }
                 }
+                console.log(item, '[][][][]]]')
+                this.searchContent = item.name
+                this.$store.commit('SEARCH_INFO', item)
+                this.searchList = []
             }
         },
         components: {}
@@ -344,6 +355,9 @@
         }
         .el-menu-demo,.el-menu--horizontal,.el-menu{
             background-color: transparent;
+            /*border: none;*/
+        }
+        .func .el-menu{
             border: none;
         }
         /*.el-menu-demo,.el-menu--horizontal,.el-menu:hover{*/

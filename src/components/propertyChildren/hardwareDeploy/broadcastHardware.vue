@@ -8,7 +8,8 @@
                 <Header @addNewInfo="addNewInfo"
                         @deletInfo="deletInfo"
                         @selectedAll="selectedAll"
-                        @search="search"
+                        @downloadInfo="downloadInfo"
+                        @searchAnything="searchAnything"
                         @fixedInfo="fixedInfo"
                         @choseType="choseType"
                         :choseId="choseInfoId"
@@ -113,9 +114,7 @@
                 key:'',
                 isShowBroadCard:true,
                 visible:false,
-                broadList:[
-
-                ],
+                broadList:[],
                 checkList:[],
                 isSelected:false,
                 broadInfo:{},
@@ -133,22 +132,29 @@
             handleSelectionChange(val) {
                 this.multipleSelection = val;
             },
-            search(info){
-                if(info !== ''){
-                    this.broadList= this.broadList.filter((item) =>{
-                       if(item.name.indexOf(info) > -1) {
-                           return item
-                       }
+            searchAnything (info) {
+                console.log(info, '这是要过滤的')
+                if (info.trim() !== '') {
+                    this.broadList = this.checkList.filter(item => {
+                        if (item.regionName.includes(info)) {
+                            return item
+                        }
+                        if (item.ip && item.ip.includes(info)) {
+                            return item
+                        }
+                        if (item.name.includes(info)) {
+                            return item
+                        }
+                        if (item.modelName && item.modelName.includes(info)) {
+                            return item
+                        }
+                        if (item.description && item.description.includes(info)) {
+                            return item
+                        }
                     })
+                } else {
+                    this.getAllBroadcast()
                 }
-//                if(info.trim() !== ''){
-//                    this.broadList = this.broadList.filter((item) =>{
-//                        if (item.name.includes(info)) {
-//                            return item
-//                        }
-//                    })
-//                }
-                return this.broadList
             },
             addNewInfo(){
                 this.showBroadDetail({},'添加广播信息')
@@ -405,6 +411,7 @@
                         this.broadList[i].id=this.broadList[i].id
                         this.broadList[i].location=`${this.broadList[i].longitude},${this.broadList[i].latitude}`
                     }
+                    this.checkList = this.broadList
                 }).catch((err)=>{
                     console.log(err)
                     this.isShowLoading=false

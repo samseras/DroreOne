@@ -10,7 +10,8 @@
                         @toggleList = "toggleList"
                         @choseType = 'choseType'
                         @selectedAll = 'selectedAll'
-                        @fixedInfo = 'fixedInfo'>
+                        @fixedInfo = 'fixedInfo'
+                        @searchAnything="searchAnything">
                 </Header>
             </div>
             <div class="personList" v-loading="isShowLoading">
@@ -125,6 +126,24 @@
             }
         },
         methods: {
+            searchAnything (info) {
+                console.log(info, '这是要过滤的')
+                if (info.trim() !== '') {
+                    this.shopList = this.checkList.filter(item => {
+                        if (item.businessTypeName.includes(info)) {
+                            return item
+                        }
+                        if (item.regionName.includes(info)) {
+                            return item
+                        }
+                        if (item.businessBean.name.includes(info)) {
+                            return item
+                        }
+                    })
+                } else {
+                    this.getAllShop()
+                }
+            },
             getClass (type) {
                switch (type) {
                    case 1 :{
@@ -344,6 +363,7 @@
                             }
                         }
                     }
+                    this.checkList = this.shopList
                 }).catch(err => {
                     console.log(err)
                     this.isShowLoading = false

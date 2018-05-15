@@ -10,7 +10,8 @@
                         @toggleList = "toggleList"
                         @choseType = 'choseType'
                         @selectedAll = 'selectedAll'
-                        @fixedInfo = 'fixedInfo'>
+                        @fixedInfo = 'fixedInfo'
+                        @searchAnything="searchAnything">
                 </Header>
             </div>
             <div class="personList" v-loading="isShowLoading">
@@ -108,6 +109,18 @@
             }
         },
         methods: {
+            searchAnything (info) {
+                console.log(info, '这是要过滤的')
+                if (info.trim() !== '') {
+                    this.indicatorList = this.checkList.filter(item => {
+                        if (item.regionName.includes(info)) {
+                            return item
+                        }
+                    })
+                } else {
+                    this.getAllIndicator()
+                }
+            },
             getClass(type){
                 if (type == 0){
                     return 'slogan'
@@ -297,6 +310,7 @@
                         this.indicatorList[i].id = this.indicatorList[i].signboardBean.id
                         this.indicatorList[i].location = `${this.indicatorList[i].longitude},${this.indicatorList[i].latitude}`
                     }
+                    this.checkList =this.indicatorList
                 }).catch(err => {
                     console.log(err)
                     this.isShowLoading = false

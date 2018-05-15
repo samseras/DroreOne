@@ -10,7 +10,8 @@
                         @toggleList = "toggleList"
                         @choseType = 'choseType'
                         @selectedAll = 'selectedAll'
-                        @fixedInfo = 'fixedInfo'>
+                        @fixedInfo = 'fixedInfo'
+                        @searchAnything="searchAnything">
                 </Header>
             </div>
             <div class="personList" v-loading="isShowLoading">
@@ -119,6 +120,21 @@
             }
         },
         methods: {
+            searchAnything (info) {
+                console.log(info, '这是要过滤的')
+                if (info.trim() !== '') {
+                    this.scenicList = this.checkList.filter(item => {
+                        if (item.regionName.includes(info)) {
+                            return item
+                        }
+                        if (item.scenicspotBean.name.includes(info)) {
+                            return item
+                        }
+                    })
+                } else {
+                    this.getAllScenic()
+                }
+            },
             handleSelectionChange(val) {
                 this.multipleSelection = val;
             },
@@ -305,6 +321,7 @@
                             }
                         }
                     }
+                    this.checkList = this.scenicList
                 }).catch((err)=> {
                     console.log(err)
                     this.isShowLoading = false

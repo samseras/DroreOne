@@ -1,7 +1,7 @@
 <template>
     <div class="cameraTitle">
         <div class="titleSearch">
-            <input type="text" placeholder="Search Anything" v-model="searchKeys">
+            <input type="text" placeholder="请输入搜索内容" v-model="searchContent" @keyup="startSearch">
             <i class="el-icon-search" @click="search"></i>
         </div>
         <div class="titleBtn">
@@ -84,10 +84,16 @@
                 ],
                 route:'',
                 isSelected:false,
-                isShowJobType:true
+                isShowJobType:true,
+                searchContent:''
             }
         },
         methods:{
+            startSearch () {
+                // if (this.searchContent !== '') {
+                this.$emit('searchAnything', this.searchContent)
+                // }
+            },
             search(){
                 this.$emit('search', this.searchKeys)
             },
@@ -98,6 +104,7 @@
                 this.$emit('deletInfo')
             },
             selectFile(e){
+                console.log(this.$route.path)
                 console.log(e.target.files[0], 'opopopopopops')
                 let file = e.target.files[0]
                 if (!file.type.includes('vnd.ms-excel')) {
@@ -211,10 +218,10 @@
             margin-right: rem(2);
         }
         .importFile{
-            width: 0;
-            height: 0;
-            display: none;
-        }
+             width: 0;
+             height: 0;
+             display: none;
+         }
     }
 </style>
 
