@@ -2,7 +2,7 @@
     <div class="cameraTitle">
         <div class="titleSearch">
             <input type="text" placeholder="请输入搜索内容" v-model="searchContent" @keyup="startSearch">
-            <i class="el-icon-search" @click="search"></i>
+            <i class="el-icon-search"></i>
         </div>
         <div class="titleBtn">
             <el-button size="mini" plain @click="addNewInfo"><i class="el-icon-circle-plus"></i>添加</el-button>
@@ -93,9 +93,6 @@
                 // if (this.searchContent !== '') {
                 this.$emit('searchAnything', this.searchContent)
                 // }
-            },
-            search(){
-                this.$emit('search', this.searchKeys)
             },
             addNewInfo(){
                 this.$emit('addNewInfo')
@@ -211,8 +208,20 @@
                 let route = this.$route.path
                 if (route.includes('broadcast')) {
                     type = 1
-                }else if(route.includes('led')){
+                }else if(route.includes('camera')){
+                    type = 2
+                }else if(route.includes('gate')){
+                    type = 3
+                } else if(route.includes('led')){
                     type =4
+                }else if(route.includes('lampLight')){
+                    type = 5
+                }else if(route.includes('monitors')){
+                    type = 6
+                }else if(route.includes('wifi')){
+                    type = 7
+                }else if(route.includes('police')){
+                    type = 8
                 }
                 if (this.choseId.length > 0) {
                     api.exportFile.exportSingle(this.choseId).then((res) =>{
@@ -233,7 +242,7 @@
                             navigator.msSaveBlob(blob, fileName)
                         }
                         this.$message.success('导出成功')
-                        this.choseId=[]
+//                        this.choseId=[]
                     }).catch(err =>{
                         this.$message.error('导出失败，请稍后再试')
                     })

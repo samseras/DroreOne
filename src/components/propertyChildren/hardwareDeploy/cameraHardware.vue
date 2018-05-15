@@ -9,6 +9,7 @@
                         @deletInfo="deletInfo"
                         @selectedAll="selectedAll"
                         @searchAnything="searchAnything"
+                        :choseId="choseInfoId"
                         @fixedInfo="fixedInfo"
                         @choseType="choseType"
                         @toggleList="toggleList"
