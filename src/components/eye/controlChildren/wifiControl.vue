@@ -1,6 +1,6 @@
 <template>
     <div class="wifi">
-        这是环境监测
+        这是wifi
     </div>
 </template>
 
