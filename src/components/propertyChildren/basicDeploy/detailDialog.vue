@@ -307,7 +307,7 @@
                     <p class="phoneNum">位置范围：
                         <span>{{area.location}}</span><i class="el-icon-location-outline" @click="showMapDialog"></i>
                     </p>
-                    <p class="type">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：
+                    <p class="textarea">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：
                         <el-input type="textarea"  v-model="area.description" :disabled="isDisabled" ></el-input>
                     </p>
                 </div>
@@ -328,7 +328,7 @@
                             <el-option label="驾车路线" :value="4"></el-option>
                         </el-select>
                     </p>
-                    <p class="type">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：
+                    <p class="textarea">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：
                         <el-input type="textarea"  v-model="roat.description" :disabled="isDisabled" ></el-input>
                     </p>
                 </div>
@@ -383,7 +383,7 @@
                     <p class="phoneNum">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置：
                         <span>{{tree.location}}</span><i class="el-icon-location-outline" @click="showMapDialog"></i>
                     </p>
-                    <p class="type">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：
+                    <p class="textarea">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：
                         <el-input type="textarea"  v-model="tree.plant.description" :disabled="isDisabled" ></el-input>
                     </p>
                 </div>
@@ -419,7 +419,7 @@
                     <p class="phoneNum">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置：
                         <span>{{build.location}}</span><i class="el-icon-location-outline" @click="showMapDialog"></i>
                     </p>
-                    <p class="type">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：
+                    <p class="textarea">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：
                         <el-input type="textarea"  v-model="build.building.description" :disabled="isDisabled" ></el-input>
                     </p>
                 </div>
@@ -1032,7 +1032,7 @@
             margin-top: rem(-3);
         }
         .data .el-input__inner{
-            padding-left: rem(30);
+            padding-left: rem(10);
         }
         .el-input__inner{
             border: none;
@@ -1440,6 +1440,9 @@
                         box-sizing: border-box;
                         border-radius: rem(5);
                     }
+                }
+                .textarea{
+                    border-bottom: 1px solid transparent;
                 }
                 .basicType{
                     text-align: center;
