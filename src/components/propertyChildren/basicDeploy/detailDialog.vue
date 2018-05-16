@@ -308,8 +308,7 @@
                         <span>{{area.location}}</span><i class="el-icon-location-outline" @click="showMapDialog"></i>
                     </p>
                     <p class="type">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：
-                        <textarea name="" v-model="area.description" cols="30"
-                                                                               rows="5" placeholder="请输入描述信息"></textarea>
+                        <el-input type="textarea"  v-model="area.description" :disabled="isDisabled" ></el-input>
                     </p>
                 </div>
                 <!--路网-->
@@ -330,8 +329,7 @@
                         </el-select>
                     </p>
                     <p class="type">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：
-                        <textarea name=""v-model="roat.description" cols="30"
-                                                                               rows="5" placeholder="请输入描述信息"></textarea>
+                        <el-input type="textarea"  v-model="roat.description" :disabled="isDisabled" ></el-input>
                     </p>
                 </div>
                 <!--设施类行-->
@@ -386,8 +384,7 @@
                         <span>{{tree.location}}</span><i class="el-icon-location-outline" @click="showMapDialog"></i>
                     </p>
                     <p class="type">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：
-                        <textarea name="" v-model="tree.plant.description" cols="30"
-                                                                               rows="5" placeholder="请输入描述信息"></textarea>
+                        <el-input type="textarea"  v-model="tree.plant.description" :disabled="isDisabled" ></el-input>
                     </p>
                 </div>
                 <!--建筑-->
@@ -423,8 +420,7 @@
                         <span>{{build.location}}</span><i class="el-icon-location-outline" @click="showMapDialog"></i>
                     </p>
                     <p class="type">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：
-                        <textarea name="" v-model="build.building.description" cols="30"
-                                                                               rows="5" placeholder="请输入描述信息"></textarea>
+                        <el-input type="textarea"  v-model="build.building.description" :disabled="isDisabled" ></el-input>
                     </p>
                 </div>
 
