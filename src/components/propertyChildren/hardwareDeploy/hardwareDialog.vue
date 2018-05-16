@@ -18,7 +18,7 @@
                         </el-select>
                     </p>
                     <p class="name">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称：
-                        <el-input type="text" v-model="camera.name" :disabled="isDisabled"></el-input>
+                        <el-input type="text" v-model="camera.name" :disabled="isDisabled" :maxlength="15"></el-input>
                     </p>
                     <p class="manufacturer">型&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;号：
                         <el-select name="" v-model="camera.model" @change="choseModel(camera.model)":disabled="isDisabled">
@@ -62,7 +62,7 @@
                         </el-select>
                     </p>
                     <p class="name">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称:
-                        <el-input type="text" v-model="broadCast.name" :disabled="isDisabled"></el-input>
+                        <el-input type="text" v-model="broadCast.name" :disabled="isDisabled" :maxlength="15"></el-input>
                     </p>
                     <p class="home">型&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;号:
 
@@ -106,7 +106,7 @@
                         </el-select>
                     </p>
                     <p class="name">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称:
-                        <el-input type="text" v-model="led.name" :disabled="isDisabled"></el-input>
+                        <el-input type="text" v-model="led.name" :disabled="isDisabled" :maxlength="15"></el-input>
                     </p>
                     <p class="home">型&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;号:
                         <el-select v-model="led.model" :disabled="isDisabled">
@@ -157,7 +157,7 @@
                         </el-select>
                     </p>
                     <p class="name">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称:
-                        <el-input type="text" v-model="wifi.name" :disabled="isDisabled"></el-input>
+                        <el-input type="text" v-model="wifi.name" :disabled="isDisabled" :maxlength="15"></el-input>
                     </p>
                     <p class="version">型&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;号:
                         <el-select name="" v-model="wifi.model" @change="choseModel(wifi.model)" :disabled="isDisabled">
@@ -216,7 +216,7 @@
                         </el-select>
                     </p>
                     <p class="name">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称:
-                        <el-input type="text" v-model="monitors.name" :disabled="isDisabled"></el-input>
+                        <el-input type="text" v-model="monitors.name" :disabled="isDisabled" :maxlength="15"></el-input>
                     </p>
                     <p class="version">型&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;号:
                         <el-select name="" v-model="monitors.model" :disabled="isDisabled">
@@ -263,7 +263,7 @@
                         </el-select>
                     </p>
                     <p class="name">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称:
-                        <el-input type="text" v-model="Light.name" :disabled="isDisabled"></el-input>
+                        <el-input type="text" v-model="Light.name" :disabled="isDisabled" :maxlength="15"></el-input>
                     </p>
                     <p class="port">路灯端口:
                         <el-input type="text" v-model="Light.port" :disabled="isDisabled"></el-input>
@@ -307,7 +307,7 @@
                         </el-select>
                     </p>
                     <p class="name">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称:
-                        <el-input type="text" v-model="gate.name" :disabled="isDisabled"></el-input>
+                        <el-input type="text" v-model="gate.name" :disabled="isDisabled" :maxlength="15"></el-input>
                     </p>
                     <p class="version">型&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;号:
                         <el-select  v-model="gate.model" :disabled="isDisabled">
@@ -350,7 +350,7 @@
                         </el-select>
                     </p>
                     <p class="name">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称:
-                        <el-input type="text" v-model="police.name" :disabled="isDisabled"></el-input>
+                        <el-input type="text" v-model="police.name" :disabled="isDisabled" :maxlength="15"></el-input>
                     </p>
                     <p class="version">型&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;号:
                         <el-select name="" v-model="police.model" :disabled="isDisabled">

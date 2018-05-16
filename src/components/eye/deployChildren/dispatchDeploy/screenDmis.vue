@@ -53,7 +53,7 @@
                                 <span @click="fixedInfo(scope.row,'LED编辑')" class="edit">编辑</span> |
                                 <span @click="stop(scope.row,'片区信息')" v-if="scope.row.isStop">停止 |</span>
                                 <span @click="start(scope.row,'片区信息')" v-else="scope.row.isStart">开始 |</span>
-                                <span @click="showPersonDetail(scope.row,'LED信息')">查看</span> |
+                                <span @click="showPersonDetail(scope.row,'LED信息',true)">查看</span> |
                                 <span @click="deletInfo(scope.row.id,'片区信息')">删除</span>
                             </template>
                         </el-table-column>
@@ -63,7 +63,7 @@
                               :visible="visible"
                               :Info="screenInfo"
                               :isDisabled="isDisabled"
-                              @closeInfoDialog ="visible = false"
+                              @closeInfoDialog ="closeDmisDialog"
                               :title="title"
                               @fixInfo = "fixInfo"
                               @saveNewInfo="addNewPerson">
@@ -102,6 +102,9 @@
             }
         },
         methods: {
+            closeDmisDialog () {
+                this.visible = false
+            },
             handleSelectionChange(selection) {
                 // this.choseInfoId = selection.map(item => {
                 //     return item.id
@@ -223,6 +226,7 @@
                     obj.days = info.ledSchedule.days
                 }
                 api.scheduleled.updataScreenLed(JSON.stringify(obj)).then(res => {
+                    this.closeDmisDialog()
                     console.log(res, '创建成功')
                     this.getAllScreenLed()
                     this.$message.success('修改成功')
@@ -251,6 +255,7 @@
                     obj.days = info.ledSchedule.days
                 }
                 api.scheduleled.createdScreenLed(JSON.stringify(obj)).then(res => {
+                    this.closeDmisDialog()
                     console.log(res, '创建成功')
                     this.getAllScreenLed()
                     this.$message.success('创建成功')

@@ -68,7 +68,7 @@
                                 <span @click="fixedInfo(scope.row,'保洁信息编辑')">编辑</span> |
                                 <span @click="stop(scope.row,'片区信息')" v-if="scope.row.isStop">停止 |</span>
                                 <span @click="start(scope.row,'片区信息')" v-else="scope.row.isStart">开始 |</span>
-                                <span @click="showPersonDetail(scope.row,'保洁信息')">查看</span> |
+                                <span @click="showPersonDetail(scope.row,'保洁信息',true)">查看</span> |
                                 <span @click="deletInfo(scope.row.id,'片区信息')">删除</span>
                             </template>
                         </el-table-column>
@@ -93,7 +93,7 @@
                               :visible="visible"
                               :Info="purifierInfo"
                               :isDisabled="isDisabled"
-                              @closeInfoDialog ="visible = false"
+                              @closeInfoDialog ="closeDmisDialog"
                               @fixInfo = "fixInfo"
                               :title = "title"
                               @saveNewInfo="addNewPerson">
@@ -131,6 +131,9 @@
             }
         },
         methods: {
+            closeDmisDialog () {
+                this.visible = false
+            },
             handleSelectionChange(val) {
                 this.multipleSelection = val;
             },
@@ -231,6 +234,7 @@
                 }
                 console.log(obj, '这是传给后台的')
                 api.purifier.updataPurifier(JSON.stringify(obj)).then(res => {
+                    this.closeDmisDialog()
                     console.log(res, '创建成功')
                     this.$message.success('修改成功')
                     this.getAllPurifier()
@@ -263,6 +267,7 @@
                 }
                 console.log(obj, '这是传给后台的')
                 api.purifier.createdPurifier(JSON.stringify(obj)).then(res => {
+                    this.closeDmisDialog()
                     console.log(res, '创建成功')
                     this.$message.success('创建成功')
                     this.getAllPurifier()
@@ -319,6 +324,9 @@
                             item.cleanSchedule.classTime = [`2018-04-25,${item.cleanSchedule.customizedStartTime}`,`2018-04-25,${item.cleanSchedule.customizedEndTime}`]
                         } else {
                             item.cleanSchedule.shifts = item.cleanSchedule.shifts.split(',')
+                        }
+                        if (item.regions.length > 0) {
+                            item.regionIds = [item.regions[0].id]
                         }
                     })
                 }).catch(err => {
