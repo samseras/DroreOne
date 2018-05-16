@@ -1036,7 +1036,7 @@
             margin-top: rem(-3);
         }
         .data .el-input__inner{
-            padding-left: rem(30);
+            padding-left: rem(10);
         }
         .el-input__inner{
             border: none;
