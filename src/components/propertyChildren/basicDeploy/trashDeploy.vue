@@ -56,7 +56,7 @@
                         <el-table-column
                             label="操作">
                             <template slot-scope="scope">
-                                <span @click="showTrashDetail(scope.row, '垃圾桶信息')">查看</span>
+                                <span @click="showTrashDetail(scope.row, '垃圾桶信息',true)">查看</span>
                                 <sapn class="line">|</sapn>
                                 <span @click="fixedInfo(scope.row.id )">编辑</span>
                                 <sapn class="line">|</sapn>
@@ -68,7 +68,7 @@
                         <div class="checkBox">
                             <el-checkbox v-model="item.checked" @change="checked(item.id)" class="checkBtn"></el-checkbox>
                         </div>
-                        <div class="personType" @click.stop="showTrashDetail(item, '垃圾桶信息')">
+                        <div class="personType" @click.stop="showTrashDetail(item, '垃圾桶信息',true)">
                             <img src="../../../../static/img/wasteCard.png" alt="">
                             <span class="type">
                                   {{item.dustbinBean.type | typeFilter}}垃圾桶
@@ -87,7 +87,7 @@
                               :Info="trashInfo"
                               :isDisabled="isDisabled"
                               :title="title"
-                              @closeInfoDialog ="visible = false"
+                              @closeInfoDialog ="closeDialog"
                               @fixInfo = "fixInfo"
                               @addNewInfo="addNewTrash">
                 </PersonDetail>
@@ -119,6 +119,9 @@
             }
         },
         methods : {
+            closeDialog () {
+                this.visible = false
+            },
             searchAnything (info) {
                 console.log(info, '这是要过滤的')
                 if (info.trim() !== '') {
@@ -137,13 +140,14 @@
             handleSelectionChange(val) {
                 this.multipleSelection = val;
             },
-            showTrashDetail (info,title) {
+            showTrashDetail (info,title,state) {
                 this.trashInfo = info
                 this.visible = true
+                this.isDisabled = state
                 this.title = title
             },
             addNewInfo () {
-                this.showTrashDetail({dustbinBean:{}}, '添加垃圾桶信息')
+                this.showTrashDetail({dustbinBean:{}}, '添加垃圾桶信息',false)
                 this.isDisabled = false
             },
             deletInfo (id) {
@@ -257,6 +261,7 @@
                     longitude: longitude
                 }
                 await api.dustbin.updateDustbin(JSON.stringify(trashObj)).then(res => {
+                    this.closeDialog()
                     console.log('修改成功')
                     this.$message.success('修改成功')
                     this.choseInfoId = []
@@ -280,6 +285,7 @@
                 }
                 console.log(trashObj, 'this is trashObj')
                 await api.dustbin.createDustbin(JSON.stringify(trashObj)).then(res => {
+                    this.closeDialog()
                     console.log('增加成功')
                     this.$message.success('创建成功')
                     this.getAllTrash()
@@ -294,6 +300,7 @@
                 }
                 if (this.choseInfoId.length > 1) {
                     this.$message.warning('至多选择一个数据修改')
+                    return
                 }
                 if (this.choseInfoId.length > 0) {
                     this.trashList.map((item) => {
@@ -301,8 +308,7 @@
                             this.trashInfo = item
                         }
                     })
-                    this.showTrashDetail(this.trashInfo, '修改垃圾桶信息')
-                    this.isDisabled = false
+                    this.showTrashDetail(this.trashInfo, '修改垃圾桶信息',false)
                     this.choseInfoId = []
                 } else {
                     this.$message.error('请选择要修改的垃圾桶')
@@ -420,13 +426,19 @@
                             position: absolute;
                             left: rem(15);
                             top: rem(-10);
-
                         }
                         span{
+                            display: inline-block;
+                            width: rem(100);
                             float: right;
-                            margin-right: rem(20);
+                            text-align: right;
+                            padding-right: rem(5);
                             line-height: rem(20);
                             color: #fff;
+                            overflow: hidden;
+                            text-overflow: ellipsis;
+                            white-space: nowrap;
+                            box-sizing: border-box;
                         }
                     }
                     .specificInfo{

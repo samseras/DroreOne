@@ -65,7 +65,7 @@
                         </el-table-column>
                         <el-table-column>
                             <template slot-scope="scope">
-                                <span @click="showLightDetail(scope.row, '路灯信息')">查看</span>
+                                <span @click="showLightDetail(scope.row, '路灯信息',true)">查看</span>
                                 <span class="line">|</span>
                                 <span @click="fixedInfo(scope.row.id )">编辑</span>
                                 <span class="line">|</span>
@@ -78,7 +78,7 @@
                         <div class="checkBox">
                             <el-checkbox v-model="item.checked" @change="checked(item.id)" class="checkBtn"></el-checkbox>
                         </div>
-                        <div class="personType" @click.stop="showLightDetail(item,'路灯信息')">
+                        <div class="personType" @click.stop="showLightDetail(item,'路灯信息',true)">
                             <img src="../../../../static/img/policeCard.png" alt="">
                             <span class="type">
                                   {{item.name}}
@@ -97,7 +97,7 @@
                           :Info="lightInfo"
                           :title="title"
                           :isDisabled="isDisabled"
-                          @closeInfoDialog="visible=false"
+                          @closeInfoDialog="closeDialog"
                           @addNewInfo="addLight"
                           @fixInfo="fixInfo">
 
@@ -131,6 +131,9 @@
             }
         },
         methods:{
+            closeDialog () {
+                this.visible = false
+            },
             searchAnything (info) {
                 console.log(info, '这是要过滤的')
                 if (info.trim() !== '') {
@@ -156,12 +159,13 @@
                 this.multipleSelection = val;
             },
             addNewInfo(){
-                this.showLightDetail({},'添加路灯信息')
+                this.showLightDetail({},'添加路灯信息',false)
                 this.isDisabled=false
             },
-            showLightDetail(info,title){
+            showLightDetail(info,title,state){
                 this.lightInfo=info
                 this.visible=true
+                this.isDisabled = state
                 this.title=title
 
             },
@@ -183,6 +187,7 @@
                     longitude:longitude
                 }]
                 api.light.updateLight(lightObj).then(res =>{
+                    this.closeDialog()
                     this.$message.success('修改成功')
                     this.choseInfoId=[]
                     this.getAllLight()
@@ -204,7 +209,7 @@
                             this.lightInfo=item
                         }
                     })
-                    this.showLightDetail(this.lightInfo,'修改路灯信息')
+                    this.showLightDetail(this.lightInfo,'修改路灯信息',false)
                     this.isDisabled=false
                 }else{
                     this.$message.error('请选择要修改的路灯')
@@ -260,6 +265,7 @@
                     longitude:longitude
                 }]
                 api.light.createLight(lightObj).then(res =>{
+                    this.closeDialog()
                     this.$message.success('添加成功')
                     this.getAllLight()
                 }).catch(err =>{

@@ -71,7 +71,7 @@
                         <el-table-column
                             label="操作">
                             <template slot-scope="scope">
-                                <span class="formBtn" @click="showPersonDetail(scope.row, '车船信息')">查看</span>
+                                <span class="formBtn" @click="showPersonDetail(scope.row, '车船信息',true)">查看</span>
                                 <span class="line">|</span>
                                 <span class="formBtn" @click="fixedInfo(scope.row.id)">编辑</span>
                                 <span class="line">|</span>
@@ -83,7 +83,7 @@
                         <div class="checkBox">
                             <el-checkbox v-model="item.checked" @change="getChecked(item.id)" class="checkBtn"></el-checkbox>
                         </div>
-                        <div class="personType" :class="item.type === '车辆'? 'carInfo':''" @click.stop="showPersonDetail(item ,'车船信息')">
+                        <div class="personType" :class="item.type === '车辆'? 'carInfo':''" @click.stop="showPersonDetail(item ,'车船信息',true)">
                             <img src="../../../../static/img/boatCartCard.png" alt="">
                             <span class="type">
                                   {{item.vehicle.type | boatFilter}}信息
@@ -102,7 +102,7 @@
                               :Info="boatCarInfo"
                               :isDisabled="isDisabled"
                               :title="title"
-                              @closeInfoDialog ="visible = false; isDisabled = true"
+                              @closeInfoDialog ="closeDialog"
                               @fixInfo = "fixInfo"
                               @addNewInfo="addNewBoatCar">
                 </PersonDetail>
@@ -135,6 +135,9 @@
             }
         },
         methods: {
+            closeDialog () {
+                this.visible = false
+            },
             searchAnything (info) {
                 console.log(info, '这是要过滤的')
                 if (info.trim() !== '') {
@@ -161,13 +164,14 @@
             selectAll (selection) {
                 console.log(selection,'这是全选的数据')
             },
-            showPersonDetail (info, title) {
+            showPersonDetail (info, title, state) {
                 this.boatCarInfo = info
                 this.visible = true
+                this.isDisabled = state
                 this.title = title
             },
             addNewInfo () {
-                this.showPersonDetail({vehicle: {}},'添加车船信息')
+                this.showPersonDetail({vehicle: {}},'添加车船信息', false)
                 this.isDisabled = false
             },
             deletInfo (id) {
@@ -278,6 +282,7 @@
                 }
                 console.log(boatObj, 'this is trashObj')
                 await api.boat.updateBoat(JSON.stringify(boatObj)).then(res => {
+                    this.closeDialog()
                     console.log(res ,'增加成功')
                     this.$message.success('修改成功')
                     this.getAllBoat()
@@ -298,6 +303,7 @@
                     purchaseDate: info.vehicle.purchaseDate
                 }
                 await api.boat.createBoat(JSON.stringify(boatObj)).then(res => {
+                    this.closeDialog()
                     console.log(res ,'增加成功')
                     this.$message.success('添加成功')
                     this.getAllBoat()
@@ -312,6 +318,7 @@
                 }
                 if (this.choseInfoId.length > 1) {
                     this.$message.warning('至多选择一个数据修改')
+                    return
                 }
                  if (this.choseInfoId.length > 0) {
                      this.boatCarList.map((item) => {
@@ -319,7 +326,7 @@
                              this.boatCarInfo = item
                          }
                      })
-                     this.showPersonDetail(this.boatCarInfo,'修改车船信息')
+                     this.showPersonDetail(this.boatCarInfo,'修改车船信息',false)
                      this.isDisabled = false
                      this.choseInfoId = []
                  } else {
@@ -456,10 +463,17 @@
                             background: red;
                         }
                         span{
+                            display: inline-block;
+                            width: rem(100);
                             float: right;
-                            margin-right: rem(20);
+                            text-align: right;
+                            padding-right: rem(5);
                             line-height: rem(20);
                             color: #fff;
+                            overflow: hidden;
+                            text-overflow: ellipsis;
+                            white-space: nowrap;
+                            box-sizing: border-box;
                         }
                     }
                     .carInfo{

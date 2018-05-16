@@ -94,7 +94,8 @@
                               :Info="personInfo"
                               :isDisabled="isDisabled"
                               :title="title"
-                              @closeInfoDialog="visible = false"
+                              @closeInfoDialog="closeDialog"
+                              v-loading="isShowDialogLoading"
                               @fixInfo="fixInfo"
                               @addNewInfo="addNewPerson">
                 </PersonDetail>
@@ -122,10 +123,14 @@
                 choseList: [],
                 isDisabled: true,
                 title: '',
-                isShowLoading: false
+                isShowLoading: false,
+                isShowDialogLoading: false
             }
         },
         methods: {
+            closeDialog () {
+                this.visible = false
+            },
             searchAnything (info) {
                 console.log(info, '这是要过滤的')
                 if (info.trim() !== '') {
@@ -221,7 +226,7 @@
                     })
 
                 } else {
-                    this.$message.error('请选择要删除的人选信息')
+                    this.$message.error('请选择要删除的人员信息')
                 }
             },
             toggleList(type) {
@@ -303,7 +308,8 @@
                     personObj.pictureId = info.pictureId
                 }
                 await api.person.updatePerson(JSON.stringify(personObj)).then(res => {
-                    this.$message.success('添加成功')
+                    this.closeDialog()
+                    this.$message.success('修改成功')
                     console.log('增加成功')
                     this.choseInfoId = []
                     this.getAllPerson()
@@ -313,6 +319,7 @@
                 })
             },
             async addNewPerson(info) {
+                this.isShowDialogLoading = true
                 console.log(info, 'opopopopopo')
                 let personObj = {
                     name: info.name,
@@ -333,11 +340,14 @@
                     })
                 }
                 await api.person.createPerson(JSON.stringify(personObj)).then(res => {
+                    this.isShowDialogLoading = false
+                    this.closeDialog()
                     this.$message.success('添加成功')
                     console.log('增加成功')
                     this.getAllPerson()
                 }).catch(err => {
                     console.log(err, '添加失败')
+                    this.isShowDialogLoading = false
                     this.$message.error('添加失败，请稍后重试')
                 })
             },
@@ -347,6 +357,7 @@
                 }
                 if (this.choseInfoId.length > 1) {
                     this.$message.warning('至多选择一个数据修改')
+                    return
                 }
                 if (this.choseInfoId.length > 0) {
                     this.personList.map((item) => {
