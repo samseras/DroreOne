@@ -592,9 +592,18 @@
            addNewInfo(){
                let newInfo={ }
                if(this.route.includes('camera')){
-                   newInfo=this.camera
+                   newInfo = this.camera
+                   if(newInfo.name ===''|| newInfo.ip ===''){
+                       this.$message.error('请输入完整信息')
+                       return
+                   }
                }else if(this.route.includes('broadcast')){
                    newInfo=this.broadCast
+                   if(newInfo.name ===''|| newInfo.ip ===''){
+                       this.$message.error('请输入完整信息')
+                       return
+                   }
+
                }else if(this.route.includes('led')) {
                    newInfo = this.led
                }else if(this.route.includes('wifi')) {
