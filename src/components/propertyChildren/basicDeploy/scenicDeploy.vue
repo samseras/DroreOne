@@ -278,6 +278,7 @@
                 await api.scenic.createScenic(JSON.stringify(scenicObj)).then(res => {
                     this. closeDialog()
                     console.log('增加成功')
+                    this.$message.success('创建成功')
                     this.getAllScenic()
                 }).catch(err => {
                     console.log(err, '创建失败')

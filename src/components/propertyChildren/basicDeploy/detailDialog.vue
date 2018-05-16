@@ -687,11 +687,17 @@
             },
             addNewInfo () {
                 let newInfo = {}
+                let  myreg = /^[1][3,4,5,6,7,8][0-9]{9}$/;   //电话号码校验
+                let intreg = /^[1-9]\d*$/; //非零正整数校验
+                let integerreg = /^(0|[1-9][0-9]*)$/; //大于等于0正整数
                 if (this.route.includes('person') && this.$route.params.id) {
                     newInfo = this.person
-                    let  myreg = /^[1][3,4,5,6,7,8][0-9]{9}$/
                     let idReg = /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/
-                    if (!(newInfo.name && newInfo.name === '') || !(newInfo.gender && newInfo.gender === '') || !(newInfo.jobId && newInfo.jobId === '')) {
+                    console.log(newInfo.name);
+                    console.log(newInfo.gender);
+                    console.log(newInfo.jobId);
+                    if (!(newInfo.name && newInfo.name.trim() === '') || !(newInfo.gender && newInfo.gender === '') || !(newInfo.jobId && newInfo.jobId === '')) {
+                        console.log(newInfo.name);
                         this.$message.error('请填写完整信息')
                         return
                     }
@@ -704,70 +710,207 @@
                         return
                     }
                 } else if(this.route.includes('boat')) {
+
                     newInfo = this.boatCar
-                } else if(this.route.includes('trash')) {
-                    newInfo = this.trash
-                    if (newInfo.location === '' || newInfo.regionId === '') {
+                    console.log(newInfo);
+                    if(!(newInfo.vehicle.hasOwnProperty("type") && integerreg.test(newInfo.vehicle.type)) ||
+                        !(newInfo.vehicle.serialNum && newInfo.vehicle.serialNum.trim() !== '') ||
+                        !(newInfo.vehicle.hasOwnProperty("maintenanceStatus") && integerreg.test(newInfo.vehicle.maintenanceStatus)) ||
+                        !(newInfo.vehicle.purchaseDate && newInfo.vehicle.purchaseDate !== '') ||
+                        !(newInfo.vehicle.maintenanceDate && newInfo.vehicle.maintenanceDate !== '') ||
+                        !(newInfo.driverId  && newInfo.driverId !== '') ||
+                        !(newInfo.vehicle.model && newInfo.vehicle.model.trim() !== '')
+                    ){
+
                         this.$message.error('请输入完整信息')
                         return
                     }
-                    if (newInfo.dustbinBean.type === ''|| newInfo.dustbinBean.name === '' || newInfo.dustbinBean.dustbinCount=== '') {
+
+                    // if (!(newInfo.driverPhone && newInfo.driverPhone !== '') || !myreg.test(newInfo.driverPhone)) {
+                    //     this.$message.error('请填写正确的电话号码')
+                    //     return
+                    // }
+
+                    if (!(newInfo.vehicle.capacity && newInfo.vehicle.capacity !== '') || !intreg.test(newInfo.vehicle.capacity)) {
+                            this.$message.error('核载人数只能输入数字！')
+                            return
+                    }
+
+                } else if(this.route.includes('trash')) {
+                    newInfo = this.trash
+                    if(!(newInfo.dustbinBean.hasOwnProperty("type") && integerreg.test(newInfo.dustbinBean.type)) ||
+                        !(newInfo.dustbinBean.name && newInfo.dustbinBean.name.trim() !== '') ||
+                        !(newInfo.regionId && newInfo.regionId !== '') ||
+                        // !(newInfo.status && newInfo.status !== '') ||
+                        !(newInfo.location && newInfo.location !== '')
+                    ){
+
                         this.$message.error('请输入完整信息')
+                        return
+                    }
+
+                    if(!(newInfo.dustbinBean.dustbinCount && newInfo.dustbinBean.dustbinCount !== '') ||
+                        !intreg.test(newInfo.dustbinBean.dustbinCount)){
+                        this.$message.error('个数只能输入数字！')
                         return
                     }
                 } else if(this.route.includes('indicator')) {
                     newInfo = this.indicator
-                    if (newInfo.signboardBean.type === '' || newInfo.regionId ==='' || newInfo.location === ''){
+                    if(!(newInfo.signboardBean.hasOwnProperty("type") && integerreg.test(newInfo.signboardBean.type)) ||
+                        !(newInfo.regionId && newInfo.regionId !== '') ||
+                        !(newInfo.location && newInfo.location !== '')
+
+                    ){
+
                         this.$message.error('请输入完整信息')
                         return
                     }
                 } else if(this.route.includes('scenic')) {
                     newInfo = this.scenic
-                    if (newInfo.scenicspotBean.capacity === '' || newInfo.scenicspotBean.name === '') {
+                    if(!(newInfo.scenicspotBean.name && newInfo.scenicspotBean.name.trim() !== '') ||
+                        !(newInfo.regionId && newInfo.regionId !== '') ||
+                        // !(newInfo.scenicspotBean.statu && newInfo.scenicspotBean.statu !== '') ||
+                        !(newInfo.location && newInfo.location !== '')
+
+                    ){
+
                         this.$message.error('请输入完整信息')
                         return
                     }
-                    if (newInfo.regionId === '' || newInfo.location === '') {
-                        this.$message.error('请输入完整信息')
+
+                    if(!(newInfo.scenicspotBean.capacity && newInfo.scenicspotBean.capacity !== '') ||
+                        !intreg.test(newInfo.scenicspotBean.capacity)){
+                        this.$message.error('容量只能输入数字！')
+                        return
+                    }
+
+                    if(!(newInfo.scenicspotBean.currentNum && newInfo.scenicspotBean.currentNum !== '') ||
+                        !intreg.test(newInfo.scenicspotBean.currentNum)){
+                        this.$message.error('当前人数只能输入数字！')
                         return
                     }
 
                 } else if(this.route.includes('shop')) {
                     newInfo = this.shop
-                    if (newInfo.businessBean.capacity === '' || newInfo.businessBean.currentNum === '' || newInfo.businessBean.name === '' || newInfo.businessBean.businessTypeId === '') {
+                    console.log(newInfo)
+                    if(!(newInfo.businessBean.hasOwnProperty("businessTypeId") && integerreg.test(newInfo.businessBean.businessTypeId)) ||
+                        !(newInfo.businessBean.name && newInfo.businessBean.name.trim() !== '') ||
+                        // !(newInfo.businessBean.state && newInfo.businessBean.state !== '') ||
+                        !(newInfo.location && newInfo.location !== '') ||
+                        !(newInfo.regionId && newInfo.regionId !== '')
+                    ){
                         this.$message.error('请输入完整信息')
                         return
                     }
-                    if (newInfo.location === ''|| newInfo.regionId === '') {
-                        this.$message.error('请输入完整信息')
+
+                    if(!(newInfo.businessBean.capacity && newInfo.businessBean.capacity !== '') ||
+                        !intreg.test(newInfo.businessBean.capacity)){
+                        this.$message.error('容量只能输入数字！')
                         return
                     }
+
+                    if(!(newInfo.businessBean.currentNum && newInfo.businessBean.currentNum !== '') ||
+                        !intreg.test(newInfo.businessBean.currentNum)){
+                        this.$message.error('当前人数只能输入数字！')
+                        return
+                    }
+
                 } else if(this.route.includes('park')) {
                     newInfo = this.park
-                    if (newInfo.parkingBean.type === '' || newInfo.parkingBean.name === ''|| newInfo.parkingBean.surplusNum === ''|| newInfo.parkingBean.capacity === '') {
+                    console.log(newInfo);
+                    if(!(newInfo.parkingBean.hasOwnProperty("type") && integerreg.test(newInfo.parkingBean.type)) ||
+                        !(newInfo.parkingBean.name && newInfo.parkingBean.name.trim() !== '') ||
+                        // !(newInfo.parkingBean.state && newInfo.parkingBean.state !== '') ||
+                        !(newInfo.location && newInfo.location !== '') ||
+                        !(newInfo.regionId && newInfo.regionId !== '')
+                    ){
+
                         this.$message.error('请输入完整信息')
                         return
                     }
-                    if (newInfo.location === '' || newInfo.regionId === '') {
-                        this.$message.error('请输入完整信息')
+
+                    if(!(newInfo.parkingBean.surplusNum && newInfo.parkingBean.surplusNum !== '') ||
+                        !intreg.test(newInfo.parkingBean.surplusNum)){
+                        this.$message.error('空余车位只能输入数字！')
                         return
                     }
+
+                    if(!(newInfo.parkingBean.capacity && newInfo.parkingBean.capacity !== '') ||
+                        !intreg.test(newInfo.parkingBean.capacity)){
+                        this.$message.error('车位总数只能输入数字！')
+                        return
+                    }
+
+
                 } else if(this.route.includes('toilet')) {
                     newInfo = this.toilet
-                    if (newInfo.toiletBean.name === ''|| newInfo.location === ''||newInfo.regionId === ''){
+                    if(!(newInfo.toiletBean.name && newInfo.toiletBean.name.trim() !== '') ||
+                        !(newInfo.regionId && newInfo.regionId !== '') ||
+                        // !(newInfo.state && newInfo.state !== '') ||
+                        !(newInfo.location && newInfo.location !== '')
+                    ){
+
                         this.$message.error('请输入完整信息')
                         return
                     }
+
                 } else if(this.route.includes('area')) {
-                    newInfo = this.area
+                    newInfo = this.area;
+                    if(!(newInfo.name && newInfo.name.trim() !== '') ||
+                        !(newInfo.location && newInfo.location !== '') ||
+                        // !(newInfo.placeScenic && newInfo.placeScenic !== '') ||
+                        !(newInfo.description && newInfo.description !== '')
+                    ){
+
+                        this.$message.error('请输入完整信息')
+                        return
+                    }
                 } else if (this.route.includes('roat')) {
                     newInfo = this.roat
+                    console.log(newInfo)
+                    if(!(newInfo.name && newInfo.name.trim() !== '') ||
+                        !(newInfo.location && newInfo.location !== '') ||
+                        !(newInfo.type && newInfo.type !== '') ||
+                        !(newInfo.description && newInfo.description !== '')
+                    ){
+
+                        console.log(newInfo.type);
+                        this.$message.error('请输入完整信息')
+                        return
+                    }
+
                 } else if (this.route.includes('personType')) {
                     newInfo = this.job
                 } else if (this.route.includes('plant-deploy')) {
                     newInfo = this.tree
+                    if(!(newInfo.plant.name && newInfo.plant.name.trim() !== '') ||
+                        !(newInfo.plant.genera && newInfo.plant.genera !== '') ||
+                        !(newInfo.plant.height && newInfo.plant.height !== '') ||
+                        !(newInfo.plant.plantYear && newInfo.plant.plantYear !== '') ||
+                        !(newInfo.location && newInfo.location !== '') ||
+                        !(newInfo.regionId && newInfo.regionId !== '') ||
+                        !(newInfo.plant.description && newInfo.plant.description.trim() !== '')
+                    ){
+
+                        this.$message.error('请输入完整信息')
+                        return
+                    }
+
                 } else if (this.route.includes('construction')) {
                     newInfo = this.build
+
+                    if(!(newInfo.building.name && newInfo.building.name.trim() !== '') ||
+                        !(newInfo.building.layers && newInfo.building.layers !== '') ||
+                        !(newInfo.building.height && newInfo.building.height !== '') ||
+                        !(newInfo.building.buildYear && newInfo.building.buildYear !== '') ||
+                        !(newInfo.location && newInfo.location !== '') ||
+                        !(newInfo.regionId && newInfo.regionId !== '') ||
+                        !(newInfo.building.description && newInfo.building.description.trim() !== '')
+                    ){
+
+                        this.$message.error('请输入完整信息')
+                        return
+                    }
                 }
                 newInfo.status = true
                 newInfo.checked = false
