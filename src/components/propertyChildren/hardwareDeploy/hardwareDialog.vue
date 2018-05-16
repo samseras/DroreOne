@@ -11,7 +11,7 @@
             <div class="card">
                 <!--摄像头-->
                 <div class="cameraCard popCard" v-if="route.includes('camera')">
-                    <p class="cameraType">类&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  型：
+                    <p class="cameraType">类&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;型：
                         <el-select name="" v-model="camera.positionType" :disabled="isDisabled">
                             <el-option label='室内' :value="0"></el-option>
                             <el-option label='室外' :value="1"></el-option>
@@ -20,7 +20,7 @@
                     <p class="name">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称：
                         <el-input type="text" v-model="camera.name" :disabled="isDisabled"></el-input>
                     </p>
-                    <p class="manufacturer">型&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;号：
+                    <p class="manufacturer">型&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;号：
                         <el-select name="" v-model="camera.model" @change="choseModel(camera.model)":disabled="isDisabled">
                             <el-option v-for="item in modelType"
                                        :key="item.id"
@@ -32,10 +32,10 @@
                     <p class="IP">I P 地 址：
                         <el-input type="text" v-model="camera.ip" :disabled="isDisabled"></el-input>
                     </p>
-                    <p class="port">端&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  口：
+                    <p class="port">端&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;口：
                         <el-input type="text" v-model="camera.port" :disabled="isDisabled"></el-input>
                     </p>
-                    <p class="place">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  置：
+                    <p class="place">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置：
                         <span>{{camera.location}}</span>
                         <i class="el-icon-location-outline" @click="showMapDialog"></i>
                     </p>
@@ -49,25 +49,22 @@
                             </el-option>
                         </el-select>
                     </p>
-                    <p class="description">描&nbsp; 述：
-                        <!--<textarea v-model="camera.description" cols="40" rows="8">-->
-                                <!---->
-                        <!--</textarea>-->
-                        <el-input type="textarea" v-model="camera.description"></el-input>
+                    <p class="description">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：
+                        <el-input type="textarea" v-model="camera.description" :disabled="isDisabled"></el-input>
                     </p>
                 </div>
                 <!--广播-->
                 <div class="cameraCard popCard" v-if="route.includes('broadcast')">
-                    <p class="type">类&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  型：
+                    <p class="type">类&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;型:
                         <el-select name="" v-model="broadCast.positionType" :disabled="isDisabled">
                             <el-option label='室内' :value="0"></el-option>
                             <el-option label='室外' :value="1"></el-option>
                         </el-select>
                     </p>
-                    <p class="name">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称：
+                    <p class="name">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称:
                         <el-input type="text" v-model="broadCast.name" :disabled="isDisabled"></el-input>
                     </p>
-                    <p class="home">型&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  号：
+                    <p class="home">型&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;号:
 
                         <el-select name="" v-model="broadCast.model" :disabled="isDisabled">
                             <el-option v-for="item in modelType"
@@ -77,17 +74,17 @@
                             </el-option>
                         </el-select>
                     </p>
-                    <p class="IP">I P 地 址：
+                    <p class="IP">IP&nbsp;&nbsp;地&nbsp;&nbsp;址:
                         <el-input type="text" v-model="broadCast.ip" :disabled="isDisabled"></el-input>
                     </p>
-                    <p class="host">端&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  口：
+                    <p class="host">端&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;口:
                         <el-input type="text" v-model="broadCast.port" :disabled="isDisabled"></el-input>
                     </p>
-                    <p class="place">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  置：
+                    <p class="place">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置:
                         <span>{{broadCast.location}}</span>
                         <i class="el-icon-location-outline" @click="showMapDialog"></i>
                     </p>
-                    <p class="area">所属区域：
+                    <p class="area">所属区域:
                         <el-select name="" v-model="broadCast.regionId" :disabled="isDisabled">
                             <el-option
                                 v-for="item in regions"
@@ -96,30 +93,22 @@
                             </el-option>
                         </el-select>
                     </p>
-                    <p class="describe">描&nbsp; 述：
-                        <!--<textarea v-model="broadCast.description" cols="40" rows="8">-->
-
-                        <!--</textarea>-->
-                        <el-input type="textarea" v-model="broadCast.description"></el-input>
+                    <p class="describe">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述:
+                        <el-input type="textarea" v-model="broadCast.description" :disabled="isDisabled" ></el-input>
                     </p>
-                    <!--<div class="img">-->
-                        <!--<label for="avatar">-->
-                            <!--<img :src="files.length ? files[0].url : 'https://www.gravatar.com/avatar/default?s=200&r=pg&d=mm'"  class="rounded-circle" />-->
-                        <!--</label>-->
-                    <!--</div>-->
                 </div>
                 <!--LED-->
                 <div class="cameraCard popCard" v-if="route.includes('led')">
-                    <p class="type">类&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  型：
+                    <p class="type">类&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;型:
                         <el-select name="" v-model="led.positionType" :disabled="isDisabled">
                             <el-option label='室内' :value="0"></el-option>
                             <el-option label='室外' :value="1"></el-option>
                         </el-select>
                     </p>
-                    <p class="name">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称：
+                    <p class="name">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称:
                         <el-input type="text" v-model="led.name" :disabled="isDisabled"></el-input>
                     </p>
-                    <p class="home">型&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  号：
+                    <p class="home">型&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;号:
                         <el-select v-model="led.model" :disabled="isDisabled">
                             <el-option v-for="item in modelType"
                                        :key="item.id"
@@ -128,22 +117,22 @@
                             </el-option>
                         </el-select>
                     </p>
-                    <p class="width">屏幕宽高：
+                    <p class="width">屏幕宽高:
                         <el-input type="text" v-model="led.area" :disabled="isDisabled"></el-input>
                     </p>
-                    <p class="IP">I P 地 址：
+                    <p class="IP">IP&nbsp;&nbsp;地&nbsp;&nbsp;址:
                         <el-input type="text" v-model="led.ip" :disabled="isDisabled"></el-input>
                     </p>
-                    <p class="port">设备端口：
+                    <p class="port">设备端口:
                         <el-input type="text" v-model="led.port" :disabled="isDisabled"></el-input>
                     </p>
-                    <p class="host">设备编号：
+                    <p class="host">设备编号:
                         <el-input type="text" v-model="led.serialNum" :disabled="isDisabled"></el-input>
                     </p>
-                    <p class="place">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  置：<span>{{led.location}}</span>
+                    <p class="place">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置:<span>{{led.location}}</span>
                         <i class="el-icon-location-outline" @click="showMapDialog"></i>
                     </p>
-                    <p class="area">所属片区：
+                    <p class="area">所属片区:
 
                         <el-select name="" v-model="led.regionId" :disabled="isDisabled">
                             <el-option
@@ -154,30 +143,23 @@
                         </el-select>
 
                     </p>
-                    <p class="describe">描&nbsp;&nbsp;&nbsp;述：
-                        <!--<textarea v-model="led.description" cols="40" rows="8">-->
+                    <p class="describe textarea">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：
 
-                        <!--</textarea>-->
-                        <el-input type="textarea" v-model="led.description"></el-input>
+                        <el-input type="textarea" v-model="led.description" :disabled="isDisabled"></el-input>
                     </p>
-                    <!--<div class="img">-->
-                        <!--<label for="avatar">-->
-                            <!--<img :src="files.length ? files[0].url : 'https://www.gravatar.com/avatar/default?s=200&r=pg&d=mm'"  class="rounded-circle" />-->
-                        <!--</label>-->
-                    <!--</div>-->
                 </div>
                 <!--Wifi-->
                 <div class="cameraCard popCard" v-if="route.includes('wifi')">
-                    <p class="type">类&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  型：
+                    <p class="type">类&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;型:
                         <el-select name="" v-model="wifi.positionType" :disabled="isDisabled">
                             <el-option :value="0" label="室内"></el-option>
                             <el-option :value="1" label="室外"></el-option>
                         </el-select>
                     </p>
-                    <p class="name">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称：
+                    <p class="name">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称:
                         <el-input type="text" v-model="wifi.name" :disabled="isDisabled"></el-input>
                     </p>
-                    <p class="version">型&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;号:
+                    <p class="version">型&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;号:
                         <el-select name="" v-model="wifi.model" @change="choseModel(wifi.model)" :disabled="isDisabled">
                             <el-option v-for="item in modelType"
                                        :key="item.id"
@@ -194,24 +176,24 @@
                             <el-option value='否' label="否"></el-option>
                         </el-select>
                     </p>
-                    <p class="IP">设备I P ：
+                    <p class="IP">设&nbsp;&nbsp;备&nbsp;&nbsp;IP:
                         <el-input type="text" v-model="wifi.ip" :disabled="isDisabled"></el-input>
                     </p>
 
-                    <p class="IP">设备端口 ：
+                    <p class="IP">设备端口:
                         <el-input type="text" v-model="wifi.port" :disabled="isDisabled"></el-input>
                     </p>
-                    <p class="mac">M a c：
+                    <p class="mac">M&nbsp;&nbsp;&nbsp;a&nbsp;&nbsp;&nbsp;&nbsp;c:
                         <el-input type="text" v-model="wifi.mac" :disabled="isDisabled"></el-input>
                     </p>
-                    <p class="host">设备编号：
+                    <p class="host">设备编号:
                         <el-input type="text" v-model="wifi.serialNum" :disabled="isDisabled"></el-input>
                     </p>
-                    <p class="place">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  置：
+                    <p class="place">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置:
                         <span>{{wifi.location}}</span>
                         <i class="el-icon-location-outline" @click="showMapDialog"></i>
                     </p>
-                    <p class="area">所属片区：
+                    <p class="area">所属片区:
 
                         <el-select v-model="wifi.regionId" :disabled="isDisabled">
                             <el-option
@@ -220,23 +202,23 @@
                                 :label="item.name"></el-option>
                         </el-select>
                     </p>
-                    <p class="describe">描&nbsp; 述：
+                   <p class="describe">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：
 
-                        <el-input type="textarea" v-model="wifi.description" ></el-input>
+                        <el-input type="textarea" v-model="wifi.description" :disabled="isDisabled" ></el-input>
                     </p>
                 </div>
                 <!--传感器-->
                 <div class="cameraCard popCard" v-if="route.includes('monitors')">
-                    <p class="type">类&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  型：
+                    <p class="type">类&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;型:
                         <el-select name="" v-model="monitors.sensorType" :disabled="isDisabled">
                             <el-option :value="1" label="温度"></el-option>
                             <el-option :value="2" label="湿度"></el-option>
                         </el-select>
                     </p>
-                    <p class="name">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称：
+                    <p class="name">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称:
                         <el-input type="text" v-model="monitors.name" :disabled="isDisabled"></el-input>
                     </p>
-                    <p class="version">型&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;号:
+                    <p class="version">型&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;号:
                         <el-select name="" v-model="monitors.model" :disabled="isDisabled">
                             <el-option v-for="item in modelType"
                                        :key="item.id"
@@ -245,20 +227,20 @@
                             </el-option>
                         </el-select>
                     </p >
-                    <p class="IP">设备I P ：
+                    <p class="IP">设&nbsp;&nbsp;备&nbsp;&nbsp;IP:
                         <el-input type="text" v-model="monitors.ip" :disabled="isDisabled"></el-input>
                     </p>
-                    <p class="host">设备编号：
+                    <p class="host">设备编号:
                         <el-input type="text" v-model="monitors.serialNum" :disabled="isDisabled"></el-input>
                     </p>
-                    <p class="host">设备端口：
+                    <p class="host">设备端口:
                         <el-input type="text" v-model="monitors.port" :disabled="isDisabled"></el-input>
                     </p>
-                    <p class="place">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  置：
+                    <p class="place">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置:
                         <span>{{monitors.location}}</span>
                         <i class="el-icon-location-outline" @click="showMapDialog"></i>
                     </p>
-                    <p class="area">所属片区：
+                    <p class="area">所属片区:
 
                         <el-select v-model="monitors.regionId" :disabled="isDisabled">
                             <el-option
@@ -267,36 +249,29 @@
                                 :label="item.name"></el-option>
                         </el-select>
                     </p>
-                    <p class="describe">描&nbsp; 述：
-                        <!--<textarea v-model="monitors.description" cols="40" rows="8">-->
+                    <p class="describe">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述:
 
-                        <!--</textarea>-->
-                        <el-input type="textarea" v-model="monitors.description"></el-input>
+                        <el-input type="textarea" v-model="monitors.description" :disabled="isDisabled"></el-input>
                     </p>
-                    <!--<div class="img">-->
-                        <!--<label for="avatar">-->
-                            <!--<img :src="files.length ? files[0].url : 'https://www.gravatar.com/avatar/default?s=200&r=pg&d=mm'"  class="rounded-circle" />-->
-                        <!--</label>-->
-                    <!--</div>-->
                 </div>
                 <!--灯光-->
                 <div class="cameraCard popCard" v-if="route.includes('Light')">
-                    <p class="status">状&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;态:
+                    <p class="status">状&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;态:
                         <el-select name="" v-model="Light.lightStatus":disabled="isDisabled" >
                             <el-option :value="true" label="通电"></el-option>
                             <el-option :value="false" label="断电"></el-option>
                         </el-select>
                     </p>
-                    <p class="name">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称：
+                    <p class="name">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称:
                         <el-input type="text" v-model="Light.name" :disabled="isDisabled"></el-input>
                     </p>
-                    <p class="port">路灯端口：
+                    <p class="port">路灯端口:
                         <el-input type="text" v-model="Light.port" :disabled="isDisabled"></el-input>
                     </p>
-                    <p class="num">路灯编号：
+                    <p class="num">路灯编号:
                         <el-input type="text" v-model="Light.serialNum" :disabled="isDisabled"></el-input>
                     </p>
-                    <p class="version">型&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;号:
+                    <p class="version">型&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;号:
                         <el-select  v-model="Light.model" :disabled="isDisabled">
                             <el-option v-for="item in modelType"
                                        :key="item.id"
@@ -305,11 +280,10 @@
                             </el-option>
                         </el-select>
                     </p >
-
-                    <p class="place">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置：<span>{{Light.location}}</span>
+                    <p class="place">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置:<span>{{Light.location}}</span>
                         <i class="el-icon-location-outline" @click="showMapDialog"></i>
                     </p>
-                    <p class="area">所属片区：
+                    <p class="area">所属片区:
                         <el-select name="" v-model="Light.regionId" :disabled="isDisabled">
                             <el-option  v-for="item in regions" :value="item.id"
                                 :label="item.name">
@@ -317,18 +291,14 @@
                             </el-option>
                         </el-select>
                     </p>
-                    <p class="describe">描&nbsp; &nbsp;&nbsp;&nbsp;述：
-                        <el-input type="textarea" v-model="Light.description"></el-input>
+                    <p class="describe">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述:
+
+                        <el-input type="textarea" v-model="Light.description" :disabled="isDisabled"></el-input>
                     </p>
-                    <!--<div class="img">-->
-                        <!--<label for="avatar">-->
-                            <!--<img :src="files.length ? files[0].url : 'https://www.gravatar.com/avatar/default?s=200&r=pg&d=mm'"  class="rounded-circle" />-->
-                        <!--</label>-->
-                    <!--</div>-->
                 </div>
                 <!--闸机-->
                 <div class="cameraCard popCard" v-if="route.includes('gate')">
-                    <p class="type">类&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  型：
+                    <p class="type">类&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;型:
                         <el-select name="" v-model="gate.gateType" :disabled="isDisabled">
                             <el-option :value="1" label="翼闸"></el-option>
                             <el-option :value="2" label="摆闸"></el-option>
@@ -336,10 +306,10 @@
                             <el-option :value="4" label="平移闸"></el-option>
                         </el-select>
                     </p>
-                    <p class="name">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称：
+                    <p class="name">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称:
                         <el-input type="text" v-model="gate.name" :disabled="isDisabled"></el-input>
                     </p>
-                    <p class="version">型&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;号：
+                    <p class="version">型&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;号:
                         <el-select  v-model="gate.model" :disabled="isDisabled">
                             <el-option v-for="item in modelType"
                                        :key="item.id"
@@ -348,47 +318,41 @@
                             </el-option>
                         </el-select>
                     </p>
-                    <p class="IP">设备I P ：
+                    <p class="IP">设&nbsp;&nbsp;备&nbsp;&nbsp;IP:
                         <el-input type="text" v-model="gate.ip" :disabled="isDisabled"></el-input>
                     </p>
-                    <p class="num">设备编号：
+                    <p class="num">设备编号:
                         <el-input type="text" v-model="gate.serialNum" :disabled="isDisabled"></el-input>
                     </p>
-                    <p class="name">端&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;口：
+                    <p class="name">端&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;口:
                         <el-input type="text" v-model="gate.port" :disabled="isDisabled"></el-input>
                     </p>
-                    <p class="place">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  置：
+                    <p class="place">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置:
                         <span>{{gate.location}}</span>
                         <i class="el-icon-location-outline" @click="showMapDialog"></i>
                     </p>
-                    <p class="area">所属片区：
+                    <p class="area">所属片区:
                         <el-select name="" v-model="gate.regionId" :disabled="isDisabled">
                             <el-option  v-for="item in regions" :value="item.id"
                                 :label="item.name"></el-option>
                         </el-select>
                     </p>
-                    <p class="describe">描&nbsp;&nbsp;&nbsp;&nbsp; 述：
-
-                        <el-input type="textarea"  v-model="gate.description"></el-input>
+                    <p class="describe">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述:
+                        <el-input type="textarea"  v-model="gate.description" :disabled="isDisabled"></el-input>
                     </p>
-                    <!--<div class="img">-->
-                        <!--<label for="avatar">-->
-                            <!--<img :src="files.length ? files[0].url : 'https://www.gravatar.com/avatar/default?s=200&r=pg&d=mm'"  class="rounded-circle" />-->
-                        <!--</label>-->
-                    <!--</div>-->
                 </div>
                 <!--报警柱-->
                 <div class="cameraCard popCard" v-if="route.includes('police')">
-                    <p class="type">类&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  型：
+                    <p class="type">类&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;型:
                         <el-select name="" v-model="police.sensorType" :disabled="isDisabled">
                             <el-option :value="10" label="报警柱"></el-option>
                             <el-option :value="11" label="越界"></el-option>
                         </el-select>
                     </p>
-                    <p class="name">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称：
+                    <p class="name">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称:
                         <el-input type="text" v-model="police.name" :disabled="isDisabled"></el-input>
                     </p>
-                    <p class="version">型&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;号:
+                    <p class="version">型&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;号:
                         <el-select name="" v-model="police.model" :disabled="isDisabled">
                             <el-option v-for="item in modelType"
                                        :key="item.id"
@@ -398,28 +362,29 @@
                             </el-option>
                         </el-select>
                     </p>
-                    <p class="host">设备编号：
+                    <p class="host">设备编号:
                         <el-input type="text" v-model="police.serialNum" :disabled="isDisabled"></el-input>
                     </p>
-                    <p class="port">设备端口：
+                    <p class="port">设备端口:
                         <el-input type="text" v-model="police.port" :disabled="isDisabled"></el-input>
                     </p>
-                    <p class="IP">设备I P ：
+                    <p class="IP">设&nbsp;&nbsp;备&nbsp;&nbsp;IP:
                         <el-input type="text" v-model="police.ip" :disabled="isDisabled"></el-input>
                     </p>
 
-                    <p class="place">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  置：
+                    <p class="place">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置:
                         <span>{{police.location}}</span>
                         <i class="el-icon-location-outline" @click="showMapDialog"></i>
                     </p>
-                    <p class="area">所属片区：
+                    <p class="area">所属片区:
                         <el-select name="" v-model="police.regionId" :disabled="isDisabled">
                             <el-option  v-for="item in regions" :value="item.id"
                                 :label="item.name"></el-option>
                         </el-select>
                     </p>
-                    <p class="describe">描&nbsp; 述：
-                        <el-input type="textarea" v-model="police.description"></el-input>
+                    <p class="describe">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述:
+
+                        <el-input type="textarea" v-model="police.description" :disabled="isDisabled" ></el-input>
                     </p>
                 </div>
 
@@ -1267,6 +1232,9 @@
                         padding: rem(3);
                         box-sizing: border-box;
                     }
+                }
+                .textarea {
+                    border-bottom: 1px solid transparent;
                 }
                 /*.img{
                         width: rem(120);
