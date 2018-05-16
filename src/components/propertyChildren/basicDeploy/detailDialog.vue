@@ -693,19 +693,15 @@
                 if (this.route.includes('person') && this.$route.params.id) {
                     newInfo = this.person
                     let idReg = /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/
-                    console.log(newInfo.name);
-                    console.log(newInfo.gender);
-                    console.log(newInfo.jobId);
-                    if (!(newInfo.name && newInfo.name.trim() === '') || !(newInfo.gender && newInfo.gender === '') || !(newInfo.jobId && newInfo.jobId === '')) {
-                        console.log(newInfo.name);
+                    if (!(newInfo.name && newInfo.name.trim() !== '') || !(newInfo.hasOwnProperty("gender") && newInfo.gender !== '') || !(newInfo.jobId && newInfo.jobId !== '')) {
                         this.$message.error('请填写完整信息')
                         return
                     }
-                    if ((newInfo.phone && newInfo.phone === '') || !myreg.test(newInfo.phone)) {
+                    if (!(newInfo.phone && newInfo.phone !== '') || !myreg.test(newInfo.phone)) {
                         this.$message.error('请填写正确的电话号码')
                         return
                     }
-                    if ((newInfo.idNum && newInfo.idNum === '') || !idReg.test(newInfo.idNum)) {
+                    if (!(newInfo.idNum && newInfo.idNum !== '') || !idReg.test(newInfo.idNum)) {
                         this.$message.error('请填写正确的身份证号码')
                         return
                     }
