@@ -97,6 +97,7 @@
             },
             selectFile(e){
                 console.log(this.$route.path)
+                var route = this.$route.path;
                 console.log(e.target.files[0], 'opopopopopops')
                 let file = e.target.files[0]
                 if (!file.type.includes('vnd.ms-excel')) {
@@ -106,12 +107,71 @@
                     var form = new FormData();
                     form.append('f1',file);
                     console.log(form, 'opopopopoppopop')
-                    api.importfile.importFileData(form).then(res => {
-                        console.log(res, '导入成功')
-                    }).catch(err => {
-                        this.$message.error('导入失败，请稍后重试')
-                        console.log(err, '导入失败')
-                    })
+
+                    switch (true){
+                        case route.includes("boat"):
+                            console.log("boat");
+                            break;
+                        case route.includes("roat"):
+                            console.log("roat");
+                            break;
+                        case route.includes("area"):
+                            console.log("area");
+                            break;
+                        case route.includes("toilet"):
+                            console.log("toilet");
+                            break;
+                        case route.includes("park"):
+                            console.log("park");
+                            break;
+                        case route.includes("shop"):
+                            console.log("shop");
+                            break;
+                        case route.includes("scenic"):
+                            console.log("scenic");
+                            break;
+                        case route.includes("trash"):
+                            console.log("trash");
+                            break;
+                        case route.includes("indicator"):
+                            console.log("indicator");
+                            break;
+                        case route.includes("plant"):
+                            console.log("plant");
+                            break;
+                        case route.includes("construction"):
+                            console.log("construction");
+                            break;
+                        case route.includes("1"):
+                            console.log("1");
+                            break;
+                        case route.includes("2"):
+                            console.log("2");
+                            break;
+                        case route.includes("3"):
+                            console.log("3");
+                            break;
+                        case route.includes("4"):
+                            console.log("4");
+                            break;
+                        case route.includes("5"):
+                            console.log("5");
+                            break;
+                        case route.includes("6"):
+                            console.log("6");
+                            break;
+                        case route.includes("7"):
+                            console.log("7");
+                            break;
+                    }
+
+
+                    // api.importfile.importFileData(form).then(res => {
+                    //     console.log(res, '导入成功')
+                    // }).catch(err => {
+                    //     this.$message.error('导入失败，请稍后重试')
+                    //     console.log(err, '导入失败')
+                    // })
                 }
             },
             deleteCard () {
