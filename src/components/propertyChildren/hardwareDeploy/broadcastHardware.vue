@@ -8,11 +8,12 @@
                 <Header @addNewInfo="addNewInfo"
                         @deletInfo="deletInfo"
                         @selectedAll="selectedAll"
-                        @downloadInfo="downloadInfo"
                         @searchAnything="searchAnything"
                         @fixedInfo="fixedInfo"
                         @choseType="choseType"
-                        @toggleList="toggleList">
+                        @toggleList="toggleList"
+                        @getAllBroadcast="getAllBroadcast"
+                        :choseId="choseInfoId">
                 </Header>
             </div>
 
@@ -59,7 +60,7 @@
                         <el-table-column
                             label="操作">
                             <template slot-scope="scope">
-                                <span @click="showBroadDetail(scope.row, '广播信息')">查看</span>
+                                <span @click="showBroadDetail(scope.row, '广播信息', true)">查看</span>
                                 <span class="line">|</span>
                                 <span @click="fixedInfo(scope.row.id )">编辑</span>
                                 <span class="line">|</span>
@@ -73,7 +74,7 @@
                             <!--<input type="checkbox" :checked="item.checked" class="checkBtn" @change="checked(item.id)">-->
                             <el-checkbox v-model="item.checked" @change="checked(item.id)" class="checkBtn"></el-checkbox>
                         </div>
-                        <div class="personType" @click.stop="showBroadDetail(item,'广播信息')">
+                        <div class="personType" @click.stop="showBroadDetail(item,'广播信息',true)">
                             <img src="../../../../static/img/broadcastCard.png" alt="">
                             <span class="name">
                                   {{item.name}}
@@ -92,7 +93,7 @@
                           :Info="broadInfo"
                           :title="title"
                           :isDisabled="isDisabled"
-                          @closeInfoDialog="visible=false"
+                          @closeInfoDialog="closeDialog"
                           @addNewInfo="addBroad"
                           @fixInfo="fixInfo">
                 </HardWare>
@@ -121,12 +122,16 @@
                 choseList:[],
                 isDisabled:true,
                 filterList: [],
+                choseId:[],
 
                 title:'',
                 isShowLoading:false
             }
         },
         methods:{
+            closeDialog () {
+                this.visible = false
+            },
             handleSelectionChange(val) {
                 this.multipleSelection = val;
             },
@@ -155,65 +160,16 @@
                 }
             },
             addNewInfo(){
-                this.showBroadDetail({},'添加广播信息')
+                this.showBroadDetail({},'添加广播信息',false)
                 this.isDisabled=false
             },
-            showBroadDetail(info,title){
+            showBroadDetail(info,title, state){
                 this.broadInfo=info
                 this.visible=true
+                this.isDisabled = state
                 this.title=title
 
             },
-            downloadInfo(){
-                if(this.choseInfoId.length >0){
-                    api.broadcast.exportBroadcast(this.choseInfoId).then((res) =>{
-                        console.log(res,'niaho')
-                        const content = res
-                        const blob = new Blob([content])
-                        const fileName = '测试.csv'
-                        if('download' in document.createElement('a')){
-                            const elink = document.createElement('a')
-                            elink.download = fileName
-                            elink.style.display = 'none'
-                            elink.href = URL.createObjectURL(blob)
-                            document.body.appendChild(elink)
-                            elink.click()
-                            URL.revokeObjectURL(elink.href) // 释放URL 对象
-                            document.body.removeChild(elink)
-                        }else{
-                            navigator.msSaveBlob(blob, fileName)
-                        }
-                        this.$message.success('导出成功')
-                        this.choseInfoId=[]
-                    }).catch(err =>{
-                        this.$message.error('导出失败，请稍后再试')
-                    })
-                }else{
-                    api.broadcast.exportAllBroadcast().then((res) =>{
-                        console.log(res,'niaho')
-                        const content = res
-                        const blob = new Blob([content])
-                        const fileName = '测试.csv'
-                        if('download' in document.createElement('a')){
-                            const elink = document.createElement('a')
-                            elink.download = fileName
-                            elink.style.display = 'none'
-                            elink.href = URL.createObjectURL(blob)
-                            document.body.appendChild(elink)
-                            elink.click()
-                            URL.revokeObjectURL(elink.href) // 释放URL 对象
-                            document.body.removeChild(elink)
-                        }else{
-                            navigator.msSaveBlob(blob, fileName)
-                        }
-                        this.$message.success('导出成功')
-                    }).catch(err =>{
-                        this.$message.error('导出失败，请稍后再试')
-                    })
-                }
-
-            },
-
 
             fixInfo(info){
                 let index = info.location.includes(',')?info.location.indexOf(','):info.location.indexOf('，')
@@ -233,6 +189,7 @@
                     longitude:longitude
                 }]
                 api.broadcast.updateBroadcast(broadObj).then(res =>{
+                    this.closeDialog()
                     this.$message.success('修改成功')
                     this.choseInfoId=[]
                     this.getAllBroadcast()
@@ -271,7 +228,7 @@
                             this.broadInfo=item
                         }
                     })
-                    this.showBroadDetail(this.broadInfo,'修改广播信息')
+                    this.showBroadDetail(this.broadInfo,'修改广播信息', false)
                     this.isDisabled=false
                 }else{
                     this.$message.error('请选择要修改的广播信息')
@@ -326,6 +283,7 @@
                     longitude:longitude
                 }]
                 api.broadcast.createBroadcast(broadObj).then(res =>{
+                    this.closeDialog()
                     this.$message.success('添加成功')
                     this.getAllBroadcast()
                 }).catch(err =>{

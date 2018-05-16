@@ -2,7 +2,7 @@
     <div class="cameraTitle">
         <div class="titleSearch">
             <input type="text" placeholder="请输入搜索内容" v-model="searchContent" @keyup="startSearch">
-            <i class="el-icon-search" @click="search"></i>
+            <i class="el-icon-search"></i>
         </div>
         <div class="titleBtn">
             <el-button size="mini" plain @click="addNewInfo"><i class="el-icon-circle-plus"></i>添加</el-button>
@@ -63,6 +63,7 @@
     import api from '@/api'
 
     export default{
+        props: ['choseId'],
         data(){
             return{
                 searchKeys:'',
@@ -93,9 +94,6 @@
                 this.$emit('searchAnything', this.searchContent)
                 // }
             },
-            search(){
-                this.$emit('search', this.searchKeys)
-            },
             addNewInfo(){
                 this.$emit('addNewInfo')
             },
@@ -103,28 +101,174 @@
                 this.$emit('deletInfo')
             },
             selectFile(e){
-                console.log(this.$route.path)
-                console.log(e.target.files[0], 'opopopopopops')
-                let file = e.target.files[0]
+                let file = e.target.files[0];
+                let params = {};
                 if (!file.type.includes('vnd.ms-excel')) {
                     this.$message.error('请上传CSV格式文件，谢谢！');
                     return
                 } else {
                     var form = new FormData();
                     form.append('f1',file);
-                    console.log(form, 'opopopopoppopop')
-                    api.importfile.importFileData(form).then(res => {
-                        console.log(res, '导入成功')
-                    }).catch(err => {
-                        this.$message.error('导入失败，请稍后重试')
-                        console.log(err, '导入失败')
-                    })
+                    if(this.$route.path.includes("broadcast")){
+                        params.fileParam = form;
+                        params.type = '1';
+                        console.log(form, 'opopopopoppopop')
+                        api.importfile.importFileData(params).then(res => {
+                            this.$message.success('导入成功');
+                            this.$emit("getAllBroadcast");
+                        }).catch(err => {
+                            this.$message.error('导入失败，请稍后重试')
+                            console.log(err, '导入失败')
+                        })
+
+                    }else if(this.$route.path.includes("camera")) {
+                        params.fileParam = form;
+                        params.type = '2';
+                        api.importfile.importFileData(params).then(res => {
+                            this.$message.success('导入成功');
+                            this.$emit("getAllCamera");
+                        }).catch(err => {
+                            this.$message.error('导入失败，请稍后重试')
+                            console.log(err, '导入失败')
+                        })
+
+                    }else if(this.$route.path.includes("monitors")){
+                        params.fileParam = form;
+                        params.type = '6';
+                        api.importfile.importFileData(params).then(res => {
+                            this.$message.success('导入成功');
+                            this.$emit("getAllMonitor");
+                        }).catch(err => {
+                            this.$message.error('导入失败，请稍后重试')
+                            console.log(err, '导入失败')
+                        })
+
+                    }else if(this.$route.path.includes("police")){
+                        params.fileParam = form;
+                        params.type = '8';
+                        api.importfile.importFileData(params).then(res => {
+                            this.$message.success('导入成功');
+                            this.$emit("getAllPolice");
+                        }).catch(err => {
+                            this.$message.error('导入失败，请稍后重试')
+                            console.log(err, '导入失败')
+                        })
+
+                    }else if(this.$route.path.includes("led")){
+                        params.fileParam = form;
+                        params.type = '4';
+                        api.importfile.importFileData(params).then(res => {
+                            this.$message.success('导入成功');
+                            this.$emit("getAllLed");
+                        }).catch(err => {
+                            this.$message.error('导入失败，请稍后重试')
+                            console.log(err, '导入失败')
+                        })
+
+                    }else if(this.$route.path.includes("wifi")){
+                        params.fileParam = form;
+                        params.type = '7';
+                        console.log(form, 'opopopopoppopop')
+                        api.importfile.importFileData(params).then(res => {
+                            this.$message.success('导入成功');
+                            this.$emit("getAllWifi");
+                        }).catch(err => {
+                            this.$message.error('导入失败，请稍后重试')
+                            console.log(err, '导入失败')
+                        })
+
+                    }else if(this.$route.path.includes("gate")){
+                        params.fileParam = form;
+                        params.type = '3';
+                        api.importfile.importFileData(params).then(res => {
+                            this.$message.success('导入成功');
+                            this.$emit("getAllGate");
+                        }).catch(err => {
+                            this.$message.error('导入失败，请稍后重试')
+                            console.log(err, '导入失败')
+                        })
+
+                    }else if(this.$route.path.includes("lampLight")){
+                        params.fileParam = form;
+                        params.type = '5';
+                        api.importfile.importFileData(params).then(res => {
+                            this.$message.success('导入成功');
+                            this.$emit("getAllLight");
+                        }).catch(err => {
+                            this.$message.error('导入失败，请稍后重试')
+                            console.log(err, '导入失败')
+                        })
+                    }
                 }
             },
 
-            downloadFile(id){
-                console.log(id);
-                this.$emit('downloadInfo',id)
+            downloadFile(){
+//                this.$emit('downloadInfo',id)
+                let type
+                let route = this.$route.path
+                if (route.includes('broadcast')) {
+                    type = 1
+                }else if(route.includes('camera')){
+                    type = 2
+                }else if(route.includes('gate')){
+                    type = 3
+                } else if(route.includes('led')){
+                    type =4
+                }else if(route.includes('lampLight')){
+                    type = 5
+                }else if(route.includes('monitors')){
+                    type = 6
+                }else if(route.includes('wifi')){
+                    type = 7
+                }else if(route.includes('police')){
+                    type = 8
+                }
+                if (this.choseId.length > 0) {
+                    api.exportFile.exportSingle(this.choseId).then((res) =>{
+                        console.log(res,'niaho')
+                        const content = res
+                        const blob = new Blob([content])
+                        const fileName = '设备文件.csv'
+                        if('download' in document.createElement('a')){
+                            const elink = document.createElement('a')
+                            elink.download = fileName
+                            elink.style.display = 'none'
+                            elink.href = URL.createObjectURL(blob)
+                            document.body.appendChild(elink)
+                            elink.click()
+                            URL.revokeObjectURL(elink.href) // 释放URL 对象
+                            document.body.removeChild(elink)
+                        }else{
+                            navigator.msSaveBlob(blob, fileName)
+                        }
+                        this.$message.success('导出成功')
+//                        this.choseId=[]
+                    }).catch(err =>{
+                        this.$message.error('导出失败，请稍后再试')
+                    })
+                } else {
+                    api.exportFile.exportAll(type).then((res) => {
+                        console.log(res,'niaho')
+                        const content = res
+                        const blob = new Blob([content])
+                        const fileName = '测试.csv'
+                        if('download' in document.createElement('a')){
+                            const elink = document.createElement('a')
+                            elink.download = fileName
+                            elink.style.display = 'none'
+                            elink.href = URL.createObjectURL(blob)
+                            document.body.appendChild(elink)
+                            elink.click()
+                            URL.revokeObjectURL(elink.href) // 释放URL 对象
+                            document.body.removeChild(elink)
+                        }else{
+                            navigator.msSaveBlob(blob, fileName)
+                        }
+                        this.$message.success('导出成功')
+                    }).catch(err => {
+                        this.$message.error('导出失败，请稍后再试')
+                    })
+                }
             },
             toggleList(type){
                 this.$emit('toggleList',type)

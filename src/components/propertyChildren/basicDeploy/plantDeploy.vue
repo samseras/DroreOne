@@ -53,7 +53,7 @@
                         <el-table-column
                             label="操作">
                             <template slot-scope="scope">
-                                <span @click="showPersonDetail(scope.row, '植物信息')">查看</span>
+                                <span @click="showPersonDetail(scope.row, '植物信息',true)">查看</span>
                                 <span class="line">|</span>
                                 <span @click="fixedInfo(scope.row.id )">编辑</span>
                                 <span class="line">|</span>
@@ -65,7 +65,7 @@
                         <div class="checkBox">
                             <el-checkbox v-model="item.checked" @change="checked(item.id)" class="checkBtn"></el-checkbox>
                         </div>
-                        <div class="personType" @click.stop="showPersonDetail(item, '植物信息')">
+                        <div class="personType" @click.stop="showPersonDetail(item, '植物信息',true)">
                             <img src="../../../../static/img/botanyCard.png" alt="">
                             <span class="type">
                                   {{item.plant.name}}
@@ -84,7 +84,7 @@
                               :Info="treeInfo"
                               :isDisabled="isDisabled"
                               :title="title"
-                              @closeInfoDialog ="visible = false"
+                              @closeInfoDialog ="closeDialog"
                               @fixInfo = "fixInfo"
                               @addNewInfo="addNewTree">
                 </PersonDetail>
@@ -117,6 +117,9 @@
             }
         },
         methods: {
+            closeDialog () {
+                this.visible = false
+            },
             searchAnything (info) {
                 console.log(info, '这是要过滤的')
                 if (info.trim() !== '') {
@@ -138,13 +141,14 @@
             handleSelectionChange(val) {
                 this.multipleSelection = val;
             },
-            showPersonDetail (info, title) {
+            showPersonDetail (info, title, state) {
                 this.treeInfo = info
                 this.visible = true
+                this.isDisabled = state
                 this.title = title
             },
             addNewInfo () {
-                this.showPersonDetail({plant:{}}, '添加植物信息')
+                this.showPersonDetail({plant:{}}, '添加植物信息',false)
                 this.isDisabled = false
             },
             deletInfo (id) {
@@ -255,6 +259,7 @@
                     genera: info.plant.genera
                 }
                 await api.plant.updatePlant(JSON.stringify(treetObj)).then(res => {
+                    this.closeDialog()
                     console.log(res, '修改成功')
                     this.$message.success('修改成功')
                     this.choseInfoId = []
@@ -281,6 +286,7 @@
                     genera: info.plant.genera
                 }
                 await api.plant.createPlant(JSON.stringify(treetObj)).then(res => {
+                    this.closeDialog()
                     console.log(res, '添加成功')
                     this.$message.success('创建成功')
                     this.getAllTree()
@@ -295,6 +301,7 @@
                 }
                 if (this.choseInfoId.length > 1) {
                     this.$message.warning('至多选择一个数据修改')
+                    return
                 }
                 if (this.choseInfoId.length > 0) {
                     this.treeList.map((item) => {
@@ -302,7 +309,7 @@
                             this.treeInfo = item
                         }
                     })
-                    this.showPersonDetail(this.treeInfo, '修改植物信息')
+                    this.showPersonDetail(this.treeInfo, '修改植物信息',false)
                     this.isDisabled = false
                     this.choseInfoId = []
                 } else {
@@ -418,13 +425,19 @@
                             position: absolute;
                             left: rem(15);
                             top: rem(-10);
-
                         }
                         span{
+                            display: inline-block;
+                            width: rem(100);
                             float: right;
-                            margin-right: rem(20);
+                            text-align: right;
+                            padding-right: rem(5);
                             line-height: rem(20);
                             color: #fff;
+                            overflow: hidden;
+                            text-overflow: ellipsis;
+                            white-space: nowrap;
+                            box-sizing: border-box;
                         }
                     }
                     .specificInfo{

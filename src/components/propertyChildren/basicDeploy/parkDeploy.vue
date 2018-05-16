@@ -64,7 +64,7 @@
                         <el-table-column
                             label="操作">
                             <template slot-scope="scope">
-                                <span @click="showParkDetail(scope.row, '停车场信息')">查看</span>
+                                <span @click="showParkDetail(scope.row, '停车场信息',true)">查看</span>
                                 <span class="line">|</span>
                                 <span @click="fixedInfo(scope.row.id )">编辑</span>
                                 <span class="line">|</span>
@@ -76,7 +76,7 @@
                         <div class="checkBox">
                             <el-checkbox v-model="item.checked" @change="checked(item.id)" class="checkBtn"></el-checkbox>
                         </div>
-                        <div class="personType" @click.stop="showParkDetail(item, '停车场信息')">
+                        <div class="personType" @click.stop="showParkDetail(item, '停车场信息',true)">
                             <img src="../../../../static/img/parkCard.png" alt="">
                             <span class="type">
                                   {{item.parkingBean.name}}
@@ -95,7 +95,7 @@
                               :Info="parkInfo"
                               :isDisabled="isDisabled"
                               :title="title"
-                              @closeInfoDialog ="visible = false"
+                              @closeInfoDialog ="closeDialog"
                               @fixInfo = "fixInfo"
                               @addNewInfo="addNewPark">
                 </PersonDetail>
@@ -128,6 +128,9 @@
             }
         },
         methods: {
+            closeDialog () {
+                this.visible = false
+            },
             searchAnything (info) {
                 console.log(info, '这是要过滤的')
                 if (info.trim() !== '') {
@@ -146,13 +149,14 @@
             handleSelectionChange(val) {
                 this.multipleSelection = val;
             },
-            showParkDetail (info, title) {
+            showParkDetail (info, title,state) {
                 this.parkInfo = info
                 this.visible = true
+                this.isDisabled = state
                 this.title = title
             },
             addNewInfo () {
-                this.showParkDetail({parkingBean:{}},'添加停车场信息')
+                this.showParkDetail({parkingBean:{}},'添加停车场信息',false)
                 this.isDisabled = false
             },
             deletInfo (id) {
@@ -265,6 +269,7 @@
                     longitude: longitude
                 }
                 await api.park.updatePark(JSON.stringify(parkObj)).then(res => {
+                    this.closeDialog()
                     console.log(res, '修改停车场成功')
                     this.$message.success('修改成功')
                     this.choseInfoId = []
@@ -286,6 +291,7 @@
                     longitude: longitude
                 }
                 await api.park.createPark(JSON.stringify(parkObj)).then(res => {
+                    this.closeDialog()
                     console.log(res, '创建停车场成功')
                     this.$message.success('创建成功')
                     this.getAllPark()
@@ -307,7 +313,7 @@
                             this.parkInfo = item
                         }
                     })
-                    this.showParkDetail(this.parkInfo, '修改停车场信息')
+                    this.showParkDetail(this.parkInfo, '修改停车场信息',false)
                     this.isDisabled = false
                     this.choseInfoId = []
                 } else {
@@ -434,10 +440,17 @@
 
                         }
                         span{
+                            display: inline-block;
+                            width: rem(100);
                             float: right;
-                            margin-right: rem(20);
+                            text-align: right;
+                            padding-right: rem(5);
                             line-height: rem(20);
                             color: #fff;
+                            overflow: hidden;
+                            text-overflow: ellipsis;
+                            white-space: nowrap;
+                            box-sizing: border-box;
                         }
                     }
                     .specificInfo{

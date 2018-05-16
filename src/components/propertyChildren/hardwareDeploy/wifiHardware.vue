@@ -10,8 +10,10 @@
                         @selectedAll="selectedAll"
                         @fixedInfo="fixedInfo"
                         @searchAnything="searchAnything"
+                        :choseId="choseInfoId"
                         @choseType="choseType"
-                        @toggleList="toggleList">
+                        @toggleList="toggleList"
+                        @getAllWifi = "getAllWifi">
                 </Header>
             </div>
 
@@ -64,7 +66,7 @@
                         </el-table-column>
                         <el-table-column>
                             <template slot-scope="scope">
-                                <span @click="showWifiDetail(scope.row, 'Wifi信息')">查看</span>
+                                <span @click="showWifiDetail(scope.row, 'Wifi信息',true)">查看</span>
                                 <span class="line">|</span>
                                 <span @click="fixedInfo(scope.row.id )">编辑</span>
                                 <span class="line">|</span>
@@ -77,7 +79,7 @@
                         <div class="checkBox">
                             <el-checkbox v-model="item.checked" @change="checked(item.id)" class="checkBtn"></el-checkbox>
                         </div>
-                        <div class="personType" @click.stop="showWifiDetail(item,'WIFI信息')">
+                        <div class="personType" @click.stop="showWifiDetail(item,'WIFI信息',true)">
                             <img src="../../../../static/img/wifiCard.png" alt="">
                             <span class="name">
                                   {{item.name}}
@@ -96,7 +98,7 @@
                           :Info="wifiInfo"
                           :title="title"
                           :isDisabled="isDisabled"
-                          @closeInfoDialog="visible=false"
+                          @closeInfoDialog="closeDialog"
                           @addNewInfo="addWifi"
                           @fixInfo="fixInfo">
 
@@ -131,6 +133,9 @@
             }
         },
         methods:{
+            closeDialog () {
+                this.visible = false
+            },
             searchAnything (info) {
                 console.log(info, '这是要过滤的')
                 if (info.trim() !== '') {
@@ -156,12 +161,13 @@
                 this.multipleSelection = val;
             },
             addNewInfo(){
-                this.showWifiDetail({},'添加WIFI信息')
+                this.showWifiDetail({},'添加WIFI信息',false)
                 this.isDisabled=false
             },
-            showWifiDetail(info,title){
+            showWifiDetail(info,title,state){
                 this.wifiInfo=info
                 this.visible=true
+                this.isDisabled = state
                 this.title=title
 
             },
@@ -187,6 +193,7 @@
                 }]
                 console.log(wifiObj)
                 api.wifi.updateWifi(wifiObj).then(res =>{
+                    this.closeDialog()
                     this.$message.success('修改成功')
                     this.choseInfoId=[]
                     this.getAllWifi()
@@ -208,7 +215,7 @@
                             this.wifiInfo=item
                         }
                     })
-                    this.showWifiDetail(this.wifiInfo,'修改WIFI信息')
+                    this.showWifiDetail(this.wifiInfo,'修改WIFI信息',false)
                     this.isDisabled=false
                 }else{
                     this.$message.error('请选择要修改的WIFI')
@@ -265,6 +272,7 @@
                     longitude:longitude
                 }]
                 api.wifi.createWifi(wifiObj).then(res => {
+                    this.closeDialog()
                     this.$message.success('添加成功')
                     this.getAllWifi()
                 }).catch(err => {

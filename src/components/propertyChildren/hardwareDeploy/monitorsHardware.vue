@@ -9,9 +9,11 @@
                         @deletInfo="deletInfo"
                         @selectedAll="selectedAll"
                         @fixedInfo="fixedInfo"
+                        :choseId="choseInfoId"
                         @searchAnything="searchAnything"
                         @choseType="choseType"
-                        @toggleList="toggleList">
+                        @toggleList="toggleList"
+                        @getAllMonitor="getAllMonitor">
                 </Header>
             </div>
 
@@ -59,7 +61,7 @@
                         <el-table-column label="操作">
 
                             <template slot-scope="scope">
-                                <span @click="showMonitorDetail(scope.row, '传感器信息')">查看</span>
+                                <span @click="showMonitorDetail(scope.row, '传感器信息',true)">查看</span>
                                 <span class="line">|</span>
                                 <span @click="fixedInfo(scope.row.id )">编辑</span>
                                 <span class="line">|</span>
@@ -74,7 +76,7 @@
                             <el-checkbox v-model="item.checked" @change="checked(item.id)" class="checkBtn"></el-checkbox>
 
                         </div>
-                        <div class="personType" @click.stop="showMonitorDetail(item,'传感器信息')">
+                        <div class="personType" @click.stop="showMonitorDetail(item,'传感器信息',true)">
                             <img src="../../../../static/img/environmentCard.png" alt="">
                             <span class="type">
                                   {{item.name}}
@@ -92,7 +94,7 @@
                           :Info="monitorInfo"
                           :title="title"
                           :isDisabled="isDisabled"
-                          @closeInfoDialog="visible=false"
+                          @closeInfoDialog="closeDialog"
                           @addNewInfo="addMonitors"
                           @fixInfo="fixInfo">
 
@@ -128,6 +130,9 @@
             }
         },
         methods:{
+            closeDialog () {
+                this.visible = false
+            },
             searchAnything (info) {
                 console.log(info, '这是要过滤的')
                 if (info.trim() !== '') {
@@ -156,12 +161,13 @@
                 this.multipleSelection = val;
             },
             addNewInfo(){
-                this.showMonitorDetail({},'添加传感器信息')
+                this.showMonitorDetail({},'添加传感器信息',false)
                 this.isDisabled=false
             },
-            showMonitorDetail(info,title){
+            showMonitorDetail(info,title,state){
                 this.monitorInfo=info
                 this.visible=true
+                this.isDisabled = state
                 this.title=title
 
             },
@@ -184,6 +190,7 @@
                     longitude:longitude
                 }]
                 api.monitor.updateMonitor(monitorsObj).then(res =>{
+                    this.closeDialog()
                     this.$message.success('修改成功')
                     this.choseInfoId=[]
                     this.getAllMonitor()
@@ -205,7 +212,7 @@
                             this.monitorInfo=item
                         }
                     })
-                    this.showMonitorDetail(this.monitorInfo,'修改传感器信息')
+                    this.showMonitorDetail(this.monitorInfo,'修改传感器信息',false)
                     this.isDisabled=false
                 }else{
                     this.$message.error('请选择要修改的传感器')
@@ -261,6 +268,7 @@
                     longitude:longitude
                 }]
                 api.monitor.createMonitor(monitorsObj).then(res =>{
+                    this.closeDialog()
                     this.$message.success('添加成功')
                     this.getAllMonitor()
                 }).catch(err =>{
@@ -336,7 +344,7 @@
                         this.monitorsList[i].id=this.monitorsList[i].id
                         this.monitorsList[i].location=`${this.monitorsList[i].longitude},${this.monitorsList[i].latitude}`
                     }
-                    this.checkList = this,monitorsList
+                    this.checkList = this.monitorsList
                 }).catch((err)=>{
                     console.log(err)
                 })

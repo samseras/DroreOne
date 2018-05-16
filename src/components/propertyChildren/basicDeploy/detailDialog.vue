@@ -11,15 +11,17 @@
             <div class="card">
                 <!--人员-->
                 <div class="personCardContent" v-if="route.includes('person') && $route.params.id">
-                    <p class="name">姓&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;名：<input type="text"v-model="person.name"></p>
+                    <p class="name">姓&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;名：
+                        <el-input type="text"v-model="person.name" :disabled="isDisabled"></el-input>
+                    </p>
                     <p class="sex">性&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;别：
-                        <el-select v-model="person.gender" placeholder="请选择">
+                        <el-select v-model="person.gender" placeholder="请选择" :disabled="isDisabled">
                             <el-option label="男" :value="1"></el-option>
                             <el-option label="女" :value="0"></el-option>
                         </el-select>
                     </p>
                     <p class="type">人员角色：
-                        <el-select v-model="person.jobId" placeholder="请选择">
+                        <el-select v-model="person.jobId" placeholder="请选择" disabled>
                             <el-option
                                 v-for="item in options"
                                 :key="item.value"
@@ -28,8 +30,12 @@
                             </el-option>
                         </el-select>
                     </p>
-                    <p class="idNum">身份证号：<input type="text"v-model="person.idNum"></p>
-                    <p class="phoneNum">电话号码：<input type="text"v-model="person.phone"></p>
+                    <p class="idNum">身份证号：
+                        <el-input type="text"v-model="person.idNum" :disabled="isDisabled"></el-input>
+                    </p>
+                    <p class="phoneNum">电话号码：
+                        <el-input type="text"v-model="person.phone" :disabled="isDisabled"></el-input>
+                    </p>
                     <div class="img">
                         <img :src="getUrl(person.picturePath)" alt="" v-if="isDisabled" @error="imgError">
                         <label for="avatar" v-if="!isDisabled">
@@ -40,24 +46,29 @@
                 <!--车船-->
                 <div class="personCardContent boatCardContent" v-if="route.includes('boat')">
                     <p class="name">类&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;型：
-                        <el-select v-model="boatCar.vehicle.type" placeholder="请选择" @change="selectePerson(boatCar.vehicle.type)">
+                        <el-select v-model="boatCar.vehicle.type" placeholder="请选择" @change="selectePerson(boatCar.vehicle.type)" :disabled="isDisabled">
                             <el-option label="船只" :value="1"></el-option>
                             <el-option label="车辆" :value="0"></el-option>
                         </el-select>
                     </p>
-                    <p class="sex">编&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;号：<input type="text"v-model="boatCar.vehicle.serialNum"></p>
+                    <p class="sex">编&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;号：
+                        <el-input type="text"v-model="boatCar.vehicle.serialNum" :disabled="isDisabled"></el-input>
+                    </p>
                     <p class="type">维护状态：
-                        <el-select v-model="boatCar.vehicle.maintenanceStatus" placeholder="请选择">
+                        <el-select v-model="boatCar.vehicle.maintenanceStatus" placeholder="请选择" :disabled="isDisabled">
                             <el-option label="异常" :value="1"></el-option>
                             <el-option label="正常" :value="0"></el-option>
                         </el-select>
                     </p>
-                    <p class="idNum">核载人数：<input type="text"v-model="boatCar.vehicle.capacity"></p>
+                    <p class="idNum">核载人数：
+                        <el-input type="text"v-model="boatCar.vehicle.capacity" :disabled="isDisabled"></el-input>
+                    </p>
                     <p class="phoneNum data">购买时间：
                         <!--<input type="text"v-model="boatCar.vehicle.purchaseDate">-->
                         <el-date-picker
                             v-model="boatCar.vehicle.purchaseDate"
                             type="date"
+                            :disabled="isDisabled"
                             placeholder="选择日期">
                         </el-date-picker>
                     </p>
@@ -65,11 +76,12 @@
                         <el-date-picker
                             v-model="boatCar.vehicle.maintenanceDate"
                             type="date"
+                            :disabled="isDisabled"
                             placeholder="选择日期">
                         </el-date-picker>
                     </p>
                     <p class="phoneNum">驾驶人员：
-                        <el-select v-model="boatCar.driverId" placeholder="请选择">
+                        <el-select v-model="boatCar.driverId" placeholder="请选择" :disabled="isDisabled">
                             <el-option
                                 v-for="item in driverList"
                                 :key="item.id"
@@ -78,20 +90,24 @@
                             </el-option>
                         </el-select>
                     </p>
-                    <p class="phoneNum" v-if="isDisabled">联系电话：<input type="text"v-model="boatCar.driverPhone"></p>
-                    <p class="phoneNum">设备号码：<input type="text"v-model="boatCar.vehicle.model"></p>
+                    <p class="phoneNum" v-if="isDisabled">联系电话：
+                        <el-input type="text"v-model="boatCar.driverPhone" :disabled="isDisabled"></el-input>
+                    </p>
+                    <p class="phoneNum">设备号码：
+                        <el-input type="text"v-model="boatCar.vehicle.model" :disabled="isDisabled"></el-input>
+                    </p>
                 </div>
                 <!--指示牌-->
                 <div class="personCardContent boatCardContent" v-if="route.includes('indicator')">
                     <p class="name">类&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;型：
-                        <el-select v-model="indicator.signboardBean.type" placeholder="请选择">
+                        <el-select v-model="indicator.signboardBean.type" placeholder="请选择" :disabled="isDisabled">
                             <el-option label="标语类" :value="0"></el-option>
                             <el-option label="路线类" :value="1"></el-option>
                             <el-option label="设施类" :value="2"></el-option>
                         </el-select>
                     </p>
                     <p class="phoneNum">所属片区：
-                        <el-select v-model="indicator.regionId" placeholder="请选择">
+                        <el-select v-model="indicator.regionId" placeholder="请选择" :disabled="isDisabled">
                             <el-option
                                 v-for="item in regions"
                                 :key="item.id"
@@ -100,27 +116,34 @@
                             </el-option>
                         </el-select>
                     </p>
-                    <p class="phoneNum">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置：<span>{{indicator.location}}</span><i class="el-icon-location-outline" @click="showMapDialog"></i></p>
+                    <p class="phoneNum">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置：
+                        <span>{{indicator.location}}</span><i class="el-icon-location-outline" @click="showMapDialog"></i></p>
                 </div>
                 <!--垃圾桶-->
                 <div class="personCardContent boatCardContent" v-if="route.includes('trash')">
                     <p class="name">类&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;型：
-                        <el-select v-model="trash.dustbinBean.type" placeholder="请选择">
+                        <el-select v-model="trash.dustbinBean.type" placeholder="请选择" :disabled="isDisabled">
                             <el-option label="临时" :value="1"></el-option>
                             <el-option label="固定" :value="0"></el-option>
                         </el-select>
                     </p>
-                    <p class="sex">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称：<input type="text"v-model="trash.dustbinBean.name"></p>
+                    <p class="sex">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称：
+                        <el-input type="text"v-model="trash.dustbinBean.name" :disabled="isDisabled"></el-input>
+                    </p>
                     <p class="type" v-if="false">状&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;态：
-                        <el-select v-model="trash.status" placeholder="请选择">
+                        <el-select v-model="trash.status" placeholder="请选择" :disabled="isDisabled">
                             <el-option label="充裕" value="充裕"></el-option>
                             <el-option label="已满" value="已满"></el-option>
                         </el-select>
                     </p>
-                    <p class="idNum">个&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;数：<input type="text"v-model="trash.dustbinBean.dustbinCount"></p>
-                    <p class="phoneNum">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置：<span>{{trash.location}}</span><i class="el-icon-location-outline" @click="showMapDialog"></i></p>
+                    <p class="idNum">个&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;数：
+                        <el-input type="text"v-model="trash.dustbinBean.dustbinCount" :disabled="isDisabled"></el-input>
+                    </p>
+                    <p class="phoneNum">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置：
+                        <span>{{trash.location}}</span><i class="el-icon-location-outline" @click="showMapDialog"></i>
+                    </p>
                     <p class="phoneNum">所属片区：
-                        <el-select v-model="trash.regionId" placeholder="请选择">
+                        <el-select v-model="trash.regionId" placeholder="请选择" :disabled="isDisabled">
                             <el-option
                                 v-for="item in regions"
                                 :key="item.id"
@@ -132,9 +155,11 @@
                 </div>
                 <!--景点-->
                 <div class="personCardContent boatCardContent" v-if="route.includes('scenic')">
-                    <p class="name">景点名称：<input type="text"v-model="scenic.scenicspotBean.name"></p>
+                    <p class="name">景点名称：
+                        <el-input type="text"v-model="scenic.scenicspotBean.name" :disabled="isDisabled"></el-input>
+                    </p>
                     <p class="sex">所属片区：
-                        <el-select v-model="scenic.regionId" placeholder="请选择">
+                        <el-select v-model="scenic.regionId" placeholder="请选择" :disabled="isDisabled">
                             <el-option
                                 v-for="item in regions"
                                 :key="item.id"
@@ -146,20 +171,26 @@
                     </p>
                     <p class="type" v-if="isDisabled">
                         状&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;态：
-                        <el-select v-model="indicator.scenicspotBean.status" placeholder="请选择">
+                        <el-select v-model="scenic.scenicspotBean.statu" placeholder="请选择" :disabled="isDisabled">
                             <el-option label="充裕" value="充裕"></el-option>
                             <el-option label="已满" value="已满"></el-option>
                         </el-select>
                     </p>
-                    <p class="idNum">容&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;量：<input type="text"v-model="scenic.scenicspotBean.capacity"></p>
+                    <p class="idNum">容&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;量：
+                        <el-input type="text"v-model="scenic.scenicspotBean.capacity" :disabled="isDisabled"></el-input>
+                    </p>
 
-                    <p class="phoneNum">当前人数：<input type="text"v-model="scenic.scenicspotBean.currentNum"></p>
-                    <p class="phoneNum">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置：<span>{{scenic.location}}</span><i class="el-icon-location-outline" @click="showMapDialog"></i></p>
+                    <p class="phoneNum">当前人数：
+                        <el-input type="text"v-model="scenic.scenicspotBean.currentNum" :disabled="isDisabled"></el-input>
+                    </p>
+                    <p class="phoneNum">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置：
+                        <span>{{scenic.location}}</span><i class="el-icon-location-outline" @click="showMapDialog"></i>
+                    </p>
                 </div>
                 <!--商圈-->
                 <div class="personCardContent boatCardContent" v-if="route.includes('shop')">
                     <p class="name">类&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;型：
-                        <el-select v-model="shop.businessBean.businessTypeId" placeholder="请选择">
+                        <el-select v-model="shop.businessBean.businessTypeId" placeholder="请选择" :disabled="isDisabled">
                             <el-option
                                 v-for="item in businesstype"
                                 :key="item.businessType.id"
@@ -168,20 +199,28 @@
                             </el-option>
                         </el-select>
                     </p>
-                    <p class="sex">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称：<input type="text"v-model="shop.businessBean.name"></p>
+                    <p class="sex">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称：
+                        <el-input type="text"v-model="shop.businessBean.name" :disabled="isDisabled"></el-input>
+                    </p>
                     <p class="type" v-if="isDisabled">
                         状&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;态：
-                        <el-select v-model="shop.businessBean.state" placeholder="请选择">
+                        <el-select v-model="shop.businessBean.state" placeholder="请选择" :disabled="isDisabled">
                             <el-option label="充裕" :value="充裕"></el-option>
                             <el-option label="已满" :value="已满"></el-option>
                         </el-select>
                     </p>
-                    <p class="idNum">容&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;量：<input type="text"v-model="shop.businessBean.capacity"></p>
+                    <p class="idNum">容&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;量：
+                        <el-input type="text"v-model="shop.businessBean.capacity" :disabled="isDisabled"></el-input>
+                    </p>
 
-                    <p class="phoneNum">当前人数：<input type="text"v-model="shop.businessBean.currentNum"></p>
-                    <p class="phoneNum">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置：<span>{{shop.location}}</span><i class="el-icon-location-outline" @click="showMapDialog"></i></p>
+                    <p class="phoneNum">当前人数：
+                        <el-input type="text"v-model="shop.businessBean.currentNum" :disabled="isDisabled"></el-input>
+                    </p>
+                    <p class="phoneNum">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置：
+                        <span>{{shop.location}}</span><i class="el-icon-location-outline" @click="showMapDialog"></i>
+                    </p>
                     <p class="phoneNum">所属片区：
-                        <el-select v-model="shop.regionId" placeholder="请选择">
+                        <el-select v-model="shop.regionId" placeholder="请选择" :disabled="isDisabled">
                             <el-option
                                 v-for="item in regions"
                                 :key="item.id"
@@ -194,27 +233,34 @@
                 <!--停车场-->
                 <div class="personCardContent boatCardContent" v-if="route.includes('park')">
                     <p class="name">类&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;型：
-                        <el-select v-model="park.parkingBean.type" placeholder="请选择">
+                        <el-select v-model="park.parkingBean.type" placeholder="请选择" :disabled="isDisabled">
                             <el-option label="室外" :value="0"></el-option>
                             <el-option label="室内" :value="1"></el-option>
                         </el-select>
                     </p>
-                    <p class="sex">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称：<input type="text"v-model="park.parkingBean.name"></p>
+                    <p class="sex">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称：
+                        <el-input type="text"v-model="park.parkingBean.name" :disabled="isDisabled"></el-input>
+                    </p>
                     <p class="type" v-if="isDisabled">
                         状&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;态：
-                        <el-select v-model="park.parkingBean.state" placeholder="请选择">
+                        <el-select v-model="park.parkingBean.state" placeholder="请选择" :disabled="isDisabled">
                             <el-option label="充裕" value="充裕"></el-option>
                             <el-option label="已满" value="已满"></el-option>
                             <el-option label="紧张" value="紧张"></el-option>
                         </el-select>
                     </p>
-                    <p class="idNum">空余车位：<input type="text"v-model="park.parkingBean.surplusNum"></p>
-                    <p class="phoneNum">车位总数：<input type="text"v-model="park.parkingBean.capacity"></p>
-                    <p class="phoneNum">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置：<span>{{park.location}}</span>
+                    <p class="idNum">空余车位：
+                        <el-input type="text"v-model="park.parkingBean.surplusNum" :disabled="isDisabled"></el-input>
+                    </p>
+                    <p class="phoneNum">车位总数：
+                        <el-input type="text"v-model="park.parkingBean.capacity" :disabled="isDisabled"></el-input>
+                    </p>
+                    <p class="phoneNum">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置：
+                        <span>{{park.location}}</span>
                         <i class="el-icon-location-outline" @click="showMapDialog"></i>
                     </p>
                     <p class="phoneNum">所属片区：
-                        <el-select v-model="park.regionId" placeholder="请选择">
+                        <el-select v-model="park.regionId" placeholder="请选择" :disabled="isDisabled">
                             <el-option
                                 v-for="item in regions"
                                 :key="item.id"
@@ -226,9 +272,11 @@
                 </div>
                 <!--洗手间-->
                 <div class="personCardContent boatCardContent" v-if="route.includes('toilet')">
-                    <p class="sex">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称：<input type="text"v-model="toilet.toiletBean.name"></p>
+                    <p class="sex">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称：
+                        <el-input type="text"v-model="toilet.toiletBean.name" :disabled="isDisabled"></el-input>
+                    </p>
                     <p class="phoneNum">所属片区：
-                        <el-select v-model="toilet.regionId" placeholder="请选择">
+                        <el-select v-model="toilet.regionId" placeholder="请选择" :disabled="isDisabled">
                             <el-option
                                 v-for="item in regions"
                                 :key="item.id"
@@ -239,39 +287,49 @@
                     </p>
                     <p class="type" v-if="isDisabled">
                         状&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;态：
-                        <el-select v-model="toilet.state" placeholder="请选择">
+                        <el-select v-model="toilet.state" placeholder="请选择" :disabled="isDisabled">
                             <el-option label="正常" value="正常"></el-option>
                             <el-option label="紧张" value="紧张"></el-option>
                         </el-select>
                     </p>
-                    <p class="phoneNum">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置：<span>{{toilet.location}}</span><i class="el-icon-location-outline" @click="showMapDialog"></i></p>
+                    <p class="phoneNum">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置：
+                        <span>{{toilet.location}}</span><i class="el-icon-location-outline" @click="showMapDialog"></i>
+                    </p>
                 </div>
                 <!--片区-->
                 <div class="personCardContent boatCardContent" v-if="route.includes('area')">
-                    <p class="sex">片区名称：<input type="text" v-model="area.name" required="required"></p>
-                    <p class="phoneNum" v-if="false">所在景区：<input type="text"v-model="area.placeScenic"></p>
-                    <p class="phoneNum">位置范围：<span>{{area.geo}}</span><i class="el-icon-location-outline" @click="showMapDialog"></i></p>
-                    <p class="type">
-                        描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：<textarea name="" v-model="area.description" cols="30"
-                                                                               rows="5" placeholder="请输入描述信息"></textarea>
+                    <p class="sex">片区名称：
+                        <el-input type="text" v-model="area.name" required="required" :disabled="isDisabled"></el-input>
+                    </p>
+                    <p class="phoneNum" v-if="false">所在景区：
+                        <el-input type="text"v-model="area.placeScenic" :disabled="isDisabled"></el-input>
+                    </p>
+                    <p class="phoneNum">位置范围：
+                        <span>{{area.location}}</span><i class="el-icon-location-outline" @click="showMapDialog"></i>
+                    </p>
+                    <p class="textarea">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：
+                        <el-input type="textarea"  v-model="area.description" :disabled="isDisabled" ></el-input>
                     </p>
                 </div>
                 <!--路网-->
                 <div class="personCardContent boatCardContent" v-if="route.includes('roat')">
-                    <p class="sex">路线名称：<input type="text"v-model="roat.name"></p>
-                    <p class="phoneNum">位置范围：<span>{{roat.location}}</span><i class="el-icon-location-outline" @click="showMapDialog"></i></p>
+                    <p class="sex">路线名称：
+                        <el-input type="text"v-model="roat.name" :disabled="isDisabled"></el-input>
+                    </p>
+                    <p class="phoneNum">位置范围：
+                        <span>{{roat.location}}</span><i class="el-icon-location-outline" @click="showMapDialog"></i>
+                    </p>
                     <p class="type">
                         路线类型：
-                        <el-select v-model="roat.type" placeholder="请选择">
+                        <el-select v-model="roat.type" placeholder="请选择" :disabled="isDisabled">
                             <el-option label="水路" :value="1"></el-option>
                             <el-option label="公交道路" :value="2"></el-option>
                             <el-option label="步行道路" :value="3"></el-option>
                             <el-option label="驾车路线" :value="4"></el-option>
                         </el-select>
                     </p>
-                    <p class="type">
-                        描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：<textarea name=""v-model="roat.description" cols="30"
-                                                                               rows="5" placeholder="请输入描述信息"></textarea>
+                    <p class="textarea">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：
+                        <el-input type="textarea"  v-model="roat.description" :disabled="isDisabled" ></el-input>
                     </p>
                 </div>
                 <!--设施类行-->
@@ -289,27 +347,31 @@
                 </div>
                 <!--人员类型-->
                 <div class="personCardContent boatCardContent" v-if="route.includes('personType')">
-                    <p class="basicType">人员类型：<input type="text"v-model="job.name">
+                    <p class="basicType">人员类型：
+                        <el-input type="text"v-model="job.name"></el-input>
                     </p>
                 </div>
                 <!--植物-->
                 <div class="personCardContent boatCardContent" v-if="route.includes('plant-deploy')">
-                    <p class="sex">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称：<input type="text"v-model="tree.plant.name"></p>
+                    <p class="sex">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称：
+                        <el-input type="text"v-model="tree.plant.name" :disabled="isDisabled"></el-input>
+                    </p>
                     <p class="name">科&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;目：
-                        <input type="text"v-model="tree.plant.genera">
+                        <el-input type="text"v-model="tree.plant.genera" :disabled="isDisabled"></el-input>
                     </p>
                     <p class="name">高&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;度：
-                        <input type="number"v-model="tree.plant.height"  placeholder="请输入树木高度（数字）">
+                        <el-input type="number"v-model="tree.plant.height"  min = "0" placeholder="请输入树木高度（数字）" :disabled="isDisabled"></el-input>
                     </p>
                     <p class="name">年&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;代：
                         <el-date-picker
                             v-model="tree.plant.plantYear"
                             type="date"
+                            :disabled="isDisabled"
                             placeholder="选择日期">
                         </el-date-picker>
                     </p>
                     <p class="phoneNum">所属片区：
-                        <el-select v-model="tree.regionId" placeholder="请选择">
+                        <el-select v-model="tree.regionId" placeholder="请选择" :disabled="isDisabled">
                             <el-option
                                 v-for="item in regions"
                                 :key="item.id"
@@ -318,30 +380,34 @@
                             </el-option>
                         </el-select>
                     </p>
-                    <p class="phoneNum">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置：<span>{{tree.location}}</span><i class="el-icon-location-outline" @click="showMapDialog"></i></p>
-                    <p class="type">
-                        描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：<textarea name="" v-model="tree.plant.description" cols="30"
-                                                                               rows="5" placeholder="请输入描述信息"></textarea>
+                    <p class="phoneNum">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置：
+                        <span>{{tree.location}}</span><i class="el-icon-location-outline" @click="showMapDialog"></i>
+                    </p>
+                    <p class="textarea">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：
+                        <el-input type="textarea"  v-model="tree.plant.description" :disabled="isDisabled" ></el-input>
                     </p>
                 </div>
                 <!--建筑-->
                 <div class="personCardContent boatCardContent" v-if="route.includes('construction')">
-                    <p class="sex">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称：<input type="text"v-model="build.building.name"></p>
+                    <p class="sex">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称：
+                        <el-input type="text"v-model="build.building.name" :disabled="isDisabled"></el-input>
+                    </p>
                     <p class="name">层&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;高：
-                        <input type="number"v-model="build.building.layers"  placeholder="请输入建筑层高（数字）">
+                        <el-input type="number" min="0" v-model="build.building.layers"  placeholder="请输入建筑层高（数字）" :disabled="isDisabled"></el-input>
                     </p>
                     <p class="name">高&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;度：
-                        <input type="number"v-model="build.building.height"  placeholder="请输入建筑高度（数字）">
+                        <el-input type="number"v-model="build.building.height"  min="0" placeholder="请输入建筑高度（数字）" :disabled="isDisabled"></el-input>
                     </p>
                     <p class="name">年&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;代：
                         <el-date-picker
                             v-model="build.building.buildYear"
+                            :disabled="isDisabled"
                             type="date"
                             placeholder="选择日期">
                         </el-date-picker>
                     </p>
                     <p class="phoneNum">所属片区：
-                        <el-select v-model="build.regionId" placeholder="请选择">
+                        <el-select v-model="build.regionId" placeholder="请选择" :disabled="isDisabled">
                             <el-option
                                 v-for="item in regions"
                                 :key="item.id"
@@ -350,10 +416,11 @@
                             </el-option>
                         </el-select>
                     </p>
-                    <p class="phoneNum">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置：<span>{{build.location}}</span><i class="el-icon-location-outline" @click="showMapDialog"></i></p>
-                    <p class="type">
-                        描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：<textarea name="" v-model="build.building.description" cols="30"
-                                                                               rows="5" placeholder="请输入描述信息"></textarea>
+                    <p class="phoneNum">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置：
+                        <span>{{build.location}}</span><i class="el-icon-location-outline" @click="showMapDialog"></i>
+                    </p>
+                    <p class="textarea">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：
+                        <el-input type="textarea"  v-model="build.building.description" :disabled="isDisabled" ></el-input>
                     </p>
                 </div>
 
@@ -620,86 +687,226 @@
             },
             addNewInfo () {
                 let newInfo = {}
+                let  myreg = /^[1][3,4,5,6,7,8][0-9]{9}$/;   //电话号码校验
+                let intreg = /^[1-9]\d*$/; //非零正整数校验
+                let integerreg = /^(0|[1-9][0-9]*)$/; //大于等于0正整数
                 if (this.route.includes('person') && this.$route.params.id) {
                     newInfo = this.person
-                    let  myreg = /^[1][3,4,5,6,7,8][0-9]{9}$/
                     let idReg = /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/
-                    if (newInfo.name.trim() === '' || newInfo.gender === '' || newInfo.jobId === '') {
+                    if (!(newInfo.name && newInfo.name.trim() !== '') || !(newInfo.hasOwnProperty("gender") && newInfo.gender !== '') || !(newInfo.jobId && newInfo.jobId !== '')) {
                         this.$message.error('请填写完整信息')
                         return
                     }
-                    if (newInfo.phone === '' || !myreg.test(newInfo.phone)) {
+                    if (!(newInfo.phone && newInfo.phone !== '') || !myreg.test(newInfo.phone)) {
                         this.$message.error('请填写正确的电话号码')
                         return
                     }
-                    if (newInfo.idNum === '' || !idReg.test(newInfo.idNum)) {
+                    if (!(newInfo.idNum && newInfo.idNum !== '') || !idReg.test(newInfo.idNum)) {
                         this.$message.error('请填写正确的身份证号码')
                         return
                     }
                 } else if(this.route.includes('boat')) {
+
                     newInfo = this.boatCar
-                } else if(this.route.includes('trash')) {
-                    newInfo = this.trash
-                    if (newInfo.location === '' || newInfo.regionId === '') {
+                    console.log(newInfo);
+                    if(!(newInfo.vehicle.hasOwnProperty("type") && integerreg.test(newInfo.vehicle.type)) ||
+                        !(newInfo.vehicle.serialNum && newInfo.vehicle.serialNum.trim() !== '') ||
+                        !(newInfo.vehicle.hasOwnProperty("maintenanceStatus") && integerreg.test(newInfo.vehicle.maintenanceStatus)) ||
+                        !(newInfo.vehicle.purchaseDate && newInfo.vehicle.purchaseDate !== '') ||
+                        !(newInfo.vehicle.maintenanceDate && newInfo.vehicle.maintenanceDate !== '') ||
+                        !(newInfo.driverId  && newInfo.driverId !== '') ||
+                        !(newInfo.vehicle.model && newInfo.vehicle.model.trim() !== '')
+                    ){
+
                         this.$message.error('请输入完整信息')
                         return
                     }
-                    if (newInfo.dustbinBean.type === ''|| newInfo.dustbinBean.name === '' || newInfo.dustbinBean.dustbinCount=== '') {
+
+                    // if (!(newInfo.driverPhone && newInfo.driverPhone !== '') || !myreg.test(newInfo.driverPhone)) {
+                    //     this.$message.error('请填写正确的电话号码')
+                    //     return
+                    // }
+
+                    if (!(newInfo.vehicle.capacity && newInfo.vehicle.capacity !== '') || !intreg.test(newInfo.vehicle.capacity)) {
+                            this.$message.error('核载人数只能输入数字！')
+                            return
+                    }
+
+                } else if(this.route.includes('trash')) {
+                    newInfo = this.trash
+                    if(!(newInfo.dustbinBean.hasOwnProperty("type") && integerreg.test(newInfo.dustbinBean.type)) ||
+                        !(newInfo.dustbinBean.name && newInfo.dustbinBean.name.trim() !== '') ||
+                        !(newInfo.regionId && newInfo.regionId !== '') ||
+                        // !(newInfo.status && newInfo.status !== '') ||
+                        !(newInfo.location && newInfo.location !== '')
+                    ){
+
                         this.$message.error('请输入完整信息')
+                        return
+                    }
+
+                    if(!(newInfo.dustbinBean.dustbinCount && newInfo.dustbinBean.dustbinCount !== '') ||
+                        !intreg.test(newInfo.dustbinBean.dustbinCount)){
+                        this.$message.error('个数只能输入数字！')
                         return
                     }
                 } else if(this.route.includes('indicator')) {
                     newInfo = this.indicator
-                    if (newInfo.signboardBean.type === '' || newInfo.regionId ==='' || newInfo.location === ''){
+                    if(!(newInfo.signboardBean.hasOwnProperty("type") && integerreg.test(newInfo.signboardBean.type)) ||
+                        !(newInfo.regionId && newInfo.regionId !== '') ||
+                        !(newInfo.location && newInfo.location !== '')
+
+                    ){
+
                         this.$message.error('请输入完整信息')
                         return
                     }
                 } else if(this.route.includes('scenic')) {
                     newInfo = this.scenic
-                    if (newInfo.scenicspotBean.capacity === '' || newInfo.scenicspotBean.name.trim() === '') {
+                    if(!(newInfo.scenicspotBean.name && newInfo.scenicspotBean.name.trim() !== '') ||
+                        !(newInfo.regionId && newInfo.regionId !== '') ||
+                        // !(newInfo.scenicspotBean.statu && newInfo.scenicspotBean.statu !== '') ||
+                        !(newInfo.location && newInfo.location !== '')
+
+                    ){
+
                         this.$message.error('请输入完整信息')
                         return
                     }
-                    if (newInfo.regionId === '' || newInfo.location === '') {
-                        this.$message.error('请输入完整信息')
+
+                    if(!(newInfo.scenicspotBean.capacity && newInfo.scenicspotBean.capacity !== '') ||
+                        !intreg.test(newInfo.scenicspotBean.capacity)){
+                        this.$message.error('容量只能输入数字！')
                         return
                     }
+
+                    if(!(newInfo.scenicspotBean.currentNum && newInfo.scenicspotBean.currentNum !== '') ||
+                        !intreg.test(newInfo.scenicspotBean.currentNum)){
+                        this.$message.error('当前人数只能输入数字！')
+                        return
+                    }
+
                 } else if(this.route.includes('shop')) {
                     newInfo = this.shop
-                    if (newInfo.businessBean.capacity === '' || newInfo.businessBean.currentNum === '' || newInfo.businessBean.name.trim() === '' || newInfo.businessBean.businessTypeId === '') {
+                    console.log(newInfo)
+                    if(!(newInfo.businessBean.hasOwnProperty("businessTypeId") && integerreg.test(newInfo.businessBean.businessTypeId)) ||
+                        !(newInfo.businessBean.name && newInfo.businessBean.name.trim() !== '') ||
+                        // !(newInfo.businessBean.state && newInfo.businessBean.state !== '') ||
+                        !(newInfo.location && newInfo.location !== '') ||
+                        !(newInfo.regionId && newInfo.regionId !== '')
+                    ){
                         this.$message.error('请输入完整信息')
                         return
                     }
-                    if (newInfo.location === ''|| newInfo.regionId === '') {
-                        this.$message.error('请输入完整信息')
+
+                    if(!(newInfo.businessBean.capacity && newInfo.businessBean.capacity !== '') ||
+                        !intreg.test(newInfo.businessBean.capacity)){
+                        this.$message.error('容量只能输入数字！')
                         return
                     }
+
+                    if(!(newInfo.businessBean.currentNum && newInfo.businessBean.currentNum !== '') ||
+                        !intreg.test(newInfo.businessBean.currentNum)){
+                        this.$message.error('当前人数只能输入数字！')
+                        return
+                    }
+
                 } else if(this.route.includes('park')) {
                     newInfo = this.park
-                    if (newInfo.parkingBean.type === '' || newInfo.parkingBean.name.trim() === ''|| newInfo.parkingBean.surplusNum === ''|| newInfo.parkingBean.capacity === '') {
+                    console.log(newInfo);
+                    if(!(newInfo.parkingBean.hasOwnProperty("type") && integerreg.test(newInfo.parkingBean.type)) ||
+                        !(newInfo.parkingBean.name && newInfo.parkingBean.name.trim() !== '') ||
+                        // !(newInfo.parkingBean.state && newInfo.parkingBean.state !== '') ||
+                        !(newInfo.location && newInfo.location !== '') ||
+                        !(newInfo.regionId && newInfo.regionId !== '')
+                    ){
+
                         this.$message.error('请输入完整信息')
                         return
                     }
-                    if (newInfo.location === '' || newInfo.regionId === '') {
-                        this.$message.error('请输入完整信息')
+
+                    if(!(newInfo.parkingBean.surplusNum && newInfo.parkingBean.surplusNum !== '') ||
+                        !intreg.test(newInfo.parkingBean.surplusNum)){
+                        this.$message.error('空余车位只能输入数字！')
                         return
                     }
+
+                    if(!(newInfo.parkingBean.capacity && newInfo.parkingBean.capacity !== '') ||
+                        !intreg.test(newInfo.parkingBean.capacity)){
+                        this.$message.error('车位总数只能输入数字！')
+                        return
+                    }
+
+
                 } else if(this.route.includes('toilet')) {
                     newInfo = this.toilet
-                    if (newInfo.toiletBean.name.trim() === ''|| newInfo.location === ''||newInfo.regionId === ''){
+                    if(!(newInfo.toiletBean.name && newInfo.toiletBean.name.trim() !== '') ||
+                        !(newInfo.regionId && newInfo.regionId !== '') ||
+                        // !(newInfo.state && newInfo.state !== '') ||
+                        !(newInfo.location && newInfo.location !== '')
+                    ){
+
                         this.$message.error('请输入完整信息')
                         return
                     }
+
                 } else if(this.route.includes('area')) {
-                    newInfo = this.area
+                    newInfo = this.area;
+                    if(!(newInfo.name && newInfo.name.trim() !== '') ||
+                        !(newInfo.location && newInfo.location !== '') ||
+                        // !(newInfo.placeScenic && newInfo.placeScenic !== '') ||
+                        !(newInfo.description && newInfo.description !== '')
+                    ){
+
+                        this.$message.error('请输入完整信息')
+                        return
+                    }
                 } else if (this.route.includes('roat')) {
                     newInfo = this.roat
+                    console.log(newInfo)
+                    if(!(newInfo.name && newInfo.name.trim() !== '') ||
+                        !(newInfo.location && newInfo.location !== '') ||
+                        !(newInfo.type && newInfo.type !== '') ||
+                        !(newInfo.description && newInfo.description !== '')
+                    ){
+
+                        console.log(newInfo.type);
+                        this.$message.error('请输入完整信息')
+                        return
+                    }
+
                 } else if (this.route.includes('personType')) {
                     newInfo = this.job
                 } else if (this.route.includes('plant-deploy')) {
                     newInfo = this.tree
+                    if(!(newInfo.plant.name && newInfo.plant.name.trim() !== '') ||
+                        !(newInfo.plant.genera && newInfo.plant.genera !== '') ||
+                        !(newInfo.plant.height && newInfo.plant.height !== '') ||
+                        !(newInfo.plant.plantYear && newInfo.plant.plantYear !== '') ||
+                        !(newInfo.location && newInfo.location !== '') ||
+                        !(newInfo.regionId && newInfo.regionId !== '') ||
+                        !(newInfo.plant.description && newInfo.plant.description.trim() !== '')
+                    ){
+
+                        this.$message.error('请输入完整信息')
+                        return
+                    }
+
                 } else if (this.route.includes('construction')) {
                     newInfo = this.build
+
+                    if(!(newInfo.building.name && newInfo.building.name.trim() !== '') ||
+                        !(newInfo.building.layers && newInfo.building.layers !== '') ||
+                        !(newInfo.building.height && newInfo.building.height !== '') ||
+                        !(newInfo.building.buildYear && newInfo.building.buildYear !== '') ||
+                        !(newInfo.location && newInfo.location !== '') ||
+                        !(newInfo.regionId && newInfo.regionId !== '') ||
+                        !(newInfo.building.description && newInfo.building.description.trim() !== '')
+                    ){
+
+                        this.$message.error('请输入完整信息')
+                        return
+                    }
                 }
                 newInfo.status = true
                 newInfo.checked = false
@@ -716,7 +923,6 @@
                 } else {
                     this.$emit('addNewInfo', newInfo)
                 }
-                this.closeDialog()
             },
             showMapDialog () {
                 this.mapVisible  = true
@@ -834,6 +1040,7 @@
             } else if(this.route.includes('indicator')) {
                 this.indicator = this.Info
             } else if(this.route.includes('scenic')) {
+                console.log(this.Info, '[][][][][[][][][')
                 this.scenic = this.Info
             } else if(this.route.includes('shop')) {
                 api.shop.getBusinesstype().then(res => {
@@ -964,7 +1171,7 @@
             margin-top: rem(-3);
         }
         .data .el-input__inner{
-            padding-left: rem(30);
+            padding-left: rem(10);
         }
         .el-input__inner{
             border: none;
@@ -973,7 +1180,10 @@
             font-size: rem(12);
             padding: 0;
             padding-left: rem(10);
-
+        }
+        .el-input{
+            width: rem(160);
+            padding-left: rem(5);
         }
     }
 </style>
@@ -1370,6 +1580,9 @@
                         border-radius: rem(5);
                     }
                 }
+                .textarea{
+                    border-bottom: 1px solid transparent;
+                }
                 .basicType{
                     text-align: center;
                 }
@@ -1378,14 +1591,14 @@
                     height: rem(60);
                     position: absolute;
                     top: rem(0);
-                    right: rem(-5);
+                    right: rem(-20);
                     background: #fff;
                     img{
                         width: rem(55);
                         height: rem(55);
                         display: inline-block;
                         border-radius: 50%;
-                        margin-left: rem(25);
+                        margin-left: rem(18);
                     }
                 }
             }

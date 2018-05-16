@@ -58,7 +58,7 @@
                         <el-table-column
                             label="操作">
                             <template slot-scope="scope">
-                                <span @click="showPersonDetail(scope.row, '人员信息')">查看</span>
+                                <span @click="showPersonDetail(scope.row, '人员信息',true)">查看</span>
                                 <span @click="fixedInfo(scope.row.id )">编辑</span>
                                 <span @click="deletInfo(scope.row.id)">删除</span>
                             </template>
@@ -68,7 +68,7 @@
                         <div class="checkBox">
                             <el-checkbox v-model="item.checked" @change="checked(item.id)" class="checkBtn"></el-checkbox>
                         </div>
-                        <div class="personType" @click.stop="showPersonDetail(item, '景点信息')">
+                        <div class="personType" @click.stop="showPersonDetail(item, '景点信息',true)">
                             <img src="../../../../static/img/scenicCard.png" alt="">
                             <span class="type">
                                   {{item.scenicspotBean.name}}
@@ -87,7 +87,7 @@
                               :Info="personInfo"
                               :isDisabled="isDisabled"
                               :title="title"
-                              @closeInfoDialog ="visible = false"
+                              @closeInfoDialog ="closeDialog"
                               @fixInfo = "fixInfo"
                               @addNewInfo="addNewPerson">
                 </PersonDetail>
@@ -120,6 +120,9 @@
             }
         },
         methods: {
+            closeDialog () {
+                this.visible = false
+            },
             searchAnything (info) {
                 console.log(info, '这是要过滤的')
                 if (info.trim() !== '') {
@@ -138,13 +141,14 @@
             handleSelectionChange(val) {
                 this.multipleSelection = val;
             },
-            showPersonDetail (info, title) {
+            showPersonDetail (info, title, state) {
                 this.personInfo = info
                 this.visible = true
+                this.isDisabled = state
                 this.title = title
             },
             addNewInfo () {
-                this.showPersonDetail({scenicspotBean:{}}, '添加景点信息')
+                this.showPersonDetail({scenicspotBean:{}}, '添加景点信息', false)
                 this.isDisabled = false
             },
             deletInfo (id) {
@@ -252,6 +256,7 @@
                 }
                 console.log(scenicObj, 'this is trashObj')
                 await api.scenic.updateScenic(JSON.stringify(scenicObj)).then(res => {
+                    this. closeDialog()
                     console.log('增加成功')
                     this.$message.success('修改成功')
                     this.choseInfoId = []
@@ -271,7 +276,9 @@
                 }
                 console.log(scenicObj, 'this is trashObj')
                 await api.scenic.createScenic(JSON.stringify(scenicObj)).then(res => {
+                    this. closeDialog()
                     console.log('增加成功')
+                    this.$message.success('创建成功')
                     this.getAllScenic()
                 }).catch(err => {
                     console.log(err, '创建失败')
@@ -283,6 +290,7 @@
                 }
                 if (this.choseInfoId.length > 1) {
                     this.$message.warning('至多选择一个数据修改')
+                    return
                 }
                 if (this.choseInfoId.length > 0) {
                     this.scenicList.map((item) => {
@@ -290,7 +298,7 @@
                             this.personInfo = item
                         }
                     })
-                    this.showPersonDetail(this.personInfo, '修改景点信息')
+                    this.showPersonDetail(this.personInfo, '修改景点信息', false)
                     this.isDisabled = false
                     this.choseInfoId = []
                 } else {
@@ -311,13 +319,13 @@
                         this.scenicList[i].scenicspotBean.currentNum = this.currentNum
                         // scenicspotBean.status
                         if (this.scenicList[i].scenicspotBean.capacity == 0) {
-                            this.scenicList[i].scenicspotBean.status = '已满'
+                            this.scenicList[i].scenicspotBean.statu = '已满'
                         } else {
                             let parcent = this.scenicList[i].scenicspotBean.currentNum/this.scenicList[i].scenicspotBean.capacity
                             if (parcent < .9){
-                                this.scenicList[i].scenicspotBean.status = '充裕'
+                                this.scenicList[i].scenicspotBean.statu = '充裕'
                             } else {
-                                this.scenicList[i].scenicspotBean.status = '已满'
+                                this.scenicList[i].scenicspotBean.statu = '已满'
                             }
                         }
                     }
@@ -416,10 +424,17 @@
 
                         }
                         span{
+                            display: inline-block;
+                            width: rem(100);
                             float: right;
-                            margin-right: rem(20);
+                            text-align: right;
+                            padding-right: rem(5);
                             line-height: rem(20);
                             color: #fff;
+                            overflow: hidden;
+                            text-overflow: ellipsis;
+                            white-space: nowrap;
+                            box-sizing: border-box;
                         }
                     }
                     .specificInfo{

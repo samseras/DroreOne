@@ -9,9 +9,11 @@
                         @deletInfo="deletInfo"
                         @selectedAll="selectedAll"
                         @searchAnything="searchAnything"
+                        :choseId="choseInfoId"
                         @fixedInfo="fixedInfo"
                         @choseType="choseType"
-                        @toggleList="toggleList">
+                        @toggleList="toggleList"
+                        @getAllCamera="getAllCamera">
                 </Header>
             </div>
 
@@ -53,7 +55,7 @@
                         </el-table-column>
                         <el-table-column>
                             <template slot-scope="scope">
-                                <span @click="showPersonDetail(scope.row, '摄像头信息')">查看</span>
+                                <span @click="showPersonDetail(scope.row, '摄像头信息',true)">查看</span>
                                 <span class="line">|</span>
                                 <span @click="fixedInfo(scope.row.id )">编辑</span>
                                 <span class="line">|</span>
@@ -66,7 +68,7 @@
                         <div class="checkBox">
                             <el-checkbox v-model="item.checked" @change="checked(item.id)" class="checkBtn"></el-checkbox>
                         </div>
-                        <div class="personType" @click.stop="showPersonDetail(item,'摄像头信息')">
+                        <div class="personType" @click.stop="showPersonDetail(item,'摄像头信息', true)">
                             <img src="../../../../static/img/cameraCard.png" alt="">
                             <span class="type">
                                   {{item.name}}
@@ -85,7 +87,7 @@
                           :Info="personInfo"
                           :title="title"
                           :isDisabled="isDisabled"
-                          @closeInfoDialog="visible=false"
+                          @closeInfoDialog="closeDialog"
                           @addNewInfo="addNewPerson"
                           @fixInfo="fixInfo">
 
@@ -119,6 +121,9 @@
             }
         },
         methods:{
+            closeDialog () {
+                this.visible = false
+            },
             searchAnything (info) {
                 console.log(info, '这是要过滤的')
                 if (info.trim() !== '') {
@@ -147,12 +152,13 @@
                 this.multipleSelection = val;
             },
             addNewInfo(){
-                this.showPersonDetail({},'添加摄像头信息')
+                this.showPersonDetail({},'添加摄像头信息', false)
                 this.isDisabled=false
             },
-            showPersonDetail(info,title){
+            showPersonDetail(info,title, state){
                 this.personInfo=info
                 this.visible=true
+                this.isDisabled = state
                 this.title=title
 
             },
@@ -175,6 +181,7 @@
                 }]
                 console.log(cameraObj)
                 api.camera.updateCamera(cameraObj).then(res=>{
+                    this.closeDialog()
                     this.$message.success('修改成功')
                     this.choseInfoId=[]
                     this.getAllCamera()
@@ -196,7 +203,7 @@
                             this.personInfo=item
                         }
                     })
-                    this.showPersonDetail(this.personInfo,'修改摄像头信息')
+                    this.showPersonDetail(this.personInfo,'修改摄像头信息', false)
                     this.isDisabled=false
                 }else{
                     this.$message.error('请选择要修改的摄像头')
@@ -255,6 +262,7 @@
                 }]
                 console.log(cameraObj)
                 api.camera.createCamera(cameraObj).then(res=>{
+                    this.closeDialog()
                     this.$message.success('添加成功')
                     console.log('增加成功')
                     this.getAllCamera()
@@ -325,6 +333,7 @@
                 console.log(this.choseInfoId)
             },
             async getAllCamera () {
+                console.log("aaaaaaaaaaaaaaaaa")
                 this.isShowLoading = true
                 await api.camera.getAllCamera().then((res) => {
                     console.log(res, '这是请求回来的所有数据')

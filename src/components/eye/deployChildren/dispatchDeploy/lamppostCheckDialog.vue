@@ -8,14 +8,14 @@
             class="dialog echatDialog"
             center>
             <div class="lamppostCheck">
-                <p class="sex">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 称：{{checkInfo.light.name}}</p>
-                <p class="time" v-if="checkInfo.light.customizedDays">调度时间：{{checkInfo.light.startDate}}~{{checkInfo.light.endDate}}</p>
-                <p class="time" v-if="!checkInfo.light.customizedDays">调度时间：{{checkInfo.light.days | weekFilter}}</p>
-                <p class="Hardware">执行时间：{{checkInfo.light.startTime}}~{{checkInfo.light.endTime}}</p>
+                <p class="sex">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 称：{{checkInfo.lightSchedule.name}}</p>
+                <p class="time" v-if="checkInfo.lightSchedule.customizedDays">调度时间：{{checkInfo.lightSchedule.startDate}}~{{checkInfo.lightSchedule.endDate}}</p>
+                <p class="time" v-if="!checkInfo.lightSchedule.customizedDays">调度时间：{{checkInfo.lightSchedule.days | weekFilter}}</p>
+                <p class="Hardware">执行时间：{{checkInfo.lightSchedule.startTime}}~{{checkInfo.lightSchedule.endTime}}</p>
                 <p class="name">关联路灯：<span v-for="item in LightName">{{item.name}}</span>
                 </p>
                 <p class="type">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：
-                    <textarea name="" v-model="checkInfo.light.description" cols="70"
+                    <textarea name="" v-model="checkInfo.lightSchedule.description" cols="70"
                               rows="5" placeholder="请输入描述信息"></textarea></p>
             </div>
             <div class="" slot="footer" class="dialog-footer cardFooter">

@@ -32,6 +32,7 @@ import build from './build'
 import deployRoad from './deployRoad'
 import publi from './public'
 import importfile from './importfile'
+import exportFile from './exportFile'
 
 
 export default {
@@ -65,5 +66,6 @@ export default {
     build,
     deployRoad,
     publi,
-    importfile
+    importfile,
+    exportFile
 }

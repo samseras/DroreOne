@@ -12,21 +12,21 @@ const broadcast={
           url:'/info/device/model?type=1'
       })
     },
-    exportAllBroadcast(){
-        return axios({
-            method:'GET',
-            url:'/device/export/file?deviceType=1',
-        })
-    },
-    exportBroadcast(par){
-        return axios({
-            method:'POST',
-            url:'/device/export/file',
-            data:{
-                ids:par
-            }
-        })
-    },
+    // exportAllBroadcast(){
+    //     return axios({
+    //         method:'GET',
+    //         url:'/device/export/file?deviceType=1',
+    //     })
+    // },
+    // exportBroadcast(par){
+    //     return axios({
+    //         method:'POST',
+    //         url:'/device/export/file',
+    //         data:{
+    //             ids:par
+    //         }
+    //     })
+    // },
 
     getAllBroadcast(){
         return axios({
