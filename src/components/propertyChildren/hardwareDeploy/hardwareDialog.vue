@@ -49,7 +49,7 @@
                             </el-option>
                         </el-select>
                     </p>
-                    <p class="description">描&nbsp; 述：
+                    <p class="description textarea">描&nbsp; 述：
                         <el-input type="textarea" v-model="camera.description" :disabled="isDisabled"></el-input>
                     </p>
                 </div>
@@ -93,7 +93,7 @@
                             </el-option>
                         </el-select>
                     </p>
-                    <p class="describe">描&nbsp; 述：
+                    <p class="describe textarea">描&nbsp; 述：
                         <el-input type="textarea" v-model="broadCast.description" :disabled="isDisabled" ></el-input>
                     </p>
                     <!--<div class="img">-->
@@ -148,7 +148,7 @@
                         </el-select>
 
                     </p>
-                    <p class="describe">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：
+                    <p class="describe textarea">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：
 
                         <el-input type="textarea" v-model="led.description" :disabled="isDisabled"></el-input>
                     </p>
@@ -207,7 +207,7 @@
                                 :label="item.name"></el-option>
                         </el-select>
                     </p>
-                    <p class="describe">描&nbsp;&nbsp;&nbsp;&nbsp; 述：
+                    <p class="describe textarea">描&nbsp;&nbsp;&nbsp;&nbsp; 述：
 
                         <el-input type="textarea" v-model="wifi.description" :disabled="isDisabled" ></el-input>
                     </p>
@@ -254,7 +254,7 @@
                                 :label="item.name"></el-option>
                         </el-select>
                     </p>
-                    <p class="describe">描&nbsp; 述：
+                    <p class="describe textarea">描&nbsp; 述：
                         <el-input type="textarea" v-model="monitors.description" :disabled="isDisabled"></el-input>
                     </p>
                 </div>
@@ -295,7 +295,7 @@
                             </el-option>
                         </el-select>
                     </p>
-                    <p class="describe">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：
+                    <p class="describe textarea">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：
                         <el-input type="textarea" v-model="Light.description" :disabled="isDisabled"></el-input>
                     </p>
                 </div>
@@ -340,7 +340,7 @@
                                 :label="item.name"></el-option>
                         </el-select>
                     </p>
-                    <p class="describe">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：
+                    <p class="describe textarea">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：
 
                         <el-input type="textarea"  v-model="gate.description" :disabled="isDisabled"></el-input>
                     </p>
@@ -386,7 +386,7 @@
                                 :label="item.name"></el-option>
                         </el-select>
                     </p>
-                    <p class="describe">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：
+                    <p class="describe textarea">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：
                         <el-input type="textarea" v-model="police.description" :disabled="isDisabled" ></el-input>
                     </p>
                 </div>
@@ -1235,6 +1235,9 @@
                         padding: rem(3);
                         box-sizing: border-box;
                     }
+                }
+                .textarea {
+                    border-bottom: 1px solid transparent;
                 }
                 /*.img{
                         width: rem(120);
