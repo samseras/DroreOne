@@ -177,6 +177,13 @@
                             imgSrc = './../../../static/img/trickCard.png';
                             break
                         }
+                        case '7': {
+                            imgSrc = './../../../static/img/keepServ.png';
+                            break
+                        }
+                        default:{
+                            imgSrc = './../../../static/img/driveCard.png';
+                        }
                     }
                     return imgSrc
                 } else {
