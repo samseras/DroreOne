@@ -316,6 +316,7 @@
                 }
             },
             async getAllTrash () {
+                console.log('垃圾桶')
                 this.isShowLoading = true
                 await api.dustbin.getAllDustbin().then(res => {
                     console.log(res, '这是请求回来的数据')
