@@ -11,6 +11,7 @@
                         @choseType = 'choseType'
                         @selectedAll = 'selectedAll'
                         @fixedInfo = 'fixedInfo'
+                        :choseId="choseInfoId"
                         @searchAnything="searchAnything">
                 </Header>
             </div>
@@ -123,6 +124,7 @@
                 choseList: [],
                 isDisabled: true,
                 title: '',
+                choseId:[],
                 isShowLoading: false,
                 currentNum: 50
             }

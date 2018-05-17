@@ -12,18 +12,18 @@ module.exports = {
     assetsPublicPath: '/',
     proxyTable: {//做跨域配置
         '/v1': {
-            target: 'http://192.168.0.150:8090/',
+            target: 'http://192.168.0.150:8050/',
             changeOrigin: true,
-            // pathRewrite: {
-            //     '^/droreone': '/'//需要rewrite重写
-            // }
+            pathRewrite: {
+                '^/v1': '/'//需要rewrite重写
+            }
         },
         '/resource': {
             target: 'http://192.168.0.150:8090/',
             changeOrigin: true
         },
         '/device':{
-            target:'http://192.168.0.150:8250/',
+            target:'http://192.168.0.150:8050/',
             changeOrigin: true
         },
         '/info':{

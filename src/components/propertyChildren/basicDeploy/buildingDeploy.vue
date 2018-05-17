@@ -10,6 +10,7 @@
                         @toggleList = "toggleList"
                         @choseType = 'choseType'
                         @selectedAll = 'selectedAll'
+                        :choseId="choseInfoId"
                         @fixedInfo = 'fixedInfo'
                         @searchAnything="searchAnything">
                 </Header>
