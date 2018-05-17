@@ -300,9 +300,9 @@
                     })
                     this.showPersonDetail(this.indicatorInfo, '修改指示牌信息', false)
                     this.isDisabled = false
-                    this.choseInfoId = []
+                    //this.choseInfoId = []
                 } else {
-                    this.$message.error('请选择要修改的指示牌')
+                    this.$message.error('请选择一条数据')
                 }
             },
             async getAllIndicator () {
@@ -318,6 +318,7 @@
                         this.indicatorList[i].location = `${this.indicatorList[i].longitude},${this.indicatorList[i].latitude}`
                     }
                     this.checkList =this.indicatorList
+                    this.choseInfoId = []
                 }).catch(err => {
                     console.log(err)
                     this.isShowLoading = false

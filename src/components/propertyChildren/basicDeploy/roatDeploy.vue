@@ -295,7 +295,7 @@
                     this.showPersonDetail(this.roatInfo, '修改路网信息', false)
                     this.isDisabled = false
                 } else {
-                    this.$message.error('请选择要修改的信息')
+                    this.$message.error('请选择一条数据')
                 }
             },
             async getAllRoat () {
@@ -322,6 +322,7 @@
                         }
                     }
                     this.checkList = this.roatList
+                    this.choseInfoId = []
                 }).catch(err => {
                     console.log(err, '请求失败')
                 })

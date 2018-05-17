@@ -311,9 +311,9 @@
                     })
                     this.showPersonDetail(this.treeInfo, '修改植物信息',false)
                     this.isDisabled = false
-                    this.choseInfoId = []
+                    //this.choseInfoId = []
                 } else {
-                    this.$message.error('请选择要修改的洗手间')
+                    this.$message.error('请选择一条数据')
                 }
             },
             async getAllTree () {
@@ -330,6 +330,7 @@
                         // this.treeList[i].state = '正常'
                     }
                     this.checkList = this.treeList
+                    this.choseInfoId = []
                 }).catch(err => {
                     console.log(err, '请求失败')
                     this.isShowLoading = false

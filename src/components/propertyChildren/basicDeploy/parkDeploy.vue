@@ -315,9 +315,9 @@
                     })
                     this.showParkDetail(this.parkInfo, '修改停车场信息',false)
                     this.isDisabled = false
-                    this.choseInfoId = []
+                    //this.choseInfoId = []
                 } else {
-                    this.$message.error('请选择要修改的停车场')
+                    this.$message.error('请选择一条数据')
                 }
             },
             async getAllPark () {
@@ -347,6 +347,7 @@
                         }
                     }
                     this.checkList = this.parkList
+                    this.choseInfoId = []
                 }).catch(err => {
                     console.log(err)
                     this.isShowLoading = false

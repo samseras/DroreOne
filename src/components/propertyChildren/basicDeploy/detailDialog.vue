@@ -307,7 +307,8 @@
                     <p class="phoneNum">位置范围：
                         <span>{{area.location}}</span><i class="el-icon-location-outline" @click="showMapDialog"></i>
                     </p>
-                    <p class="textarea">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：
+                    <p class="textarea ms">
+                        <span>描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：</span>
                         <el-input type="textarea"  v-model="area.description" :disabled="isDisabled" ></el-input>
                     </p>
                 </div>
@@ -328,7 +329,8 @@
                             <el-option label="驾车路线" :value="4"></el-option>
                         </el-select>
                     </p>
-                    <p class="textarea">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：
+                    <p class="textarea ms">
+                        <span >描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：</span>
                         <el-input type="textarea"  v-model="roat.description" :disabled="isDisabled" ></el-input>
                     </p>
                 </div>
@@ -1528,6 +1530,7 @@
                 width: 100%;
                 height: 100%;
                 position: relative;
+
                 p{
                     margin-top: rem(8);
                     border-bottom: 1px solid #ccc;
@@ -1578,6 +1581,14 @@
                         padding: rem(3);
                         box-sizing: border-box;
                         border-radius: rem(5);
+                    }
+                }
+                .ms{
+                    span{
+                        width:rem(66)
+                    }
+                    div{
+                        width:70%
                     }
                 }
                 .textarea{
