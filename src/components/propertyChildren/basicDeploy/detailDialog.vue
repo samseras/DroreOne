@@ -15,7 +15,7 @@
                         <el-input v-model="person.name" :disabled="isDisabled" :maxlength="15"></el-input>
                     </p>
                     <p class="sex">性&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;别：
-                        <el-select v-model="person.gender" placeholder="请选择" :disabled="isDisabled" @change="ad">
+                        <el-select v-model="sex" placeholder="请选择" :disabled="isDisabled" @change="ad">
                             <el-option label="男" :value="1"></el-option>
                             <el-option label="女" :value="0"></el-option>
                         </el-select>
@@ -479,6 +479,7 @@
                 basicType: {
                     type:'片区'
                 },
+                sex: '',
                 person: {
                     name:'',
                     gender:'',
@@ -696,6 +697,7 @@
                 let intreg = /^[1-9]\d*$/; //非零正整数校验
                 let integerreg = /^(0|[1-9][0-9]*)$/; //大于等于0正整数
                 if (this.route.includes('person') && this.$route.params.id) {
+                    this.person.gender = this.sex
                     newInfo = this.person
                     let idReg = /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/
                     if (!(newInfo.name && newInfo.name.trim() !== '') || !(newInfo.hasOwnProperty("gender") && newInfo.gender !== '') || !(newInfo.jobId && newInfo.jobId !== '')) {
@@ -1017,6 +1019,7 @@
                     this.options = res
                 })
                 this.person = this.Info
+                this.sex = this.person.gender
                 this.person.jobId = jobId
             } else if(this.route.includes('boat')) {
                 let jobId
