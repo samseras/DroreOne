@@ -11,7 +11,10 @@
                         @choseType = 'choseType'
                         @selectedAll = 'selectedAll'
                         @fixedInfo = 'fixedInfo'
-                        @searchAnything="searchAnything">
+                        :choseId="choseInfoId"
+                        @searchAnything="searchAnything"
+                        @getAllTrash="getAllTrash">
+
                 </Header>
             </div>
             <div class="personList" v-loading="isShowLoading">
@@ -116,6 +119,7 @@
                 choseList: [],
                 isDisabled: true,
                 title: '',
+                choseId:[],
                 isShowLoading: false
             }
         },

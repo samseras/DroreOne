@@ -9,9 +9,11 @@
                         @deletInfo = "deletInfo"
                         @toggleList = "toggleList"
                         @choseType = 'choseType'
+                        :choseId="choseInfoId"
                         @selectedAll = 'selectedAll'
                         @fixedInfo = 'fixedInfo'
-                        @searchAnything="searchAnything">
+                        @searchAnything="searchAnything"
+                        @getAllScenic="getAllScenic">
                 </Header>
             </div>
             <div class="personList" v-loading="isShowLoading">
