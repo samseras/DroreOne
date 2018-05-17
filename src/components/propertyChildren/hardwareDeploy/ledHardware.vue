@@ -108,6 +108,7 @@
     import Header from './camera.vue'
     import HardWare from './hardwareDialog.vue'
     import api from '@/api'
+    import _ from 'lodash'
 
     export default{
         data(){
@@ -357,7 +358,9 @@
                         this.ledList[i].id = this.ledList[i].id
                         this.ledList[i].location=`${this.ledList[i].longitude},${this.ledList[i].latitude}`
                         this.ledList[i].area=`${this.ledList[i].screenWidth},${this.ledList[i].screenHeight}`
+                        this.ledList[i].byTime = -(new Date(this.ledList[i].modifyTime)).getTime()
                     }
+                    this.ledList = _.sortBy(this.ledList,'byTime')
                     this.checkList = this.ledList
                 }).catch((err)=>{
                     console.log(err)

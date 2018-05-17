@@ -11,8 +11,10 @@
                         @choseType = 'choseType'
                         @selectedAll = 'selectedAll'
                         @fixedInfo = 'fixedInfo'
+                        :choseId="choseInfoId"
                         @searchAnything="searchAnything"
                         @getAllPark="getAllPark">
+
                 </Header>
             </div>
             <div class="personList" v-loading="isShowLoading">
@@ -110,6 +112,7 @@
     import Header from './funHeader'
     import PersonDetail from './detailDialog'
     import api from '@/api'
+    import _ from 'lodash'
     export default {
         name: "park-deploy",
         data(){
@@ -124,6 +127,7 @@
                 choseList: [],
                 isDisabled: true,
                 title: '',
+                choseId:[],
                 isShowLoading: false,
                 currentNum: 50
             }
@@ -346,7 +350,9 @@
                                 this.parkList[i].parkingBean.state = '已满'
                             }
                         }
+                        this.parkList[i].byTime = -(new Date(this.parkList[i].parkingBean.modifyTime)).getTime()
                     }
+                    this.parkList = _.sortBy(this.parkList, 'byTime')
                     this.checkList = this.parkList
                     this.choseInfoId = []
                 }).catch(err => {

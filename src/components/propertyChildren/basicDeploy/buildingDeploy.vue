@@ -10,6 +10,7 @@
                         @toggleList = "toggleList"
                         @choseType = 'choseType'
                         @selectedAll = 'selectedAll'
+                        :choseId="choseInfoId"
                         @fixedInfo = 'fixedInfo'
                         @searchAnything="searchAnything"
                         @getAllBuild="getAllBuild">
@@ -104,6 +105,8 @@
     import PersonDetail from './detailDialog'
     import api from '@/api'
     import moment from 'moment'
+    import _ from 'lodash'
+
     export default {
         name: "build-deploy",
         data(){
@@ -333,8 +336,9 @@
                         this.buildList[i].location = `${this.buildList[i].longitude},${this.buildList[i].latitude}`
                         this.buildList[i].id = this.buildList[i].building.id
                         // this.treeList[i].state = '正常'
+                        this.buildList[i].byTime = -(new Date(this.buildList[i].building.modifyTime)).getTime()
                     }
-
+                    this.buildList = _.sortBy(this.buildList,'byTime')
                     this.choseInfoId = []
                 }).catch(err => {
                     console.log(err, '请求失败')
