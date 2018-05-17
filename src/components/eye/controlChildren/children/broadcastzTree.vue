@@ -1,102 +1,57 @@
 <template>
-    <el-tree
-        :data="data4"
-        show-checkbox
-        node-key="id"
-        :expand-on-click-node="true">
-    </el-tree>
+    <div class="broadcast_tree">
+        <el-tree
+            :data="data4"
+            show-checkbox
+            node-key="id"
+            :expand-on-click-node="true"
+            :default-expanded-keys="['b2df9e8f-b12e-4c66-9575-b18356777a68']"
+            :default-checked-keys="[5,6,19]">
+            <span class="custom-tree-node" slot-scope="{ node, Info }">
+                <img class="icon" :src="node.icon"/>
+                <span>{{ node.label }}</span>
+            </span>
+        </el-tree>
+    </div>
 </template>
 
 <script>
     // let id = 1000;
     export default {
+        props:['visible','Info','title','isDisabled'],
         data() {
-            const data = [{
-                id: 1,
-                label: '室内广播 总共14个 故障2个',
-                children: [
-                    {id: 6, label: '广播1',},
-                    {id: 7, label: '广播2',},
-                    {id: 8, label: '广播3',},
-                    {id: 9, label: '广播4',},
-                    {id: 10, label: '广播5',},
-                    {id: 11, label: '广播6',},
-                    {id: 12, label: '广播7',},
-                    {id: 13, label: '广播8',},
-                    {id: 14, label: '广播9',}
-                    ]
-            }, {
-                id: 2,
-                label: '室外广播 总共14个 故障2个',
-                children: [
-                    {id: 15, label: '广播1',},
-                    {id: 16, label: '广播2',},
-                    {id: 17, label: '广播3',},
-                    {id: 18, label: '广播4',},
-                    {id: 19, label: '广播5',},
-                    {id: 20, label: '广播6',},
-                    {id: 21, label: '广播7',},
-                    {id: 22, label: '广播8',},
-                    {id: 23, label: '广播9',}
-                ]
-            }, {
-                id: 3,
-                label: '室外广播 总共14个 故障2个',
-                children: [
-                    {id: 6, label: '广播1',},
-                    {id: 7, label: '广播2',},
-                    {id: 8, label: '广播3',},
-                    {id: 9, label: '广播4',},
-                    {id: 10, label: '广播5',},
-                    {id: 11, label: '广播6',},
-                    {id: 12, label: '广播7',},
-                    {id: 13, label: '广播8',},
-                    {id: 14, label: '广播9',}
-                ]
-            },
-            {
-                id: 4,
-                label: '室外广播 总共14个 故障2个',
-                children: [
-                    {id: 6, label: '广播1',},
-                    {id: 7, label: '广播2',},
-                    {id: 8, label: '广播3',},
-                    {id: 9, label: '广播4',},
-                    {id: 10, label: '广播5',},
-                    {id: 11, label: '广播6',},
-                    {id: 12, label: '广播7',},
-                    {id: 13, label: '广播8',},
-                    {id: 14, label: '广播9',}
-                ]
-            },
-            {
-                id: 5,
-                label: '室外广播 总共14个 故障2个',
-                children: [
-                    {id: 6, label: '广播1',},
-                    {id: 7, label: '广播2',},
-                    {id: 8, label: '广播3',},
-                    {id: 9, label: '广播4',},
-                    {id: 10, label: '广播5',},
-                    {id: 11, label: '广播6',},
-                    {id: 12, label: '广播7',},
-                    {id: 13, label: '广播8',},
-                    {id: 14, label: '广播9',}
-                ]
-            },
-            ];
             return {
-                data4: JSON.parse(JSON.stringify(data)),
-                data5: JSON.parse(JSON.stringify(data))
+                data4: JSON.parse(JSON.stringify(this.Info)),
             }
+
         },
         methods: {
 
-        }
+        },
+        created: function () {
+            console.log(this.Info)
+            this.route=this.$route.path
+            if (this.route.includes('light')){
+
+            }
+        },
+
     };
 
 </script>
-<style>
-
-
+<style lang="scss">
+   .broadcast_tree{
+       font-size: rem(14);
+       .el-tree-node__children{
+            .custom-tree-node{
+                .icon{
+                    width: rem(18);
+                    height:rem(18);
+                    margin-right: rem(5);
+                    display: inline-block;
+                    vertical-align: bottom;
+                }
+           }
+       }
+   }
 </style>

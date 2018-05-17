@@ -12,7 +12,7 @@ module.exports = {
     assetsPublicPath: '/',
     proxyTable: {//做跨域配置
         '/v1': {
-            target: 'http://192.168.0.150:8090/',
+            target: 'http://192.168.0.150:8050/',
             changeOrigin: true,
             // pathRewrite: {
             //     '^/v1': '/'//需要rewrite重写
@@ -30,10 +30,6 @@ module.exports = {
             target:'http://192.168.0.150:8050/',
             changeOrigin: true
             },
-        '/dsp': {
-            target: 'http://192.168.0.110:8090/',
-            changeOrigin: true
-        },
         '/analysis': {
             target: 'http://192.168.0.150:9527/',
             changeOrigin: true

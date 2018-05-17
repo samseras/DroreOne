@@ -39,6 +39,7 @@
                     {route: '/controler/screen', img: '../../../static/img/screen.png', desc: "大屏"},
                     {route: '/controler/person', img: '../../../static/img/personLocation.png', desc: "个人定位"},
                     {route: '/controler/car', img: '../../../static/img/car.png', desc: "车船调度"},
+                    {route: '/controler/light', img: '../../../static/img/light.svg', desc: "路灯"},
                     {route: '/controler/other', img: '../../../static/img/else.png', desc: "其他"}
                 ],
                 isShowControler: false,
@@ -118,18 +119,18 @@
                     background: #f2f2f2;
                     li{
                         width: 100%;
-                        height: rem(40);
+                        height: rem(60);
                         cursor: pointer;
                         a{
                             display: block;
                             width: 100%;
                             text-align: center;
                             height: 100%;
-                            line-height: rem(40);
+                            line-height: rem(60);
                             img{
                                 vertical-align: middle;
-                                width: rem(15);
-                                height: rem(15);
+                                width: rem(18);
+                                height: rem(18);
                             }
                         }
                     }
