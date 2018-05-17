@@ -11,7 +11,8 @@
                         @choseType = 'choseType'
                         @selectedAll = 'selectedAll'
                         @fixedInfo = 'fixedInfo'
-                        @searchAnything="searchAnything">
+                        @searchAnything="searchAnything"
+                        @getAllToilet="getAllToilet">
                 </Header>
             </div>
             <div class="personList" v-loading="isShowLoading">
