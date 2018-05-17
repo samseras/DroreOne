@@ -48,13 +48,13 @@
             }else if (route.includes('controler')) {
                 droreMap.interaction.enableMapClick = true
                 droreMap.interaction.showMove()
-                this.getAllLight();//路灯现有标注
+                // this.getAllLight();//路灯现有标注
                 // this.getAllGate();//闸机现有标注
                 // this.getAllWifi();//wifi现有标注
                 // this.getAllLed();//Led现有标注
                 // this.getAllPolice();//报警柱现有标注
                 // this.getAllMonitor();//传感器现有标注
-                this.getAllBroadcast();//广播现有标注
+                // this.getAllBroadcast();//广播现有标注
                 // this.getAllCamera();//摄像头现有标注
                 this.overView();//鹰眼
             } else if (route.includes('area-deploy')) {

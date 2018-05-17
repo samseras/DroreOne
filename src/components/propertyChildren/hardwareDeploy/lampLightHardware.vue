@@ -100,7 +100,6 @@
                           @closeInfoDialog="closeDialog"
                           @addNewInfo="addLight"
                           @fixInfo="fixInfo">
-
                 </HardWare>
             </div>
         </div>

@@ -20,7 +20,7 @@ import Car from '@/components/eye/controlChildren/carControl'
 import Other from '@/components/eye/controlChildren/otherControl'
 import Camera from '@/components/eye/controlChildren/cameraControl'
 import Environment from '@/components/eye/controlChildren/environment'
-
+import Light from '@/components/eye/controlChildren/lightControl' //
 
 //地图
 import gis from '@/components/pages/gis'
@@ -155,6 +155,7 @@ const routes = [
                     {path: '/controler/camera',name: 'Camera', component:Camera},
                     {path: '/controler/other',name: 'Other', component:Other},
                     {path: '/controler/environment',name: 'Environment', component:Environment},
+                    {path: '/controler/light',name: 'Light', component:Light},
                 ]
             },
             {
@@ -247,7 +248,6 @@ const routes = [
                     {path: '/hard-property/camera-Hware', name: 'CameraHware', component: CameraHware},
                     {path: '/hard-property/broadcast-Hware', name: 'BroadcastHware', component: BroadcastHware},
                     {path: '/hard-property/gate-Hware', name: 'GateHware', component: GateHware},
-                    {path: '/hard-property/lampLight-Hware', name: 'LightHware', component: LightHware},
                     {path: '/hard-property/lampLight-Hware', name: 'LightHware', component: LightHware},
                     {path: '/hard-property/led-Hware', name: 'LedHware', component: LedHware},
                     {path: '/hard-property/wifi-Hware', name: 'WifiHware', component: WifiHware},
