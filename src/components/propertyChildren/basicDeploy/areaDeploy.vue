@@ -34,10 +34,10 @@
                             label="片区名称"
                             width="120">
                         </el-table-column>
-                        <el-table-column
+                        <!--<el-table-column
                             prop="placeScenic"
                             label="所在景区">
-                        </el-table-column>
+                        </el-table-column>-->
                         <el-table-column
                             prop="location"
                             label="位置范围">
@@ -143,7 +143,7 @@
             },
             deletInfo (id) {
                 if (id) {
-                    this.choseInfoId.push(id)
+                    //this.choseInfoId.push(id)   //列表页删除
                 }
                 if (this.choseInfoId.length > 0) {
                     this.$confirm('此操作将永久删除该数据, 是否继续?', '提示', {
@@ -250,7 +250,11 @@
                     this.choseInfoId = []
                     this.getAllArea()
                 }).catch(err => {
-                    this.$message.error('修改失败，请稍后重试')
+                    if(err.message.includes('请重新选择区域名称！')) {
+                        this.$message.error(err.message)
+                    } else {
+                        this.$message.error('修改失败，请稍后重试')
+                    }
                 })
             },
             async addNewPerson (info) {
@@ -278,12 +282,17 @@
                     this.$message.success('创建成功')
                     this.getAllArea()
                 }).catch(err => {
-                    this.$message.error('创建失败，请稍后重试')
+                    if(err.message.includes('请重新选择区域名称！')) {
+                        this.$message.error(err.message)
+                    } else {
+                        this.$message.error('创建失败，请稍后重试')
+                    }
                 })
             },
             fixedInfo (id) {
                 if (id) {
-                    this.choseInfoId.push(id)
+
+                    //this.choseInfoId.push(id)   //列表页修改
                 }
                 if (this.choseInfoId.length > 1) {
                     this.$message.warning('至多选择一个数据修改')
@@ -298,7 +307,7 @@
                     this.showPersonDetail(this.areaInfo, '修改片区信息',false)
                     this.isDisabled = false
                 } else {
-                    this.$message.error('请选择要修改的片区')
+                    this.$message.error('请选择一条数据')
                 }
             },
             async getAllArea () {
@@ -313,6 +322,7 @@
                         this.areaList[i].location = this.areaList[i].geo
                     }
                     this.checkList = this.areaList
+                    this.choseInfoId = []
                 }).catch(err => {
                     console.log(err, '失败')
                     this.isShowLoading = false

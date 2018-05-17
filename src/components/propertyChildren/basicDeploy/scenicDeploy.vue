@@ -12,7 +12,8 @@
                         :choseId="choseInfoId"
                         @selectedAll = 'selectedAll'
                         @fixedInfo = 'fixedInfo'
-                        @searchAnything="searchAnything">
+                        @searchAnything="searchAnything"
+                        @getAllScenic="getAllScenic">
                 </Header>
             </div>
             <div class="personList" v-loading="isShowLoading">
@@ -301,9 +302,9 @@
                     })
                     this.showPersonDetail(this.personInfo, '修改景点信息', false)
                     this.isDisabled = false
-                    this.choseInfoId = []
+                    //this.choseInfoId = []
                 } else {
-                    this.$message.error('请选择要修改的景点')
+                    this.$message.error('请选择一条数据')
                 }
             },
             async getAllScenic () {
@@ -331,6 +332,7 @@
                         }
                     }
                     this.checkList = this.scenicList
+                    this.choseInfoId = []
                 }).catch((err)=> {
                     console.log(err)
                     this.isShowLoading = false

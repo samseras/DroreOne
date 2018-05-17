@@ -12,7 +12,9 @@
                         @selectedAll = 'selectedAll'
                         @fixedInfo = 'fixedInfo'
                         :choseId="choseInfoId"
-                        @searchAnything="searchAnything">
+                        @searchAnything="searchAnything"
+                        @getAllTrash="getAllTrash">
+
                 </Header>
             </div>
             <div class="personList" v-loading="isShowLoading">
@@ -311,9 +313,9 @@
                         }
                     })
                     this.showTrashDetail(this.trashInfo, '修改垃圾桶信息',false)
-                    this.choseInfoId = []
+                    //this.choseInfoId = []
                 } else {
-                    this.$message.error('请选择要修改的垃圾桶')
+                    this.$message.error('请选择一条数据')
                 }
             },
             async getAllTrash () {
@@ -329,6 +331,7 @@
                         this.trashList[i].id = this.trashList[i].dustbinBean.id
                     }
                     this.checkList = this.trashList
+                    this.choseInfoId = []
                 }).catch(err => {
                     console.log(err)
                     this.isShowLoading = false

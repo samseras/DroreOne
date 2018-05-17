@@ -12,7 +12,8 @@
                         :choseId="choseInfoId"
                         @selectedAll = 'selectedAll'
                         @fixedInfo = 'fixedInfo'
-                        @searchAnything="searchAnything">
+                        @searchAnything="searchAnything"
+                        @getAllToilet="getAllToilet">
                 </Header>
             </div>
             <div class="personList" v-loading="isShowLoading">
@@ -292,9 +293,9 @@
                     })
                     this.showPersonDetail(this.toiletInfo, '修改卫生间信息',false)
                     this.isDisabled = false
-                    this.choseInfoId = []
+                    //this.choseInfoId = []
                 } else {
-                    this.$message.error('请选择要修改的洗手间')
+                    this.$message.error('请选择一条数据')
                 }
             },
             async getAllToilet () {
@@ -311,6 +312,7 @@
                         this.toiletList[i].state = '正常'
                     }
                     this.checkList = this.toiletList
+                    this.choseInfoId = []
                 }).catch(err => {
                     console.log(err, '请求失败')
                     this.isShowLoading = false
