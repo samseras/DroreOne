@@ -591,34 +591,203 @@
            },
            addNewInfo(){
                let newInfo={ }
+               let intreg = /^[1-9]\d*$/; //非零正整数校验
+               let integerreg = /^(0|[1-9][0-9]*)$/; //大于等于0正整数
+               let myip = /^(\d|[1-9]\d|1\d{2}|2[0-5][0-5])\.(\d|[1-9]\d|1\d{2}|2[0-5][0-5])\.(\d|[1-9]\d|1\d{2}|2[0-5][0-5])\.(\d|[1-9]\d|1\d{2}|2[0-5][0-5])$/; //ip校验
+               let myport = /^([0-9]|[1-9]\d{1,3}|[1-5]\d{4}|6[0-5]{2}[0-3][0-5])$/; //端口校验
+               let myMac = /([A-Fa-f0-9]{2}-){5}[A-Fa-f0-9]{2}/
                if(this.route.includes('camera')){
                    newInfo = this.camera
-                   if(newInfo.name ===''|| newInfo.ip ===''){
+                  if(!(newInfo.hasOwnProperty("positionType")&& integerreg.test(newInfo.positionType))||
+                     !(newInfo.name && newInfo.name !=='') ||
+                     !(newInfo.hasOwnProperty("model")&& newInfo.model) ||
+                     !(newInfo.regionId && newInfo.regionId !=='') ||
+                     !(newInfo.description && newInfo.description !== '') ||
+                     !(newInfo.location && newInfo.location !== '')
+                  ){
+                       this.$message.error('请输入完整信息')
+                      return
+                  }
+                  if(!(newInfo.ip && myip.test(newInfo.ip))){
+                      this.$message.error('请输入有效ip地址！')
+                      return
+                  }
+                  if(!(newInfo.port && myport.test(newInfo.port))){
+                      this.$message.error('请输入正确端口号！')
+                      return
+                  }
+
+
+               }else if(this.route.includes('broadcast')){
+                   newInfo=this.broadCast
+                   if(!(newInfo.hasOwnProperty("positionType")&& integerreg.test(newInfo.positionType))||
+                       !(newInfo.name && newInfo.name !=='') ||
+                       !(newInfo.hasOwnProperty("model")&& newInfo.model) ||
+                       !(newInfo.regionId && newInfo.regionId !=='') ||
+                       !(newInfo.description && newInfo.description !== '') ||
+                       !(newInfo.location && newInfo.location !== '')
+                   ){
                        this.$message.error('请输入完整信息')
                        return
                    }
-               }else if(this.route.includes('broadcast')){
-                   newInfo=this.broadCast
-                   if(newInfo.name ===''|| newInfo.ip ===''){
-                       this.$message.error('请输入完整信息')
+                   if(!(newInfo.ip && myip.test(newInfo.ip))){
+                       this.$message.error('请输入有效ip地址！')
+                       return
+                   }
+                   if(!(newInfo.port && myport.test(newInfo.port))){
+                       this.$message.error('请输入正确端口号！')
                        return
                    }
 
                }else if(this.route.includes('led')) {
                    newInfo = this.led
+                   if(!(newInfo.hasOwnProperty("positionType")&& integerreg.test(newInfo.positionType))||
+                       !(newInfo.name && newInfo.name !=='') ||
+                       !(newInfo.hasOwnProperty("model")&& newInfo.model) ||
+                       !(newInfo.regionId && newInfo.regionId !=='') ||
+                       !(newInfo.description && newInfo.description !== '') ||
+                       !(newInfo.location && newInfo.location !== '')
+                   ){
+                       this.$message.error('请输入完整信息')
+                       return
+                   }
+                   if(!(newInfo.ip && myip.test(newInfo.ip))){
+                       this.$message.error('请输入有效ip地址！')
+                       return
+                   }
+                   if(!(newInfo.port && myport.test(newInfo.port))){
+                       this.$message.error('请输入正确端口号！')
+                       return
+                   }
+                   if(!(newInfo.serialNum && intreg.test(newInfo.serialNum))){
+                       this.$message.error('编号只能输入数字！')
+                       return
+                   }
+
                }else if(this.route.includes('wifi')) {
-
-                   console.log(this.extend, '选择上的')
-
                    newInfo = this.wifi
+                   if(!(newInfo.hasOwnProperty("positionType")&& integerreg.test(newInfo.positionType))||
+                       !(newInfo.name && newInfo.name !=='') ||
+                       !(newInfo.hasOwnProperty("model")&& newInfo.model) ||
+                       !(newInfo.regionId && newInfo.regionId !=='') ||
+                       !(newInfo.description && newInfo.description !== '') ||
+                       !(newInfo.location && newInfo.location !== '')
+                   ){
+                       this.$message.error('请输入完整信息')
+                       return
+                   }
+                   if(!(newInfo.ip && myip.test(newInfo.ip))){
+                       this.$message.error('请输入有效ip地址！')
+                       return
+                   }
+                   if(!(newInfo.port && myport.test(newInfo.port))){
+                       this.$message.error('请输入正确端口号！')
+                       return
+                   }
+                   if(!(newInfo.serialNum && intreg.test(newInfo.serialNum))){
+                       this.$message.error('编号只能输入数字！')
+                       return
+                   }
+                   if(!(newInfo.mac && myMac.test(newInfo.mac))){
+                       this.$message.error('请输入正确的MAC编号')
+                       return
+                   }
+
                }else if(this.route.includes('monitors')) {
                    newInfo = this.monitors
+                   if(!(newInfo.hasOwnProperty("sensorType")&& integerreg.test(newInfo.sensorType))||
+                       !(newInfo.name && newInfo.name !=='') ||
+                       !(newInfo.hasOwnProperty("model")&& newInfo.model) ||
+                       !(newInfo.regionId && newInfo.regionId !=='') ||
+                       !(newInfo.description && newInfo.description !== '') ||
+                       !(newInfo.location && newInfo.location !== '')
+                   ){
+                       this.$message.error('请输入完整信息')
+                       return
+                   }
+                   if(!(newInfo.ip && myip.test(newInfo.ip))){
+                       this.$message.error('请输入有效ip地址！')
+                       return
+                   }
+                   if(!(newInfo.port && myport.test(newInfo.port))){
+                       this.$message.error('请输入正确端口号！')
+                       return
+                   }
+                   if(!(newInfo.serialNum && intreg.test(newInfo.serialNum))){
+                       this.$message.error('编号只能输入数字！')
+                       return
+                   }
+
                }else if(this.route.includes('Light')) {
                    newInfo = this.Light
+                   if(!(newInfo.hasOwnProperty("lightStatus")&& integerreg.test(newInfo.lightStatus))||
+                       !(newInfo.name && newInfo.name !=='') ||
+                       !(newInfo.hasOwnProperty("model")&& newInfo.model) ||
+                       !(newInfo.regionId && newInfo.regionId !=='') ||
+                       !(newInfo.description && newInfo.description !== '') ||
+                       !(newInfo.location && newInfo.location !== '')
+                   ){
+                       this.$message.error('请输入完整信息')
+                       return
+                   }
+                   if(!(newInfo.port && myport.test(newInfo.port))){
+                       this.$message.error('请输入正确端口号！')
+                       return
+                   }
+                   if(!(newInfo.serialNum && intreg.test(newInfo.serialNum))){
+                       this.$message.error('编号只能输入数字！')
+                       return
+                   }
+
                }else if(this.route.includes('gate')) {
                    newInfo = this.gate
+                   if(!(newInfo.hasOwnProperty("gateType")&& integerreg.test(newInfo.gateType))||
+                       !(newInfo.name && newInfo.name !=='') ||
+                       !(newInfo.hasOwnProperty("model")&& newInfo.model) ||
+                       !(newInfo.regionId && newInfo.regionId !=='') ||
+                       !(newInfo.description && newInfo.description !== '') ||
+                       !(newInfo.location && newInfo.location !== '')
+                   ){
+                       this.$message.error('请输入完整信息')
+                       return
+                   }
+                   if(!(newInfo.ip && myip.test(newInfo.ip))){
+                       this.$message.error('请输入有效ip地址！')
+                       return
+                   }
+                   if(!(newInfo.port && myport.test(newInfo.port))){
+                       this.$message.error('请输入正确端口号！')
+                       return
+                   }
+                   if(!(newInfo.serialNum && intreg.test(newInfo.serialNum))){
+                       this.$message.error('编号只能输入数字！')
+                       return
+                   }
+
                }else if(this.route.includes('police')) {
                    newInfo = this.police
+                   if(!(newInfo.hasOwnProperty("sensorType")&& integerreg.test(newInfo.sensorType))||
+                       !(newInfo.name && newInfo.name !=='') ||
+                       !(newInfo.hasOwnProperty("model")&& newInfo.model) ||
+                       !(newInfo.regionId && newInfo.regionId !=='') ||
+                       !(newInfo.description && newInfo.description !== '') ||
+                       !(newInfo.location && newInfo.location !== '')
+                   ){
+                       this.$message.error('请输入完整信息')
+                       return
+                   }
+                   if(!(newInfo.ip && myip.test(newInfo.ip))){
+                       this.$message.error('请输入有效ip地址！')
+                       return
+                   }
+                   if(!(newInfo.port && myport.test(newInfo.port))){
+                       this.$message.error('请输入正确端口号！')
+                       return
+                   }
+                   if(!(newInfo.serialNum && intreg.test(newInfo.serialNum))){
+                       this.$message.error('编号只能输入数字！')
+                       return
+                   }
                }
                newInfo.jsonAttr = JSON.stringify(this.obj)
                newInfo.status=true
