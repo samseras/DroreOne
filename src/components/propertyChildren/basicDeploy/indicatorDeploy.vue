@@ -11,7 +11,8 @@
                         @choseType = 'choseType'
                         @selectedAll = 'selectedAll'
                         @fixedInfo = 'fixedInfo'
-                        @searchAnything="searchAnything">
+                        @searchAnything="searchAnything"
+                        @getAllIndicator="getAllIndicator">
                 </Header>
             </div>
             <div class="personList" v-loading="isShowLoading">
@@ -91,6 +92,8 @@
     import Header from './funHeader'
     import DetailDialog from './detailDialog'
     import api from '@/api'
+    import _ from 'lodash'
+
     export default {
         name: "indicator-deploy",
         data () {
@@ -300,9 +303,9 @@
                     })
                     this.showPersonDetail(this.indicatorInfo, '修改指示牌信息', false)
                     this.isDisabled = false
-                    this.choseInfoId = []
+                    //this.choseInfoId = []
                 } else {
-                    this.$message.error('请选择要修改的指示牌')
+                    this.$message.error('请选择一条数据')
                 }
             },
             async getAllIndicator () {
@@ -316,8 +319,11 @@
                         this.indicatorList[i].status = true
                         this.indicatorList[i].id = this.indicatorList[i].signboardBean.id
                         this.indicatorList[i].location = `${this.indicatorList[i].longitude},${this.indicatorList[i].latitude}`
+                        this.indicatorList[i].byTime = -(new Date(this.indicatorList[i].signboardBean.modifyTime)).getTime()
                     }
+                    this.indicatorList = _.sortBy(this.indicatorList, 'byTime')
                     this.checkList =this.indicatorList
+                    this.choseInfoId = []
                 }).catch(err => {
                     console.log(err)
                     this.isShowLoading = false

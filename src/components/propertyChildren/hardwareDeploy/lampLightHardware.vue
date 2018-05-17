@@ -111,6 +111,7 @@
     import Header from './camera.vue'
     import HardWare from './hardwareDialog.vue'
     import api from '@/api'
+    import _ from 'lodash'
 
     export default{
         data(){
@@ -340,7 +341,9 @@
                         this.lightList[i].status=true
 
                         this.lightList[i].location=`${this.lightList[i].longitude},${this.lightList[i].latitude}`
+                        this.lightList[i].byTime = -(new Date(this.lightList[i].modifyTime)).getTime()
                     }
+                    this.lightList = _.sortBy(this.lightList,'byTime')
                     this.checkList = this.lightList
                 }).catch((err)=>{
                     console.log(err)

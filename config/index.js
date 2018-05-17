@@ -14,9 +14,9 @@ module.exports = {
         '/v1': {
             target: 'http://192.168.0.150:8050/',
             changeOrigin: true,
-            pathRewrite: {
-                '^/v1': '/'//需要rewrite重写
-            }
+            // pathRewrite: {
+            //     '^/v1': '/'//需要rewrite重写
+            // }
         },
         '/resource': {
             target: 'http://192.168.0.150:8090/',

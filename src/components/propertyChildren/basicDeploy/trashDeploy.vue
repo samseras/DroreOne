@@ -11,7 +11,10 @@
                         @choseType = 'choseType'
                         @selectedAll = 'selectedAll'
                         @fixedInfo = 'fixedInfo'
-                        @searchAnything="searchAnything">
+                        :choseId="choseInfoId"
+                        @searchAnything="searchAnything"
+                        @getAllTrash="getAllTrash">
+
                 </Header>
             </div>
             <div class="personList" v-loading="isShowLoading">
@@ -101,6 +104,7 @@
     import Header from './funHeader'
     import PersonDetail from './detailDialog'
     import api from '@/api'
+    import _ from 'lodash'
     export default {
         name: "trash-deploy",
         data (){
@@ -115,6 +119,7 @@
                 choseList: [],
                 isDisabled: true,
                 title: '',
+                choseId:[],
                 isShowLoading: false
             }
         },
@@ -309,12 +314,13 @@
                         }
                     })
                     this.showTrashDetail(this.trashInfo, '修改垃圾桶信息',false)
-                    this.choseInfoId = []
+                    //this.choseInfoId = []
                 } else {
-                    this.$message.error('请选择要修改的垃圾桶')
+                    this.$message.error('请选择一条数据')
                 }
             },
             async getAllTrash () {
+                console.log('垃圾桶')
                 this.isShowLoading = true
                 await api.dustbin.getAllDustbin().then(res => {
                     console.log(res, '这是请求回来的数据')
@@ -325,8 +331,11 @@
                         this.trashList[i].checked = false
                         this.trashList[i].status = true
                         this.trashList[i].id = this.trashList[i].dustbinBean.id
+                        this.trashList[i].byTime = -(new Date(this.trashList[i].dustbinBean.modifyTime)).getTime()
                     }
+                    this.trashList = _.sortBy(this.trashList, 'byTime')
                     this.checkList = this.trashList
+                    this.choseInfoId = []
                 }).catch(err => {
                     console.log(err)
                     this.isShowLoading = false

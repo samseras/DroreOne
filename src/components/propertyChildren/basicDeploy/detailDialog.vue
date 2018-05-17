@@ -15,7 +15,7 @@
                         <el-input v-model="person.name" :disabled="isDisabled" :maxlength="15"></el-input>
                     </p>
                     <p class="sex">性&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;别：
-                        <el-select v-model="person.gender" placeholder="请选择" :disabled="isDisabled">
+                        <el-select v-model="person.gender" placeholder="请选择" :disabled="isDisabled" @change="ad">
                             <el-option label="男" :value="1"></el-option>
                             <el-option label="女" :value="0"></el-option>
                         </el-select>
@@ -307,7 +307,8 @@
                     <p class="phoneNum">位置范围：
                         <span>{{area.location}}</span><i class="el-icon-location-outline" @click="showMapDialog"></i>
                     </p>
-                    <p class="textarea">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：
+                    <p class="textarea ms">
+                        <span>描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：</span>
                         <el-input type="textarea"  v-model="area.description" :disabled="isDisabled" ></el-input>
                     </p>
                 </div>
@@ -328,7 +329,8 @@
                             <el-option label="驾车路线" :value="4"></el-option>
                         </el-select>
                     </p>
-                    <p class="textarea">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：
+                    <p class="textarea ms">
+                        <span >描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：</span>
                         <el-input type="textarea"  v-model="roat.description" :disabled="isDisabled" ></el-input>
                     </p>
                 </div>
@@ -606,6 +608,9 @@
             }
         },
         methods: {
+            ad () {
+              console.log(9999999999)
+            },
             ...mapMutations(['LOCATION_ID']),
             imgError (e) {
                 e.target.src = this.getUrl(null);
@@ -1528,6 +1533,7 @@
                 width: 100%;
                 height: 100%;
                 position: relative;
+
                 p{
                     margin-top: rem(8);
                     border-bottom: 1px solid #ccc;
@@ -1578,6 +1584,14 @@
                         padding: rem(3);
                         box-sizing: border-box;
                         border-radius: rem(5);
+                    }
+                }
+                .ms{
+                    span{
+                        width:rem(66)
+                    }
+                    div{
+                        width:70%
                     }
                 }
                 .textarea{

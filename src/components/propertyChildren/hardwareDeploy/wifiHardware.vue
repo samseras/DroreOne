@@ -113,6 +113,7 @@
     import Header from './camera.vue'
     import HardWare from './hardwareDialog.vue'
     import api from '@/api'
+    import _ from 'lodash'
 
     export default{
         data(){
@@ -139,8 +140,9 @@
             searchAnything (info) {
                 console.log(info, '这是要过滤的')
                 if (info.trim() !== '') {
+                    // console.log(this.checkList, 'p[p[p[p[p[p[p[p[p')
                     this.wifiList = this.checkList.filter(item => {
-                        if (item.regionName.includes(info)) {
+                        if (item.regionName && item.regionName.includes(info)) {
                             return item
                         }
                         if (item.name.includes(info)) {
@@ -352,7 +354,9 @@
                         this.wifiList[i].status=true
                         this.wifiList[i].id=this.wifiList[i].id
                         this.wifiList[i].location=`${this.wifiList[i].longitude},${this.wifiList[i].latitude}`
+                        this.wifiList[i].byTime = -(new Date(this.wifiList[i].modifyTime)).getTime()
                     }
+                    this.wifiList = _.sortBy(this.wifiList,'byTime')
                     this.checkList = this.wifiList
                 }).catch((err)=>{
                     console.log(err)

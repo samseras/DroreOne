@@ -7,6 +7,23 @@ import {getUrl} from './path'
 
 
 const boat = {
+    getAllExport(){
+      return axios({
+          method:'GET',
+          url:getUrl('/vehicle/export')
+      })
+    },
+    getSingleEeport(params){
+        return axios({
+            method:'POST',
+            url:getUrl('/vehicle/export'),
+            data:{
+                ids:params
+            }
+        })
+    },
+
+
     getAllBoat () {
         return axios ({
             method: 'GET',

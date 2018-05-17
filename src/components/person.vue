@@ -90,6 +90,12 @@
                         return './../../static/img/teller.svg';
                         break
                     }
+                    case '7':{
+                        return './../../static/img/keepServe.svg';
+                    }
+                    default:{
+                        return './../../static/img/peopleInfo.svg';
+                    }
                 }
             }
         },

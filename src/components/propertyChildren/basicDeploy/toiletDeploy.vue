@@ -9,9 +9,11 @@
                         @deletInfo = "deletInfo"
                         @toggleList = "toggleList"
                         @choseType = 'choseType'
+                        :choseId="choseInfoId"
                         @selectedAll = 'selectedAll'
                         @fixedInfo = 'fixedInfo'
-                        @searchAnything="searchAnything">
+                        @searchAnything="searchAnything"
+                        @getAllToilet="getAllToilet">
                 </Header>
             </div>
             <div class="personList" v-loading="isShowLoading">
@@ -93,6 +95,7 @@
     import Header from './funHeader'
     import PersonDetail from './detailDialog'
     import api from '@/api'
+    import _ from 'lodash'
     export default {
         name: "toilet-deploy",
         data(){
@@ -291,9 +294,9 @@
                     })
                     this.showPersonDetail(this.toiletInfo, '修改卫生间信息',false)
                     this.isDisabled = false
-                    this.choseInfoId = []
+                    //this.choseInfoId = []
                 } else {
-                    this.$message.error('请选择要修改的洗手间')
+                    this.$message.error('请选择一条数据')
                 }
             },
             async getAllToilet () {
@@ -308,8 +311,11 @@
                         this.toiletList[i].location = `${this.toiletList[i].longitude},${this.toiletList[i].latitude}`
                         this.toiletList[i].id = this.toiletList[i].toiletBean.id
                         this.toiletList[i].state = '正常'
+                        this.toiletList[i].byTime = -(new Date(this.toiletList.toiletBean.modifyTime)).getTime()
                     }
+                    this.toiletList = _.sortBy(this.toiletList, 'byTime')
                     this.checkList = this.toiletList
+                    this.choseInfoId = []
                 }).catch(err => {
                     console.log(err, '请求失败')
                     this.isShowLoading = false

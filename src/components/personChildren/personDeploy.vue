@@ -11,7 +11,8 @@
                         @choseType='choseType'
                         @selectedAll='selectedAll'
                         @fixedInfo='fixedInfo'
-                        @searchAnything="searchAnything">
+                        @searchAnything="searchAnything"
+                        @getAllPerson="getAllPerson">
                 </Header>
             </div>
             <div class="personList" v-loading="isShowLoading">
@@ -108,6 +109,7 @@
     import Header from '../propertyChildren/basicDeploy/funHeader'
     import PersonDetail from '../propertyChildren/basicDeploy/detailDialog'
     import api from '@/api'
+    import _ from 'lodash'
 
     export default {
         name: 'person-deploy',
@@ -177,6 +179,13 @@
                             imgSrc = './../../../static/img/trickCard.png';
                             break
                         }
+                        case '7': {
+                            imgSrc = './../../../static/img/keepServ.png';
+                            break
+                        }
+                        default:{
+                            imgSrc = './../../../static/img/driveCard.png';
+                        }
                     }
                     return imgSrc
                 } else {
@@ -226,7 +235,7 @@
                     })
 
                 } else {
-                    this.$message.error('请选择要删除的人员信息')
+                    this.$message.error('请选择一条数据')
                 }
             },
             toggleList(type) {
@@ -367,12 +376,13 @@
                     })
                     this.showPersonDetail(this.personInfo, '修改人员信息', false)
                     this.isDisabled = false
-                    this.choseInfoId = []
+                    //this.choseInfoId = []
                 } else {
                     this.$message.error('请选择要修改的人员')
                 }
             },
             async getAllPerson() {
+                this.choseInfoId = []       //人员切换左侧选项卡去掉上项的默认选择
                 this.isShowLoading = true
                 let id = this.$route.params.id
                 await api.person.getJobPerson(id).then(res => {
@@ -388,7 +398,10 @@
                         this.personList[i].idNum = this.personList[i].personBean.idNum
                         this.personList[i].name = this.personList[i].personBean.name
                         this.personList[i].phone = this.personList[i].personBean.phone
+                        this.personList[i].byTime = -(new Date(this.personList[i].personBean.modifyTime)).getTime()
                     }
+                    this.personList = _.sortBy(this.personList,'byTime')
+                    console.log(this.personList, 'p[p[p[p[p[p[p[p[p[p[p[p[p[[pp')
                     this.checkList = this.personList
                 }).catch(err => {
                     console.log(err)

@@ -9,9 +9,11 @@
                         @deletInfo = "deletInfo"
                         @toggleList = "toggleList"
                         @choseType = 'choseType'
+                        :choseId="choseInfoId"
                         @selectedAll = 'selectedAll'
                         @fixedInfo = 'fixedInfo'
-                        @searchAnything="searchAnything">
+                        @searchAnything="searchAnything"
+                        @getAllPlant="getAllTree">
                 </Header>
             </div>
             <div class="personList" v-loading="isShowLoading">
@@ -99,6 +101,7 @@
     import PersonDetail from './detailDialog'
     import api from '@/api'
     import moment from 'moment'
+    import _ from 'lodash'
     export default {
         name: "tree-deploy",
         data(){
@@ -311,9 +314,9 @@
                     })
                     this.showPersonDetail(this.treeInfo, '修改植物信息',false)
                     this.isDisabled = false
-                    this.choseInfoId = []
+                    //this.choseInfoId = []
                 } else {
-                    this.$message.error('请选择要修改的洗手间')
+                    this.$message.error('请选择一条数据')
                 }
             },
             async getAllTree () {
@@ -328,8 +331,11 @@
                         this.treeList[i].location = `${this.treeList[i].longitude},${this.treeList[i].latitude}`
                         this.treeList[i].id = this.treeList[i].plant.id
                         // this.treeList[i].state = '正常'
+                        this.treeList[i].byTime = -(new Date(this.treeList[i].plant.modifyTime)).getTime()
                     }
+                    this.treeList = _.sortBy(this.treeList, 'byTime')
                     this.checkList = this.treeList
+                    this.choseInfoId = []
                 }).catch(err => {
                     console.log(err, '请求失败')
                     this.isShowLoading = false

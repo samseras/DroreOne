@@ -91,6 +91,8 @@
     import Header from './funHeader'
     import PersonDetail from './detailDialog'
     import api from '@/api'
+    import _ from 'lodash'
+
     export default {
         name: "roat-deploy",
         data(){
@@ -295,7 +297,7 @@
                     this.showPersonDetail(this.roatInfo, '修改路网信息', false)
                     this.isDisabled = false
                 } else {
-                    this.$message.error('请选择要修改的信息')
+                    this.$message.error('请选择一条数据')
                 }
             },
             async getAllRoat () {
@@ -320,8 +322,10 @@
                         if (this.roatList[i].type == 4) {
                             this.roatList[i].routeType = '驾车路线'
                         }
+                        // this.roatList[i].byTime = this.roatList[i].modifyTime
                     }
                     this.checkList = this.roatList
+                    this.choseInfoId = []
                 }).catch(err => {
                     console.log(err, '请求失败')
                 })
