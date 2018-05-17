@@ -12,7 +12,7 @@
                 <!--人员-->
                 <div class="personCardContent" v-if="route.includes('person') && $route.params.id">
                     <p class="name">姓&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;名：
-                        <el-input type="text"v-model="person.name" :disabled="isDisabled"></el-input>
+                        <el-input v-model="person.name" :disabled="isDisabled" :maxlength="15"></el-input>
                     </p>
                     <p class="sex">性&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;别：
                         <el-select v-model="person.gender" placeholder="请选择" :disabled="isDisabled">
@@ -128,7 +128,7 @@
                         </el-select>
                     </p>
                     <p class="sex">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称：
-                        <el-input type="text"v-model="trash.dustbinBean.name" :disabled="isDisabled"></el-input>
+                        <el-input type="text"v-model="trash.dustbinBean.name" :disabled="isDisabled" :maxlength="15"></el-input>
                     </p>
                     <p class="type" v-if="false">状&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;态：
                         <el-select v-model="trash.status" placeholder="请选择" :disabled="isDisabled">
@@ -156,7 +156,7 @@
                 <!--景点-->
                 <div class="personCardContent boatCardContent" v-if="route.includes('scenic')">
                     <p class="name">景点名称：
-                        <el-input type="text"v-model="scenic.scenicspotBean.name" :disabled="isDisabled"></el-input>
+                        <el-input type="text"v-model="scenic.scenicspotBean.name" :disabled="isDisabled" :maxlength="15"></el-input>
                     </p>
                     <p class="sex">所属片区：
                         <el-select v-model="scenic.regionId" placeholder="请选择" :disabled="isDisabled">
@@ -200,7 +200,7 @@
                         </el-select>
                     </p>
                     <p class="sex">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称：
-                        <el-input type="text"v-model="shop.businessBean.name" :disabled="isDisabled"></el-input>
+                        <el-input type="text"v-model="shop.businessBean.name" :disabled="isDisabled" :maxlength="15"></el-input>
                     </p>
                     <p class="type" v-if="isDisabled">
                         状&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;态：
@@ -239,7 +239,7 @@
                         </el-select>
                     </p>
                     <p class="sex">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称：
-                        <el-input type="text"v-model="park.parkingBean.name" :disabled="isDisabled"></el-input>
+                        <el-input type="text"v-model="park.parkingBean.name" :disabled="isDisabled" :maxlength="15"></el-input>
                     </p>
                     <p class="type" v-if="isDisabled">
                         状&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;态：
@@ -273,7 +273,7 @@
                 <!--洗手间-->
                 <div class="personCardContent boatCardContent" v-if="route.includes('toilet')">
                     <p class="sex">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称：
-                        <el-input type="text"v-model="toilet.toiletBean.name" :disabled="isDisabled"></el-input>
+                        <el-input type="text"v-model="toilet.toiletBean.name" :disabled="isDisabled" :maxlength="15"></el-input>
                     </p>
                     <p class="phoneNum">所属片区：
                         <el-select v-model="toilet.regionId" placeholder="请选择" :disabled="isDisabled">
@@ -299,7 +299,7 @@
                 <!--片区-->
                 <div class="personCardContent boatCardContent" v-if="route.includes('area')">
                     <p class="sex">片区名称：
-                        <el-input type="text" v-model="area.name" required="required" :disabled="isDisabled"></el-input>
+                        <el-input type="text" v-model="area.name" required="required" :disabled="isDisabled" :maxlength="15"></el-input>
                     </p>
                     <p class="phoneNum" v-if="false">所在景区：
                         <el-input type="text"v-model="area.placeScenic" :disabled="isDisabled"></el-input>
@@ -314,7 +314,7 @@
                 <!--路网-->
                 <div class="personCardContent boatCardContent" v-if="route.includes('roat')">
                     <p class="sex">路线名称：
-                        <el-input type="text"v-model="roat.name" :disabled="isDisabled"></el-input>
+                        <el-input type="text"v-model="roat.name" :disabled="isDisabled" :maxlength="15"></el-input>
                     </p>
                     <p class="phoneNum">位置范围：
                         <span>{{roat.location}}</span><i class="el-icon-location-outline" @click="showMapDialog"></i>
@@ -354,13 +354,13 @@
                 <!--植物-->
                 <div class="personCardContent boatCardContent" v-if="route.includes('plant-deploy')">
                     <p class="sex">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称：
-                        <el-input type="text"v-model="tree.plant.name" :disabled="isDisabled"></el-input>
+                        <el-input type="text"v-model="tree.plant.name" :disabled="isDisabled" :maxlength="15"></el-input>
                     </p>
                     <p class="name">科&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;目：
                         <el-input type="text"v-model="tree.plant.genera" :disabled="isDisabled"></el-input>
                     </p>
                     <p class="name">高&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;度：
-                        <el-input type="number"v-model="tree.plant.height"  placeholder="请输入树木高度（数字）" :disabled="isDisabled"></el-input>
+                        <el-input type="number"v-model="tree.plant.height"  min = "0" placeholder="请输入树木高度（数字）" :disabled="isDisabled"></el-input>
                     </p>
                     <p class="name">年&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;代：
                         <el-date-picker
@@ -390,13 +390,13 @@
                 <!--建筑-->
                 <div class="personCardContent boatCardContent" v-if="route.includes('construction')">
                     <p class="sex">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称：
-                        <el-input type="text"v-model="build.building.name" :disabled="isDisabled"></el-input>
+                        <el-input type="text"v-model="build.building.name" :disabled="isDisabled" :maxlength="15"></el-input>
                     </p>
                     <p class="name">层&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;高：
-                        <el-input type="number"v-model="build.building.layers"  placeholder="请输入建筑层高（数字）" :disabled="isDisabled"></el-input>
+                        <el-input type="number" min="0" v-model="build.building.layers"  placeholder="请输入建筑层高（数字）" :disabled="isDisabled"></el-input>
                     </p>
                     <p class="name">高&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;度：
-                        <el-input type="number"v-model="build.building.height"  placeholder="请输入建筑高度（数字）" :disabled="isDisabled"></el-input>
+                        <el-input type="number"v-model="build.building.height"  min="0" placeholder="请输入建筑高度（数字）" :disabled="isDisabled"></el-input>
                     </p>
                     <p class="name">年&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;代：
                         <el-date-picker
@@ -693,19 +693,15 @@
                 if (this.route.includes('person') && this.$route.params.id) {
                     newInfo = this.person
                     let idReg = /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/
-                    console.log(newInfo.name);
-                    console.log(newInfo.gender);
-                    console.log(newInfo.jobId);
-                    if (!(newInfo.name && newInfo.name.trim() === '') || !(newInfo.gender && newInfo.gender === '') || !(newInfo.jobId && newInfo.jobId === '')) {
-                        console.log(newInfo.name);
+                    if (!(newInfo.name && newInfo.name.trim() !== '') || !(newInfo.hasOwnProperty("gender") && newInfo.gender !== '') || !(newInfo.jobId && newInfo.jobId !== '')) {
                         this.$message.error('请填写完整信息')
                         return
                     }
-                    if ((newInfo.phone && newInfo.phone === '') || !myreg.test(newInfo.phone)) {
+                    if (!(newInfo.phone && newInfo.phone !== '') || !myreg.test(newInfo.phone)) {
                         this.$message.error('请填写正确的电话号码')
                         return
                     }
-                    if ((newInfo.idNum && newInfo.idNum === '') || !idReg.test(newInfo.idNum)) {
+                    if (!(newInfo.idNum && newInfo.idNum !== '') || !idReg.test(newInfo.idNum)) {
                         this.$message.error('请填写正确的身份证号码')
                         return
                     }

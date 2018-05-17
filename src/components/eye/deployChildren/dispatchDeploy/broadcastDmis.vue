@@ -58,7 +58,7 @@
                                 <span @click="fixedInfo(scope.row,'广播编辑')" class="edit">编辑</span> |
                                 <span @click="stop(scope.row,'片区信息')" v-if="scope.row.isStop">停止 |</span>
                                 <span @click="start(scope.row,'片区信息')" v-else="scope.row.isStart">开始 |</span>
-                                <span @click="showPersonDetail(scope.row,'广播信息')">查看</span> |
+                                <span @click="showPersonDetail(scope.row,'广播信息',true)">查看</span> |
                                 <span @click="deletInfo(scope.row.id,'片区信息')">删除</span>
                             </template>
                         </el-table-column>
@@ -68,7 +68,7 @@
                               :visible="visible"
                               :Info="broadCastInfo"
                               :isDisabled="isDisabled"
-                              @closeInfoDialog ="visible = false"
+                              @closeInfoDialog ="closeDmisDialog"
                               @fixInfo = "fixInfo"
                               :title = "title"
                               @saveNewInfo="addNewPerson">
@@ -107,6 +107,9 @@
             }
         },
         methods: {
+            closeDmisDialog () {
+                this.visible = false
+            },
             handleSelectionChange(selection) {
                 this.choseInfoId = selection.map(item => {
                     return item.id
@@ -189,9 +192,16 @@
                 })
             },
             fixInfo (info) {
-                let musicIds = info.musicIds.map(item => {
-                    return item.id
-                })
+                let musicIds
+                if (info.musicIds) {
+                    musicIds = info.musicIds.map(item => {
+                        return item.id
+                    })
+                } else {
+                    musicIds = info.musics.map(item => {
+                        return item.id
+                    })
+                }
                 let obj = {
                     id: info.broadcastSchedule.id,
                     name: info.broadcastSchedule.name,
@@ -209,12 +219,13 @@
                     obj.days = info.broadcastSchedule.days
                 }
                 api.schedulebroadcast.updataBroadcast(JSON.stringify(obj)).then(res => {
+                    this.closeDmisDialog()
                     console.log(res, '创建成功')
                     this.getAllBroadcast()
-                    this.$message.success('创建成功')
+                    this.$message.success('修改成功')
                 }).catch(err => {
                     console.log(err, '创建失败')
-                    this.$message.error('创建失败，请稍后重试')
+                    this.$message.error('修改失败，请稍后重试')
                 })
             },
             addNewPerson (info) {
@@ -238,6 +249,7 @@
                     obj.days = info.broadcastSchedule.days
                 }
                 api.schedulebroadcast.createdBroadcast(JSON.stringify(obj)).then(res => {
+                    this.closeDmisDialog()
                     console.log(res, '创建成功')
                     this.getAllBroadcast()
                     this.$message.success('创建成功')

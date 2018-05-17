@@ -278,7 +278,7 @@
                     this.$message.error('创建失败，请稍后重试')
                 })
             },
-            fixedInfo () {
+            fixedInfo (id) {
                 if (id) {
                     this.choseInfoId.push(id)
                 }

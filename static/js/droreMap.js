@@ -1684,10 +1684,10 @@ define(function(require, exports, module) {
                         }),
                         font: _size + "px sans-serif",
                         offsetX: '0',
-                        offsetY: -width / 2 - _size / 2 - 5,
+                        offsetY: -width / 2 - _size / 2 + 37,
                         stroke: new ol.style.Stroke({
-                            color: 'black',
-                            width: 8
+                            color: '#000',
+                            width: 5
                         })
                     });
                     if(val) {
@@ -1760,7 +1760,7 @@ define(function(require, exports, module) {
                 this.overlay = new ol.Overlay({
                     id: id0,
                     element: container,
-                    //offset: [0, -10],
+                    offset: [-60, -75],
                     stopEvent: true, //当鼠标滚轮在地图上滚动时，会触发地图缩放事件，如果在 overlay 之上滚动滚轮，并不会触发缩放事件，如果想鼠标在 overlay 之上也支持缩放，那么将该属性设置为 false
                     autoPan: false,
                     position: coord,

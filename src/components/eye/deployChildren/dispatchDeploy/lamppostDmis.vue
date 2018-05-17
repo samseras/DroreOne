@@ -68,7 +68,7 @@
                               :visible="visible"
                               :Info="lamppostInfo"
                               :isDisabled="isDisabled"
-                              @closeInfoDialog ="visible = false"
+                              @closeInfoDialog ="closeDmisDialog"
                               @fixInfo = "fixInfo"
                               :title = "title"
                               @saveNewInfo="saveNewPerson">
@@ -115,6 +115,9 @@
             }
         },
         methods: {
+            closeDmisDialog () {
+                this.visible = false
+            },
             handleSelectionChange(selection) {
                 this.choseInfoId = selection.map(item => {
                     return item.id
@@ -142,11 +145,11 @@
                     this.isShowLoading = false
                 })
             },
-            showPersonDetail (info,title) {
+            showPersonDetail (info,title,state) {
                 this.lamppostInfo = info;
                 this.visible = true;
                 this.title = title;
-                this.isDisabled = false
+                this.isDisabled = state
             },
             showCheckDetail(info,title){
                 this.lamppostInfo = info;
@@ -155,7 +158,7 @@
                 this.isDisabled = true;
             },
             addNewInfo () {
-                this.showPersonDetail({lightSchedule:{}}, '添加灯光照明')
+                this.showPersonDetail({lightSchedule:{}}, '添加灯光照明',false)
                 this.isDisabled = false
             },
             deletInfo (id) {
@@ -240,6 +243,7 @@
                     obj.days = info.lightSchedule.days
                 }
                 await api.lamppost.updataLamppost(JSON.stringify(obj)).then(res => {
+                    this.closeDmisDialog()
                     console.log(res, '这是请求回来的')
                     this.$message.success('修改成功')
                     this.getLamppostList()
@@ -266,6 +270,7 @@
                 }
                 console.log(obj, '擦时候')
                 api.lamppost.addLamppost(JSON.stringify(obj)).then(res => {
+                    this.closeDmisDialog()
                     console.log(res, '这是请求回来的')
                     this.$message.success('添加成功')
                     this.getLamppostList()

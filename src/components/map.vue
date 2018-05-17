@@ -3,6 +3,12 @@
         <div id="map" class="map">
 
         </div>
+        <div id="contextmenu_container" class="contextmenu">
+            <i @click="menuDelete"></i>
+            <button @click="menuOperation"></button>
+            <button @click="menuShow"></button>
+            <button @click="menuPhone"></button>
+        </div>
     </Scrollcontainer>
 </template>
 
@@ -17,6 +23,7 @@
         name: "map1",
         data () {
             return {
+                menulist: {},
             }
         },
         created () {
@@ -41,13 +48,13 @@
             }else if (route.includes('controler')) {
                 droreMap.interaction.enableMapClick = true
                 droreMap.interaction.showMove()
-                // this.getAllLight();//路灯现有标注
+                this.getAllLight();//路灯现有标注
                 // this.getAllGate();//闸机现有标注
                 // this.getAllWifi();//wifi现有标注
                 // this.getAllLed();//Led现有标注
                 // this.getAllPolice();//报警柱现有标注
                 // this.getAllMonitor();//传感器现有标注
-                // this.getAllBroadcast();//广播现有标注
+                this.getAllBroadcast();//广播现有标注
                 // this.getAllCamera();//摄像头现有标注
                 this.overView();//鹰眼
             } else if (route.includes('area-deploy')) {
@@ -268,6 +275,9 @@
                             url: "http://label.drore.com/gisLabelTabImage/public/defaults/24*24/zhilupai.png"
                         });
                         droreMap.icon.addChild(Indicator);
+                        Indicator.onclick(function(e) {
+                            this.popup(e);
+                        });
                     }
 
                 }).catch(err => {
@@ -614,11 +624,13 @@
                             name: this.lightList[i].name,
                             subtype: "Light",
                             id: this.lightList[i].id,
-                            url: "http://label.drore.com/gisLabelTabImage/public/defaults/24*24/ludeng.png"
+                            url: "/static/img/icon/Light.png"
                         });
                         droreMap.icon.addChild(Light);
+                        let that =this;
                         Light.onclick(function(e) {
-                            alert("这是路灯，id是"+ e.data.id);
+                            that.menulist = e;
+                            that.droreMappopup(e);
                         });
                     }
                 }).catch((err)=>{
@@ -655,7 +667,7 @@
                                 name: this.lightList[i].name,
                                 subtype: "droreMapinit",
                                 id: this.lightList[i].id,
-                                url: "http://label.drore.com/gisLabelTabImage/public/defaults/24*24/ludeng.png"
+                                url: "/static/img/icon/Light.png"
                             });
                             droreMap.icon.addChild(icon1);
                         }
@@ -795,11 +807,13 @@
                             name: this.ledList[i].name,
                             subtype: "Led",
                             id: this.ledList[i].id,
-                            url: "http://label.drore.com/gisLabelTabImage/public/defaults/24*24/dianziping.png"
+                            url: "/static/img/icon/Led.png"
                         });
                         droreMap.icon.addChild(Led);
+                        let that =this
                         Led.onclick(function(e) {
-                            alert("这是Led，id是" + e.data.id);
+                            that.menulist = e;
+                            that.droreMappopup(e);
                         });
                     }
                 }).catch((err)=>{
@@ -836,7 +850,7 @@
                                 name: this.ledList[i].name,
                                 subtype: "droreMapinit",
                                 id: this.ledList[i].id,
-                                url: "http://label.drore.com/gisLabelTabImage/public/defaults/24*24/dianziping.png"
+                                url:  "/static/img/icon/Led.png"
                             });
                             droreMap.icon.addChild(icon1);
                         }
@@ -975,11 +989,13 @@
                             name: this.broadList[i].name,
                             subtype: "Broadcast",
                             id: this.broadList[i].id,
-                            url: "http://label.drore.com/gisLabelTabImage/public/defaults/24*24/guangboshebei.png"
+                            url: "/static/img/icon/guangboshebei.png"
                         });
                         droreMap.icon.addChild(Broadcast);
+                        let that =this
                         Broadcast.onclick(function(e) {
-                            alert("这是广播，id是"+e.data.id);
+                            that.menulist = e;
+                            that.droreMappopup(e);
                         });
                     }
                 }).catch((err)=>{
@@ -1017,7 +1033,7 @@
                                 name: this.broadList[i].name,
                                 subtype: "droreMapinit",
                                 id: this.broadList[i].id,
-                                url: "http://label.drore.com/gisLabelTabImage/public/defaults/24*24/guangboshebei.png"
+                                url: "/static/img/icon/guangboshebei.png"
                             });
                             droreMap.icon.addChild(icon1);
                         }
@@ -1694,6 +1710,30 @@
                 areaEvets.setVisible(true)
                 droreMap.area.addChild(areaEvets)
                 droreMap.map.panToCoord(droreMap.trans.transFromWgsToLayer(ol[0]));
+            },
+            droreMappopup(e){
+                var div = document.getElementById('contextmenu_container')
+                var popup = new  droreMap.pop.Popup(div,e.coordinate,"contextmenu_container")
+                droreMap.pop.addChild(popup);
+                if(e.subtype=== "Light"){
+                    $("#contextmenu_container").attr("class","contextmenu Light");
+                }else if(e.subtype=== "Broadcast"){
+                    $("#contextmenu_container").attr("class","contextmenu Broadcast");
+                }
+                $("#contextmenu_container").show();
+            },
+            menuOperation(){
+                console.log(this.menulist);
+                alert("坐标是"+this.menulist.coordinate);
+            },
+            menuShow(){
+                alert("id是"+this.menulist.id);
+            },
+            menuPhone(){
+                alert("名字是"+this.menulist.name);
+            },
+            menuDelete(){
+                $("#contextmenu_container").hide();
             }
         },
         components: {
@@ -1939,6 +1979,53 @@
     }
     .ol-overviewmap-box {
         border:2px dotted rgba(0,60,136,.7)
+    }
+    .contextmenu{
+        background: url("/static/img/icon_bg.png") no-repeat;
+        width: 120px;
+        height: 60px;
+        position: relative;
+    }
+    .contextmenu i{
+        cursor: pointer;
+        display: inline-block;
+        width: 46px;
+        height: 58px;
+        position: absolute;
+        top:37px;
+        left: 37px;
+    }
+    .contextmenu.Light i{
+        background: url("/static/img/icon/Light_big.png") no-repeat;
+    }
+    .contextmenu.Broadcast i{
+        background: url("/static/img/icon/guangboshebei_big.png") no-repeat;
+    }
+    .contextmenu button{
+        position: absolute;
+        cursor: pointer;
+        border: none;
+        outline:none;
+        width: 20px;
+        height: 20px;
+    }
+    .contextmenu button:nth-child(2){
+        background: url("/static/img/menuOperation.svg");
+        background-size: cover;
+        top:32px;
+        left:13px;
+    }
+    .contextmenu button:nth-child(3){
+        background: url("/static/img/menuShow.svg");
+        background-size: cover;
+        top:10px;
+        left: 50px;
+    }
+    .contextmenu button:last-child{
+        background: url("/static/img/menuPhone.svg");
+        background-size: cover;
+        top:32px;
+        right: 13px;
     }
 </style>
 <style lang="scss" scoped>

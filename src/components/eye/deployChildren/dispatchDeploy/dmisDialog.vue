@@ -11,17 +11,20 @@
             <div class="card">
                 <!--巡更路线-->
                 <div class="personCardContent" v-if="route.includes('security')">
-                    <p class="sex">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 称：<input type="text"v-model="security.inspectionSchedule.name"class="inputText"></p>
+                    <p class="sex">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 称：
+                        <el-input type="text"v-model="security.inspectionSchedule.name"class="inputText" :maxlength="15" :disabled='isDisabled'></el-input>
+                    </p>
                     <p class="time">时&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 间：
-                        <el-checkbox-group v-model = "filterList" @change="security.inspectionSchedule.customizedDays = false">
+                        <el-checkbox-group v-model = "filterList" @change="security.inspectionSchedule.customizedDays = false" :disabled='isDisabled'>
                             <el-checkbox v-for="item in week" :label="item.id" :key="item.id">{{item.type}}</el-checkbox>
                         </el-checkbox-group>
-                        <el-checkbox label="自定义" @change="weekCustom(security.inspectionSchedule.customizedDays)" v-model="security.inspectionSchedule.customizedDays"></el-checkbox>
+                        <el-checkbox label="自定义" @change="weekCustom(security.inspectionSchedule.customizedDays)" v-model="security.inspectionSchedule.customizedDays" :disabled='isDisabled'></el-checkbox>
                     </p>
                     <p class="time" v-if="security.inspectionSchedule.customizedDays">选择时间：
                         <el-date-picker
-                            v-model="security.inspectionSchedule.time"
+                            v-model="daySelect"
                             size ="mini"
+                            :disabled='isDisabled'
                             type="daterange"
                             range-separator="至"
                             start-placeholder="开始日期"
@@ -29,21 +32,22 @@
                         </el-date-picker>
                     </p>
                     <p class="time">班&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 次：
-                        <el-checkbox-group v-model="classesList" @change="security.inspectionSchedule.customizedShift = false">
+                        <el-checkbox-group v-model="classesList" @change="security.inspectionSchedule.customizedShift = false" :disabled='isDisabled'>
                             <el-checkbox v-for="item in classes" :label="item.id" :key="item.id">{{item.type}}</el-checkbox>
                         </el-checkbox-group>
-                        <el-checkbox label="自定义" @change="dayCustom(security.inspectionSchedule.customizedShift)" v-model="security.inspectionSchedule.customizedShift"></el-checkbox>
+                        <el-checkbox label="自定义" @change="dayCustom(security.inspectionSchedule.customizedShift)" v-model="security.inspectionSchedule.customizedShift" :disabled='isDisabled'></el-checkbox>
                         <el-time-picker v-if="security.inspectionSchedule.customizedShift"
                             is-range
-                            v-model="security.inspectionSchedule.classTime"
+                            v-model="timeSelect"
                             range-separator="至"
+                            :disabled='isDisabled'
                             start-placeholder="开始时间"
                             end-placeholder="结束时间"
                             placeholder="选择时间范围">
                         </el-time-picker>
                     </p>
                     <p class="name">人&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 员：
-                        <el-select v-model="security.securityIds" size="mini" class="" multiple placeholder="请选择">
+                        <el-select v-model="security.securityIds" size="mini" class="" multiple placeholder="请选择" :disabled='isDisabled'>
                             <el-option
                                 v-for="item in personList"
                                 :key="item.personBean.id"
@@ -58,7 +62,7 @@
                     <!--</p>-->
                     <p class="phoneNum">线路绘制：
                         <!--<input type="text"v-model="security.location" class="location">-->
-                        <el-select v-model="security.inspectionSchedule.routeId" placeholder="请选择">
+                        <el-select v-model="security.inspectionSchedule.routeId" placeholder="请选择" :disabled='isDisabled'>
                             <el-option
                                 v-for="ite in options"
                                 :key="ite.id"
@@ -75,17 +79,20 @@
                 </div>
                 <!--广播-->
                 <div class="personCardContent" v-if="route.includes('broadcast')">
-                    <p class="sex">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 称：<input type="text"v-model="broadList.broadcastSchedule.name" class="inputText"></p>
+                    <p class="sex">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 称：
+                        <el-input type="text"v-model="broadList.broadcastSchedule.name" class="inputText" :maxlength="15" :disabled='isDisabled'></el-input>
+                    </p>
                     <p class="time">时&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 间：
-                        <el-checkbox-group v-model="filterList" @change="broadList.broadcastSchedule.customizedDays = false">
+                        <el-checkbox-group v-model="filterList" @change="broadList.broadcastSchedule.customizedDays = false" :disabled='isDisabled'>
                             <el-checkbox v-for="item in week" :label="item.id" :key="item.id">{{item.type}}</el-checkbox>
                         </el-checkbox-group>
-                        <el-checkbox label="自定义" @change="weekCustom(broadList.broadcastSchedule.customizedDays)" v-model="broadList.broadcastSchedule.customizedDays"></el-checkbox>
+                        <el-checkbox label="自定义" @change="weekCustom(broadList.broadcastSchedule.customizedDays)" v-model="broadList.broadcastSchedule.customizedDays" :disabled='isDisabled'></el-checkbox>
                     </p>
                     <p class="time" v-if="broadList.broadcastSchedule.customizedDays">选择时间：
                         <el-date-picker
-                            v-model="broadList.broadcastSchedule.time"
+                            v-model="daySelect"
                             size ="mini"
+                            :disabled='isDisabled'
                             type="daterange"
                             range-separator="至"
                             start-placeholder="开始日期"
@@ -94,7 +101,8 @@
                     </p>
                     <p class="Hardware">执行时间：
                         <el-time-picker is-range
-                                        v-model="broadList.broadcastSchedule.watchTime"
+                                        v-model="timeSelect"
+                                        :disabled='isDisabled'
                                         range-separator="至"
                                         start-placeholder="开始时间"
                                         end-placeholder="结束时间"
@@ -102,7 +110,7 @@
                         </el-time-picker>
                     </p>
                     <p class="name">关联广播：
-                        <el-select v-model="broadList.broadcastIds" size="mini" multiple placeholder="请选择">
+                        <el-select v-model="broadList.broadcastIds" size="mini" multiple placeholder="请选择" :disabled='isDisabled'>
                             <el-option
                                 v-for="item in options"
                                 :key="item.id"
@@ -127,17 +135,20 @@
                 </div>
                 <!--路灯-->
                 <div class="personCardContent" v-if="route.includes('lamppost')">
-                    <p class="sex">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 称：<input type="text" v-model="lamppost.lightSchedule.name" class="inputText"></p>
+                    <p class="sex">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 称：
+                        <el-input type="text" v-model="lamppost.lightSchedule.name" class="inputText" :maxlength="15" :disabled='isDisabled'></el-input>
+                    </p>
                     <p class="time">时&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 间：
-                        <el-checkbox-group v-model="filterList" @change="lamppost.lightSchedule.customizedDays = false">
+                        <el-checkbox-group v-model="filterList" @change="lamppost.lightSchedule.customizedDays = false" :disabled='isDisabled'>
                             <el-checkbox v-for="item in week" :label="item.id" :key="item.id">{{item.type}}</el-checkbox>
                         </el-checkbox-group>
-                        <el-checkbox label="自定义" @change="weekCustom(lamppost.lightSchedule.customizedDays)" v-model="lamppost.lightSchedule.customizedDays"></el-checkbox>
+                        <el-checkbox label="自定义" @change="weekCustom(lamppost.lightSchedule.customizedDays)" v-model="lamppost.lightSchedule.customizedDays" :disabled='isDisabled'></el-checkbox>
                     </p>
                     <p class="time" v-if="lamppost.lightSchedule.customizedDays">选择时间：
                         <el-date-picker
-                            v-model="lamppost.lightSchedule.time"
+                            v-model="daySelect"
                             size ="mini"
+                            :disabled='isDisabled'
                             type="daterange"
                             range-separator="至"
                             start-placeholder="开始日期"
@@ -146,7 +157,8 @@
                     </p>
                     <p class="Hardware">执行时间：
                         <el-time-picker is-range
-                                        v-model="lamppost.lightSchedule.watchTime"
+                                        v-model="timeSelect"
+                                        :disabled='isDisabled'
                                         range-separator="至"
                                         start-placeholder="开始时间"
                                         end-placeholder="结束时间"
@@ -154,7 +166,7 @@
                         </el-time-picker>
                     </p>
                     <p class="name">关联路灯：
-                        <el-select v-model="lamppost.lightIds" size="mini" multiple placeholder="请选择">
+                        <el-select v-model="lamppost.lightIds" size="mini" multiple placeholder="请选择" :disabled='isDisabled'>
                             <el-option
                                 v-for="light in options"
                                 :label="light.name"
@@ -170,39 +182,43 @@
                 </div>
                 <!--保洁-->
                 <div class="personCardContent" v-if="route.includes('purifier')">
-                    <p class="sex">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 称：<input type="text"v-model="purifier.cleanSchedule.name"class="inputText"></p>
+                    <p class="sex">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 称：
+                        <el-input type="text"v-model="purifier.cleanSchedule.name"class="inputText" :maxlength="15" :disabled='isDisabled'></el-input>
+                    </p>
                     <p class="time">时&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 间：
-                        <el-checkbox-group v-model="filterList" @change="purifier.cleanSchedule.customizedDays = false">
+                        <el-checkbox-group v-model="filterList" @change="purifier.cleanSchedule.customizedDays = false" :disabled='isDisabled'>
                             <el-checkbox v-for="item in week" :label="item.id" :key="item.id">{{item.type}}</el-checkbox>
                         </el-checkbox-group>
-                        <el-checkbox label="自定义" @change="weekCustom(purifier.cleanSchedule.customizedDays)" v-model="purifier.cleanSchedule.customizedDays"></el-checkbox>
+                        <el-checkbox label="自定义" @change="weekCustom(purifier.cleanSchedule.customizedDays)" v-model="purifier.cleanSchedule.customizedDays":disabled='isDisabled' ></el-checkbox>
                     </p>
                     <p class="time" v-if="purifier.cleanSchedule.customizedDays">选择时间：
                         <el-date-picker
-                            v-model="purifier.cleanSchedule.time"
+                            v-model="daySelect"
                             size ="mini"
                             type="daterange"
+                            :disabled='isDisabled'
                             range-separator="至"
                             start-placeholder="开始日期"
                             end-placeholder="结束日期">
                         </el-date-picker>
                     </p>
                     <p class="time">班&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 次：
-                        <el-checkbox-group v-model="classesList" @change="purifier.cleanSchedule.customizedShift = false">
-                            <el-checkbox v-for="item in classes" :label="item.id" :key="item.id">{{item.type}}</el-checkbox>
+                        <el-checkbox-group v-model="classesList" @change="purifier.cleanSchedule.customizedShift = false" :disabled='isDisabled'>
+                            <el-checkbox v-for="item in classes" :label="item.id" :key="item.id" >{{item.type}}</el-checkbox>
                         </el-checkbox-group>
-                        <el-checkbox label="自定义" @change="dayCustom(purifier.cleanSchedule.customizedShift)" v-model="purifier.cleanSchedule.customizedShift"></el-checkbox>
+                        <el-checkbox label="自定义" @change="dayCustom(purifier.cleanSchedule.customizedShift)" v-model="purifier.cleanSchedule.customizedShift" :disabled='isDisabled'></el-checkbox>
                         <el-time-picker v-if="purifier.cleanSchedule.customizedShift"
                                         is-range
-                                        v-model="purifier.cleanSchedule.classTime"
+                                        v-model="timeSelect"
                                         range-separator="至"
+                                        :disabled='isDisabled'
                                         start-placeholder="开始时间"
                                         end-placeholder="结束时间"
                                         placeholder="选择时间范围">
                         </el-time-picker>
                     </p>
                     <p class="name">人&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 员：
-                        <el-select v-model="purifier.cleanerIds" size="mini" class="" multiple placeholder="请选择">
+                        <el-select v-model="purifier.cleanerIds" size="mini" class="" multiple placeholder="请选择" :disabled='isDisabled'>
                             <el-option
                                 v-for="item in personList"
                                 :key="item.personBean.id"
@@ -216,7 +232,7 @@
                         <!--<el-radio v-model="radio" label="0">否</el-radio>-->
                     <!--</p>-->
                     <p class="name">片&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 区：
-                        <el-select v-model="purifier.regionIds" size="mini" class="" multiple placeholder="请选择">
+                        <el-select v-model="purifier.regionIds" size="mini" class="" multiple placeholder="请选择" :disabled='isDisabled'>
                             <el-option
                                 v-for="item in options"
                                 :key="item.id"
@@ -232,18 +248,21 @@
                 </div>
                 <!--LED-->
                 <div class="personCardContent" v-if="route.includes('screen')">
-                    <p class="sex">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 称：<input type="text"v-model="screen.ledSchedule.name" class="inputText"></p>
+                    <p class="sex">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 称：
+                        <el-input type="text"v-model="screen.ledSchedule.name" class="inputText" :disabled="isDisabled" :maxlength="15"></el-input>
+                    </p>
                     <p class="time">时&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 间：
-                        <el-checkbox-group v-model="filterList" @change="screen.ledSchedule.customizedDays = false">
+                        <el-checkbox-group v-model="filterList" @change="screen.ledSchedule.customizedDays = false" :disabled='isDisabled'>
                             <el-checkbox v-for="item in week" :label="item.id" :key="item.id">{{item.type}}</el-checkbox>
                         </el-checkbox-group>
-                        <el-checkbox label="自定义" @change="weekCustom(screen.ledSchedule.customizedDays)" v-model="screen.ledSchedule.customizedDays"></el-checkbox>
+                        <el-checkbox label="自定义" @change="weekCustom(screen.ledSchedule.customizedDays)" v-model="screen.ledSchedule.customizedDays" :disabled='isDisabled'></el-checkbox>
                     </p>
                     <p class="time" v-if="screen.ledSchedule.customizedDays">选择时间：
                         <el-date-picker
-                            v-model="screen.ledSchedule.time"
+                            v-model="daySelect"
                             size ="mini"
                             type="daterange"
+                            :disabled='isDisabled'
                             range-separator="至"
                             start-placeholder="开始日期"
                             end-placeholder="结束日期">
@@ -251,7 +270,8 @@
                     </p>
                     <p class="Hardware">执行时间：
                         <el-time-picker is-range
-                                        v-model="screen.ledSchedule.watchTime"
+                                        v-model="timeSelect"
+                                        :disabled='isDisabled'
                                         range-separator="至"
                                         start-placeholder="开始时间"
                                         end-placeholder="结束时间"
@@ -259,7 +279,7 @@
                         </el-time-picker>
                     </p>
                     <p class="name">关联大屏：
-                        <el-select v-model="screen.ledIds" size="mini" multiple placeholder="请选择">
+                        <el-select v-model="screen.ledIds" size="mini" multiple placeholder="请选择" :disabled='isDisabled'>
                             <el-option
                                 v-for="item in options"
                                 :key="item.id"
@@ -283,7 +303,7 @@
                 </div>
             </div>
             <div class=""slot="footer" class="dialog-footer cardFooter">
-                <el-button size="mini" class="hold" @click="addNewInfo" :disabled='isDisabled'>保存</el-button>
+                <el-button size="mini" class="hold" @click="addNewInfo" :disabled="isDisabled">保存</el-button>
                 <el-button size="mini" @click = 'closeDialog' :disabled='isDisabled'>取消</el-button>
             </div>
         </el-dialog>
@@ -306,6 +326,8 @@
         props: ['visible', 'Info','isDisabled','title'],
         data () {
             return {
+                daySelect:[],
+                timeSelect: [],
                 files: [],
                 selectLight:[],
                 edit: false,
@@ -433,33 +455,50 @@
                 if (this.route.includes('security')) {
                     if (!this.security.inspectionSchedule.customizedDays) {
                         this.security.inspectionSchedule.days = this.filterList.join()
+                    } else {
+                        this.security.inspectionSchedule.time = this.daySelect
                     }
                     if (!this.security.inspectionSchedule.customizedShift) {
                         this.security.inspectionSchedule.shifts = this.classesList.join()
+                    } else {
+                        this.security.inspectionSchedule.classTime = this.timeSelect
                     }
                     newInfo = this.security
                 } else if(this.route.includes('broadcast')) {
                     if (!this.broadList.broadcastSchedule.customizedDays) {
                         this.broadList.broadcastSchedule.days = this.filterList.join()
+                    }else {
+                        this.broadList.broadcastSchedule.time = this.daySelect
                     }
+                    this.broadList.broadcastSchedule.watchTime = this.timeSelect
                     newInfo = this.broadList
                 } else if(this.route.includes('lamppost')) {
                     if (!this.lamppost.lightSchedule.customizedDays) {
                         this.lamppost.lightSchedule.days = this.filterList.join()
+                    }else {
+                        this.lamppost.lightSchedule.time = this.daySelect
                     }
+                    this.lamppost.lightSchedule.watchTime = this.timeSelect
                     newInfo = this.lamppost
                 } else if(this.route.includes('purifier')) {
                     if (!this.purifier.cleanSchedule.customizedDays) {
                         this.purifier.cleanSchedule.days = this.filterList.join()
+                    }else {
+                        this.purifier.cleanSchedule.time = this.daySelect
                     }
                     if (!this.purifier.cleanSchedule.customizedShift) {
                         this.purifier.cleanSchedule.shifts = this.classesList.join()
+                    }else {
+                        this.purifier.cleanSchedule.classTime = this.timeSelect
                     }
                     newInfo = this.purifier
                 } else if(this.route.includes('screen')) {
                     if (!this.screen.ledSchedule.customizedDays) {
                         this.screen.ledSchedule.days = this.filterList.join()
+                    }else {
+                        this.screen.ledSchedule.time= this.daySelect
                     }
+                    this.screen.ledSchedule.watchTime= this.timeSelect
                     newInfo = this.screen
                 }
                 newInfo.status = true
@@ -471,7 +510,6 @@
                 } else {
                     this.$emit('saveNewInfo', newInfo)
                 }
-                this.closeDialog()
             },
             weekCustom(state){
                 if (state) {
@@ -589,38 +627,55 @@
                 this.security = this.Info;
                 if (this.security.inspectionSchedule.customizedDays === false) {
                     this.filterList = this.security.inspectionSchedule.days;
+                } else {
+                    this.daySelect = this.security.inspectionSchedule.time
                 }
                 if (this.security.inspectionSchedule.customizedShift === false) {
                     this.classesList = this.security.inspectionSchedule.shifts
+                } else {
+                    this.timeSelect = this.security.inspectionSchedule.classTime
                 }
             } else if(this.route.includes('broadcast')) {
                 this.getAllBroadcast()
                 this.broadList = this.Info;
                 if(this.broadList.broadcastSchedule.customizedDays === false) {
                     this.filterList = this.broadList.broadcastSchedule.days;
+                }else {
+                    this.daySelect = this.broadList.broadcastSchedule.time
                 }
+                this.timeSelect = this.broadList.broadcastSchedule.watchTime
             } else if(this.route.includes('lamppost')) {
                 this.getAllLight()
                 this.lamppost = this.Info;
                 if(this.lamppost.lightSchedule.customizedDays === false) {
                     this.filterList = this.lamppost.lightSchedule.days;
+                }else {
+                    this.daySelect = this.lamppost.lightSchedule.time
                 }
+                this.timeSelect = this.lamppost.lightSchedule.watchTime
             } else if(this.route.includes('purifier')) {
                 this.getAllPurifierPerson()
                 this.getAllRegion()
                 this.purifier = this.Info;
                 if (this.purifier.cleanSchedule.customizedDays === false) {
                     this.filterList = this.purifier.cleanSchedule.days;
+                }else {
+                    this.daySelect = this.purifier.cleanSchedule.time
                 }
                 if (this.purifier.cleanSchedule.customizedShift === false) {
                     this.classesList = this.purifier.cleanSchedule.shifts
+                } else {
+                    this.timeSelect = this.purifier.cleanSchedule.classTime
                 }
             } else if(this.route.includes('screen')) {
                 this.getAllLed()
                 this.screen = this.Info;
                 if(this.screen.ledSchedule.customizedDays === false) {
                     this.filterList = this.screen.ledSchedule.days;
+                }else {
+                    this.daySelect = this.screen.ledSchedule.time
                 }
+                this.timeSelect = this.screen.ledSchedule.watchTime
             } else if(this.route.includes('label')){
                 this.label = this.Info;
             }
@@ -791,6 +846,9 @@
         }
         .el-select-dropdown__item span{
             font-size: rem(12);
+        }
+        .el-input__inner{
+           border: none;
         }
     }
 </style>
