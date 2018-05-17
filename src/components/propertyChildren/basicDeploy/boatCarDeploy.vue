@@ -8,10 +8,12 @@
                 <Header @addNewInfo = "addNewInfo"
                         @deletInfo = "deletInfo"
                         @toggleList = "toggleList"
+                        :choseId="choseInfoId"
                         @choseType = 'choseType'
                         @selectedAll = 'selectedAll'
                         @fixedInfo = 'fixedInfo'
-                        @searchAnything="searchAnything">
+                        @searchAnything="searchAnything"
+                        @getAllBoat="getAllBoat">
                 </Header>
             </div>
             <div class="personList" v-loading="isShowLoading">
@@ -116,6 +118,7 @@
     import Header from './funHeader'
     import PersonDetail from './detailDialog'
     import api from '@/api'
+    import _ from 'lodash'
     export default {
         name: 'boatCar-deploy',
         data () {
@@ -343,7 +346,9 @@
                         this.boatCarList[i].checked = false
                         this.boatCarList[i].status = true
                         this.boatCarList[i].id = this.boatCarList[i].vehicle.id
+                        this.boatCarList[i].byTime = -(new Date(this.boatCarList[i].vehicle.modifyTime)).getTime()
                     }
+                    this.boatCarList = _.sortBy(this.boatCarList,'byTime')
                     this.checkList = this.boatCarList
                     this.choseInfoId = []
                 }).catch(err => {

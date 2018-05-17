@@ -9,9 +9,11 @@
                         @deletInfo = "deletInfo"
                         @toggleList = "toggleList"
                         @choseType = 'choseType'
+                        :choseId="choseInfoId"
                         @selectedAll = 'selectedAll'
                         @fixedInfo = 'fixedInfo'
-                        @searchAnything="searchAnything">
+                        @searchAnything="searchAnything"
+                        @getAllScenic="getAllScenic">
                 </Header>
             </div>
             <div class="personList" v-loading="isShowLoading">
@@ -101,6 +103,8 @@
     import Header from './funHeader'
     import PersonDetail from './detailDialog'
     import api from '@/api'
+    import _ from 'lodash'
+
     export default {
         name: "scenic-deploy",
         data () {
@@ -328,7 +332,9 @@
                                 this.scenicList[i].scenicspotBean.statu = '已满'
                             }
                         }
+                        this.scenicList[i].byTime = -(new Date(this.scenicList[i].scenicspotBean.modifyTime)).getTime()
                     }
+                    this.scenicList = _.sortBy(this.scenicList, 'byTime')
                     this.checkList = this.scenicList
                     this.choseInfoId = []
                 }).catch((err)=> {

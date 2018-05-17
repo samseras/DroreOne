@@ -9,9 +9,11 @@
                         @deletInfo = "deletInfo"
                         @toggleList = "toggleList"
                         @choseType = 'choseType'
+                        :choseId="choseInfoId"
                         @selectedAll = 'selectedAll'
                         @fixedInfo = 'fixedInfo'
-                        @searchAnything="searchAnything">
+                        @searchAnything="searchAnything"
+                        @getAllPlant="getAllTree">
                 </Header>
             </div>
             <div class="personList" v-loading="isShowLoading">
@@ -99,6 +101,7 @@
     import PersonDetail from './detailDialog'
     import api from '@/api'
     import moment from 'moment'
+    import _ from 'lodash'
     export default {
         name: "tree-deploy",
         data(){
@@ -328,7 +331,9 @@
                         this.treeList[i].location = `${this.treeList[i].longitude},${this.treeList[i].latitude}`
                         this.treeList[i].id = this.treeList[i].plant.id
                         // this.treeList[i].state = '正常'
+                        this.treeList[i].byTime = -(new Date(this.treeList[i].plant.modifyTime)).getTime()
                     }
+                    this.treeList = _.sortBy(this.treeList, 'byTime')
                     this.checkList = this.treeList
                     this.choseInfoId = []
                 }).catch(err => {

@@ -14,7 +14,7 @@
                 <el-button size="mini" plain @click="$refs.uploadFile.click()"><i class="el-icon-upload2"></i>导入</el-button>
                 <input type="file" ref="uploadFile" class="importFile" @change="selectFile">
             </div>
-            <el-button size="mini"plain v-if="isShowHeader">导出</el-button>
+            <el-button size="mini"plain v-if="isShowHeader" @click="expotInfo"><i class="el-icon-download"></i>导出</el-button>
             <el-button size="mini"plain @click="deleteCard"><i class="el-icon-delete"></i>删除</el-button>
             <el-button size="mini"plain @click="fixCard"><i class="el-icon-edit"></i>修改</el-button>
         </div>
@@ -57,6 +57,7 @@
     import api from '@/api'
     export default {
         name: "fun-header",
+        props:['choseId'],
         data () {
             return {
                 filterList: [],
@@ -111,67 +112,175 @@
                     switch (true){
                         case route.includes("boat"):
                             console.log("boat");
-                            break;
-                        case route.includes("roat"):
-                            console.log("roat");
-                            break;
-                        case route.includes("area"):
-                            console.log("area");
+                            api.importfile.importBoat(form).then(res => {
+                                this.$message.success('导入成功');
+                                this.$emit("getAllBoat");
+                            }).catch(err => {
+                                this.$message.error('导入失败，请稍后重试')
+                                console.log(err, '导入失败')
+                            })
                             break;
                         case route.includes("toilet"):
                             console.log("toilet");
+                            api.importfile.importToilet(form).then(res => {
+                                this.$message.success('导入成功');
+                                this.$emit("getAllToilet");
+                            }).catch(err => {
+                                this.$message.error('导入失败，请稍后重试')
+                                console.log(err, '导入失败')
+                            })
                             break;
                         case route.includes("park"):
                             console.log("park");
+                            api.importfile.importPark(form).then(res => {
+                                this.$message.success('导入成功');
+                                this.$emit("getAllPark");
+                            }).catch(err => {
+                                this.$message.error('导入失败，请稍后重试')
+                                console.log(err, '导入失败')
+                            })
                             break;
                         case route.includes("shop"):
                             console.log("shop");
+                            api.importfile.importShop(form).then(res => {
+                                this.$message.success('导入成功');
+                                this.$emit("getAllShop");
+                            }).catch(err => {
+                                this.$message.error('导入失败，请稍后重试')
+                                console.log(err, '导入失败')
+                            })
                             break;
                         case route.includes("scenic"):
                             console.log("scenic");
+                            api.importfile.importScenic(form).then(res => {
+                                this.$message.success('导入成功');
+                                this.$emit("getAllScenic");
+                            }).catch(err => {
+                                this.$message.error('导入失败，请稍后重试')
+                                console.log(err, '导入失败')
+                            })
                             break;
                         case route.includes("trash"):
                             console.log("trash");
+                            api.importfile.importDustbin(form).then(res => {
+                                this.$message.success('导入成功');
+                                this.$emit("getAllTrash");
+                            }).catch(err => {
+                                this.$message.error('导入失败，请稍后重试')
+                                console.log(err, '导入失败')
+                            })
                             break;
                         case route.includes("indicator"):
                             console.log("indicator");
+                            api.importfile.importIndicator(form).then(res => {
+                                this.$message.success('导入成功');
+                                this.$emit("getAllIndicator");
+                            }).catch(err => {
+                                this.$message.error('导入失败，请稍后重试')
+                                console.log(err, '导入失败')
+                            })
                             break;
                         case route.includes("plant"):
                             console.log("plant");
+                            api.importfile.importPlant(form).then(res => {
+                                this.$message.success('导入成功');
+                                this.$emit("getAllPlant");
+                            }).catch(err => {
+                                this.$message.error('导入失败，请稍后重试')
+                                console.log(err, '导入失败')
+                            })
                             break;
                         case route.includes("construction"):
                             console.log("construction");
+                            api.importfile.importConstruction(form).then(res => {
+                                this.$message.success('导入成功');
+                                this.$emit("getAllBuild");
+                            }).catch(err => {
+                                this.$message.error('导入失败，请稍后重试')
+                                console.log(err, '导入失败')
+                            })
                             break;
-                        case route.includes("1"):
-                            console.log("1");
+                        case route.includes("person"):
+                            api.importfile.importPerson(form).then(res => {
+                                this.$message.success('导入成功');
+                                this.$emit("getAllPerson");
+                            }).catch(err => {
+                                this.$message.error('导入失败，请稍后重试')
+                                console.log(err, '导入失败')
+                            })
                             break;
-                        case route.includes("2"):
-                            console.log("2");
-                            break;
-                        case route.includes("3"):
-                            console.log("3");
-                            break;
-                        case route.includes("4"):
-                            console.log("4");
-                            break;
-                        case route.includes("5"):
-                            console.log("5");
-                            break;
-                        case route.includes("6"):
-                            console.log("6");
-                            break;
-                        case route.includes("7"):
-                            console.log("7");
-                            break;
+
                     }
+                }
+            },
+            expotInfo(){
+                let type
+                let route = this.$route.path
+                if (route.includes('park')) {
+                    type = 'parking'  //停车场
+                }else if(route.includes('trash')){
+                    type = 'dustbin'  //垃圾桶
+                }else if(route.includes('construction')){
+                    type = 'building' //建筑
+                }else if(route.includes('plant')){
+                    type = 'plant' //植物
+                }else if(route.includes('indicator')){
+                    type = 'signboard'  //指示牌
+                }else if(route.includes('scenic')){
+                    type = 'scenicspot'  //景点
+                }else if(route.includes('toilet')){
+                    type = 'toilet'  //厕所
+                }else if(route.includes('scenic')){
+                    type = 'scenicspot'  //景点
+                }else if(route.includes('boat')){
+                    type = 'vehicle'  //车船
+                }
 
-
-                    // api.importfile.importFileData(form).then(res => {
-                    //     console.log(res, '导入成功')
-                    // }).catch(err => {
-                    //     this.$message.error('导入失败，请稍后重试')
-                    //     console.log(err, '导入失败')
-                    // })
+                if (this.choseId.length > 0) {
+                    api.exportFile.exportSingleBasic(this.choseId,type).then((res) =>{
+                        console.log(res,'niaho')
+                        const content = res
+                        const blob = new Blob([content])
+                        const fileName = '设备文件.csv'
+                        if('download' in document.createElement('a')){
+                            const elink = document.createElement('a')
+                            elink.download = fileName
+                            elink.style.display = 'none'
+                            elink.href = URL.createObjectURL(blob)
+                            document.body.appendChild(elink)
+                            elink.click()
+                            URL.revokeObjectURL(elink.href) // 释放URL 对象
+                            document.body.removeChild(elink)
+                        }else{
+                            navigator.msSaveBlob(blob, fileName)
+                        }
+                        this.$message.success('导出成功')
+//                        this.choseId=[]
+                    }).catch(err =>{
+                        this.$message.error('导出失败，请稍后再试')
+                    })
+                } else {
+                    api.exportFile.exportAllBasic(type).then((res) => {
+                        console.log(res,'niaho')
+                        const content = res
+                        const blob = new Blob([content])
+                        const fileName = '测试.csv'
+                        if('download' in document.createElement('a')){
+                            const elink = document.createElement('a')
+                            elink.download = fileName
+                            elink.style.display = 'none'
+                            elink.href = URL.createObjectURL(blob)
+                            document.body.appendChild(elink)
+                            elink.click()
+                            URL.revokeObjectURL(elink.href) // 释放URL 对象
+                            document.body.removeChild(elink)
+                        }else{
+                            navigator.msSaveBlob(blob, fileName)
+                        }
+                        this.$message.success('导出成功')
+                    }).catch(err => {
+                        this.$message.error('导出失败，请稍后再试')
+                    })
                 }
             },
             deleteCard () {

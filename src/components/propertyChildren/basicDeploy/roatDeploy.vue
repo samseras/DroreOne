@@ -91,6 +91,8 @@
     import Header from './funHeader'
     import PersonDetail from './detailDialog'
     import api from '@/api'
+    import _ from 'lodash'
+
     export default {
         name: "roat-deploy",
         data(){
@@ -320,6 +322,7 @@
                         if (this.roatList[i].type == 4) {
                             this.roatList[i].routeType = '驾车路线'
                         }
+                        // this.roatList[i].byTime = this.roatList[i].modifyTime
                     }
                     this.checkList = this.roatList
                     this.choseInfoId = []

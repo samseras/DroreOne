@@ -11,7 +11,8 @@
                         @choseType = 'choseType'
                         @selectedAll = 'selectedAll'
                         @fixedInfo = 'fixedInfo'
-                        @searchAnything="searchAnything">
+                        @searchAnything="searchAnything"
+                        @getAllShop="getAllShop">
                 </Header>
             </div>
             <div class="personList" v-loading="isShowLoading">
@@ -107,6 +108,8 @@
     import Header from './funHeader'
     import PersonDetail from './detailDialog'
     import api from '@/api'
+    import _ from 'lodash'
+
     export default {
         name: "shop-deploy",
         data () {
@@ -369,7 +372,9 @@
                                 this.shopList[i].businessBean.state = '充裕'
                             }
                         }
+                        this.shopList[i].byTime = -(new Date(this.shopList[i].businessBean.modifyTime)).getTime()
                     }
+                    this.shopList = _.sortBy(this.shopList, 'byTime')
                     this.checkList = this.shopList
                     this.choseInfoId = []
                 }).catch(err => {

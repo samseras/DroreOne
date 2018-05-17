@@ -15,7 +15,7 @@
                         <el-input v-model="person.name" :disabled="isDisabled" :maxlength="15"></el-input>
                     </p>
                     <p class="sex">性&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;别：
-                        <el-select v-model="person.gender" placeholder="请选择" :disabled="isDisabled">
+                        <el-select v-model="person.gender" placeholder="请选择" :disabled="isDisabled" @change="ad">
                             <el-option label="男" :value="1"></el-option>
                             <el-option label="女" :value="0"></el-option>
                         </el-select>
@@ -608,6 +608,9 @@
             }
         },
         methods: {
+            ad () {
+              console.log(9999999999)
+            },
             ...mapMutations(['LOCATION_ID']),
             imgError (e) {
                 e.target.src = this.getUrl(null);

@@ -107,6 +107,7 @@
     import Header from './camera.vue'
     import HardWare from './hardwareDialog.vue'
     import api from '@/api'
+    import _ from 'lodash'
 
     export default{
         data(){
@@ -366,7 +367,9 @@
                         this.broadList[i].status = true
                         this.broadList[i].id=this.broadList[i].id
                         this.broadList[i].location=`${this.broadList[i].longitude},${this.broadList[i].latitude}`
+                        this.broadList[i].byTime = -(new Date(this.broadList[i].modifyTime)).getTime()
                     }
+                    this.broadList = _.sortBy(this.broadList,'byTime')
                     this.checkList = this.broadList
                 }).catch((err)=>{
                     console.log(err)
