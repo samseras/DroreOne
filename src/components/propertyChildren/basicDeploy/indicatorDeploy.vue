@@ -91,6 +91,8 @@
     import Header from './funHeader'
     import DetailDialog from './detailDialog'
     import api from '@/api'
+    import _ from 'lodash'
+
     export default {
         name: "indicator-deploy",
         data () {
@@ -316,7 +318,9 @@
                         this.indicatorList[i].status = true
                         this.indicatorList[i].id = this.indicatorList[i].signboardBean.id
                         this.indicatorList[i].location = `${this.indicatorList[i].longitude},${this.indicatorList[i].latitude}`
+                        this.indicatorList[i].byTime = -(new Date(this.indicatorList[i].signboardBean.modifyTime)).getTime()
                     }
+                    this.indicatorList = _.sortBy(this.indicatorList, 'byTime')
                     this.checkList =this.indicatorList
                     this.choseInfoId = []
                 }).catch(err => {

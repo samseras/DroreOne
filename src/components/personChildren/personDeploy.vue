@@ -108,6 +108,7 @@
     import Header from '../propertyChildren/basicDeploy/funHeader'
     import PersonDetail from '../propertyChildren/basicDeploy/detailDialog'
     import api from '@/api'
+    import _ from 'lodash'
 
     export default {
         name: 'person-deploy',
@@ -389,7 +390,10 @@
                         this.personList[i].idNum = this.personList[i].personBean.idNum
                         this.personList[i].name = this.personList[i].personBean.name
                         this.personList[i].phone = this.personList[i].personBean.phone
+                        this.personList[i].byTime = -(new Date(this.personList[i].personBean.modifyTime)).getTime()
                     }
+                    this.personList = _.sortBy(this.personList,'byTime')
+                    console.log(this.personList, 'p[p[p[p[p[p[p[p[p[p[p[p[p[[pp')
                     this.checkList = this.personList
                 }).catch(err => {
                     console.log(err)

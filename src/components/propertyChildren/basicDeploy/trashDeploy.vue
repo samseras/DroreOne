@@ -101,6 +101,7 @@
     import Header from './funHeader'
     import PersonDetail from './detailDialog'
     import api from '@/api'
+    import _ from 'lodash'
     export default {
         name: "trash-deploy",
         data (){
@@ -325,7 +326,9 @@
                         this.trashList[i].checked = false
                         this.trashList[i].status = true
                         this.trashList[i].id = this.trashList[i].dustbinBean.id
+                        this.trashList[i].byTime = -(new Date(this.trashList[i].dustbinBean.modifyTime)).getTime()
                     }
+                    this.trashList = _.sortBy(this.trashList, 'byTime')
                     this.checkList = this.trashList
                     this.choseInfoId = []
                 }).catch(err => {
