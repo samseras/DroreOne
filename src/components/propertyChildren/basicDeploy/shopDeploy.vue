@@ -343,9 +343,9 @@
                     })
                     this.showPersonDetail(this.shopInfo, '修改商圈信息',false)
                     this.isDisabled = false
-                    this.choseInfoId = []
+                    //this.choseInfoId = []
                 } else {
-                    this.$message.error('请选择要修改的商铺')
+                    this.$message.error('请选择一条数据')
                 }
             },
             async getAllShop () {
@@ -372,6 +372,7 @@
                         }
                     }
                     this.checkList = this.shopList
+                    this.choseInfoId = []
                 }).catch(err => {
                     console.log(err)
                     this.isShowLoading = false

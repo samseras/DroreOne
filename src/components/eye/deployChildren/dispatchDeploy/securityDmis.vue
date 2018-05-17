@@ -56,7 +56,7 @@
                                 <span @click="fixedInfo(scope.row,'巡更路线编辑')">编辑</span> |
                                 <span @click="stop(scope.row,'片区信息')" v-if="scope.row.isStop">停止 |</span>
                                 <span @click="start(scope.row,'片区信息')" v-else="scope.row.isStart">开始 |</span>
-                                <span @click="showPersonDetail(scope.row,'巡更路线信息')">查看</span> |
+                                <span @click="showPersonDetail(scope.row,'巡更路线信息',true)">查看</span> |
                                 <span @click="deletInfo(scope.row.id,'片区信息')">删除</span>
                             </template>
                         </el-table-column>
@@ -81,7 +81,7 @@
                               :visible="visible"
                               :Info="patrolInfo"
                               :isDisabled="isDisabled"
-                              @closeInfoDialog ="visible = false"
+                              @closeInfoDialog ="closeDmisDialog"
                               @fixInfo = "fixInfo"
                               :title="title"
                               @saveNewInfo="addNewPerson">
@@ -120,6 +120,9 @@
             }
         },
         methods: {
+            closeDmisDialog () {
+                this.visible = false
+            },
             handleSelectionChange(selection) {
                 this.choseInfoId = selection.map(item => {
                     return item.id
@@ -221,6 +224,7 @@
                     obj.shifts = info.inspectionSchedule.shifts
                 }
                 api.patrol.updataPatrol(JSON.stringify(obj)).then(res => {
+                    this.closeDmisDialog()
                     console.log(res, '创建成功')
                     this.$message.success('修改成功')
                     this.getAllpatrol()
@@ -251,6 +255,7 @@
                     obj.shifts = info.inspectionSchedule.shifts
                 }
                 api.patrol.createdPatrol(JSON.stringify(obj)).then(res => {
+                    this.closeDmisDialog()
                     console.log(res, '创建成功')
                     this.$message.success('创建成功')
                     this.getAllpatrol()
@@ -321,6 +326,7 @@
                         item.checked = false;
                         if (item.inspectionSchedule.customizedDays) {
                             item.inspectionSchedule.time = [item.inspectionSchedule.startDate,item.inspectionSchedule.endDate]
+                            // item.inspectionSchedule.time = [new Date(2018,10,18,10,10),new Date(2018,11,19,10,10)]
                         } else {
                             item.inspectionSchedule.days = item.inspectionSchedule.days.split(',')
                         }

@@ -88,7 +88,7 @@
                             <img src="../../../../static/img/boatCartCard.png" alt="">
                             <span class="type">
                                   {{item.vehicle.type | boatFilter}}信息
-                                </span>
+                            </span>
                         </div>
                         <div class="specificInfo">
                             <p class="name">驾驶人员：<span>{{item.driverName}}</span></p>
@@ -329,9 +329,9 @@
                      })
                      this.showPersonDetail(this.boatCarInfo,'修改车船信息',false)
                      this.isDisabled = false
-                     this.choseInfoId = []
+                     //this.choseInfoId = []
                  } else {
-                     this.$message.error('请选择要修改的车船')
+                     this.$message.error('请选择一条数据')
                  }
             },
             async getAllBoat (){
@@ -346,6 +346,7 @@
                         this.boatCarList[i].id = this.boatCarList[i].vehicle.id
                     }
                     this.checkList = this.boatCarList
+                    this.choseInfoId = []
                 }).catch(err => {
                     console.log(err, '请求失败')
                     this.isShowLoading = false

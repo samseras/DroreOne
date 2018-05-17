@@ -28,13 +28,17 @@ axios.interceptors.response.use(
             // }
 
         }
+        if (response.status === 400 && response.request.status === 400){
+            console.log(response, ',.,.,.,.,.,.,.,,..klkl')
+        }
         return response
     },
     error => {//失败判断
         if (error.response.data.code === 401 ) {
             store.dispatch('logout').then(() => location.reload())
         }
-        return Promise.reject(error)
+        console.log(error.response, 'opopopopopp[p[p[p[p[][][][]')
+        return Promise.reject(error.response.data)
     }
 )
 
