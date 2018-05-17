@@ -37,7 +37,6 @@ axios.interceptors.response.use(
         if (error.response.data.code === 401 ) {
             store.dispatch('logout').then(() => location.reload())
         }
-        console.log(error.response, 'opopopopopp[p[p[p[p[][][][]')
         return Promise.reject(error.response.data)
     }
 )
