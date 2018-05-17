@@ -250,7 +250,11 @@
                     this.choseInfoId = []
                     this.getAllArea()
                 }).catch(err => {
-                    this.$message.error('修改失败，请稍后重试')
+                    if(err.message.includes('请重新选择区域名称！')) {
+                        this.$message.error(err.message)
+                    } else {
+                        this.$message.error('修改失败，请稍后重试')
+                    }
                 })
             },
             async addNewPerson (info) {
@@ -278,7 +282,11 @@
                     this.$message.success('创建成功')
                     this.getAllArea()
                 }).catch(err => {
-                    this.$message.error('创建失败，请稍后重试')
+                    if(err.message.includes('请重新选择区域名称！')) {
+                        this.$message.error(err.message)
+                    } else {
+                        this.$message.error('创建失败，请稍后重试')
+                    }
                 })
             },
             fixedInfo (id) {
