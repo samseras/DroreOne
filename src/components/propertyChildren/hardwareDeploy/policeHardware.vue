@@ -107,6 +107,7 @@
     import Header from './camera.vue'
     import HardWare from './hardwareDialog.vue'
     import api from '@/api'
+    import _ from 'lodash'
 
     export default{
         data(){
@@ -344,7 +345,9 @@
                         this.policeList[i].status=true
                         this.policeList[i].id=this.policeList[i].id
                         this.policeList[i].location=`${this.policeList[i].longitude},${this.policeList[i].latitude}`
+                        this.policeList[i].byTime = -(new Date(this.policeList[i].modifyTime)).getTime()
                     }
+                    this.policeList = _.sortBy(this.policeList,'byTime')
                     this.checkList = this.policeList
                 }).catch((err)=>{
                     console.log(err)

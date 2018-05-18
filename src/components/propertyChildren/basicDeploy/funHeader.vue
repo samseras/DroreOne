@@ -97,7 +97,6 @@
                 this.$emit('selectedAll', this.isSelected)
             },
             selectFile(e){
-                console.log(this.$route.path)
                 var route = this.$route.path;
                 console.log(e.target.files[0], 'opopopopopops')
                 let file = e.target.files[0]
@@ -117,7 +116,6 @@
                                 this.$emit("getAllBoat");
                             }).catch(err => {
                                 this.$message.error('导入失败，请稍后重试')
-                                console.log(err, '导入失败')
                             })
                             break;
                         case route.includes("toilet"):
@@ -127,7 +125,6 @@
                                 this.$emit("getAllToilet");
                             }).catch(err => {
                                 this.$message.error('导入失败，请稍后重试')
-                                console.log(err, '导入失败')
                             })
                             break;
                         case route.includes("park"):
@@ -137,7 +134,6 @@
                                 this.$emit("getAllPark");
                             }).catch(err => {
                                 this.$message.error('导入失败，请稍后重试')
-                                console.log(err, '导入失败')
                             })
                             break;
                         case route.includes("shop"):
@@ -147,7 +143,6 @@
                                 this.$emit("getAllShop");
                             }).catch(err => {
                                 this.$message.error('导入失败，请稍后重试')
-                                console.log(err, '导入失败')
                             })
                             break;
                         case route.includes("scenic"):
@@ -157,7 +152,6 @@
                                 this.$emit("getAllScenic");
                             }).catch(err => {
                                 this.$message.error('导入失败，请稍后重试')
-                                console.log(err, '导入失败')
                             })
                             break;
                         case route.includes("trash"):
@@ -167,7 +161,6 @@
                                 this.$emit("getAllTrash");
                             }).catch(err => {
                                 this.$message.error('导入失败，请稍后重试')
-                                console.log(err, '导入失败')
                             })
                             break;
                         case route.includes("indicator"):
@@ -177,7 +170,6 @@
                                 this.$emit("getAllIndicator");
                             }).catch(err => {
                                 this.$message.error('导入失败，请稍后重试')
-                                console.log(err, '导入失败')
                             })
                             break;
                         case route.includes("plant"):
@@ -187,7 +179,6 @@
                                 this.$emit("getAllPlant");
                             }).catch(err => {
                                 this.$message.error('导入失败，请稍后重试')
-                                console.log(err, '导入失败')
                             })
                             break;
                         case route.includes("construction"):
@@ -197,16 +188,15 @@
                                 this.$emit("getAllBuild");
                             }).catch(err => {
                                 this.$message.error('导入失败，请稍后重试')
-                                console.log(err, '导入失败')
                             })
                             break;
                         case route.includes("person"):
+                            console.log("person");
                             api.importfile.importPerson(form).then(res => {
                                 this.$message.success('导入成功');
                                 this.$emit("getAllPerson");
                             }).catch(err => {
                                 this.$message.error('导入失败，请稍后重试')
-                                console.log(err, '导入失败')
                             })
                             break;
 

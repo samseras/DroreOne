@@ -105,6 +105,7 @@
     import Header from './funHeader'
     import PersonDetail from './detailDialog'
     import api from '@/api'
+    import _ from 'lodash'
     export default {
         name: "trash-deploy",
         data (){
@@ -320,6 +321,7 @@
                 }
             },
             async getAllTrash () {
+                console.log('垃圾桶')
                 this.isShowLoading = true
                 await api.dustbin.getAllDustbin().then(res => {
                     console.log(res, '这是请求回来的数据')
@@ -330,7 +332,9 @@
                         this.trashList[i].checked = false
                         this.trashList[i].status = true
                         this.trashList[i].id = this.trashList[i].dustbinBean.id
+                        this.trashList[i].byTime = -(new Date(this.trashList[i].dustbinBean.modifyTime)).getTime()
                     }
+                    this.trashList = _.sortBy(this.trashList, 'byTime')
                     this.checkList = this.trashList
                     this.choseInfoId = []
                 }).catch(err => {
