@@ -11,6 +11,7 @@
                         @fixedInfo="fixedInfo"
                         @searchAnything="searchAnything"
                         :choseId="choseInfoId"
+                        :listsLength = "policeList.length"
                         @choseType="choseType"
                         @toggleList="toggleList"
                         @getAllPolice="getAllPolice">
