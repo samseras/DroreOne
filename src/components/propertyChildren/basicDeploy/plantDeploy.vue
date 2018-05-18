@@ -10,6 +10,7 @@
                         @toggleList = "toggleList"
                         @choseType = 'choseType'
                         :choseId="choseInfoId"
+                        :listsLength="treeList.length"
                         @selectedAll = 'selectedAll'
                         @fixedInfo = 'fixedInfo'
                         @searchAnything="searchAnything"

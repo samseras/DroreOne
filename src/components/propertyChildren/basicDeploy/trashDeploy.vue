@@ -12,6 +12,7 @@
                         @selectedAll = 'selectedAll'
                         @fixedInfo = 'fixedInfo'
                         :choseId="choseInfoId"
+                        :listsLength="trashList.length"
                         @searchAnything="searchAnything"
                         @getAllTrash="getAllTrash">
 

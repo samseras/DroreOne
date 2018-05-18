@@ -6,7 +6,7 @@
             node-key="id"
             :expand-on-click-node="true"
             :default-expanded-keys="['b2df9e8f-b12e-4c66-9575-b18356777a68']"
-            :default-checked-keys="[5,6,19]">
+            :default-checked-keys="['b2df9e8f-b12e-4c66-9575-b18356777a68',6,19]">
             <span class="custom-tree-node" slot-scope="{ node, Info }">
                 <img class="icon" :src="node.icon"/>
                 <span>{{ node.label }}</span>
@@ -16,14 +16,12 @@
 </template>
 
 <script>
-    // let id = 1000;
     export default {
         props:['visible','Info','title','isDisabled'],
         data() {
             return {
                 // data4: JSON.parse(JSON.stringify(this.Info)),
             }
-
         },
         methods: {
 

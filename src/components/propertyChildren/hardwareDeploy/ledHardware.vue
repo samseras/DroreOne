@@ -10,8 +10,8 @@
                         @selectedAll="selectedAll"
                         @fixedInfo="fixedInfo"
                         :choseId="choseInfoId"
+                        :listsLength = "ledList.length"
                         @searchAnything="searchAnything"
-
                         @choseType="choseType"
                         @toggleList="toggleList"
                         @getAllLed="getAllLed">
