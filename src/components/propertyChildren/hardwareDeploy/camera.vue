@@ -63,7 +63,7 @@
     import api from '@/api'
 
     export default{
-        props: ['choseId'],
+        props: ['choseId','listsLength'],
         data(){
             return{
                 searchKeys:'',
@@ -203,7 +203,11 @@
             },
 
             downloadFile(){
-//                this.$emit('downloadInfo',id)
+                if(this.listsLength < 1){
+                    this.$message.error('没有数据导出,添加后再试')
+                    return
+                }
+
                 let type
                 let route = this.$route.path
                 if (route.includes('broadcast')) {

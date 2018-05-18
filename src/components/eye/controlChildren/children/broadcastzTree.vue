@@ -36,6 +36,11 @@
 
             }
         },
+        mounted () {
+            console.log(this.Info, '[[][][][')
+            console.log(typeof this.Info)
+            console.log(typeof [1,2,3])
+        }
 
     };
 

@@ -12,6 +12,7 @@
                         @selectedAll = 'selectedAll'
                         @fixedInfo = 'fixedInfo'
                         :choseId="choseInfoId"
+                        :listsLength="parkList.length"
                         @searchAnything="searchAnything"
                         @getAllPark="getAllPark">
 

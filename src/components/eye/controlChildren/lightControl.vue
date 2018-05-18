@@ -59,8 +59,9 @@
                 isShowBroadCard: false,
                 number: '12',
                 fault: '2',
-                lightInfo:[],
+                lightInfo: [],
                 regionId:[],
+                lightList:[]
             }
         },
         components: {
@@ -128,43 +129,50 @@
                 });
             },
             async getAllLight(){
-                await api.light.getAllLight().then((res)=>{
-                    console.log(res,'这是请求的数据')
+                await api.light.getAllLight().then(res =>{
+                    console.log(res,'这是请求的数据ddd')
                     this.lightList=res.devices
-                    let regionId =[];
-                    let student = [];
-                    let studentlist = new Object();
-                    let children =[];
+                    let regionIdList = []
+                    let arr = []
+                    let idList = []
                     for (let i=0;i<this.lightList.length;i++){
-                        if(regionId.indexOf(this.lightList[i].regionId)==-1){
-                            regionId.push(this.lightList[i].regionId)
+                        if(this.regionId.indexOf(this.lightList[i].regionId)==-1){
+                            this.regionId.push(this.lightList[i].regionId)
                         }
                     }
-                    this.regionId =regionId
-                    for (let j=0;j<this.regionId.length;j++){
-                        for (let i=0;i<this.lightList.length;i++) {
-                            if (this.lightList[i].regionId == this.regionId[j]) {
-
-                                if (this.lightList[i].lightStatus) {
-                                    this.lightList[i].icon = '../../../static/img/light_big.svg'
+                    this.lightList.forEach(item => {
+                        item.label = item.name
+                        if (item.lightStatus) {
+                            item.icon = '../../../static/img/light_big.svg'
+                        } else {
+                            item.icon = '../../../static/img/light.svg'
+                        }
+                        if (!regionIdList.includes(item.regionId)){
+                            regionIdList.push(item.regionId)
+                            let obj = {
+                                label: item.regionName,
+                                id: item.regionId,
+                                children:[]
+                            }
+                            arr.push(obj)
+                        }
+                        arr.forEach(item1 => {
+                            if (item1.id == item.regionId){
+                                if (item1.children.length< 1) {
+                                    item1.children.push(item)
                                 } else {
-                                    this.lightList[i].icon = '../../../static/img/light.svg'
-                                }
-                                this.lightList[i].label =this.lightList[i].name
-                                children.push(this.lightList[i])
-                                this.children = children
-                                studentlist = {
-                                    id:this.lightList[i].regionId,
-                                    label: this.lightList[i].regionName,
-                                    children: this.children,
+                                    item1.children.forEach(item2 => {
+                                        if (!idList.includes(item2.id)){
+                                            idList.push(item.id)
+                                            item1.children.push(item)
+                                        }
+                                    })
                                 }
                             }
-                        }
-                        student.push(studentlist)
-                    }
-                    this.lightInfo=student
-                    console.log(this.lightInfo, 'p[p[p[p[p[p[')
-                }).catch((err)=>{
+                        })
+                    })
+                    this.lightInfo = arr
+                }).catch(err =>{
                     console.log(err)
                 })
             }

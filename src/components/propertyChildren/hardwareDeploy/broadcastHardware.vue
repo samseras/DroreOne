@@ -13,6 +13,7 @@
                         @choseType="choseType"
                         @toggleList="toggleList"
                         @getAllBroadcast="getAllBroadcast"
+                        :listsLength = "broadList.length"
                         :choseId="choseInfoId">
                 </Header>
             </div>

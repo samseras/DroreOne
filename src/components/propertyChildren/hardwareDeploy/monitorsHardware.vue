@@ -10,6 +10,7 @@
                         @selectedAll="selectedAll"
                         @fixedInfo="fixedInfo"
                         :choseId="choseInfoId"
+                        :listsLength = "monitorsList.length"
                         @searchAnything="searchAnything"
                         @choseType="choseType"
                         @toggleList="toggleList"
