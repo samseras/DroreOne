@@ -59,7 +59,7 @@
                 isShowBroadCard: false,
                 number: '12',
                 fault: '2',
-                lightInfo:{}
+                lightInfo:[]
             }
         },
         components: {
