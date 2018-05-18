@@ -27,7 +27,7 @@
                 <div class="boottom" id="ztree">
                     <!--广播-->
                     <ScrollContainer>
-                        <broadcast-ztree :Info="lightInfo"></broadcast-ztree>
+                        <broadcast-ztree :Info="lightInfo" :regionId="regionId"></broadcast-ztree>
                     </ScrollContainer>
                 </div>
             </div>
@@ -59,7 +59,8 @@
                 isShowBroadCard: false,
                 number: '12',
                 fault: '2',
-                lightInfo:[]
+                lightInfo:[],
+                regionId:[],
             }
         },
         components: {
@@ -134,33 +135,28 @@
                     let student = [];
                     let studentlist = new Object();
                     let children =[];
-                    let childrenList = new Object();
-                    let childrenListicon;
                     for (let i=0;i<this.lightList.length;i++){
                         if(regionId.indexOf(this.lightList[i].regionId)==-1){
                             regionId.push(this.lightList[i].regionId)
                         }
                     }
-                    console.log(regionId)
-                    for (let j=0;j<regionId.length;j++){
+                    this.regionId =regionId
+                    for (let j=0;j<this.regionId.length;j++){
                         for (let i=0;i<this.lightList.length;i++) {
-                            if (this.lightList[i].regionId == regionId[j]) {
-                                console.log(regionId[j],this.lightList[i].regionId);
+                            if (this.lightList[i].regionId == this.regionId[j]) {
+
                                 if (this.lightList[i].lightStatus) {
-                                    childrenListicon = '../../../static/img/light_big.svg'
+                                    this.lightList[i].icon = '../../../static/img/light_big.svg'
                                 } else {
-                                    childrenListicon = '../../../static/img/light.svg'
+                                    this.lightList[i].icon = '../../../static/img/light.svg'
                                 }
-                                childrenList ={
-                                    id:this.lightList[i].id,
-                                    label:this.lightList[i].name,
-                                    icon:childrenListicon,
-                                }
-                                children.push(childrenList)
+                                this.lightList[i].label =this.lightList[i].name
+                                children.push(this.lightList[i])
+                                this.children = children
                                 studentlist = {
                                     id:this.lightList[i].regionId,
                                     label: this.lightList[i].regionName,
-                                    children:children,
+                                    children: this.children,
                                 }
                             }
                         }

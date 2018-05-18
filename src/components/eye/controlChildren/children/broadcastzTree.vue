@@ -5,8 +5,9 @@
             show-checkbox
             node-key="id"
             :expand-on-click-node="true"
-            :default-expanded-keys="['b2df9e8f-b12e-4c66-9575-b18356777a68']"
-            :default-checked-keys="['b2df9e8f-b12e-4c66-9575-b18356777a68',6,19]">
+            :default-expanded-keys="regionId"
+            :default-checked-keys="[]"
+            @check-change="handleCheckChange"   >
             <span class="custom-tree-node" slot-scope="{ node, Info }">
                 <img class="icon" :src="node.icon"/>
                 <span>{{ node.label }}</span>
@@ -17,17 +18,19 @@
 
 <script>
     export default {
-        props:['visible','Info','title','isDisabled'],
+        props:['Info','regionId'],
         data() {
             return {
-                data4: JSON.parse(JSON.stringify(this.Info)),
             }
         },
         methods: {
-
+            handleCheckChange(data) {
+                if(!data.children){
+                    this.$store.commit('SHOW_TREE', data)
+                }
+            },
         },
         created: function () {
-            console.log(this.Info)
             this.route=this.$route.path
             if (this.route.includes('light')){
 

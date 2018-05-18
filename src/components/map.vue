@@ -1551,7 +1551,7 @@
                 droreMap.interaction.showMove()
                 this.overView();//鹰眼
             },
-            searchShow() {//搜索
+            searchShow(data) {//搜索
                 this.interaction();
                 console.log(this.getSearchInfo.entityType);
                 if(this.getSearchInfo.entityType == '1'){
@@ -1734,6 +1734,24 @@
             },
             menuDelete(){
                 $("#contextmenu_container").hide();
+            },
+            treeShow(data){
+                console.log(data)
+                data.location = [data.longitude,data.latitude]
+                var Light = new droreMap.icon.Marker({
+                    coordinate: droreMap.trans.transFromWgsToLayer(data.location),
+                    name: data.name,
+                    subtype: "Light",
+                    id: data.id,
+                    url: "/static/img/icon/Light.png"
+                });
+                droreMap.icon.addChild(Light);
+                droreMap.map.panToCoord(droreMap.trans.transFromWgsToLayer(data.location));
+                let that =this;
+                Light.onclick(function(e) {
+                    that.menulist = e;
+                    that.droreMappopup(e);
+                });
             }
         },
         components: {
@@ -1743,13 +1761,17 @@
             getSearchInfo () {
                 console.log(this.getSearchInfo,"qweqweqweqweqwe");
                 this.requestGisMain();
-                this.searchShow();
+                this.searchShow(this.getSearchInfo);
+            },
+            getTreeState(){
+                this.treeShow(this.getTreeState);
             }
         },
         computed: {
             ...mapGetters([
                 'getLocationId',
-                'getSearchInfo'
+                'getSearchInfo',
+                'getTreeState'
             ])
         }
     }

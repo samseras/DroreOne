@@ -10,7 +10,8 @@ const map = {
         isSaveRoatLocation: false,
         locationId: '',
         searchInfo: {},
-        isShowSearch: false
+        isShowSearch: false,
+        treeData:[]
     },
     getters: {
         getLocation (state) {
@@ -36,6 +37,9 @@ const map = {
         },
         getSearchState(state) {
             return state.isShowSearch
+        },
+        getTreeState(state) {
+            return state.treeData
         }
     },
     setters: {},
@@ -68,6 +72,10 @@ const map = {
         [types.SHOW_SEARCH] (state, data) {
             state.isShowSearch = data
             console.log(state.isShowSearch,'1231123123')
+        },
+        [types.SHOW_TREE] (state, data) {
+            state.treeData = data
+            console.log(state.treeData,'1231123123')
         },
     },
     actions: {
