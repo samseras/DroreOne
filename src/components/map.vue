@@ -1736,12 +1736,12 @@
                 $("#contextmenu_container").hide();
             },
             treeShow(data){
-                console.log(data)
+                console.log('treeShow');
                 data.location = [data.longitude,data.latitude]
                 var Light = new droreMap.icon.Marker({
                     coordinate: droreMap.trans.transFromWgsToLayer(data.location),
                     name: data.name,
-                    subtype: "Light",
+                    subtype:  data.subtype,
                     id: data.id,
                     url: "/static/img/icon/Light.png"
                 });
@@ -1752,6 +1752,10 @@
                     that.menulist = e;
                     that.droreMappopup(e);
                 });
+            },
+            treeHide(data){
+                console.log('treeHide');
+                droreMap.icon.removeIcon(data.subtype,data.id);
             }
         },
         components: {
@@ -1763,15 +1767,29 @@
                 this.requestGisMain();
                 this.searchShow(this.getSearchInfo);
             },
+            // getTreeHide(){
+            //     console.log(this.getTreeState.id,this.getTreeHide)
+            //     if(this.getTreeHide){
+            //         this.treeShow(this.getTreeState);
+            //     }else {
+            //         this.treeHide(this.getTreeState);
+            //     }
+            // },
             getTreeState(){
-                this.treeShow(this.getTreeState);
+                console.log(this.getTreeState,"sedqweqw")
+                if(this.getTreeState.checked){
+                    this.treeShow(this.getTreeState);
+                }else {
+                    this.treeHide(this.getTreeState);
+                }
             }
         },
         computed: {
             ...mapGetters([
                 'getLocationId',
                 'getSearchInfo',
-                'getTreeState'
+                'getTreeState',
+                'getTreeHide'
             ])
         }
     }

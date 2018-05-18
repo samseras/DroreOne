@@ -24,9 +24,19 @@
             }
         },
         methods: {
-            handleCheckChange(data) {
+            handleCheckChange(data,checked) {
                 if(!data.children){
+                    // if(checked) {
+                    //     data.cchecked =checked
+                    //     this.$store.commit('HIDE_TREE', true)
+                    //     this.$store.commit('SHOW_TREE', data)
+                    // }else {
+                    //     this.$store.commit('HIDE_TREE', false)
+                    //     this.$store.commit('SHOW_TREE', data)
+                    // }
+                    data.checked =checked
                     this.$store.commit('SHOW_TREE', data)
+                    // this.$set()
                 }
             },
         },
@@ -37,9 +47,7 @@
             }
         },
         mounted () {
-            console.log(this.Info, '[[][][][')
-            console.log(typeof this.Info)
-            console.log(typeof [1,2,3])
+
         }
 
     };

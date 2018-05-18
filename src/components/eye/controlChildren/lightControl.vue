@@ -142,6 +142,7 @@
                     }
                     this.lightList.forEach(item => {
                         item.label = item.name
+                        item.subtype = "Light"
                         if (item.lightStatus) {
                             item.icon = '../../../static/img/light_big.svg'
                         } else {

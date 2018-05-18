@@ -11,7 +11,8 @@ const map = {
         locationId: '',
         searchInfo: {},
         isShowSearch: false,
-        treeData:[]
+        treeData:[],
+        checked:false
     },
     getters: {
         getLocation (state) {
@@ -39,7 +40,11 @@ const map = {
             return state.isShowSearch
         },
         getTreeState(state) {
+            console.log(state.treeData.checked,'getter')
             return state.treeData
+        },
+        getTreeHide(state) {
+            return state.checked
         }
     },
     setters: {},
@@ -75,7 +80,11 @@ const map = {
         },
         [types.SHOW_TREE] (state, data) {
             state.treeData = data
-            console.log(state.treeData,'1231123123')
+            console.log(state.treeData.checked,'commit')
+        },
+        [types.HIDE_TREE] (state, data) {
+            state.checked = data
+            console.log(state.checked,'qweqweqweqw')
         },
     },
     actions: {
