@@ -1,7 +1,7 @@
 <template>
     <div class="broadcast_tree">
         <el-tree
-            :data="data4"
+            :data="Info"
             show-checkbox
             node-key="id"
             :expand-on-click-node="true"
@@ -21,7 +21,7 @@
         props:['visible','Info','title','isDisabled'],
         data() {
             return {
-                data4: JSON.parse(JSON.stringify(this.Info)),
+                // data4: JSON.parse(JSON.stringify(this.Info)),
             }
 
         },
@@ -35,6 +35,11 @@
 
             }
         },
+        mounted () {
+            console.log(this.Info, '[[][][][')
+            console.log(typeof this.Info)
+            console.log(typeof [1,2,3])
+        }
 
     };
 
