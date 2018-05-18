@@ -720,22 +720,19 @@
 
                }else if(this.route.includes('Light')) {
                    newInfo = this.Light
-                   if(!(newInfo.hasOwnProperty("lightStatus")&& integerreg.test(newInfo.lightStatus))||
+                   if(!(newInfo.lightStatus && newInfo.lightStatus !=='')||
                        !(newInfo.name && newInfo.name !=='') ||
                        !(newInfo.hasOwnProperty("model")&& newInfo.model) ||
                        !(newInfo.regionId && newInfo.regionId !=='') ||
                        !(newInfo.description && newInfo.description !== '') ||
-                       !(newInfo.location && newInfo.location !== '')
+                       !(newInfo.location && newInfo.location !== '') ||
+                       !(newInfo.serialNum && newInfo.serialNum !== '')
                    ){
                        this.$message.error('请输入完整信息')
                        return
                    }
                    if(!(newInfo.port && myport.test(newInfo.port))){
                        this.$message.error('请输入正确端口号！')
-                       return
-                   }
-                   if(!(newInfo.serialNum && intreg.test(newInfo.serialNum))){
-                       this.$message.error('编号只能输入数字！')
                        return
                    }
 

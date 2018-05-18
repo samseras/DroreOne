@@ -9,6 +9,8 @@
                         @deletInfo = "deletInfo"
                         @toggleList = "toggleList"
                         @choseType = 'choseType'
+                        :choseId="choseInfoId"
+                        :listsLength="indicatorList.length"
                         @selectedAll = 'selectedAll'
                         @fixedInfo = 'fixedInfo'
                         @searchAnything="searchAnything"

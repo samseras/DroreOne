@@ -11,6 +11,7 @@
                         @choseType = 'choseType'
                         :choseId="choseInfoId"
                         @selectedAll = 'selectedAll'
+                        :listsLength="scenicList.length"
                         @fixedInfo = 'fixedInfo'
                         @searchAnything="searchAnything"
                         @getAllScenic="getAllScenic">

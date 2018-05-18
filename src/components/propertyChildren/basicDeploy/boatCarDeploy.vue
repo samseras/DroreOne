@@ -9,6 +9,7 @@
                         @deletInfo = "deletInfo"
                         @toggleList = "toggleList"
                         :choseId="choseInfoId"
+                        :listsLength="boatCarList.length"
                         @choseType = 'choseType'
                         @selectedAll = 'selectedAll'
                         @fixedInfo = 'fixedInfo'
