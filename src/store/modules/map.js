@@ -12,13 +12,9 @@ const map = {
         locationId: '',
         searchInfo: {},
         isShowSearch: false,
-        treeData:{
-            id:'',
-            checked: false,
-            longitude:'',
-            latitude: ''
-        },
+        treeData:[],
         checked:false
+
     },
     getters: {
         getLocation (state) {
@@ -85,12 +81,11 @@ const map = {
             console.log(state.isShowSearch,'1231123123')
         },
         [types.SHOW_TREE] (state, data) {
-            console.log(data,'opopopopop')
-            Vue.set(state.treeData, 'checked', data.checked)
-            Vue.set(state.treeData, 'id', data.id)
-            Vue.set(state.treeData, 'longitude', data.longitude)
-            Vue.set(state.treeData, 'latitude', data.latitude)
-            // state.treeData = data
+            // console.log(data,'opopopopop')
+            // Vue.set(state.treeData, 'checked', data.checked)
+            // Vue.set(state.treeData, 'id', data.id)
+            // Vue.set(state.treeData, 'data', data)
+            state.treeData = data
             console.log(state.treeData,'commit')
         },
         [types.HIDE_TREE] (state, data) {

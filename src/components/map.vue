@@ -1754,8 +1754,10 @@
                 });
             },
             treeHide(data){
-                console.log('treeHide');
+                console.log('treeHide',data.id);
                 droreMap.icon.removeIcon(data.subtype,data.id);
+                this.requestGisMain();
+                this.interaction();
             }
         },
         components: {
@@ -1767,14 +1769,13 @@
                 this.requestGisMain();
                 this.searchShow(this.getSearchInfo);
             },
-            // getTreeHide(){
-            //     console.log(this.getTreeState.id,this.getTreeHide)
-            //     if(this.getTreeHide){
-            //         this.treeShow(this.getTreeState);
-            //     }else {
-            //         this.treeHide(this.getTreeState);
-            //     }
-            // },
+            getTreeHide(){
+                if(this.getTreeHide){
+                    this.treeShow(this.getTreeState);
+                }else {
+                    this.treeHide(this.getTreeState);
+                }
+            },
             getTreeState(){
                 console.log(this.getTreeState,"sedqweqw")
                 if(this.getTreeState.checked){

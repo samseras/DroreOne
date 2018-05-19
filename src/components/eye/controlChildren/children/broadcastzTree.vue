@@ -5,8 +5,8 @@
             v-model="filterText">
         </el-input>
         <div class="manage">
-            <el-checkbox class="check" @change="selectAllCheck">路灯总数<font>{{this.number}}</font>个</el-checkbox>
-            <el-checkbox class="check">故障<font>{{this.fault}}</font>个</el-checkbox>
+            <el-checkbox class="check" @change="selectAllCheck">{{title}}总数<font>{{number}}</font>个</el-checkbox>
+            <el-checkbox class="check">故障<font>{{fault}}</font>个</el-checkbox>
         </div>
         <el-tree
             :data="Info"
@@ -29,19 +29,14 @@
 <script>
     import {mapMutations} from 'vuex'
     export default {
-        props:['Info','regionId','lightList'],
+        props:['Info','regionId','lightList','number','fault','title'],
         data() {
             return {
                 filterText: '',
-                number: '0',
-                fault: '0',
+
             }
         },
         methods: {
-            numberlist(){
-                console.log(this.lightList,'12312321234234')
-                this.number = this.lightList.length
-            },
             filterNode(value, data) {
                 if (!value) return true;
                 return data.label.indexOf(value) !== -1;
@@ -62,16 +57,16 @@
 
             handleCheckChange(data,checked) {
                 if(!data.children){
-                    // if(checked) {
-                    //     data.cchecked =checked
-                    //     this.$store.commit('HIDE_TREE', true)
-                    //     this.$store.commit('SHOW_TREE', data)
-                    // }else {
-                    //     this.$store.commit('HIDE_TREE', false)
-                    //     this.$store.commit('SHOW_TREE', data)
-                    // }
-                    data.checked = checked
-                    this.$store.commit('SHOW_TREE', data)
+                    data.checked =checked
+                    if(checked) {
+                        this.$store.commit('HIDE_TREE', true)
+                        this.$store.commit('SHOW_TREE', data)
+                    }else {
+                        this.$store.commit('HIDE_TREE', false)
+                        this.$store.commit('SHOW_TREE', data)
+                    }
+                    // data.checked = checked
+                    // this.$store.commit('SHOW_TREE', data)
                     // this.$set()
                 }
             }
@@ -89,7 +84,6 @@
             },
         },
         mounted () {
-            this.numberlist();
         }
 
     };

@@ -28,9 +28,12 @@
                     <!--广播-->
                     <ScrollContainer>
                         <broadcast-ztree
+                            :title="title"
                             :Info="lightInfo"
                             :regionId="regionId"
-                            :lightList="lightList">
+                            :lightList="lightList"
+                            :number="number"
+                            :fault="fault">
                         </broadcast-ztree>
                     </ScrollContainer>
                 </div>
@@ -58,12 +61,15 @@
                 isShow: true,
                 options: [],
                 value: '',
+                number: '0',
+                fault: '0',
                 optionMisic: [],
                 isShowBroadCard: false,
                 lightInfo: [],
                 regionId:[],
                 lightList:[],
-                selectAll:[]
+                selectAll:[],
+                title:'路灯'
             }
         },
         components: {
@@ -135,6 +141,7 @@
                 await api.light.getAllLight().then(res =>{
                     console.log(res,'这是请求的数据ddd')
                     this.lightList=res.devices
+                    this.number=this.lightList.length
                     let regionIdList = []
                     let arr = []
                     let idList = []
