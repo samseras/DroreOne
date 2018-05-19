@@ -16,18 +16,22 @@
                 </ul>
             </div>
             <div class="middle">
-                <!--搜索-->
-                <div class="list_search">
-                    <input id="search" type="text" placeholder="设备名称,组名称"/>
-                </div>
-                <div class="manage">
-                    <el-checkbox class="check">路灯总数<font>4</font>个</el-checkbox>
-                    <el-checkbox class="check">故障<font>0</font>个</el-checkbox>
-                </div>
+                <!--&lt;!&ndash;搜索&ndash;&gt;-->
+                <!--<div class="list_search">-->
+                    <!--<input id="search" type="text" placeholder="设备名称,组名称"/>-->
+                <!--</div>-->
+                <!--<div class="manage">-->
+                    <!--<el-checkbox class="check" @change="selectAllCheck">路灯总数<font>{{this.number}}</font>个</el-checkbox>-->
+                    <!--<el-checkbox class="check">故障<font>{{this.fault}}</font>个</el-checkbox>-->
+                <!--</div>-->
                 <div class="boottom" id="ztree">
                     <!--广播-->
                     <ScrollContainer>
-                        <broadcast-ztree :Info="lightInfo" :regionId="regionId"></broadcast-ztree>
+                        <broadcast-ztree
+                            :Info="lightInfo"
+                            :regionId="regionId"
+                            :lightList="lightList">
+                        </broadcast-ztree>
                     </ScrollContainer>
                 </div>
             </div>
@@ -49,7 +53,6 @@
 
     export default {
         data() {
-
             return {
                 open:false,
                 isShow: true,
@@ -57,11 +60,10 @@
                 value: '',
                 optionMisic: [],
                 isShowBroadCard: false,
-                number: '12',
-                fault: '2',
                 lightInfo: [],
                 regionId:[],
-                lightList:[]
+                lightList:[],
+                selectAll:[]
             }
         },
         components: {
@@ -128,6 +130,7 @@
                     color: ['#26bbf0', '#f36a5a']
                 });
             },
+
             async getAllLight(){
                 await api.light.getAllLight().then(res =>{
                     console.log(res,'这是请求的数据ddd')
@@ -246,7 +249,7 @@
                     width: 100%;
                     height: 45px;
                     line-height: 45px;
-                    border-bottom: 1px solid #ccc;
+                    border-top: 1px solid #f2f2f2;
                     .check {
                         margin-left: 10px;
                     }

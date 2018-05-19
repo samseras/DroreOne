@@ -11,7 +11,7 @@ const map = {
         locationId: '',
         searchInfo: {},
         isShowSearch: false,
-        treeData:[],
+        treeData:{},
         checked:false
     },
     getters: {
