@@ -1783,6 +1783,7 @@
                     this.treeHide(this.getTreeState);
                 }
             }
+
         },
         computed: {
             ...mapGetters([

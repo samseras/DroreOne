@@ -27,6 +27,7 @@
 </template>
 
 <script>
+    import {mapMutations} from 'vuex'
     export default {
         props:['Info','regionId','lightList'],
         data() {
@@ -56,6 +57,9 @@
                 }
                 this.$refs.tree.setCheckedKeys(this.selectedAll);
             },
+
+            ...mapMutations(['SHOW_TREE']),
+
             handleCheckChange(data,checked) {
                 if(!data.children){
                     // if(checked) {
@@ -66,7 +70,7 @@
                     //     this.$store.commit('HIDE_TREE', false)
                     //     this.$store.commit('SHOW_TREE', data)
                     // }
-                    data.checked =checked
+                    data.checked = checked
                     this.$store.commit('SHOW_TREE', data)
                     // this.$set()
                 }

@@ -10,6 +10,8 @@ import Index from '@/components/pages/index'
 import login from '@/components/pages/login'
 
 import eye from '@/components/pages/eye'
+
+// 全视之眼-----管控
 import Controler from '@/components/controler'
 import Broad from '@/components/eye/controlChildren/broadcast'
 import Person from '@/components/eye/controlChildren/securityperson'
@@ -29,11 +31,7 @@ import mapData from '@/components/gis/mapManage/mapData'
 import labelManage from '@/components/gis/labelManage/labelManage'
 import labelLibrary from '@/components/gis/labelManage/labelLibrary'
 
-import Analyze from '@/components/analyze'
-import Passenger from '@/components/eye/analyze/passengerFlow'
-// import Origin from '@/components/eye/analyze/passengerOrigin'
-// import Ticket from '@/components/eye/analyze/ticketBusiness'
-
+// 全视之眼----设施
 import Facility from '@/components/facility'
 import Toilet from "@/components/eye/facilityChildren/toiletFacility"
 import Park from "@/components/eye/facilityChildren/parkFacility"
@@ -43,9 +41,18 @@ import Dustbin from "@/components/eye/facilityChildren/dustbinFacility"
 import ScenicName from "@/components/eye/facilityChildren/scenicNameFacility"
 import Build from "@/components/eye/facilityChildren/buildFacility"
 
+// 全视之眼----主页（目前隐藏）
 import HomePage from '@/components/homePage'
 
+//全视之眼-----调度
 import Deploy from '@/components/deploy'
+import broadcastDmis from '@/components/eye/deployChildren/dispatchDeploy/broadcastDmis' //广播播放
+import lamppostDmis from '@/components/eye/deployChildren/dispatchDeploy/lamppostDmis' //路灯照明
+import screenDmis from '@/components/eye/deployChildren/dispatchDeploy/screenDmis' //LED
+import securityDmis from '@/components/eye/deployChildren/dispatchDeploy/securityDmis' //巡更巡检
+import purifierDmis from '@/components/eye/deployChildren/dispatchDeploy/purifierDmis' //保洁
+import dispatchRecord from '@/components/eye/deployChildren/recordDeploy/dispatchRecord' //调度统计
+
 
 //数据中心
 import Property from '@/components/property'
@@ -54,10 +61,9 @@ import HardWareMenu from '@/components/propertyChildren/hardWareMenu'
 import BasicType from '@/components/propertyChildren/basicDeploy/basicType'
 import HardWareType from '@/components/propertyChildren/hardwareDeploy/hardWareType'
 //建筑
-import BuildingMenu from '@/components/propertyChildren/buildingMenu'
-import BuildingType from '@/components/propertyChildren/buildingDeploy/buildingType'
-import LandmarkBuilding from '@/components/propertyChildren/buildingDeploy/landmarkBuilding'
-import ServiceBuilding from '@/components/propertyChildren/buildingDeploy/serviceBuilding'
+
+
+// 数据中心--设备
 import wifiType from '@/components/propertyChildren/hardwareDeploy/wifiType'          //wifi型号
 import broadcastType from '@/components/propertyChildren/hardwareDeploy/broadcastType'//广播型号
 import cameraType from '@/components/propertyChildren/hardwareDeploy/cameraType'    //摄像头型号
@@ -67,8 +73,17 @@ import gateType from '@/components/propertyChildren/hardwareDeploy/gateType'    
 import lightType from '@/components/propertyChildren/hardwareDeploy/lightType'      //路灯型号
 import policeType from '@/components/propertyChildren/hardwareDeploy/policeType'    //报警柱型号
 import gpsType from '@/components/propertyChildren/hardwareDeploy/gpsType'          //GPS型号
+import CameraHware from '@/components/propertyChildren/hardwareDeploy/cameraHardware'
+import BroadcastHware from '@/components/propertyChildren/hardwareDeploy/broadcastHardware'
+import GateHware from '@/components/propertyChildren/hardwareDeploy/gateHardware'
+import LightHware from '@/components/propertyChildren/hardwareDeploy/lampLightHardware'
+import LedHware from '@/components/propertyChildren/hardwareDeploy/ledHardware'
+import MonitorsHware from '@/components/propertyChildren/hardwareDeploy/monitorsHardware'
+import WifiHware from '@/components/propertyChildren/hardwareDeploy/wifiHardware'
+import VoiceHware from '@/components/propertyChildren/hardwareDeploy/voiceHardware'
+import PoliceHware from '@/components/propertyChildren/hardwareDeploy/policeHardware'
 
-
+//数据中心-----设施
 import AreaDeploy from '@/components/propertyChildren/basicDeploy/areaDeploy'       //片区
 import BoatDeploy from '@/components/propertyChildren/basicDeploy/boatCarDeploy'       //车船
 import IndicatorDeploy from '@/components/propertyChildren/basicDeploy/indicatorDeploy'       //指示牌
@@ -82,30 +97,19 @@ import ToiletDeploy from '@/components/propertyChildren/basicDeploy/toiletDeploy
 import TrashDeploy from '@/components/propertyChildren/basicDeploy/trashDeploy'       //垃圾桶
 import PlantDeploy from '@/components/propertyChildren/basicDeploy/plantDeploy'       //植物
 import BuildDeploy from '@/components/propertyChildren/basicDeploy/buildingDeploy'       //建筑
+//  建筑  （目前在设施）
+// import BuildingMenu from '@/components/propertyChildren/buildingMenu'
+// import BuildingType from '@/components/propertyChildren/buildingDeploy/buildingType'
+// import LandmarkBuilding from '@/components/propertyChildren/buildingDeploy/landmarkBuilding'
+// import ServiceBuilding from '@/components/propertyChildren/buildingDeploy/serviceBuilding'
 
-
-import CameraHware from '@/components/propertyChildren/hardwareDeploy/cameraHardware'
-import BroadcastHware from '@/components/propertyChildren/hardwareDeploy/broadcastHardware'
-import GateHware from '@/components/propertyChildren/hardwareDeploy/gateHardware'
-import LightHware from '@/components/propertyChildren/hardwareDeploy/lampLightHardware'
-import LedHware from '@/components/propertyChildren/hardwareDeploy/ledHardware'
-import MonitorsHware from '@/components/propertyChildren/hardwareDeploy/monitorsHardware'
-import WifiHware from '@/components/propertyChildren/hardwareDeploy/wifiHardware'
-import VoiceHware from '@/components/propertyChildren/hardwareDeploy/voiceHardware'
-import PoliceHware from '@/components/propertyChildren/hardwareDeploy/policeHardware'
-
-import broadcastDmis from '@/components/eye/deployChildren/dispatchDeploy/broadcastDmis' //广播播放
-import lamppostDmis from '@/components/eye/deployChildren/dispatchDeploy/lamppostDmis' //路灯照明
-import screenDmis from '@/components/eye/deployChildren/dispatchDeploy/screenDmis' //LED
-import securityDmis from '@/components/eye/deployChildren/dispatchDeploy/securityDmis' //巡更巡检
-import purifierDmis from '@/components/eye/deployChildren/dispatchDeploy/purifierDmis' //保洁
-
-import dispatchRecord from '@/components/eye/deployChildren/recordDeploy/dispatchRecord' //调度统计
-
-//人员
+//数据中心-----人员
 import PersonPlat from '@/components/person'
 import PersonType from '@/components/personChildren/personType'
 
+// 数据分析（图表）
+import Analyze from '@/components/analyze'
+import Passenger from '@/components/analysisSystem/analyze/passengerFlow'
 
 
 Vue.use(Router)
@@ -140,6 +144,7 @@ const routes = [
                 name: 'homePage',
                 component: HomePage
             },
+            // 管控
             {
                 path: '/controler',
                 name: 'controler',
@@ -158,15 +163,17 @@ const routes = [
                     {path: '/controler/light',name: 'Light', component:Light},
                 ]
             },
-            {
-                path: '/analyze',
-                name: 'analyze',
-                // redirect: '/analyze/:id',
-                component: Analyze,
-                children: [
-                    {path: '/analyze/:id',name: 'Passenger', component:Passenger}
-                ]
-            },
+            //分析
+            // {
+            //     path: '/analyze',
+            //     name: 'analyze',
+            //     // redirect: '/analyze/:id',
+            //     component: Analyze,
+            //     children: [
+            //         {path: '/analyze/:id',name: 'Passenger', component:Passenger}
+            //     ]
+            // },
+            // 设施
             {
                 path: '/facility',
                 name: 'facility',
@@ -182,6 +189,7 @@ const routes = [
                     {path: '/facility/build',name: 'Build', component:Build}
                 ]
             },
+            //调度
             {
                 path: '/deploy',
                 name: 'deploy',
@@ -206,6 +214,7 @@ const routes = [
         redirect: '/basic-property',
         component: Property,
         children: [
+            // 设施
             {
                 path: '/basic-property',
                 name: 'ProBasicMenu',
@@ -228,6 +237,7 @@ const routes = [
                     {path: '/basic-property/construction-deploy', name: 'BuildDeploy', component: BuildDeploy},
                 ]
             },
+            // 设备
             {
                 path: '/hard-property',
                 name: 'HardWareMenu',
@@ -256,6 +266,7 @@ const routes = [
                     {path: '/hard-property/monitors-Hware', name: 'MonitorsHware', component: MonitorsHware},
                 ]
             },
+            // 人员
             {
                 path: '/person',
                 name: PersonPlat,
@@ -266,17 +277,6 @@ const routes = [
                     { path: '/person/:id',name: 'PersonDeploy', component:PersonDeploy }
                 ]
             },
-            {
-                path: '/building',
-                name: BuildingMenu,
-                component: BuildingMenu,
-                redirect: '/building/buildType',
-                children: [
-                    {path: '/building/buildType', name: "BuildingType", component: BuildingType},
-                    {path: '/building/landmarkBuild',name: 'LandmarkBuilding', component:LandmarkBuilding },
-                    {path: '/building/serviceBuild',name: 'ServiceBuilding', component:ServiceBuilding }
-                ]
-            }
         ]
     },
     //GIS
@@ -316,8 +316,16 @@ const routes = [
             // }
         ]
     },
+  //  分析
+    {
+        path: '/analyze',
+        name: 'analyze',
+        component: Analyze,
+        children: [
+            {path: '/analyze/:id',name: 'Passenger', component:Passenger}
+        ]
+    },
 
-    //  人员
   ]
 const router = new Router({
     mode: 'history',

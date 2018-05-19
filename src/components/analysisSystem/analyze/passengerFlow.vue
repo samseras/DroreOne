@@ -32,7 +32,7 @@
 
 <script>
     import ScrollContainer from '@/components/ScrollContainer'
-    import EchatsCard from '@/components/eye/analyze/echats'
+    // import EchatsCard from '@/components/eye/analyze/echats'
     import api from '@/api'
     import {mapGetters} from 'vuex'
     import $ from 'jquery'
@@ -955,7 +955,7 @@
         },
         components: {
             ScrollContainer,
-            EchatsCard
+            // EchatsCard
         },
         destroyed  () {
             clearInterval(window.SETTIMER)
