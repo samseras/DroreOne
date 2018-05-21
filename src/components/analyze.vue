@@ -1,16 +1,20 @@
 <template>
-  <div class="analyze">
-      <div class="analyzeMenu" v-if="hideList">
-          <ul>
-              <li v-for="(item,index) in sidebarList" @click="isShowAnalyze(item.dashboard_id,index,item.refresh_interval)"  :class="activeIndex === index?'active':''" :id="item.id" :listName = "item.name" >
-                  {{item.name}}
-              </li>
-          </ul>
-      </div>
-      <div class="analyzeContent">
-          <router-view @hideList = "hideLists"></router-view>
-      </div>
-  </div>
+    <div class="analyze">
+        <div class="analyzeHeader" v-show="isshowHead">header</div>
+        <div class="analyzeDetails">
+            <div class="analyzeMenu" v-if="hideList">
+                <ul>
+                    <li v-for="(item,index) in sidebarList" @click="isShowAnalyze(item.dashboard_id,index,item.refresh_interval)"  :class="activeIndex === index?'active':''" :id="item.id" :listName = "item.name" >
+                        {{item.name}}
+                    </li>
+                </ul>
+            </div>
+            <div class="analyzeContent">
+                <router-view @hideList = "hideLists"></router-view>
+            </div>
+        </div>
+    </div>
+
 </template>
 
 <script>
@@ -27,6 +31,7 @@
             sidebarList:[],
             activeIndex : 0,
             hideList:true,
+            isshowHead:true
   		}
   	},
     async created () {
@@ -41,8 +46,8 @@
         ...mapMutations(['REFRESH_DATA_TYPE']),
         hideLists(data){
               this.hideList = !data.list;
-              let hideData = !data.head;
-              this.$emit('hideHead',hideData);
+               this.isshowHead = !data.head;
+              // this.$emit('hideHead',hideData);
         },
         isShowAnalyze (id,index,refresh) {
 	          this.$router.push({path: `/analyze/${id}`});
@@ -76,40 +81,53 @@
 
 </script>
 <style lang="scss" type="text/scss" scoped>
-  .analyze{
-      width: 100%;
-      height: 100%;
-      display: flex;
-      .analyzeMenu{
-          width: rem(200);
-          height: 100%;
-          background: #f2f2f2;
-         ul{
-             width: 100%;
-             height: 100%;
-             li{
-                 padding: rem(8) 0 rem(8) rem(40);
-                 box-sizing: border-box;
-                 text-align: left;
-                 cursor: pointer;
-                 img{
-                     display: inline-block;
-                     width: rem(20);
-                     height: rem(20);
-                     background: red;
-                     vertical-align: middle;
-                     margin-right: rem(5);
-                 }
-             }
-         }
-          .active{
-              background: #fff;
-              color: #52c4f2;
-          }
-      }
-      .analyzeContent{
-          flex: 1;
-          background: #fff;
-      }
-  }
+    .analyze{
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        .analyzeHeader{
+            width: 100%;
+            height: rem(50);
+            background: #5daf34;
+            line-height: rem(50);
+        }
+        .analyzeDetails{
+            width: 100%;
+            flex: 1;
+            display: flex;
+            .analyzeMenu{
+                width: rem(200);
+                height: 100%;
+                background: #f2f2f2;
+                ul{
+                    width: 100%;
+                    height: 100%;
+                    li{
+                        padding: rem(8) 0 rem(8) rem(40);
+                        box-sizing: border-box;
+                        text-align: left;
+                        cursor: pointer;
+                        img{
+                            display: inline-block;
+                            width: rem(20);
+                            height: rem(20);
+                            background: red;
+                            vertical-align: middle;
+                            margin-right: rem(5);
+                        }
+                    }
+                }
+                .active{
+                    background: #fff;
+                    color: #52c4f2;
+                }
+            }
+            .analyzeContent{
+                flex: 1;
+                background: #fff;
+            }
+        }
+    }
+
 </style>
