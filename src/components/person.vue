@@ -1,7 +1,7 @@
 <template>
     <div class="person">
         <div class="pro_content">
-            <el-menu default-active="/person/personType" router>
+            <el-menu default-active="/person/personType" router :default-openeds="openeds">
                 <ScrollContainer>
                     <template v-for="item in items">
                         <template v-if="item.subs">
@@ -40,6 +40,7 @@
         name: "property",
         data() {
             return {
+                openeds:['2'],
                 isActive: false,
                 items: [
                 {

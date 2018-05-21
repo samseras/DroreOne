@@ -3,5 +3,6 @@ export const  message = {
     control : 'Control ',
     facility: 'Facility',
     analyze: 'Analyze',
-    deploy: 'Deploy'
+    deploy: 'Deploy',
+    alarm:'Alarm'
 }

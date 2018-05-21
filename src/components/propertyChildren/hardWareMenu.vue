@@ -1,6 +1,8 @@
 <template>
     <div class="hardwareMenu">
-        <el-menu default-active="/hard-property/camera-Hware" router>
+        <el-menu default-active="/hard-property/camera-Hware"
+                 text-color="#fff"
+                 active-text-color="#ffd04b" router>
 
             <ScrollContainer>
                 <template v-for="item in items">
@@ -151,6 +153,9 @@
 </script>
 
 <style lang="scss" type="text/scss">
+    .hardwareMenu .el-submenu .el-menu-item:hover{
+        background-color:#808080;
+    }
     .hardwareMenu .el-submenu .el-menu-item {
         width: 100%;
         height: rem(40);
@@ -158,6 +163,8 @@
         padding: rem(0) !important;
         padding-left: rem(20) !important;
         font-size: rem(14);
+        color:#999ca2;
+        background-color:#485462;
     img{
         display: inline-block;
         width: rem(18);
@@ -166,9 +173,12 @@
         margin-right: rem(5);
         margin-left: rem(5);
         margin-top: rem(-4);
+
         }
     }
     .hardwareMenu .el-submenu__title{
+        background-color:#434e5c;
+        color:#fff;
         img{
             width: rem(25);
             height: rem(25);
@@ -181,7 +191,7 @@
         width: 100%;
         height: rem(55);
         line-height: rem(55);
-        border-bottom:1px solid #e0e0e0;
+        border-bottom:1px solid #4e5b6b;
         img{
             width: rem(25);
             height: rem(25);
@@ -193,7 +203,7 @@
 
     .hardwareMenu .el-menu .el-menu--inline {
         width: 100%;
-        background: #eee;
+        background: #434e5c;
         box-sizing: border-box;
         text-align: left;
         /*padding-left: rem(8);*/

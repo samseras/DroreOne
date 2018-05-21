@@ -602,7 +602,6 @@
                      !(newInfo.name && newInfo.name !=='') ||
                      !(newInfo.hasOwnProperty("model")&& newInfo.model) ||
                      !(newInfo.regionId && newInfo.regionId !=='') ||
-                     !(newInfo.description && newInfo.description !== '') ||
                      !(newInfo.location && newInfo.location !== '')
                   ){
                        this.$message.error('请输入完整信息')
@@ -624,7 +623,6 @@
                        !(newInfo.name && newInfo.name !=='') ||
                        !(newInfo.hasOwnProperty("model")&& newInfo.model) ||
                        !(newInfo.regionId && newInfo.regionId !=='') ||
-                       !(newInfo.description && newInfo.description !== '') ||
                        !(newInfo.location && newInfo.location !== '')
                    ){
                        this.$message.error('请输入完整信息')
@@ -645,7 +643,6 @@
                        !(newInfo.name && newInfo.name !=='') ||
                        !(newInfo.hasOwnProperty("model")&& newInfo.model) ||
                        !(newInfo.regionId && newInfo.regionId !=='') ||
-                       !(newInfo.description && newInfo.description !== '') ||
                        !(newInfo.location && newInfo.location !== '')
                    ){
                        this.$message.error('请输入完整信息')
@@ -670,7 +667,6 @@
                        !(newInfo.name && newInfo.name !=='') ||
                        !(newInfo.hasOwnProperty("model")&& newInfo.model) ||
                        !(newInfo.regionId && newInfo.regionId !=='') ||
-                       !(newInfo.description && newInfo.description !== '') ||
                        !(newInfo.location && newInfo.location !== '')
                    ){
                        this.$message.error('请输入完整信息')
@@ -699,7 +695,6 @@
                        !(newInfo.name && newInfo.name !=='') ||
                        !(newInfo.hasOwnProperty("model")&& newInfo.model) ||
                        !(newInfo.regionId && newInfo.regionId !=='') ||
-                       !(newInfo.description && newInfo.description !== '') ||
                        !(newInfo.location && newInfo.location !== '')
                    ){
                        this.$message.error('请输入完整信息')
@@ -724,7 +719,6 @@
                        !(newInfo.name && newInfo.name !=='') ||
                        !(newInfo.hasOwnProperty("model")&& newInfo.model) ||
                        !(newInfo.regionId && newInfo.regionId !=='') ||
-                       !(newInfo.description && newInfo.description !== '') ||
                        !(newInfo.location && newInfo.location !== '') ||
                        !(newInfo.serialNum && newInfo.serialNum !== '')
                    ){
@@ -742,7 +736,6 @@
                        !(newInfo.name && newInfo.name !=='') ||
                        !(newInfo.hasOwnProperty("model")&& newInfo.model) ||
                        !(newInfo.regionId && newInfo.regionId !=='') ||
-                       !(newInfo.description && newInfo.description !== '') ||
                        !(newInfo.location && newInfo.location !== '')
                    ){
                        this.$message.error('请输入完整信息')
@@ -767,7 +760,6 @@
                        !(newInfo.name && newInfo.name !=='') ||
                        !(newInfo.hasOwnProperty("model")&& newInfo.model) ||
                        !(newInfo.regionId && newInfo.regionId !=='') ||
-                       !(newInfo.description && newInfo.description !== '') ||
                        !(newInfo.location && newInfo.location !== '')
                    ){
                        this.$message.error('请输入完整信息')
