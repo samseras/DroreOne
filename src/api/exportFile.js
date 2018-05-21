@@ -36,7 +36,25 @@ const exportFile ={
                 ids:params
             }
         })
+    },
+    // 人员导出
+    exportAllPerson(params){
+        return axios({
+            method:'GET',
+            url:getUrl(`/person/export?type=${params}`)
+        })
+    },
+    exportSinglePerson(params){
+        return axios({
+            method:'POST',
+            url:getUrl('/person/export'),
+            data:{
+                ids:params
+            }
+        })
     }
+
+
 }
 
 export default exportFile
