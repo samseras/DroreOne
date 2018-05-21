@@ -11,6 +11,7 @@
                         @choseType = 'choseType'
                         @selectedAll = 'selectedAll'
                         :choseId="choseInfoId"
+                        :listsLength="buildList.length"
                         @fixedInfo = 'fixedInfo'
                         @searchAnything="searchAnything"
                         @getAllBuild="getAllBuild">

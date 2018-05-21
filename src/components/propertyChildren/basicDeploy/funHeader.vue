@@ -57,7 +57,7 @@
     import api from '@/api'
     export default {
         name: "fun-header",
-        props:['choseId'],
+        props:['choseId','listsLength'],
         data () {
             return {
                 filterList: [],
@@ -204,6 +204,10 @@
                 }
             },
             expotInfo(){
+                if (this.listsLength < 1){
+                    this.$message.error('当前无数据可导出，请添加数据后在导出')
+                    return
+                }
                 let type
                 let route = this.$route.path
                 if (route.includes('park')) {
@@ -216,8 +220,8 @@
                     type = 'plant' //植物
                 }else if(route.includes('indicator')){
                     type = 'signboard'  //指示牌
-                }else if(route.includes('scenic')){
-                    type = 'scenicspot'  //景点
+                }else if(route.includes('shop')){
+                    type = 'business'  //景点
                 }else if(route.includes('toilet')){
                     type = 'toilet'  //厕所
                 }else if(route.includes('scenic')){
@@ -228,10 +232,9 @@
 
                 if (this.choseId.length > 0) {
                     api.exportFile.exportSingleBasic(this.choseId,type).then((res) =>{
-                        console.log(res,'niaho')
                         const content = res
                         const blob = new Blob([content])
-                        const fileName = '设备文件.csv'
+                        const fileName = '设施.csv'
                         if('download' in document.createElement('a')){
                             const elink = document.createElement('a')
                             elink.download = fileName
@@ -254,7 +257,7 @@
                         console.log(res,'niaho')
                         const content = res
                         const blob = new Blob([content])
-                        const fileName = '测试.csv'
+                        const fileName = '设施.csv'
                         if('download' in document.createElement('a')){
                             const elink = document.createElement('a')
                             elink.download = fileName

@@ -1551,7 +1551,7 @@
                 droreMap.interaction.showMove()
                 this.overView();//鹰眼
             },
-            searchShow() {//搜索
+            searchShow(data) {//搜索
                 this.interaction();
                 console.log(this.getSearchInfo.entityType);
                 if(this.getSearchInfo.entityType == '1'){
@@ -1734,6 +1734,30 @@
             },
             menuDelete(){
                 $("#contextmenu_container").hide();
+            },
+            treeShow(data){
+                console.log('treeShow');
+                data.location = [data.longitude,data.latitude]
+                var Light = new droreMap.icon.Marker({
+                    coordinate: droreMap.trans.transFromWgsToLayer(data.location),
+                    name: data.name,
+                    subtype:  data.subtype,
+                    id: data.id,
+                    url: "/static/img/icon/Light.png"
+                });
+                droreMap.icon.addChild(Light);
+                droreMap.map.panToCoord(droreMap.trans.transFromWgsToLayer(data.location));
+                let that =this;
+                Light.onclick(function(e) {
+                    that.menulist = e;
+                    that.droreMappopup(e);
+                });
+            },
+            treeHide(data){
+                console.log('treeHide',data.id);
+                droreMap.icon.removeIcon(data.subtype,data.id);
+                this.requestGisMain();
+                this.interaction();
             }
         },
         components: {
@@ -1743,13 +1767,31 @@
             getSearchInfo () {
                 console.log(this.getSearchInfo,"qweqweqweqweqwe");
                 this.requestGisMain();
-                this.searchShow();
+                this.searchShow(this.getSearchInfo);
+            },
+            getTreeHide(){
+                if(this.getTreeHide){
+                    this.treeShow(this.getTreeState);
+                }else {
+                    this.treeHide(this.getTreeState);
+                }
+            },
+            getTreeState(){
+                console.log(this.getTreeState,"sedqweqw")
+                if(this.getTreeState.checked){
+                    this.treeShow(this.getTreeState);
+                }else {
+                    this.treeHide(this.getTreeState);
+                }
             }
+
         },
         computed: {
             ...mapGetters([
                 'getLocationId',
-                'getSearchInfo'
+                'getSearchInfo',
+                'getTreeState',
+                'getTreeHide'
             ])
         }
     }
