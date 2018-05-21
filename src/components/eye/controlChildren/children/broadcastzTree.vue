@@ -57,16 +57,16 @@
 
             handleCheckChange(data,checked) {
                 if(!data.children){
-                    data.checked =checked
-                    if(checked) {
-                        this.$store.commit('HIDE_TREE', true)
-                        this.$store.commit('SHOW_TREE', data)
-                    }else {
-                        this.$store.commit('HIDE_TREE', false)
-                        this.$store.commit('SHOW_TREE', data)
-                    }
-                    // data.checked = checked
-                    // this.$store.commit('SHOW_TREE', data)
+                    // data.checked =checked
+                    // if(checked) {
+                    //     this.$store.commit('HIDE_TREE', true)
+                    //     this.$store.commit('SHOW_TREE', data)
+                    // }else {
+                    //     this.$store.commit('HIDE_TREE', false)
+                    //     this.$store.commit('SHOW_TREE', data)
+                    // }
+                    data.checked = checked
+                    this.$store.commit('SHOW_TREE', data)
                     // this.$set()
                 }
             }

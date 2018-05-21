@@ -1754,10 +1754,9 @@
                 });
             },
             treeHide(data){
-                console.log('treeHide',data.id);
-                droreMap.icon.removeIcon(data.subtype,data.id);
-                this.requestGisMain();
-                this.interaction();
+                console.log('treeHide',data);
+                droreMap.icon.IconStyleById(data.id);
+                $("#contextmenu_container").hide();
             }
         },
         components: {
@@ -1769,19 +1768,13 @@
                 this.requestGisMain();
                 this.searchShow(this.getSearchInfo);
             },
-            getTreeHide(){
-                if(this.getTreeHide){
-                    this.treeShow(this.getTreeState);
-                }else {
-                    this.treeHide(this.getTreeState);
-                }
-            },
             getTreeState(){
-                console.log(this.getTreeState,"sedqweqw")
+                console.log(this.getTreeState,"map.vue")
+                this.treeData=this.getTreeState.data
                 if(this.getTreeState.checked){
-                    this.treeShow(this.getTreeState);
+                    this.treeShow(this.treeData);
                 }else {
-                    this.treeHide(this.getTreeState);
+                    this.treeHide(this.treeData);
                 }
             }
 
@@ -1790,8 +1783,7 @@
             ...mapGetters([
                 'getLocationId',
                 'getSearchInfo',
-                'getTreeState',
-                'getTreeHide'
+                'getTreeState'
             ])
         }
     }

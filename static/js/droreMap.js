@@ -2923,10 +2923,13 @@ define(function(require, exports, module) {
                         return;
                     }
                     var layer = pool.getLayerById(icon.subtype);
-                    layer.getSource().removeFeature(icon.feature);
-                    icon.clear();
-                    icon = null;
+                    if(layer) {
+                        layer.getSource().removeFeature(icon.feature);
+                        icon.clear();
+                        icon = null;
+                    }
                 },
+
                 /********************/
                 addIcon: function(obj) { //subType标签所属图标类型id，url标签图标的url地址 ，obj标签包含的数据对象
                     var layer = pool.getLayerById(obj.subType);
@@ -2960,11 +2963,19 @@ define(function(require, exports, module) {
                 },
                 removeIcon: function(subtype, id) {
                     var layer = pool.getLayerById(subtype);
+                    var feature = pool.getIconById(id);
                     if(layer != null) {
-                        if(layer.getSource().getFeatureById(id) != null) {
-                            layer.getSource().removeFeature(layer.getSource().getFeatureById(id));
+                        if(feature.feature != null) {
                             pool.removeIcon(id);
+                            layer.getSource().removeFeature(feature.feature);
+                            // layer.getSource().removeFeature(layer.getSource().getFeatureById(id));
                         }
+                    }
+                },
+                showLayer: function(id, visibility) {
+                    var layer = pool.getLayerById(id);
+                    if(layer) {
+                        layer.setVisible(visibility);
                     }
                 },
                 getIconDataByEvt: function(evt) {
@@ -2984,6 +2995,14 @@ define(function(require, exports, module) {
                     if(feature) {
                         var attrs = feature.getProperties();
                         return attrs;
+                    }
+                },
+                IconStyleById: function(id) { //*******
+                    var feature = pool.getIconById(id);
+                    if(feature) {
+                        feature.setStyle(new ol.style.Style({
+                            display: 'none',
+                        }));
                     }
                 },
                 setIconStyleById: function(id, url) { //*******
