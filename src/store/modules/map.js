@@ -12,11 +12,7 @@ const map = {
         locationId: '',
         searchInfo: {},
         isShowSearch: false,
-        treeData:{
-            id:'',
-            checked:false,
-            data:{}
-        },
+        treeData:[],
 
 
     },
@@ -46,7 +42,6 @@ const map = {
             return state.isShowSearch
         },
         getTreeState(state) {
-            console.log(state.treeData.checked,state.treeData.id,'getter')
             return state.treeData
         }
     },
@@ -82,12 +77,11 @@ const map = {
             console.log(state.isShowSearch,'1231123123')
         },
         [types.SHOW_TREE] (state, data) {
-            // console.log(data,'opopopopop')
-            // state.treeData = data
-            Vue.set(state.treeData, 'id', data.id)
-            Vue.set(state.treeData, 'checked', data.checked)
-            Vue.set(state.treeData, 'data', data)
-
+            if (!data.length) {
+                state.treeData = [data]
+            } else {
+                state.treeData = data
+            }
             console.log(state.treeData,'commit')
         }
     },

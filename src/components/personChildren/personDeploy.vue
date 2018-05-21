@@ -10,6 +10,7 @@
                         @toggleList="toggleList"
                         @choseType='choseType'
                         @selectedAll='selectedAll'
+                        :listsLength="personList.length"
                         @fixedInfo='fixedInfo'
                         @searchAnything="searchAnything"
                         @getAllPerson="getAllPerson">
