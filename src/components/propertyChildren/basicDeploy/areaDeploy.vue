@@ -287,7 +287,8 @@
                     this.getAllArea()
                 }).catch(err => {
                     if(err.message.includes('请重新选择区域名称！')) {
-                        this.$message.error(err.message)
+                        //this.$message.error(err.message)
+                        this.$message.error('片区名称不能重复')
                     } else {
                         this.$message.error('创建失败，请稍后重试')
                     }

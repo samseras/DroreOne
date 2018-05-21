@@ -11,6 +11,7 @@
                         @fixedInfo="fixedInfo"
                         @searchAnything="searchAnything"
                         :choseId="choseInfoId"
+                        :listsLength = "gateList.length"
                         @choseType="choseType"
                         @toggleList="toggleList"
                         @getAllGate="getAllGate">

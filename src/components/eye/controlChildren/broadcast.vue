@@ -12,12 +12,6 @@
                 </ul>
             </div>
             <div class="middle">
-                <!--搜索-->
-                <input id="search" type="text" placeholder="设备名称,组名称"/>
-                <div class="manage">
-                    <el-checkbox class="check">广播总数<font>187</font>个</el-checkbox>
-                    <el-checkbox class="check">故障<font>15</font>个</el-checkbox>
-                </div>
                 <div class="boottom" id="ztree">
                     <!--广播-->
                     <ScrollContainer>
@@ -62,44 +56,7 @@
         data() {
             return {
                 isShow: true,
-                // setting: {
-                //     check: {
-                //         enable: true,
-                //         nocheckInherit: false
-                //     },
-                //     data: {
-                //         simpleData: {
-                //             enable: true
-                //         }
-                //     },
-                //     callback: {
-                //         beforeClick: this.beforeClick,
-                //         onClick: this.zTreeOnClick,
-                //         onCheck: this.zTreeOnCheck,
-                //     },
-                //     view: {
-                //         showLine: false
-                //     }
-                // },
-                // zNodes: [],
-                options: [
-                    {value: '选项1', label: '周一'},
-                    {value: '选项2', label: '周二'},
-                    {value: '选项3', label: '周三'},
-                    {value: '选项4', label: '周四'},
-                    {value: '选项5', label: '周五'},
-                    {value: '选项6', label: '周六'},
-                    {value: '选项7', label: '周天'}
-                ],
-                value: '',
-                optionMisic: [
-                    {value: '选项1', label: '曲目1'},
-                    {value: '选项2', label: '曲目2'},
-                    {value: '选项3', label: '曲目3'},
-                    {value: '选项4', label: '曲目4'},
-                    {value: '选项5', label: '曲目5'},
-                    {value: '选项6', label: '曲目6'}
-                ],
+
                 isShowBroadCard: false
             }
         },

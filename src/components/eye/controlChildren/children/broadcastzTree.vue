@@ -1,12 +1,23 @@
 <template>
     <div class="broadcast_tree">
+        <el-input
+            placeholder="设备名称,组名称"
+            v-model="filterText">
+        </el-input>
+        <div class="manage">
+            <el-checkbox class="check" @change="selectAllCheck">{{title}}总数<font>{{number}}</font>个</el-checkbox>
+            <el-checkbox class="check">故障<font>{{fault}}</font>个</el-checkbox>
+        </div>
         <el-tree
             :data="Info"
             show-checkbox
             node-key="id"
             :expand-on-click-node="true"
-            :default-expanded-keys="['b2df9e8f-b12e-4c66-9575-b18356777a68']"
-            :default-checked-keys="['b2df9e8f-b12e-4c66-9575-b18356777a68',6,19]">
+            :default-expanded-keys="regionId"
+            :default-checked-keys="[]"
+            :filter-node-method="filterNode"
+            ref="tree"
+            @check-change="handleCheckChange">
             <span class="custom-tree-node" slot-scope="{ node, Info }">
                 <img class="icon" :src="node.icon"/>
                 <span>{{ node.label }}</span>
@@ -16,23 +27,64 @@
 </template>
 
 <script>
+    import {mapMutations} from 'vuex'
     export default {
-        props:['visible','Info','title','isDisabled'],
+        props:['Info','regionId','lightList','number','fault','title'],
         data() {
             return {
-                data4: JSON.parse(JSON.stringify(this.Info)),
+                filterText: '',
+
             }
         },
         methods: {
+            filterNode(value, data) {
+                if (!value) return true;
+                return data.label.indexOf(value) !== -1;
+            },
+            selectAllCheck(state){
+                if(state){
+                    this.selectedAll= []
+                    for (let i=0;i<this.lightList.length;i++){
+                        this.selectedAll.push(this.lightList[i].id)
+                    }
+                }else {
+                    this.selectedAll= []
+                }
+                this.$refs.tree.setCheckedKeys(this.selectedAll);
+            },
+
+            ...mapMutations(['SHOW_TREE']),
+
+            handleCheckChange(data,checked) {
+                if(!data.children){
+                    data.checked =checked
+                    if(checked) {
+                        this.$store.commit('HIDE_TREE', true)
+                        this.$store.commit('SHOW_TREE', data)
+                    }else {
+                        this.$store.commit('HIDE_TREE', false)
+                        this.$store.commit('SHOW_TREE', data)
+                    }
+                    // data.checked = checked
+                    // this.$store.commit('SHOW_TREE', data)
+                    // this.$set()
+                }
+            }
 
         },
         created: function () {
-            console.log(this.Info)
             this.route=this.$route.path
             if (this.route.includes('light')){
 
             }
         },
+        watch:{
+            filterText(val) {
+                this.$refs.tree.filter(val);
+            },
+        },
+        mounted () {
+        }
 
     };
 
@@ -40,6 +92,27 @@
 <style lang="scss">
    .broadcast_tree{
        font-size: rem(14);
+       .el-input{
+           padding: rem(10);
+           background: #f2f2f2;
+           box-sizing: border-box;
+           .el-input__inner{
+               height: rem(26);
+               line-height: rem(26);
+           }
+       }
+       .manage {
+           width: 100%;
+           height: 45px;
+           line-height: 45px;
+           border-bottom: 1px solid #ccc;
+           .check {
+               margin-left: 10px;
+           }
+           .el-checkbox:last-child {
+               color: #f36a5a;
+           }
+       }
        .el-tree-node__children{
             .custom-tree-node{
                 .icon{

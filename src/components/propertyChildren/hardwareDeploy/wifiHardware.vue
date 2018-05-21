@@ -11,6 +11,7 @@
                         @fixedInfo="fixedInfo"
                         @searchAnything="searchAnything"
                         :choseId="choseInfoId"
+                        :listsLength = "wifiList.length"
                         @choseType="choseType"
                         @toggleList="toggleList"
                         @getAllWifi = "getAllWifi">

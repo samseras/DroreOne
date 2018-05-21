@@ -76,7 +76,7 @@
             }
         },
         computed: {
-            ...mapGetters(['getSearchInfo','getSearchState'])
+            ...mapGetters(['getSearchInfo','getSearchState','getTreeState'])
         }
     }
 </script>

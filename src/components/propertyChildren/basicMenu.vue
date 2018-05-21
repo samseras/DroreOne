@@ -1,6 +1,6 @@
 <template>
     <div class="basicMenu">
-        <el-menu default-active="/basic-property/basictype" router>
+        <el-menu default-active="/basic-property/basictype" router :default-openeds="openeds">
             <ScrollContainer>
                 <template v-for="item in items">
                     <template v-if="item.subs">
@@ -35,6 +35,7 @@
         name: "basic-menu",
         data () {
             return{
+                openeds:['2'],
                 items: [
                     {
                         icon: './../../../static/img/basictype.svg',

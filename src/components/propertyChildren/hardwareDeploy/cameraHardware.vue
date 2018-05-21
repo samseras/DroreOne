@@ -10,6 +10,7 @@
                         @selectedAll="selectedAll"
                         @searchAnything="searchAnything"
                         :choseId="choseInfoId"
+                        :listsLength = "cameraList.length"
                         @fixedInfo="fixedInfo"
                         @choseType="choseType"
                         @toggleList="toggleList"

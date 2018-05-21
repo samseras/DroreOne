@@ -16,18 +16,25 @@
                 </ul>
             </div>
             <div class="middle">
-                <!--搜索-->
-                <div class="list_search">
-                    <input id="search" type="text" placeholder="设备名称,组名称"/>
-                </div>
-                <div class="manage">
-                    <el-checkbox class="check">路灯总数<font>4</font>个</el-checkbox>
-                    <el-checkbox class="check">故障<font>0</font>个</el-checkbox>
-                </div>
+                <!--&lt;!&ndash;搜索&ndash;&gt;-->
+                <!--<div class="list_search">-->
+                    <!--<input id="search" type="text" placeholder="设备名称,组名称"/>-->
+                <!--</div>-->
+                <!--<div class="manage">-->
+                    <!--<el-checkbox class="check" @change="selectAllCheck">路灯总数<font>{{this.number}}</font>个</el-checkbox>-->
+                    <!--<el-checkbox class="check">故障<font>{{this.fault}}</font>个</el-checkbox>-->
+                <!--</div>-->
                 <div class="boottom" id="ztree">
                     <!--广播-->
                     <ScrollContainer>
-                        <broadcast-ztree :Info="lightInfo"></broadcast-ztree>
+                        <broadcast-ztree
+                            :title="title"
+                            :Info="lightInfo"
+                            :regionId="regionId"
+                            :lightList="lightList"
+                            :number="number"
+                            :fault="fault">
+                        </broadcast-ztree>
                     </ScrollContainer>
                 </div>
             </div>
@@ -49,17 +56,20 @@
 
     export default {
         data() {
-
             return {
                 open:false,
                 isShow: true,
                 options: [],
                 value: '',
+                number: '0',
+                fault: '0',
                 optionMisic: [],
                 isShowBroadCard: false,
-                number: '12',
-                fault: '2',
-                lightInfo:[]
+                lightInfo: [],
+                regionId:[],
+                lightList:[],
+                selectAll:[],
+                title:'路灯'
             }
         },
         components: {
@@ -126,49 +136,54 @@
                     color: ['#26bbf0', '#f36a5a']
                 });
             },
+
             async getAllLight(){
-                await api.light.getAllLight().then((res)=>{
-                    console.log(res,'这是请求的数据')
+                await api.light.getAllLight().then(res =>{
+                    console.log(res,'这是请求的数据ddd')
                     this.lightList=res.devices
-                    let regionId =[];
-                    let student = [];
-                    let studentlist = new Object();
-                    let children =[];
-                    let childrenList = new Object();
-                    let childrenListicon;
+                    this.number=this.lightList.length
+                    let regionIdList = []
+                    let arr = []
+                    let idList = []
                     for (let i=0;i<this.lightList.length;i++){
-                        if(regionId.indexOf(this.lightList[i].regionId)==-1){
-                            regionId.push(this.lightList[i].regionId)
+                        if(this.regionId.indexOf(this.lightList[i].regionId)==-1){
+                            this.regionId.push(this.lightList[i].regionId)
                         }
                     }
-                    console.log(regionId)
-                    for (let j=0;j<regionId.length;j++){
-                        for (let i=0;i<this.lightList.length;i++) {
-                            if (this.lightList[i].regionId == regionId[j]) {
-                                console.log(regionId[j],this.lightList[i].regionId);
-                                if (this.lightList[i].lightStatus) {
-                                    childrenListicon = '../../../static/img/light_big.svg'
+                    this.lightList.forEach(item => {
+                        item.label = item.name
+                        item.subtype = "Light"
+                        if (item.lightStatus) {
+                            item.icon = '../../../static/img/light_big.svg'
+                        } else {
+                            item.icon = '../../../static/img/light.svg'
+                        }
+                        if (!regionIdList.includes(item.regionId)){
+                            regionIdList.push(item.regionId)
+                            let obj = {
+                                label: item.regionName,
+                                id: item.regionId,
+                                children:[]
+                            }
+                            arr.push(obj)
+                        }
+                        arr.forEach(item1 => {
+                            if (item1.id == item.regionId){
+                                if (item1.children.length< 1) {
+                                    item1.children.push(item)
                                 } else {
-                                    childrenListicon = '../../../static/img/light.svg'
-                                }
-                                childrenList ={
-                                    id:this.lightList[i].id,
-                                    label:this.lightList[i].name,
-                                    icon:childrenListicon,
-                                }
-                                children.push(childrenList)
-                                studentlist = {
-                                    id:this.lightList[i].regionId,
-                                    label: this.lightList[i].regionName,
-                                    children:children,
+                                    item1.children.forEach(item2 => {
+                                        if (!idList.includes(item2.id)){
+                                            idList.push(item.id)
+                                            item1.children.push(item)
+                                        }
+                                    })
                                 }
                             }
-                        }
-                        student.push(studentlist)
-                    }
-                    this.lightInfo=student
-                    console.log(this.lightInfo, 'p[p[p[p[p[p[')
-                }).catch((err)=>{
+                        })
+                    })
+                    this.lightInfo = arr
+                }).catch(err =>{
                     console.log(err)
                 })
             }
@@ -241,7 +256,7 @@
                     width: 100%;
                     height: 45px;
                     line-height: 45px;
-                    border-bottom: 1px solid #ccc;
+                    border-top: 1px solid #f2f2f2;
                     .check {
                         margin-left: 10px;
                     }
