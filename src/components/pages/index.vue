@@ -45,7 +45,8 @@
                                 </div>
                                 <div class="eye">
                                     <router-link to="/eye"  id="eye" class="change">全视之眼>><img src="../../../static/img/eye.png"/></router-link>
-                                    <div class="change"><a href="">舆情分析>><img src="../../../static/img/sentiment.png"/></a></div>
+                                    <!---->
+                                    <div class="change"><router-link to="/analyze" class="change">舆情分析>><img src="../../../static/img/sentiment.png"/></router-link></div>
                                 </div>
                             </li>
                             <li class="change" id="bee"><a href="">物联网>><img src="../../../static/img/ZigBee.png"/></a></li>

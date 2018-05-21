@@ -1,5 +1,4 @@
 <template>
-
     <div class="passengerFlow"  v-loading="isShowloading">
         <ScrollContainer>
             <i class="el-icon-d-arrow-right" v-show = "isSetOut" @click="setOut"></i>
@@ -32,7 +31,7 @@
 
 <script>
     import ScrollContainer from '@/components/ScrollContainer'
-    import EchatsCard from '@/components/eye/analyze/echats'
+    // import EchatsCard from '@/components/eye/analyze/echats'
     import api from '@/api'
     import {mapGetters} from 'vuex'
     import $ from 'jquery'
@@ -955,7 +954,7 @@
         },
         components: {
             ScrollContainer,
-            EchatsCard
+            // EchatsCard
         },
         destroyed  () {
             clearInterval(window.SETTIMER)

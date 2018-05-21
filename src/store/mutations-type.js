@@ -16,3 +16,6 @@ export const REFRESH_DATA_TYPE = 'REFRESH_DATA_TYPE'
  export const SEARCH_INFO = 'SEARCH_INFO'
  export const SHOW_SEARCH = 'SHOW_SEARCH'
 
+ export const SHOW_TREE = 'SHOW_TREE'
+ export const HIDE_TREE = 'HIDE_TREE'
+

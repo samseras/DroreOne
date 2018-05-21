@@ -1,5 +1,6 @@
 // import api from '@/api'
 import * as types from '../mutations-type'
+import Vue from 'vue'
 
 const map = {
     state: {
@@ -10,7 +11,10 @@ const map = {
         isSaveRoatLocation: false,
         locationId: '',
         searchInfo: {},
-        isShowSearch: false
+        isShowSearch: false,
+        treeData:[],
+        checked:false
+
     },
     getters: {
         getLocation (state) {
@@ -36,6 +40,13 @@ const map = {
         },
         getSearchState(state) {
             return state.isShowSearch
+        },
+        getTreeState(state) {
+            console.log(state.treeData.checked,'getter')
+            return state.treeData
+        },
+        getTreeHide(state) {
+            return state.checked
         }
     },
     setters: {},
@@ -68,6 +79,18 @@ const map = {
         [types.SHOW_SEARCH] (state, data) {
             state.isShowSearch = data
             console.log(state.isShowSearch,'1231123123')
+        },
+        [types.SHOW_TREE] (state, data) {
+            // console.log(data,'opopopopop')
+            // Vue.set(state.treeData, 'checked', data.checked)
+            // Vue.set(state.treeData, 'id', data.id)
+            // Vue.set(state.treeData, 'data', data)
+            state.treeData = data
+            console.log(state.treeData,'commit')
+        },
+        [types.HIDE_TREE] (state, data) {
+            state.checked = data
+            console.log(state.checked,'qweqweqweqw')
         },
     },
     actions: {
