@@ -28,16 +28,19 @@
                         @select-all="selectAll"
                         @selection-change="handleSelectionChange">
                         <el-table-column
-                            width="55">
-                            <template slot-scope="scope">
-                                <!--<input type="checkbox" :checked='scope.row.checked' class="checkBoxBtn" @change="checked(scope.row.id)">-->
+                            width="1" style="display:none">
+                            <!--<template slot-scope="scope">
+                                &lt;!&ndash;<input type="checkbox" :checked='scope.row.checked' class="checkBoxBtn" @change="checked(scope.row.id)">&ndash;&gt;
                                 <el-checkbox v-model="scope.row.checked" @change="getChecked(scope.row.id)" class="checkBoxBtn"></el-checkbox>
-                            </template>
+                            </template>-->
                         </el-table-column>
                         <el-table-column
-                            prop="driverName"
-                            label="驾驶人员"
+
+                            label="名称"
                             width="120">
+                            <template slot-scope="scope">
+                                <span>{{scope.row.vehicle.serialNum }}</span>
+                            </template>
                         </el-table-column>
                         <el-table-column
                             label="类型">
@@ -55,13 +58,13 @@
                             prop="vehicle.capacity"
                             label="核载人数">
                         </el-table-column>
-                        <el-table-column
+                        <!--<el-table-column
                             prop="driverPhone"
                             label="电话号码">
-                        </el-table-column>
+                        </el-table-column>-->
                         <el-table-column
                             prop="vehicle.model"
-                            label="设备号码">
+                            label="序列号码">
                         </el-table-column>
                         <el-table-column
                             prop="vehicle.purchaseDate"
@@ -93,10 +96,11 @@
                             </span>
                         </div>
                         <div class="specificInfo">
-                            <p class="name">驾驶人员：<span>{{item.driverName}}</span></p>
+                            <!--<p class="name">驾驶人员：<span>{{item.driverName}}</span></p>-->
+                            <p class="name">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称：<span>{{item.vehicle.serialNum}}</span></p>
                             <p class="sex">状&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;态：<span>{{item.vehicle.maintenanceStatus | statusFilter}}</span></p>
                             <p class="idNum">核载人数：<span>{{item.vehicle.capacity}}</span></p>
-                            <p class="phoneNum">电&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;话：<span>{{item.driverPhone}}</span></p>
+                            <!--<p class="phoneNum">电&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;话：<span>{{item.driverPhone}}</span></p>-->
                         </div>
                     </div>
                 </ScrollContainer>
@@ -140,7 +144,8 @@
         },
         methods: {
             closeDialog () {
-                this.visible = false
+                this.visible = false;
+                this.getAllBoat()
             },
             searchAnything (info) {
                 console.log(info, '这是要过滤的')
@@ -279,8 +284,8 @@
                     capacity: info.vehicle.capacity,
                     type: info.vehicle.type,
                     model: info.vehicle.model,
-                    driverId: info.driverId,
-                    maintenanceStatus: 0,
+                    //driverId: info.driverId,
+                    maintenanceStatus: info.vehicle.maintenanceStatus,
                     maintenanceDate: info.vehicle.maintenanceDate,
                     purchaseDate: info.vehicle.purchaseDate
                 }
@@ -301,11 +306,12 @@
                     capacity: info.vehicle.capacity,
                     type: info.vehicle.type,
                     model: info.vehicle.model,
-                    driverId: info.driverId,
-                    maintenanceStatus: 0,
+                    //driverId: info.driverId,
+                    maintenanceStatus: info.vehicle.maintenanceStatus,
                     maintenanceDate: info.vehicle.maintenanceDate,
                     purchaseDate: info.vehicle.purchaseDate
                 }
+                console.log(boatObj);
                 await api.boat.createBoat(JSON.stringify(boatObj)).then(res => {
                     this.closeDialog()
                     console.log(res ,'增加成功')
@@ -350,6 +356,7 @@
                         this.boatCarList[i].byTime = -(new Date(this.boatCarList[i].vehicle.modifyTime)).getTime()
                     }
                     this.boatCarList = _.sortBy(this.boatCarList,'byTime')
+                    console.log(this.boatCarList);
                     this.checkList = this.boatCarList
                     this.choseInfoId = []
                 }).catch(err => {
@@ -370,7 +377,7 @@
                 if (item == 0) {
                     return "正常"
                 } else {
-                    return "维修"
+                    return "异常"
                 }
             }
         },

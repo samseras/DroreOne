@@ -107,10 +107,15 @@ import BuildDeploy from '@/components/propertyChildren/basicDeploy/buildingDeplo
 import PersonPlat from '@/components/person'
 import PersonType from '@/components/personChildren/personType'
 
+
+//告警
+import Alarm from '@/components/alarm'
+import alarmcolumnRule from '@/components/eye/alarm/alarmRule/alarmcolumnRule'
+import warningEvent from '@/components/eye/alarm/alarmEvent/warningEvent'
+
 // 数据分析（图表）
 import Analyze from '@/components/analyze'
 import Passenger from '@/components/analysisSystem/analyze/passengerFlow'
-
 
 Vue.use(Router)
 const routes = [
@@ -203,6 +208,24 @@ const routes = [
                     {path:'/deploy/security-Dmis',name:'securityDmis',component:securityDmis},
                     {path:'/deploy/purifier-Dmis',name:'purifierDmis',component:purifierDmis},
                     {path:'/deploy/dispatch-Record',name:'dispatchRecord',component:dispatchRecord}
+                ]
+            },
+            {
+                path: '/alarm',
+                name: 'alarm',
+                redirect: '/alarm/warning-Event',
+                component: Alarm,
+                children:[
+
+                    {path:'/alarm/alarmcolumn-Rule',name:'alarmcolumnRule',component:alarmcolumnRule},
+                    // {path:'/alarm/firefighting-Rule',name:'firefightingRule',component:firefightingRule},
+                    // {path:'/alarm/crossborder-Rule',name:'crossborderRule',component:crossborderRule},
+                    // {path:'/alarm/speeding-Rule',name:'speendingRule',component:speendingRule},
+                    // {path:'/alarm/offtrack-Rule',name:'offtrackRule',component:offtrackRule},
+                    // {path:'/alarm/overlimit-Rule',name:'overlimitRule',component:overlimitRule},
+                    // {path:'/alarm/waterlevel-Rule',name:'waterlevelRule',component:waterlevelRule},
+                    // {path:'/alarm/condition-Rule',name:'conditionRule',component:conditionRule},
+                    {path:'/alarm/warning-Event',name:'warningEvent',component:warningEvent}
                 ]
             }
         ]
