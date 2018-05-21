@@ -1,5 +1,4 @@
 <template>
-
     <div class="passengerFlow"  v-loading="isShowloading">
         <ScrollContainer>
             <i class="el-icon-d-arrow-right" v-show = "isSetOut" @click="setOut"></i>
