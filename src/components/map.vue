@@ -1777,11 +1777,30 @@
                 }
             },
             getTreeState(){
-                console.log(this.getTreeState,"sedqweqw")
-                if(this.getTreeState.checked){
-                    this.treeShow(this.getTreeState);
+                if(this.getTreeState.length>1) {
+                //    这边是全选
+                    this.getTreeState.forEach(item => {
+                        item.children.forEach(item1 => {
+                            this.treeShow(item1);
+                        })
+                    })
                 }else {
-                    this.treeHide(this.getTreeState);
+                    if(this.getTreeState[0].children){
+                        let data = this.getTreeState[0].children
+                        if (this.getTreeState[0].checked.checkedKeys.length > 0) {
+                            for (let i = 0; i < data.length; i++) {
+                                this.treeShow(data[i]);
+                            }
+                        }else {
+                            this.treeHide(this.getTreeState[0].children);
+                        }
+                    }else {
+                        if (this.getTreeState[0].checked.checkedKeys.includes(this.getTreeState[0].id)) {
+                            this.treeShow(this.getTreeState[0]);
+                        } else {
+                            this.treeHide(this.getTreeState);
+                        }
+                    }
                 }
             }
 

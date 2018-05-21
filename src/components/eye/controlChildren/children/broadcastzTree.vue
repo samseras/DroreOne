@@ -17,7 +17,7 @@
             :default-checked-keys="[]"
             :filter-node-method="filterNode"
             ref="tree"
-            @check-change="handleCheckChange">
+            @check="handleCheckChange">
             <span class="custom-tree-node" slot-scope="{ node, Info }">
                 <img class="icon" :src="node.icon"/>
                 <span>{{ node.label }}</span>
@@ -42,33 +42,35 @@
                 return data.label.indexOf(value) !== -1;
             },
             selectAllCheck(state){
+                let arr
                 if(state){
                     this.selectedAll= []
                     for (let i=0;i<this.lightList.length;i++){
-                        this.selectedAll.push(this.lightList[i].id)
+                        this.selectedAll.push({id:this.lightList[i].id,label: this.lightList[i].label})
                     }
+                    this.$refs.tree.setCheckedNodes(this.selectedAll);
+                    arr = this.$refs.tree.getCheckedNodes()
+                    arr = arr.filter(item => {
+                        if (item.children) {
+                            item.checked={}
+                            item.checked.checkedKeys = this.$refs.tree.getCheckedKeys()
+                            return item
+                        }
+                    })
                 }else {
                     this.selectedAll= []
+                    arr = this.lightList.map(item => {
+                        return item.id
+                    })
                 }
-                this.$refs.tree.setCheckedKeys(this.selectedAll);
+                this.$store.commit('SHOW_TREE', arr)
             },
 
             ...mapMutations(['SHOW_TREE']),
 
             handleCheckChange(data,checked) {
-                if(!data.children){
-                    data.checked =checked
-                    if(checked) {
-                        this.$store.commit('HIDE_TREE', true)
-                        this.$store.commit('SHOW_TREE', data)
-                    }else {
-                        this.$store.commit('HIDE_TREE', false)
-                        this.$store.commit('SHOW_TREE', data)
-                    }
-                    // data.checked = checked
-                    // this.$store.commit('SHOW_TREE', data)
-                    // this.$set()
-                }
+                data.checked = checked
+                this.$store.commit('SHOW_TREE', data)
             }
 
         },
