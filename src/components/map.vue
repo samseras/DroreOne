@@ -1771,16 +1771,24 @@
             getTreeState(){
                 console.log(this.getTreeState,'213123')
                 if(this.getTreeState.length>1) {
-                //    这边是全选
-                    this.getTreeState.forEach(item => {
-                        item.children.forEach(item1 => {
-                            this.treeShow(item1);
+                    console.log(this.getTreeState,'ioioioiooioioiooi')
+                    //    这边是全选
+                    if (this.getTreeState[0].checked) {//显示
+                        this.getTreeState.forEach(item => {
+                            item.children.forEach(item1 => {
+                                this.treeShow(item1);
+                            })
                         })
-                    })
+                    }else {//隐藏
+                        this.getTreeState.forEach(item => {
+                            this.treeHide(item)
+                        })
+                    }
+
                 }else {
                     if(this.getTreeState[0].children){
                         let data = this.getTreeState[0].children
-                        if (this.getTreeState[0].checked.checkedKeys.length > 0) {
+                        if (this.getTreeState[0].checked.checkedKeys.includes(this.getTreeState[0].id)) {
                             for (let i = 0; i < data.length; i++) {
                                 this.treeShow(data[i]);
                             }

@@ -59,9 +59,8 @@
                     })
                 }else {
                     this.selectedAll= []
-                    arr = this.lightList.map(item => {
-                        return item.id
-                    })
+                    this.$refs.tree.setCheckedNodes(this.selectedAll);
+                    arr = this.lightList
                 }
                 this.$store.commit('SHOW_TREE', arr)
             },
