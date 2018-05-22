@@ -20,7 +20,7 @@
                             <el-option label="女" :value="0"></el-option>
                         </el-select>
                     </p>
-                    <p class="type">人员角色：
+                    <p class="type person-jole">人员角色：
                         <el-select v-model="person.jobId" placeholder="请选择" disabled>
                             <el-option
                                 v-for="item in options"
@@ -51,7 +51,7 @@
                             <el-option label="车辆" :value="0"></el-option>
                         </el-select>
                     </p>
-                    <p class="sex">编&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;号：
+                    <p class="sex">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称：
                         <el-input type="text"v-model="boatCar.vehicle.serialNum" :disabled="isDisabled"></el-input>
                     </p>
                     <p class="type">维护状态：
@@ -80,7 +80,7 @@
                             placeholder="选择日期">
                         </el-date-picker>
                     </p>
-                    <p class="phoneNum">驾驶人员：
+                    <p class="phoneNum person-driv">驾驶人员：
                         <el-select v-model="boatCar.driverId" placeholder="请选择" :disabled="isDisabled">
                             <el-option
                                 v-for="item in driverList"
@@ -90,10 +90,11 @@
                             </el-option>
                         </el-select>
                     </p>
-                    <p class="phoneNum" v-if="isDisabled">联系电话：
+                    <p class="phoneNum person-driv">联系电话：
+                    <!--<p class="phoneNum person-driv" v-if="isDisabled">联系电话：-->
                         <el-input type="text"v-model="boatCar.driverPhone" :disabled="isDisabled"></el-input>
                     </p>
-                    <p class="phoneNum">设备号码：
+                    <p class="phoneNum">序列号码：
                         <el-input type="text"v-model="boatCar.vehicle.model" :disabled="isDisabled"></el-input>
                     </p>
                 </div>
@@ -490,6 +491,7 @@
                 boatCar: {
                     driverId: '',
                     driverPhone: '',
+                    boatCarName:'',
                     vehicle: {
                         capacity:'',
                         driverId: "",
@@ -713,15 +715,14 @@
                         return
                     }
                 } else if(this.route.includes('boat')) {
-
-                    newInfo = this.boatCar
+                    newInfo = this.boatCar;
                     console.log(newInfo);
                     if(!(newInfo.vehicle.hasOwnProperty("type") && integerreg.test(newInfo.vehicle.type)) ||
-                        !(newInfo.vehicle.serialNum && newInfo.vehicle.serialNum.trim() !== '') ||
+                        !(newInfo.vehicle.serialNum && newInfo.vehicle.serialNum.trim() !== '') ||  //编号改为名称
                         !(newInfo.vehicle.hasOwnProperty("maintenanceStatus") && integerreg.test(newInfo.vehicle.maintenanceStatus)) ||
                         !(newInfo.vehicle.purchaseDate && newInfo.vehicle.purchaseDate !== '') ||
                         !(newInfo.vehicle.maintenanceDate && newInfo.vehicle.maintenanceDate !== '') ||
-                        !(newInfo.driverId  && newInfo.driverId !== '') ||
+                        //!(newInfo.driverId  && newInfo.driverId !== '') ||   //驾驶员信息
                         !(newInfo.vehicle.model && newInfo.vehicle.model.trim() !== '')
                     ){
 
@@ -1196,6 +1197,12 @@
     }
 </style>
 <style>
+    .el-input.is-disabled .el-input__inner,.el-textarea.is-disabled .el-textarea__inner{
+        background-color:transparent;
+    }
+    .person-jole{
+        display:none;
+    }
     .example-avatar .avatar-upload .rounded-circle {
         width: 200px;
         height: 200px;
@@ -1588,6 +1595,9 @@
                         box-sizing: border-box;
                         border-radius: rem(5);
                     }
+                }
+                .person-driv{
+                    display:none;
                 }
                 .ms{
                     span{

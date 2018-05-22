@@ -127,6 +127,7 @@
         methods: {
             closeDialog () {
                 this.visible = false
+                this.getAllScenic()
             },
             searchAnything (info) {
                 console.log(info, '这是要过滤的')
@@ -158,7 +159,7 @@
             },
             deletInfo (id) {
                 if (id) {
-                    this.choseInfoId.push(id)
+                    //this.choseInfoId.push(id)
                 }
                 if (this.choseInfoId.length > 0) {
                     this.$confirm('此操作将永久删除该数据, 是否继续?', '提示', {

@@ -5,7 +5,7 @@
             v-model="filterText">
         </el-input>
         <div class="manage">
-            <el-checkbox class="check" @change="selectAllCheck">{{title}}总数<font>{{number}}</font>个</el-checkbox>
+            <el-checkbox class="check" v-model="selectAllCheckBox" @change="selectAllCheck">{{title}}总数<font>{{number}}</font>个</el-checkbox>
             <el-checkbox class="check">故障<font>{{fault}}</font>个</el-checkbox>
         </div>
         <el-tree
@@ -17,7 +17,7 @@
             :default-checked-keys="[]"
             :filter-node-method="filterNode"
             ref="tree"
-            @check-change="handleCheckChange">
+            @check="handleCheckChange">
             <span class="custom-tree-node" slot-scope="{ node, Info }">
                 <img class="icon" :src="node.icon"/>
                 <span>{{ node.label }}</span>
@@ -33,6 +33,7 @@
         data() {
             return {
                 filterText: '',
+                selectAllCheckBox: false
 
             }
         },
@@ -42,33 +43,53 @@
                 return data.label.indexOf(value) !== -1;
             },
             selectAllCheck(state){
-                if(state){
+                let arr
+                if(this.selectAllCheckBox){
                     this.selectedAll= []
                     for (let i=0;i<this.lightList.length;i++){
-                        this.selectedAll.push(this.lightList[i].id)
+                        this.selectedAll.push({id:this.lightList[i].id,label: this.lightList[i].label})
                     }
+                    this.$refs.tree.setCheckedNodes(this.selectedAll);
+                    arr = this.$refs.tree.getCheckedNodes()
+                    arr = arr.filter(item => {
+                        if (item.children) {
+                            item.checked={}
+                            item.checked.checkedKeys = this.$refs.tree.getCheckedKeys()
+                            return item
+                        }
+                    })
                 }else {
                     this.selectedAll= []
+                    this.$refs.tree.setCheckedNodes(this.selectedAll);
+                    this.lightList.forEach(item => {
+                        if (item.checked) {
+                            delete item.checked
+                        }
+                    })
+                    arr = this.lightList
+
                 }
-                this.$refs.tree.setCheckedKeys(this.selectedAll);
+                console.log(arr, '这是最后提交的')
+                this.$store.commit('SHOW_TREE', arr)
             },
 
             ...mapMutations(['SHOW_TREE']),
 
             handleCheckChange(data,checked) {
-                if(!data.children){
-                    data.checked =checked
-                    if(checked) {
-                        this.$store.commit('HIDE_TREE', true)
-                        this.$store.commit('SHOW_TREE', data)
-                    }else {
-                        this.$store.commit('HIDE_TREE', false)
-                        this.$store.commit('SHOW_TREE', data)
+                console.log(data, 'oooooooooooo')
+                console.log(checked, 'iiiiiiiiiiiiiiiiiiii')
+                checked.checkedNodes = checked.checkedNodes.filter(item => {
+                    if (!item.children) {
+                        return item
                     }
-                    // data.checked = checked
-                    // this.$store.commit('SHOW_TREE', data)
-                    // this.$set()
+                })
+                if (checked.checkedNodes.length == this.lightList.length) {
+                    this.selectAllCheckBox = true
+                } else {
+                    this.selectAllCheckBox = false
                 }
+                data.checked = checked
+                this.$store.commit('SHOW_TREE', data)
             }
 
         },
