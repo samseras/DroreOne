@@ -48,7 +48,7 @@
             }else if (route.includes('controler')) {
                 droreMap.interaction.enableMapClick = true
                 droreMap.interaction.showMove()
-                // this.getAllLight();//路灯现有标注
+                this.getAllLight();//路灯现有标注
                 // this.getAllGate();//闸机现有标注
                 // this.getAllWifi();//wifi现有标注
                 // this.getAllLed();//Led现有标注
@@ -627,6 +627,7 @@
                             url: "/static/img/icon/Light.png"
                         });
                         droreMap.icon.addChild(Light);
+                        droreMap.icon.IconStyleById(Light.id,false);
                         let that =this;
                         Light.onclick(function(e) {
                             that.menulist = e;
@@ -1737,25 +1738,26 @@
             },
             treeShow(data){
                 console.log('treeShow');
-                data.location = [data.longitude,data.latitude]
-                var Light = new droreMap.icon.Marker({
-                    coordinate: droreMap.trans.transFromWgsToLayer(data.location),
-                    name: data.name,
-                    subtype:  data.subtype,
-                    id: data.id,
-                    url: "/static/img/icon/Light.png"
-                });
-                droreMap.icon.addChild(Light);
-                droreMap.map.panToCoord(droreMap.trans.transFromWgsToLayer(data.location));
-                let that =this;
-                Light.onclick(function(e) {
-                    that.menulist = e;
-                    that.droreMappopup(e);
-                });
+                // data.location = [data.longitude,data.latitude]
+                // var Light = new droreMap.icon.Marker({
+                //     coordinate: droreMap.trans.transFromWgsToLayer(data.location),
+                //     name: data.name,
+                //     subtype:  data.subtype,
+                //     id: data.id,
+                //     url: "/static/img/icon/Light.png"
+                // });
+                // droreMap.icon.addChild(Light);
+                // droreMap.map.panToCoord(droreMap.trans.transFromWgsToLayer(data.location));
+                // let that =this;
+                // Light.onclick(function(e) {
+                //     that.menulist = e;
+                //     that.droreMappopup(e);
+                // });
+                droreMap.icon.IconStyleById(data.id,true);
             },
             treeHide(data){
                 console.log('treeHide',data);
-                droreMap.icon.IconStyleById(data.id);
+                droreMap.icon.IconStyleById(data.id,false);
                 $("#contextmenu_container").hide();
             }
         },

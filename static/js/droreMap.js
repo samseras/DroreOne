@@ -2997,12 +2997,32 @@ define(function(require, exports, module) {
                         return attrs;
                     }
                 },
-                IconStyleById: function(id) { //*******
+                IconStyleById: function(id,visibility) { //*******
                     var feature = pool.getIconById(id);
+                    var url =feature.data.url
+                    // console.log(feature.data.url);
                     if(feature) {
-                        feature.setStyle(new ol.style.Style({
-                            display: 'none',
-                        }));
+                        if(visibility){
+                            feature.setStyle(new ol.style.Style({
+                                image: new ol.style.Icon({
+                                    anchor: [0.5, 0.5],
+                                    anchorXUnits: 'fraction',
+                                    anchorYUnits: 'fraction',
+                                    opacity: 1,
+                                    src: url
+                                })
+                            }));
+                        }else {
+                            feature.setStyle(new ol.style.Style({
+                                image: new ol.style.Icon({
+                                    anchor: [0.5, 0.5],
+                                    anchorXUnits: 'fraction',
+                                    anchorYUnits: 'fraction',
+                                    opacity: 0,
+                                    src: url
+                                })
+                            }));
+                        }
                     }
                 },
                 setIconStyleById: function(id, url) { //*******
