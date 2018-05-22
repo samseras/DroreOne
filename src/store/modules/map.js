@@ -13,7 +13,7 @@ const map = {
         searchInfo: {},
         isShowSearch: false,
         treeData:[],
-
+        controleLight:[],
 
     },
     getters: {
@@ -43,6 +43,9 @@ const map = {
         },
         getTreeState(state) {
             return state.treeData
+        },
+        getcontroleLight(state) {
+            return state.controleLight
         }
     },
     setters: {},
@@ -83,6 +86,10 @@ const map = {
                 state.treeData = data
             }
             console.log(state.treeData,'commit')
+        },
+        [types.CONTROLER_LIGHT] (state, data) {
+            state.controleLight = data
+            console.log(state.controleLight,'commit')
         }
     },
     actions: {
