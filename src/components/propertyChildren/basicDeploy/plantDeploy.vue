@@ -38,10 +38,12 @@
                             width="120">
                         </el-table-column>
                         <el-table-column
+                            width="180"
                             prop="regionName"
                             label="所属片区">
                         </el-table-column>
                         <el-table-column
+                            width="120"
                             prop="plant.height"
                             label="高度">
                         </el-table-column>
@@ -50,10 +52,12 @@
                             label="位置">
                         </el-table-column>
                         <el-table-column
+                            width="180"
                             prop="plant.plantYear"
                             label="年代">
                         </el-table-column>
                         <el-table-column
+                            width="150"
                             label="操作">
                             <template slot-scope="scope">
                                 <span @click="showPersonDetail(scope.row, '植物信息',true)">查看</span>
@@ -64,7 +68,7 @@
                             </template>
                         </el-table-column>
                     </el-table>
-                    <div class="personInfo" v-for="item in treeList" v-if="isShowToiletCard && item.status">
+                    <div class="personInfo judge-title" v-for="item in treeList" v-if="isShowToiletCard && item.status">
                         <div class="checkBox">
                             <el-checkbox v-model="item.checked" @change="checked(item.id)" class="checkBtn"></el-checkbox>
                         </div>
@@ -464,4 +468,11 @@
         }
     }
 
+</style>
+<style>
+    .judge-title  .cell{
+        white-space: nowrap ;
+        overflow: hidden ;
+        text-overflow: ellipsis ;
+    }
 </style>

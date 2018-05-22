@@ -14,7 +14,7 @@
                         @searchAnything="searchAnything">
                 </Header>
             </div>
-            <div class="personList" v-loading="isShowLoading">
+            <div class="personList judge-title" v-loading="isShowLoading">
                 <ScrollContainer>
                     <el-table
                         v-if="!isShowAreaCard"
@@ -39,7 +39,6 @@
                             label="所在景区">
                         </el-table-column>-->
                         <el-table-column
-                            class="position-range"
                             prop="location"
                             label="位置范围">
                         </el-table-column>
@@ -358,13 +357,6 @@
         height: 100%;
         display: flex;
         flex-direction: column;
-        .position-range{
-            .cell{
-                white-space: nowrap !important;
-                overflow: hidden !important;
-                text-overflow: ellipsis !important;
-            }
-        }
         .title{
             width: 100%;
             padding: rem(16) 0 rem(17) rem(15);
@@ -387,6 +379,13 @@
                 margin-top: rem(10);
                 border-bottom: 2px solid #e44b4e;
             }
+            /*.judge-title{
+                .cell{
+                    white-space: nowrap ;
+                    overflow: hidden ;
+                    text-overflow: ellipsis ;
+                }
+            }*/
             .personList{
                 width: 100%;
                 flex: 1;
@@ -475,4 +474,11 @@
         }
     }
 
+</style>
+<style>
+    .judge-title  .cell{
+        white-space: nowrap ;
+        overflow: hidden ;
+        text-overflow: ellipsis ;
+    }
 </style>
