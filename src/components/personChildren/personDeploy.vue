@@ -133,6 +133,7 @@
         methods: {
             closeDialog () {
                 this.visible = false
+                this.getAllPerson()
             },
             searchAnything (info) {
                 console.log(info, '这是要过滤的')
@@ -317,6 +318,7 @@
                 } else {
                     personObj.pictureId = info.pictureId
                 }
+                console.log(personObj)
                 await api.person.updatePerson(JSON.stringify(personObj)).then(res => {
                     this.closeDialog()
                     this.$message.success('修改成功')
