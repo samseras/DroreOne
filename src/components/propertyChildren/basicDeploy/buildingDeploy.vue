@@ -128,6 +128,7 @@
         methods: {
             closeDialog () {
                 this.visible = false
+                this.getAllBuild()
             },
             searchAnything (info) {
                 // console.log(info, '这是要过滤的')
@@ -149,6 +150,9 @@
             },
             handleSelectionChange(val) {
                 this.multipleSelection = val;
+                /*this.choseInfoId = selection.map(item => {
+                    return item.id
+                })*/
             },
             showPersonDetail (info, title, state) {
                 this.buildInfo = info
@@ -162,8 +166,9 @@
             },
             deletInfo (id) {
                 if (id) {
-                    this.choseInfoId.push(id)
+                    //this.choseInfoId.push(id)
                 }
+                console.log(this.choseInfoId)
                 if (this.choseInfoId.length > 0) {
                     this.$confirm('此操作将永久删除该数据, 是否继续?', '提示', {
                         confirmButtonText: '确定',
@@ -215,6 +220,7 @@
                 } else {
                     this.choseInfoId.push(id)
                 }
+                console.log(this.choseInfoId)
             },
             choseType (type) {
                 console.log(type)

@@ -28,11 +28,11 @@
                         @select-all="selectAll"
                         @selection-change="handleSelectionChange">
                         <el-table-column
-                            width="1" style="display:none">
-                            <!--<template slot-scope="scope">
-                                &lt;!&ndash;<input type="checkbox" :checked='scope.row.checked' class="checkBoxBtn" @change="checked(scope.row.id)">&ndash;&gt;
+                            width="55" style="display:none">
+                            <template slot-scope="scope">
+                                <!--<input type="checkbox" :checked='scope.row.checked' class="checkBoxBtn" @change="checked(scope.row.id)">-->
                                 <el-checkbox v-model="scope.row.checked" @change="getChecked(scope.row.id)" class="checkBoxBtn"></el-checkbox>
-                            </template>-->
+                            </template>
                         </el-table-column>
                         <el-table-column
 
@@ -184,9 +184,7 @@
                 this.isDisabled = false
             },
             deletInfo (id) {
-                if (id) {
-                    this.choseInfoId.push(id)
-                }
+                console.log(this.choseInfoId);
                 if (this.choseInfoId.length > 0) {
                     this.$confirm('此操作将永久删除该数据, 是否继续?', '提示', {
                         confirmButtonText: '确定',
