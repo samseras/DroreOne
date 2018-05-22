@@ -1776,12 +1776,15 @@
                     console.log(this.getTreeState,'ioioioiooioioiooi')
                     //    这边是全选
                     if (this.getTreeState[0].checked) {//显示
+                        console.log(this.getTreeState,'这111111111111')
                         this.getTreeState.forEach(item => {
+                            console.log(item, 'googogoogoogoogogoo')
                             item.children.forEach(item1 => {
                                 this.treeShow(item1);
                             })
                         })
                     }else {//隐藏
+                        console.log('在这报错22222222222222')
                         this.getTreeState.forEach(item => {
                             this.treeHide(item)
                         })
