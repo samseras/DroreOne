@@ -84,11 +84,11 @@
                 console.log(this.chartH,"this.chartH")
                 console.log(this.chartW,"this.chartW")
             },
-            getscreen(){
-                 this.fullHeight = window.innerHeight+67;
-                 this.fullWidth = window.innerWidth-70;
-            },
             fullscreen(){
+                this.fullHeight = window.screen.availHeight;
+                // this.fullHeight = window.innerHeight;
+                // this.fullWidth = window.innerWidth;
+                this.fullWidth =  window.screen.availWidth;
                 this.isBigScreen = !this.isBigScreen;
                 this.isSetOut = !this.isSetOut;
                 let data = {
@@ -99,7 +99,8 @@
                 this.$emit('hideList',data);//fullscreen事件触发后，自动触发hideList事件 var docElm = document.documentElement;
                 this.requestFullScreen();
                 let changeH,changeW;
-                console.log(this.fullHeight);
+                console.log(this.fullHeight,"fullHeight");
+                console.log(this.fullWidth,"fullWidth")
                 for(let i=0;i<this.echatList.length;i++){
                     changeH = this.echatList[i].pos_height/100;
                     changeW = this.echatList[i].pos_width/100;
@@ -117,12 +118,18 @@
                     this.isPackUp = false;
                     let data = false;
                     let changeH,changeW;
+                    this.chartT = this.$refs.content.getBoundingClientRect().top;
+                    this.chartB = this.$refs.content.getBoundingClientRect().bottom;
+                    this.chartL = this.$refs.content.getBoundingClientRect().left;
+                    this.chartR = this.$refs.content.getBoundingClientRect().right;
+                    this.chartH = this.chartB - this.chartT-60;
+                    this.chartW = this.chartR - 220;
                     that.$emit('hideList',data);//fullscreen事件触发后，自动触发hideList事件 var docElm = document.documentElement;
                     for(let i=0;i<this.echatList.length;i++){
                         changeH = this.echatList[i].pos_height/100;
                         changeW = this.echatList[i].pos_width/100;
                             $($(".echatsContent")[i]).css({"height":this.chartH*changeH-42+"px"});
-                        // $($(".echatsContent")[i]).prev(".echatsTitle").css({"width":this.chartW*changeW-10+"px"});
+                         // $($(".echatsContent")[i]).prev(".echatsTitle").css({"width":this.chartW*changeW-10+"px"});
                     };
                     this.moveChart();
                 }
@@ -232,6 +239,16 @@
                   smallCharDom.resize();
             },
             moveChart(){
+                 console.log(this.barDom,"this.barDom")
+                console.log(this.pieDom,"this.pieDom")
+                console.log(this.radarDom)
+                console.log(this.candlestickDom)
+                console.log(this.gaugeDom)
+                console.log(this.funnelDom)
+                console.log(this.roseDom)
+                console.log(this.relativebarDom)
+                console.log(this.lineDom)
+
                 if(this.barDom!=undefined){
                     this.barDom.resize();
                 };
@@ -948,8 +965,6 @@
         created () {
             this.echatList = []
             this.getEchats();
-            this.getscreen();
-
         },
         computed: {
             ...mapGetters(['getRefresh'])
