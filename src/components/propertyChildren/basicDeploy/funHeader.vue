@@ -282,7 +282,20 @@
                         type = 1
                     }else if (route.includes('2')){
                         type = 2
+                    }else if (route.includes('3')){
+                        type = 3
+                    }else if (route.includes('4')){
+                        type = 4
+                    }else if (route.includes('5')){
+                        type = 5
+                    }else if (route.includes('6')){
+                        type = 6
+                    }else if (route.includes('7')){
+                        type = 7
+                    }else if (route.includes('8')){
+                        type = 8
                     }
+
                     if (this.choseId.length > 0) {
                         api.exportFile.exportSinglePerson(this.choseId).then((res) =>{
                             const content = res
