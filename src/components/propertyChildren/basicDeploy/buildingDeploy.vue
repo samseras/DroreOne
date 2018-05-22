@@ -131,22 +131,21 @@
                 this.getAllBuild()
             },
             searchAnything (info) {
-                // console.log(info, '这是要过滤的')
-                // if (info.trim() !== '') {
-                //     this.boatCarList = this.checkList.filter(item => {
-                //         if (item.driverName.includes(info)) {
-                //             return item
-                //         }
-                //         if (item.driverPhone.includes(info)) {
-                //             return item
-                //         }
-                //         if (item.vehicle.serialNum.includes(info)) {
-                //             return item
-                //         }
-                //     })
-                // } else {
-                //     this.getAllBuild()
-                // }
+                console.log(info, '这是要过滤的')
+                console.log(this.checkList)
+                if (info.trim() !== '') {
+                    this.buildList = this.checkList.filter(item => {
+                        if ((item.regionName)&&(item.regionName.includes(info))) {
+                            return item
+                        }
+                        if ((item.building.name)&&(item.building.name.includes(info))) {
+                            return item
+                        }
+
+                    })
+                } else {
+                    this.getAllBuild()
+                }
             },
             handleSelectionChange(val) {
                 this.multipleSelection = val;
@@ -312,7 +311,7 @@
             },
             fixedInfo (id) {
                 if (id) {
-                    this.choseInfoId.push(id)
+                    //this.choseInfoId.push(id)
                 }
                 if (this.choseInfoId.length > 1) {
                     this.$message.warning('至多选择一个数据修改')
@@ -346,6 +345,7 @@
                         this.buildList[i].byTime = -(new Date(this.buildList[i].building.modifyTime)).getTime()
                     }
                     this.buildList = _.sortBy(this.buildList,'byTime')
+                    this.checkList = this.buildList
                     this.choseInfoId = []
                 }).catch(err => {
                     console.log(err, '请求失败')

@@ -298,7 +298,7 @@
             fixedInfo (id) {
                 if (id) {
 
-                    this.choseInfoId.push(id)   //列表页修改
+                    //this.choseInfoId.push(id)   //列表页修改
                 }
                 if (this.choseInfoId.length > 1) {
                     this.$message.warning('至多选择一个数据修改')
