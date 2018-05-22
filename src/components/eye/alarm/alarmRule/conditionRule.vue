@@ -1,5 +1,5 @@
 <template>
-    <div class="alarmcolumn">
+    <div class="condition">
         <div class="title">
             告警事件
         </div>
@@ -15,7 +15,7 @@
                 <ScrollContainer>
                     <el-table
                         ref="multipleTable"
-                        :data="alarmcolumnList"
+                        :data="conditionList"
                         tooltip-effect="dark"
                         style="width: 100%"
                         @selection-change="handleSelectionChange"
@@ -31,16 +31,25 @@
                             label="名称">
                         </el-table-column>
                         <el-table-column
-                            prop="alarmColumn"
-                            label="关联报警柱">
+                            sortable
+                            prop="pointerType"
+                            label="指标类型">
                         </el-table-column>
                         <el-table-column
-                            prop="deviceRange"
-                            label="设备调度范围">
+                            prop="source"
+                            label="来源">
                         </el-table-column>
                         <el-table-column
-                            prop="safeRange"
-                            label="安保调度范围">
+                            prop="associatDevice"
+                            label="关联设备">
+                        </el-table-column>
+                        <el-table-column
+                            prop="upperThreshold"
+                            label="阈值上限">
+                        </el-table-column>
+                        <el-table-column
+                            prop="lowerThreshold"
+                            label="阈值下限">
                         </el-table-column>
                         <el-table-column
                             sortable
@@ -58,7 +67,7 @@
                 </ScrollContainer>
                 <AlarmDetail v-if="visible"
                              :visible="visible"
-                             :Info="alarmcolumnInfo"
+                             :Info="conditionInfo"
                              :isReadonly="isReadonly"
                              @closeDialog ="closeDialog"
                              :title = "title"
@@ -80,27 +89,30 @@
     export default {
         data(){
             return{
-                alarmcolumnList: [
+                conditionList: [
                     {
-                        name:'sos报警规则01',
-                        alarmColumn:'BJ001、BJ002',
-                        deviceRange:'100米',
-                        safeRange:'200米',
-                        manager:'马云'
-
+                        name:'环境告警规则1',
+                        pointerType:'温度',
+                        source:'外部系统',
+                        associatDevice:'温度传感器',
+                        upperThreshold:'40℃',
+                        lowerThreshold:'-40℃',
+                        level:'',
+                        manager:'程杰'
                     },
                     {
-                        name:'sos报警规则02',
-                        alarmColumn:'BJ003、BJ004',
-                        deviceRange:'400米',
-                        safeRange:'700米',
-                        manager:'徐一项'
-
+                        name:'环境告警规则2',
+                        pointerType:'PM2.5',
+                        source:'外部系统',
+                        associatDevice:'水温传感器',
+                        upperThreshold:'40℃',
+                        lowerThreshold:'-40℃',
+                        level:'',
+                        manager:'程杰'
                     },
                 ],
-                alarmcolumnInfo:{},
+                conditionInfo:{},
                 visible: false,
-                warningEventInfo: {},
                 choseInfoId: [],
                 isReadonly: true,
                 title:'',
@@ -112,7 +124,7 @@
         },
         methods: {
             addNewInfo () {
-                this.showDetail({},false,'添加报警柱告警规则',)
+                this.showDetail({},false,'添加环境告警规则',)
             },
             closeDialog () {
                 this.visible = false
@@ -123,7 +135,7 @@
                 })
             },
             showDetail (info,state,title) {
-                this.alarmcolumnInfo = info;
+                this.conditionInfo = info;
                 this.visible = true;
                 this.isBatchEdit = false;
                 this.isReadonly = state;
@@ -170,7 +182,7 @@
                 }
             },
             checked (id) {
-                this.alarmcolumnList = this.alarmcolumnList.filter(item => {
+                this.conditionList = this.conditionList.filter(item => {
                     if (item.id === id) {
                         item.checked = item.checked
                     }
@@ -185,7 +197,7 @@
                 }
             },
             selectedAll (state) {
-                this.alarmcolumnList = this.alarmcolumnList.filter((item) => {
+                this.conditionList = this.conditionList.filter((item) => {
                     if (state === true) {
                         item.checked = true
                         this.choseInfoId.push(item.id)
@@ -207,7 +219,7 @@
                     this.isBatchEdit = true;
                     // this.warningEventInfo = info;
                     this.visible = true;
-                    this.title="编辑报警柱告警规则"
+                    this.title="编辑环境告警规则"
                 } else {
                     this.$message.error('请选择要编辑的数据')
                     return
@@ -229,7 +241,7 @@
 </script>
 
 <style lang="scss" scoped type="text/scss">
-    .alarmcolumn{
+    .condition{
         width: 100%;
         height: 100%;
         display: flex;

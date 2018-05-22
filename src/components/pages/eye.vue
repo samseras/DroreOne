@@ -72,7 +72,7 @@
     export default {
         data() {
             return {
-                manage: [ 'message.control', 'message.facility', 'message.analyze', 'message.deploy','message.alarm'],
+                manage: [ 'message.control', 'message.facility', 'message.deploy','message.alarm'],
                 currTime: new Date(),   //当前时间
                 title: ["&#xe8c0;", "&#xe627;", "&#xe647;"],
                 activeIndex: 1,
@@ -118,9 +118,9 @@
             if (route.includes('facility/')){
                 this.activeIndex = 1
             }
-            if (route.includes('analyze/')){
-                this.activeIndex = 2
-            }
+            // if (route.includes('analyze/')){
+            //     this.activeIndex = 2
+            // }
         },
         filters: {
             timeFiler(item) {
@@ -230,9 +230,9 @@
                     case 'message.facility':
                         this.$router.push({path: '/facility'});
                         break;
-                    case 'message.analyze':
-                        this.$router.push({path: '/analyze'});
-                        break;
+                    // case 'message.analyze':
+                    //     this.$router.push({path: '/analyze'});
+                    //     break;
                     case 'message.deploy':
                         this.$router.push({path: '/deploy'});
                         break;
