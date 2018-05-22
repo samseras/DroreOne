@@ -5,7 +5,7 @@
             v-model="filterText">
         </el-input>
         <div class="manage">
-            <el-checkbox class="check" @change="selectAllCheck">{{title}}总数<font>{{number}}</font>个</el-checkbox>
+            <el-checkbox class="check" v-model="selectAllCheckBox" @change="selectAllCheck">{{title}}总数<font>{{number}}</font>个</el-checkbox>
             <el-checkbox class="check">故障<font>{{fault}}</font>个</el-checkbox>
         </div>
         <el-tree
@@ -33,6 +33,7 @@
         data() {
             return {
                 filterText: '',
+                selectAllCheckBox: false
 
             }
         },
@@ -43,7 +44,7 @@
             },
             selectAllCheck(state){
                 let arr
-                if(state){
+                if(this.selectAllCheckBox){
                     this.selectedAll= []
                     for (let i=0;i<this.lightList.length;i++){
                         this.selectedAll.push({id:this.lightList[i].id,label: this.lightList[i].label})
@@ -60,14 +61,33 @@
                 }else {
                     this.selectedAll= []
                     this.$refs.tree.setCheckedNodes(this.selectedAll);
+                    this.lightList.forEach(item => {
+                        if (item.checked) {
+                            delete item.checked
+                        }
+                    })
                     arr = this.lightList
+
                 }
+                console.log(arr, '这是最后提交的')
                 this.$store.commit('SHOW_TREE', arr)
             },
 
             ...mapMutations(['SHOW_TREE']),
 
             handleCheckChange(data,checked) {
+                console.log(data, 'oooooooooooo')
+                console.log(checked, 'iiiiiiiiiiiiiiiiiiii')
+                checked.checkedNodes = checked.checkedNodes.filter(item => {
+                    if (!item.children) {
+                        return item
+                    }
+                })
+                if (checked.checkedNodes.length == this.lightList.length) {
+                    this.selectAllCheckBox = true
+                } else {
+                    this.selectAllCheckBox = false
+                }
                 data.checked = checked
                 this.$store.commit('SHOW_TREE', data)
             }

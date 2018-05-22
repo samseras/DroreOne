@@ -627,7 +627,10 @@
                             url: "/static/img/icon/Light.png"
                         });
                         droreMap.icon.addChild(Light);
-                        droreMap.icon.IconStyleById(Light.id,false);
+                        let route = this.$route.path
+                        if(route.includes('controler')){
+                            droreMap.icon.IconStyleById(Light.id,false);
+                        }
                         let that =this;
                         Light.onclick(function(e) {
                             that.menulist = e;
@@ -1738,7 +1741,7 @@
             },
             treeShow(data){
                 console.log('treeShow');
-                // data.location = [data.longitude,data.latitude]
+                data.location = [data.longitude,data.latitude]
                 // var Light = new droreMap.icon.Marker({
                 //     coordinate: droreMap.trans.transFromWgsToLayer(data.location),
                 //     name: data.name,
@@ -1753,6 +1756,7 @@
                 //     that.menulist = e;
                 //     that.droreMappopup(e);
                 // });
+                droreMap.map.panToCoord(droreMap.trans.transFromWgsToLayer(data.location));
                 droreMap.icon.IconStyleById(data.id,true);
             },
             treeHide(data){
@@ -1776,12 +1780,15 @@
                     console.log(this.getTreeState,'ioioioiooioioiooi')
                     //    这边是全选
                     if (this.getTreeState[0].checked) {//显示
+                        console.log(this.getTreeState,'这111111111111')
                         this.getTreeState.forEach(item => {
+                            console.log(item, 'googogoogoogoogogoo')
                             item.children.forEach(item1 => {
                                 this.treeShow(item1);
                             })
                         })
                     }else {//隐藏
+                        console.log('在这报错22222222222222')
                         this.getTreeState.forEach(item => {
                             this.treeHide(item)
                         })

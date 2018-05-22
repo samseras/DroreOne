@@ -116,6 +116,7 @@
         methods: {
             closeDialog () {
                 this.visible = false
+                this.getAllArea()
             },
             searchAnything (info) {
                 console.log(info, '这是要过滤的')
@@ -159,9 +160,9 @@
                                 this.areaList = this.areaList.filter((item, index) => {
                                     if (item.id === this.choseInfoId[i]){
                                         this.areaList[index].checked = false
-                                        this.areaList[index].status = false
+                                        //this.areaList[index].status = false
                                     }
-                                    return item
+                                    return item.id !== this.choseInfoId[i]
                                 })
                             }
                             this.choseInfoId = []
@@ -297,7 +298,7 @@
             fixedInfo (id) {
                 if (id) {
 
-                    //this.choseInfoId.push(id)   //列表页修改
+                    this.choseInfoId.push(id)   //列表页修改
                 }
                 if (this.choseInfoId.length > 1) {
                     this.$message.warning('至多选择一个数据修改')
@@ -327,6 +328,7 @@
                         this.areaList[i].location = this.areaList[i].geo
                         this.areaList[i].byTime = -(new Date(this.areaList[i].modifyTime)).getTime()
                     }
+                    console.log(this.areaList)
                     this.areaList = _.sortBy(this.areaList,'byTime')
 
                     this.checkList = this.areaList
