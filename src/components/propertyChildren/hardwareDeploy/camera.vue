@@ -16,6 +16,7 @@
                 <input type="file" ref="uploadFile" class="importFile" @change="selectFile">
             </div>
             <el-button size="mini" plain @click="downloadFile"><i class="el-icon-download"></i>导出</el-button>
+            <el-button size="mini" plain @click="downloadTemplate"><i class="el-icon-download"></i>下载模板</el-button>
 
         </div>
         <div class="titleCheck" v-if="route.includes('camera')" >
@@ -273,6 +274,9 @@
                         this.$message.error('导出失败，请稍后再试')
                     })
                 }
+            },
+            downloadTemplate(){
+                window.location.href="/static/template/devices_import.csv";
             },
             toggleList(type){
                 this.$emit('toggleList',type)

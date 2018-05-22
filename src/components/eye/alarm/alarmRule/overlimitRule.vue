@@ -1,5 +1,5 @@
 <template>
-    <div class="alarmcolumn">
+    <div class="overlimit">
         <div class="title">
             告警事件
         </div>
@@ -15,7 +15,7 @@
                 <ScrollContainer>
                     <el-table
                         ref="multipleTable"
-                        :data="alarmcolumnList"
+                        :data="overlimitList"
                         tooltip-effect="dark"
                         style="width: 100%"
                         @selection-change="handleSelectionChange"
@@ -31,16 +31,12 @@
                             label="名称">
                         </el-table-column>
                         <el-table-column
-                            prop="alarmColumn"
-                            label="关联报警柱">
+                            prop="associatDevice"
+                            label="关联设备">
                         </el-table-column>
                         <el-table-column
-                            prop="deviceRange"
-                            label="设备调度范围">
-                        </el-table-column>
-                        <el-table-column
-                            prop="safeRange"
-                            label="安保调度范围">
+                            prop="trafficValue"
+                            label="客流阈值">
                         </el-table-column>
                         <el-table-column
                             sortable
@@ -58,7 +54,7 @@
                 </ScrollContainer>
                 <AlarmDetail v-if="visible"
                              :visible="visible"
-                             :Info="alarmcolumnInfo"
+                             :Info="overlimitInfo"
                              :isReadonly="isReadonly"
                              @closeDialog ="closeDialog"
                              :title = "title"
@@ -80,27 +76,24 @@
     export default {
         data(){
             return{
-                alarmcolumnList: [
+                overlimitList: [
                     {
-                        name:'sos报警规则01',
-                        alarmColumn:'BJ001、BJ002',
-                        deviceRange:'100米',
-                        safeRange:'200米',
-                        manager:'马云'
-
+                        name:'客流量超限告警规则1',
+                        associatDevice:'东门闸机',
+                        trafficValue:'3000人',
+                        level:'',
+                        manager:'程杰'
                     },
                     {
-                        name:'sos报警规则02',
-                        alarmColumn:'BJ003、BJ004',
-                        deviceRange:'400米',
-                        safeRange:'700米',
-                        manager:'徐一项'
-
-                    },
+                        name:'客流量超限告警规则2',
+                        associatDevice:'索道摄像头',
+                        trafficValue:'500人',
+                        level:'',
+                        manager:'程杰'
+                    }
                 ],
-                alarmcolumnInfo:{},
+                overlimitInfo:{},
                 visible: false,
-                warningEventInfo: {},
                 choseInfoId: [],
                 isReadonly: true,
                 title:'',
@@ -112,7 +105,7 @@
         },
         methods: {
             addNewInfo () {
-                this.showDetail({},false,'添加报警柱告警规则',)
+                this.showDetail({},false,'添加客流量告警规则',)
             },
             closeDialog () {
                 this.visible = false
@@ -123,7 +116,7 @@
                 })
             },
             showDetail (info,state,title) {
-                this.alarmcolumnInfo = info;
+                this.overlimitInfo = info;
                 this.visible = true;
                 this.isBatchEdit = false;
                 this.isReadonly = state;
@@ -170,7 +163,7 @@
                 }
             },
             checked (id) {
-                this.alarmcolumnList = this.alarmcolumnList.filter(item => {
+                this.overlimitList = this.overlimitList.filter(item => {
                     if (item.id === id) {
                         item.checked = item.checked
                     }
@@ -185,7 +178,7 @@
                 }
             },
             selectedAll (state) {
-                this.alarmcolumnList = this.alarmcolumnList.filter((item) => {
+                this.overlimitList = this.overlimitList.filter((item) => {
                     if (state === true) {
                         item.checked = true
                         this.choseInfoId.push(item.id)
@@ -207,7 +200,7 @@
                     this.isBatchEdit = true;
                     // this.warningEventInfo = info;
                     this.visible = true;
-                    this.title="编辑报警柱告警规则"
+                    this.title="编辑客流量告警规则"
                 } else {
                     this.$message.error('请选择要编辑的数据')
                     return
@@ -229,7 +222,7 @@
 </script>
 
 <style lang="scss" scoped type="text/scss">
-    .alarmcolumn{
+    .overlimit{
         width: 100%;
         height: 100%;
         display: flex;

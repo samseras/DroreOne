@@ -39,6 +39,7 @@
                             label="所在景区">
                         </el-table-column>-->
                         <el-table-column
+                            class="position-range"
                             prop="location"
                             label="位置范围">
                         </el-table-column>
@@ -116,6 +117,7 @@
         methods: {
             closeDialog () {
                 this.visible = false
+                this.getAllArea()
             },
             searchAnything (info) {
                 console.log(info, '这是要过滤的')
@@ -159,9 +161,9 @@
                                 this.areaList = this.areaList.filter((item, index) => {
                                     if (item.id === this.choseInfoId[i]){
                                         this.areaList[index].checked = false
-                                        this.areaList[index].status = false
+                                        //this.areaList[index].status = false
                                     }
-                                    return item
+                                    return item.id !== this.choseInfoId[i]
                                 })
                             }
                             this.choseInfoId = []
@@ -327,6 +329,7 @@
                         this.areaList[i].location = this.areaList[i].geo
                         this.areaList[i].byTime = -(new Date(this.areaList[i].modifyTime)).getTime()
                     }
+                    console.log(this.areaList)
                     this.areaList = _.sortBy(this.areaList,'byTime')
 
                     this.checkList = this.areaList
@@ -355,6 +358,13 @@
         height: 100%;
         display: flex;
         flex-direction: column;
+        .position-range{
+            .cell{
+                white-space: nowrap !important;
+                overflow: hidden !important;
+                text-overflow: ellipsis !important;
+            }
+        }
         .title{
             width: 100%;
             padding: rem(16) 0 rem(17) rem(15);

@@ -15,6 +15,7 @@
                 <input type="file" ref="uploadFile" class="importFile" @change="selectFile">
             </div>
             <el-button size="mini"plain v-if="isShowHeader" @click="expotInfo"><i class="el-icon-download"></i>导出</el-button>
+            <el-button size="mini"plain v-if="isShowHeader" @click="exportTemplate"><i class="el-icon-download"></i>下载模板</el-button>
             <el-button size="mini"plain @click="deleteCard"><i class="el-icon-delete"></i>删除</el-button>
             <el-button size="mini"plain @click="fixCard"><i class="el-icon-edit"></i>修改</el-button>
         </div>
@@ -203,78 +204,181 @@
                     }
                 }
             },
+            exportTemplate(){
+                var route = this.$route.path;
+                    switch (true){
+                        case route.includes("boat"):
+                            window.location.href="/static/template/vehicle.csv";
+                            break;
+                        case route.includes("toilet"):
+                            window.location.href="/static/template/toilet.csv";
+                            break;
+                        case route.includes("park"):
+                            window.location.href="/static/template/parking.csv";
+                            break;
+                        case route.includes("shop"):
+                            window.location.href="/static/template/business.csv";
+                            break;
+                        case route.includes("scenic"):
+                            window.location.href="/static/template/scenicspot.csv";
+                            break;
+                        case route.includes("trash"):
+                            window.location.href="/static/template/dustbin.csv";
+                            break;
+                        case route.includes("indicator"):
+                            window.location.href="/static/template/signboard.csv";
+                            break;
+                        case route.includes("plant"):
+                            window.location.href="/static/template/plant.csv";
+                            break;
+                        case route.includes("construction"):
+                            window.location.href="/static/template/building.csv";
+                            break;
+                        case route.includes("person"):
+                            window.location.href="/static/template/person.csv";
+                            break;
+                }
+            },
             expotInfo(){
                 if (this.listsLength < 1){
                     this.$message.error('当前无数据可导出，请添加数据后在导出')
                     return
                 }
-                let type
                 let route = this.$route.path
-                if (route.includes('park')) {
-                    type = 'parking'  //停车场
-                }else if(route.includes('trash')){
-                    type = 'dustbin'  //垃圾桶
-                }else if(route.includes('construction')){
-                    type = 'building' //建筑
-                }else if(route.includes('plant')){
-                    type = 'plant' //植物
-                }else if(route.includes('indicator')){
-                    type = 'signboard'  //指示牌
-                }else if(route.includes('shop')){
-                    type = 'business'  //景点
-                }else if(route.includes('toilet')){
-                    type = 'toilet'  //厕所
-                }else if(route.includes('scenic')){
-                    type = 'scenicspot'  //景点
-                }else if(route.includes('boat')){
-                    type = 'vehicle'  //车船
+                if(route.includes('basic')){
+                    let type
+                    if (route.includes('park')) {
+                        type = 'parking'  //停车场
+                    }else if(route.includes('trash')){
+                        type = 'dustbin'  //垃圾桶
+                    }else if(route.includes('construction')){
+                        type = 'building' //建筑
+                    }else if(route.includes('plant')){
+                        type = 'plant' //植物
+                    }else if(route.includes('indicator')){
+                        type = 'signboard'  //指示牌
+                    }else if(route.includes('shop')){
+                        type = 'business'  //景点
+                    }else if(route.includes('toilet')){
+                        type = 'toilet'  //厕所
+                    }else if(route.includes('scenic')){
+                        type = 'scenicspot'  //景点
+                    }else if(route.includes('boat')){
+                        type = 'vehicle'  //车船
+                    }
+
+                    if (this.choseId.length > 0) {
+                        api.exportFile.exportSingleBasic(this.choseId,type).then((res) =>{
+                            const content = res
+                            const blob = new Blob([content])
+                            const fileName = '设施.csv'
+                            if('download' in document.createElement('a')){
+                                const elink = document.createElement('a')
+                                elink.download = fileName
+                                elink.style.display = 'none'
+                                elink.href = URL.createObjectURL(blob)
+                                document.body.appendChild(elink)
+                                elink.click()
+                                URL.revokeObjectURL(elink.href) // 释放URL 对象
+                                document.body.removeChild(elink)
+                            }else{
+                                navigator.msSaveBlob(blob, fileName)
+                            }
+                            this.$message.success('导出成功')
+//                        this.choseId=[]
+                        }).catch(err =>{
+                            this.$message.error('导出失败，请稍后再试')
+                        })
+                    } else {
+                        api.exportFile.exportAllBasic(type).then((res) => {
+                            console.log(res,'niaho')
+                            const content = res
+                            const blob = new Blob([content])
+                            const fileName = '设施.csv'
+                            if('download' in document.createElement('a')){
+                                const elink = document.createElement('a')
+                                elink.download = fileName
+                                elink.style.display = 'none'
+                                elink.href = URL.createObjectURL(blob)
+                                document.body.appendChild(elink)
+                                elink.click()
+                                URL.revokeObjectURL(elink.href) // 释放URL 对象
+                                document.body.removeChild(elink)
+                            }else{
+                                navigator.msSaveBlob(blob, fileName)
+                            }
+                            this.$message.success('导出成功')
+                        }).catch(err => {
+                            this.$message.error('导出失败，请稍后再试')
+                        })
+                    }
+                }else {
+                    let type
+                    if(route.includes('1')){
+                        type = 1
+                    }else if (route.includes('2')){
+                        type = 2
+                    }else if (route.includes('3')){
+                        type = 3
+                    }else if (route.includes('4')){
+                        type = 4
+                    }else if (route.includes('5')){
+                        type = 5
+                    }else if (route.includes('6')){
+                        type = 6
+                    }else if (route.includes('7')){
+                        type = 7
+                    }else if (route.includes('8')){
+                        type = 8
+                    }
+
+                    if (this.choseId.length > 0) {
+                        api.exportFile.exportSinglePerson(this.choseId).then((res) =>{
+                            const content = res
+                            const blob = new Blob([content])
+                            const fileName = '人员.csv'
+                            if('download' in document.createElement('a')){
+                                const elink = document.createElement('a')
+                                elink.download = fileName
+                                elink.style.display = 'none'
+                                elink.href = URL.createObjectURL(blob)
+                                document.body.appendChild(elink)
+                                elink.click()
+                                URL.revokeObjectURL(elink.href) // 释放URL 对象
+                                document.body.removeChild(elink)
+                            }else{
+                                navigator.msSaveBlob(blob, fileName)
+                            }
+                            this.$message.success('导出成功')
+//                        this.choseId=[]
+                        }).catch(err =>{
+                            this.$message.error('导出失败，请稍后再试')
+                        })
+                    } else {
+                        api.exportFile.exportAllPerson(type).then((res) => {
+                            console.log(res,'niaho')
+                            const content = res
+                            const blob = new Blob([content])
+                            const fileName = '人员.csv'
+                            if('download' in document.createElement('a')){
+                                const elink = document.createElement('a')
+                                elink.download = fileName
+                                elink.style.display = 'none'
+                                elink.href = URL.createObjectURL(blob)
+                                document.body.appendChild(elink)
+                                elink.click()
+                                URL.revokeObjectURL(elink.href) // 释放URL 对象
+                                document.body.removeChild(elink)
+                            }else{
+                                navigator.msSaveBlob(blob, fileName)
+                            }
+                            this.$message.success('导出成功')
+                        }).catch(err => {
+                            this.$message.error('导出失败，请稍后再试')
+                        })
+                    }
                 }
 
-                if (this.choseId.length > 0) {
-                    api.exportFile.exportSingleBasic(this.choseId,type).then((res) =>{
-                        const content = res
-                        const blob = new Blob([content])
-                        const fileName = '设施.csv'
-                        if('download' in document.createElement('a')){
-                            const elink = document.createElement('a')
-                            elink.download = fileName
-                            elink.style.display = 'none'
-                            elink.href = URL.createObjectURL(blob)
-                            document.body.appendChild(elink)
-                            elink.click()
-                            URL.revokeObjectURL(elink.href) // 释放URL 对象
-                            document.body.removeChild(elink)
-                        }else{
-                            navigator.msSaveBlob(blob, fileName)
-                        }
-                        this.$message.success('导出成功')
-//                        this.choseId=[]
-                    }).catch(err =>{
-                        this.$message.error('导出失败，请稍后再试')
-                    })
-                } else {
-                    api.exportFile.exportAllBasic(type).then((res) => {
-                        console.log(res,'niaho')
-                        const content = res
-                        const blob = new Blob([content])
-                        const fileName = '设施.csv'
-                        if('download' in document.createElement('a')){
-                            const elink = document.createElement('a')
-                            elink.download = fileName
-                            elink.style.display = 'none'
-                            elink.href = URL.createObjectURL(blob)
-                            document.body.appendChild(elink)
-                            elink.click()
-                            URL.revokeObjectURL(elink.href) // 释放URL 对象
-                            document.body.removeChild(elink)
-                        }else{
-                            navigator.msSaveBlob(blob, fileName)
-                        }
-                        this.$message.success('导出成功')
-                    }).catch(err => {
-                        this.$message.error('导出失败，请稍后再试')
-                    })
-                }
             },
             deleteCard () {
                 this.$emit('deletInfo')

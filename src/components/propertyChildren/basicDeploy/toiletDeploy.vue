@@ -117,12 +117,14 @@
         methods: {
             closeDialog () {
                 this.visible = false
+                this.getAllToilet()
             },
             searchAnything (info) {
                 console.log(info, '这是要过滤的')
+                console.log(this.checkList)
                 if (info.trim() !== '') {
                     this.toiletList = this.checkList.filter(item => {
-                        if (item.regionName.includes(info)) {
+                        if ((item.regionName)&&(item.regionName.includes(info))) {
                             return item
                         }
                         if (item.toiletBean.name.includes(info)) {
@@ -148,7 +150,7 @@
             },
             deletInfo (id) {
                 if (id) {
-                    this.choseInfoId.push(id)
+                    //this.choseInfoId.push(id)
                 }
                 if (this.choseInfoId.length > 0) {
                     this.$confirm('此操作将永久删除该数据, 是否继续?', '提示', {
@@ -156,8 +158,9 @@
                         cancelButtonText: '取消',
                         type: 'warning'
                     }).then(() => {
+                        //alert(choseInfoId)
                         api.toilet.deleteToilet(this.choseInfoId).then(res => {
-                            console.log(res, '删除成功')
+
                             for (let i = 0; i < this.choseInfoId.length; i++) {
                                 this.toiletList = this.toiletList.filter((item, index) => {
                                     if (item.toiletBean.id === this.choseInfoId[i]){
@@ -166,6 +169,7 @@
                                     return item.toiletBean.id !== this.choseInfoId[i]
                                 })
                             }
+                            console.log(res, '删除成功')
                             this.$message.success('删除成功')
                             this.choseInfoId = []
                         }).catch(err => {
@@ -239,6 +243,7 @@
             },
             async fixInfo (info) {
                 let index = info.location.includes(',')?info.location.indexOf(','):info.location.indexOf('，')
+                //alert(typeof info.location)
                 let longitude = info.location.substring(0, index)
                 let latitude = info.location.substring(index + 1)
                 let toiletObj = {
@@ -281,7 +286,7 @@
             },
             fixedInfo (id) {
                 if (id) {
-                    this.choseInfoId.push(id)
+                    //this.choseInfoId.push(id)
                 }
                 if (this.choseInfoId.length > 1) {
                     this.$message.warning('至多选择一个数据修改')
@@ -312,8 +317,10 @@
                         this.toiletList[i].location = `${this.toiletList[i].longitude},${this.toiletList[i].latitude}`
                         this.toiletList[i].id = this.toiletList[i].toiletBean.id
                         this.toiletList[i].state = '正常'
-                        this.toiletList[i].byTime = -(new Date(this.toiletList.toiletBean.modifyTime)).getTime()
+                        this.toiletList[i].byTime = -(new Date(this.toiletList[i].toiletBean.modifyTime)).getTime()
                     }
+
+                    console.log(this.toiletList)
                     this.toiletList = _.sortBy(this.toiletList, 'byTime')
                     this.checkList = this.toiletList
                     this.choseInfoId = []

@@ -123,17 +123,18 @@
         methods: {
             closeDialog () {
                 this.visible = false
+                this.getAllTree()
             },
             searchAnything (info) {
                 console.log(info, '这是要过滤的')
                 if (info.trim() !== '') {
                     this.treeList = this.checkList.filter(item => {
-                        if (item.regionName.includes(info)) {
+                        if ((item.regionName)&&(item.regionName.includes(info))) {
                             return item
                         }
-                        if (item.plant.genera.includes(info)) {
+                        /*if (item.plant.genera.includes(info)) {
                             return item
-                        }
+                        }*/
                         if (item.plant.name.includes(info)) {
                             return item
                         }
@@ -157,7 +158,7 @@
             },
             deletInfo (id) {
                 if (id) {
-                    this.choseInfoId.push(id)
+                    //this.choseInfoId.push(id)
                 }
                 if (this.choseInfoId.length > 0) {
                     this.$confirm('此操作将永久删除该数据, 是否继续?', '提示', {
@@ -301,7 +302,7 @@
             },
             fixedInfo (id) {
                 if (id) {
-                    this.choseInfoId.push(id)
+                    //this.choseInfoId.push(id)
                 }
                 if (this.choseInfoId.length > 1) {
                     this.$message.warning('至多选择一个数据修改')
