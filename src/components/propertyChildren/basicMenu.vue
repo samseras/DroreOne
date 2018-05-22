@@ -47,10 +47,11 @@
                         index: '2',
                         title: '设施信息',
                         subs: [
+
                             {
-                                icon: './../../../static/img/boatCar.svg',
-                                index: '/basic-property/boat-deploy',
-                                title: '车船'
+                                icon: './../../../static/img/area.svg',
+                                index: '/basic-property/area-deploy',
+                                title: '片区'
                             },
                             {
                                 icon: './../../../static/img/roat.svg',
@@ -58,10 +59,11 @@
                                 title: '路网'
                             },
                             {
-                                icon: './../../../static/img/area.svg',
-                                index: '/basic-property/area-deploy',
-                                title: '片区'
+                                icon: './../../../static/img/boatCar.svg',
+                                index: '/basic-property/boat-deploy',
+                                title: '车船'
                             },
+
                             {
                                 icon: './../../../static/img/toilet.svg',
                                 index: '/basic-property/toilet-deploy',

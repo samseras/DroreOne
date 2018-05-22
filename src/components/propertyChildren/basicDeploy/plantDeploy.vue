@@ -132,9 +132,9 @@
                         if ((item.regionName)&&(item.regionName.includes(info))) {
                             return item
                         }
-                        if (item.plant.genera.includes(info)) {
+                        /*if (item.plant.genera.includes(info)) {
                             return item
-                        }
+                        }*/
                         if (item.plant.name.includes(info)) {
                             return item
                         }

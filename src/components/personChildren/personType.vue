@@ -20,13 +20,15 @@
                         tooltip-effect="dark"
                         style="width: 100%"
                         @selection-change="handleSelectionChange">
-                        <el-table-column
+
+                        <!--<el-table-column
                             width="55">
                             <template slot-scope="scope">
                                 <el-checkbox v-model="scope.row.checked" @change="checked(scope.row.id)"
                                              class="checkBoxBtn"></el-checkbox>
                             </template>
-                        </el-table-column>
+                        </el-table-column>-->
+
                         <el-table-column
                             prop="name"
                             label="职业"

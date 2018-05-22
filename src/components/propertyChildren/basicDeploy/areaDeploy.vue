@@ -39,6 +39,7 @@
                             label="所在景区">
                         </el-table-column>-->
                         <el-table-column
+                            class="position-range"
                             prop="location"
                             label="位置范围">
                         </el-table-column>
@@ -357,6 +358,13 @@
         height: 100%;
         display: flex;
         flex-direction: column;
+        .position-range{
+            .cell{
+                white-space: nowrap !important;
+                overflow: hidden !important;
+                text-overflow: ellipsis !important;
+            }
+        }
         .title{
             width: 100%;
             padding: rem(16) 0 rem(17) rem(15);
