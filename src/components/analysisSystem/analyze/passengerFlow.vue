@@ -15,11 +15,11 @@
                             <p class = "title"></p>
                             <div class = "echatsBtn" v-show="!isBigScreen">
                                 <i class="el-icon-rank" @click="showBigEchat(index,item,item.scenario_id)" v-if="isShowIcon"></i>
-                                <img src="../../../../static/img/out.png" alt="">
+                                <!--<img src="../../../../static/img/out.png" alt="">-->
                                 <i class="el-icon-close" v-if="!isShowIcon" @click = "closeBigChart(item)"></i>
                             </div>
                         </div>
-                        <div class="echatsContent" :id="item.scenario_id" ref="chartHeight">
+                        <div class="echatsContent" :id="item.scenario_id" ref="chartHeight" >
 
                         </div>
                     </div>
@@ -31,7 +31,7 @@
 
 <script>
     import ScrollContainer from '@/components/ScrollContainer'
-    // import EchatsCard from '@/components/eye/analyze/echats'
+    // import EchatsCard from '@/components/analysisSystem/analyze/echats'
     import api from '@/api'
     import {mapGetters} from 'vuex'
     import $ from 'jquery'
@@ -46,6 +46,10 @@
                 isShowloading: false,
                 chartH:null,
                 chartW:null,
+                chartT:null,
+                chartB:null,
+                chartL:null,
+                chartR:null,
                 kind:null,
                 isShowIcon:true,
                 isActive: -1,
@@ -70,6 +74,16 @@
         },
         props:['listName'],
         methods: {
+            getDom(){
+                this.chartT = this.$refs.content.getBoundingClientRect().top;
+                this.chartB = this.$refs.content.getBoundingClientRect().bottom;
+                this.chartL = this.$refs.content.getBoundingClientRect().left;
+                this.chartR = this.$refs.content.getBoundingClientRect().right;
+                this.chartH = this.chartB - this.chartT;
+                this.chartW = this.chartR - this.chartL;
+                console.log(this.chartH,"this.chartH")
+                console.log(this.chartW,"this.chartW")
+            },
             getscreen(){
                  this.fullHeight = window.innerHeight+67;
                  this.fullWidth = window.innerWidth-70;
@@ -89,7 +103,8 @@
                 for(let i=0;i<this.echatList.length;i++){
                     changeH = this.echatList[i].pos_height/100;
                     changeW = this.echatList[i].pos_width/100;
-                    $($(".echatsContent")[i]).css({"height":this.fullHeight*changeH-42+"px","width":this.fullWidth*changeW-12+"px"});
+                    $($(".echatsContent")[i]).css({"height":this.fullHeight*changeH-42+"px"});
+                    // $($(".echatsContent")[i]).prev(".echatsTitle").css({"width":this.fullWidth*changeW-14+"px"});
                 };
                 this.moveChart();
             },
@@ -106,7 +121,8 @@
                     for(let i=0;i<this.echatList.length;i++){
                         changeH = this.echatList[i].pos_height/100;
                         changeW = this.echatList[i].pos_width/100;
-                            $($(".echatsContent")[i]).css({"height":this.chartH*changeH-42+"px","width":this.chartW*changeW-7+"px"});
+                            $($(".echatsContent")[i]).css({"height":this.chartH*changeH-42+"px"});
+                        // $($(".echatsContent")[i]).prev(".echatsTitle").css({"width":this.chartW*changeW-10+"px"});
                     };
                     this.moveChart();
                 }
@@ -145,7 +161,8 @@
                 for(let i=0;i<this.echatList.length;i++){
                     changeH = this.echatList[i].pos_height/100;
                     changeW = this.echatList[i].pos_width/100;
-                    $($(".echatsContent")[i]).css({"width":this.chartW*changeW-7+"px"});
+                    // $($(".echatsContent")[i]).css({"width":this.chartW*changeW-10+"px"});
+                    // $($(".echatsContent")[i]).prev(".echatsTitle").css({"width":this.chartW*changeW-10+"px"});
                     this.moveChart();
                 };
 
@@ -162,7 +179,7 @@
                 for(let i=0;i<this.echatList.length;i++){
                     changeH = this.echatList[i].pos_height/100;
                     changeW = this.echatList[i].pos_width/100;
-                    $($(".echatsContent")[i]).css({"width":this.fullWidth*changeW-12+"px"});
+                    // $($(".echatsContent")[i]).css({"width":this.fullWidth*changeW-14+"px"});
                     this.moveChart();
                 };
             },
@@ -175,7 +192,7 @@
                     this.isShowloading = false;
                     this.echatList = res.result;
                     let scenarioId,chartId,chartDomH;
-             //       console.log(this.echatList, '这是请求回来的表格');
+                   console.log(this.echatList, '这是请求回来的图表');
                     for(let i=0;i<this.echatList.length;i++){
                          scenarioId = this.echatList[i].scenario_id;
                          chartId = this.echatList[i].id;
@@ -304,7 +321,7 @@
                 await api.analyze.getScenarioMapData(scenarioId).then(res=>{
                     this.echatData = res.result;
                     barResult = JSON.parse(res.result);
-                    // console.log(barResult, 'sdsdfhdsfhsdf')
+                     // console.log(barResult, 'sdsdfhdsfhsdf')
                     var title = barResult.title;
                     //var subtitle = chartData.subtitle;
                     var legendData = barResult.legendData;
@@ -515,7 +532,7 @@
                                 width: '80%',
                                 // height: {totalHeight} - y - y2,
                                 min: 0,
-                                max: 1000,
+                                max: 200,
                                 minSize: '0%',
                                 maxSize: '100%',
                                 sort: 'descending',
@@ -580,11 +597,6 @@
                             right: '4%',
                             bottom: '3%',
                             containLabel: true
-                        },
-                        toolbox: {
-                            feature: {
-                                saveAsImage: {}
-                            }
                         },
                         xAxis: {
                             type: 'category',
@@ -777,22 +789,18 @@
                     this.echatData = res.result;
                   //  console.log(res,"这是返回的gauge数据");
                     gaugeResult = JSON.parse(res.result);
-                    var title = gaugeResult.title;
+                    // var title = gaugeResult.title;
+                    var title = gaugeResult.seriesData[0].name;
                     var nameColumn = gaugeResult.nameColumn;
                     var minValue = gaugeResult.minValue;
                     var maxValue = gaugeResult.maxValue;
                     var seriesData = gaugeResult.seriesData;
-                    $("#"+scenarioId).prev().find(".title").text(gaugeResult.title);
+                    delete seriesData[0].name;
+                    $("#"+scenarioId).prev().find(".title").text(title);
                     this.gaugeDom = this.$echarts.init(document.getElementById(scenarioId));
                     gauge0ption = {
                         tooltip : {
                             formatter: "{a} <br/>{b} : {c}%"
-                        },
-                        toolbox: {
-                            feature: {
-                                restore: {},
-                                saveAsImage: {}
-                            }
                         },
                         series: [
                             {
@@ -801,7 +809,7 @@
                                 min: minValue,
                                 max: maxValue,
                                 detail: {
-                                    formatter:'{value}%'
+                                    formatter:'{value}'
                                 },
                                 data: seriesData
                             }
@@ -930,23 +938,25 @@
               if (this.$route.path.includes('analyze')) {
                   this.echatList = []  //清空dom 内容
                   this.getEchats()
+                  this.getDom();
                   window.SETTIMER = setInterval(this.getRefreshTime,this.getRefresh)
                   console.log(this.radarDom, 'opopopopopopopopopop')
               }
           },
+
         },
         created () {
             this.echatList = []
             this.getEchats();
             this.getscreen();
+
         },
         computed: {
             ...mapGetters(['getRefresh'])
         },
         mounted () {
             window.SETTIMER = setInterval(this.getRefreshTime,this.getRefresh)
-            this.chartH = this.$refs.content.getBoundingClientRect().height;
-            this.chartW = this.$refs.content.getBoundingClientRect().width-15;
+            this.getDom();
             let that=this
             window.onresize = function(){
                 that.showList();
@@ -954,7 +964,7 @@
         },
         components: {
             ScrollContainer,
-            // EchatsCard
+             // EchatsCard
         },
         destroyed  () {
             clearInterval(window.SETTIMER)
@@ -1065,7 +1075,6 @@
                         box-sizing: border-box;
                         text-align: left;
                         color: #666;
-                        /*border-bottom: 1px solid #ccc;*/
                         background: #f6f6f6;
                         border-radius: rem(5);
                         border-bottom-right-radius: rem(0);
@@ -1104,6 +1113,8 @@
 
                     }
                     .echatsContent{
+                        width: 100%;
+                        box-sizing: border-box;
                         border: 1px solid #eee;
                         border-top: none;
                         background: #fff;
