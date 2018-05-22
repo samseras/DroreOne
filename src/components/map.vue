@@ -24,6 +24,7 @@
         data () {
             return {
                 menulist: {},
+                controleLightList:[]
             }
         },
         created () {
@@ -79,6 +80,7 @@
                     this.getAllRouteedit();//修改路线调度
                 }
             } else if (route.includes('indicator-deploy'))  {
+                this.getAllArea();// 片区输出
                 if(!this.getLocationId) {
                     this.getAllIndicator();//指示牌现有标注
                     this.labelDot();// 指示牌打点
@@ -86,6 +88,7 @@
                     this.getAllIndicatorEdit();// 指示牌修改
                 }
             } else if (route.includes('trash-deploy'))  {
+                this.getAllArea();// 片区输出
                 if(!this.getLocationId) {
                     this.getAllTrash();//垃圾桶现有标注
                     this.labelDot();// 垃圾桶打点
@@ -93,6 +96,7 @@
                     this.getAllTrashEdit();// 垃圾桶修改
                 }
             } else if (route.includes('scenic-deploy'))  {
+                this.getAllArea();// 片区输出
                 if(!this.getLocationId) {
                     this.getAllScenic();//景点现有标注
                     this.labelDot();// 景点打点
@@ -100,6 +104,7 @@
                     this.getAllScenicEdit();// 景点修改
                 }
             } else if (route.includes('shop-deploy'))  {
+                this.getAllArea();// 片区输出
                 if(!this.getLocationId) {
                     this.getAllShop();//商圈现有标注
                     this.labelDot();// 商圈打点
@@ -107,6 +112,7 @@
                     this.getAllShopEdit();// 商圈修改
                 }
             } else if (route.includes('park-deploy'))  {
+                this.getAllArea();// 片区输出
                 if(!this.getLocationId) {
                     this.getAllPark();//停车场现有标注
                     this.labelDot();// 停车场打点
@@ -114,6 +120,7 @@
                     this.getAllParkEdit();// 停车场修改
                 }
             }else if (route.includes('toilet-deploy'))  {
+                this.getAllArea();// 片区输出
                 if(!this.getLocationId) {
                     this.getAllToilet();//卫生间现有标注
                     this.labelDot();// 卫生间打点
@@ -121,6 +128,7 @@
                     this.getAllToiletEdit();// 卫生间修改
                 }
             }else if (route.includes('lampLight-Hware'))  {
+                this.getAllArea();// 片区输出
                 if(!this.getLocationId) {
                     this.getAllLight();//路灯现有标注
                     this.labelDot();// 路灯打点
@@ -128,6 +136,7 @@
                     this.getAllLightEdit();// 路灯修改
                 }
             }else if (route.includes('gate-Hware'))  {
+                this.getAllArea();// 片区输出
                 if(!this.getLocationId) {
                     this.getAllGate();//闸机现有标注
                     this.labelDot();// 闸机打点
@@ -135,6 +144,7 @@
                     this.getAllGateEdit();// 闸机修改
                 }
             }else if (route.includes('wifi-Hware'))  {
+                this.getAllArea();// 片区输出
                 if(!this.getLocationId) {
                     this.getAllWifi();//wifi现有标注
                     this.labelDot();// wifi打点
@@ -142,6 +152,7 @@
                     this.getAllWifiEdit();// wifi修改
                 }
             }else if (route.includes('led-Hware'))  {
+                this.getAllArea();// 片区输出
                 if(!this.getLocationId) {
                     this.getAllLed();//Led现有标注
                     this.labelDot();// Led打点
@@ -149,6 +160,7 @@
                     this.getAllLedEdit();// Led修改
                 }
             }else if (route.includes('police-Hware'))  {
+                this.getAllArea();// 片区输出
                 if(!this.getLocationId) {
                     this.getAllPolice();//报警柱现有标注
                     this.labelDot();// 报警柱打点
@@ -156,6 +168,7 @@
                     this.getAllPoliceEdit();// 报警柱修改
                 }
             }else if (route.includes('monitors-Hware'))  {
+                this.getAllArea();// 片区输出
                 if(!this.getLocationId) {
                     this.getAllMonitor();//传感器现有标注
                     this.labelDot();// 传感器打点
@@ -163,6 +176,7 @@
                     this.getAllMonitorEdit();// 传感器修改
                 }
             }else if (route.includes('broadcast-Hware'))  {
+                this.getAllArea();// 片区输出
                 if(!this.getLocationId) {
                     this.getAllBroadcast();//广播现有标注
                     this.labelDot();// 广播打点
@@ -170,6 +184,7 @@
                     this.getAllBroadcastEdit();// 广播修改
                 }
             }else if (route.includes('camera-Hware'))  {
+                this.getAllArea();// 片区输出
                 if(!this.getLocationId) {
                     this.getAllCamera();//摄像头现有标注
                     this.labelDot();// 摄像头打点
@@ -177,6 +192,7 @@
                     this.getAllCameraEdit();// 摄像头修改
                 }
             }else if (route.includes('plant-deploy'))  {
+                this.getAllArea();// 片区输出
                 if(!this.getLocationId) {
                     this.getAllTree();//植物现有标注
                     this.labelDot();// 植物打点
@@ -184,6 +200,7 @@
                     this.getAllTreeEdit();// 植物修改
                 }
             }else if (route.includes('construction-deploy'))  {
+                this.getAllArea();// 片区输出
                 if(!this.getLocationId) {
                     this.getAllBuild();//建筑现有标注
                     this.labelDot();// 建筑打点
@@ -1742,20 +1759,6 @@
             treeShow(data){
                 console.log('treeShow');
                 data.location = [data.longitude,data.latitude]
-                // var Light = new droreMap.icon.Marker({
-                //     coordinate: droreMap.trans.transFromWgsToLayer(data.location),
-                //     name: data.name,
-                //     subtype:  data.subtype,
-                //     id: data.id,
-                //     url: "/static/img/icon/Light.png"
-                // });
-                // droreMap.icon.addChild(Light);
-                // droreMap.map.panToCoord(droreMap.trans.transFromWgsToLayer(data.location));
-                // let that =this;
-                // Light.onclick(function(e) {
-                //     that.menulist = e;
-                //     that.droreMappopup(e);
-                // });
                 droreMap.map.panToCoord(droreMap.trans.transFromWgsToLayer(data.location));
                 droreMap.icon.IconStyleById(data.id,true);
             },
@@ -1777,45 +1780,64 @@
             getTreeState(){
                 console.log(this.getTreeState,'213123')
                 if(this.getTreeState.length>1) {
-                    console.log(this.getTreeState,'ioioioiooioioiooi')
+                    // console.log(this.getTreeState,'ioioioiooioioiooi')
                     //    这边是全选
                     if (this.getTreeState[0].checked) {//显示
-                        console.log(this.getTreeState,'这111111111111')
+                        this.controleLightList=[];
+                        // console.log(this.getTreeState,'这111111111111')
                         this.getTreeState.forEach(item => {
-                            console.log(item, 'googogoogoogoogogoo')
+                            // console.log(item, 'googogoogoogoogogoo')
                             item.children.forEach(item1 => {
                                 this.treeShow(item1);
+                                this.controleLightList.push(item1.id);
                             })
                         })
                     }else {//隐藏
-                        console.log('在这报错22222222222222')
+                        // console.log('在这报错22222222222222')
                         this.getTreeState.forEach(item => {
                             this.treeHide(item)
                         })
+                        this.controleLightList=[];
                     }
-
                 }else {
                     if(this.getTreeState[0].children){
                         let data = this.getTreeState[0].children
                         if (this.getTreeState[0].checked.checkedKeys.includes(this.getTreeState[0].id)) {
                             for (let i = 0; i < data.length; i++) {
                                 this.treeShow(data[i]);
+                                this.controleLightList.push(data[i].id);
+                                this.controleLightList=[...new Set(this.controleLightList)];
                             }
                         }else {
                             for (let i = 0; i < this.getTreeState[0].children.length; i++) {
+                                console.log(this.getTreeState[0].children)
                                 this.treeHide(this.getTreeState[0].children[i]);
+                                let index = this.controleLightList.indexOf(this.getTreeState[0].children[i].id);
+                                if (index > -1) {
+                                    this.controleLightList.splice(index, 1);
+                                }
                             }
                         }
                     }else {
                         if (this.getTreeState[0].checked.checkedKeys.includes(this.getTreeState[0].id)) {
                             this.treeShow(this.getTreeState[0]);
+                            this.controleLightList.push(this.getTreeState[0].id);
+                            this.controleLightList=[...new Set(this.controleLightList)];
                         } else {
                             this.treeHide(this.getTreeState[0]);
+                            let index = this.controleLightList.indexOf(this.getTreeState[0].id);
+                            if (index > -1) {
+                                this.controleLightList.splice(index, 1);
+                            }
                         }
                     }
                 }
+            },
+            '$route' (to,from) {
+                if(from.name==='Light'){
+                    this.$store.commit('CONTROLER_LIGHT', this.controleLightList)
+                }
             }
-
         },
         computed: {
             ...mapGetters([

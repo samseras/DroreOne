@@ -18,4 +18,6 @@ export const REFRESH_DATA_TYPE = 'REFRESH_DATA_TYPE'
 
  export const SHOW_TREE = 'SHOW_TREE'
 
+ export const CONTROLER_LIGHT = 'CONTROLER_LIGHT'
+
 
