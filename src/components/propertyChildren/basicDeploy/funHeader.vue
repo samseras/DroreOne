@@ -15,6 +15,7 @@
                 <input type="file" ref="uploadFile" class="importFile" @change="selectFile">
             </div>
             <el-button size="mini"plain v-if="isShowHeader" @click="expotInfo"><i class="el-icon-download"></i>导出</el-button>
+            <el-button size="mini"plain v-if="isShowHeader" @click="exportTemplate"><i class="el-icon-download"></i>下载模板</el-button>
             <el-button size="mini"plain @click="deleteCard"><i class="el-icon-delete"></i>删除</el-button>
             <el-button size="mini"plain @click="fixCard"><i class="el-icon-edit"></i>修改</el-button>
         </div>
@@ -201,6 +202,41 @@
                             break;
 
                     }
+                }
+            },
+            exportTemplate(){
+                var route = this.$route.path;
+                    switch (true){
+                        case route.includes("boat"):
+                            window.location.href="/static/template/vehicle.csv";
+                            break;
+                        case route.includes("toilet"):
+                            window.location.href="/static/template/toilet.csv";
+                            break;
+                        case route.includes("park"):
+                            window.location.href="/static/template/parking.csv";
+                            break;
+                        case route.includes("shop"):
+                            window.location.href="/static/template/business.csv";
+                            break;
+                        case route.includes("scenic"):
+                            window.location.href="/static/template/scenicspot.csv";
+                            break;
+                        case route.includes("trash"):
+                            window.location.href="/static/template/dustbin.csv";
+                            break;
+                        case route.includes("indicator"):
+                            window.location.href="/static/template/signboard.csv";
+                            break;
+                        case route.includes("plant"):
+                            window.location.href="/static/template/plant.csv";
+                            break;
+                        case route.includes("construction"):
+                            window.location.href="/static/template/building.csv";
+                            break;
+                        case route.includes("person"):
+                            window.location.href="/static/template/person.csv";
+                            break;
                 }
             },
             expotInfo(){

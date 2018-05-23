@@ -1,5 +1,5 @@
 <template>
-    <div class="alarmcolumn">
+    <div class="crossborder">
         <div class="title">
             告警事件
         </div>
@@ -15,7 +15,7 @@
                 <ScrollContainer>
                     <el-table
                         ref="multipleTable"
-                        :data="alarmcolumnList"
+                        :data="crossborderList"
                         tooltip-effect="dark"
                         style="width: 100%"
                         @selection-change="handleSelectionChange"
@@ -29,10 +29,6 @@
                         <el-table-column
                             prop="name"
                             label="名称">
-                        </el-table-column>
-                        <el-table-column
-                            prop="alarmColumn"
-                            label="关联报警柱">
                         </el-table-column>
                         <el-table-column
                             prop="deviceRange"
@@ -49,8 +45,8 @@
                         </el-table-column>
                         <el-table-column label="操作" width="200">
                             <template slot-scope="scope">
-                                <span @click="editInfo(scope.row,false,'编辑报警柱告警规则')" class="edit">编辑</span> |
-                                <span @click="showDetail(scope.row,true,'查看报警柱告警规则')">查看</span> |
+                                <span @click="editInfo(scope.row,false,'编辑越界告警规则')" class="edit">编辑</span> |
+                                <span @click="showDetail(scope.row,true,'查看越界告警规则')">查看</span> |
                                 <span @click="deletInfo(scope.row.id)">删除</span>
                             </template>
                         </el-table-column>
@@ -58,7 +54,7 @@
                 </ScrollContainer>
                 <AlarmDetail v-if="visible"
                              :visible="visible"
-                             :Info="alarmcolumnInfo"
+                             :Info="crossborderInfo"
                              :isReadonly="isReadonly"
                              @closeDialog ="closeDialog"
                              :title = "title"
@@ -80,29 +76,24 @@
     export default {
         data(){
             return{
-                alarmcolumnList: [
+                crossborderList: [
                     {
-                        name:'sos报警规则01',
-                        alarmColumn:'BJ001、BJ002',
-                        level:'',
+                        name:'越界告警规则1',
                         deviceRange:'100米',
                         safeRange:'200米',
-                        manager:'马云'
+                        manager:'程杰'
 
                     },
                     {
-                        name:'sos报警规则02',
-                        alarmColumn:'BJ003、BJ004',
-                        level:'',
+                        name:'越界告警规则2',
                         deviceRange:'400米',
                         safeRange:'700米',
-                        manager:'徐一项'
+                        manager:'新电视'
 
                     },
                 ],
-                alarmcolumnInfo:{},
+                crossborderInfo:{},
                 visible: false,
-                warningEventInfo: {},
                 choseInfoId: [],
                 isReadonly: true,
                 title:'',
@@ -114,7 +105,7 @@
         },
         methods: {
             addNewInfo () {
-                this.showDetail({},false,'添加报警柱告警规则',)
+                this.showDetail({},false,'添加越界告警规则',)
             },
             closeDialog () {
                 this.visible = false
@@ -125,7 +116,7 @@
                 })
             },
             showDetail (info,state,title) {
-                this.alarmcolumnInfo = info;
+                this.crossborderInfo = info;
                 this.visible = true;
                 this.isBatchEdit = false;
                 this.isReadonly = state;
@@ -172,7 +163,7 @@
                 }
             },
             checked (id) {
-                this.alarmcolumnList = this.alarmcolumnList.filter(item => {
+                this.crossborderList = this.crossborderList.filter(item => {
                     if (item.id === id) {
                         item.checked = item.checked
                     }
@@ -187,7 +178,7 @@
                 }
             },
             selectedAll (state) {
-                this.alarmcolumnList = this.alarmcolumnList.filter((item) => {
+                this.crossborderList = this.crossborderList.filter((item) => {
                     if (state === true) {
                         item.checked = true
                         this.choseInfoId.push(item.id)
@@ -209,7 +200,7 @@
                     this.isBatchEdit = true;
                     // this.warningEventInfo = info;
                     this.visible = true;
-                    this.title="编辑报警柱告警规则"
+                    this.title="编辑越界告警规则"
                 } else {
                     this.$message.error('请选择要编辑的数据')
                     return
@@ -231,7 +222,7 @@
 </script>
 
 <style lang="scss" scoped type="text/scss">
-    .alarmcolumn{
+    .crossborder{
         width: 100%;
         height: 100%;
         display: flex;

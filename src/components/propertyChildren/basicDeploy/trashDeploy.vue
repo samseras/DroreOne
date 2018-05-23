@@ -40,12 +40,14 @@
                             width="120">
                         </el-table-column>
                         <el-table-column
+                            width="150"
                             label="类型">
                             <template slot-scope="scope">
                                 <span>{{scope.row.dustbinBean.type | typeFilter}}</span>
                             </template>
                         </el-table-column>
                         <el-table-column
+                            width="150"
                             prop="dustbinBean.dustbinCount"
                             label="个数">
                         </el-table-column>
@@ -54,6 +56,7 @@
                             label="位置">
                         </el-table-column>
                         <el-table-column
+                            width="150"
                             prop="regionName"
                             label="所属片区">
                         </el-table-column>
@@ -303,7 +306,7 @@
             },
             fixedInfo (id) {
                 if (id) {
-                    this.choseInfoId.push(id)
+                    //this.choseInfoId.push(id)
                 }
                 if (this.choseInfoId.length > 1) {
                     this.$message.warning('至多选择一个数据修改')

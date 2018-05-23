@@ -209,7 +209,7 @@
             },
             deletInfo(id) {
                 if (id) {
-                    this.choseInfoId.push(id)
+                    //this.choseInfoId.push(id)
                 }
                 if (this.choseInfoId.length > 0) {
                     this.$confirm('此操作将永久删除该数据, 是否继续?', '提示', {
@@ -254,6 +254,7 @@
                         item.checked = item.checked
                     }
                     return item
+
                 })
                 if (this.choseInfoId.includes(id)) {
                     this.choseInfoId = this.choseInfoId.filter((item) => {
@@ -298,6 +299,7 @@
                 console.log(this.choseInfoId, 'opopop')
             },
             async fixInfo(info) {
+                console.log(info)
                 let personObj = {
                     id: info.id,
                     name: info.name,
@@ -321,15 +323,17 @@
                 }
                 console.log(personObj)
                 await api.person.updatePerson(JSON.stringify(personObj)).then(res => {
+                    console.log(res)
                     this.closeDialog()
                     this.$message.success('修改成功')
-                    console.log('增加成功')
+                    console.log('修改成功')
                     this.choseInfoId = []
                     this.getAllPerson()
                 }).catch(err => {
                     console.log(err, '更新失败')
                     this.$message.error('更新失败，请稍后重试')
                 })
+                this.getAllPerson()
             },
             async addNewPerson(info) {
                 this.isShowDialogLoading = true
@@ -366,7 +370,7 @@
             },
             fixedInfo(id) {
                 if (id) {
-                    this.choseInfoId.push(id)
+                    //this.choseInfoId.push(id)
                 }
                 if (this.choseInfoId.length > 1) {
                     this.$message.warning('至多选择一个数据修改')

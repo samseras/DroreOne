@@ -1559,9 +1559,9 @@
                     span{
                         display: inline-block;
                         width: rem(180);
-                        overflow: hidden;
+                        /*overflow: hidden;
                         text-overflow: ellipsis;
-                        white-space: nowrap;
+                        white-space: nowrap;*/
                         line-height: rem(15);
                     }
                     select{

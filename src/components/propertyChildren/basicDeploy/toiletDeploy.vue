@@ -35,13 +35,15 @@
                         <el-table-column
                             prop="toiletBean.name"
                             label="名称"
-                            width="120">
+                            width="140">
                         </el-table-column>
                         <el-table-column
+                            width="130"
                             prop="regionName"
                             label="所属片区">
                         </el-table-column>
                         <el-table-column
+                            width="100"
                             prop="state"
                             label="状态">
                         </el-table-column>
@@ -50,6 +52,7 @@
                             label="位置">
                         </el-table-column>
                         <el-table-column
+                            width="150"
                             label="操作">
                             <template slot-scope="scope">
                                 <span @click="showPersonDetail(scope.row, '卫生间信息',true)">查看</span>
@@ -121,9 +124,10 @@
             },
             searchAnything (info) {
                 console.log(info, '这是要过滤的')
+                console.log(this.checkList)
                 if (info.trim() !== '') {
                     this.toiletList = this.checkList.filter(item => {
-                        if (item.regionName.includes(info)) {
+                        if ((item.regionName)&&(item.regionName.includes(info))) {
                             return item
                         }
                         if (item.toiletBean.name.includes(info)) {
@@ -285,7 +289,7 @@
             },
             fixedInfo (id) {
                 if (id) {
-                    this.choseInfoId.push(id)
+                    //this.choseInfoId.push(id)
                 }
                 if (this.choseInfoId.length > 1) {
                     this.$message.warning('至多选择一个数据修改')

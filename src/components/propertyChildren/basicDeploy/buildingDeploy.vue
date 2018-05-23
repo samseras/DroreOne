@@ -38,18 +38,22 @@
                             width="120">
                         </el-table-column>
                         <el-table-column
+                            width="180"
                             prop="regionName"
                             label="所属片区">
                         </el-table-column>
                         <el-table-column
+                            width="180"
                             prop="building.buildYear"
                             label="年代">
                         </el-table-column>
                         <el-table-column
+                            width="100"
                             prop="building.height"
                             label="高度">
                         </el-table-column>
                         <el-table-column
+                            width="100"
                             prop="building.layers"
                             label="层高">
                         </el-table-column>
@@ -58,6 +62,7 @@
                             label="位置">
                         </el-table-column>
                         <el-table-column
+                            width="180"
                             label="操作">
                             <template slot-scope="scope">
                                 <span @click="showPersonDetail(scope.row, '建筑信息', true)">查看</span>
@@ -68,7 +73,7 @@
                             </template>
                         </el-table-column>
                     </el-table>
-                    <div class="personInfo" v-for="item in buildList" v-if="isShowToiletCard && item.status">
+                    <div class="personInfo judge-title" v-for="item in buildList" v-if="isShowToiletCard && item.status">
                         <div class="checkBox">
                             <el-checkbox v-model="item.checked" @change="checked(item.id)" class="checkBtn"></el-checkbox>
                         </div>
@@ -131,22 +136,21 @@
                 this.getAllBuild()
             },
             searchAnything (info) {
-                // console.log(info, '这是要过滤的')
-                // if (info.trim() !== '') {
-                //     this.boatCarList = this.checkList.filter(item => {
-                //         if (item.driverName.includes(info)) {
-                //             return item
-                //         }
-                //         if (item.driverPhone.includes(info)) {
-                //             return item
-                //         }
-                //         if (item.vehicle.serialNum.includes(info)) {
-                //             return item
-                //         }
-                //     })
-                // } else {
-                //     this.getAllBuild()
-                // }
+                console.log(info, '这是要过滤的')
+                console.log(this.checkList)
+                if (info.trim() !== '') {
+                    this.buildList = this.checkList.filter(item => {
+                        if ((item.regionName)&&(item.regionName.includes(info))) {
+                            return item
+                        }
+                        if ((item.building.name)&&(item.building.name.includes(info))) {
+                            return item
+                        }
+
+                    })
+                } else {
+                    this.getAllBuild()
+                }
             },
             handleSelectionChange(val) {
                 this.multipleSelection = val;
@@ -346,6 +350,7 @@
                         this.buildList[i].byTime = -(new Date(this.buildList[i].building.modifyTime)).getTime()
                     }
                     this.buildList = _.sortBy(this.buildList,'byTime')
+                    this.checkList = this.buildList
                     this.choseInfoId = []
                 }).catch(err => {
                     console.log(err, '请求失败')
@@ -474,4 +479,11 @@
         }
     }
 
+</style>
+<style>
+    .judge-title  .cell{
+        white-space: nowrap ;
+        overflow: hidden ;
+        text-overflow: ellipsis ;
+    }
 </style>

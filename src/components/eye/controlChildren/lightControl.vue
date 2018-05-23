@@ -30,6 +30,7 @@
                         <broadcast-ztree
                             :title="title"
                             :Info="lightInfo"
+                            :lightCheckout="lightCheckout"
                             :regionId="regionId"
                             :lightList="lightList"
                             :number="number"
@@ -53,6 +54,7 @@
     import broadcastZtree from "./children/broadcastzTree.vue"
     import ScrollContainer from '@/components/ScrollContainer'
     import api from '@/api'
+    import {mapGetters} from 'vuex'
 
     export default {
         data() {
@@ -66,6 +68,7 @@
                 optionMisic: [],
                 isShowBroadCard: false,
                 lightInfo: [],
+                lightCheckout:[],
                 regionId:[],
                 lightList:[],
                 selectAll:[],
@@ -77,7 +80,11 @@
             ScrollContainer
         },
         methods: {
-
+            treeShow(){
+                if(this.getcontroleLight){
+                    this.lightCheckout=this.getcontroleLight
+                }
+            },
             showBroadCard() {
                 console.log(777)
                 this.isShowBroadCard = true
@@ -136,7 +143,6 @@
                     color: ['#26bbf0', '#f36a5a']
                 });
             },
-
             async getAllLight(){
                 await api.light.getAllLight().then(res =>{
                     console.log(res,'这是请求的数据ddd')
@@ -152,7 +158,6 @@
                     }
                     this.lightList.forEach(item => {
                         item.label = item.name
-                        item.subtype = "Light"
                         if (item.lightStatus) {
                             item.icon = '../../../static/img/light_big.svg'
                         } else {
@@ -183,18 +188,24 @@
                         })
                     })
                     this.lightInfo = arr
+
                 }).catch(err =>{
                     console.log(err)
                 })
-            }
+            },
         },
+        watch:{
 
+        },
         created: function () {
-
+            this.treeShow();
         },
         mounted() {
             this.getAllLight();
             this.drawLine();
+        },
+        computed: {
+            ...mapGetters(['getcontroleLight'])
         }
     }
 </script>

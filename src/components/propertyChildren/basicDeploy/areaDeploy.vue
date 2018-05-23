@@ -14,7 +14,7 @@
                         @searchAnything="searchAnything">
                 </Header>
             </div>
-            <div class="personList" v-loading="isShowLoading">
+            <div class="personList judge-title" v-loading="isShowLoading">
                 <ScrollContainer>
                     <el-table
                         v-if="!isShowAreaCard"
@@ -298,7 +298,7 @@
             fixedInfo (id) {
                 if (id) {
 
-                    this.choseInfoId.push(id)   //列表页修改
+                    //this.choseInfoId.push(id)   //列表页修改
                 }
                 if (this.choseInfoId.length > 1) {
                     this.$message.warning('至多选择一个数据修改')
@@ -379,6 +379,13 @@
                 margin-top: rem(10);
                 border-bottom: 2px solid #e44b4e;
             }
+            /*.judge-title{
+                .cell{
+                    white-space: nowrap ;
+                    overflow: hidden ;
+                    text-overflow: ellipsis ;
+                }
+            }*/
             .personList{
                 width: 100%;
                 flex: 1;
@@ -467,4 +474,11 @@
         }
     }
 
+</style>
+<style>
+    .judge-title  .cell{
+        white-space: nowrap ;
+        overflow: hidden ;
+        text-overflow: ellipsis ;
+    }
 </style>

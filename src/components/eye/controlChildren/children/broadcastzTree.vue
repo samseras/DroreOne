@@ -6,7 +6,7 @@
         </el-input>
         <div class="manage">
             <el-checkbox class="check" v-model="selectAllCheckBox" @change="selectAllCheck">{{title}}总数<font>{{number}}</font>个</el-checkbox>
-            <el-checkbox class="check">故障<font>{{fault}}</font>个</el-checkbox>
+            <!--<el-checkbox class="check">故障<font>{{fault}}</font>个</el-checkbox>-->
         </div>
         <el-tree
             :data="Info"
@@ -14,7 +14,7 @@
             node-key="id"
             :expand-on-click-node="true"
             :default-expanded-keys="regionId"
-            :default-checked-keys="[]"
+            :default-checked-keys="lightCheckout"
             :filter-node-method="filterNode"
             ref="tree"
             @check="handleCheckChange">
@@ -29,15 +29,15 @@
 <script>
     import {mapMutations} from 'vuex'
     export default {
-        props:['Info','regionId','lightList','number','fault','title'],
+        props:['Info','regionId','lightList','number','fault','title','lightInfo','lightCheckout'],
         data() {
             return {
                 filterText: '',
-                selectAllCheckBox: false
-
+                selectAllCheckBox: false,
             }
         },
         methods: {
+            ...mapMutations(['SHOW_TREE']),
             filterNode(value, data) {
                 if (!value) return true;
                 return data.label.indexOf(value) !== -1;
@@ -72,9 +72,6 @@
                 console.log(arr, '这是最后提交的')
                 this.$store.commit('SHOW_TREE', arr)
             },
-
-            ...mapMutations(['SHOW_TREE']),
-
             handleCheckChange(data,checked) {
                 console.log(data, 'oooooooooooo')
                 console.log(checked, 'iiiiiiiiiiiiiiiiiiii')
@@ -90,8 +87,16 @@
                 }
                 data.checked = checked
                 this.$store.commit('SHOW_TREE', data)
+            },
+            treeALL(){
+                if(this.lightCheckout.length > 0){
+                    if (this.lightCheckout.length == this.number) {
+                        this.selectAllCheckBox = true
+                    } else {
+                        this.selectAllCheckBox = false
+                    }
+                }
             }
-
         },
         created: function () {
             this.route=this.$route.path
@@ -105,6 +110,10 @@
             },
         },
         mounted () {
+
+        },
+        updated(){
+            this.treeALL();
         }
 
     };

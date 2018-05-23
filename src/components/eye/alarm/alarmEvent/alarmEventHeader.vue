@@ -40,10 +40,14 @@
             deleteCard () {
                 this.$emit('deletInfo')
             },
+            choseType () {
+                this.$emit('choseType',this.filterList)
+            },
             selectedAll () {
                 this.$emit('selectedAll', this.isSelected)
             },
             batchEdit () {
+                console.log('batchEdit')
                 this.$emit('batchEdit','batchEdit')
             },
             showPersonJob () {

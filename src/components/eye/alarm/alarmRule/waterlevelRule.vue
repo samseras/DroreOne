@@ -1,5 +1,5 @@
 <template>
-    <div class="alarmcolumn">
+    <div class="waterlevel">
         <div class="title">
             告警事件
         </div>
@@ -15,7 +15,7 @@
                 <ScrollContainer>
                     <el-table
                         ref="multipleTable"
-                        :data="alarmcolumnList"
+                        :data="waterlevelList"
                         tooltip-effect="dark"
                         style="width: 100%"
                         @selection-change="handleSelectionChange"
@@ -31,16 +31,16 @@
                             label="名称">
                         </el-table-column>
                         <el-table-column
-                            prop="alarmColumn"
-                            label="关联报警柱">
+                            prop="associatDevice"
+                            label="关联设备">
                         </el-table-column>
                         <el-table-column
-                            prop="deviceRange"
-                            label="设备调度范围">
+                            prop="upperLimit"
+                            label="水位上限">
                         </el-table-column>
                         <el-table-column
-                            prop="safeRange"
-                            label="安保调度范围">
+                            prop="lowerLimit"
+                            label="水位下限">
                         </el-table-column>
                         <el-table-column
                             sortable
@@ -49,8 +49,8 @@
                         </el-table-column>
                         <el-table-column label="操作" width="200">
                             <template slot-scope="scope">
-                                <span @click="editInfo(scope.row,false,'编辑报警柱告警规则')" class="edit">编辑</span> |
-                                <span @click="showDetail(scope.row,true,'查看报警柱告警规则')">查看</span> |
+                                <span @click="editInfo(scope.row,false,'编辑水位告警规则')" class="edit">编辑</span> |
+                                <span @click="showDetail(scope.row,true,'查看水位告警规则')">查看</span> |
                                 <span @click="deletInfo(scope.row.id)">删除</span>
                             </template>
                         </el-table-column>
@@ -58,7 +58,7 @@
                 </ScrollContainer>
                 <AlarmDetail v-if="visible"
                              :visible="visible"
-                             :Info="alarmcolumnInfo"
+                             :Info="waterlevelInfo"
                              :isReadonly="isReadonly"
                              @closeDialog ="closeDialog"
                              :title = "title"
@@ -80,29 +80,26 @@
     export default {
         data(){
             return{
-                alarmcolumnList: [
+                waterlevelList: [
                     {
-                        name:'sos报警规则01',
-                        alarmColumn:'BJ001、BJ002',
+                        name:'马虎水位告警规则1',
+                        associatDevice:'水位监测传感器1',
+                        upperLimit:'2米',
+                        lowerLimit:'0.5米',
                         level:'',
-                        deviceRange:'100米',
-                        safeRange:'200米',
-                        manager:'马云'
-
+                        manager:'程杰'
                     },
                     {
-                        name:'sos报警规则02',
-                        alarmColumn:'BJ003、BJ004',
+                        name:'南湖水位告警规则2',
+                        associatDevice:'水位监测传感器2',
+                        upperLimit:'2米',
+                        lowerLimit:'0.5米',
                         level:'',
-                        deviceRange:'400米',
-                        safeRange:'700米',
-                        manager:'徐一项'
-
-                    },
+                        manager:'程杰'
+                    }
                 ],
-                alarmcolumnInfo:{},
+                waterlevelInfo:{},
                 visible: false,
-                warningEventInfo: {},
                 choseInfoId: [],
                 isReadonly: true,
                 title:'',
@@ -114,7 +111,7 @@
         },
         methods: {
             addNewInfo () {
-                this.showDetail({},false,'添加报警柱告警规则',)
+                this.showDetail({},false,'添加水位告警规则',)
             },
             closeDialog () {
                 this.visible = false
@@ -125,7 +122,7 @@
                 })
             },
             showDetail (info,state,title) {
-                this.alarmcolumnInfo = info;
+                this.waterlevelInfo = info;
                 this.visible = true;
                 this.isBatchEdit = false;
                 this.isReadonly = state;
@@ -172,7 +169,7 @@
                 }
             },
             checked (id) {
-                this.alarmcolumnList = this.alarmcolumnList.filter(item => {
+                this.waterlevelList = this.waterlevelList.filter(item => {
                     if (item.id === id) {
                         item.checked = item.checked
                     }
@@ -187,7 +184,7 @@
                 }
             },
             selectedAll (state) {
-                this.alarmcolumnList = this.alarmcolumnList.filter((item) => {
+                this.waterlevelList = this.waterlevelList.filter((item) => {
                     if (state === true) {
                         item.checked = true
                         this.choseInfoId.push(item.id)
@@ -209,7 +206,7 @@
                     this.isBatchEdit = true;
                     // this.warningEventInfo = info;
                     this.visible = true;
-                    this.title="编辑报警柱告警规则"
+                    this.title="编辑水位告警规则"
                 } else {
                     this.$message.error('请选择要编辑的数据')
                     return
@@ -231,7 +228,7 @@
 </script>
 
 <style lang="scss" scoped type="text/scss">
-    .alarmcolumn{
+    .waterlevel{
         width: 100%;
         height: 100%;
         display: flex;
