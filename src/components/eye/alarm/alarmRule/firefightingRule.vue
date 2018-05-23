@@ -49,8 +49,8 @@
                         </el-table-column>
                         <el-table-column label="操作" width="200">
                             <template slot-scope="scope">
-                                <span @click="editInfo(scope.row,false)" class="edit">编辑</span> |
-                                <span @click="showDetail(scope.row,true)">查看</span> |
+                                <span @click="editInfo(scope.row,false,'编辑消防告警规则')" class="edit">编辑</span> |
+                                <span @click="showDetail(scope.row,true,'查看消防告警规则')">查看</span> |
                                 <span @click="deletInfo(scope.row.id)">删除</span>
                             </template>
                         </el-table-column>
@@ -194,9 +194,9 @@
                     }
                 })
             },
-            editInfo (info,state) {
+            editInfo (info,state,title) {
                 console.log(info);
-                this.showDetail(info,state);
+                this.showDetail(info,state,title);
             },
             batchEdit(){
                 if (this.choseInfoId.length > 0) {

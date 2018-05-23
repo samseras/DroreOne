@@ -12,15 +12,15 @@
                 <!--批量编辑-->
                 <div class="alarmContent" v-if="route.includes('alarmcolumn') && isBatchEdit">
                     <p class="name">严重等级：
-                    <el-select  v-model="eventInfo.level" size="mini" class="" placeholder="请选择">
-                        <el-option
-                            v-for="item in levelInfo"
-                            :key="item.value"
-                            :label="item.label"
-                            :value="item.value">
-                        </el-option>
-                    </el-select>
-                </p>
+                        <el-select  v-model="alarmcolumnInfo.batchEdit.batchLevel" size="mini" class="" placeholder="请选择">
+                            <el-option
+                                v-for="item in levelInfo"
+                                :key="item.value"
+                                :label="item.label"
+                                :value="item.value">
+                            </el-option>
+                        </el-select>
+                    </p>
                 </div>
                 <div v-if="route.includes('alarmcolumn') && !isBatchEdit"  class="alarmContent">
                     <p class="name">名称：
@@ -425,6 +425,9 @@
             return{
                 route:'',
                 alarmcolumnInfo:{
+                    batchEdit:{
+                        batchLevel:''
+                    },
                     name:'',
                     alarmColumn:[],
                     level:'',
@@ -570,12 +573,13 @@
             saveDialog(){
                 //批量编辑
                 if(this.isBatchEdit){
+                    console.log("批量编辑")
                     console.log(this.choseInfoId);
-                    console.log(this.level);
-                    console.log(this.status);
+                    console.log(this.alarmcolumnInfo.batchEdit.batchLevel)
                     this.$emit('saveInfo');
 
                 }else{  //单个编辑或查看
+                    console.log("单个编辑")
                     this.$emit('saveInfo');
                 }
             }

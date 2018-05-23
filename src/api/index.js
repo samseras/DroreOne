@@ -33,6 +33,7 @@ import deployRoad from './deployRoad'
 import publi from './public'
 import importfile from './importfile'
 import exportFile from './exportFile'
+import alarm from './alarm'
 
 
 export default {
@@ -67,5 +68,6 @@ export default {
     deployRoad,
     publi,
     importfile,
-    exportFile
+    exportFile,
+    alarm
 }
