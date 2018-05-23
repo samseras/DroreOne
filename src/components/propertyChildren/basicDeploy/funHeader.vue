@@ -58,7 +58,7 @@
     import api from '@/api'
     export default {
         name: "fun-header",
-        props:['choseId','listsLength'],
+        props:['choseId','listsLength','allselflag'],
         data () {
             return {
                 filterList: [],
@@ -81,6 +81,7 @@
                 isSelected: false,
                 isShowHeader: true,
                 searchContent: ''
+
             }
         },
         methods: {
@@ -435,6 +436,13 @@
             '$route' () {
                 this.showType()
                 this.showHeader()
+            },
+            allselflag(n,o){
+                console.log(n);
+                if(n===8){
+                    this.selected();
+                }
+
             }
         },
         created () {

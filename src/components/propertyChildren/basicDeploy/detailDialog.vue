@@ -36,6 +36,10 @@
                     <p class="phoneNum">电话号码：
                         <el-input type="text"v-model="person.phone" :disabled="isDisabled"></el-input>
                     </p>
+                    <p class="textarea ms ms-person">
+                        <span class="des-person">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：</span>
+                        <el-input type="textarea"  v-model="person.description" :disabled="isDisabled" ></el-input>
+                    </p>
                     <div class="img">
                         <img :src="getUrl(person.picturePath)" alt="" v-if="isDisabled" @error="imgError">
                         <label for="avatar" v-if="!isDisabled">
@@ -97,6 +101,10 @@
                     <p class="phoneNum">序列号码：
                         <el-input type="text"v-model="boatCar.vehicle.model" :disabled="isDisabled"></el-input>
                     </p>
+                    <p class="textarea ms">
+                        <span class="des">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：</span>
+                        <el-input type="textarea"  v-model="boatCar.vehicle.description" :disabled="isDisabled" ></el-input>
+                    </p>
                 </div>
                 <!--指示牌-->
                 <div class="personCardContent boatCardContent" v-if="route.includes('indicator')">
@@ -117,8 +125,14 @@
                             </el-option>
                         </el-select>
                     </p>
-                    <p class="phoneNum">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置：
-                        <span>{{indicator.location}}</span><i class="el-icon-location-outline" @click="showMapDialog"></i></p>
+                    <p class="phoneNum">
+                        <s>位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置：</s>
+                        <span :class="{ps:isDisabled}">{{indicator.location}}</span><i class="el-icon-location-outline" @click="showMapDialog"></i>
+                    </p>
+                    <p class="textarea ms">
+                        <span class="des">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：</span>
+                        <el-input type="textarea"  v-model="indicator.description" :disabled="isDisabled" ></el-input>
+                    </p>
                 </div>
                 <!--垃圾桶-->
                 <div class="personCardContent boatCardContent" v-if="route.includes('trash')">
@@ -140,8 +154,9 @@
                     <p class="idNum">个&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;数：
                         <el-input type="text"v-model="trash.dustbinBean.dustbinCount" :disabled="isDisabled"></el-input>
                     </p>
-                    <p class="phoneNum">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置：
-                        <span>{{trash.location}}</span><i class="el-icon-location-outline" @click="showMapDialog"></i>
+                    <p class="phoneNum">
+                        <s>位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置</s>：
+                        <span :class="{ps:isDisabled}">{{trash.location}}</span><i class="el-icon-location-outline" @click="showMapDialog"></i>
                     </p>
                     <p class="phoneNum">所属片区：
                         <el-select v-model="trash.regionId" placeholder="请选择" :disabled="isDisabled">
@@ -152,6 +167,10 @@
                                 :value="item.id">
                             </el-option>
                         </el-select>
+                    </p>
+                    <p class="textarea ms">
+                        <span class="des">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：</span>
+                        <el-input type="textarea"  v-model="trash.description" :disabled="isDisabled" ></el-input>
                     </p>
                 </div>
                 <!--景点-->
@@ -184,8 +203,13 @@
                     <p class="phoneNum">当前人数：
                         <el-input type="text"v-model="scenic.scenicspotBean.currentNum" :disabled="isDisabled"></el-input>
                     </p>
-                    <p class="phoneNum">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置：
-                        <span>{{scenic.location}}</span><i class="el-icon-location-outline" @click="showMapDialog"></i>
+                    <p class="phoneNum">
+                        <s>位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置：</s>
+                        <span :class="{ps:isDisabled}">{{scenic.location}}</span><i class="el-icon-location-outline" @click="showMapDialog"></i>
+                    </p>
+                    <p class="textarea ms">
+                        <span class="des">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：</span>
+                        <el-input type="textarea"  v-model="scenic.description" :disabled="isDisabled" ></el-input>
                     </p>
                 </div>
                 <!--商圈-->
@@ -217,8 +241,9 @@
                     <p class="phoneNum">当前人数：
                         <el-input type="text"v-model="shop.businessBean.currentNum" :disabled="isDisabled"></el-input>
                     </p>
-                    <p class="phoneNum">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置：
-                        <span>{{shop.location}}</span><i class="el-icon-location-outline" @click="showMapDialog"></i>
+                    <p class="phoneNum">
+                        <s>位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置：</s>
+                        <span :class="{ps:isDisabled}">{{shop.location}}</span><i class="el-icon-location-outline" @click="showMapDialog"></i>
                     </p>
                     <p class="phoneNum">所属片区：
                         <el-select v-model="shop.regionId" placeholder="请选择" :disabled="isDisabled">
@@ -229,6 +254,10 @@
                                 :value="item.id">
                             </el-option>
                         </el-select>
+                    </p>
+                    <p class="textarea ms">
+                        <span class="des">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：</span>
+                        <el-input type="textarea"  v-model="shop.description" :disabled="isDisabled" ></el-input>
                     </p>
                 </div>
                 <!--停车场-->
@@ -256,8 +285,9 @@
                     <p class="phoneNum">车位总数：
                         <el-input type="text"v-model="park.parkingBean.capacity" :disabled="isDisabled"></el-input>
                     </p>
-                    <p class="phoneNum">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置：
-                        <span>{{park.location}}</span>
+                    <p class="phoneNum">
+                        <s>位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置：</s>
+                        <span :class="{ps:isDisabled}">{{park.location}}</span>
                         <i class="el-icon-location-outline" @click="showMapDialog"></i>
                     </p>
                     <p class="phoneNum">所属片区：
@@ -270,8 +300,12 @@
                             </el-option>
                         </el-select>
                     </p>
+                    <p class="textarea ms">
+                        <span class="des">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：</span>
+                        <el-input type="textarea"  v-model="park.description" :disabled="isDisabled" ></el-input>
+                    </p>
                 </div>
-                <!--洗手间-->
+                <!--卫生间-->
                 <div class="personCardContent boatCardContent" v-if="route.includes('toilet')">
                     <p class="sex">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称：
                         <el-input type="text"v-model="toilet.toiletBean.name" :disabled="isDisabled" :maxlength="15"></el-input>
@@ -293,8 +327,13 @@
                             <el-option label="紧张" value="紧张"></el-option>
                         </el-select>
                     </p>
-                    <p class="phoneNum">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置：
-                        <span>{{toilet.location}}</span><i class="el-icon-location-outline" @click="showMapDialog"></i>
+                    <p class="phoneNum">
+                        <s>位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置：</s>
+                        <span :class="{ps:isDisabled}">{{toilet.location}}</span><i class="el-icon-location-outline" @click="showMapDialog"></i>
+                    </p>
+                    <p class="textarea ms">
+                        <span class="des">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：</span>
+                        <el-input type="textarea"  v-model="toilet.description" :disabled="isDisabled" ></el-input>
                     </p>
                 </div>
                 <!--片区-->
@@ -305,11 +344,12 @@
                     <p class="phoneNum" v-if="false">所在景区：
                         <el-input type="text"v-model="area.placeScenic" :disabled="isDisabled"></el-input>
                     </p>
-                    <p class="phoneNum">位置范围：
-                        <span>{{area.location}}</span><i class="el-icon-location-outline" @click="showMapDialog"></i>
+                    <p class="phoneNum">
+                        <s>位置范围：</s>
+                        <span :class="{ps:isDisabled}">{{area.location}}</span><i class="el-icon-location-outline" @click="showMapDialog"></i>
                     </p>
                     <p class="textarea ms">
-                        <span>描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：</span>
+                        <span class="des">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：</span>
                         <el-input type="textarea"  v-model="area.description" :disabled="isDisabled" ></el-input>
                     </p>
                 </div>
@@ -318,8 +358,9 @@
                     <p class="sex">路线名称：
                         <el-input type="text"v-model="roat.name" :disabled="isDisabled" :maxlength="15"></el-input>
                     </p>
-                    <p class="phoneNum">位置范围：
-                        <span>{{roat.location}}</span><i class="el-icon-location-outline" @click="showMapDialog"></i>
+                    <p class="phoneNum">
+                        <s>位置范围：</s>
+                        <span :class="{ps:isDisabled}">{{roat.location}}</span><i class="el-icon-location-outline" @click="showMapDialog"></i>
                     </p>
                     <p class="type">
                         路线类型：
@@ -331,7 +372,7 @@
                         </el-select>
                     </p>
                     <p class="textarea ms">
-                        <span >描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：</span>
+                        <span class="des">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：</span>
                         <el-input type="textarea"  v-model="roat.description" :disabled="isDisabled" ></el-input>
                     </p>
                 </div>
@@ -383,10 +424,12 @@
                             </el-option>
                         </el-select>
                     </p>
-                    <p class="phoneNum">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置：
-                        <span>{{tree.location}}</span><i class="el-icon-location-outline" @click="showMapDialog"></i>
+                    <p class="phoneNum">
+                        <s>位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置：</s>
+                        <span :class="{ps:isDisabled}">{{tree.location}}</span><i class="el-icon-location-outline" @click="showMapDialog"></i>
                     </p>
-                    <p class="textarea">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：
+                    <p class="textarea ms">
+                        <span class="des">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：</span>
                         <el-input type="textarea"  v-model="tree.plant.description" :disabled="isDisabled" ></el-input>
                     </p>
                 </div>
@@ -419,10 +462,12 @@
                             </el-option>
                         </el-select>
                     </p>
-                    <p class="phoneNum">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置：
-                        <span>{{build.location}}</span><i class="el-icon-location-outline" @click="showMapDialog"></i>
+                    <p class="phoneNum">
+                        <s>位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置：</s>
+                        <span :class="{ps:isDisabled}">{{build.location}}</span><i class="el-icon-location-outline" @click="showMapDialog"></i>
                     </p>
-                    <p class="textarea">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：
+                    <p class="textarea ms">
+                        <span class="des">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：</span>
                         <el-input type="textarea"  v-model="build.building.description" :disabled="isDisabled" ></el-input>
                     </p>
                 </div>
@@ -482,6 +527,7 @@
                 },
                 sex: '',
                 person: {
+                    description:'',
                     name:'',
                     gender:'',
                     idNum:'',
@@ -502,6 +548,7 @@
                         purchaseDate:"",
                         serialNum:"",
                         type: '',
+                        description:''
                     },
                 },
                 trash: {
@@ -512,7 +559,8 @@
                         dustbinCount: '',
                     },
                     location: '',
-                    regionId: ''
+                    regionId: '',
+                    description:''
                 },
                 indicator: {
                     signboardBean: {
@@ -520,6 +568,7 @@
                     },
                     regionId: '',
                     location: '',
+                    description:''
                 },
                 scenic: {
                     scenicspotBean: {
@@ -530,6 +579,7 @@
                     regionId: '',
                     state: '',
                     location: '',
+                    description:''
                 },
                 shop: {
                     businessBean: {
@@ -540,7 +590,8 @@
                         businessTypeId: ''
                     },
                     location: '',
-                    regionId: ''
+                    regionId: '',
+                    description:''
                 },
                 park: {
                     parkingBean: {
@@ -553,6 +604,7 @@
                     },
                     location: '',
                     regionId: '',
+                    description:''
                 },
                 toilet: {
                     toiletBean: {
@@ -563,7 +615,8 @@
                     },
                     state:'',
                     location:'',
-                    regionId: ''
+                    regionId: '',
+                    description:''
                 },
                 area: {
                     name: '',
@@ -586,7 +639,7 @@
                         description: ''
                     },
                     location:'',
-                    regionId: ''
+                    regionId: '',
                 },
                 build: {
                     building:{
@@ -1194,15 +1247,23 @@
             width: rem(160);
             padding-left: rem(5);
         }
+        .ms-person .el-textarea__inner{
+            font-size:.75rem;
+            line-height:1.875rem;
+            color:red;
+        }
+        .el-input.is-disabled .el-input__inner,.el-textarea.is-disabled .el-textarea__inner{
+            background-color:transparent;
+        }
+        .person-jole{
+            display:none;
+        }
+        .detailDialog .card .boatCardContent .ms .des{
+            height:53px;
+        }
     }
 </style>
 <style>
-    .el-input.is-disabled .el-input__inner,.el-textarea.is-disabled .el-textarea__inner{
-        background-color:transparent;
-    }
-    .person-jole{
-        display:none;
-    }
     .example-avatar .avatar-upload .rounded-circle {
         width: 200px;
         height: 200px;
@@ -1533,6 +1594,7 @@
         cursor: not-allowed
     }
 
+
 </style>
 <style lang="scss" scoped type="text/scss">
     .detailDialog{
@@ -1558,11 +1620,21 @@
                     }
                     span{
                         display: inline-block;
-                        width: rem(180);
+                        width: rem(200);
                         /*overflow: hidden;
                         text-overflow: ellipsis;
                         white-space: nowrap;*/
                         line-height: rem(15);
+                        overflow: hidden;
+                    }
+                    .ps{
+                        color:#c0c4cc;
+                        width: rem(203.2);
+                    }
+                    s{
+                        text-decoration: none;
+                        line-height: 0.9375rem;
+                        float: left;
                     }
                     select{
                         border: none;
@@ -1587,6 +1659,7 @@
                        font-size: rem(16);
                         vertical-align: middle;
                         cursor: pointer;
+                        margin-left:1rem
                     }
                     textarea{
                         resize: none;
@@ -1603,8 +1676,16 @@
                     span{
                         width:rem(66)
                     }
+                    .des-person{
+                        float:left
+                    }
                     div{
-                        width:70%
+                        width:14rem
+                    }
+                }
+                .ms-person{
+                    div{
+                        width:15.3rem;
                     }
                 }
                 .textarea{

@@ -272,6 +272,7 @@
                 let longitude = info.location.substring(0, index)
                 let latitude = info.location.substring(index + 1)
                 let toiletObj = {
+                    //description:info.description,
                     name: info.toiletBean.name,
                     regionId: info.regionId,
                     latitude: latitude,

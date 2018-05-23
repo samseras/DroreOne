@@ -133,6 +133,7 @@
         methods:{
             closeDialog () {
                 this.visible = false
+                this.getAllBroadcast()
             },
             handleSelectionChange(val) {
                 this.multipleSelection = val;

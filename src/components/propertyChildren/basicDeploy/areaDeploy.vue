@@ -11,6 +11,7 @@
                         @choseType = 'choseType'
                         @selectedAll = 'selectedAll'
                         @fixedInfo = 'fixedInfo'
+                        :allselflag="allSelFlag"
                         @searchAnything="searchAnything">
                 </Header>
             </div>
@@ -34,13 +35,23 @@
                             label="片区名称"
                             width="120">
                         </el-table-column>
+
                         <!--<el-table-column
                             prop="placeScenic"
                             label="所在景区">
                         </el-table-column>-->
+
                         <el-table-column
-                            prop="location"
                             label="位置范围">
+                            <template slot-scope="scope">
+                                <div class="box">
+                                    <div class="bottom">
+                                        <el-tooltip class="item" effect="light" :content=scope.row.location placement="bottom">
+                                            <el-button>{{scope.row.location}}</el-button>
+                                        </el-tooltip>
+                                    </div>
+                                </div>
+                            </template>
                         </el-table-column>
                         <el-table-column
                             prop="description"
@@ -72,7 +83,7 @@
                         </div>
                         <div class="specificInfo">
                             <p class="name" v-if="false">所在景区：<span>{{item.placeScenic}}</span></p>
-                            <p class="sex text">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：<span>{{item.description}}</span></p>
+                            <p class="sex text describe">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：<span>{{item.description}}</span></p>
                         </div>
                     </div>
                 </ScrollContainer>
@@ -110,7 +121,8 @@
                 choseList: [],
                 isDisabled: true,
                 title: '',
-                isShowLoading : false
+                isShowLoading : false,
+                allSelFlag:-1
             }
         },
         methods: {
@@ -187,6 +199,7 @@
                 }
             },
             checked (id) {
+
                 this.areaList = this.areaList.filter(item => {
                     if (item.id === id) {
                         item.checked = item.checked
@@ -200,6 +213,16 @@
                 } else {
                     this.choseInfoId.push(id)
                 }
+
+
+                /*let that=this;
+                this.areaList.forEach(function(item,i){
+                    if(item.checked===false){
+                        that.allSelFlag=8
+                    }
+                })*/
+
+
             },
             choseType (type) {
                 console.log(type)
@@ -468,6 +491,12 @@
                             -webkit-box-orient:vertical;
                             -webkit-line-clamp:4;
                         }
+                        .describe{
+                            overflow: hidden;
+                            text-overflow: ellipsis;
+                            white-space: nowrap;
+                            display:inline-block;
+                        }
                     }
                 }
             }
@@ -480,5 +509,18 @@
         white-space: nowrap ;
         overflow: hidden ;
         text-overflow: ellipsis ;
+    }
+    .box .el-button{
+        border:1px solid transparent
+    }
+    .box .el-button span{
+        display:inline-block;
+        width:300px;
+        white-space: nowrap ;
+        overflow: hidden ;
+        text-overflow: ellipsis ;
+    }
+    .el-tooltip__popper {
+        width:300px;
     }
 </style>

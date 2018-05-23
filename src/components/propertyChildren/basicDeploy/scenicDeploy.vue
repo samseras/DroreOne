@@ -279,6 +279,7 @@
                 let longitude = info.location.substring(0, index)
                 let latitude = info.location.substring(index + 1)
                 let scenicObj = {
+                    //description:info.description,
                     name: info.scenicspotBean.name,
                     capacity: info.scenicspotBean.capacity,
                     regionId: info.regionId,

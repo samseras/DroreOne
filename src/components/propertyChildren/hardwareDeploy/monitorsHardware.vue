@@ -134,6 +134,7 @@
         methods:{
             closeDialog () {
                 this.visible = false
+                this.getAllMonitor()
             },
             searchAnything (info) {
                 console.log(info, '这是要过滤的')

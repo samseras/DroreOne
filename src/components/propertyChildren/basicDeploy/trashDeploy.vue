@@ -286,6 +286,7 @@
                 let longitude= info.location.substring(0, index)
                 let latitude = info.location.substring(index + 1)
                 let trashObj = {
+                    //description:info.description,
                     name: info.dustbinBean.name,
                     dustbinCount: info.dustbinBean.dustbinCount,
                     type: info.dustbinBean.type,

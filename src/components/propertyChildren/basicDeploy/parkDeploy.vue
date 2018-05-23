@@ -297,6 +297,7 @@
                 let longitude = info.location.substring(0, index)
                 let latitude = info.location.substring(index + 1)
                 let parkObj = {
+                    description:info.description,
                     name: info.parkingBean.name,
                     capacity: info.parkingBean.capacity,
                     type: info.parkingBean.type,

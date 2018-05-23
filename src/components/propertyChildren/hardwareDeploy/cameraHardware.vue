@@ -125,6 +125,7 @@
         methods:{
             closeDialog () {
                 this.visible = false
+                this.getAllCamera()
             },
             searchAnything (info) {
                 console.log(info, '这是要过滤的')
@@ -193,7 +194,7 @@
             },
             fixedInfo(id){
                 if (id) {
-                    this.choseInfoId.push(id)
+                    //this.choseInfoId.push(id)
                 }
                 if(this.choseInfoId.length > 1) {
                     this.$message.warning('至多选择一条数据')
@@ -213,7 +214,7 @@
             },
             deletInfo(id){
                 if (id) {
-                    this.choseInfoId.push(id)
+                    //this.choseInfoId.push(id)
                 }
                 if (this.choseInfoId.length > 0) {
                     this.$confirm('此操作将永久删除该数据, 是否继续?', '提示', {
@@ -335,6 +336,7 @@
                 console.log(this.choseInfoId)
             },
             async getAllCamera () {
+                this.choseInfoId=[];
                 console.log("aaaaaaaaaaaaaaaaa")
                 this.isShowLoading = true
                 await api.camera.getAllCamera().then((res) => {

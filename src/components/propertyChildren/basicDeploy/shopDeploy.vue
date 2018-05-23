@@ -322,12 +322,14 @@
                 let longitude= info.location.substring(0, index)
                 let latitude = info.location.substring(index + 1)
                 let shopObj = {
+                    //description:info.description,
                     name: info.businessBean.name,
                     capacity: info.businessBean.capacity,
                     regionId: info.regionId,
                     businessTypeId: info.businessBean.businessTypeId,
                     latitude: latitude,
                     longitude: longitude
+
                 }
                 console.log(shopObj, 'this is trashObj')
                 await api.shop.createShop(JSON.stringify(shopObj)).then(res => {

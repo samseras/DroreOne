@@ -301,6 +301,7 @@
             },
             async addNewBoatCar (info) {
                 let boatObj = {
+                    //description: info.description,
                     serialNum: info.vehicle.serialNum,
                     capacity: info.vehicle.capacity,
                     type: info.vehicle.type,
