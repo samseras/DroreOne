@@ -23,7 +23,7 @@ const lamppost = {
     deletLamppost(item){
         return axios ({
             method: 'DELETE',
-            url: getUrl('/schedule/light'),
+            url: getUrl('/schedule/light/isenabled'),
             data:{
                 ids:item
             }
@@ -43,7 +43,16 @@ const lamppost = {
             url: getUrl('/schedule/light'),
             data:par
         })
-    }
-}
+    },
+    stareEndPlan (id) {
+        return axios ({
+            method: 'PUT',
+            url: getUrl('/schedule/light/isenabled'),
+            data:{
+                ids:id
+            }
+
+        })
+    }}
 
 export default lamppost

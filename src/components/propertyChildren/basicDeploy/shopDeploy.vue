@@ -84,7 +84,8 @@
                             <el-checkbox v-model="item.checked" @change="checked(item.id)" class="checkBtn"></el-checkbox>
                         </div>
                         <div class="personType" :class="getClass(item.businessBean.businessTypeId)" @click.stop="showPersonDetail(item, '商圈信息',true)">
-                            <img src="../../../../static/img/businesCard.png" alt="">
+                            <!--<img src="../../../../static/img/businesCard.png" alt="">-->
+                            <img :src="getUrl(item.picturePath)" alt="" @error="imgError">
                             <span class="type">
                                   {{item.businessBean.name}}
                                 </span>
@@ -137,6 +138,16 @@
             }
         },
         methods: {
+            imgError (e) {
+                e.target.src = this.getUrl(null);
+            },
+            getUrl (url) {
+                if (url === null) {
+                    return '../../../../static/img/businesCard.png'
+                } else {
+                    return url
+                }
+            },
             closeDialog () {
                 this.visible = false
                 this.getAllShop()
@@ -305,6 +316,18 @@
                     latitude: latitude,
                     longitude: longitude
                 }
+                if (info.imgUrl !== '') {
+                    await api.person.updataAva(info.imgUrl).then(res => {
+                        console.log(res, '上传成功')
+                        shopObj.pictureId = res.id
+                    }).catch(err => {
+                        console.log(err, '上传失败')
+                        this.$message.error('上传失败，其请稍后重试')
+                        return
+                    })
+                } else {
+                    shopObj.pictureId = info.pictureId
+                }
                 console.log(shopObj, 'this is trashObj')
                 await api.shop.updateShop(JSON.stringify(shopObj)).then(res => {
                     this.closeDialog()
@@ -330,6 +353,16 @@
                     latitude: latitude,
                     longitude: longitude
 
+                }
+                if (info.imgUrl !== '') {
+                    await api.person.updataAva(info.imgUrl).then(res => {
+                        console.log(res, '上传成功')
+                        shopObj.pictureId = res.id
+                    }).catch(err => {
+                        console.log(err, '上传失败')
+                        this.$message.error('上传失败，其请稍后重试')
+                        return
+                    })
                 }
                 console.log(shopObj, 'this is trashObj')
                 await api.shop.createShop(JSON.stringify(shopObj)).then(res => {

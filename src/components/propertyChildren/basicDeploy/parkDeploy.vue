@@ -87,7 +87,8 @@
                             <el-checkbox v-model="item.checked" @change="checked(item.id)" class="checkBtn"></el-checkbox>
                         </div>
                         <div class="personType" @click.stop="showParkDetail(item, '停车场信息',true)">
-                            <img src="../../../../static/img/parkCard.png" alt="">
+                            <!--<img src="../../../../static/img/parkCard.png" alt="">-->
+                            <img :src="getUrl(item.picturePath)" alt="" @error="imgError">
                             <span class="type">
                                   {{item.parkingBean.name}}
                                 </span>
@@ -140,6 +141,16 @@
             }
         },
         methods: {
+            imgError (e) {
+                e.target.src = this.getUrl(null);
+            },
+            getUrl (url) {
+                if (url === null) {
+                    return '../../../../static/img/parkCard.png'
+                } else {
+                    return url
+                }
+            },
             closeDialog () {
                 this.visible = false
                 this.getAllPark()
@@ -282,6 +293,18 @@
                     latitude: latitude,
                     longitude: longitude
                 }
+                if (info.imgUrl !== '') {
+                    await api.person.updataAva(info.imgUrl).then(res => {
+                        console.log(res, '上传成功')
+                        parkObj.pictureId = res.id
+                    }).catch(err => {
+                        console.log(err, '上传失败')
+                        this.$message.error('上传失败，其请稍后重试')
+                        return
+                    })
+                } else {
+                    parkObj.pictureId = info.pictureId
+                }
                 await api.park.updatePark(JSON.stringify(parkObj)).then(res => {
                     this.closeDialog()
                     console.log(res, '修改停车场成功')
@@ -304,6 +327,16 @@
                     regionId: info.regionId,
                     latitude: latitude,
                     longitude: longitude
+                }
+                if (info.imgUrl !== '') {
+                    await api.person.updataAva(info.imgUrl).then(res => {
+                        console.log(res, '上传成功')
+                        parkObj.pictureId = res.id
+                    }).catch(err => {
+                        console.log(err, '上传失败')
+                        this.$message.error('上传失败，其请稍后重试')
+                        return
+                    })
                 }
                 await api.park.createPark(JSON.stringify(parkObj)).then(res => {
                     this.closeDialog()

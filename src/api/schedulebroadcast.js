@@ -65,6 +65,17 @@ const schedulebroadcast = {
 
         })
     },
+    stareEndPlan (id) {
+        return axios ({
+            method: 'PUT',
+            url: getUrl('/schedule/broadcast/isenabled'),
+            data:{
+                ids:id
+            }
+
+        })
+    }
+
 }
 
 export default schedulebroadcast

@@ -78,7 +78,8 @@
                             <el-checkbox v-model="item.checked" @change="checked(item.id)" class="checkBtn"></el-checkbox>
                         </div>
                         <div class="personType" @click.stop="showPersonDetail(item, '建筑信息', true)">
-                            <img src="../../../../static/img/bulidCard.png" alt="">
+                            <!--<img src="../../../../static/img/bulidCard.png" alt="">-->
+                            <img :src="getUrl(item.picturePath)" alt="" @error="imgError">
                             <span class="type">
                                   {{item.building.name}}
                                 </span>
@@ -131,6 +132,16 @@
             }
         },
         methods: {
+            imgError (e) {
+                e.target.src = this.getUrl(null);
+            },
+            getUrl (url) {
+                if (url === null) {
+                    return '../../../../static/img/bulidCard.png'
+                } else {
+                    return url
+                }
+            },
             closeDialog () {
                 this.visible = false
                 this.getAllBuild()
@@ -277,6 +288,18 @@
                     description: info.building.description,
                     layers: info.building.layers
                 }
+                if (info.imgUrl !== '') {
+                    await api.person.updataAva(info.imgUrl).then(res => {
+                        console.log(res, '上传成功')
+                        buildObj.pictureId = res.id
+                    }).catch(err => {
+                        console.log(err, '上传失败')
+                        this.$message.error('上传失败，其请稍后重试')
+                        return
+                    })
+                } else {
+                    buildObj.pictureId = info.pictureId
+                }
                 await api.build.updateBuild(JSON.stringify(buildObj)).then(res => {
                     this.closeDialog()
                     console.log(res, '修改成功')
@@ -303,6 +326,16 @@
                     height: Number(info.building.height),
                     description: info.building.description,
                     layers: info.building.layers
+                }
+                if (info.imgUrl !== '') {
+                    await api.person.updataAva(info.imgUrl).then(res => {
+                        console.log(res, '上传成功')
+                        buildObj.pictureId = res.id
+                    }).catch(err => {
+                        console.log(err, '上传失败')
+                        this.$message.error('上传失败，其请稍后重试')
+                        return
+                    })
                 }
                 await api.build.createBuild(JSON.stringify(buildObj)).then(res => {
                     this.closeDialog()

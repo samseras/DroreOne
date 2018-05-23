@@ -540,6 +540,7 @@
             },
             closeMapDialog () {
                 this.mapVisible = false
+                this.getAllRouteLine()
             },
             closeBroadcastDialog(){
                 this.broadcastVisible = false
