@@ -72,7 +72,7 @@
     export default {
         data() {
             return {
-                manage: [ 'message.control', 'message.facility', 'message.analyze', 'message.deploy','message.alarm'],
+                manage: [ 'message.control', 'message.facility', 'message.deploy','message.alarm'],
                 currTime: new Date(),   //当前时间
                 title: ["&#xe8c0;", "&#xe627;", "&#xe647;"],
                 activeIndex: 1,

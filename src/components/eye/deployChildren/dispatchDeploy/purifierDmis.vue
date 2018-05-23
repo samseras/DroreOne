@@ -8,6 +8,7 @@
                 <Header @addNewInfo = "addNewInfo"
                         @deletInfo = "deletInfo"
                         @selectedAll = 'selectedAll'
+                        @startEndPlan="startEndPlan"
                         @fixedInfo = 'fixedInfo'>
                 </Header>
             </div>
@@ -22,7 +23,7 @@
                         <el-table-column
                             width="50">
                             <template slot-scope="scope">
-                                <el-checkbox v-model="scope.row.checked" @change="checked(scope.row)" class="checkBoxBtn"></el-checkbox>
+                                <el-checkbox v-model="scope.row.checked" @change="checked(scope.row.id)" class="checkBoxBtn"></el-checkbox>
                             </template>
                         </el-table-column>
                         <el-table-column
@@ -66,8 +67,8 @@
                         <el-table-column label="操作" width="200">
                             <template slot-scope="scope">
                                 <span @click="fixedInfo(scope.row,'保洁信息编辑')">编辑</span> |
-                                <span @click="stop(scope.row,'片区信息')" v-if="scope.row.isStop">停止 |</span>
-                                <span @click="start(scope.row,'片区信息')" v-else="scope.row.isStart">开始 |</span>
+                                <span @click="stop(scope.row)" v-if="scope.row.cleanSchedule.enabled">停止 |</span>
+                                <span @click="stop(scope.row)" v-else="!scope.row.cleanSchedule.enabled">开始 |</span>
                                 <span @click="showPersonDetail(scope.row,'保洁信息',true)">查看</span> |
                                 <span @click="deletInfo(scope.row.id,'片区信息')">删除</span>
                             </template>
@@ -131,6 +132,59 @@
             }
         },
         methods: {
+            startEndPlan (state) {
+                console.log(this.choseInfoId, 'opopopop')
+                let choseId = []
+                choseId = this.purifierList.filter(item => {
+                    if (this.choseInfoId.includes(item.id)) {
+                        if (state === 'start') {
+                            if (!item.cleanSchedule.enabled) {
+                                return item
+                            }
+                        } else {
+                            if (item.cleanSchedule.enabled) {
+                                return item
+                            }
+                        }
+                    }
+                })
+                choseId = choseId.map(item => {
+                    return item.id
+                })
+                console.log(choseId, 'opopop')
+                if(choseId.length < 1) {
+                    if (state === 'start') {
+                        this.$message.info('当前选中的计划已开启')
+                    } else {
+                        this.$message.info('当前选中的计划已关闭')
+                    }
+                    return
+                }
+                api.purifier.stareEndPlan(choseId).then(res => {
+                    console.log(res, '更改状态成功')
+                    if (state === 'start') {
+                        this.$message.success('计划开启成功')
+                    } else {
+                        this.$message.success('计划关闭成功')
+                    }
+                    choseId.forEach(item => {
+                        this.purifierList.forEach(item1 => {
+                            if (item === item1.id) {
+                                item1.cleanSchedule.enabled = !item1.cleanSchedule.enabled
+                            }
+                        })
+                    })
+
+                }).catch(err => {
+                    console.log(err, '计划开启失败')
+
+                    if (state === 'start') {
+                        this.$message.error('计划开启失败，请稍后重试')
+                    } else {
+                        this.$message.error('计划关闭失败，请稍后重试')
+                    }
+                })
+            },
             closeDmisDialog () {
                 this.visible = false
             },
@@ -149,6 +203,21 @@
             deletInfo (id) {
                 if (id) {
                     this.choseInfoId = [id]
+                }
+                let isDelete = false
+                this.choseInfoId.forEach(item => {
+                    this.purifierList.forEach(item1 => {
+                        if (item === item1.id) {
+                            if (item1.cleanSchedule.enabled) {
+                                isDelete = true
+                                this.$message.info('所选计划已经开启，请关闭后再删除')
+                                return
+                            }
+                        }
+                    })
+                })
+                if (isDelete) {
+                    return
                 }
                 if (this.choseInfoId.length > 0) {
                     this.$confirm('此操作将永久删除该数据, 是否继续?', '提示', {
@@ -277,34 +346,25 @@
                 })
             },
             fixedInfo (info,title) {
+                if (info.cleanSchedule.enabled) {
+                    this.$message.info('所选计划已经开启，请关闭后再修改')
+                    return
+                }
                 this.purifierInfo = info
                 this.showPersonDetail(info, title, false)
             },
             stop(Info){
-                console.log(this.choseInfoId)
-                if(!this.choseInfoId.includes(Info.id)){
-                    this.choseInfoId.push(Info.id)
-                }
-                if(this.choseInfoId.length == 1){
-                    Info.isStart = true;
-                    Info.isStop = false;
-                    this.choseInfoId = []
-                }else{
-                    this.$message.warning('至多选择一条数据')
-                }
-            },
-            start(Info){
-                console.log(this.choseInfoId)
-                if(!this.choseInfoId.includes(Info.id)){
-                    this.choseInfoId.push(Info.id)
-                }
-                if(this.choseInfoId.length == 1){
-                    Info.isStart = false;
-                    Info.isStop = true;
-                    this.choseInfoId = []
-                }else{
-                    this.$message.warning('至多选择一条数据')
-                }
+                api.purifier.stareEndPlan([Info.id]).then(res => {
+                    console.log(res, '成功')
+                    Info.cleanSchedule.enabled = !Info.cleanSchedule.enabled
+                    if ( !Info.cleanSchedule.enabled) {
+                        this.$message.success('调度计划已关闭')
+                    }else {
+                        this.$message.success('调度计划已开启')
+                    }
+                }).then(err => {
+                    console.log(err, '失败')
+                })
             },
             async getAllPurifier () {
                 this.isShowLoading = true

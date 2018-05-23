@@ -65,7 +65,8 @@
                             <el-checkbox v-model="item.checked" @change="checked(item.id)" class="checkBtn"></el-checkbox>
                         </div>
                         <div class="personType" @click.stop="showPersonDetail(item, '卫生间信息',true)">
-                            <img src="../../../../static/img/toiletCard.png" alt="">
+                            <!--<img src="../../../../static/img/toiletCard.png" alt="">-->
+                            <img :src="getUrl(item.picturePath)" alt="" @error="imgError">
                             <span class="type">
                                   {{item.toiletBean.name}}
                                 </span>
@@ -115,6 +116,16 @@
             }
         },
         methods: {
+            imgError (e) {
+                e.target.src = this.getUrl(null);
+            },
+            getUrl (url) {
+                if (url === null) {
+                    return '../../../../static/img/toiletCard.png'
+                } else {
+                    return url
+                }
+            },
             closeDialog () {
                 this.visible = false
             },
@@ -248,6 +259,18 @@
                     latitude: latitude,
                     longitude: longitude
                 }
+                if (info.imgUrl !== '') {
+                    await api.person.updataAva(info.imgUrl).then(res => {
+                        console.log(res, '上传成功')
+                        toiletObj.pictureId = res.id
+                    }).catch(err => {
+                        console.log(err, '上传失败')
+                        this.$message.error('上传失败，其请稍后重试')
+                        return
+                    })
+                } else {
+                    toiletObj.pictureId = info.pictureId
+                }
                 await api.toilet.updateToilet(JSON.stringify(toiletObj)).then(res => {
                     this.closeDialog()
                     console.log(res, '修改成功')
@@ -269,6 +292,16 @@
                     latitude: latitude,
                     longitude: longitude
                 }
+               if (info.imgUrl !== '') {
+                   await api.person.updataAva(info.imgUrl).then(res => {
+                       console.log(res, '上传成功')
+                       toiletObj.pictureId = res.id
+                   }).catch(err => {
+                       console.log(err, '上传失败')
+                       this.$message.error('上传失败，其请稍后重试')
+                       return
+                   })
+               }
                await api.toilet.createToilet(JSON.stringify(toiletObj)).then(res => {
                    this.closeDialog()
                     console.log(res, '添加成功')
@@ -312,7 +345,7 @@
                         this.toiletList[i].location = `${this.toiletList[i].longitude},${this.toiletList[i].latitude}`
                         this.toiletList[i].id = this.toiletList[i].toiletBean.id
                         this.toiletList[i].state = '正常'
-                        this.toiletList[i].byTime = -(new Date(this.toiletList.toiletBean.modifyTime)).getTime()
+                        this.toiletList[i].byTime = -(new Date(this.toiletList[i].toiletBean.modifyTime)).getTime()
                     }
                     this.toiletList = _.sortBy(this.toiletList, 'byTime')
                     this.checkList = this.toiletList

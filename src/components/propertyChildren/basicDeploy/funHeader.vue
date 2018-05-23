@@ -47,8 +47,8 @@
             <span>当前第1页/共8页</span>
             <span class="upPage"><</span>
             <span class="downPage">></span>
-            <span class="listForm" @click="toggleList('list')"><i class="el-icon-tickets"></i></span>
-            <span class="cardForm" @click="toggleList('card')"><i class="el-icon-menu"></i></span>
+            <span class="listForm" @click="toggleList('list')" v-if="isShowIcon"><i class="el-icon-tickets"></i></span>
+            <span class="cardForm" @click="toggleList('card')" v-if="!isShowIcon"><i class="el-icon-menu"></i></span>
         </div>
     </div>
 </template>
@@ -79,7 +79,8 @@
                 route: '',
                 isSelected: false,
                 isShowHeader: true,
-                searchContent: ''
+                searchContent: '',
+                isShowIcon: true
             }
         },
         methods: {
@@ -280,6 +281,11 @@
                 this.$emit('deletInfo')
             },
             toggleList (type) {
+                if (type === 'list') {
+                    this.isShowIcon = false
+                } else {
+                    this.isShowIcon = true
+                }
                 this.$emit('toggleList',type)
             },
             choseType () {

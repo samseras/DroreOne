@@ -97,6 +97,12 @@
                     <p class="phoneNum">序列号码：
                         <el-input type="text"v-model="boatCar.vehicle.model" :disabled="isDisabled"></el-input>
                     </p>
+                    <div class="img">
+                        <img :src="getUrl(boatCar.picturePath)" alt="" v-if="isDisabled" @error="imgError">
+                        <label for="avatar" v-if="!isDisabled">
+                            <img :src="files.length ? files[0].url : getUrl(boatCar.picturePath)"  @error="imgError" class="rounded-circle" />
+                        </label>
+                    </div>
                 </div>
                 <!--指示牌-->
                 <div class="personCardContent boatCardContent" v-if="route.includes('indicator')">
@@ -118,7 +124,14 @@
                         </el-select>
                     </p>
                     <p class="phoneNum">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置：
-                        <span>{{indicator.location}}</span><i class="el-icon-location-outline" @click="showMapDialog"></i></p>
+                        <span>{{indicator.location}}</span><i class="el-icon-location-outline" @click="showMapDialog"></i>
+                    </p>
+                    <div class="img">
+                        <img :src="getUrl(indicator.picturePath)" alt="" v-if="isDisabled" @error="imgError">
+                        <label for="avatar" v-if="!isDisabled">
+                            <img :src="files.length ? files[0].url : getUrl(indicator.picturePath)"  @error="imgError" class="rounded-circle" />
+                        </label>
+                    </div>
                 </div>
                 <!--垃圾桶-->
                 <div class="personCardContent boatCardContent" v-if="route.includes('trash')">
@@ -153,6 +166,12 @@
                             </el-option>
                         </el-select>
                     </p>
+                    <div class="img">
+                        <img :src="getUrl(trash.picturePath)" alt="" v-if="isDisabled" @error="imgError">
+                        <label for="avatar" v-if="!isDisabled">
+                            <img :src="files.length ? files[0].url : getUrl(trash.picturePath)"  @error="imgError" class="rounded-circle" />
+                        </label>
+                    </div>
                 </div>
                 <!--景点-->
                 <div class="personCardContent boatCardContent" v-if="route.includes('scenic')">
@@ -187,6 +206,12 @@
                     <p class="phoneNum">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置：
                         <span>{{scenic.location}}</span><i class="el-icon-location-outline" @click="showMapDialog"></i>
                     </p>
+                    <div class="img">
+                        <img :src="getUrl(scenic.picturePath)" alt="" v-if="isDisabled" @error="imgError">
+                        <label for="avatar" v-if="!isDisabled">
+                            <img :src="files.length ? files[0].url : getUrl(scenic.picturePath)"  @error="imgError" class="rounded-circle" />
+                        </label>
+                    </div>
                 </div>
                 <!--商圈-->
                 <div class="personCardContent boatCardContent" v-if="route.includes('shop')">
@@ -230,6 +255,12 @@
                             </el-option>
                         </el-select>
                     </p>
+                    <div class="img">
+                        <img :src="getUrl(shop.picturePath)" alt="" v-if="isDisabled" @error="imgError">
+                        <label for="avatar" v-if="!isDisabled">
+                            <img :src="files.length ? files[0].url : getUrl(shop.picturePath)"  @error="imgError" class="rounded-circle" />
+                        </label>
+                    </div>
                 </div>
                 <!--停车场-->
                 <div class="personCardContent boatCardContent" v-if="route.includes('park')">
@@ -270,6 +301,12 @@
                             </el-option>
                         </el-select>
                     </p>
+                    <div class="img">
+                        <img :src="getUrl(park.picturePath)" alt="" v-if="isDisabled" @error="imgError">
+                        <label for="avatar" v-if="!isDisabled">
+                            <img :src="files.length ? files[0].url : getUrl(park.picturePath)"  @error="imgError" class="rounded-circle" />
+                        </label>
+                    </div>
                 </div>
                 <!--洗手间-->
                 <div class="personCardContent boatCardContent" v-if="route.includes('toilet')">
@@ -296,6 +333,12 @@
                     <p class="phoneNum">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置：
                         <span>{{toilet.location}}</span><i class="el-icon-location-outline" @click="showMapDialog"></i>
                     </p>
+                    <div class="img">
+                        <img :src="getUrl(toilet.picturePath)" alt="" v-if="isDisabled" @error="imgError">
+                        <label for="avatar" v-if="!isDisabled">
+                            <img :src="files.length ? files[0].url : getUrl(toilet.picturePath)"  @error="imgError" class="rounded-circle" />
+                        </label>
+                    </div>
                 </div>
                 <!--片区-->
                 <div class="personCardContent boatCardContent" v-if="route.includes('area')">
@@ -368,9 +411,9 @@
                     <p class="name">年&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;代：
                         <el-date-picker
                             v-model="tree.plant.plantYear"
-                            type="date"
+                            type="year"
                             :disabled="isDisabled"
-                            placeholder="选择日期">
+                            placeholder="选择年份">
                         </el-date-picker>
                     </p>
                     <p class="phoneNum">所属片区：
@@ -389,6 +432,12 @@
                     <p class="textarea">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：
                         <el-input type="textarea"  v-model="tree.plant.description" :disabled="isDisabled" ></el-input>
                     </p>
+                    <div class="img">
+                        <img :src="getUrl(tree.picturePath)" alt="" v-if="isDisabled" @error="imgError">
+                        <label for="avatar" v-if="!isDisabled">
+                            <img :src="files.length ? files[0].url : getUrl(tree.picturePath)"  @error="imgError" class="rounded-circle" />
+                        </label>
+                    </div>
                 </div>
                 <!--建筑-->
                 <div class="personCardContent boatCardContent" v-if="route.includes('construction')">
@@ -425,6 +474,12 @@
                     <p class="textarea">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：
                         <el-input type="textarea"  v-model="build.building.description" :disabled="isDisabled" ></el-input>
                     </p>
+                    <div class="img">
+                        <img :src="getUrl(build.picturePath)" alt="" v-if="isDisabled" @error="imgError">
+                        <label for="avatar" v-if="!isDisabled">
+                            <img :src="files.length ? files[0].url : getUrl(build.picturePath)"  @error="imgError" class="rounded-circle" />
+                        </label>
+                    </div>
                 </div>
 
                 <div class="text-center p-2">
@@ -621,32 +676,59 @@
             getUrl (url) {
                 if (url === null || url === undefined) {
                     let imgSrc
-                    switch (this.$route.params.id) {
-                        case '1': {
-                            imgSrc = './../../../static/img/driveCard.png';
-                            break
+                    if (this.$route.params.id) {
+                        switch (this.$route.params.id) {
+                            case '1': {
+                                imgSrc = './../../../static/img/driveCard.png';
+                                break
+                            }
+                            case '2': {
+                                imgSrc = './../../../static/img/boatCard.png';
+                                break
+                            }
+                            case '3': {
+                                imgSrc = './../../../static/img/clearCard.png';
+                                break
+                            }
+                            case '4': {
+                                imgSrc = './../../../static/img/clearCard.png';
+                                break
+                            }
+                            case '5': {
+                                imgSrc = './../../../static/img/saleTrickCard.png';
+                                break
+                            }
+                            case '6': {
+                                imgSrc = './../../../static/img/trickCard.png';
+                                break
+                            }
                         }
-                        case '2': {
-                            imgSrc = './../../../static/img/boatCard.png';
-                            break
-                        }
-                        case '3': {
-                            imgSrc = './../../../static/img/clearCard.png';
-                            break
-                        }
-                        case '4': {
-                            imgSrc = './../../../static/img/clearCard.png';
-                            break
-                        }
-                        case '5': {
-                            imgSrc = './../../../static/img/saleTrickCard.png';
-                            break
-                        }
-                        case '6': {
-                            imgSrc = './../../../static/img/trickCard.png';
-                            break
-                        }
+                    } else {
+                        console.log(this.$route.path, 'p[ppppp[p')
+                        let route = this.$route.path
+                       if (route.includes('shop')) {//商铺
+                           imgSrc = './../../../../static/img/businesCard.png'
+
+                       }else if (route.includes('park')) {//停车
+                           imgSrc = './../../../../static/img/parkCard.png'
+                       }else if (route.includes('toilet')) {//卫生间
+                           imgSrc = './../../../../static/img/toiletCard.png'
+                       }else if (route.includes('scenic')) {//景点
+                           imgSrc = './../../../../static/img/scenicCard.png'
+                       }else if (route.includes('trash')) {//垃圾桶
+                           imgSrc = './../../../../static/img/wasteCard.png'
+                       }else if (route.includes('indicator')) {//指示牌
+                           imgSrc = './../../../../static/img/indicatorCard.png'
+                       }else if (route.includes('plant')) {//植物
+                           imgSrc = './../../../../static/img/botanyCard.png'
+                       }else if (route.includes('construction')) {//建筑
+                           imgSrc = './../../../../static/img/bulidCard.png'
+                       } else if (route.includes('boat')) {//车船
+                           imgSrc = './../../../../static/img/boatCartCard.png'
+
+                       }
                     }
+
                     console.log(imgSrc, 'opopopopopopopo')
                     return imgSrc
                 } else {
@@ -1023,25 +1105,25 @@
                 this.sex = this.person.gender
                 this.person.jobId = jobId
             } else if(this.route.includes('boat')) {
-                let jobId
-                if (this.Info.vehicle) {
-                    if (this.Info.vehicle.type == 0){
-                        jobId = 1
-                    }else {
-                        jobId = 2
-                    }
-                    api.person.getJobPerson(jobId).then(res => {
-                        console.log(res, '成功')
-                        this.driverList = res
-                        this.driverList.forEach(item => {
-                            item.id = item.personBean.id
-                            item.name = item.personBean.name
-                        })
-                        console.log(this.driverList)
-                    }).catch(err => {
-                        console.log(err, '失败')
-                    })
-                }
+                // let jobId
+                // if (this.Info.vehicle) {
+                //     if (this.Info.vehicle.type == 0){
+                //         jobId = 1
+                //     }else {
+                //         jobId = 2
+                //     }
+                //     api.person.getJobPerson(jobId).then(res => {
+                //         console.log(res, '成功')
+                //         this.driverList = res
+                //         this.driverList.forEach(item => {
+                //             item.id = item.personBean.id
+                //             item.name = item.personBean.name
+                //         })
+                //         console.log(this.driverList)
+                //     }).catch(err => {
+                //         console.log(err, '失败')
+                //     })
+                // }
                 this.boatCar = this.Info
             } else if(this.route.includes('trash')) {
                 console.log(this.Info, '909090909090')
@@ -1167,6 +1249,7 @@
         }
         .el-date-editor,.el-input,.el-input--prefix,.el-input--suffix,.el-date-editor--date{
             margin-top: rem(-2);
+            top: rem(-2);
         }
         .el-date-editor,.el-input,.el-input--prefix,.el-input--suffix,.el-date-editor--date .el-input__inner{
             border: none;

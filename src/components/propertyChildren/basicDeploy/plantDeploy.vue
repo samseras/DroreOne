@@ -69,7 +69,8 @@
                             <el-checkbox v-model="item.checked" @change="checked(item.id)" class="checkBtn"></el-checkbox>
                         </div>
                         <div class="personType" @click.stop="showPersonDetail(item, '植物信息',true)">
-                            <img src="../../../../static/img/botanyCard.png" alt="">
+                            <!--<img src="../../../../static/img/botanyCard.png" alt="">-->
+                            <img :src="getUrl(item.picturePath)" alt="" @error="imgError">
                             <span class="type">
                                   {{item.plant.name}}
                                 </span>
@@ -121,6 +122,16 @@
             }
         },
         methods: {
+            imgError (e) {
+                e.target.src = this.getUrl(null);
+            },
+            getUrl (url) {
+                if (url === null) {
+                    return '../../../../static/img/botanyCard.png'
+                } else {
+                    return url
+                }
+            },
             closeDialog () {
                 this.visible = false
             },
@@ -262,6 +273,18 @@
                     description: info.plant.description,
                     genera: info.plant.genera
                 }
+                if (info.imgUrl !== '') {
+                    await api.person.updataAva(info.imgUrl).then(res => {
+                        console.log(res, '上传成功')
+                        treetObj.pictureId = res.id
+                    }).catch(err => {
+                        console.log(err, '上传失败')
+                        this.$message.error('上传失败，其请稍后重试')
+                        return
+                    })
+                } else {
+                    treetObj.pictureId = info.pictureId
+                }
                 await api.plant.updatePlant(JSON.stringify(treetObj)).then(res => {
                     this.closeDialog()
                     console.log(res, '修改成功')
@@ -288,6 +311,16 @@
                     height: Number(info.plant.height),
                     description: info.plant.description,
                     genera: info.plant.genera
+                }
+                if (info.imgUrl !== '') {
+                    await api.person.updataAva(info.imgUrl).then(res => {
+                        console.log(res, '上传成功')
+                        treetObj.pictureId = res.id
+                    }).catch(err => {
+                        console.log(err, '上传失败')
+                        this.$message.error('上传失败，其请稍后重试')
+                        return
+                    })
                 }
                 await api.plant.createPlant(JSON.stringify(treetObj)).then(res => {
                     this.closeDialog()

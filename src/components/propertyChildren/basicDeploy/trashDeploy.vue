@@ -73,7 +73,8 @@
                             <el-checkbox v-model="item.checked" @change="checked(item.id)" class="checkBtn"></el-checkbox>
                         </div>
                         <div class="personType" @click.stop="showTrashDetail(item, '垃圾桶信息',true)">
-                            <img src="../../../../static/img/wasteCard.png" alt="">
+                            <!--<img src="../../../../static/img/wasteCard.png" alt="">-->
+                            <img :src="getUrl(item.picturePath)" alt="" @error="imgError">
                             <span class="type">
                                   {{item.dustbinBean.type | typeFilter}}垃圾桶
                                 </span>
@@ -125,6 +126,16 @@
             }
         },
         methods : {
+            imgError (e) {
+                e.target.src = this.getUrl(null);
+            },
+            getUrl (url) {
+                if (url === null) {
+                    return '../../../../static/img/wasteCard.png'
+                } else {
+                    return url
+                }
+            },
             closeDialog () {
                 this.visible = false
             },
@@ -266,6 +277,18 @@
                     latitude: latitude,
                     longitude: longitude
                 }
+                if (info.imgUrl !== '') {
+                    await api.person.updataAva(info.imgUrl).then(res => {
+                        console.log(res, '上传成功')
+                        trashObj.pictureId = res.id
+                    }).catch(err => {
+                        console.log(err, '上传失败')
+                        this.$message.error('上传失败，其请稍后重试')
+                        return
+                    })
+                } else {
+                    trashObj.pictureId = info.pictureId
+                }
                 await api.dustbin.updateDustbin(JSON.stringify(trashObj)).then(res => {
                     this.closeDialog()
                     console.log('修改成功')
@@ -288,6 +311,16 @@
                     regionId: info.regionId,
                     latitude: latitude,
                     longitude: longitude
+                }
+                if (info.imgUrl !== '') {
+                    await api.person.updataAva(info.imgUrl).then(res => {
+                        console.log(res, '上传成功')
+                        trashObj.pictureId = res.id
+                    }).catch(err => {
+                        console.log(err, '上传失败')
+                        this.$message.error('上传失败，其请稍后重试')
+                        return
+                    })
                 }
                 console.log(trashObj, 'this is trashObj')
                 await api.dustbin.createDustbin(JSON.stringify(trashObj)).then(res => {

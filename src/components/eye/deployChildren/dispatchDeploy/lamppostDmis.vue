@@ -8,6 +8,7 @@
                 <Header @addNewInfo = "addNewInfo"
                         @deletInfo = "deletInfo"
                         @selectedAll = 'selectedAll'
+                        @startEndPlan="startEndPlan"
                         @fixedInfo = 'fixedInfo'>
                 </Header>
             </div>
@@ -56,8 +57,8 @@
                         <el-table-column label="操作" width="200">
                             <template slot-scope="scope">
                                 <span @click="fixedInfo(scope.row,'路灯编辑')" class="edit">编辑</span> |
-                                <span @click="stop(scope.row)" v-if="scope.row.isStop">停止 |</span>
-                                <span @click="start(scope.row)" v-else="scope.row.isStart">开始 |</span>
+                                <span @click="stop(scope.row)" v-if="scope.row.lightSchedule.enabled">停止 |</span>
+                                <span @click="stop(scope.row)" v-else="!scope.row.lightSchedule.enabled">开始 |</span>
                                 <span @click="showCheckDetail(scope.row,'路灯信息')">查看</span> |
                                 <span @click="deletInfo(scope.row.id)">删除</span>
                             </template>
@@ -115,6 +116,59 @@
             }
         },
         methods: {
+            startEndPlan (state) {
+                console.log(this.choseInfoId, 'opopopop')
+                let choseId = []
+                choseId = this.lamppostList.filter(item => {
+                    if (this.choseInfoId.includes(item.id)) {
+                        if (state === 'start') {
+                            if (!item.lightSchedule.enabled) {
+                                return item
+                            }
+                        } else {
+                            if (item.lightSchedule.enabled) {
+                                return item
+                            }
+                        }
+                    }
+                })
+                choseId = choseId.map(item => {
+                    return item.id
+                })
+                console.log(choseId, 'opopop')
+                if(choseId.length < 1) {
+                    if (state === 'start') {
+                        this.$message.info('当前选中的计划已开启')
+                    } else {
+                        this.$message.info('当前选中的计划已关闭')
+                    }
+                    return
+                }
+                api.lamppost.stareEndPlan(choseId).then(res => {
+                    console.log(res, '更改状态成功')
+                    if (state === 'start') {
+                        this.$message.success('计划开启成功')
+                    } else {
+                        this.$message.success('计划关闭成功')
+                    }
+                    choseId.forEach(item => {
+                        this.lamppostList.forEach(item1 => {
+                            if (item === item1.id) {
+                                item1.lightSchedule.enabled = !item1.lightSchedule.enabled
+                            }
+                        })
+                    })
+
+                }).catch(err => {
+                    console.log(err, '计划开启失败')
+
+                    if (state === 'start') {
+                        this.$message.error('计划开启失败，请稍后重试')
+                    } else {
+                        this.$message.error('计划关闭失败，请稍后重试')
+                    }
+                })
+            },
             closeDmisDialog () {
                 this.visible = false
             },
@@ -164,6 +218,21 @@
             deletInfo (id) {
                 if (id) {
                     this.choseInfoId = [id]
+                }
+                let isDelete = false
+                this.choseInfoId.forEach(item => {
+                    this.lamppostList.forEach(item1 => {
+                        if (item === item1.id) {
+                            if (item1.lightSchedule.enabled) {
+                                isDelete = true
+                                this.$message.info('所选计划已经开启，请关闭后再删除')
+                                return
+                            }
+                        }
+                    })
+                })
+                if (isDelete) {
+                    return
                 }
                 if (this.choseInfoId.length > 0) {
                     this.$confirm('此操作将永久删除该数据, 是否继续?', '提示', {
@@ -280,57 +349,26 @@
                 })
             },
             fixedInfo (info,title) {
+                if (info.lightSchedule.enabled) {
+                    this.$message.info('所选计划已经开启，请关闭后再修改')
+                    return
+                }
                 this.lamppostInfo = info
                 this.showPersonDetail(info, title)
             },
             stop(Info){
-                console.log(Info.id)
-                if (this.choseInfoId.includes(Info.id)) {
-                    if(this.choseInfoId.length > 1){
-                        this.$message.warning('至多选择一条数据')
-                    }else{
-                        Info.isStart = true;
-                        Info.isStop = false;
-                    }
-                }else {
-                    if(this.choseChecked.length == 0){
-                        this.choseInfoId.push(Info.id)
-                        if(this.choseInfoId.length > 1){
-                            this.$message.warning('至多选择一条数据')
-                        }else{
-                            Info.isStart = true;
-                            Info.isStop = false;
-                        }
-                        this.choseInfoId = []
+                api.lamppost.stareEndPlan([Info.id]).then(res => {
+                    console.log(res, '成功')
+                    Info.lightSchedule.enabled = !Info.lightSchedule.enabled
+                    if ( !Info.lightSchedule.enabled) {
+                        this.$message.success('调度计划已关闭')
                     }else {
-                        this.$message.warning('选择的数据和即将编辑的数据不一致，或者未选择包编辑的数据')
+                        this.$message.success('调度计划已开启')
                     }
-                }
+                }).then(err => {
+                    console.log(err, '失败')
+                })
             },
-            start(Info){
-                console.log(Info.id)
-                if (this.choseInfoId.includes(Info.id)) {
-                    if(this.choseInfoId.length > 1){
-                        this.$message.warning('至多选择一条数据')
-                    }else{
-                        Info.isStart = false;
-                        Info.isStop = true;
-                    }
-                }else {
-                    if(this.choseChecked.length == 0){
-                        this.choseInfoId.push(Info.id)
-                        if(this.choseInfoId.length > 1){
-                            this.$message.warning('至多选择一条数据')
-                        }else{
-                            Info.isStart = false;
-                            Info.isStop = true;
-                        }
-                        this.choseInfoId = []
-                    }else {
-                        this.$message.warning('选择的数据和即将编辑的数据不一致，或者未选择包编辑的数据')
-                    }
-                }
-            }
         },
         created () {
             this.getLamppostList ();
