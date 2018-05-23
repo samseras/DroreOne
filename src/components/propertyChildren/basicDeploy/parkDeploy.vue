@@ -37,23 +37,27 @@
                         <el-table-column
                             prop="parkingBean.name"
                             label="名称"
-                            width="120">
+                            width="140">
                         </el-table-column>
                         <el-table-column
+                            width="120"
                             label="类型">
                             <template slot-scope="scope">
                                 <span>{{scope.row.parkingBean.type}}</span>
                             </template>
                         </el-table-column>
                         <el-table-column
+                            width="100"
                             prop="state"
                             label="状态">
                         </el-table-column>
                         <el-table-column
+                            width="100"
                             prop="parkingBean.surplusNum"
                             label="空余车位">
                         </el-table-column>
                         <el-table-column
+                            width="100"
                             prop="parkingBean.capacity"
                             label="车位总数">
                         </el-table-column>
@@ -62,10 +66,12 @@
                             label="位置">
                         </el-table-column>
                         <el-table-column
+                            width="140"
                             prop="regionName"
                             label="所属片区">
                         </el-table-column>
                         <el-table-column
+                            width="140"
                             label="操作">
                             <template slot-scope="scope">
                                 <span @click="showParkDetail(scope.row, '停车场信息',true)">查看</span>

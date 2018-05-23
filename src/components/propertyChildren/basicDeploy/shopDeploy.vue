@@ -36,21 +36,25 @@
                         <el-table-column
                             prop="businessBean.name"
                             label="名称"
-                            width="120">
+                            width="140">
                         </el-table-column>
                         <el-table-column
+                            width="120"
                             prop="businessTypeName"
                             label="类型">
                         </el-table-column>
                         <el-table-column
+                            width="100"
                             prop="state"
                             label="状态">
                         </el-table-column>
                         <el-table-column
+                            width="100"
                             prop="businessBean.capacity"
                             label="容量">
                         </el-table-column>
                         <el-table-column
+                            width="100"
                             prop="businessBean.currentNum"
                             label="当前人数">
                         </el-table-column>
@@ -59,10 +63,12 @@
                             label="位置">
                         </el-table-column>
                         <el-table-column
+                            width="150"
                             prop="regionName"
                             label="所属片区">
                         </el-table-column>
                         <el-table-column
+                            width="150"
                             label="操作">
                             <template slot-scope="scope">
                                 <span @click="showPersonDetail(scope.row, '商圈信息',true )">查看</span>

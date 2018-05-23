@@ -2,7 +2,7 @@
   <div class="broadcast">
     <!--顶部-->
     <div class="top">
-      <h5>广播列表</h5>
+      <h5>卫生间列表</h5>
       <ul>
         <li><img src="../../../../static/img/search.png" alt="" /></li>
       </ul>
@@ -49,7 +49,7 @@
         checkAll: false,
         isIndeterminate: true,
         checkedCities1:[""],
-        data1:toiletFacility,
+        data1:toilet,
         isShow:true
       }
     },

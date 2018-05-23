@@ -254,6 +254,7 @@
                         item.checked = item.checked
                     }
                     return item
+
                 })
                 if (this.choseInfoId.includes(id)) {
                     this.choseInfoId = this.choseInfoId.filter((item) => {
@@ -369,7 +370,7 @@
             },
             fixedInfo(id) {
                 if (id) {
-                    this.choseInfoId.push(id)
+                    //this.choseInfoId.push(id)
                 }
                 if (this.choseInfoId.length > 1) {
                     this.$message.warning('至多选择一个数据修改')

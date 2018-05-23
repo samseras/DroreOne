@@ -36,21 +36,25 @@
                         <el-table-column
                             prop="scenicspotBean.name"
                             label="景点名称"
-                            width="120">
+                            width="150">
                         </el-table-column>
                         <el-table-column
+                            width="150"
                             prop="regionName"
                             label="所属片区">
                         </el-table-column>
                         <el-table-column
+                            width="100"
                             prop="state"
                             label="状态">
                         </el-table-column>
                         <el-table-column
+                            width="100"
                             prop="scenicspotBean.capacity"
                             label="容量">
                         </el-table-column>
                         <el-table-column
+                            width="100"
                             prop="scenicspotBean.currentNum"
                             label="当前人数">
                         </el-table-column>
@@ -59,6 +63,7 @@
                             label="位置">
                         </el-table-column>
                         <el-table-column
+                            width="150"
                             label="操作">
                             <template slot-scope="scope">
                                 <span @click="showPersonDetail(scope.row, '人员信息',true)">查看</span>

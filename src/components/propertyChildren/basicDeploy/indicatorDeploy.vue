@@ -41,14 +41,17 @@
                             </template>
                         </el-table-column>
                         <el-table-column
+                            width="200"
                             prop="regionName"
                             label="所属片区">
                         </el-table-column>
                         <el-table-column
+                            width="500"
                             prop="location"
                             label="位置">
                         </el-table-column>
                         <el-table-column
+                            width="150"
                             label="操作">
                             <template slot-scope="scope">
                                 <span @click="showPersonDetail(scope.row, '指示牌信息',true)">查看</span>
