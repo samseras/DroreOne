@@ -12,7 +12,7 @@
                 <!--批量编辑-->
                 <div class="alarmContent" v-if="route.includes('alarmcolumn') && isBatchEdit">
                     <p class="name">严重等级：
-                        <el-select  v-model="alarmcolumnInfo.batchEdit.batchLevel" size="mini" class="" placeholder="请选择">
+                        <el-select  v-model="batchLevel.level" size="mini" class="" placeholder="请选择">
                             <el-option
                                 v-for="item in levelInfo"
                                 :key="item.value"
@@ -37,7 +37,14 @@
                         </el-select>
                     </p>
                     <p class="level">严重级别：
-                        <el-input type="text" v-model='alarmcolumnInfo.level' class="inputText" :maxlength="15" :disabled='isReadonly'></el-input>
+                        <el-select  v-model="alarmcolumnInfo.level" size="mini" :disabled='isReadonly' class="" placeholder="请选择">
+                            <el-option
+                                v-for="item in levelInfo"
+                                :key="item.value"
+                                :label="item.label"
+                                :value="item.value">
+                            </el-option>
+                        </el-select>
                     </p>
                     <p class="deviceRange">设备范围：
                         <el-input type="text" v-model='alarmcolumnInfo.deviceRange' class="inputText" :maxlength="15" :disabled='isReadonly'></el-input>
@@ -63,7 +70,7 @@
 
                 <div class="alarmContent" v-if="route.includes('firefighting') && isBatchEdit">
                     <p class="name">严重等级：
-                        <el-select  v-model="eventInfo.level" size="mini" class="" placeholder="请选择">
+                        <el-select  v-model="batchLevel.level" size="mini" class="" placeholder="请选择">
                             <el-option
                                 v-for="item in levelInfo"
                                 :key="item.value"
@@ -112,7 +119,7 @@
 
                 <div class="alarmContent" v-if="route.includes('crossborder') && isBatchEdit">
                     <p class="name">严重等级：
-                        <el-select  v-model="eventInfo.level" size="mini" class="" placeholder="请选择">
+                        <el-select  v-model="batchLevel.level" size="mini" class="" placeholder="请选择">
                             <el-option
                                 v-for="item in levelInfo"
                                 :key="item.value"
@@ -161,7 +168,7 @@
 
                 <div class="alarmContent" v-if="route.includes('offtrack') && isBatchEdit">
                     <p class="name">严重等级：
-                        <el-select  v-model="eventInfo.level" size="mini" class="" placeholder="请选择">
+                        <el-select  v-model="batchLevel.level" size="mini" class="" placeholder="请选择">
                             <el-option
                                 v-for="item in levelInfo"
                                 :key="item.value"
@@ -219,7 +226,7 @@
 
                 <div class="alarmContent" v-if="route.includes('overlimit') && isBatchEdit">
                     <p class="name">严重等级：
-                        <el-select  v-model="overlimitInfo.level" size="mini" class="" placeholder="请选择">
+                        <el-select  v-model="batchLevel.level" size="mini" class="" placeholder="请选择">
                             <el-option
                                 v-for="item in levelInfo"
                                 :key="item.value"
@@ -274,7 +281,7 @@
 
                 <div class="alarmContent" v-if="route.includes('waterlevel') && isBatchEdit">
                     <p class="name">严重等级：
-                        <el-select  v-model="waterlevelInfo.level" size="mini" class="" placeholder="请选择">
+                        <el-select  v-model="batchLevel.level" size="mini" class="" placeholder="请选择">
                             <el-option
                                 v-for="item in levelInfo"
                                 :key="item.value"
@@ -332,7 +339,7 @@
 
                 <div class="alarmContent" v-if="route.includes('condition') && isBatchEdit">
                     <p class="name">严重等级：
-                        <el-select  v-model="conditionInfo.level" size="mini" class="" placeholder="请选择">
+                        <el-select  v-model="batchLevel.level" size="mini" class="" placeholder="请选择">
                             <el-option
                                 v-for="item in levelInfo"
                                 :key="item.value"
@@ -424,6 +431,9 @@
         data () {
             return{
                 route:'',
+                batchLevel:{
+                    level:''
+                },
                 alarmcolumnInfo:{
                     batchEdit:{
                         batchLevel:''
@@ -571,17 +581,61 @@
                 this.$emit('closeDialog')
             },
             saveDialog(){
-                //批量编辑
-                if(this.isBatchEdit){
-                    console.log("批量编辑")
-                    console.log(this.choseInfoId);
-                    console.log(this.alarmcolumnInfo.batchEdit.batchLevel)
-                    this.$emit('saveInfo');
+                if (this.route.includes('alarmcolumn')){
+                    if(this.isBatchEdit){   //批量编辑
+                        console.log(this.choseInfoId);
+                        console.log(this.alarmcolumnInfo.batchEdit.batchLevel)
+                        this.$emit('saveInfo');
 
-                }else{  //单个编辑或查看
-                    console.log("单个编辑")
-                    this.$emit('saveInfo');
+                    }else{  //单个编辑或查看
+
+                        console.log(this.alarmcolumnInfo);
+                        this.$emit('saveInfo',this.alarmcolumnInfo);
+                    }
+                }else if(this.route.includes('firefighting')){
+                    if(this.isBatchEdit){   //批量编辑
+                        console.log(this.choseInfoId);
+                        this.$emit('saveInfo');
+
+                    }else{  //单个编辑或查看
+                        this.$emit('saveInfo');
+                    }
+                }else if(this.route.includes('crossborder')){
+                    if(this.isBatchEdit){   //批量编辑
+                        console.log(this.choseInfoId);
+                        this.$emit('saveInfo');
+
+                    }else{  //单个编辑或查看
+                        this.$emit('saveInfo');
+                    }
+                }else if(this.route.includes('offtrack')){
+                    if(this.isBatchEdit){   //批量编辑
+                        console.log(this.choseInfoId);
+                        this.$emit('saveInfo');
+
+                    }else{  //单个编辑或查看
+                        this.$emit('saveInfo');
+                    }
+                }else if(this.route.includes('overlimit')){
+                    if(this.isBatchEdit){   //批量编辑
+                        console.log(this.choseInfoId);
+                        this.$emit('saveInfo');
+
+                    }else{  //单个编辑或查看
+                        this.$emit('saveInfo');
+                    }
+                }else if(this.route.includes('waterlevel')){
+                    if(this.isBatchEdit){   //批量编辑
+                        console.log(this.choseInfoId);
+                        this.$emit('saveInfo');
+
+                    }else{  //单个编辑或查看
+                        this.$emit('saveInfo');
+                    }
+                }else if(this.route.includes('condition')){
+
                 }
+
             }
         },
         async created () {
@@ -589,7 +643,7 @@
             console.log(this.Info,'  Info')
             if (this.route.includes('alarmcolumn')) {
                 this.alarmcolumnInfo = this.Info;
-
+                // this.alarmcolumnInfo.batchEdit.batchLevel = "1";
             } else if(this.route.includes('firefighting')) {
                 // this.getAllBroadcast()
                 this.firefightingInfo = this.Info;

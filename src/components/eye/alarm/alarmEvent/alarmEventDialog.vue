@@ -35,19 +35,19 @@
 
                 <div v-else  class="alarmContent">
                     <p class="sex">编&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 号：
-                        <el-input type="text" v-model='eventInfo.id' class="inputText" :maxlength="15" :disabled="true"></el-input>
+                        <el-input type="text" v-model='eventInfo.id' class="inputText" :maxlength="15" :readonly="true"></el-input>
                     </p>
                     <p class="type">类&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 型：
-                        <el-input type="text" v-model='eventInfo.type' class="inputText" :maxlength="15" :disabled='true'></el-input>
+                        <el-input type="text" v-model='eventInfo.type' class="inputText" :maxlength="15" :readonly='true'></el-input>
                     </p>
                     <p class="source">来&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 源：
-                        <el-input type="text"  v-model='eventInfo.source' class="inputText" :maxlength="15" :disabled='true'></el-input>
+                        <el-input type="text"  v-model='eventInfo.source' class="inputText" :maxlength="15" :readonly='true'></el-input>
                     </p>
                     <p class="time">发生时间：
-                        <el-input type="text"  v-model='eventInfo.occurTime' class="inputText" :maxlength="15" :disabled='true'></el-input>
+                        <el-input type="text"  v-model='eventInfo.occurTime' class="inputText" :maxlength="15" :readonly='true'></el-input>
                     </p>
                     <p class="role">告警规则：
-                        <el-input type="text" v-model='eventInfo.role' class="inputText" :maxlength="15" :disabled='true'></el-input>
+                        <el-input type="text" v-model='eventInfo.role' class="inputText" :maxlength="15" :readonly='true'></el-input>
                     </p>
                     <p class="level">等&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;级：
                         <el-select  v-model="eventInfo.level" size="mini" class="" placeholder="请选择" :disabled="isReadonly">
