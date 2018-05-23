@@ -141,13 +141,13 @@
                 console.log(info, '这是要过滤的')
                 if (info.trim() !== '') {
                     this.cameraList = this.checkList.filter(item => {
+                        if (item.name.includes(info)) {
+                            return item
+                        }
                         if (item.regionName.includes(info)) {
                             return item
                         }
                         if (item.ip && item.ip.includes(info)) {
-                            return item
-                        }
-                        if (item.name.includes(info)) {
                             return item
                         }
                         if (item.modelName && item.modelName.includes(info)) {

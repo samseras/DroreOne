@@ -38,10 +38,12 @@
                             width="120">
                         </el-table-column>
                         <el-table-column
+                            width="180"
                             prop="regionName"
                             label="所属片区">
                         </el-table-column>
                         <el-table-column
+                            width="120"
                             prop="plant.height"
                             label="高度">
                         </el-table-column>
@@ -50,10 +52,12 @@
                             label="位置">
                         </el-table-column>
                         <el-table-column
+                            width="180"
                             prop="plant.plantYear"
                             label="年代">
                         </el-table-column>
                         <el-table-column
+                            width="150"
                             label="操作">
                             <template slot-scope="scope">
                                 <span @click="showPersonDetail(scope.row, '植物信息',true)">查看</span>
@@ -64,7 +68,7 @@
                             </template>
                         </el-table-column>
                     </el-table>
-                    <div class="personInfo" v-for="item in treeList" v-if="isShowToiletCard && item.status">
+                    <div class="personInfo judge-title" v-for="item in treeList" v-if="isShowToiletCard && item.status">
                         <div class="checkBox">
                             <el-checkbox v-model="item.checked" @change="checked(item.id)" class="checkBtn"></el-checkbox>
                         </div>
@@ -134,17 +138,18 @@
             },
             closeDialog () {
                 this.visible = false
+                this.getAllTree()
             },
             searchAnything (info) {
                 console.log(info, '这是要过滤的')
                 if (info.trim() !== '') {
                     this.treeList = this.checkList.filter(item => {
-                        if (item.regionName.includes(info)) {
+                        if ((item.regionName)&&(item.regionName.includes(info))) {
                             return item
                         }
-                        if (item.plant.genera.includes(info)) {
+                        /*if (item.plant.genera.includes(info)) {
                             return item
-                        }
+                        }*/
                         if (item.plant.name.includes(info)) {
                             return item
                         }
@@ -168,7 +173,7 @@
             },
             deletInfo (id) {
                 if (id) {
-                    this.choseInfoId.push(id)
+                    //this.choseInfoId.push(id)
                 }
                 if (this.choseInfoId.length > 0) {
                     this.$confirm('此操作将永久删除该数据, 是否继续?', '提示', {
@@ -334,7 +339,7 @@
             },
             fixedInfo (id) {
                 if (id) {
-                    this.choseInfoId.push(id)
+                    //this.choseInfoId.push(id)
                 }
                 if (this.choseInfoId.length > 1) {
                     this.$message.warning('至多选择一个数据修改')
@@ -496,4 +501,11 @@
         }
     }
 
+</style>
+<style>
+    .judge-title  .cell{
+        white-space: nowrap ;
+        overflow: hidden ;
+        text-overflow: ellipsis ;
+    }
 </style>

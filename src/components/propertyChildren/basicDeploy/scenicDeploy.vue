@@ -36,21 +36,25 @@
                         <el-table-column
                             prop="scenicspotBean.name"
                             label="景点名称"
-                            width="120">
+                            width="150">
                         </el-table-column>
                         <el-table-column
+                            width="150"
                             prop="regionName"
                             label="所属片区">
                         </el-table-column>
                         <el-table-column
+                            width="100"
                             prop="state"
                             label="状态">
                         </el-table-column>
                         <el-table-column
+                            width="100"
                             prop="scenicspotBean.capacity"
                             label="容量">
                         </el-table-column>
                         <el-table-column
+                            width="100"
                             prop="scenicspotBean.currentNum"
                             label="当前人数">
                         </el-table-column>
@@ -59,6 +63,7 @@
                             label="位置">
                         </el-table-column>
                         <el-table-column
+                            width="150"
                             label="操作">
                             <template slot-scope="scope">
                                 <span @click="showPersonDetail(scope.row, '人员信息',true)">查看</span>
@@ -138,12 +143,13 @@
             },
             closeDialog () {
                 this.visible = false
+                this.getAllScenic()
             },
             searchAnything (info) {
                 console.log(info, '这是要过滤的')
                 if (info.trim() !== '') {
                     this.scenicList = this.checkList.filter(item => {
-                        if (item.regionName.includes(info)) {
+                        if ((item.regionName)&&(item.regionName.includes(info))) {
                             return item
                         }
                         if (item.scenicspotBean.name.includes(info)) {
@@ -169,7 +175,7 @@
             },
             deletInfo (id) {
                 if (id) {
-                    this.choseInfoId.push(id)
+                    //this.choseInfoId.push(id)
                 }
                 if (this.choseInfoId.length > 0) {
                     this.$confirm('此操作将永久删除该数据, 是否继续?', '提示', {
@@ -324,7 +330,7 @@
             },
             fixedInfo (id) {
                 if (id) {
-                    this.choseInfoId.push(id)
+                    //this.choseInfoId.push(id)
                 }
                 if (this.choseInfoId.length > 1) {
                     this.$message.warning('至多选择一个数据修改')

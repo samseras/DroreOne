@@ -36,21 +36,25 @@
                         <el-table-column
                             prop="businessBean.name"
                             label="名称"
-                            width="120">
+                            width="140">
                         </el-table-column>
                         <el-table-column
+                            width="120"
                             prop="businessTypeName"
                             label="类型">
                         </el-table-column>
                         <el-table-column
+                            width="100"
                             prop="state"
                             label="状态">
                         </el-table-column>
                         <el-table-column
+                            width="100"
                             prop="businessBean.capacity"
                             label="容量">
                         </el-table-column>
                         <el-table-column
+                            width="100"
                             prop="businessBean.currentNum"
                             label="当前人数">
                         </el-table-column>
@@ -59,10 +63,12 @@
                             label="位置">
                         </el-table-column>
                         <el-table-column
+                            width="150"
                             prop="regionName"
                             label="所属片区">
                         </el-table-column>
                         <el-table-column
+                            width="150"
                             label="操作">
                             <template slot-scope="scope">
                                 <span @click="showPersonDetail(scope.row, '商圈信息',true )">查看</span>
@@ -144,6 +150,7 @@
             },
             closeDialog () {
                 this.visible = false
+                this.getAllShop()
             },
             searchAnything (info) {
                 console.log(info, '这是要过滤的')
@@ -152,7 +159,7 @@
                         if (item.businessTypeName.includes(info)) {
                             return item
                         }
-                        if (item.regionName.includes(info)) {
+                        if ((item.regionName)&&(item.regionName.includes(info))) {
                             return item
                         }
                         if (item.businessBean.name.includes(info)) {
@@ -206,8 +213,9 @@
                 this.isDisabled = false
             },
             deletInfo (id) {
+                console.log(this.choseInfoId)
                 if (id) {
-                    this.choseInfoId.push(id)
+                    //this.choseInfoId.push(id)
                 }
                 if (this.choseInfoId.length > 0) {
                     this.$confirm('此操作将永久删除该数据, 是否继续?', '提示', {
@@ -259,6 +267,7 @@
                 } else {
                     this.choseInfoId.push(id)
                 }
+                console.log(this.choseInfoId)
             },
             choseType (type) {
                 console.log(type)
@@ -366,7 +375,7 @@
             },
             fixedInfo (id) {
                 if (id) {
-                    this.choseInfoId.push(id)
+                    //this.choseInfoId.push(id)
                 }
                 if (this.choseInfoId.length > 1) {
                     this.$message.warning('至多选择一个数据修改')

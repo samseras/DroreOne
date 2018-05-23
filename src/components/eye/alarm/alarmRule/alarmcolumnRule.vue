@@ -1,78 +1,71 @@
 <template>
-    <div class="alarmcolumnRule">
+    <div class="alarmcolumn">
         <div class="title">
-            广播
+            告警事件
         </div>
         <div class="personContent">
             <div class="funcTitle">
-                <!--<Header @addNewInfo = "addNewInfo"-->
-                        <!--@deletInfo = "deletInfo"-->
-                        <!--@selectedAll = 'selectedAll'-->
-                        <!--@fixedInfo = 'fixedInfo'>-->
-                <!--</Header>-->
+                <Header @deletInfo = "deletInfo"
+                        @selectedAll = 'selectedAll'
+                        @batchEdit = 'batchEdit'
+                        @addNewInfo="addNewInfo">
+                </Header>
             </div>
             <div class="personList" v-loading="isShowloading">
                 <ScrollContainer>
                     <el-table
-                        v-if="isShowAreaCard"
                         ref="multipleTable"
-                        :data="broadCastList"
+                        :data="alarmcolumnList"
                         tooltip-effect="dark"
                         style="width: 100%"
-                        @selection-change="handleSelectionChange">
+                        @selection-change="handleSelectionChange"
+                        :default-sort = "{prop: 'manager', order: 'descending'}">
                         <el-table-column
                             width="50">
                             <template slot-scope="scope">
                                 <el-checkbox v-model="scope.row.checked" @change="checked(scope.row)" class="checkBoxBtn"></el-checkbox>
                             </template>
                         </el-table-column>
-
                         <el-table-column
-                            prop="broadcastSchedule.name"
+                            prop="name"
                             label="名称">
                         </el-table-column>
                         <el-table-column
-                            prop="broadcastIds.length"
-                            label="硬件总数">
+                            prop="alarmColumn"
+                            label="关联报警柱">
                         </el-table-column>
                         <el-table-column
-                            label="时间">
-                            <template slot-scope="scope">
-                                <span v-if="scope.row.broadcastSchedule.customizedDays">{{scope.row.broadcastSchedule.startDate}}~{{scope.row.broadcastSchedule.endDate}}</span>
-                                <span v-if="!scope.row.broadcastSchedule.customizedDays">{{scope.row.broadcastSchedule.days | weekFilter}}</span>
-                            </template>
+                            prop="deviceRange"
+                            label="设备调度范围">
                         </el-table-column>
                         <el-table-column
-                            label="执行时间">
-                            <template slot-scope="scope">
-                                <span>{{scope.row.broadcastSchedule.startTime}}~{{scope.row.broadcastSchedule.endTime}}</span>
-                            </template>
+                            prop="safeRange"
+                            label="安保调度范围">
                         </el-table-column>
-                        <!--<el-table-column-->
-                            <!--prop="repetition"-->
-                            <!--label="重复调度"-->
-                            <!--sortable>-->
-                        <!--</el-table-column>-->
+                        <el-table-column
+                            sortable
+                            prop="manager"
+                            label="管理者">
+                        </el-table-column>
                         <el-table-column label="操作" width="200">
                             <template slot-scope="scope">
-                                <span @click="fixedInfo(scope.row,'广播编辑')" class="edit">编辑</span> |
-                                <span @click="stop(scope.row,'片区信息')" v-if="scope.row.isStop">停止 |</span>
-                                <span @click="start(scope.row,'片区信息')" v-else="scope.row.isStart">开始 |</span>
-                                <span @click="showPersonDetail(scope.row,'广播信息',true)">查看</span> |
-                                <span @click="deletInfo(scope.row.id,'片区信息')">删除</span>
+                                <span @click="editInfo(scope.row,false,'编辑报警柱告警规则')" class="edit">编辑</span> |
+                                <span @click="showDetail(scope.row,true,'查看报警柱告警规则')">查看</span> |
+                                <span @click="deletInfo(scope.row.id)">删除</span>
                             </template>
                         </el-table-column>
                     </el-table>
                 </ScrollContainer>
-                <!--<PersonDetail v-if="visible"-->
-                              <!--:visible="visible"-->
-                              <!--:Info="broadCastInfo"-->
-                              <!--:isDisabled="isDisabled"-->
-                              <!--@closeInfoDialog ="closeDmisDialog"-->
-                              <!--@fixInfo = "fixInfo"-->
-                              <!--:title = "title"-->
-                              <!--@saveNewInfo="addNewPerson">-->
-                <!--</PersonDetail>-->
+                <AlarmDetail v-if="visible"
+                             :visible="visible"
+                             :Info="alarmcolumnInfo"
+                             :isReadonly="isReadonly"
+                             @closeDialog ="closeDialog"
+                             :title = "title"
+                             @saveInfo="saveInfo"
+                             :isBatchEdit="isBatchEdit"
+                             :choseInfoId = 'choseInfoId'>
+                </AlarmDetail>
             </div>
         </div>
     </div>
@@ -81,33 +74,49 @@
 <script>
     import ScrollContainer from '@/components/ScrollContainer'
     // import api from '@/api'
-    // import Header from './dmisHeader'
-    // import PersonDetail from './dmisDialog'
+    import Header from './alarmRuleHeader'
+    import AlarmDetail from './alarmRuleDialog'
     // import moment from 'moment'
     export default {
-        name: 'area-deploy',
         data(){
             return{
-                isShowAreaCard: true,
-                checkList: [],
-                filterList: [],
-                broadCastList: [],
+                alarmcolumnList: [
+                    {
+                        name:'sos报警规则01',
+                        alarmColumn:'BJ001、BJ002',
+                        level:'',
+                        deviceRange:'100米',
+                        safeRange:'200米',
+                        manager:'马云'
+
+                    },
+                    {
+                        name:'sos报警规则02',
+                        alarmColumn:'BJ003、BJ004',
+                        level:'',
+                        deviceRange:'400米',
+                        safeRange:'700米',
+                        manager:'徐一项'
+
+                    },
+                ],
+                alarmcolumnInfo:{},
                 visible: false,
-                broadCastInfo: {},
+                warningEventInfo: {},
                 choseInfoId: [],
-                choseId:[],
-                choseChecked:[],
-                choseList: [],
-                isDisabled: true,
+                isReadonly: true,
                 title:'',
-                // isStart:false,
-                // isStop:true,
                 selection:[],
-                isShowloading: false
+                isShowloading: false,
+                isBatchEdit:false
+
             }
         },
         methods: {
-            closeDmisDialog () {
+            addNewInfo () {
+                this.showDetail({},false,'添加报警柱告警规则',)
+            },
+            closeDialog () {
                 this.visible = false
             },
             handleSelectionChange(selection) {
@@ -115,15 +124,14 @@
                     return item.id
                 })
             },
-            showPersonDetail (info,title,state) {
-                this.broadCastInfo = info;
+            showDetail (info,state,title) {
+                this.alarmcolumnInfo = info;
                 this.visible = true;
-                this.title = title;
-                this.isDisabled = state
-            },
-            addNewInfo () {
-                this.showPersonDetail({broadcastSchedule:{}}, '添加广播播放',false)
-                this.isDisabled = false
+                this.isBatchEdit = false;
+                this.isReadonly = state;
+                if(title) {
+                    this.title = title;
+                }
             },
             deletInfo (id) {
                 console.log(id)
@@ -164,7 +172,7 @@
                 }
             },
             checked (id) {
-                this.broadCastList = this.broadCastList.filter(item => {
+                this.alarmcolumnList = this.alarmcolumnList.filter(item => {
                     if (item.id === id) {
                         item.checked = item.checked
                     }
@@ -179,7 +187,7 @@
                 }
             },
             selectedAll (state) {
-                this.broadCastList = this.broadCastList.filter((item) => {
+                this.alarmcolumnList = this.alarmcolumnList.filter((item) => {
                     if (state === true) {
                         item.checked = true
                         this.choseInfoId.push(item.id)
@@ -191,129 +199,39 @@
                     }
                 })
             },
-            fixInfo (info) {
-                let musicIds
-                if (info.musicIds) {
-                    musicIds = info.musicIds.map(item => {
-                        return item.id
-                    })
+            editInfo (info,state,title) {
+                console.log(info);
+                this.showDetail(info,state,title);
+            },
+            batchEdit(){
+                if (this.choseInfoId.length > 0) {
+                    console.log('batchEdit')
+                    this.isBatchEdit = true;
+                    // this.warningEventInfo = info;
+                    this.visible = true;
+                    this.title="编辑报警柱告警规则"
                 } else {
-                    musicIds = info.musics.map(item => {
-                        return item.id
-                    })
+                    this.$message.error('请选择要编辑的数据')
+                    return
                 }
-                let obj = {
-                    id: info.broadcastSchedule.id,
-                    name: info.broadcastSchedule.name,
-                    customizedDays: info.broadcastSchedule.customizedDays,
-                    startTime: moment(info.broadcastSchedule.watchTime[0]).format('HH:mm:ss'),
-                    endTime: moment(info.broadcastSchedule.watchTime[1]).format('HH:mm:ss'),
-                    description: info.broadcastSchedule.description,
-                    broadcastIds: info.broadcastIds,
-                    musicIds: musicIds
-                }
-                if (info.broadcastSchedule.customizedDays) {
-                    obj.startDate = moment(info.broadcastSchedule.time[0]).format('YYYY-MM-DD')
-                    obj.endDate = moment(info.broadcastSchedule.time[1]).format('YYYY-MM-DD')
-                } else {
-                    obj.days = info.broadcastSchedule.days
-                }
-                // api.schedulebroadcast.updataBroadcast(JSON.stringify(obj)).then(res => {
-                //     this.closeDmisDialog()
-                //     console.log(res, '创建成功')
-                //     this.getAllBroadcast()
-                //     this.$message.success('修改成功')
-                // }).catch(err => {
-                //     console.log(err, '创建失败')
-                //     this.$message.error('修改失败，请稍后重试')
-                // })
             },
-            addNewPerson (info) {
-                console.log(info, '这是要添加的')
-                let musicIds = info.musics.map(item => {
-                    return item.id
-                })
-                let obj = {
-                    name: info.broadcastSchedule.name,
-                    customizedDays: info.broadcastSchedule.customizedDays,
-                    startTime: moment(info.broadcastSchedule.watchTime[0]).format('HH:mm:ss'),
-                    endTime: moment(info.broadcastSchedule.watchTime[1]).format('HH:mm:ss'),
-                    description: info.broadcastSchedule.description,
-                    broadcastIds: info.broadcastIds,
-                    musicIds: musicIds
-                }
-                if (info.broadcastSchedule.customizedDays) {
-                    obj.startDate = moment(info.broadcastSchedule.time[0]).format('YYYY-MM-DD')
-                    obj.endDate = moment(info.broadcastSchedule.time[1]).format('YYYY-MM-DD')
-                } else {
-                    obj.days = info.broadcastSchedule.days
-                }
-                // api.schedulebroadcast.createdBroadcast(JSON.stringify(obj)).then(res => {
-                //     this.closeDmisDialog()
-                //     console.log(res, '创建成功')
-                //     this.getAllBroadcast()
-                //     this.$message.success('创建成功')
-                // }).catch(err => {
-                //     console.log(err, '创建失败')
-                //     this.$message.error('创建失败，请稍后重试')
-                // })
-            },
-            fixedInfo (info,title) {
-                this.broadCastInfo = info
-                this.showPersonDetail(info, title)
-            },
-            stop(Info){
-                Info.isStart = true;
-                Info.isStop = false;
-            },
-            start(Info){
-                Info.isStart = false;
-                Info.isStop = true;
-            },
-            async getAllBroadcast () {
-                this.isShowLoading = true
-                // await api.schedulebroadcast.getAllBroadcast().then(res => {
-                //     console.log(res, '请求成功')
-                //     this.isShowLoading = false
-                //     this.broadCastList = res
-                //     this.broadCastList.forEach(item => {
-                //         item.checked = false;
-                //         item.broadcastSchedule.time = [item.broadcastSchedule.startDate,item.broadcastSchedule.endDate]
-                //         item.broadcastSchedule.watchTime = [`2018-04-25,${item.broadcastSchedule.startTime}`,`2018-04-25,${item.broadcastSchedule.endTime}`]
-                //         item.id = item.broadcastSchedule.id
-                //         if (!item.broadcastSchedule.customizedDays) {
-                //             item.broadcastSchedule.days = item.broadcastSchedule.days.split(',')
-                //         }
-                //         if (item.musics.length > 0) {
-                //             item.musics.forEach(item => {
-                //                 let endNum = item.musicPath.lastIndexOf('_')
-                //                 let startNum = item.musicPath.lastIndexOf('/') + 1
-                //                 item.title = item.musicPath.substring(startNum,endNum)
-                //                 item.id = item.musicId
-                //             })
-                //         }
-                //     })
-                // }).catch(err => {
-                //     console.log(err, '请求失败')
-                //     this.isShowLoading = false
-                // })
+            saveInfo(){
+
             }
         },
         created () {
-            this.getAllBroadcast()
         },
         components: {
             ScrollContainer,
-            // Header
-            // ,
-            // PersonDetail
+            Header,
+            AlarmDetail
         },
     }
 
 </script>
 
 <style lang="scss" scoped type="text/scss">
-    .alarmcolumnRule{
+    .alarmcolumn{
         width: 100%;
         height: 100%;
         display: flex;

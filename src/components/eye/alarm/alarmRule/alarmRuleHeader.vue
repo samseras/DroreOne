@@ -1,14 +1,14 @@
 <template>
-    <div class="dmisHeader">
+    <div class="ruleHeader">
         <div class="searchInfo">
             <input type="text" placeholder="Search Anything">
             <i class="el-icon-search"></i>
         </div>
         <div class="funcBtn">
             <el-button size="mini"plain @click="addNewInfo"><i class="el-icon-circle-plus"></i>添加</el-button>
-             <el-checkbox v-model="isSelected" @change="selectedAll">全选</el-checkbox>
-
+            <el-checkbox v-model="isSelected" @change="selectedAll">全选</el-checkbox>
             <el-button size="mini"plain @click="deleteCard"><i class="el-icon-delete"></i>删除</el-button>
+            <el-button size="mini"plain @click="batchEdit"><i class="el-icon-edit"></i>编辑</el-button>
         </div>
 
         <div class="page">
@@ -33,35 +33,24 @@
             }
         },
         methods: {
-            addNewInfo () {
-                // console.log(this.$route.path, 'opop')
-
-                this.$emit('addNewInfo')
+            selected () {
+                this.isSelected = !this.isSelected
+                this.$emit('selectedAll', this.isSelected)
             },
-            // selected () {
-            //     this.isSelected = !this.isSelected
-            //     this.$emit('selectedAll', this.isSelected)
-            // },
             deleteCard () {
                 this.$emit('deletInfo')
             },
-            // toggleList (type) {
-            //     this.$emit('toggleList',type)
-            // },
-            choseType () {
-                this.$emit('choseType',this.filterList)
-            },
-
             selectedAll () {
-                console.log(this.isSelected, 'zhehis')
                 this.$emit('selectedAll', this.isSelected)
             },
-            fixCard () {
-                this.$emit('fixedInfo')
+            batchEdit () {
+                this.$emit('batchEdit','batchEdit')
+            },
+            addNewInfo(){
+                this.$emit('addNewInfo')
             },
             showPersonJob () {
                 this.route = this.$route.path
-
             }
         },
         watch: {
@@ -76,7 +65,7 @@
 </script>
 
 <style lang="scss">
-    .dmisHeader{
+    .ruleHeader{
         .el-checkbox__label{
             padding-left: rem(5);
             font-size: rem(14);
@@ -114,7 +103,7 @@
 </style>
 
 <style lang="scss" scoped type="text/scss">
-    .dmisHeader{
+    .ruleHeader{
         width: 100%;
         height: 100%;
         div{

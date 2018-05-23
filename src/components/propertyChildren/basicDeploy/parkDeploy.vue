@@ -37,23 +37,27 @@
                         <el-table-column
                             prop="parkingBean.name"
                             label="名称"
-                            width="120">
+                            width="140">
                         </el-table-column>
                         <el-table-column
+                            width="120"
                             label="类型">
                             <template slot-scope="scope">
                                 <span>{{scope.row.parkingBean.type}}</span>
                             </template>
                         </el-table-column>
                         <el-table-column
+                            width="100"
                             prop="state"
                             label="状态">
                         </el-table-column>
                         <el-table-column
+                            width="100"
                             prop="parkingBean.surplusNum"
                             label="空余车位">
                         </el-table-column>
                         <el-table-column
+                            width="100"
                             prop="parkingBean.capacity"
                             label="车位总数">
                         </el-table-column>
@@ -62,10 +66,12 @@
                             label="位置">
                         </el-table-column>
                         <el-table-column
+                            width="140"
                             prop="regionName"
                             label="所属片区">
                         </el-table-column>
                         <el-table-column
+                            width="140"
                             label="操作">
                             <template slot-scope="scope">
                                 <span @click="showParkDetail(scope.row, '停车场信息',true)">查看</span>
@@ -147,12 +153,14 @@
             },
             closeDialog () {
                 this.visible = false
+                this.getAllPark()
             },
             searchAnything (info) {
                 console.log(info, '这是要过滤的')
+                console.log(this.checkList)
                 if (info.trim() !== '') {
                     this.parkList = this.checkList.filter(item => {
-                        if (item.regionName.includes(info)) {
+                        if ((item.regionName)&&(item.regionName.includes(info))) {
                             return item
                         }
                         if (item.parkingBean.name.includes(info)) {
@@ -340,7 +348,7 @@
             },
             fixedInfo (id) {
                 if (id){
-                    this.choseInfoId.push(id)
+                    //this.choseInfoId.push(id)
                 }
                 if (this.choseInfoId.length > 1) {
                     this.$message.warning('至多选择一个数据修改')

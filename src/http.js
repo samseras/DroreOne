@@ -29,6 +29,7 @@ axios.interceptors.response.use(
 
         }
         if (response.status === 400 && response.request.status === 400){
+            window.location.href = '/err'
             console.log(response, ',.,.,.,.,.,.,.,,..klkl')
         }
         return response

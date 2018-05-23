@@ -38,10 +38,10 @@ const exportFile ={
         })
     },
     // 人员导出
-    exportAllPerson(params){
+    exportAllPerson(par){
         return axios({
             method:'GET',
-            url:getUrl(`/person/export?type=${params}`)
+            url:getUrl(`/person/export?type=${par}`)
         })
     },
     exportSinglePerson(params){

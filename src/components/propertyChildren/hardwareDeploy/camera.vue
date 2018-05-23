@@ -16,6 +16,7 @@
                 <input type="file" ref="uploadFile" class="importFile" @change="selectFile">
             </div>
             <el-button size="mini" plain @click="downloadFile"><i class="el-icon-download"></i>导出</el-button>
+            <el-button size="mini" plain @click="downloadTemplate"><i class="el-icon-download"></i>下载模板</el-button>
 
         </div>
         <div class="titleCheck" v-if="route.includes('camera')" >
@@ -281,7 +282,9 @@
                 } else {
                     this.isShowIcon = true
                 }
-                this.$emit('toggleList',type)
+            },
+            downloadTemplate(){
+                window.location.href="/static/template/devices_import.csv";
             },
             choseType(){
                 this.$emit('choseType',this.filterList)

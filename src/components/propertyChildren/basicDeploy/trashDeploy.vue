@@ -40,12 +40,14 @@
                             width="120">
                         </el-table-column>
                         <el-table-column
+                            width="150"
                             label="类型">
                             <template slot-scope="scope">
                                 <span>{{scope.row.dustbinBean.type | typeFilter}}</span>
                             </template>
                         </el-table-column>
                         <el-table-column
+                            width="150"
                             prop="dustbinBean.dustbinCount"
                             label="个数">
                         </el-table-column>
@@ -54,6 +56,7 @@
                             label="位置">
                         </el-table-column>
                         <el-table-column
+                            width="150"
                             prop="regionName"
                             label="所属片区">
                         </el-table-column>
@@ -138,6 +141,7 @@
             },
             closeDialog () {
                 this.visible = false
+                this.getAllTrash()
             },
             searchAnything (info) {
                 console.log(info, '这是要过滤的')
@@ -169,7 +173,7 @@
             },
             deletInfo (id) {
                 if (id) {
-                    this.choseInfoId.push(id)
+                    //this.choseInfoId.push(id)
                 }
                 if (this.choseInfoId.length > 0) {
                     this.$confirm('此操作将永久删除该数据, 是否继续?', '提示', {
@@ -335,7 +339,7 @@
             },
             fixedInfo (id) {
                 if (id) {
-                    this.choseInfoId.push(id)
+                    //this.choseInfoId.push(id)
                 }
                 if (this.choseInfoId.length > 1) {
                     this.$message.warning('至多选择一个数据修改')

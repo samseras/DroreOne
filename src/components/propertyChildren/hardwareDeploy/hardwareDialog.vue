@@ -793,8 +793,7 @@
 
                }else if(this.route.includes('Light')) {
                    newInfo = this.Light
-                   if(
-                       !(newInfo.name && newInfo.name !=='') ||
+                   if(!(newInfo.name && newInfo.name !=='') ||
                        !(newInfo.hasOwnProperty("model")&& newInfo.model) ||
                        !(newInfo.regionId && newInfo.regionId !=='') ||
                        !(newInfo.location && newInfo.location !== '') ||

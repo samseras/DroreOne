@@ -14,7 +14,7 @@
                         @searchAnything="searchAnything">
                 </Header>
             </div>
-            <div class="personList" v-loading="isShowLoading">
+            <div class="personList judge-title" v-loading="isShowLoading">
                 <ScrollContainer>
                     <el-table
                         v-if="!isShowAreaCard"
@@ -116,6 +116,7 @@
         methods: {
             closeDialog () {
                 this.visible = false
+                this.getAllArea()
             },
             searchAnything (info) {
                 console.log(info, '这是要过滤的')
@@ -159,9 +160,9 @@
                                 this.areaList = this.areaList.filter((item, index) => {
                                     if (item.id === this.choseInfoId[i]){
                                         this.areaList[index].checked = false
-                                        this.areaList[index].status = false
+                                        //this.areaList[index].status = false
                                     }
-                                    return item
+                                    return item.id !== this.choseInfoId[i]
                                 })
                             }
                             this.choseInfoId = []
@@ -327,6 +328,7 @@
                         this.areaList[i].location = this.areaList[i].geo
                         this.areaList[i].byTime = -(new Date(this.areaList[i].modifyTime)).getTime()
                     }
+                    console.log(this.areaList)
                     this.areaList = _.sortBy(this.areaList,'byTime')
 
                     this.checkList = this.areaList
@@ -377,6 +379,13 @@
                 margin-top: rem(10);
                 border-bottom: 2px solid #e44b4e;
             }
+            /*.judge-title{
+                .cell{
+                    white-space: nowrap ;
+                    overflow: hidden ;
+                    text-overflow: ellipsis ;
+                }
+            }*/
             .personList{
                 width: 100%;
                 flex: 1;
@@ -465,4 +474,11 @@
         }
     }
 
+</style>
+<style>
+    .judge-title  .cell{
+        white-space: nowrap ;
+        overflow: hidden ;
+        text-overflow: ellipsis ;
+    }
 </style>

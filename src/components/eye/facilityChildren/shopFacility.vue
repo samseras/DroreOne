@@ -1,5 +1,3 @@
-
-
 <template>
     <div class="shop">
         <!--顶部-->
@@ -34,13 +32,7 @@
 
 </template>
 <script>
-       // import shopingData from "../../../../API/shop.json"
 
-
-//    const park=[
-//        {title:"肯德基",content:"充裕",total:"300",spare:"140"},
-//        {title:"星巴克咖啡",content:"紧张",total:"300",spare:"240"}
-//    ];
     export default{
         data(){
             return{
