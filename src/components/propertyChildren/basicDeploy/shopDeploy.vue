@@ -11,6 +11,7 @@
                         @choseType = 'choseType'
                         :choseId="choseInfoId"
                         :listsLength="shopList.length"
+                        :personListFlag="selectFlag"
                         @selectedAll = 'selectedAll'
                         @fixedInfo = 'fixedInfo'
                         @searchAnything="searchAnything"
@@ -94,8 +95,8 @@
                         </div>
                         <div class="specificInfo">
                             <p class="name">所属区域：<span>{{item.regionName}}</span></p>
+                            <p class="idNum">商铺类型：<span>{{item.businessTypeName}}</span></p>
                             <p class="sex">状&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;态：<span>{{item.businessBean.state}}</span></p>
-                            <!--<p class="idNum">当前人数：<span>{{item.businessBean.currentNum}}</span></p>-->
                             <p class="phoneNum">最大容量：<span>{{item.businessBean.capacity}}</span></p>
                         </div>
                     </div>
@@ -125,6 +126,8 @@
         name: "shop-deploy",
         data () {
             return {
+                selectFlag:false,
+                tempSelects:[],
                 isShowShopCard: true,
                 checkList: [],
                 filterList: [],
@@ -237,6 +240,7 @@
                             }
                             this.$message.success('删除成功')
                             this.choseInfoId = []
+                            this.getAllShop()
                         }).catch(err => {
                             console.log(err)
                             this.$message.error('删除失败，请稍后重试')
@@ -256,6 +260,7 @@
                 }
             },
             checked (id) {
+                this.tempSelects=[];
                 this.shopList = this.shopList.filter(item => {
                     if (item.id === id) {
                         item.checked = item.checked
@@ -270,6 +275,16 @@
                     this.choseInfoId.push(id)
                 }
                 console.log(this.choseInfoId)
+                let that=this;
+                this.shopList.forEach(function(item,i){
+                    (item.checked)&&(that.tempSelects.push(item))
+                })
+                console.log(this.tempSelects)
+                if(this.tempSelects.length===this.shopList.length){
+                    this.selectFlag=true
+                }else{
+                    this.selectFlag=false
+                }
             },
             choseType (type) {
                 console.log(type)
@@ -427,6 +442,9 @@
                     this.shopList = _.sortBy(this.shopList, 'byTime')
                     this.checkList = this.shopList
                     this.choseInfoId = []
+                    if(this.shopList.length=== 0){
+                        this.selectFlag=false
+                    }
                 }).catch(err => {
                     console.log(err)
                     this.isShowLoading = false
