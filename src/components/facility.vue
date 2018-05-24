@@ -111,7 +111,7 @@
                     background: #EFF7F2;
                     li{
                         width: 100%;
-                        height: rem(40);
+                        height: rem(50);
                         a{
                             display: block;
                             width: 100%;
@@ -120,8 +120,8 @@
                             line-height: rem(40);
                             img{
                                 vertical-align: middle;
-                                width: rem(15);
-                                height: rem(15);
+                                width: rem(18);
+                                height: rem(18);
                             }
                         }
                     }

@@ -36,11 +36,16 @@
                         </el-table-column>
                         <el-table-column
                             prop="upperLimit"
-                            label="水位上限">
+                            label="水位上限(m)">
                         </el-table-column>
                         <el-table-column
                             prop="lowerLimit"
-                            label="水位下限">
+                            label="水位下限(m)">
+                        </el-table-column>
+                        <el-table-column
+                            sortable
+                            prop="level"
+                            label="严重等级">
                         </el-table-column>
                         <el-table-column
                             sortable

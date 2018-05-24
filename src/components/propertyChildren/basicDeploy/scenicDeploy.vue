@@ -53,11 +53,13 @@
                             prop="scenicspotBean.capacity"
                             label="容量">
                         </el-table-column>
-                        <el-table-column
+
+                        <!--<el-table-column
                             width="100"
                             prop="scenicspotBean.currentNum"
                             label="当前人数">
-                        </el-table-column>
+                        </el-table-column>-->
+
                         <el-table-column
                             prop="location"
                             label="位置">
@@ -77,7 +79,8 @@
                             <el-checkbox v-model="item.checked" @change="checked(item.id)" class="checkBtn"></el-checkbox>
                         </div>
                         <div class="personType" @click.stop="showPersonDetail(item, '景点信息',true)">
-                            <img src="../../../../static/img/scenicCard.png" alt="">
+                            <!--<img src="../../../../static/img/scenicCard.png" alt="">-->
+                            <img :src="getUrl(item.picturePath)" alt="" @error="imgError">
                             <span class="type">
                                   {{item.scenicspotBean.name}}
                                 </span>
@@ -85,7 +88,7 @@
                         <div class="specificInfo">
                             <p class="name">所属区域：<span>{{item.regionName}}</span></p>
                             <p class="sex">状&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;态：<span>{{item.scenicspotBean.status}}</span></p>
-                            <p class="idNum">当前人数：<span>{{item.scenicspotBean.currentNum}}</span></p>
+                            <!--<p class="idNum">当前人数：<span>{{item.scenicspotBean.currentNum}}</span></p>-->
                             <p class="phoneNum">最大容量：<span>{{item.scenicspotBean.capacity}}</span></p>
                         </div>
                     </div>
@@ -130,6 +133,16 @@
             }
         },
         methods: {
+            imgError (e) {
+                e.target.src = this.getUrl(null);
+            },
+            getUrl (url) {
+                if (url === null) {
+                    return '../../../../static/img/scenicCard.png'
+                } else {
+                    return url
+                }
+            },
             closeDialog () {
                 this.visible = false
                 this.getAllScenic()
@@ -258,12 +271,25 @@
                 let longitude = info.location.substring(0, index)
                 let latitude = info.location.substring(index + 1)
                 let scenicObj = {
+                    description:info.description,
                     id: info.scenicspotBean.id,
                     name: info.scenicspotBean.name,
                     capacity: info.scenicspotBean.capacity,
                     regionId: info.regionId,
                     latitude: latitude,
                     longitude: longitude
+                }
+                if (info.imgUrl !== '') {
+                    await api.person.updataAva(info.imgUrl).then(res => {
+                        console.log(res, '上传成功')
+                        scenicObj.pictureId = res.id
+                    }).catch(err => {
+                        console.log(err, '上传失败')
+                        this.$message.error('上传失败，其请稍后重试')
+                        return
+                    })
+                } else {
+                    scenicObj.pictureId = info.pictureId
                 }
                 console.log(scenicObj, 'this is trashObj')
                 await api.scenic.updateScenic(JSON.stringify(scenicObj)).then(res => {
@@ -279,11 +305,22 @@
                 let longitude = info.location.substring(0, index)
                 let latitude = info.location.substring(index + 1)
                 let scenicObj = {
+                    description:info.description,
                     name: info.scenicspotBean.name,
                     capacity: info.scenicspotBean.capacity,
                     regionId: info.regionId,
                     latitude: latitude,
                     longitude: longitude
+                }
+                if (info.imgUrl !== '') {
+                    await api.person.updataAva(info.imgUrl).then(res => {
+                        console.log(res, '上传成功')
+                        scenicObj.pictureId = res.id
+                    }).catch(err => {
+                        console.log(err, '上传失败')
+                        this.$message.error('上传失败，其请稍后重试')
+                        return
+                    })
                 }
                 console.log(scenicObj, 'this is trashObj')
                 await api.scenic.createScenic(JSON.stringify(scenicObj)).then(res => {
@@ -326,6 +363,7 @@
                         this.scenicList[i].checked = false
                         this.scenicList[i].status = true
                         this.scenicList[i].id = this.scenicList[i].scenicspotBean.id
+                        this.scenicList[i].description = this.scenicList[i].scenicspotBean.description
                         this.scenicList[i].location = `${this.scenicList[i].longitude},${this.scenicList[i].latitude}`
                         this.scenicList[i].scenicspotBean.currentNum = this.currentNum
                         // scenicspotBean.status

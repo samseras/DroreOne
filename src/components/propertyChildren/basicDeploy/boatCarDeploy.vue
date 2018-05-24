@@ -90,7 +90,8 @@
                             <el-checkbox v-model="item.checked" @change="getChecked(item.id)" class="checkBtn"></el-checkbox>
                         </div>
                         <div class="personType" :class="item.type === '车辆'? 'carInfo':''" @click.stop="showPersonDetail(item ,'车船信息',true)">
-                            <img src="../../../../static/img/boatCartCard.png" alt="">
+                            <!--<img src="../../../../static/img/boatCartCard.png" alt="">-->
+                            <img :src="getUrl(item.picturePath)" alt="" @error="imgError">
                             <span class="type">
                                   {{item.vehicle.type | boatFilter}}信息
                             </span>
@@ -143,6 +144,16 @@
             }
         },
         methods: {
+            imgError (e) {
+                e.target.src = this.getUrl(null);
+            },
+            getUrl (url) {
+                if (url === null) {
+                    return '../../../../static/img/boatCartCard.png'
+                } else {
+                    return url
+                }
+            },
             closeDialog () {
                 this.visible = false;
                 this.getAllBoat()
@@ -278,6 +289,7 @@
             },
             async fixInfo (info) {
                 let boatObj = {
+                    description: info.vehicle.description,
                     id: info.id,
                     serialNum: info.vehicle.serialNum,
                     capacity: info.vehicle.capacity,
@@ -287,6 +299,18 @@
                     maintenanceStatus: info.vehicle.maintenanceStatus,
                     maintenanceDate: info.vehicle.maintenanceDate,
                     purchaseDate: info.vehicle.purchaseDate
+                }
+                if (info.imgUrl !== '') {
+                    await api.person.updataAva(info.imgUrl).then(res => {
+                        console.log(res, '上传成功')
+                        boatObj.pictureId = res.id
+                    }).catch(err => {
+                        console.log(err, '上传失败')
+                        this.$message.error('上传失败，其请稍后重试')
+                        return
+                    })
+                } else {
+                    boatObj.pictureId = info.pictureId
                 }
                 console.log(boatObj, 'this is trashObj')
                 await api.boat.updateBoat(JSON.stringify(boatObj)).then(res => {
@@ -301,6 +325,7 @@
             },
             async addNewBoatCar (info) {
                 let boatObj = {
+                    description: info.vehicle.description,
                     serialNum: info.vehicle.serialNum,
                     capacity: info.vehicle.capacity,
                     type: info.vehicle.type,
@@ -309,6 +334,16 @@
                     maintenanceStatus: info.vehicle.maintenanceStatus,
                     maintenanceDate: info.vehicle.maintenanceDate,
                     purchaseDate: info.vehicle.purchaseDate
+                }
+                if (info.imgUrl !== '') {
+                    await api.person.updataAva(info.imgUrl).then(res => {
+                        console.log(res, '上传成功')
+                        boatObj.pictureId = res.id
+                    }).catch(err => {
+                        console.log(err, '上传失败')
+                        this.$message.error('上传失败，其请稍后重试')
+                        return
+                    })
                 }
                 console.log(boatObj);
                 await api.boat.createBoat(JSON.stringify(boatObj)).then(res => {
@@ -352,6 +387,7 @@
                         this.boatCarList[i].checked = false
                         this.boatCarList[i].status = true
                         this.boatCarList[i].id = this.boatCarList[i].vehicle.id
+                        this.boatCarList[i].description = this.boatCarList[i].vehicle.description
                         this.boatCarList[i].byTime = -(new Date(this.boatCarList[i].vehicle.modifyTime)).getTime()
                     }
                     this.boatCarList = _.sortBy(this.boatCarList,'byTime')

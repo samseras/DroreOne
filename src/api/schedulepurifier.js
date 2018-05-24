@@ -37,6 +37,16 @@ const purifier = {
             data:info
         })
     },
+    stareEndPlan (id) {
+        return axios ({
+            method: 'PUT',
+            url: getUrl('/schedule/clean/isenabled'),
+            data:{
+                ids:id
+            }
+
+        })
+    }
 }
 
 export default purifier

@@ -7,6 +7,7 @@
                 <Header @addNewInfo = "addNewInfo"
                         @deletInfo = "deletInfo"
                         @selectedAll = 'selectedAll'
+                        @startEndPlan="startEndPlan"
                         @fixedInfo = 'fixedInfo'>
                 </Header>
             </div>
@@ -21,7 +22,7 @@
                         <el-table-column
                             width="50">
                             <template slot-scope="scope">
-                                <el-checkbox v-model="scope.row.checked" @change="checked(scope.row)" class="checkBoxBtn"></el-checkbox>
+                                <el-checkbox v-model="scope.row.checked" @change="checked(scope.row.id)" class="checkBoxBtn"></el-checkbox>
                             </template>
                         </el-table-column>
 
@@ -54,8 +55,8 @@
                         <el-table-column label="操作" width="200">
                             <template slot-scope="scope">
                                 <span @click="fixedInfo(scope.row,'巡更路线编辑')">编辑</span> |
-                                <span @click="stop(scope.row,'片区信息')" v-if="scope.row.isStop">停止 |</span>
-                                <span @click="start(scope.row,'片区信息')" v-else="scope.row.isStart">开始 |</span>
+                                <span @click="stop(scope.row)" v-if="scope.row.inspectionSchedule.enabled">停止 |</span>
+                                <span @click="stop(scope.row)" v-else="!scope.row.inspectionSchedule.enabled">开始 |</span>
                                 <span @click="showPersonDetail(scope.row,'巡更路线信息',true)">查看</span> |
                                 <span @click="deletInfo(scope.row.id,'片区信息')">删除</span>
                             </template>
@@ -120,6 +121,56 @@
             }
         },
         methods: {
+            startEndPlan (state) {
+                console.log(this.choseInfoId, 'opopopop')
+                let choseId = []
+                choseId = this.patrolList.filter(item => {
+                    if (this.choseInfoId.includes(item.id)) {
+                        if (state === 'start') {
+                            if (!item.inspectionSchedule.enabled) {
+                                return item
+                            }
+                        } else {
+                            if (item.inspectionSchedule.enabled) {
+                                return item
+                            }
+                        }
+                    }
+                })
+                choseId = choseId.map(item => {
+                    return item.id
+                })
+                if(choseId.length < 1) {
+                    if (state === 'start') {
+                        this.$message.info('当前选中的计划已开启')
+                    } else {
+                        this.$message.info('当前选中的计划已关闭')
+                    }
+                    return
+                }
+                api.patrol.stareEndPlan(choseId).then(res => {
+                    console.log(res, '更改状态成功')
+                    if (state === 'start') {
+                        this.$message.success('计划开启成功')
+                    } else {
+                        this.$message.success('计划关闭成功')
+                    }
+                    choseId.forEach(item => {
+                        this.patrolList.forEach(item1 => {
+                            if (item === item1.id) {
+                                item1.inspectionSchedule.enabled = !item1.inspectionSchedule.enabled
+                            }
+                        })
+                    })
+                }).catch(err => {
+                    console.log(err, '计划开启失败')
+                    if (state === 'start') {
+                        this.$message.error('计划开启失败，请稍后重试')
+                    } else {
+                        this.$message.error('计划关闭失败，请稍后重试')
+                    }
+                })
+            },
             closeDmisDialog () {
                 this.visible = false
             },
@@ -140,6 +191,21 @@
             deletInfo (id) {
                 if (id) {
                     this.choseInfoId = [id]
+                }
+                let isDelete = false
+                this.choseInfoId.forEach(item => {
+                    this.patrolList.forEach(item1 => {
+                        if (item === item1.id) {
+                            if (item1.inspectionSchedule.enabled) {
+                                isDelete = true
+                                this.$message.info('所选计划已经开启，请关闭后再删除')
+                                return
+                            }
+                        }
+                    })
+                })
+                if (isDelete) {
+                    return
                 }
                 if (this.choseInfoId.length > 0) {
                     this.$confirm('此操作将永久删除该数据, 是否继续?', '提示', {
@@ -265,55 +331,24 @@
                 })
             },
             fixedInfo (info,title) {
+                if (info.inspectionSchedule.enabled) {
+                    this.$message.info('所选计划已经开启，请关闭后再修改')
+                    return
+                }
                 this.showPersonDetail(info, title, false)
             },
             stop(Info){
-                console.log(Info.id)
-                if (this.choseInfoId.includes(Info.id)) {
-                    if(this.choseInfoId.length > 1){
-                        this.$message.warning('至多选择一条数据')
-                    }else{
-                        Info.isStart = true;
-                        Info.isStop = false;
-                    }
-                }else {
-                    if(this.choseChecked.length == 0){
-                        this.choseInfoId.push(Info.id)
-                        if(this.choseInfoId.length > 1){
-                            this.$message.warning('至多选择一条数据')
-                        }else{
-                            Info.isStart = true;
-                            Info.isStop = false;
-                        }
-                        this.choseInfoId = []
+                api.patrol.stareEndPlan([Info.id]).then(res => {
+                    console.log(res, '成功')
+                    Info.inspectionSchedule.enabled = !Info.inspectionSchedule.enabled
+                    if (!Info.inspectionSchedule.enabled) {
+                        this.$message.success('调度计划已关闭')
                     }else {
-                        this.$message.warning('选择的数据和即将编辑的数据不一致，或者未选择包编辑的数据')
+                        this.$message.success('调度计划已开启')
                     }
-                }
-            },
-            start(Info){
-                console.log(Info.id)
-                if (this.choseInfoId.includes(Info.id)) {
-                    if(this.choseInfoId.length > 1){
-                        this.$message.warning('至多选择一条数据')
-                    }else{
-                        Info.isStart = false;
-                        Info.isStop = true;
-                    }
-                }else {
-                    if(this.choseChecked.length == 0){
-                        this.choseInfoId.push(Info.id)
-                        if(this.choseInfoId.length > 1){
-                            this.$message.warning('至多选择一条数据')
-                        }else{
-                            Info.isStart = false;
-                            Info.isStop = true;
-                        }
-                        this.choseInfoId = []
-                    }else {
-                        this.$message.warning('选择的数据和即将编辑的数据不一致，或者未选择包编辑的数据')
-                    }
-                }
+                }).then(err => {
+                    console.log(err, '失败')
+                })
             },
             async getAllpatrol () {
                 this.isShowLoading = true
