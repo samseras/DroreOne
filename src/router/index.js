@@ -8,6 +8,7 @@ import Router from 'vue-router'
 import MicServiceManagementSystem from '@/components/pages/MicroService/MicroServiceManagementSystem'
 import Index from '@/components/pages/index'
 import login from '@/components/pages/login'
+// import Error from '@/components/pages/err'
 
 import eye from '@/components/pages/eye'
 
@@ -33,13 +34,19 @@ import labelLibrary from '@/components/gis/labelManage/labelLibrary'
 
 // 全视之眼----设施
 import Facility from '@/components/facility'
-import Toilet from "@/components/eye/facilityChildren/toiletFacility"
-import Park from "@/components/eye/facilityChildren/parkFacility"
-import Shop from "@/components/eye/facilityChildren/shopFacility"
-import Road from "@/components/eye/facilityChildren/roadFacility"
-import Dustbin from "@/components/eye/facilityChildren/dustbinFacility"
-import ScenicName from "@/components/eye/facilityChildren/scenicNameFacility"
-import Build from "@/components/eye/facilityChildren/buildFacility"
+import Road from "@/components/eye/facilityChildren/roadFacility"//路网
+import Park from "@/components/eye/facilityChildren/parkFacility"//停车场
+import Toilet from "@/components/eye/facilityChildren/toiletFacility"//卫生间
+import Shop from "@/components/eye/facilityChildren/shopFacility"//商铺
+import Build from "@/components/eye/facilityChildren/buildFacility"//建筑
+import ScenicName from "@/components/eye/facilityChildren/scenicNameFacility"//景点
+import Plant from "@/components/eye/facilityChildren/plantFacility"//植物
+import Indicator from "@/components/eye/facilityChildren/indicatorFacility"//指示牌
+
+
+
+
+
 
 // 全视之眼----主页（目前隐藏）
 import HomePage from '@/components/homePage'
@@ -133,6 +140,11 @@ const routes = [
       path: '/MicServiceManagementSystem',
       component: MicServiceManagementSystem
     },
+    // //404页面
+    // {
+    //     path: '/err',
+    //     component: Error
+    // },
       // 主页面
     {
       path: '/droreone',
@@ -194,9 +206,10 @@ const routes = [
                     {path: '/facility/park',name: 'Park', component:Park},
                     {path: '/facility/shop',name: 'Shop', component:Shop},
                     {path: '/facility/road',name: 'Road', component:Road},
-                    {path: '/facility/dustbin',name: 'Dustbin', component:Dustbin},
-                    {path: '/facility/scenicName',name: 'ScenicName', component:ScenicName},
-                    {path: '/facility/build',name: 'Build', component:Build}
+                    {path: '/facility/scenic',name: 'ScenicName', component:ScenicName},
+                    {path: '/facility/build',name: 'Build', component:Build},
+                    {path: '/facility/plant',name: 'Plant', component:Plant},
+                    {path: '/facility/indicator',name: 'Indicator', component:Indicator}
                 ]
             },
             //调度

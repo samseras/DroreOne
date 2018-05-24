@@ -35,7 +35,7 @@
                     <p class="port">端&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;口：
                         <el-input type="text" v-model="camera.port" :disabled="isDisabled"></el-input>
                     </p>
-                    <p class="place">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置：
+                    <p class="place" :class="{ps:isDisabled}">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置：
                         <span>{{camera.location}}</span>
                         <i class="el-icon-location-outline" @click="showMapDialog"></i>
                     </p>
@@ -49,9 +49,16 @@
                             </el-option>
                         </el-select>
                     </p>
-                    <p class="description">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：
+                    <p class="description ms">
+                        <span class="des">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：</span>
                         <el-input type="textarea" v-model="camera.description" :disabled="isDisabled"></el-input>
                     </p>
+                    <div class="img">
+                        <img :src="getUrl(camera.picturePath)" alt="" v-if="isDisabled" @error="imgError">
+                        <label for="avatar" v-if="!isDisabled">
+                            <img :src="files.length ? files[0].url : getUrl(camera.picturePath)"  @error="imgError" class="rounded-circle" />
+                        </label>
+                    </div>
                 </div>
                 <!--广播-->
                 <div class="cameraCard popCard" v-if="route.includes('broadcast')">
@@ -80,7 +87,7 @@
                     <p class="host">端&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;口:
                         <el-input type="text" v-model="broadCast.port" :disabled="isDisabled"></el-input>
                     </p>
-                    <p class="place">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置:
+                    <p class="place" :class="{ps:isDisabled}">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置:
                         <span>{{broadCast.location}}</span>
                         <i class="el-icon-location-outline" @click="showMapDialog"></i>
                     </p>
@@ -93,9 +100,16 @@
                             </el-option>
                         </el-select>
                     </p>
-                    <p class="describe">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述:
+                    <p class="describe ms">
+                        <span class="des">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述:</span>
                         <el-input type="textarea" v-model="broadCast.description" :disabled="isDisabled" ></el-input>
                     </p>
+                    <div class="img">
+                        <img :src="getUrl(broadCast.picturePath)" alt="" v-if="isDisabled" @error="imgError">
+                        <label for="avatar" v-if="!isDisabled">
+                            <img :src="files.length ? files[0].url : getUrl(broadCast.picturePath)"  @error="imgError" class="rounded-circle" />
+                        </label>
+                    </div>
                 </div>
                 <!--LED-->
                 <div class="cameraCard popCard" v-if="route.includes('led')">
@@ -129,7 +143,7 @@
                     <p class="host">设备编号:
                         <el-input type="text" v-model="led.serialNum" :disabled="isDisabled"></el-input>
                     </p>
-                    <p class="place">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置:<span>{{led.location}}</span>
+                    <p class="place" :class="{ps:isDisabled}">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置:<span>{{led.location}}</span>
                         <i class="el-icon-location-outline" @click="showMapDialog"></i>
                     </p>
                     <p class="area">所属片区:
@@ -143,10 +157,17 @@
                         </el-select>
 
                     </p>
-                    <p class="describe textarea">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：
+                    <p class="describe textarea ms">
+                        <span class="des">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：</span>
 
                         <el-input type="textarea" v-model="led.description" :disabled="isDisabled"></el-input>
                     </p>
+                    <div class="img">
+                        <img :src="getUrl(led.picturePath)" alt="" v-if="isDisabled" @error="imgError">
+                        <label for="avatar" v-if="!isDisabled">
+                            <img :src="files.length ? files[0].url : getUrl(led.picturePath)"  @error="imgError" class="rounded-circle" />
+                        </label>
+                    </div>
                 </div>
                 <!--Wifi-->
                 <div class="cameraCard popCard" v-if="route.includes('wifi')">
@@ -189,7 +210,7 @@
                     <p class="host">设备编号:
                         <el-input type="text" v-model="wifi.serialNum" :disabled="isDisabled"></el-input>
                     </p>
-                    <p class="place">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置:
+                    <p class="place" :class="{ps:isDisabled}">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置:
                         <span>{{wifi.location}}</span>
                         <i class="el-icon-location-outline" @click="showMapDialog"></i>
                     </p>
@@ -202,10 +223,17 @@
                                 :label="item.name"></el-option>
                         </el-select>
                     </p>
-                   <p class="describe">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：
+                   <p class="describe ms">
+                       <span class="des">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：</span>
 
                         <el-input type="textarea" v-model="wifi.description" :disabled="isDisabled" ></el-input>
                     </p>
+                    <div class="img">
+                        <img :src="getUrl(wifi.picturePath)" alt="" v-if="isDisabled" @error="imgError">
+                        <label for="avatar" v-if="!isDisabled">
+                            <img :src="files.length ? files[0].url : getUrl(wifi.picturePath)"  @error="imgError" class="rounded-circle" />
+                        </label>
+                    </div>
                 </div>
                 <!--传感器-->
                 <div class="cameraCard popCard" v-if="route.includes('monitors')">
@@ -236,7 +264,7 @@
                     <p class="host">设备端口:
                         <el-input type="text" v-model="monitors.port" :disabled="isDisabled"></el-input>
                     </p>
-                    <p class="place">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置:
+                    <p class="place" :class="{ps:isDisabled}">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置:
                         <span>{{monitors.location}}</span>
                         <i class="el-icon-location-outline" @click="showMapDialog"></i>
                     </p>
@@ -249,10 +277,17 @@
                                 :label="item.name"></el-option>
                         </el-select>
                     </p>
-                    <p class="describe">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述:
+                    <p class="describe ms">
+                        <span class="des">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述:</span>
 
                         <el-input type="textarea" v-model="monitors.description" :disabled="isDisabled"></el-input>
                     </p>
+                    <div class="img">
+                        <img :src="getUrl(monitors.picturePath)" alt="" v-if="isDisabled" @error="imgError">
+                        <label for="avatar" v-if="!isDisabled">
+                            <img :src="files.length ? files[0].url : getUrl(monitors.picturePath)"  @error="imgError" class="rounded-circle" />
+                        </label>
+                    </div>
                 </div>
                 <!--灯光-->
                 <div class="cameraCard popCard" v-if="route.includes('Light')">
@@ -280,7 +315,7 @@
                             </el-option>
                         </el-select>
                     </p >
-                    <p class="place">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置:<span>{{Light.location}}</span>
+                    <p class="place" :class="{ps:isDisabled}">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置:<span>{{Light.location}}</span>
                         <i class="el-icon-location-outline" @click="showMapDialog"></i>
                     </p>
                     <p class="area">所属片区:
@@ -291,10 +326,17 @@
                             </el-option>
                         </el-select>
                     </p>
-                    <p class="describe">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述:
+                    <p class="describe ms">
+                        <span class="des">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述:</span>
 
                         <el-input type="textarea" v-model="Light.description" :disabled="isDisabled"></el-input>
                     </p>
+                    <div class="img">
+                        <img :src="getUrl(Light.picturePath)" alt="" v-if="isDisabled" @error="imgError">
+                        <label for="avatar" v-if="!isDisabled">
+                            <img :src="files.length ? files[0].url : getUrl(Light.picturePath)"  @error="imgError" class="rounded-circle" />
+                        </label>
+                    </div>
                 </div>
                 <!--闸机-->
                 <div class="cameraCard popCard" v-if="route.includes('gate')">
@@ -327,7 +369,7 @@
                     <p class="name">端&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;口:
                         <el-input type="text" v-model="gate.port" :disabled="isDisabled"></el-input>
                     </p>
-                    <p class="place">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置:
+                    <p class="place" :class="{ps:isDisabled}">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置:
                         <span>{{gate.location}}</span>
                         <i class="el-icon-location-outline" @click="showMapDialog"></i>
                     </p>
@@ -337,9 +379,16 @@
                                 :label="item.name"></el-option>
                         </el-select>
                     </p>
-                    <p class="describe">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述:
+                    <p class="describe ms">
+                        <span class="des">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述:</span>
                         <el-input type="textarea"  v-model="gate.description" :disabled="isDisabled"></el-input>
                     </p>
+                    <div class="img">
+                        <img :src="getUrl(gate.picturePath)" alt="" v-if="isDisabled" @error="imgError">
+                        <label for="avatar" v-if="!isDisabled">
+                            <img :src="files.length ? files[0].url : getUrl(gate.picturePath)"  @error="imgError" class="rounded-circle" />
+                        </label>
+                    </div>
                 </div>
                 <!--报警柱-->
                 <div class="cameraCard popCard" v-if="route.includes('police')">
@@ -372,7 +421,7 @@
                         <el-input type="text" v-model="police.ip" :disabled="isDisabled"></el-input>
                     </p>
 
-                    <p class="place">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置:
+                    <p class="place" :class="{ps:isDisabled}">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置:
                         <span>{{police.location}}</span>
                         <i class="el-icon-location-outline" @click="showMapDialog"></i>
                     </p>
@@ -382,10 +431,17 @@
                                 :label="item.name"></el-option>
                         </el-select>
                     </p>
-                    <p class="describe">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述:
+                    <p class="describe ms">
+                        <span class="des">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述:</span>
 
                         <el-input type="textarea" v-model="police.description" :disabled="isDisabled" ></el-input>
                     </p>
+                    <div class="img">
+                        <img :src="getUrl(police.picturePath)" alt="" v-if="isDisabled" @error="imgError">
+                        <label for="avatar" v-if="!isDisabled">
+                            <img :src="files.length ? files[0].url : getUrl(police.picturePath)"  @error="imgError" class="rounded-circle" />
+                        </label>
+                    </div>
                 </div>
 
             </div>
@@ -535,7 +591,6 @@
                src:'',
                edit: false,
                cropper: false,
-               src: {},
                attribute:{},
                extend:{},
                content:[],
@@ -545,6 +600,37 @@
        },
        methods:{
            ...mapMutations(['LOCATION_ID']),
+           imgError (e) {
+               e.target.src = this.getUrl(null);
+           },
+           getUrl (url) {
+               if (url === null || url === undefined) {
+                   let imgSrc
+                       console.log(this.$route.path, 'p[ppppp[p')
+                       let route = this.$route.path
+                       if (route.includes('camera')) {//摄像头
+                           imgSrc = './../../../../static/img/cameraCard.png'
+                       }else if (route.includes('broadcast')) {//广播
+                           imgSrc = './../../../../static/img/broadcastCard.png'
+                       }else if (route.includes('monitors')) {//环境监测
+                           imgSrc = './../../../../static/img/environmentCard.png'
+                       }else if (route.includes('police')) {//报警
+                           imgSrc = './../../../../static/img/policeCard.png'
+                       }else if (route.includes('led')) {//LED
+                           imgSrc = './../../../../static/img/screenCard.png'
+                       }else if (route.includes('wifi')) {//wifi
+                           imgSrc = './../../../../static/img/wifiCard.png'
+                       }else if (route.includes('gate')) {//闸机
+                           imgSrc = './../../../../static/img/gateCard.png'
+                       }else if (route.includes('lampLight')) {//灯光
+                           imgSrc = './../../../../static/img/botanyCard.png'
+                       }
+                   console.log(imgSrc, 'opopopopopopopo')
+                   return imgSrc
+               } else {
+                   return url
+               }
+           },
            choseModel (item) {
                console.log(item, '这是选择的')
                console.log(this.modelType, '所有的')
@@ -1281,6 +1367,7 @@
     }
 
 </style>
+
 <style lang="scss" type="text/scss">
     .hardwareDialog{
         width: 100%;
@@ -1399,26 +1486,44 @@
                         box-sizing: border-box;
                     }
                 }
+                .ps{
+                    span{
+                        color:#c0c4cc;
+                    }
+                }
+                .ms{
+                    border-bottom:1px solid transparent;
+                    .des{
+                        float:left;
+                        display:inline-block;
+                        width:4.3rem;
+                        height:45px;
+
+                    }
+
+                    div{
+                        width:79%;
+
+                    }
+                }
                 .textarea {
                     border-bottom: 1px solid transparent;
                 }
-                /*.img{
-                        width: rem(120);
-                        height: rem(60);
-                        position: absolute;
-                        top: rem(0);
-                        right: rem(-5);
-                        background: #fff;
-                        img{
-                            width: rem(55);
-                            height: rem(55);
-                            border:1px solid #988E83;
-                            display: inline-block;
-                            background:red;
-                            border-radius: 50%;
-                            margin-left: rem(40);
-                        }
-                    }*/
+                .img{
+                    width: rem(100);
+                    height: rem(60);
+                    position: absolute;
+                    top: rem(0);
+                    right: rem(-15);
+                    background: #fff;
+                    img{
+                        width: rem(55);
+                        height: rem(55);
+                        display: inline-block;
+                        border-radius: 50%;
+                        margin-left: rem(22);
+                    }
+                }
             }
             .cardFooter {
                 width: 100%;
@@ -1439,5 +1544,16 @@
     }
 
 </style>
+<style>
 
+    .el-input.is-disabled .el-input__inner,.el-textarea.is-disabled .el-textarea__inner{
+            background-color:transparent;
+        }
+    .ms .el-textarea__inner{
+            font-size:.75rem;
+            font-family: Arial;
+        }
+
+
+</style>
 

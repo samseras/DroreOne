@@ -38,10 +38,12 @@
                             width="120">
                         </el-table-column>
                         <el-table-column
+                            width="180"
                             prop="regionName"
                             label="所属片区">
                         </el-table-column>
                         <el-table-column
+                            width="120"
                             prop="plant.height"
                             label="高度">
                         </el-table-column>
@@ -50,10 +52,12 @@
                             label="位置">
                         </el-table-column>
                         <el-table-column
+                            width="180"
                             prop="plant.plantYear"
                             label="年代">
                         </el-table-column>
                         <el-table-column
+                            width="150"
                             label="操作">
                             <template slot-scope="scope">
                                 <span @click="showPersonDetail(scope.row, '植物信息',true)">查看</span>
@@ -64,12 +68,13 @@
                             </template>
                         </el-table-column>
                     </el-table>
-                    <div class="personInfo" v-for="item in treeList" v-if="isShowToiletCard && item.status">
+                    <div class="personInfo judge-title" v-for="item in treeList" v-if="isShowToiletCard && item.status">
                         <div class="checkBox">
                             <el-checkbox v-model="item.checked" @change="checked(item.id)" class="checkBtn"></el-checkbox>
                         </div>
                         <div class="personType" @click.stop="showPersonDetail(item, '植物信息',true)">
-                            <img src="../../../../static/img/botanyCard.png" alt="">
+                            <!--<img src="../../../../static/img/botanyCard.png" alt="">-->
+                            <img :src="getUrl(item.picturePath)" alt="" @error="imgError">
                             <span class="type">
                                   {{item.plant.name}}
                                 </span>
@@ -121,6 +126,16 @@
             }
         },
         methods: {
+            imgError (e) {
+                e.target.src = this.getUrl(null);
+            },
+            getUrl (url) {
+                if (url === null) {
+                    return '../../../../static/img/botanyCard.png'
+                } else {
+                    return url
+                }
+            },
             closeDialog () {
                 this.visible = false
                 this.getAllTree()
@@ -263,6 +278,18 @@
                     description: info.plant.description,
                     genera: info.plant.genera
                 }
+                if (info.imgUrl !== '') {
+                    await api.person.updataAva(info.imgUrl).then(res => {
+                        console.log(res, '上传成功')
+                        treetObj.pictureId = res.id
+                    }).catch(err => {
+                        console.log(err, '上传失败')
+                        this.$message.error('上传失败，其请稍后重试')
+                        return
+                    })
+                } else {
+                    treetObj.pictureId = info.pictureId
+                }
                 await api.plant.updatePlant(JSON.stringify(treetObj)).then(res => {
                     this.closeDialog()
                     console.log(res, '修改成功')
@@ -289,6 +316,16 @@
                     height: Number(info.plant.height),
                     description: info.plant.description,
                     genera: info.plant.genera
+                }
+                if (info.imgUrl !== '') {
+                    await api.person.updataAva(info.imgUrl).then(res => {
+                        console.log(res, '上传成功')
+                        treetObj.pictureId = res.id
+                    }).catch(err => {
+                        console.log(err, '上传失败')
+                        this.$message.error('上传失败，其请稍后重试')
+                        return
+                    })
                 }
                 await api.plant.createPlant(JSON.stringify(treetObj)).then(res => {
                     this.closeDialog()
@@ -332,6 +369,7 @@
                         this.treeList[i].status = true
                         this.treeList[i].location = `${this.treeList[i].longitude},${this.treeList[i].latitude}`
                         this.treeList[i].id = this.treeList[i].plant.id
+                        this.treeList[i].description = this.treeList[i].plant.description
                         // this.treeList[i].state = '正常'
                         this.treeList[i].byTime = -(new Date(this.treeList[i].plant.modifyTime)).getTime()
                     }
@@ -464,4 +502,11 @@
         }
     }
 
+</style>
+<style>
+    .judge-title  .cell{
+        white-space: nowrap ;
+        overflow: hidden ;
+        text-overflow: ellipsis ;
+    }
 </style>

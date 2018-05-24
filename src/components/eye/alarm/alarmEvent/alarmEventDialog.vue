@@ -50,7 +50,7 @@
                         <el-input type="text" v-model='eventInfo.role' class="inputText" :maxlength="15" :readonly='true'></el-input>
                     </p>
                     <p class="level">等&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;级：
-                        <el-select  v-model="eventInfo.level" size="mini" class="" placeholder="请选择" :readonly="isReadonly">
+                        <el-select  v-model="eventInfo.level" size="mini" class="" placeholder="请选择" :disabled="isReadonly">
                             <el-option
                                 v-for="item in levelInfo"
                                 :key="item.value"
@@ -60,7 +60,7 @@
                         </el-select>
                     </p>
                     <p class="owner">负责人：
-                        <el-select  v-model="eventInfo.owner.name" @change="ownerChange" size="mini" class="" placeholder="请选择" :readonly="isReadonly">
+                        <el-select  v-model="eventInfo.owner.name" @change="ownerChange" size="mini" class="" placeholder="请选择" :disabled="isReadonly">
                             <el-option
                                 v-for="item in eventInfo.owner"
                                 :key="item.val"
@@ -70,10 +70,10 @@
                         </el-select>
                     </p>
                     <p class="tel">电话号码：
-                        <el-input type="text" v-model="eventInfo.tel" class="inputText" :maxlength="15" :readonly="isReadonly"></el-input>
+                        <el-input type="text" v-model="eventInfo.tel" class="inputText" :maxlength="15" :disabled="isReadonly"></el-input>
                     </p>
                     <p class="status">状&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 态：
-                        <el-select  v-model="eventInfo.status" size="mini" class="" placeholder="请选择" :readonly="isReadonly">
+                        <el-select  v-model="eventInfo.status" size="mini" class="" placeholder="请选择" :disabled="isReadonly">
                             <el-option
                                 v-for="item in statusInfo"
                                 :key="item.value"
@@ -84,11 +84,41 @@
                     </p>
                     <p class="description">描述：
                         <textarea name="" v-model='eventInfo.description' cols="30"
-                                  rows="5" placeholder="请输入描述信息" :readonly="isReadonly"></textarea >
+                                  rows="5" placeholder="请输入描述信息" :disabled="isReadonly"></textarea >
                     </p>
+                    <!--<div class="uploadFile">-->
+                        <!--<p class="attachment">附件：</p>-->
+                        <!--<div class="uploadContent"></div>>-->
+                    <!--</div>-->
+                    <div class="attachment">附件：
+                        <div v-loading="isShowLoading" class="showFilelist" >
+                            <div class="uploadlist" v-for="(item,idx) in fileList" :id="item.id" :key="item.id">
+                                <el-checkbox v-model="item.checked" @change="checked(item.id)" class="checkBoxBtn"></el-checkbox>
+                                <span>{{item.title}}</span>
+                            </div>
+                        </div>
+                        <div class="uploadContent">
+                            <el-button size="mini" class="hold" @click="$refs.uploadFile.click()" :disabled="isReadonly">上传附件</el-button>
+                             <el-button size="mini" class="hold" @click="deleteFile" :disabled="isReadonly">删除文件</el-button>
+                            <input type="file" ref="uploadFile" class="multiFile" @change="selectFile">
+                        </div>
+                    </div>
 
+                    <div class="processLog">
+                        <p>处理记录：</p>
+                        <div class="processDiv">
+                            <div class="processTime">2018-05-09 14:34:09</div>
+                            <div class="processContent">
+                                编辑人：溜冰<br>
+                                flex-basis属性定义了在分配多余空间之前，项目占据的主轴空间（main size）。
+                                浏览器根据这个属性，计算主轴是否有多余空间。它的默认值为auto，即项目的本来大小。
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class=""slot="footer" class="dialog-footer cardFooter">
+
+
+                <div slot="footer" class="dialog-footer cardFooter">
                     <el-button size="mini" class="hold" @click='saveDialog'>提交</el-button>
                     <el-button size="mini" @click = 'closeDialog'>取消</el-button>
                 </div>
@@ -144,6 +174,46 @@
                     }
                 ],
                 isShowLoading: false,
+                fileList:[
+                    {
+                        id:'1',
+                        title:'1235555552.jpg'
+                    },
+                    {
+                        id:'2',
+                        title:'sdfsgdfhfdhdfdf.jpg'
+                    },
+                    {
+                        id:'3',
+                        title:'121233546435643564.jpg'
+                    },
+                    {
+                        id:'4',
+                        title:'12124565463.jpg'
+                    },
+                    {
+
+                        id:'5',
+                        title:'12123.jpg'
+                    },
+                    {
+                        id:'6',
+                        title:'121fgfdgdfg23.jpg'
+                    },
+                    {
+                        id:'7',
+                        title:'12123dfgdfgdfgdfg.jpg'
+                    },
+                    {
+                        id:'8',
+                        title:'12123dfgdfgdfgdfg.jpg'
+                    },
+                    {
+                        id:'9',
+                        title:'12123dfgdfgdfgdfg.jpg'
+                    }
+                ],
+                selectFileList:[],
                 eventInfo:{
                     id:'',
                     type:'',
@@ -194,35 +264,127 @@
                     this.$emit('addAlarmEvent');
                 }
 
-                // let musicList
-                // for (let i = 0; i < this.selectNameList.length; i++) {
-                //     musicList = this.songList.filter((item, index) => {
-                //         if (item.id === this.selectNameList[i]){
-                //             this.songList[index].status = true
-                //         }
-                //         return item.status === true
+            },
+            checked (id) {
+                console.log(id)
+                console.log(this.selectFileList)
+                this.fileList = this.fileList.filter(item => {
+                    if (item.id === id) {
+                        item.checked = item.checked
+                    }
+                    return item
+                })
+                if (this.selectFileList.includes(id)) {
+                    this.selectFileList = this.selectFileList.filter((item) =>{
+                        return item !== id
+                    })
+                } else {
+                    this.selectFileList.push(id)
+                }
+                console.log(this.selectFileList)
+
+            },
+            selectFile (e) {
+                console.log(e.target.files[0], 'opopopopopops')
+                let file = e.target.files[0]
+                var obj = {
+                    id:'123',
+                    title:file.name
+                }
+                this.fileList.push(obj);
+                // if (!file.type.includes('jpg')) {
+                //     this.$message.error('请上传jpg格式文件，谢谢！');
+                //     return
+                // } else {
+                //     var form = new FormData();
+                //     form.append('f1',file);
+                //     console.log(form, 'opopopopoppopop')
+                //     api.alarm.createFile(form).then(res => {
+                //         console.log(res, '上传成功')
+                //     }).catch(err => {
+                //         this.$message.error('上传失败，请稍后重试')
+                //         console.log(err, '上传失败')
                 //     })
                 // }
-                // this.$emit('saveMusicList',musicList)
-                // console.log(musicList)
+            },
+            deleteFile(){
+                if(this.selectFileList.length > 0){
+                    this.$confirm('此操作将永久删除该数据, 是否继续?', '提示', {
+                        confirmButtonText: '确定',
+                        cancelButtonText: '取消',
+                        type: 'warning'
+                    }).then(() => {
+
+                        var ids = this.selectFileList.map(function(val){
+                            return val.id;
+                        });
+                        api.alarm.deletFile(ids).then(res => {
+                            console.log(res, '删除成功')
+                            this.$message.success('删除成功')
+                            this.fileList = this.fileList.filter(item => {
+                                return item.id !== id
+                            })
+                        }).catch(err => {
+                            this.$message.error('删除失败，请稍后重试')
+                            console.log(err)
+                            this.choseInfoId = []
+                        })
+                    }).catch(() => {
+                        this.$message.info('取消删除')
+                    })
+                }else{
+                    this.$message.error('请选择要删除的文件！');
+                }
+            },
+            init () {
+                // let that = this;
+                // that.fileList.forEach(function(item){
+                //     if(item.checked){
+                //         if(that.selectFileList.indexOf(item.title) === -1 ){
+                //             // console.log(that.selectFileList.indexOf(item.title))
+                //             that.selectFileList.push(item.title)
+                //             that.playMusicList.push(item);
+                //         }
+                //     }
+                // })
+                // that.fileList.forEach(function(item){
+                //     that.songNameList.push(item.title);
+                // })
+            },
+            async getAllFile () {
+                this.isShowLoading = true
+                await api.alarm.getAllFile().then(res => {
+                    this.isShowLoading = false
+                    console.log(res, '请求成功')
+                    this.fileList = res
+                    this.fileList.forEach(item => {
+                        let endNum = item.path.lastIndexOf('_')
+                        let startNum = item.path.lastIndexOf('/') + 1
+                        item.src = item.path
+                        item.title = item.path.substring(startNum,endNum)
+                        item.checked =false
+                    })
+                }).catch(err => {
+                    this.isShowLoading = false
+                    console.log(err, '请求失败')
+                })
             }
+
+
         },
         watch:{
 
         },
+        async created () {
+            // this.getAllFile()
+        },
         components : {
-             // 'a-player': VueAplayer
+
         },
          mounted () {
-            //异步加载，先加载出player再使用
-            //  this.init();
-            // this.init();
-            // console.log(this.$refs.aplayer, '这是啥')
-            // let aplayer = this.$refs.aplayer;
-            // // aplayer.play();
-            // console.log(aplayer.musicList, '这是当前的music')
-            //  this.playMusicList.push(this.currentMusic);
-            // console.log(this.playMusicList)
+            //异步加载
+             this.init();
+
         }
     }
 </script>
@@ -379,6 +541,38 @@
                 width: 100%;
                 height: 100%;
                 position: relative;
+                .uploadContent{
+                    text-align: right;
+                    .multiFile{
+                        display: none;
+                    }
+                }
+                .attachment{
+                     .showFilelist{
+                         display: flex;
+                         flex-wrap: wrap;
+                         justify-content:space-between;
+                         div {
+                             display:inline-block;
+                         }
+                    }
+                }
+                .processLog{
+                    /*text-align: cente;*/
+                    p{
+                        border-bottom: 0;
+                    }
+                    .processDiv{
+
+                    }
+                    .processTime{
+                        width:30%;
+                        float:left;
+                    }
+                    .processContent{
+                        overflow: hidden;
+                    }
+                }
                 p{
                     margin-top: rem(8);
                     border-bottom: 1px solid #ccc;
@@ -435,31 +629,20 @@
                         color: #909399;
                     }
                 }
-                .uploadText{
-                    overflow: hidden;
-                    text-overflow: ellipsis;
-                    white-space: nowrap;
-                    height: rem(30);
-                    margin-top: 0;
-                    padding-top: rem(10);
-                    padding-right:rem(85);
-                    span{
-                        margin-right: rem(10);
-                    }
-                    button{
-                        float: right;
-                        margin-right: rem(-80);
-                        margin-top: rem(-5);
-                    }
-                }
+
             }
             .cardFooter {
                 width: 100%;
                 padding: rem(5) rem(10);
                 box-sizing: border-box;
                 border-top: 1px solid #ccc;
+                text-align: right;
                 .el-button{
-                    padding: 0;
+                    padding: rem(4) rem(6);
+                }
+            }
+            .uploadContent{
+                .el-button{
                     padding: rem(4) rem(6);
                 }
             }

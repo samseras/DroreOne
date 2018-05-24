@@ -2,7 +2,7 @@
   <div class="broadcast">
     <!--顶部-->
     <div class="top">
-         <h5>广播列表</h5>
+         <h5>停车场列表</h5>
           <ul>
             <li><img src="../../../../static/img/search.png" alt="" /></li>
           </ul>

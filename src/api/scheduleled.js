@@ -63,6 +63,16 @@ const scheduleled = {
 
         })
     },
+    stareEndPlan (id) {
+        return axios ({
+            method: 'PUT',
+            url: getUrl('/schedule/led/isenabled'),
+            data:{
+                ids:id
+            }
+
+        })
+    }
 }
 
 export default scheduleled

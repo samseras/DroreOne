@@ -36,33 +36,41 @@
                         <el-table-column
                             prop="businessBean.name"
                             label="名称"
-                            width="120">
+                            width="140">
                         </el-table-column>
                         <el-table-column
+                            width="120"
                             prop="businessTypeName"
                             label="类型">
                         </el-table-column>
                         <el-table-column
+                            width="100"
                             prop="state"
                             label="状态">
                         </el-table-column>
                         <el-table-column
+                            width="100"
                             prop="businessBean.capacity"
                             label="容量">
                         </el-table-column>
-                        <el-table-column
+
+                        <!--<el-table-column
+                            width="100"
                             prop="businessBean.currentNum"
                             label="当前人数">
-                        </el-table-column>
+                        </el-table-column>-->
+
                         <el-table-column
                             prop="location"
                             label="位置">
                         </el-table-column>
                         <el-table-column
+                            width="150"
                             prop="regionName"
                             label="所属片区">
                         </el-table-column>
                         <el-table-column
+                            width="150"
                             label="操作">
                             <template slot-scope="scope">
                                 <span @click="showPersonDetail(scope.row, '商圈信息',true )">查看</span>
@@ -78,7 +86,8 @@
                             <el-checkbox v-model="item.checked" @change="checked(item.id)" class="checkBtn"></el-checkbox>
                         </div>
                         <div class="personType" :class="getClass(item.businessBean.businessTypeId)" @click.stop="showPersonDetail(item, '商圈信息',true)">
-                            <img src="../../../../static/img/businesCard.png" alt="">
+                            <!--<img src="../../../../static/img/businesCard.png" alt="">-->
+                            <img :src="getUrl(item.picturePath)" alt="" @error="imgError">
                             <span class="type">
                                   {{item.businessBean.name}}
                                 </span>
@@ -86,7 +95,7 @@
                         <div class="specificInfo">
                             <p class="name">所属区域：<span>{{item.regionName}}</span></p>
                             <p class="sex">状&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;态：<span>{{item.businessBean.state}}</span></p>
-                            <p class="idNum">当前人数：<span>{{item.businessBean.currentNum}}</span></p>
+                            <!--<p class="idNum">当前人数：<span>{{item.businessBean.currentNum}}</span></p>-->
                             <p class="phoneNum">最大容量：<span>{{item.businessBean.capacity}}</span></p>
                         </div>
                     </div>
@@ -131,6 +140,16 @@
             }
         },
         methods: {
+            imgError (e) {
+                e.target.src = this.getUrl(null);
+            },
+            getUrl (url) {
+                if (url === null) {
+                    return '../../../../static/img/businesCard.png'
+                } else {
+                    return url
+                }
+            },
             closeDialog () {
                 this.visible = false
                 this.getAllShop()
@@ -291,6 +310,7 @@
                 let longitude= info.location.substring(0, index)
                 let latitude = info.location.substring(index + 1)
                 let shopObj = {
+                    description:info.description,
                     id: info.businessBean.id,
                     name: info.businessBean.name,
                     capacity: info.businessBean.capacity,
@@ -298,6 +318,18 @@
                     businessTypeId: info.businessBean.businessTypeId,
                     latitude: latitude,
                     longitude: longitude
+                }
+                if (info.imgUrl !== '') {
+                    await api.person.updataAva(info.imgUrl).then(res => {
+                        console.log(res, '上传成功')
+                        shopObj.pictureId = res.id
+                    }).catch(err => {
+                        console.log(err, '上传失败')
+                        this.$message.error('上传失败，其请稍后重试')
+                        return
+                    })
+                } else {
+                    shopObj.pictureId = info.pictureId
                 }
                 console.log(shopObj, 'this is trashObj')
                 await api.shop.updateShop(JSON.stringify(shopObj)).then(res => {
@@ -316,12 +348,24 @@
                 let longitude= info.location.substring(0, index)
                 let latitude = info.location.substring(index + 1)
                 let shopObj = {
+                    description:info.description,
                     name: info.businessBean.name,
                     capacity: info.businessBean.capacity,
                     regionId: info.regionId,
                     businessTypeId: info.businessBean.businessTypeId,
                     latitude: latitude,
                     longitude: longitude
+
+                }
+                if (info.imgUrl !== '') {
+                    await api.person.updataAva(info.imgUrl).then(res => {
+                        console.log(res, '上传成功')
+                        shopObj.pictureId = res.id
+                    }).catch(err => {
+                        console.log(err, '上传失败')
+                        this.$message.error('上传失败，其请稍后重试')
+                        return
+                    })
                 }
                 console.log(shopObj, 'this is trashObj')
                 await api.shop.createShop(JSON.stringify(shopObj)).then(res => {
@@ -365,6 +409,7 @@
                         this.shopList[i].checked = false
                         this.shopList[i].status = true
                         this.shopList[i].id = this.shopList[i].businessBean.id
+                        this.shopList[i].description = this.shopList[i].businessBean.description
                         this.shopList[i].location = `${this.shopList[i].longitude},${this.shopList[i].latitude}`
                         this.shopList[i].businessBean.currentNum = this.currentNum
                         if (this.shopList[i].businessBean.capacity == 0 ){
