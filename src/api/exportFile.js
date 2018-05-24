@@ -9,14 +9,14 @@ const exportFile ={
     exportAll(type){
         return axios({
             method:'GET',
-            url:`/device/export/file?deviceType=${type}`
+            url:getUrl(`/device/export/file?deviceType=${type}`)
         })
     },
     exportSingle(par){
         console.log(par, '-=-=-=-==-=-=-=-=-=-=-=-')
         return axios({
             method:'POST',
-            url:'/device/export/file',
+            url:getUrl('/device/export/file'),
             data:{
                 ids:par
             }
