@@ -97,7 +97,7 @@
                     {type: 302,route: '/controler/camera'},//摄像头
                     {type: 303,route: '/controler/broad'},//闸机
                     {type: 304,route: '/controler/screen'},//大屏
-                    {type: 305,route: '/controler/broad'},//路灯
+                    {type: 305,route: '/controler/light'},//路灯
                     {type: 306,route: '/controler/environment'},//传感器
                     {type: 307,route: '/controler/wifi'},//wifi
                     {type: 308,route: '/controler/warn'},//告警
