@@ -36,7 +36,12 @@
                         </el-table-column>
                         <el-table-column
                             prop="trafficValue"
-                            label="客流阈值">
+                            label="客流阈值(人)">
+                        </el-table-column>
+                        <el-table-column
+                            sortable
+                            prop="level"
+                            label="严重等级">
                         </el-table-column>
                         <el-table-column
                             sortable

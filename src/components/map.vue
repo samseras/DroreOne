@@ -5,11 +5,27 @@
         </div>
         <div id="contextmenu_container" class="contextmenu">
             <i @click="menuDelete"></i>
-            <button @click="menuOperation"></button>
-            <button @click="menuShow"></button>
-            <button @click="menuPhone"></button>
+            <el-switch
+                class="mapSwitch"
+                v-model="open"
+                :width="26"
+                active-color="#53b6a7"
+                inactive-color="#808080"
+                @change="mapSwitch">
+            </el-switch>
+            <button @click="menuShow" class="menuShow"></button>
+            <button @click="menuOperation" class="menuOperation"></button>
+            <button @click="menuPhone" class="menuPhone"></button>
+            <button @click="menuBroadcast" class="menuBroadcast"></button>
         </div>
+        <PersonDetail v-if="visible"
+                      :Info="buildInfo"
+                      :title="title"
+                      :visible="visible"
+                      @closeInfoDialog ="closeDialog">
+        </PersonDetail>
     </Scrollcontainer>
+
 </template>
 
 <script>
@@ -18,13 +34,21 @@
     import Scrollcontainer from '@/components/ScrollContainer'
     import { mapMutations,mapGetters } from 'vuex'
     import api from '@/api'
+    import PersonDetail from '@/components/controlDialog'
 
     export default {
         name: "map1",
         data () {
             return {
+                open:false,
                 menulist: {},
-                controleLightList:[]
+                controleLightList:[],
+                controleEnvironmentList:[],
+                buildInfo:[],
+                visible:false,
+                title:'',
+                isDisabled: true,
+                lightCheckout:[],
             }
         },
         created () {
@@ -54,7 +78,7 @@
                 // this.getAllWifi();//wifi现有标注
                 // this.getAllLed();//Led现有标注
                 // this.getAllPolice();//报警柱现有标注
-                // this.getAllMonitor();//传感器现有标注
+                this.getAllMonitor();//传感器现有标注
                 // this.getAllBroadcast();//广播现有标注
                 // this.getAllCamera();//摄像头现有标注
                 this.overView();//鹰眼
@@ -170,10 +194,10 @@
             }else if (route.includes('monitors-Hware'))  {
                 this.getAllArea();// 片区输出
                 if(!this.getLocationId) {
-                    this.getAllMonitor();//传感器现有标注
+                    this.getAllMonitor();//环境监测传感器现有标注
                     this.labelDot();// 传感器打点
                 }else {
-                    this.getAllMonitorEdit();// 传感器修改
+                    this.getAllMonitorEdit();// 环境监测传感器修改
                 }
             }else if (route.includes('broadcast-Hware'))  {
                 this.getAllArea();// 片区输出
@@ -222,6 +246,9 @@
                 'ROAT_LOCATION_STATE',
                 'MAP_ROAT_LOCATION'
             ]),
+            closeDialog () {
+                this.visible = false
+            },
             requestGisMain() {
                 document.getElementById('map').innerHTML = ""
                 $.ajax({
@@ -633,27 +660,21 @@
             },
             async getAllLight(){//路灯列表
                 await api.light.getAllLight().then((res)=>{
-                    this.lightList=res.devices
-                    for (let i=0;i<this.lightList.length;i++){
-                        this.lightList[i].location = [this.lightList[i].longitude,this.lightList[i].latitude]
-                        var Light = new droreMap.icon.Marker({
-                            coordinate: droreMap.trans.transFromWgsToLayer(this.lightList[i].location),
-                            name: this.lightList[i].name,
-                            subtype: "Light",
-                            id: this.lightList[i].id,
-                            url: "/static/img/icon/Light.png"
-                        });
-                        droreMap.icon.addChild(Light);
-                        let route = this.$route.path
-                        if(route.includes('controler')){
-                            droreMap.icon.IconStyleById(Light.id,false);
+                    this.iconList=res.devices
+                    for (let i=0;i<this.iconList.length;i++){
+                        this.iconList[i].type="路灯"
+                        this.iconList[i].location = [this.iconList[i].longitude,this.iconList[i].latitude]
+                        if(this.iconList[i].lightStatus){
+                            this.iconList[i].url="/static/img/icon/Light.png"
+                            this.iconList[i].subtype='Light'
+                            this.iconList[i].status=true
+                        } else {
+                            this.iconList[i].url="/static/img/icon/Light_close.png"
+                            this.iconList[i].subtype='Light_close'
+                            this.iconList[i].status=false
                         }
-                        let that =this;
-                        Light.onclick(function(e) {
-                            that.menulist = e;
-                            that.droreMappopup(e);
-                        });
                     }
+                    this.iconShow();
                 }).catch((err)=>{
                     console.log(err)
                 })
@@ -662,12 +683,19 @@
                 await api.light.getAllLight().then((res)=>{
                     this.lightList=res.devices
                     for (let i=0;i<this.lightList.length;i++){
+                        if(this.lightList[i].lightStatus){
+                            this.lightList[i].url="/static/img/icon/Light.png"
+                            this.lightList[i].subtype='Light'
+                        } else {
+                            this.lightList[i].url="/static/img/icon/Light_close.png"
+                            this.lightList[i].subtype='Light_close'
+                        }
                         if(this.lightList[i].id === this.getLocationId){
                             this.lightList[i].location = [this.lightList[i].longitude,this.lightList[i].latitude]
                             var iconedit = new droreMap.icon.Marker({
                                 coordinate: droreMap.trans.transFromWgsToLayer(this.lightList[i].location),
                                 name: this.lightList[i].name,
-                                subtype: "droreMapinit",
+                                subtype:this.lightList[i].subtype,
                                 id: this.lightList[i].id,
                                 url: "/static/img/location_on.png"
                             });
@@ -686,9 +714,9 @@
                             var icon1 = new droreMap.icon.Marker({
                                 coordinate: droreMap.trans.transFromWgsToLayer(this.lightList[i].location),
                                 name: this.lightList[i].name,
-                                subtype: "droreMapinit",
+                                subtype: this.lightList[i].subtype,
                                 id: this.lightList[i].id,
-                                url: "/static/img/icon/Light.png"
+                                url: this.lightList[i].url
                             });
                             droreMap.icon.addChild(icon1);
                         }
@@ -942,21 +970,19 @@
             },
             async getAllMonitor(){ //环境监测列表
                 await api.monitor.getAllMonitor().then((res)=>{
-                    this.monitorsList=res.devices
-                    for (let i=0;i<this.monitorsList.length;i++){
-                        this.monitorsList[i].location = [this.monitorsList[i].longitude,this.monitorsList[i].latitude]
-                        var Monitor = new droreMap.icon.Marker({
-                            coordinate: droreMap.trans.transFromWgsToLayer(this.monitorsList[i].location),
-                            name: this.monitorsList[i].name,
-                            subtype: "Monitor",
-                            id: this.monitorsList[i].id,
-                            url: "http://label.drore.com/gisLabelTabImage/public/defaults/24*24/huanjingjiance.png"
-                        });
-                        droreMap.icon.addChild(Monitor);
-                        Monitor.onclick(function(e) {
-                            alert("这是环境监测，id是"+e.data.id);
-                        });
+                    this.iconList=res.devices
+                    for (let i=0;i<this.iconList.length;i++){
+                        this.iconList[i].type="传感器"
+                        this.iconList[i].location = [this.iconList[i].longitude,this.iconList[i].latitude]
+                        if(this.iconList[i].lightStatus){
+                            this.iconList[i].url="/static/img/icon/monitors.png"
+                            this.iconList[i].subtype='Monitors'
+                        } else {
+                            this.iconList[i].url="/static/img/icon/monitors_close.png"
+                            this.iconList[i].subtype='Monitors_close'
+                        }
                     }
+                    this.iconShow();
                 }).catch((err)=>{
                     console.log(err)
                 })
@@ -965,14 +991,21 @@
                 await api.monitor.getAllMonitor().then((res)=>{
                     this.monitorsList=res.devices
                     for (let i=0;i<this.monitorsList.length;i++){
+                        if(this.iconList[i].lightStatus){
+                            this.iconList[i].url="/static/img/icon/monitors.png"
+                            this.iconList[i].subtype='Monitors'
+                        } else {
+                            this.iconList[i].url="/static/img/icon/monitors_close.png"
+                            this.iconList[i].subtype='Might_close'
+                        }
                         if(this.monitorsList[i].id === this.getLocationId){
                             this.monitorsList[i].location = [this.monitorsList[i].longitude,this.monitorsList[i].latitude]
                             var iconedit = new droreMap.icon.Marker({
                                 coordinate: droreMap.trans.transFromWgsToLayer(this.monitorsList[i].location),
                                 name: this.monitorsList[i].name,
-                                subtype: "droreMapinit",
+                                subtype: this.iconList[i].subtype,
                                 id: this.monitorsList[i].id,
-                                url: "/static/img/location_on.png"
+                                url: this.iconList[i].url
                             });
                             droreMap.icon.addChild(iconedit);
                             droreMap.interaction.ifDrag = true;
@@ -989,9 +1022,9 @@
                             var icon1 = new droreMap.icon.Marker({
                                 coordinate: droreMap.trans.transFromWgsToLayer(this.monitorsList[i].location),
                                 name: this.monitorsList[i].name,
-                                subtype: "droreMapinit",
+                                subtype: this.iconList[i].subtype,
                                 id: this.monitorsList[i].id,
-                                url: "http://label.drore.com/gisLabelTabImage/public/defaults/24*24/huanjingjiance.png"
+                                url: this.iconList[i].url
                             });
                             droreMap.icon.addChild(icon1);
                         }
@@ -1243,7 +1276,7 @@
                 await api.area.getAllRegion().then(res => {
                     this.areaList = res
                     for (let i = 0; i < this.areaList.length; i++) {
-                        var areaEvets =new droreMap.area.DrawLayer("areaList",'rgba(255, 255, 255, 0.1)',"blue")
+                        var areaEvets =new droreMap.area.DrawLayer("areaList",'rgba(255, 255, 255, 0.2)',"blue")
                         let geo =JSON.parse(this.areaList[i].geo);
                         let ol=geo[0];
                         let arrayObj = new Array();
@@ -1253,10 +1286,14 @@
                         }
                         let area= new Array();
                         area.push(arrayObj);
-                        var data = {"id": this.areaList[i].id, "name": this.areaList[i].name,"constructor":''}
+                        var data = {"id": this.areaList[i].id, "name": this.areaList[i].name,"constructor":'areaList'}
                         areaEvets.addArea(area,data)
-                        areaEvets.setVisible(true)
                         droreMap.area.addChild(areaEvets)
+                        areaEvets.ifDraw = false;
+                        areaEvets.ifModify = false;
+                        areaEvets.ifSelect = false;
+                        areaEvets.removeEventListener('drawend', "drawend")
+                        areaEvets.removeEventListener('select', "select")
                     }
                 }).catch(err => {
                     console.log(err, '失败')
@@ -1264,7 +1301,7 @@
             },
             district(){//区域划分
                 var that = this
-                var areaEvet =new droreMap.area.DrawLayer("area",'rgba(255, 255, 255, 0.2)',"red")
+                var areaEvet =new droreMap.area.DrawLayer("area",'rgba(255, 255, 255, 0.4)',"red")
                 areaEvet.ifDraw = true;
                 areaEvet.ifModify = true;
                 areaEvet.ifSelect = false;
@@ -1371,8 +1408,6 @@
                     console.log(err, '失败')
                 })
             },
-
-
             async getAllRoat () {
                 await api.deployRoad.getAllRoute().then(res => {
                     console.log(res, '请求路网成功')
@@ -1560,6 +1595,30 @@
                     console.log(err, '请求失败')
                 })
             },
+            iconShow(){
+                for (let i=0;i<this.iconList.length;i++) {
+                    var icon = new droreMap.icon.Marker({
+                        coordinate: droreMap.trans.transFromWgsToLayer(this.iconList[i].location),
+                        name: this.iconList[i].name,
+                        subtype: this.iconList[i].subtype,
+                        id: this.iconList[i].id,
+                        url: this.iconList[i].url,
+                        type: this.iconList[i].type,
+                        status: this.iconList[i].status,
+                        data: this.iconList[i],
+                    });
+                    droreMap.icon.addChild(icon);
+                    let route = this.$route.path
+                    if(route.includes('controler')){
+                        droreMap.icon.IconStyleById(icon.id,false);
+                    }
+                    let that = this;
+                    icon.onclick(function (e) {
+                        that.menulist = e.data;
+                        that.droreMappopup(that.menulist);
+                    });
+                }
+            },
             overView() {//鹰眼图
                 var overView = new droreMap.control.OverviewMap({'url': '/static/img/xxsd.jpg'});
                 droreMap.control.addControl(overView);
@@ -1572,213 +1631,106 @@
                 droreMap.interaction.showMove()
                 this.overView();//鹰眼
             },
-            searchShow(data) {//搜索
-                this.interaction();
-                console.log(this.getSearchInfo.entityType);
-                if(this.getSearchInfo.entityType == '1'){
-                    var urlImg ="http://label.drore.com/gisLabelTabImage/public/defaults/24*24/fuwuzhongxin.png"
-                    var iconType ="建筑"
-                    var subtype ="fuwuzhongxin"
-                    this.searchShowIcon(urlImg,iconType,subtype)
-                }else if(this.getSearchInfo.entityType == '2'){
-                    var urlImg ="http://label.drore.com/gisLabelTabImage/public/defaults/24*24/shangchang.png"
-                    var iconType ="商圈"
-                    var subtype ="shangchang"
-                    this.searchShowIcon(urlImg,iconType,subtype)
-                }else if(this.getSearchInfo.entityType == '3'){
-                    var urlImg ="http://label.drore.com/gisLabelTabImage/public/defaults/24*24/shebeixiang.png"
-                    var iconType ="设备"
-                    var subtype ="shebeixiang"
-                    this.searchShowIcon(urlImg,iconType,subtype)
-                }else if(this.getSearchInfo.entityType == '301'){
-                    var urlImg ="http://label.drore.com/gisLabelTabImage/public/defaults/24*24/guangboshebei.png"
-                    var iconType ="广播"
-                    var subtype ="guangboshebei"
-                    this.searchShowIcon(urlImg,iconType,subtype)
-                }else if(this.getSearchInfo.entityType == '302'){
-                    var urlImg ="http://label.drore.com/gisLabelTabImage/public/defaults/24*24/shexiangtou.png"
-                    var iconType ="摄像头"
-                    var subtype ="shexiangtou"
-                    this.searchShowIcon(urlImg,iconType,subtype)
-                }else if(this.getSearchInfo.entityType == '303'){
-                    var urlImg ="http://label.drore.com/gisLabelTabImage/public/defaults/24*24/zhaji.png"
-                    var iconType ="闸机"
-                    var subtype ="zhaji"
-                    this.searchShowIcon(urlImg,iconType,subtype)
-                }else if(this.getSearchInfo.entityType == '304'){
-                    var urlImg ="http://label.drore.com/gisLabelTabImage/public/defaults/24*24/dianziping.png"
-                    var iconType ="LED大屏"
-                    var subtype ="dianziping"
-                    this.searchShowIcon(urlImg,iconType,subtype)
-                }else if(this.getSearchInfo.entityType == '305'){
-                    var urlImg ="http://label.drore.com/gisLabelTabImage/public/defaults/24*24/ludeng.png"
-                    var iconType ="路灯"
-                    var subtype ="ludeng"
-                    this.searchShowIcon(urlImg,iconType,subtype)
-                }else if(this.getSearchInfo.entityType == '306'){
-                    var urlImg ="http://label.drore.com/gisLabelTabImage/public/defaults/24*24/huanjingjiance.png"
-                    var iconType ="传感器"
-                    var subtype ="huanjingjiance"
-                    this.searchShowIcon(urlImg,iconType,subtype)
-                }else if(this.getSearchInfo.entityType == '307'){
-                    var urlImg ="http://label.drore.com/gisLabelTabImage/public/defaults/24*24/wifi.png"
-                    var iconType ="wifi"
-                    var subtype ="wifi"
-                    this.searchShowIcon(urlImg,iconType,subtype)
-                }else if(this.getSearchInfo.entityType == '308'){
-                    var urlImg ="http://label.drore.com/gisLabelTabImage/public/defaults/24*24/baojingtingqianyi.png"
-                    var iconType ="报警器"
-                    var subtype ="baojingtingqianyi"
-                    this.searchShowIcon(urlImg,iconType,subtype)
-                }else if(this.getSearchInfo.entityType == '309'){
-                    var urlImg ="http://label.drore.com/gisLabelTabImage/public/defaults/24*24/chezaigps.png"
-                    var iconType ="GPS"
-                    var subtype ="chezaigps"
-                    this.searchShowIcon(urlImg,iconType,subtype)
-                }else if(this.getSearchInfo.entityType == '4'){
-                    var urlImg ="http://label.drore.com/gisLabelTabImage/public/defaults/24*24/lajitong.png"
-                    var iconType ="垃圾箱"
-                    var subtype ="lajitong"
-                    this.searchShowIcon(urlImg,iconType,subtype)
-                }else if(this.getSearchInfo.entityType == '5'){
-                    var urlImg ="http://label.drore.com/gisLabelTabImage/public/defaults/24*24/tingchechang.png"
-                    var iconType ="停车场"
-                    var subtype ="tingchechang"
-                    this.searchShowIcon(urlImg,iconType,subtype)
-                }else if(this.getSearchInfo.entityType == '6'){
-                    var urlImg ="http://label.drore.com/gisLabelTabImage/public/defaults/24*24/jingdian.png"
-                    var iconType ="景点"
-                    var subtype ="jingdian"
-                    this.searchShowIcon(urlImg,iconType,subtype)
-                }else if(this.getSearchInfo.entityType == '7'){
-                    var urlImg ="http://label.drore.com/gisLabelTabImage/public/defaults/24*24/anbaorenyuan.png"
-                    var iconType ="人员"
-                    var subtype ="anbaorenyuan"
-                    this.searchShowIcon(urlImg,iconType,subtype)
-                }else if(this.getSearchInfo.entityType == '8'){
-                    var urlImg ="http://label.drore.com/gisLabelTabImage/public/defaults/24*24/gushumingmu.png"
-                    var iconType ="植物"
-                    var subtype ="gushumingmu"
-                    this.searchShowIcon(urlImg,iconType,subtype)
-                }else if(this.getSearchInfo.entityType == '9'){
-                    var urlImg ="http://label.drore.com/gisLabelTabImage/public/defaults/24*24/zhilupai.png"
-                    var iconType ="指示牌"
-                    var subtype ="zhilupai"
-                    this.searchShowIcon(urlImg,iconType,subtype)
-                }else if(this.getSearchInfo.entityType == '10'){
-                    var urlImg ="http://label.drore.com/gisLabelTabImage/public/defaults/24*24/cesuo.png"
-                    var iconType ="卫生间"
-                    var subtype ="cesuo"
-                    this.searchShowIcon(urlImg,iconType,subtype)
-                }else if(this.getSearchInfo.entityType == '11'){
-                    var urlImg ="http://label.drore.com/gisLabelTabImage/public/defaults/24*24/youchuan.png"
-                    var iconType ="车船"
-                    var subtype ="youchuan"
-                    this.searchShowIcon(urlImg,iconType,subtype)
-                }else if(this.getSearchInfo.entityType == '12'){
-                    var iconType ="路网"
-                    this.searchShowLine(iconType)
-                }else if(this.getSearchInfo.entityType == '13'){
-                    var iconType ="线路"
-                    this.searchShowLine(iconType)
-                }else if(this.getSearchInfo.entityType == '14'){
-                    var iconType ="片区"
-                    this.searchShowArea(iconType)
-                }
-            },
-            searchShowIcon(urlImg,iconType,subtype){
-                this.getSearchInfo.location = [this.getSearchInfo.longitude, this.getSearchInfo.latitude]
-                var searchShow = new droreMap.icon.Marker({
-                    coordinate: droreMap.trans.transFromWgsToLayer(this.getSearchInfo.location),
-                    name: this.getSearchInfo.name,
-                    subtype: subtype,
-                    id: this.getSearchInfo.id,
-                    url: urlImg
-                });
-                droreMap.icon.addChild(searchShow);
-                console.log(droreMap.icon);
+            searchShow() {//搜索
+                this.getSearchInfo.location = [this.getSearchInfo.longitude,this.getSearchInfo.latitude]
                 droreMap.map.panToCoord(droreMap.trans.transFromWgsToLayer(this.getSearchInfo.location));
-                searchShow.onclick(function(e) {
-                    alert(iconType+"，id是"+e.data.id);
-                });
+                droreMap.icon.IconStyleById(this.getSearchInfo.id,true);
+                // if (this.getSearchInfo.entityType =="305"){
+                //     this.controleLightList.push(this.getSearchInfo.id)
+                //     this.$store.commit('CONTROLER_LIGHT', this.controleLightList)
+                // }else if(this.getSearchInfo.entityType =="306"){
+                //     this.controleEnvironmentList.push(this.getSearchInfo.id)
+                //     this.$store.commit('CONTROLER_ENVIRONMENT', this.controleEnvironmentList)
+                // }
             },
-            searchShowLine(iconType){
-                var areaEvtList =new droreMap.road.RoadLayer(iconType, 'blue', 'blue')
-                let geo =JSON.parse(this.getSearchInfo.geoText);
-                let area = [];
-                for(var j = 0; j < geo.length; j++) {
-                    let wgs=droreMap.trans.transFromWgsToLayer(geo[j])
-                    area.push(wgs);
-                }
-                var data = {"id": this.getSearchInfo.id, "name": this.getSearchInfo.name,"constructor":''}
-                areaEvtList.addRoad(area, data)
-                droreMap.road.addRoadLayer(areaEvtList)
-                droreMap.map.panToCoord(droreMap.trans.transFromWgsToLayer(geo[0]));
-            },
-            searchShowArea(iconType){
-                var areaEvets =new droreMap.area.DrawLayer(iconType,'rgba(255, 255, 255, 0.3)',"blue")
-                let geo =JSON.parse(this.getSearchInfo.geoText);
-                let ol=geo[0];
-                let arrayObj = new Array();
-                for(var j = 0; j < ol.length; j++) {
-                    let wgs=droreMap.trans.transFromWgsToLayer(ol[j])
-                    arrayObj.push(wgs);
-                }
-                let area= new Array();
-                area.push(arrayObj);
-                var data = {"id": this.getSearchInfo.id, "name": this.getSearchInfo.name,"constructor":''}
-                areaEvets.addArea(area,data)
-                areaEvets.setVisible(true)
-                droreMap.area.addChild(areaEvets)
-                droreMap.map.panToCoord(droreMap.trans.transFromWgsToLayer(ol[0]));
-            },
+            // searchShowLine(iconType){
+            //     var areaEvtList =new droreMap.road.RoadLayer(iconType, 'blue', 'blue')
+            //     let geo =JSON.parse(this.getSearchInfo.geoText);
+            //     let area = [];
+            //     for(var j = 0; j < geo.length; j++) {
+            //         let wgs=droreMap.trans.transFromWgsToLayer(geo[j])
+            //         area.push(wgs);
+            //     }
+            //     var data = {"id": this.getSearchInfo.id, "name": this.getSearchInfo.name,"constructor":''}
+            //     areaEvtList.addRoad(area, data)
+            //     droreMap.road.addRoadLayer(areaEvtList)
+            //     droreMap.map.panToCoord(droreMap.trans.transFromWgsToLayer(geo[0]));
+            // },
+            // searchShowArea(iconType){
+            //     var areaEvets =new droreMap.area.DrawLayer(iconType,'rgba(255, 255, 255, 0.3)',"blue")
+            //     let geo =JSON.parse(this.getSearchInfo.geoText);
+            //     let ol=geo[0];
+            //     let arrayObj = new Array();
+            //     for(var j = 0; j < ol.length; j++) {
+            //         let wgs=droreMap.trans.transFromWgsToLayer(ol[j])
+            //         arrayObj.push(wgs);
+            //     }
+            //     let area= new Array();
+            //     area.push(arrayObj);
+            //     var data = {"id": this.getSearchInfo.id, "name": this.getSearchInfo.name,"constructor":''}
+            //     areaEvets.addArea(area,data)
+            //     areaEvets.setVisible(true)
+            //     droreMap.area.addChild(areaEvets)
+            //     droreMap.map.panToCoord(droreMap.trans.transFromWgsToLayer(ol[0]));
+            // },
             droreMappopup(e){
+                // console.log(e);
                 var div = document.getElementById('contextmenu_container')
                 var popup = new  droreMap.pop.Popup(div,e.coordinate,"contextmenu_container")
                 droreMap.pop.addChild(popup);
-                if(e.subtype=== "Light"){
-                    $("#contextmenu_container").attr("class","contextmenu Light");
-                }else if(e.subtype=== "Broadcast"){
-                    $("#contextmenu_container").attr("class","contextmenu Broadcast");
+                $("#contextmenu_container").attr("class","contextmenu "+e.subtype);
+                if(e.status){
+                    this.open=true
+                }else {
+                    this.open=false
                 }
                 $("#contextmenu_container").show();
             },
-            menuOperation(){
-                console.log(this.menulist);
-                alert("坐标是"+this.menulist.coordinate);
+            mapSwitch(){
+                if(this.menulist.data.status){
+                    alert("关闭，id是"+this.menulist.id);
+                }else {
+                    alert("开启，id是"+this.menulist.id);
+                }
             },
             menuShow(){
-                alert("id是"+this.menulist.id);
+                this.buildInfo = this.menulist.data
+                this.visible = true
+                this.title = this.menulist.data.type
+            },
+            menuOperation(){
+                alert("操作当前内容"+this.menulist.data.name);
             },
             menuPhone(){
-                alert("名字是"+this.menulist.name);
+                console.log(this.menulist.data);
+            },
+            menuBroadcast(){
+                console.log(this.menulist.data);
             },
             menuDelete(){
                 $("#contextmenu_container").hide();
             },
             treeShow(data){
-                console.log('treeShow');
                 data.location = [data.longitude,data.latitude]
                 droreMap.map.panToCoord(droreMap.trans.transFromWgsToLayer(data.location));
                 droreMap.icon.IconStyleById(data.id,true);
             },
             treeHide(data){
-                console.log('treeHide',data);
                 droreMap.icon.IconStyleById(data.id,false);
-                $("#contextmenu_container").hide();
+                this.menuDelete();
             }
         },
         components: {
-            Scrollcontainer
+            Scrollcontainer,
+            PersonDetail
         },
         watch: {
             getSearchInfo () {
                 console.log(this.getSearchInfo,"qweqweqweqweqwe");
-                this.requestGisMain();
                 this.searchShow(this.getSearchInfo);
             },
             getTreeState(){
-                console.log(this.getTreeState,'213123')
+                // console.log(this.getTreeState,'213123')
                 if(this.getTreeState.length>1) {
                     // console.log(this.getTreeState,'ioioioiooioioiooi')
                     //    这边是全选
@@ -1786,18 +1738,25 @@
                         this.controleLightList=[];
                         // console.log(this.getTreeState,'这111111111111')
                         this.getTreeState.forEach(item => {
-                            // console.log(item, 'googogoogoogoogogoo')
                             item.children.forEach(item1 => {
                                 this.treeShow(item1);
-                                this.controleLightList.push(item1.id);
+                                if(item.type=='light'){
+                                    this.controleLightList.push(item1.id);
+                                }else if(item.type=='environment'){
+                                    this.controleEnvironmentList.push(item1.id);
+                                }
                             })
                         })
                     }else {//隐藏
                         // console.log('在这报错22222222222222')
                         this.getTreeState.forEach(item => {
                             this.treeHide(item)
+                            if(item.type=='light'){
+                                this.controleLightList=[];
+                            }else if(item.type=='environment'){
+                                this.controleEnvironmentList=[];
+                            }
                         })
-                        this.controleLightList=[];
                     }
                 }else {
                     if(this.getTreeState[0].children){
@@ -1805,29 +1764,54 @@
                         if (this.getTreeState[0].checked.checkedKeys.includes(this.getTreeState[0].id)) {
                             for (let i = 0; i < data.length; i++) {
                                 this.treeShow(data[i]);
-                                this.controleLightList.push(data[i].id);
-                                this.controleLightList=[...new Set(this.controleLightList)];
+                                // console.log(this.getTreeState[0].type,'123123');
+                                if(this.getTreeState[0].type=='light'){
+                                    this.controleLightList.push(data[i].id);
+                                    this.controleLightList=[...new Set(this.controleLightList)];
+                                }else if(this.getTreeState[0].type=='environment'){
+                                    this.controleEnvironmentList.push(data[i].id);
+                                    this.controleEnvironmentList=[...new Set(this.controleEnvironmentList)];
+                                }
                             }
                         }else {
                             for (let i = 0; i < this.getTreeState[0].children.length; i++) {
-                                console.log(this.getTreeState[0].children)
+                                // console.log(this.getTreeState[0].children)
                                 this.treeHide(this.getTreeState[0].children[i]);
-                                let index = this.controleLightList.indexOf(this.getTreeState[0].children[i].id);
-                                if (index > -1) {
-                                    this.controleLightList.splice(index, 1);
+                                if(this.getTreeState[0].children[i].type=='light'){
+                                    let index = this.controleLightList.indexOf(this.getTreeState[0].children[i].id);
+                                    if (index > -1) {
+                                        this.controleLightList.splice(index, 1);
+                                    }
+                                }else if(this.getTreeState[0].children[i].type=='environment'){
+                                    let index = this.controleEnvironmentList.indexOf(this.getTreeState[0].children[i].id);
+                                    if (index > -1) {
+                                        this.controleEnvironmentList.splice(index, 1);
+                                    }
                                 }
                             }
                         }
                     }else {
                         if (this.getTreeState[0].checked.checkedKeys.includes(this.getTreeState[0].id)) {
                             this.treeShow(this.getTreeState[0]);
-                            this.controleLightList.push(this.getTreeState[0].id);
-                            this.controleLightList=[...new Set(this.controleLightList)];
+                            if(this.getTreeState[0].type=='light'){
+                                this.controleLightList.push(this.getTreeState[0].id);
+                                this.controleLightList=[...new Set(this.controleLightList)];
+                            }else if(this.getTreeState[0].type=='environment'){
+                                this.controleEnvironmentList.push(this.getTreeState[0].id);
+                                this.controleEnvironmentList=[...new Set(this.controleEnvironmentList)];
+                            }
                         } else {
                             this.treeHide(this.getTreeState[0]);
-                            let index = this.controleLightList.indexOf(this.getTreeState[0].id);
-                            if (index > -1) {
-                                this.controleLightList.splice(index, 1);
+                            if(this.getTreeState[0].type=='light'){
+                                let index = this.controleLightList.indexOf(this.getTreeState[0].id);
+                                if (index > -1) {
+                                    this.controleLightList.splice(index, 1);
+                                }
+                            }else if(this.getTreeState[0].type=='environment'){
+                                let index = this.controleEnvironmentList.indexOf(this.getTreeState[0].id);
+                                if (index > -1) {
+                                    this.controleEnvironmentList.splice(index, 1);
+                                }
                             }
                         }
                     }
@@ -1835,7 +1819,11 @@
             },
             '$route' (to,from) {
                 if(from.name==='Light'){
+                    console.log(this.controleLightList);
                     this.$store.commit('CONTROLER_LIGHT', this.controleLightList)
+                }else if(from.name==='Environment'){
+                    console.log(this.controleEnvironmentList);
+                    this.$store.commit('CONTROLER_ENVIRONMENT', this.controleEnvironmentList)
                 }
             }
         },
@@ -1848,7 +1836,7 @@
         }
     }
 </script>
-<style>
+<style lang="scss" >
     .ol-control,.ol-scale-line {
         position:absolute;
         padding:2px
@@ -2075,56 +2063,98 @@
         border:2px dotted rgba(0,60,136,.7)
     }
     .contextmenu{
-        background: url("/static/img/icon_bg.png") no-repeat;
-        width: 120px;
-        height: 60px;
-        position: relative;
-    }
-    .contextmenu i{
-        cursor: pointer;
-        display: inline-block;
-        width: 46px;
-        height: 58px;
-        position: absolute;
-        top:37px;
-        left: 37px;
-    }
-    .contextmenu.Light i{
-        background: url("/static/img/icon/Light_big.png") no-repeat;
-    }
-    .contextmenu.Broadcast i{
-        background: url("/static/img/icon/guangboshebei_big.png") no-repeat;
-    }
-    .contextmenu button{
-        position: absolute;
-        cursor: pointer;
-        border: none;
-        outline:none;
-        width: 20px;
-        height: 20px;
-    }
-    .contextmenu button:nth-child(2){
-        background: url("/static/img/menuOperation.svg");
-        background-size: cover;
-        top:32px;
-        left:13px;
-    }
-    .contextmenu button:nth-child(3){
-        background: url("/static/img/menuShow.svg");
-        background-size: cover;
-        top:10px;
-        left: 50px;
-    }
-    .contextmenu button:last-child{
-        background: url("/static/img/menuPhone.svg");
-        background-size: cover;
-        top:32px;
-        right: 13px;
+        .mapSwitch{
+            height: rem(16);
+            line-height: rem(16);
+            .el-switch__core{
+                height: rem(16);
+                .el-switch__button{
+                    width: rem(12);
+                    height: rem(12);
+                }
+            }
+        }
+        .mapSwitch.is-checked .el-switch__button{
+            transform: translate3d(10px, 0px, 0px)!important;
+        }
     }
 </style>
 <style lang="scss" scoped>
     #map{
         width: 100%;
         height: 100%;
+    }
+    .contextmenu{
+        background: url("/static/img/icon_bg.png") no-repeat;
+        width:rem(120);
+        height: rem(76);
+        position: relative;
+        i{
+            cursor: pointer;
+            display: inline-block;
+            width: rem(46);
+            height: rem(58);
+            position: absolute;
+            top:rem(37);
+            left: rem(37);
+        }
+        button{
+            position: absolute;
+            cursor: pointer;
+            border: none;
+            outline:none;
+            width: rem(20);
+            height: rem(20);
+        }
+        .mapSwitch{
+            position: absolute;
+            left:rem(5);
+            bottom:rem(8);
+        }
+        button.menuShow{
+            background: url("/static/img/menuShow.svg");
+            background-size: cover;
+            top:rem(22);
+            left:rem(20);
+        }
+        button.menuOperation{
+            background: url("/static/img/menuOperation.svg");
+            background-size: cover;
+            top:rem(10);
+            left: rem(50);
+        }
+        button.menuBroadcast{
+            background: url("/static/img/menuPhone.svg");
+            background-size: cover;
+            top:rem(22);
+            right: rem(20);
+        }
+        button.menuPhone{
+            background: url("/static/img/menuPhone.svg");
+            background-size: cover;
+            right:rem(5);
+            bottom: rem(8);
+        }
+    }
+    .contextmenu.Light i{
+        background: url("/static/img/icon/Light_big.png") no-repeat;
+    }
+    .contextmenu.Light_close i{
+        background: url("/static/img/icon/Light_close_big.png") no-repeat;
+    }
+    .contextmenu.Light_damage i{
+        background: url("/static/img/icon/Light_damage_big.png") no-repeat;
+    }
+    .contextmenu.Monitors i{
+        background: url("/static/img/icon/Monitors_big.png") no-repeat;
+    }
+    .contextmenu.Monitors_close i{
+        background: url("/static/img/icon/Monitors_close_big.png") no-repeat;
+    }
+    .contextmenu.Monitors_damage i{
+        background: url("/static/img/icon/Monitors_damage_big.png") no-repeat;
+    }
+    .contextmenu.Broadcast i{
+        background: url("/static/img/icon/guangboshebei_big.png") no-repeat;
     }
 </style>

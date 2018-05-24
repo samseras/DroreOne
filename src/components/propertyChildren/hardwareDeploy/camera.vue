@@ -282,6 +282,7 @@
                 } else {
                     this.isShowIcon = true
                 }
+                this.$emit('toggleList',type)
             },
             downloadTemplate(){
                 window.location.href="/static/template/devices_import.csv";

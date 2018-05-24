@@ -27,7 +27,7 @@
 </template>
 
 <script>
-    import {mapMutations} from 'vuex'
+    import {mapMutations,mapGetters} from 'vuex'
     export default {
         props:['Info','regionId','lightList','number','fault','title','lightInfo','lightCheckout'],
         data() {
@@ -43,6 +43,12 @@
                 return data.label.indexOf(value) !== -1;
             },
             selectAllCheck(state){
+                if (state) {
+                    this.selectAllCheckBox = true
+                } else {
+                    this.selectAllCheckBox = false
+                }
+                console.log(state);
                 let arr
                 if(this.selectAllCheckBox){
                     this.selectedAll= []
@@ -69,12 +75,12 @@
                     arr = this.lightList
 
                 }
-                console.log(arr, '这是最后提交的')
+                // console.log(arr, '这是最后提交的')
                 this.$store.commit('SHOW_TREE', arr)
             },
             handleCheckChange(data,checked) {
-                console.log(data, 'oooooooooooo')
-                console.log(checked, 'iiiiiiiiiiiiiiiiiiii')
+                // console.log(data, 'oooooooooooo')
+                // console.log(checked, 'iiiiiiiiiiiiiiiiiiii')
                 checked.checkedNodes = checked.checkedNodes.filter(item => {
                     if (!item.children) {
                         return item
@@ -108,13 +114,24 @@
             filterText(val) {
                 this.$refs.tree.filter(val);
             },
+            getSearchInfo () {
+                if (this.getSearchInfo.id) {
+                    this.$refs.tree.setCheckedKeys([this.getSearchInfo.id])
+                }
+            },
+        },
+        computed: {
+            ...mapGetters(['getSearchInfo'])
         },
         mounted () {
-
+            let _this = this;
+            setTimeout(function() {
+                _this.treeALL();
+            }, 100)
+            if (this.getSearchInfo.id) {
+                this.$refs.tree.setCheckedKeys([this.getSearchInfo.id])
+            }
         },
-        updated(){
-            this.treeALL();
-        }
 
     };
 
@@ -138,9 +155,6 @@
            border-bottom: 1px solid #ccc;
            .check {
                margin-left: 10px;
-           }
-           .el-checkbox:last-child {
-               color: #f36a5a;
            }
        }
        .el-tree-node__children{
