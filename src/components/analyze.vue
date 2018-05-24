@@ -31,17 +31,21 @@
             </el-container>
         </div>
         <div class="analyzeDetails">
-            <div class="analyzeMenu" v-if="hideList">
-                <ul>
-                    <li v-for="(item,index) in sidebarList" @click="isShowAnalyze(item.dashboard_id,index,item.refresh_interval)"  :class="activeIndex === index?'active':''" :id="item.id" :listName = "item.name" >
-                        {{item.name}}
-                    </li>
-                </ul>
+            <div class="analyzeConfirm" v-if="confirmErr">
+                <div class="analyzeMenu" v-if="hideList">
+                    <ul>
+                        <li v-for="(item,index) in sidebarList" @click="isShowAnalyze(item.dashboard_id,index,item.refresh_interval)"  :class="activeIndex === index?'active':''" :id="item.id" :listName = "item.name" >
+                            {{item.name}}
+                        </li>
+                    </ul>
+                </div>
+                <div class="analyzeContent" >
+                    <router-view @hideList = "hideLists" ></router-view>
+                </div>
             </div>
-            <div class="analyzeContent">
-                <router-view @hideList = "hideLists"></router-view>
-            </div>
+            <err-list v-else :echatListErrs = "echatListErr"></err-list>
         </div>
+
     </div>
 
 </template>
@@ -50,6 +54,7 @@
   // import echarts from "../../static/js/echarts.min.js"
   import passengerFlow from "./analysisSystem/analyze/passengerFlow.vue"
   import api from "@/api"
+  import errList from "./pages/err.vue"
   import { mapMutations } from 'vuex'
   export default {
   	data(){
@@ -60,7 +65,12 @@
             sidebarList:[],
             activeIndex : 0,
             hideList:true,
-            isshowHead:true
+            isshowHead:true,
+            confirmErr:true,
+            echatListErr:{
+                pullData:false,
+                errInform:false,
+            }
   		}
   	},
     async created () {
@@ -69,16 +79,19 @@
       this.$store.commit('REFRESH_DATA_TYPE', this.sidebarList[0].refresh_interval)
     },
   	components:{
-  		passengerFlow
+  		passengerFlow,
+        errList
   	},
     methods:{
         ...mapMutations(['REFRESH_DATA_TYPE']),
         hideLists(data){
-              this.hideList = !data.list;
+               this.hideList = !data.list;
                this.isshowHead = !data.head;
               // this.$emit('hideHead',hideData);
         },
         isShowAnalyze (id,index,refresh) {
+            // console.log(this.$router,"this.$router.path")
+            // debugger
 	          this.$router.push({path: `/analyze/${id}`});
 	          this.activeIndex = index;
               this.$store.commit('REFRESH_DATA_TYPE', refresh)
@@ -86,12 +99,26 @@
         async getDashboradList(){
            await api.analyze.getDashboradList().then(res => {
                 this.sidebarList = res.result
+               if(this.sidebarList.length == 0){
+                   this.confirmErr = false;
+                   this.echatListErr.errInform = false;
+                   this.echatListErr.pullData = true;
+                   return
+                   console.log(echatListErr.pullData,"echatListErr.pullData")
+               }else{
+                   this.confirmErr = true;
+                   this.echatListErr.errInform = false;
+                   this.echatListErr.pullData = false;
+               }
                //  this.sidebarList = this.sidebarList.map(item => {
                //     item.refreshData = 20000
                //     return item
                // })
                // console.log(this.sidebarList,"11111111111")
             }).catch(err => {
+               this.confirmErr = false;
+               this.echatListErr.errInform = true;
+               this.echatListErr.pullData = false;
                 console.log(err)
            })
         }
@@ -174,6 +201,7 @@
         height: 100%;
         display: flex;
         flex-direction: column;
+        position: relative;
         .analyzeHeader{
             width: 100%;
             height: rem(60);
@@ -194,38 +222,48 @@
         .analyzeDetails{
             width: 100%;
             flex: 1;
-            display: flex;
-            .analyzeMenu{
-                width: rem(200);
+
+            .analyzeConfirm{
+                width: 100%;
                 height: 100%;
-                background: #f2f2f2;
-                ul{
-                    width: 100%;
+                display: flex;
+                .analyzeMenu{
+                    width: rem(200);
                     height: 100%;
-                    li{
-                        padding: rem(8) 0 rem(8) rem(40);
-                        box-sizing: border-box;
-                        text-align: left;
-                        cursor: pointer;
-                        img{
-                            display: inline-block;
-                            width: rem(20);
-                            height: rem(20);
-                            background: red;
-                            vertical-align: middle;
-                            margin-right: rem(5);
+                    background: #f2f2f2;
+                    ul{
+                        width: 100%;
+                        height: 100%;
+                        li{
+                            width: rem(200);
+                            white-space: nowrap;
+                            overflow: hidden;
+                            text-overflow: ellipsis;
+                            padding: rem(8) rem(10) rem(8) rem(40);
+                            box-sizing: border-box;
+                            text-align: left;
+                            cursor: pointer;
+                            img{
+                                display: inline-block;
+                                width: rem(20);
+                                height: rem(20);
+                                background: red;
+                                vertical-align: middle;
+                                margin-right: rem(5);
+                            }
                         }
                     }
+                    .active{
+                        background: #fff;
+                        color: #52c4f2;
+                    }
                 }
-                .active{
+                .analyzeContent{
+                    flex: 1;
                     background: #fff;
-                    color: #52c4f2;
                 }
             }
-            .analyzeContent{
-                flex: 1;
-                background: #fff;
-            }
+
         }
     }
 

@@ -49,8 +49,8 @@
                         </el-table-column>
                         <el-table-column label="操作" width="200">
                             <template slot-scope="scope">
-                                <span @click="editInfo(scope.row,false)" class="edit">编辑</span> |
-                                <span @click="showDetail(scope.row,true)">查看</span> |
+                                <span @click="editInfo(scope.row,false,'编辑报警柱告警规则')" class="edit">编辑</span> |
+                                <span @click="showDetail(scope.row,true,'查看报警柱告警规则')">查看</span> |
                                 <span @click="deletInfo(scope.row.id)">删除</span>
                             </template>
                         </el-table-column>
@@ -84,6 +84,7 @@
                     {
                         name:'sos报警规则01',
                         alarmColumn:'BJ001、BJ002',
+                        level:'',
                         deviceRange:'100米',
                         safeRange:'200米',
                         manager:'马云'
@@ -92,6 +93,7 @@
                     {
                         name:'sos报警规则02',
                         alarmColumn:'BJ003、BJ004',
+                        level:'',
                         deviceRange:'400米',
                         safeRange:'700米',
                         manager:'徐一项'
@@ -197,9 +199,9 @@
                     }
                 })
             },
-            editInfo (info,state) {
+            editInfo (info,state,title) {
                 console.log(info);
-                this.showDetail(info,state);
+                this.showDetail(info,state,title);
             },
             batchEdit(){
                 if (this.choseInfoId.length > 0) {

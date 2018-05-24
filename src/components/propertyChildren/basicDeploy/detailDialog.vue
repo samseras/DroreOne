@@ -36,6 +36,10 @@
                     <p class="phoneNum">电话号码：
                         <el-input type="text"v-model="person.phone" :disabled="isDisabled"></el-input>
                     </p>
+                    <p class="textarea ms ms-person">
+                        <span class="des-person">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：</span>
+                        <el-input type="textarea"  v-model="person.description" :disabled="isDisabled" ></el-input>
+                    </p>
                     <div class="img">
                         <img :src="getUrl(person.picturePath)" alt="" v-if="isDisabled" @error="imgError">
                         <label for="avatar" v-if="!isDisabled">
@@ -97,6 +101,16 @@
                     <p class="phoneNum">序列号码：
                         <el-input type="text"v-model="boatCar.vehicle.model" :disabled="isDisabled"></el-input>
                     </p>
+                    <p class="textarea ms">
+                        <span class="des">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：</span>
+                        <el-input type="textarea"  v-model="boatCar.vehicle.description" :disabled="isDisabled" ></el-input>
+                    </p>
+                    <div class="img">
+                        <img :src="getUrl(boatCar.picturePath)" alt="" v-if="isDisabled" @error="imgError">
+                        <label for="avatar" v-if="!isDisabled">
+                            <img :src="files.length ? files[0].url : getUrl(boatCar.picturePath)"  @error="imgError" class="rounded-circle" />
+                        </label>
+                    </div>
                 </div>
                 <!--指示牌-->
                 <div class="personCardContent boatCardContent" v-if="route.includes('indicator')">
@@ -117,8 +131,20 @@
                             </el-option>
                         </el-select>
                     </p>
-                    <p class="phoneNum">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置：
-                        <span>{{indicator.location}}</span><i class="el-icon-location-outline" @click="showMapDialog"></i></p>
+                    <p class="phoneNum">
+                        <s>位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置：</s>
+                        <span :class="{ps:isDisabled}">{{indicator.location}}</span><i class="el-icon-location-outline" @click="showMapDialog"></i>
+                    </p>
+                    <p class="textarea ms">
+                        <span class="des">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：</span>
+                        <el-input type="textarea"  v-model="indicator.description" :disabled="isDisabled" ></el-input>
+                    </p>
+                    <div class="img">
+                        <img :src="getUrl(indicator.picturePath)" alt="" v-if="isDisabled" @error="imgError">
+                        <label for="avatar" v-if="!isDisabled">
+                            <img :src="files.length ? files[0].url : getUrl(indicator.picturePath)"  @error="imgError" class="rounded-circle" />
+                        </label>
+                    </div>
                 </div>
                 <!--垃圾桶-->
                 <div class="personCardContent boatCardContent" v-if="route.includes('trash')">
@@ -140,8 +166,9 @@
                     <p class="idNum">个&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;数：
                         <el-input type="text"v-model="trash.dustbinBean.dustbinCount" :disabled="isDisabled"></el-input>
                     </p>
-                    <p class="phoneNum">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置：
-                        <span>{{trash.location}}</span><i class="el-icon-location-outline" @click="showMapDialog"></i>
+                    <p class="phoneNum">
+                        <s>位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置</s>：
+                        <span :class="{ps:isDisabled}">{{trash.location}}</span><i class="el-icon-location-outline" @click="showMapDialog"></i>
                     </p>
                     <p class="phoneNum">所属片区：
                         <el-select v-model="trash.regionId" placeholder="请选择" :disabled="isDisabled">
@@ -153,6 +180,16 @@
                             </el-option>
                         </el-select>
                     </p>
+                    <p class="textarea ms">
+                        <span class="des">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：</span>
+                        <el-input type="textarea"  v-model="trash.description" :disabled="isDisabled" ></el-input>
+                    </p>
+                    <div class="img">
+                        <img :src="getUrl(trash.picturePath)" alt="" v-if="isDisabled" @error="imgError">
+                        <label for="avatar" v-if="!isDisabled">
+                            <img :src="files.length ? files[0].url : getUrl(trash.picturePath)"  @error="imgError" class="rounded-circle" />
+                        </label>
+                    </div>
                 </div>
                 <!--景点-->
                 <div class="personCardContent boatCardContent" v-if="route.includes('scenic')">
@@ -184,9 +221,20 @@
                     <p class="phoneNum">当前人数：
                         <el-input type="text"v-model="scenic.scenicspotBean.currentNum" :disabled="isDisabled"></el-input>
                     </p>
-                    <p class="phoneNum">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置：
-                        <span>{{scenic.location}}</span><i class="el-icon-location-outline" @click="showMapDialog"></i>
+                    <p class="phoneNum">
+                        <s>位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置：</s>
+                        <span :class="{ps:isDisabled}">{{scenic.location}}</span><i class="el-icon-location-outline" @click="showMapDialog"></i>
                     </p>
+                    <p class="textarea ms">
+                        <span class="des">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：</span>
+                        <el-input type="textarea"  v-model="scenic.description" :disabled="isDisabled" ></el-input>
+                    </p>
+                    <div class="img">
+                        <img :src="getUrl(scenic.picturePath)" alt="" v-if="isDisabled" @error="imgError">
+                        <label for="avatar" v-if="!isDisabled">
+                            <img :src="files.length ? files[0].url : getUrl(scenic.picturePath)"  @error="imgError" class="rounded-circle" />
+                        </label>
+                    </div>
                 </div>
                 <!--商圈-->
                 <div class="personCardContent boatCardContent" v-if="route.includes('shop')">
@@ -217,8 +265,9 @@
                     <p class="phoneNum">当前人数：
                         <el-input type="text"v-model="shop.businessBean.currentNum" :disabled="isDisabled"></el-input>
                     </p>
-                    <p class="phoneNum">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置：
-                        <span>{{shop.location}}</span><i class="el-icon-location-outline" @click="showMapDialog"></i>
+                    <p class="phoneNum">
+                        <s>位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置：</s>
+                        <span :class="{ps:isDisabled}">{{shop.location}}</span><i class="el-icon-location-outline" @click="showMapDialog"></i>
                     </p>
                     <p class="phoneNum">所属片区：
                         <el-select v-model="shop.regionId" placeholder="请选择" :disabled="isDisabled">
@@ -230,6 +279,16 @@
                             </el-option>
                         </el-select>
                     </p>
+                    <p class="textarea ms">
+                        <span class="des">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：</span>
+                        <el-input type="textarea"  v-model="shop.description" :disabled="isDisabled" ></el-input>
+                    </p>
+                    <div class="img">
+                        <img :src="getUrl(shop.picturePath)" alt="" v-if="isDisabled" @error="imgError">
+                        <label for="avatar" v-if="!isDisabled">
+                            <img :src="files.length ? files[0].url : getUrl(shop.picturePath)"  @error="imgError" class="rounded-circle" />
+                        </label>
+                    </div>
                 </div>
                 <!--停车场-->
                 <div class="personCardContent boatCardContent" v-if="route.includes('park')">
@@ -256,8 +315,9 @@
                     <p class="phoneNum">车位总数：
                         <el-input type="text"v-model="park.parkingBean.capacity" :disabled="isDisabled"></el-input>
                     </p>
-                    <p class="phoneNum">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置：
-                        <span>{{park.location}}</span>
+                    <p class="phoneNum">
+                        <s>位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置：</s>
+                        <span :class="{ps:isDisabled}">{{park.location}}</span>
                         <i class="el-icon-location-outline" @click="showMapDialog"></i>
                     </p>
                     <p class="phoneNum">所属片区：
@@ -270,8 +330,18 @@
                             </el-option>
                         </el-select>
                     </p>
+                    <p class="textarea ms">
+                        <span class="des">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：</span>
+                        <el-input type="textarea"  v-model="park.description" :disabled="isDisabled" ></el-input>
+                    </p>
+                    <div class="img">
+                        <img :src="getUrl(park.picturePath)" alt="" v-if="isDisabled" @error="imgError">
+                        <label for="avatar" v-if="!isDisabled">
+                            <img :src="files.length ? files[0].url : getUrl(park.picturePath)"  @error="imgError" class="rounded-circle" />
+                        </label>
+                    </div>
                 </div>
-                <!--洗手间-->
+                <!--卫生间-->
                 <div class="personCardContent boatCardContent" v-if="route.includes('toilet')">
                     <p class="sex">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称：
                         <el-input type="text"v-model="toilet.toiletBean.name" :disabled="isDisabled" :maxlength="15"></el-input>
@@ -293,9 +363,20 @@
                             <el-option label="紧张" value="紧张"></el-option>
                         </el-select>
                     </p>
-                    <p class="phoneNum">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置：
-                        <span>{{toilet.location}}</span><i class="el-icon-location-outline" @click="showMapDialog"></i>
+                    <p class="phoneNum">
+                        <s>位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置：</s>
+                        <span :class="{ps:isDisabled}">{{toilet.location}}</span><i class="el-icon-location-outline" @click="showMapDialog"></i>
                     </p>
+                    <p class="textarea ms">
+                        <span class="des">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：</span>
+                        <el-input type="textarea"  v-model="toilet.description" :disabled="isDisabled" ></el-input>
+                    </p>
+                    <div class="img">
+                        <img :src="getUrl(toilet.picturePath)" alt="" v-if="isDisabled" @error="imgError">
+                        <label for="avatar" v-if="!isDisabled">
+                            <img :src="files.length ? files[0].url : getUrl(toilet.picturePath)"  @error="imgError" class="rounded-circle" />
+                        </label>
+                    </div>
                 </div>
                 <!--片区-->
                 <div class="personCardContent boatCardContent" v-if="route.includes('area')">
@@ -305,11 +386,12 @@
                     <p class="phoneNum" v-if="false">所在景区：
                         <el-input type="text"v-model="area.placeScenic" :disabled="isDisabled"></el-input>
                     </p>
-                    <p class="phoneNum">位置范围：
-                        <span>{{area.location}}</span><i class="el-icon-location-outline" @click="showMapDialog"></i>
+                    <p class="phoneNum">
+                        <s>位置范围：</s>
+                        <span :class="{ps:isDisabled}">{{area.location}}</span><i class="el-icon-location-outline" @click="showMapDialog"></i>
                     </p>
                     <p class="textarea ms">
-                        <span>描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：</span>
+                        <span class="des">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：</span>
                         <el-input type="textarea"  v-model="area.description" :disabled="isDisabled" ></el-input>
                     </p>
                 </div>
@@ -318,8 +400,9 @@
                     <p class="sex">路线名称：
                         <el-input type="text"v-model="roat.name" :disabled="isDisabled" :maxlength="15"></el-input>
                     </p>
-                    <p class="phoneNum">位置范围：
-                        <span>{{roat.location}}</span><i class="el-icon-location-outline" @click="showMapDialog"></i>
+                    <p class="phoneNum">
+                        <s>位置范围：</s>
+                        <span :class="{ps:isDisabled}">{{roat.location}}</span><i class="el-icon-location-outline" @click="showMapDialog"></i>
                     </p>
                     <p class="type">
                         路线类型：
@@ -331,7 +414,7 @@
                         </el-select>
                     </p>
                     <p class="textarea ms">
-                        <span >描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：</span>
+                        <span class="des">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：</span>
                         <el-input type="textarea"  v-model="roat.description" :disabled="isDisabled" ></el-input>
                     </p>
                 </div>
@@ -368,9 +451,9 @@
                     <p class="name">年&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;代：
                         <el-date-picker
                             v-model="tree.plant.plantYear"
-                            type="date"
+                            type="year"
                             :disabled="isDisabled"
-                            placeholder="选择日期">
+                            placeholder="选择年份">
                         </el-date-picker>
                     </p>
                     <p class="phoneNum">所属片区：
@@ -383,12 +466,20 @@
                             </el-option>
                         </el-select>
                     </p>
-                    <p class="phoneNum">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置：
-                        <span>{{tree.location}}</span><i class="el-icon-location-outline" @click="showMapDialog"></i>
+                    <p class="phoneNum">
+                        <s>位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置：</s>
+                        <span :class="{ps:isDisabled}">{{tree.location}}</span><i class="el-icon-location-outline" @click="showMapDialog"></i>
                     </p>
-                    <p class="textarea">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：
+                    <p class="textarea ms">
+                        <span class="des">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：</span>
                         <el-input type="textarea"  v-model="tree.plant.description" :disabled="isDisabled" ></el-input>
                     </p>
+                    <div class="img">
+                        <img :src="getUrl(tree.picturePath)" alt="" v-if="isDisabled" @error="imgError">
+                        <label for="avatar" v-if="!isDisabled">
+                            <img :src="files.length ? files[0].url : getUrl(tree.picturePath)"  @error="imgError" class="rounded-circle" />
+                        </label>
+                    </div>
                 </div>
                 <!--建筑-->
                 <div class="personCardContent boatCardContent" v-if="route.includes('construction')">
@@ -419,12 +510,20 @@
                             </el-option>
                         </el-select>
                     </p>
-                    <p class="phoneNum">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置：
-                        <span>{{build.location}}</span><i class="el-icon-location-outline" @click="showMapDialog"></i>
+                    <p class="phoneNum">
+                        <s>位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置：</s>
+                        <span :class="{ps:isDisabled}">{{build.location}}</span><i class="el-icon-location-outline" @click="showMapDialog"></i>
                     </p>
-                    <p class="textarea">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：
+                    <p class="textarea ms">
+                        <span class="des">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：</span>
                         <el-input type="textarea"  v-model="build.building.description" :disabled="isDisabled" ></el-input>
                     </p>
+                    <div class="img">
+                        <img :src="getUrl(build.picturePath)" alt="" v-if="isDisabled" @error="imgError">
+                        <label for="avatar" v-if="!isDisabled">
+                            <img :src="files.length ? files[0].url : getUrl(build.picturePath)"  @error="imgError" class="rounded-circle" />
+                        </label>
+                    </div>
                 </div>
 
                 <div class="text-center p-2">
@@ -482,6 +581,7 @@
                 },
                 sex: '',
                 person: {
+                    description:'',
                     name:'',
                     gender:'',
                     idNum:'',
@@ -502,6 +602,7 @@
                         purchaseDate:"",
                         serialNum:"",
                         type: '',
+                        description:''
                     },
                 },
                 trash: {
@@ -512,7 +613,8 @@
                         dustbinCount: '',
                     },
                     location: '',
-                    regionId: ''
+                    regionId: '',
+                    description:''
                 },
                 indicator: {
                     signboardBean: {
@@ -520,6 +622,7 @@
                     },
                     regionId: '',
                     location: '',
+                    description:''
                 },
                 scenic: {
                     scenicspotBean: {
@@ -530,6 +633,7 @@
                     regionId: '',
                     state: '',
                     location: '',
+                    description:''
                 },
                 shop: {
                     businessBean: {
@@ -540,7 +644,8 @@
                         businessTypeId: ''
                     },
                     location: '',
-                    regionId: ''
+                    regionId: '',
+                    description:''
                 },
                 park: {
                     parkingBean: {
@@ -553,6 +658,7 @@
                     },
                     location: '',
                     regionId: '',
+                    description:''
                 },
                 toilet: {
                     toiletBean: {
@@ -563,7 +669,8 @@
                     },
                     state:'',
                     location:'',
-                    regionId: ''
+                    regionId: '',
+                    description:''
                 },
                 area: {
                     name: '',
@@ -586,7 +693,7 @@
                         description: ''
                     },
                     location:'',
-                    regionId: ''
+                    regionId: '',
                 },
                 build: {
                     building:{
@@ -621,32 +728,59 @@
             getUrl (url) {
                 if (url === null || url === undefined) {
                     let imgSrc
-                    switch (this.$route.params.id) {
-                        case '1': {
-                            imgSrc = './../../../static/img/driveCard.png';
-                            break
+                    if (this.$route.params.id) {
+                        switch (this.$route.params.id) {
+                            case '1': {
+                                imgSrc = './../../../static/img/driveCard.png';
+                                break
+                            }
+                            case '2': {
+                                imgSrc = './../../../static/img/boatCard.png';
+                                break
+                            }
+                            case '3': {
+                                imgSrc = './../../../static/img/clearCard.png';
+                                break
+                            }
+                            case '4': {
+                                imgSrc = './../../../static/img/clearCard.png';
+                                break
+                            }
+                            case '5': {
+                                imgSrc = './../../../static/img/saleTrickCard.png';
+                                break
+                            }
+                            case '6': {
+                                imgSrc = './../../../static/img/trickCard.png';
+                                break
+                            }
                         }
-                        case '2': {
-                            imgSrc = './../../../static/img/boatCard.png';
-                            break
-                        }
-                        case '3': {
-                            imgSrc = './../../../static/img/clearCard.png';
-                            break
-                        }
-                        case '4': {
-                            imgSrc = './../../../static/img/clearCard.png';
-                            break
-                        }
-                        case '5': {
-                            imgSrc = './../../../static/img/saleTrickCard.png';
-                            break
-                        }
-                        case '6': {
-                            imgSrc = './../../../static/img/trickCard.png';
-                            break
-                        }
+                    } else {
+                        console.log(this.$route.path, 'p[ppppp[p')
+                        let route = this.$route.path
+                       if (route.includes('shop')) {//商铺
+                           imgSrc = './../../../../static/img/businesCard.png'
+
+                       }else if (route.includes('park')) {//停车
+                           imgSrc = './../../../../static/img/parkCard.png'
+                       }else if (route.includes('toilet')) {//卫生间
+                           imgSrc = './../../../../static/img/toiletCard.png'
+                       }else if (route.includes('scenic')) {//景点
+                           imgSrc = './../../../../static/img/scenicCard.png'
+                       }else if (route.includes('trash')) {//垃圾桶
+                           imgSrc = './../../../../static/img/wasteCard.png'
+                       }else if (route.includes('indicator')) {//指示牌
+                           imgSrc = './../../../../static/img/indicatorCard.png'
+                       }else if (route.includes('plant')) {//植物
+                           imgSrc = './../../../../static/img/botanyCard.png'
+                       }else if (route.includes('construction')) {//建筑
+                           imgSrc = './../../../../static/img/bulidCard.png'
+                       } else if (route.includes('boat')) {//车船
+                           imgSrc = './../../../../static/img/boatCartCard.png'
+
+                       }
                     }
+
                     console.log(imgSrc, 'opopopopopopopo')
                     return imgSrc
                 } else {
@@ -1023,25 +1157,25 @@
                 this.sex = this.person.gender
                 this.person.jobId = jobId
             } else if(this.route.includes('boat')) {
-                let jobId
-                if (this.Info.vehicle) {
-                    if (this.Info.vehicle.type == 0){
-                        jobId = 1
-                    }else {
-                        jobId = 2
-                    }
-                    api.person.getJobPerson(jobId).then(res => {
-                        console.log(res, '成功')
-                        this.driverList = res
-                        this.driverList.forEach(item => {
-                            item.id = item.personBean.id
-                            item.name = item.personBean.name
-                        })
-                        console.log(this.driverList)
-                    }).catch(err => {
-                        console.log(err, '失败')
-                    })
-                }
+                // let jobId
+                // if (this.Info.vehicle) {
+                //     if (this.Info.vehicle.type == 0){
+                //         jobId = 1
+                //     }else {
+                //         jobId = 2
+                //     }
+                //     api.person.getJobPerson(jobId).then(res => {
+                //         console.log(res, '成功')
+                //         this.driverList = res
+                //         this.driverList.forEach(item => {
+                //             item.id = item.personBean.id
+                //             item.name = item.personBean.name
+                //         })
+                //         console.log(this.driverList)
+                //     }).catch(err => {
+                //         console.log(err, '失败')
+                //     })
+                // }
                 this.boatCar = this.Info
             } else if(this.route.includes('trash')) {
                 console.log(this.Info, '909090909090')
@@ -1167,6 +1301,7 @@
         }
         .el-date-editor,.el-input,.el-input--prefix,.el-input--suffix,.el-date-editor--date{
             margin-top: rem(-2);
+            top: rem(-2);
         }
         .el-date-editor,.el-input,.el-input--prefix,.el-input--suffix,.el-date-editor--date .el-input__inner{
             border: none;
@@ -1194,15 +1329,23 @@
             width: rem(160);
             padding-left: rem(5);
         }
+        .ms-person .el-textarea__inner{
+            font-size:.75rem;
+            line-height:1.875rem;
+            color:red;
+        }
+        .el-input.is-disabled .el-input__inner,.el-textarea.is-disabled .el-textarea__inner{
+            background-color:transparent;
+        }
+        .person-jole{
+            display:none;
+        }
+        .detailDialog .card .boatCardContent .ms .des{
+            height:53px;
+        }
     }
 </style>
 <style>
-    .el-input.is-disabled .el-input__inner,.el-textarea.is-disabled .el-textarea__inner{
-        background-color:transparent;
-    }
-    .person-jole{
-        display:none;
-    }
     .example-avatar .avatar-upload .rounded-circle {
         width: 200px;
         height: 200px;
@@ -1533,6 +1676,7 @@
         cursor: not-allowed
     }
 
+
 </style>
 <style lang="scss" scoped type="text/scss">
     .detailDialog{
@@ -1558,11 +1702,21 @@
                     }
                     span{
                         display: inline-block;
-                        width: rem(180);
+                        width: rem(200);
                         /*overflow: hidden;
                         text-overflow: ellipsis;
                         white-space: nowrap;*/
                         line-height: rem(15);
+                        overflow: hidden;
+                    }
+                    .ps{
+                        color:#c0c4cc;
+                        width: rem(203.2);
+                    }
+                    s{
+                        text-decoration: none;
+                        line-height: 0.9375rem;
+                        float: left;
                     }
                     select{
                         border: none;
@@ -1587,6 +1741,7 @@
                        font-size: rem(16);
                         vertical-align: middle;
                         cursor: pointer;
+                        margin-left:1rem
                     }
                     textarea{
                         resize: none;
@@ -1603,8 +1758,16 @@
                     span{
                         width:rem(66)
                     }
+                    .des-person{
+                        float:left
+                    }
                     div{
-                        width:70%
+                        width:14rem
+                    }
+                }
+                .ms-person{
+                    div{
+                        width:15.3rem;
                     }
                 }
                 .textarea{

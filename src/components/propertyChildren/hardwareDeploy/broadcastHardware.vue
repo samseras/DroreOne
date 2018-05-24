@@ -76,7 +76,8 @@
                             <el-checkbox v-model="item.checked" @change="checked(item.id)" class="checkBtn"></el-checkbox>
                         </div>
                         <div class="personType" @click.stop="showBroadDetail(item,'广播信息',true)">
-                            <img src="../../../../static/img/broadcastCard.png" alt="">
+                            <!--<img src="../../../../static/img/broadcastCard.png" alt="">-->
+                            <img :src="getUrl(item.picturePath)" alt="" @error="imgError">
                             <span class="name">
                                   {{item.name}}
                                 </span>
@@ -131,8 +132,19 @@
             }
         },
         methods:{
+            imgError (e) {
+                e.target.src = this.getUrl(null);
+            },
+            getUrl (url) {
+                if (url === null) {
+                    return '../../../../static/img/broadcastCard.png'
+                } else {
+                    return url
+                }
+            },
             closeDialog () {
                 this.visible = false
+                this.getAllBroadcast()
             },
             handleSelectionChange(val) {
                 this.multipleSelection = val;
@@ -173,7 +185,7 @@
 
             },
 
-            fixInfo(info){
+            async fixInfo(info){
                 let index = info.location.includes(',')?info.location.indexOf(','):info.location.indexOf('，')
                 let longitude = info.location.substring(0, index)
                 let latitude = info.location.substring(index + 1)
@@ -190,7 +202,19 @@
                     latitude:latitude,
                     longitude:longitude
                 }]
-                api.broadcast.updateBroadcast(broadObj).then(res =>{
+                if (info.imgUrl !== '') {
+                    await api.person.updataAva(info.imgUrl).then(res => {
+                        console.log(res, '上传成功')
+                        broadObj[0].pictureId = res.id
+                    }).catch(err => {
+                        console.log(err, '上传失败')
+                        this.$message.error('上传失败，其请稍后重试')
+                        return
+                    })
+                } else {
+                    broadObj[0].pictureId = info.pictureId
+                }
+                await api.broadcast.updateBroadcast(broadObj).then(res =>{
                     this.closeDialog()
                     this.$message.success('修改成功')
                     this.choseInfoId=[]
@@ -268,7 +292,7 @@
                 }
 
             },
-            addBroad (info){
+            async addBroad (info){
                 let index = info.location.includes(',')?info.location.indexOf(','):info.location.indexOf('，')
                 let longitude = info.location.substring(0, index)
                 let latitude = info.location.substring(index + 1)
@@ -284,7 +308,17 @@
                     latitude:latitude,
                     longitude:longitude
                 }]
-                api.broadcast.createBroadcast(broadObj).then(res =>{
+                if (info.imgUrl !== '') {
+                    await api.person.updataAva(info.imgUrl).then(res => {
+                        console.log(res, '上传成功')
+                        broadObj[0].pictureId = res.id
+                    }).catch(err => {
+                        console.log(err, '上传失败')
+                        this.$message.error('上传失败，其请稍后重试')
+                        return
+                    })
+                }
+                await api.broadcast.createBroadcast(broadObj).then(res =>{
                     this.closeDialog()
                     this.$message.success('添加成功')
                     this.getAllBroadcast()

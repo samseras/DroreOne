@@ -1,6 +1,6 @@
 <template>
     <div class="passengerFlow"  v-loading="isShowloading">
-        <ScrollContainer>
+        <ScrollContainer v-if="isErr">
             <i class="el-icon-d-arrow-right" v-show = "isSetOut" @click="setOut"></i>
             <i class="el-icon-d-arrow-left packUp" v-show = "isPackUp" @click="packUp"></i>
             <div class="content" id="content">
@@ -26,6 +26,7 @@
                 </div>
             </div>
         </ScrollContainer>
+        <err-page v-else :echatListErrs = "echatListErr"></err-page>
     </div>
 </template>
 
@@ -33,6 +34,7 @@
     import ScrollContainer from '@/components/ScrollContainer'
     // import EchatsCard from '@/components/analysisSystem/analyze/echats'
     import api from '@/api'
+    import errPage from "../../pages/err.vue"
     import {mapGetters} from 'vuex'
     import $ from 'jquery'
     export default {
@@ -69,7 +71,12 @@
                 lineDom:null,
                 gaugeDom:null,
                 funnelDom:null,
-                isAllScreen:false
+                isAllScreen:false,
+                isErr:true,
+                echatListErr:{
+                    pullData:false,
+                    errInform:false,
+                }
             }
         },
         props:['listName'],
@@ -122,8 +129,10 @@
                     this.chartB = this.$refs.content.getBoundingClientRect().bottom;
                     this.chartL = this.$refs.content.getBoundingClientRect().left;
                     this.chartR = this.$refs.content.getBoundingClientRect().right;
-                    this.chartH = this.chartB - this.chartT-60;
+                    this.chartH = this.chartB-this.chartT-40;
                     this.chartW = this.chartR - 220;
+                    console.log(this.chartT,"this.chartT")
+                    console.log(this.chartB,"this.chartB")
                     that.$emit('hideList',data);//fullscreen事件触发后，自动触发hideList事件 var docElm = document.documentElement;
                     for(let i=0;i<this.echatList.length;i++){
                         changeH = this.echatList[i].pos_height/100;
@@ -194,10 +203,22 @@
                 // console.log(this.getRefresh)
                 this.isShowLoading = true
                 let id = this.$route.params.id;
+
                 await api.analyze.getStreamDataById(id).then(res=> {
                     // console.log(res,'nimeide ')
                     this.isShowloading = false;
                     this.echatList = res.result;
+                    if(this.echatList.length == 0){
+                        this.isErr = false;
+                        this.echatListErr.errInform = false;
+                        this.echatListErr.pullData = true;
+                        return
+                        console.log(echatListErr.pullData,"echatListErr.pullData")
+                    }else{
+                        this.isErr = true;
+                        this.echatListErr.errInform = false;
+                        this.echatListErr.pullData = false;
+                    }
                     let scenarioId,chartId,chartDomH;
                    console.log(this.echatList, '这是请求回来的图表');
                     for(let i=0;i<this.echatList.length;i++){
@@ -207,6 +228,9 @@
                          this.getchartKind(scenarioId,chartDomH);
                     };
                 }).catch(err => {
+                    this.isErr = false;
+                    this.echatListErr.errInform = true;
+                    this.echatListErr.pullData = false;
                     console.log(err)
                 })
                 this.moveChart();
@@ -239,15 +263,6 @@
                   smallCharDom.resize();
             },
             moveChart(){
-                 console.log(this.barDom,"this.barDom")
-                console.log(this.pieDom,"this.pieDom")
-                console.log(this.radarDom)
-                console.log(this.candlestickDom)
-                console.log(this.gaugeDom)
-                console.log(this.funnelDom)
-                console.log(this.roseDom)
-                console.log(this.relativebarDom)
-                console.log(this.lineDom)
 
                 if(this.barDom!=undefined){
                     this.barDom.resize();
@@ -954,8 +969,8 @@
           '$route' () {
               if (this.$route.path.includes('analyze')) {
                   this.echatList = []  //清空dom 内容
+                  // this.getDom();
                   this.getEchats()
-                  this.getDom();
                   window.SETTIMER = setInterval(this.getRefreshTime,this.getRefresh)
                   console.log(this.radarDom, 'opopopopopopopopopop')
               }
@@ -979,6 +994,7 @@
         },
         components: {
             ScrollContainer,
+            errPage
              // EchatsCard
         },
         destroyed  () {
@@ -1085,6 +1101,7 @@
                     padding:0 rem(10) rem(10) 0;
                     box-sizing: border-box;
                     .echatsTitle{
+                        position: relative;
                         width: 100%;
                         padding: rem(5) rem(10);
                         box-sizing: border-box;
@@ -1095,12 +1112,19 @@
                         border-bottom-right-radius: rem(0);
                         border-bottom-left-radius: rem(0);
                         p{
+                            width: 100%;
+                            padding-right: rem(100);
+                            overflow: hidden;
+                            text-overflow: ellipsis;
+                            white-space: nowrap;
                             display: inline-block;
                             font-size: rem(14);
                         }
                         .echatsBtn{
+                            position: absolute;
                             display: inline-block;
-                            float: right;
+                            right: rem(15);
+                            top:rem(6);
                             i{
                                 padding:0;
                                 width: rem(25);

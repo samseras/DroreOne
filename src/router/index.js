@@ -8,6 +8,7 @@ import Router from 'vue-router'
 import MicServiceManagementSystem from '@/components/pages/MicroService/MicroServiceManagementSystem'
 import Index from '@/components/pages/index'
 import login from '@/components/pages/login'
+// import Error from '@/components/pages/err'
 
 import eye from '@/components/pages/eye'
 
@@ -139,6 +140,11 @@ const routes = [
       path: '/MicServiceManagementSystem',
       component: MicServiceManagementSystem
     },
+    // //404页面
+    // {
+    //     path: '/err',
+    //     component: Error
+    // },
       // 主页面
     {
       path: '/droreone',

@@ -231,7 +231,7 @@
         components : {
              'a-player': VueAplayer
         },
-         mounted () {
+        mounted () {
             //异步加载，先加载出player再使用
              this.init();
             // this.init();
