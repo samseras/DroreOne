@@ -261,6 +261,7 @@
                 let longitude = info.location.substring(0, index)
                 let latitude = info.location.substring(index + 1)
                 let toiletObj = {
+                    description:info.description,
                     id: info.toiletBean.id,
                     name: info.toiletBean.name,
                     regionId: info.regionId,
@@ -295,6 +296,7 @@
                 let longitude = info.location.substring(0, index)
                 let latitude = info.location.substring(index + 1)
                 let toiletObj = {
+                    description:info.description,
                     name: info.toiletBean.name,
                     regionId: info.regionId,
                     latitude: latitude,
@@ -352,6 +354,7 @@
                         this.toiletList[i].status = true
                         this.toiletList[i].location = `${this.toiletList[i].longitude},${this.toiletList[i].latitude}`
                         this.toiletList[i].id = this.toiletList[i].toiletBean.id
+                        this.toiletList[i].description = this.toiletList[i].toiletBean.description
                         this.toiletList[i].state = '正常'
                         this.toiletList[i].byTime = -(new Date(this.toiletList[i].toiletBean.modifyTime)).getTime()
                     }

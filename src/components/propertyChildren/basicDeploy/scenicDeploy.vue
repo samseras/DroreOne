@@ -53,11 +53,13 @@
                             prop="scenicspotBean.capacity"
                             label="容量">
                         </el-table-column>
-                        <el-table-column
+
+                        <!--<el-table-column
                             width="100"
                             prop="scenicspotBean.currentNum"
                             label="当前人数">
-                        </el-table-column>
+                        </el-table-column>-->
+
                         <el-table-column
                             prop="location"
                             label="位置">
@@ -86,7 +88,7 @@
                         <div class="specificInfo">
                             <p class="name">所属区域：<span>{{item.regionName}}</span></p>
                             <p class="sex">状&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;态：<span>{{item.scenicspotBean.status}}</span></p>
-                            <p class="idNum">当前人数：<span>{{item.scenicspotBean.currentNum}}</span></p>
+                            <!--<p class="idNum">当前人数：<span>{{item.scenicspotBean.currentNum}}</span></p>-->
                             <p class="phoneNum">最大容量：<span>{{item.scenicspotBean.capacity}}</span></p>
                         </div>
                     </div>
@@ -269,6 +271,7 @@
                 let longitude = info.location.substring(0, index)
                 let latitude = info.location.substring(index + 1)
                 let scenicObj = {
+                    description:info.description,
                     id: info.scenicspotBean.id,
                     name: info.scenicspotBean.name,
                     capacity: info.scenicspotBean.capacity,
@@ -302,6 +305,7 @@
                 let longitude = info.location.substring(0, index)
                 let latitude = info.location.substring(index + 1)
                 let scenicObj = {
+                    description:info.description,
                     name: info.scenicspotBean.name,
                     capacity: info.scenicspotBean.capacity,
                     regionId: info.regionId,
@@ -359,6 +363,7 @@
                         this.scenicList[i].checked = false
                         this.scenicList[i].status = true
                         this.scenicList[i].id = this.scenicList[i].scenicspotBean.id
+                        this.scenicList[i].description = this.scenicList[i].scenicspotBean.description
                         this.scenicList[i].location = `${this.scenicList[i].longitude},${this.scenicList[i].latitude}`
                         this.scenicList[i].scenicspotBean.currentNum = this.currentNum
                         // scenicspotBean.status

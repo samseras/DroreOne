@@ -289,6 +289,7 @@
             },
             async fixInfo (info) {
                 let boatObj = {
+                    description: info.vehicle.description,
                     id: info.id,
                     serialNum: info.vehicle.serialNum,
                     capacity: info.vehicle.capacity,
@@ -324,6 +325,7 @@
             },
             async addNewBoatCar (info) {
                 let boatObj = {
+                    description: info.vehicle.description,
                     serialNum: info.vehicle.serialNum,
                     capacity: info.vehicle.capacity,
                     type: info.vehicle.type,
@@ -385,6 +387,7 @@
                         this.boatCarList[i].checked = false
                         this.boatCarList[i].status = true
                         this.boatCarList[i].id = this.boatCarList[i].vehicle.id
+                        this.boatCarList[i].description = this.boatCarList[i].vehicle.description
                         this.boatCarList[i].byTime = -(new Date(this.boatCarList[i].vehicle.modifyTime)).getTime()
                     }
                     this.boatCarList = _.sortBy(this.boatCarList,'byTime')

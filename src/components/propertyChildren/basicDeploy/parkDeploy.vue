@@ -51,7 +51,8 @@
                             prop="state"
                             label="状态">
                         </el-table-column>
-                        <el-table-column
+
+                        <!--<el-table-column
                             width="100"
                             prop="parkingBean.surplusNum"
                             label="空余车位">
@@ -60,7 +61,8 @@
                             width="100"
                             prop="parkingBean.capacity"
                             label="车位总数">
-                        </el-table-column>
+                        </el-table-column>-->
+
                         <el-table-column
                             prop="location"
                             label="位置">
@@ -96,8 +98,9 @@
                         <div class="specificInfo">
                             <p class="name">所属区域：<span>{{item.regionName}}</span></p>
                             <p class="sex">状&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;态：<span>{{item.parkingBean.state}}</span></p>
-                            <p class="idNum">空余车位：<span>{{item.parkingBean.surplusNum}}</span></p>
-                            <p class="phoneNum">车位总数：<span>{{item.parkingBean.capacity}}</span></p>
+                            <p class="sex text">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：<span>{{item.parkingBean.description}}</span></p>
+                           <!-- <p class="idNum">空余车位：<span>{{item.parkingBean.surplusNum}}</span></p>
+                            <p class="phoneNum">车位总数：<span>{{item.parkingBean.capacity}}</span></p>-->
                         </div>
                     </div>
                 </ScrollContainer>
@@ -285,9 +288,10 @@
                 let longitude = info.location.substring(0, index)
                 let latitude = info.location.substring(index + 1)
                 let parkObj = {
+                    description:info.description,
                     id: info.parkingBean.id,
                     name: info.parkingBean.name,
-                    capacity: info.parkingBean.capacity,
+                    //capacity: info.parkingBean.capacity,
                     type: info.parkingBean.type,
                     regionId: info.regionId,
                     latitude: latitude,
@@ -320,8 +324,9 @@
                 let longitude = info.location.substring(0, index)
                 let latitude = info.location.substring(index + 1)
                 let parkObj = {
+                    description:info.description,
                     name: info.parkingBean.name,
-                    capacity: info.parkingBean.capacity,
+                    //capacity: info.parkingBean.capacity,
                     type: info.parkingBean.type,
                     regionId: info.regionId,
                     latitude: latitude,
@@ -377,6 +382,7 @@
                         this.parkList[i].checked = false
                         this.parkList[i].status = true
                         this.parkList[i].id = this.parkList[i].parkingBean.id
+                        this.parkList[i].description = this.parkList[i].parkingBean.description
                         this.parkList[i].parkingBean.currentNum = this.currentNum
                         this.parkList[i].parkingBean.surplusNum = this.parkList[i].parkingBean.capacity - this.parkList[i].parkingBean.currentNum
                         this.parkList[i].location = `${this.parkList[i].longitude},${this.parkList[i].latitude}`

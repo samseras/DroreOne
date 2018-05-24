@@ -36,6 +36,10 @@
                     <p class="phoneNum">电话号码：
                         <el-input type="text"v-model="person.phone" :disabled="isDisabled"></el-input>
                     </p>
+                    <p class="textarea ms ms-person">
+                        <span class="des-person">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：</span>
+                        <el-input type="textarea"  v-model="person.description" :disabled="isDisabled" ></el-input>
+                    </p>
                     <div class="img">
                         <img :src="getUrl(person.picturePath)" alt="" v-if="isDisabled" @error="imgError">
                         <label for="avatar" v-if="!isDisabled">
@@ -80,7 +84,7 @@
                             placeholder="选择日期">
                         </el-date-picker>
                     </p>
-                    <p class="phoneNum person-driv">驾驶人员：
+                    <!--<p class="phoneNum person-driv">驾驶人员：
                         <el-select v-model="boatCar.driverId" placeholder="请选择" :disabled="isDisabled">
                             <el-option
                                 v-for="item in driverList"
@@ -89,13 +93,17 @@
                                 :value="item.id">
                             </el-option>
                         </el-select>
-                    </p>
+                    </p>-->
                     <p class="phoneNum person-driv">联系电话：
                     <!--<p class="phoneNum person-driv" v-if="isDisabled">联系电话：-->
                         <el-input type="text"v-model="boatCar.driverPhone" :disabled="isDisabled"></el-input>
                     </p>
                     <p class="phoneNum">序列号码：
                         <el-input type="text"v-model="boatCar.vehicle.model" :disabled="isDisabled"></el-input>
+                    </p>
+                    <p class="textarea ms">
+                        <span class="des">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：</span>
+                        <el-input type="textarea"  v-model="boatCar.vehicle.description" :disabled="isDisabled" ></el-input>
                     </p>
                     <div class="img">
                         <img :src="getUrl(boatCar.picturePath)" alt="" v-if="isDisabled" @error="imgError">
@@ -123,8 +131,13 @@
                             </el-option>
                         </el-select>
                     </p>
-                    <p class="phoneNum">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置：
-                        <span>{{indicator.location}}</span><i class="el-icon-location-outline" @click="showMapDialog"></i>
+                    <p class="phoneNum">
+                        <s>位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置：</s>
+                        <span :class="{ps:isDisabled}">{{indicator.location}}</span><i class="el-icon-location-outline" @click="showMapDialog"></i>
+                    </p>
+                    <p class="textarea ms">
+                        <span class="des">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：</span>
+                        <el-input type="textarea"  v-model="indicator.description" :disabled="isDisabled" ></el-input>
                     </p>
                     <div class="img">
                         <img :src="getUrl(indicator.picturePath)" alt="" v-if="isDisabled" @error="imgError">
@@ -153,8 +166,9 @@
                     <p class="idNum">个&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;数：
                         <el-input type="text"v-model="trash.dustbinBean.dustbinCount" :disabled="isDisabled"></el-input>
                     </p>
-                    <p class="phoneNum">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置：
-                        <span>{{trash.location}}</span><i class="el-icon-location-outline" @click="showMapDialog"></i>
+                    <p class="phoneNum">
+                        <s>位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置</s>：
+                        <span :class="{ps:isDisabled}">{{trash.location}}</span><i class="el-icon-location-outline" @click="showMapDialog"></i>
                     </p>
                     <p class="phoneNum">所属片区：
                         <el-select v-model="trash.regionId" placeholder="请选择" :disabled="isDisabled">
@@ -165,6 +179,10 @@
                                 :value="item.id">
                             </el-option>
                         </el-select>
+                    </p>
+                    <p class="textarea ms">
+                        <span class="des">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：</span>
+                        <el-input type="textarea"  v-model="trash.description" :disabled="isDisabled" ></el-input>
                     </p>
                     <div class="img">
                         <img :src="getUrl(trash.picturePath)" alt="" v-if="isDisabled" @error="imgError">
@@ -200,11 +218,16 @@
                         <el-input type="text"v-model="scenic.scenicspotBean.capacity" :disabled="isDisabled"></el-input>
                     </p>
 
-                    <p class="phoneNum">当前人数：
+                    <!--<p class="phoneNum">当前人数：
                         <el-input type="text"v-model="scenic.scenicspotBean.currentNum" :disabled="isDisabled"></el-input>
+                    </p>-->
+                    <p class="phoneNum">
+                        <s>位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置：</s>
+                        <span :class="{ps:isDisabled}">{{scenic.location}}</span><i class="el-icon-location-outline" @click="showMapDialog"></i>
                     </p>
-                    <p class="phoneNum">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置：
-                        <span>{{scenic.location}}</span><i class="el-icon-location-outline" @click="showMapDialog"></i>
+                    <p class="textarea ms">
+                        <span class="des">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：</span>
+                        <el-input type="textarea"  v-model="scenic.description" :disabled="isDisabled" ></el-input>
                     </p>
                     <div class="img">
                         <img :src="getUrl(scenic.picturePath)" alt="" v-if="isDisabled" @error="imgError">
@@ -239,11 +262,12 @@
                         <el-input type="text"v-model="shop.businessBean.capacity" :disabled="isDisabled"></el-input>
                     </p>
 
-                    <p class="phoneNum">当前人数：
+                    <!--<p class="phoneNum">当前人数：
                         <el-input type="text"v-model="shop.businessBean.currentNum" :disabled="isDisabled"></el-input>
-                    </p>
-                    <p class="phoneNum">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置：
-                        <span>{{shop.location}}</span><i class="el-icon-location-outline" @click="showMapDialog"></i>
+                    </p>-->
+                    <p class="phoneNum">
+                        <s>位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置：</s>
+                        <span :class="{ps:isDisabled}">{{shop.location}}</span><i class="el-icon-location-outline" @click="showMapDialog"></i>
                     </p>
                     <p class="phoneNum">所属片区：
                         <el-select v-model="shop.regionId" placeholder="请选择" :disabled="isDisabled">
@@ -254,6 +278,10 @@
                                 :value="item.id">
                             </el-option>
                         </el-select>
+                    </p>
+                    <p class="textarea ms">
+                        <span class="des">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：</span>
+                        <el-input type="textarea"  v-model="shop.description" :disabled="isDisabled" ></el-input>
                     </p>
                     <div class="img">
                         <img :src="getUrl(shop.picturePath)" alt="" v-if="isDisabled" @error="imgError">
@@ -281,14 +309,15 @@
                             <el-option label="紧张" value="紧张"></el-option>
                         </el-select>
                     </p>
-                    <p class="idNum">空余车位：
+                    <!--<p class="idNum">空余车位：
                         <el-input type="text"v-model="park.parkingBean.surplusNum" :disabled="isDisabled"></el-input>
                     </p>
                     <p class="phoneNum">车位总数：
                         <el-input type="text"v-model="park.parkingBean.capacity" :disabled="isDisabled"></el-input>
-                    </p>
-                    <p class="phoneNum">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置：
-                        <span>{{park.location}}</span>
+                    </p>-->
+                    <p class="phoneNum">
+                        <s>位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置：</s>
+                        <span :class="{ps:isDisabled}">{{park.location}}</span>
                         <i class="el-icon-location-outline" @click="showMapDialog"></i>
                     </p>
                     <p class="phoneNum">所属片区：
@@ -301,6 +330,10 @@
                             </el-option>
                         </el-select>
                     </p>
+                    <p class="textarea ms">
+                        <span class="des">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：</span>
+                        <el-input type="textarea"  v-model="park.description" :disabled="isDisabled" ></el-input>
+                    </p>
                     <div class="img">
                         <img :src="getUrl(park.picturePath)" alt="" v-if="isDisabled" @error="imgError">
                         <label for="avatar" v-if="!isDisabled">
@@ -308,7 +341,7 @@
                         </label>
                     </div>
                 </div>
-                <!--洗手间-->
+                <!--卫生间-->
                 <div class="personCardContent boatCardContent" v-if="route.includes('toilet')">
                     <p class="sex">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称：
                         <el-input type="text"v-model="toilet.toiletBean.name" :disabled="isDisabled" :maxlength="15"></el-input>
@@ -330,8 +363,13 @@
                             <el-option label="紧张" value="紧张"></el-option>
                         </el-select>
                     </p>
-                    <p class="phoneNum">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置：
-                        <span>{{toilet.location}}</span><i class="el-icon-location-outline" @click="showMapDialog"></i>
+                    <p class="phoneNum">
+                        <s>位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置：</s>
+                        <span :class="{ps:isDisabled}">{{toilet.location}}</span><i class="el-icon-location-outline" @click="showMapDialog"></i>
+                    </p>
+                    <p class="textarea ms">
+                        <span class="des">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：</span>
+                        <el-input type="textarea"  v-model="toilet.description" :disabled="isDisabled" ></el-input>
                     </p>
                     <div class="img">
                         <img :src="getUrl(toilet.picturePath)" alt="" v-if="isDisabled" @error="imgError">
@@ -348,11 +386,12 @@
                     <p class="phoneNum" v-if="false">所在景区：
                         <el-input type="text"v-model="area.placeScenic" :disabled="isDisabled"></el-input>
                     </p>
-                    <p class="phoneNum">位置范围：
-                        <span>{{area.location}}</span><i class="el-icon-location-outline" @click="showMapDialog"></i>
+                    <p class="phoneNum">
+                        <s>位置范围：</s>
+                        <span :class="{ps:isDisabled}">{{area.location}}</span><i class="el-icon-location-outline" @click="showMapDialog"></i>
                     </p>
                     <p class="textarea ms">
-                        <span>描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：</span>
+                        <span class="des">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：</span>
                         <el-input type="textarea"  v-model="area.description" :disabled="isDisabled" ></el-input>
                     </p>
                 </div>
@@ -361,8 +400,9 @@
                     <p class="sex">路线名称：
                         <el-input type="text"v-model="roat.name" :disabled="isDisabled" :maxlength="15"></el-input>
                     </p>
-                    <p class="phoneNum">位置范围：
-                        <span>{{roat.location}}</span><i class="el-icon-location-outline" @click="showMapDialog"></i>
+                    <p class="phoneNum">
+                        <s>位置范围：</s>
+                        <span :class="{ps:isDisabled}">{{roat.location}}</span><i class="el-icon-location-outline" @click="showMapDialog"></i>
                     </p>
                     <p class="type">
                         路线类型：
@@ -374,7 +414,7 @@
                         </el-select>
                     </p>
                     <p class="textarea ms">
-                        <span >描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：</span>
+                        <span class="des">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：</span>
                         <el-input type="textarea"  v-model="roat.description" :disabled="isDisabled" ></el-input>
                     </p>
                 </div>
@@ -426,10 +466,12 @@
                             </el-option>
                         </el-select>
                     </p>
-                    <p class="phoneNum">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置：
-                        <span>{{tree.location}}</span><i class="el-icon-location-outline" @click="showMapDialog"></i>
+                    <p class="phoneNum">
+                        <s>位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置：</s>
+                        <span :class="{ps:isDisabled}">{{tree.location}}</span><i class="el-icon-location-outline" @click="showMapDialog"></i>
                     </p>
-                    <p class="textarea">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：
+                    <p class="textarea ms">
+                        <span class="des">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：</span>
                         <el-input type="textarea"  v-model="tree.plant.description" :disabled="isDisabled" ></el-input>
                     </p>
                     <div class="img">
@@ -468,10 +510,12 @@
                             </el-option>
                         </el-select>
                     </p>
-                    <p class="phoneNum">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置：
-                        <span>{{build.location}}</span><i class="el-icon-location-outline" @click="showMapDialog"></i>
+                    <p class="phoneNum">
+                        <s>位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置：</s>
+                        <span :class="{ps:isDisabled}">{{build.location}}</span><i class="el-icon-location-outline" @click="showMapDialog"></i>
                     </p>
-                    <p class="textarea">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：
+                    <p class="textarea ms">
+                        <span class="des">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：</span>
                         <el-input type="textarea"  v-model="build.building.description" :disabled="isDisabled" ></el-input>
                     </p>
                     <div class="img">
@@ -537,6 +581,7 @@
                 },
                 sex: '',
                 person: {
+                    description:'',
                     name:'',
                     gender:'',
                     idNum:'',
@@ -544,12 +589,12 @@
                     jobId: this.$route.params.id,
                 },
                 boatCar: {
-                    driverId: '',
+                    /*driverId: '',*/
                     driverPhone: '',
                     boatCarName:'',
                     vehicle: {
                         capacity:'',
-                        driverId: "",
+                        /*driverId: "",*/
                         gpsDeviceId: "",
                         maintenanceDate:"",
                         maintenanceStatus:'',
@@ -557,6 +602,7 @@
                         purchaseDate:"",
                         serialNum:"",
                         type: '',
+                        description:''
                     },
                 },
                 trash: {
@@ -567,7 +613,8 @@
                         dustbinCount: '',
                     },
                     location: '',
-                    regionId: ''
+                    regionId: '',
+                    description:''
                 },
                 indicator: {
                     signboardBean: {
@@ -575,39 +622,43 @@
                     },
                     regionId: '',
                     location: '',
+                    description:''
                 },
                 scenic: {
                     scenicspotBean: {
                         capacity: '',
-                        currentNum: '',
+                       /* currentNum: '',*/
                         name: '',
                     },
                     regionId: '',
                     state: '',
                     location: '',
+                    description:''
                 },
                 shop: {
                     businessBean: {
                         capacity: '',
-                        currentNum: '',
+                        /*currentNum: '',*/
                         name: '',
                         state: '',
                         businessTypeId: ''
                     },
                     location: '',
-                    regionId: ''
+                    regionId: '',
+                    description:''
                 },
                 park: {
                     parkingBean: {
                         type: '',
                         name: '',
                         state: '',
-                        currentNum: '',
-                        surplusNum: '',
-                        capacity: '',
+                        currentNum: ''
+                        /*surplusNum: '',
+                        capacity: '',*/
                     },
                     location: '',
                     regionId: '',
+                    description:''
                 },
                 toilet: {
                     toiletBean: {
@@ -618,7 +669,8 @@
                     },
                     state:'',
                     location:'',
-                    regionId: ''
+                    regionId: '',
+                    description:''
                 },
                 area: {
                     name: '',
@@ -641,7 +693,7 @@
                         description: ''
                     },
                     location:'',
-                    regionId: ''
+                    regionId: '',
                 },
                 build: {
                     building:{
@@ -792,10 +844,10 @@
                         this.$message.error('请填写正确的电话号码')
                         return
                     }
-                    if (!(newInfo.idNum && newInfo.idNum !== '') || !idReg.test(newInfo.idNum)) {
+                   /* if (!(newInfo.idNum && newInfo.idNum !== '') || !idReg.test(newInfo.idNum)) {
                         this.$message.error('请填写正确的身份证号码')
                         return
-                    }
+                    }*/
                 } else if(this.route.includes('boat')) {
                     newInfo = this.boatCar;
                     console.log(newInfo);
@@ -803,7 +855,7 @@
                         !(newInfo.vehicle.serialNum && newInfo.vehicle.serialNum.trim() !== '') ||  //编号改为名称
                         !(newInfo.vehicle.hasOwnProperty("maintenanceStatus") && integerreg.test(newInfo.vehicle.maintenanceStatus)) ||
                         !(newInfo.vehicle.purchaseDate && newInfo.vehicle.purchaseDate !== '') ||
-                        !(newInfo.vehicle.maintenanceDate && newInfo.vehicle.maintenanceDate !== '') ||
+                       /* !(newInfo.vehicle.maintenanceDate && newInfo.vehicle.maintenanceDate !== '') ||*/
                         //!(newInfo.driverId  && newInfo.driverId !== '') ||   //驾驶员信息
                         !(newInfo.vehicle.model && newInfo.vehicle.model.trim() !== '')
                     ){
@@ -835,11 +887,11 @@
                         return
                     }
 
-                    if(!(newInfo.dustbinBean.dustbinCount && newInfo.dustbinBean.dustbinCount !== '') ||
+                    /*if(!(newInfo.dustbinBean.dustbinCount && newInfo.dustbinBean.dustbinCount !== '') ||
                         !intreg.test(newInfo.dustbinBean.dustbinCount)){
                         this.$message.error('个数只能输入数字！')
                         return
-                    }
+                    }*/
                 } else if(this.route.includes('indicator')) {
                     newInfo = this.indicator
                     if(!(newInfo.signboardBean.hasOwnProperty("type") && integerreg.test(newInfo.signboardBean.type)) ||
@@ -864,17 +916,17 @@
                         return
                     }
 
-                    if(!(newInfo.scenicspotBean.capacity && newInfo.scenicspotBean.capacity !== '') ||
+                    /*if(!(newInfo.scenicspotBean.capacity && newInfo.scenicspotBean.capacity !== '') ||
                         !intreg.test(newInfo.scenicspotBean.capacity)){
                         this.$message.error('容量只能输入数字！')
                         return
-                    }
+                    }*/
 
-                    if(!(newInfo.scenicspotBean.currentNum && newInfo.scenicspotBean.currentNum !== '') ||
+                    /*if(!(newInfo.scenicspotBean.currentNum && newInfo.scenicspotBean.currentNum !== '') ||
                         !intreg.test(newInfo.scenicspotBean.currentNum)){
                         this.$message.error('当前人数只能输入数字！')
                         return
-                    }
+                    }*/
 
                 } else if(this.route.includes('shop')) {
                     newInfo = this.shop
@@ -889,17 +941,17 @@
                         return
                     }
 
-                    if(!(newInfo.businessBean.capacity && newInfo.businessBean.capacity !== '') ||
+                    /*if(!(newInfo.businessBean.capacity && newInfo.businessBean.capacity !== '') ||
                         !intreg.test(newInfo.businessBean.capacity)){
                         this.$message.error('容量只能输入数字！')
                         return
-                    }
+                    }*/
 
-                    if(!(newInfo.businessBean.currentNum && newInfo.businessBean.currentNum !== '') ||
+                    /*if(!(newInfo.businessBean.currentNum && newInfo.businessBean.currentNum !== '') ||
                         !intreg.test(newInfo.businessBean.currentNum)){
                         this.$message.error('当前人数只能输入数字！')
                         return
-                    }
+                    }*/
 
                 } else if(this.route.includes('park')) {
                     newInfo = this.park
@@ -915,17 +967,17 @@
                         return
                     }
 
-                    if(!(newInfo.parkingBean.surplusNum && newInfo.parkingBean.surplusNum !== '') ||
+                    /*if(!(newInfo.parkingBean.surplusNum && newInfo.parkingBean.surplusNum !== '') ||
                         !intreg.test(newInfo.parkingBean.surplusNum)){
                         this.$message.error('空余车位只能输入数字！')
                         return
-                    }
+                    }*/
 
-                    if(!(newInfo.parkingBean.capacity && newInfo.parkingBean.capacity !== '') ||
+                    /*if(!(newInfo.parkingBean.capacity && newInfo.parkingBean.capacity !== '') ||
                         !intreg.test(newInfo.parkingBean.capacity)){
                         this.$message.error('车位总数只能输入数字！')
                         return
-                    }
+                    }*/
 
 
                 } else if(this.route.includes('toilet')) {
@@ -971,11 +1023,11 @@
                     newInfo = this.tree
                     if(!(newInfo.plant.name && newInfo.plant.name.trim() !== '') ||
                         !(newInfo.plant.genera && newInfo.plant.genera !== '') ||
-                        !(newInfo.plant.height && newInfo.plant.height !== '') ||
-                        !(newInfo.plant.plantYear && newInfo.plant.plantYear !== '') ||
+                        /*!(newInfo.plant.height && newInfo.plant.height !== '') ||
+                        !(newInfo.plant.plantYear && newInfo.plant.plantYear !== '') ||*/
                         !(newInfo.location && newInfo.location !== '') ||
-                        !(newInfo.regionId && newInfo.regionId !== '') ||
-                        !(newInfo.plant.description && newInfo.plant.description.trim() !== '')
+                        !(newInfo.regionId && newInfo.regionId !== '')
+                        /*!(newInfo.plant.description && newInfo.plant.description.trim() !== '')*/
                     ){
 
                         this.$message.error('请输入完整信息')
@@ -986,12 +1038,12 @@
                     newInfo = this.build
 
                     if(!(newInfo.building.name && newInfo.building.name.trim() !== '') ||
-                        !(newInfo.building.layers && newInfo.building.layers !== '') ||
+                        /*!(newInfo.building.layers && newInfo.building.layers !== '') ||
                         !(newInfo.building.height && newInfo.building.height !== '') ||
-                        !(newInfo.building.buildYear && newInfo.building.buildYear !== '') ||
+                        !(newInfo.building.buildYear && newInfo.building.buildYear !== '') ||*/
                         !(newInfo.location && newInfo.location !== '') ||
-                        !(newInfo.regionId && newInfo.regionId !== '') ||
-                        !(newInfo.building.description && newInfo.building.description.trim() !== '')
+                        !(newInfo.regionId && newInfo.regionId !== '')
+                        /*!(newInfo.building.description && newInfo.building.description.trim() !== '')*/
                     ){
 
                         this.$message.error('请输入完整信息')
@@ -1277,15 +1329,23 @@
             width: rem(160);
             padding-left: rem(5);
         }
+        .ms-person .el-textarea__inner{
+            font-size:.75rem;
+            font-family: Arial;
+        }
+        .el-input.is-disabled .el-input__inner,.el-textarea.is-disabled .el-textarea__inner{
+            background-color:transparent;
+        }
+        .person-jole{
+            display:none;
+        }
+        .detailDialog .card .boatCardContent .ms .des{
+            height:53px;
+            float:left
+        }
     }
 </style>
 <style>
-    .el-input.is-disabled .el-input__inner,.el-textarea.is-disabled .el-textarea__inner{
-        background-color:transparent;
-    }
-    .person-jole{
-        display:none;
-    }
     .example-avatar .avatar-upload .rounded-circle {
         width: 200px;
         height: 200px;
@@ -1616,6 +1676,7 @@
         cursor: not-allowed
     }
 
+
 </style>
 <style lang="scss" scoped type="text/scss">
     .detailDialog{
@@ -1641,11 +1702,21 @@
                     }
                     span{
                         display: inline-block;
-                        width: rem(180);
+                        width: rem(200);
                         /*overflow: hidden;
                         text-overflow: ellipsis;
                         white-space: nowrap;*/
                         line-height: rem(15);
+                        overflow: hidden;
+                    }
+                    .ps{
+                        color:#c0c4cc;
+                        width: rem(203.2);
+                    }
+                    s{
+                        text-decoration: none;
+                        line-height: 0.9375rem;
+                        float: left;
                     }
                     select{
                         border: none;
@@ -1670,6 +1741,7 @@
                        font-size: rem(16);
                         vertical-align: middle;
                         cursor: pointer;
+                        margin-left:1rem
                     }
                     textarea{
                         resize: none;
@@ -1686,8 +1758,19 @@
                     span{
                         width:rem(66)
                     }
+                    .des-person{
+                        float:left
+                    }
+                    .des{
+                        float:left
+                    }
                     div{
-                        width:70%
+                        width:14rem
+                    }
+                }
+                .ms-person{
+                    div{
+                        width:15.3rem;
                     }
                 }
                 .textarea{

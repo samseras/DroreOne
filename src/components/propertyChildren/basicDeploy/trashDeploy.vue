@@ -273,6 +273,7 @@
                 let longitude= info.location.substring(0, index)
                 let latitude = info.location.substring(index + 1)
                 let trashObj = {
+                    description:info.description,
                     id: info.dustbinBean.id,
                     name: info.dustbinBean.name,
                     dustbinCount: info.dustbinBean.dustbinCount,
@@ -309,6 +310,7 @@
                 let longitude= info.location.substring(0, index)
                 let latitude = info.location.substring(index + 1)
                 let trashObj = {
+                    description:info.description,
                     name: info.dustbinBean.name,
                     dustbinCount: info.dustbinBean.dustbinCount,
                     type: info.dustbinBean.type,
@@ -369,6 +371,7 @@
                         this.trashList[i].checked = false
                         this.trashList[i].status = true
                         this.trashList[i].id = this.trashList[i].dustbinBean.id
+                        this.trashList[i].description = this.trashList[i].dustbinBean.description
                         this.trashList[i].byTime = -(new Date(this.trashList[i].dustbinBean.modifyTime)).getTime()
                     }
                     this.trashList = _.sortBy(this.trashList, 'byTime')
