@@ -594,7 +594,7 @@
                     boatCarName:'',
                     vehicle: {
                         capacity:'',
-                        driverId: "",
+                        /*driverId: "",*/
                         gpsDeviceId: "",
                         maintenanceDate:"",
                         maintenanceStatus:'',

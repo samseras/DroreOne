@@ -339,7 +339,7 @@
                 this.isShowDialogLoading = true
                 console.log(info, 'opopopopopo')
                 let personObj = {
-                    //description:info.description,
+                    description:info.description,
                     name: info.name,
                     gender: info.gender,
                     idNum: info.idNum,
