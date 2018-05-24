@@ -9,27 +9,48 @@
             <el-checkbox v-model="isSelected" @change="selectedAll">全选</el-checkbox>
             <el-button size="mini"plain @click="deleteCard"><i class="el-icon-delete"></i>删除</el-button>
             <el-button size="mini"plain @click="batchEdit"><i class="el-icon-edit"></i>编辑</el-button>
+            <el-button size="mini" plain @click="batchDownload"><i class="el-icon-download"></i>导出</el-button>
+
         </div>
+        <div class="filite">
+            <el-checkbox-group v-model="filterList" @change="choseType">
+                <el-checkbox v-for="item in status" :label="item.id">{{item.name}}</el-checkbox>
+            </el-checkbox-group>
+        </div>
+
 
         <div class="page">
             <span>当前第1页/共8页</span>
             <span class="upPage"><</span>
             <span class="downPage">></span>
-            <span class="listForm"><i class="el-icon-tickets"></i></span>
         </div>
     </div>
 </template>
 
 <script>
     export default {
-        name: "fun-header",
         data () {
             return {
                 route: '',
                 isSelected: false,
                 isShowJobType: true,
                 isShowIndicatorType: true,
-                isShowTrashType: true
+                isShowTrashType: true,
+                status:[
+                    {
+                        id:'1',
+                        name: '新告警',
+                    },
+                    {
+                        id:'2',
+                        name: '处理中'
+                    },
+                    {
+                        id:'3',
+                        name: '已处理'
+                    }
+                ],
+                filterList:[]
             }
         },
         methods: {
@@ -52,6 +73,9 @@
             },
             showPersonJob () {
                 this.route = this.$route.path
+
+            },
+            batchDownload(){
 
             }
         },
@@ -129,6 +153,12 @@
         .funcBtn{
             margin-left: rem(20);
             margin-top: rem(4);
+            .filite{
+                margin-left: rem(50);
+                .el-checkbox{
+                    margin-left: rem(10);
+                }
+            }
             button{
                 border: none;
                 margin-right: rem(-5);

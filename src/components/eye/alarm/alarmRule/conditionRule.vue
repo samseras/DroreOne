@@ -53,6 +53,11 @@
                         </el-table-column>
                         <el-table-column
                             sortable
+                            prop="level"
+                            label="严重等级">
+                        </el-table-column>
+                        <el-table-column
+                            sortable
                             prop="manager"
                             label="管理者">
                         </el-table-column>
