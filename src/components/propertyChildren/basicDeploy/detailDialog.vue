@@ -1331,8 +1331,7 @@
         }
         .ms-person .el-textarea__inner{
             font-size:.75rem;
-            line-height:1.875rem;
-            color:red;
+            font-family: Arial;
         }
         .el-input.is-disabled .el-input__inner,.el-textarea.is-disabled .el-textarea__inner{
             background-color:transparent;
