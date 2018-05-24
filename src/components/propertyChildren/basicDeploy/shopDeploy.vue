@@ -53,11 +53,13 @@
                             prop="businessBean.capacity"
                             label="容量">
                         </el-table-column>
-                        <el-table-column
+
+                        <!--<el-table-column
                             width="100"
                             prop="businessBean.currentNum"
                             label="当前人数">
-                        </el-table-column>
+                        </el-table-column>-->
+
                         <el-table-column
                             prop="location"
                             label="位置">
@@ -93,7 +95,7 @@
                         <div class="specificInfo">
                             <p class="name">所属区域：<span>{{item.regionName}}</span></p>
                             <p class="sex">状&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;态：<span>{{item.businessBean.state}}</span></p>
-                            <p class="idNum">当前人数：<span>{{item.businessBean.currentNum}}</span></p>
+                            <!--<p class="idNum">当前人数：<span>{{item.businessBean.currentNum}}</span></p>-->
                             <p class="phoneNum">最大容量：<span>{{item.businessBean.capacity}}</span></p>
                         </div>
                     </div>
@@ -308,6 +310,7 @@
                 let longitude= info.location.substring(0, index)
                 let latitude = info.location.substring(index + 1)
                 let shopObj = {
+                    description:info.description,
                     id: info.businessBean.id,
                     name: info.businessBean.name,
                     capacity: info.businessBean.capacity,
@@ -345,7 +348,7 @@
                 let longitude= info.location.substring(0, index)
                 let latitude = info.location.substring(index + 1)
                 let shopObj = {
-                    //description:info.description,
+                    description:info.description,
                     name: info.businessBean.name,
                     capacity: info.businessBean.capacity,
                     regionId: info.regionId,
@@ -406,6 +409,7 @@
                         this.shopList[i].checked = false
                         this.shopList[i].status = true
                         this.shopList[i].id = this.shopList[i].businessBean.id
+                        this.shopList[i].description = this.shopList[i].businessBean.description
                         this.shopList[i].location = `${this.shopList[i].longitude},${this.shopList[i].latitude}`
                         this.shopList[i].businessBean.currentNum = this.currentNum
                         if (this.shopList[i].businessBean.capacity == 0 ){

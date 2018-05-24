@@ -369,6 +369,7 @@
                         this.treeList[i].status = true
                         this.treeList[i].location = `${this.treeList[i].longitude},${this.treeList[i].latitude}`
                         this.treeList[i].id = this.treeList[i].plant.id
+                        this.treeList[i].description = this.treeList[i].plant.description
                         // this.treeList[i].state = '正常'
                         this.treeList[i].byTime = -(new Date(this.treeList[i].plant.modifyTime)).getTime()
                     }

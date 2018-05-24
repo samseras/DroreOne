@@ -54,9 +54,16 @@
                             </template>
                         </el-table-column>
                         <el-table-column
-                            prop="description"
-                            label="描述"
-                            width="240">
+                            label="描述">
+                            <template slot-scope="scope">
+                                <div class="box" v-if="scope.row.description">
+                                    <div class="bottom">
+                                        <el-tooltip class="item" effect="light" :content=scope.row.description placement="bottom">
+                                            <el-button>{{scope.row.description}}</el-button>
+                                        </el-tooltip>
+                                    </div>
+                                </div>
+                            </template>
                         </el-table-column>
                         <el-table-column
                             label="操作">
@@ -373,7 +380,22 @@
     }
 
 </script>
-
+<style>
+    .areaDeploy .box .el-button{
+        border:1px solid transparent
+    }
+    .areaDeploy .box .el-button span{
+        display:inline-block;
+        width:300px;
+        white-space: nowrap ;
+        overflow: hidden ;
+        text-overflow: ellipsis ;
+    }
+    .areaDeploy .el-tooltip__popper {
+        width:300px;
+        word-break:break-all;
+    }
+</style>
 <style lang="scss" scoped type="text/scss">
     .areaDeploy{
         width: 100%;
@@ -402,13 +424,6 @@
                 margin-top: rem(10);
                 border-bottom: 2px solid #e44b4e;
             }
-            /*.judge-title{
-                .cell{
-                    white-space: nowrap ;
-                    overflow: hidden ;
-                    text-overflow: ellipsis ;
-                }
-            }*/
             .personList{
                 width: 100%;
                 flex: 1;
@@ -504,23 +519,4 @@
     }
 
 </style>
-<style>
-    .judge-title  .cell{
-        white-space: nowrap ;
-        overflow: hidden ;
-        text-overflow: ellipsis ;
-    }
-    .box .el-button{
-        border:1px solid transparent
-    }
-    .box .el-button span{
-        display:inline-block;
-        width:300px;
-        white-space: nowrap ;
-        overflow: hidden ;
-        text-overflow: ellipsis ;
-    }
-    .el-tooltip__popper {
-        width:300px;
-    }
-</style>
+

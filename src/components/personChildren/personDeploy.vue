@@ -36,14 +36,17 @@
                         <el-table-column
                             prop="personBean.name"
                             label="姓名"
-                            width="120">
+                            >
                         </el-table-column>
-                        <el-table-column
+
+                        <!--<el-table-column
                             prop="jobName"
                             label="人员角色">
-                        </el-table-column>
+                        </el-table-column>-->
+
                         <el-table-column
                             prop="personBean.gender"
+                            width="120"
                             label="性别">
                             <template slot-scope="scope">
                                 <span>{{scope.row.personBean.gender | sexFilter}}</span>
@@ -58,6 +61,18 @@
                         <el-table-column
                             prop="personBean.phone"
                             label="电话号码">
+                        </el-table-column>
+                        <el-table-column
+                            label="描述">
+                            <template slot-scope="scope">
+                                <div class="box" v-if="scope.row.description">
+                                    <div class="bottom">
+                                        <el-tooltip class="item" effect="light" :content=scope.row.description placement="bottom">
+                                            <el-button>{{scope.row.description}}</el-button>
+                                        </el-tooltip>
+                                    </div>
+                                </div>
+                            </template>
                         </el-table-column>
                         <el-table-column
                             label="操作">
@@ -301,6 +316,7 @@
             async fixInfo(info) {
                 console.log(info)
                 let personObj = {
+                    description:info.description,
                     id: info.id,
                     name: info.name,
                     gender: info.gender,
@@ -407,6 +423,7 @@
                         this.personList[i].idNum = this.personList[i].personBean.idNum
                         this.personList[i].name = this.personList[i].personBean.name
                         this.personList[i].phone = this.personList[i].personBean.phone
+                        this.personList[i].description = this.personList[i].personBean.description
                         this.personList[i].byTime = -(new Date(this.personList[i].personBean.modifyTime)).getTime()
                     }
                     this.personList = _.sortBy(this.personList,'byTime')
@@ -449,7 +466,25 @@
         }
     }
 </script>
-
+<style>
+    .personDeploy .box .el-button{
+        border:1px solid transparent;
+        padding-left:0px;
+        text-align:left;
+    }
+    .personDeploy .box .el-button span{
+        display:inline-block;
+        width:200px;
+        white-space: nowrap ;
+        overflow: hidden ;
+        text-overflow: ellipsis ;
+    }
+    .personDeploy .el-tooltip__popper {
+        width:200px;
+        word-break:break-all;
+        text-align: left;
+    }
+</style>
 <style lang="scss" scoped type="text/scss">
     .personDeploy {
         width: 100%;
