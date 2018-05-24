@@ -14,6 +14,7 @@ const map = {
         isShowSearch: false,
         treeData:[],
         controleLight:[],
+        controenvironment:[],
 
     },
     getters: {
@@ -46,6 +47,9 @@ const map = {
         },
         getcontroleLight(state) {
             return state.controleLight
+        },
+        getcontroleEnvironment(state) {
+            return state.controenvironment
         }
     },
     setters: {},
@@ -69,15 +73,15 @@ const map = {
         },
         [types.LOCATION_ID] (state, data) {
             state.locationId = data
-            console.log(state.locationId,'1231123123')
+            // console.log(state.locationId,'1231123123')
         },
         [types.SEARCH_INFO] (state, data) {
             state.searchInfo = data
-            console.log(state.searchInfo,'1231123123')
+            // console.log(state.searchInfo,'1231123123')
         },
         [types.SHOW_SEARCH] (state, data) {
             state.isShowSearch = data
-            console.log(state.isShowSearch,'1231123123')
+            // console.log(state.isShowSearch,'1231123123')
         },
         [types.SHOW_TREE] (state, data) {
             if (!data.length) {
@@ -85,11 +89,15 @@ const map = {
             } else {
                 state.treeData = data
             }
-            console.log(state.treeData,'commit')
+            // console.log(state.treeData,'commit')
         },
         [types.CONTROLER_LIGHT] (state, data) {
             state.controleLight = data
             console.log(state.controleLight,'commit')
+        },
+        [types.CONTROLER_ENVIRONMENT] (state, data) {
+            state.controenvironment = data
+            // console.log(state.controenvironment,'commit')
         }
     },
     actions: {

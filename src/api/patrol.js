@@ -38,6 +38,16 @@ const patrol = {
             data:info
         })
     },
+    stareEndPlan (id) {
+        return axios ({
+            method: 'PUT',
+            url: getUrl('/schedule/inspection/isenabled'),
+            data:{
+                ids:id
+            }
+
+        })
+    }
 }
 
 export default patrol

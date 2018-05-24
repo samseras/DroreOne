@@ -47,10 +47,10 @@
                 api.roat.createRoat(JSON.stringify(roatObj)).then(res => {
                     console.log(res, '创建成功')
                     this.$message.success('创建成功')
+                    this.closeMapDialog()
                 }).catch(err => {
                     this.$message.error(err.message)
                 })
-
             }
         },
         created () {

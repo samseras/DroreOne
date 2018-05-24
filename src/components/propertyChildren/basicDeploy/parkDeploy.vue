@@ -51,7 +51,8 @@
                             prop="state"
                             label="状态">
                         </el-table-column>
-                        <el-table-column
+
+                        <!--<el-table-column
                             width="100"
                             prop="parkingBean.surplusNum"
                             label="空余车位">
@@ -60,7 +61,8 @@
                             width="100"
                             prop="parkingBean.capacity"
                             label="车位总数">
-                        </el-table-column>
+                        </el-table-column>-->
+
                         <el-table-column
                             prop="location"
                             label="位置">
@@ -87,7 +89,8 @@
                             <el-checkbox v-model="item.checked" @change="checked(item.id)" class="checkBtn"></el-checkbox>
                         </div>
                         <div class="personType" @click.stop="showParkDetail(item, '停车场信息',true)">
-                            <img src="../../../../static/img/parkCard.png" alt="">
+                            <!--<img src="../../../../static/img/parkCard.png" alt="">-->
+                            <img :src="getUrl(item.picturePath)" alt="" @error="imgError">
                             <span class="type">
                                   {{item.parkingBean.name}}
                                 </span>
@@ -95,8 +98,9 @@
                         <div class="specificInfo">
                             <p class="name">所属区域：<span>{{item.regionName}}</span></p>
                             <p class="sex">状&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;态：<span>{{item.parkingBean.state}}</span></p>
-                            <p class="idNum">空余车位：<span>{{item.parkingBean.surplusNum}}</span></p>
-                            <p class="phoneNum">车位总数：<span>{{item.parkingBean.capacity}}</span></p>
+                            <p class="sex text">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：<span>{{item.parkingBean.description}}</span></p>
+                           <!-- <p class="idNum">空余车位：<span>{{item.parkingBean.surplusNum}}</span></p>
+                            <p class="phoneNum">车位总数：<span>{{item.parkingBean.capacity}}</span></p>-->
                         </div>
                     </div>
                 </ScrollContainer>
@@ -140,6 +144,16 @@
             }
         },
         methods: {
+            imgError (e) {
+                e.target.src = this.getUrl(null);
+            },
+            getUrl (url) {
+                if (url === null) {
+                    return '../../../../static/img/parkCard.png'
+                } else {
+                    return url
+                }
+            },
             closeDialog () {
                 this.visible = false
                 this.getAllPark()
@@ -274,13 +288,26 @@
                 let longitude = info.location.substring(0, index)
                 let latitude = info.location.substring(index + 1)
                 let parkObj = {
+                    description:info.description,
                     id: info.parkingBean.id,
                     name: info.parkingBean.name,
-                    capacity: info.parkingBean.capacity,
+                    //capacity: info.parkingBean.capacity,
                     type: info.parkingBean.type,
                     regionId: info.regionId,
                     latitude: latitude,
                     longitude: longitude
+                }
+                if (info.imgUrl !== '') {
+                    await api.person.updataAva(info.imgUrl).then(res => {
+                        console.log(res, '上传成功')
+                        parkObj.pictureId = res.id
+                    }).catch(err => {
+                        console.log(err, '上传失败')
+                        this.$message.error('上传失败，其请稍后重试')
+                        return
+                    })
+                } else {
+                    parkObj.pictureId = info.pictureId
                 }
                 await api.park.updatePark(JSON.stringify(parkObj)).then(res => {
                     this.closeDialog()
@@ -297,12 +324,23 @@
                 let longitude = info.location.substring(0, index)
                 let latitude = info.location.substring(index + 1)
                 let parkObj = {
+                    description:info.description,
                     name: info.parkingBean.name,
-                    capacity: info.parkingBean.capacity,
+                    //capacity: info.parkingBean.capacity,
                     type: info.parkingBean.type,
                     regionId: info.regionId,
                     latitude: latitude,
                     longitude: longitude
+                }
+                if (info.imgUrl !== '') {
+                    await api.person.updataAva(info.imgUrl).then(res => {
+                        console.log(res, '上传成功')
+                        parkObj.pictureId = res.id
+                    }).catch(err => {
+                        console.log(err, '上传失败')
+                        this.$message.error('上传失败，其请稍后重试')
+                        return
+                    })
                 }
                 await api.park.createPark(JSON.stringify(parkObj)).then(res => {
                     this.closeDialog()
@@ -344,6 +382,7 @@
                         this.parkList[i].checked = false
                         this.parkList[i].status = true
                         this.parkList[i].id = this.parkList[i].parkingBean.id
+                        this.parkList[i].description = this.parkList[i].parkingBean.description
                         this.parkList[i].parkingBean.currentNum = this.currentNum
                         this.parkList[i].parkingBean.surplusNum = this.parkList[i].parkingBean.capacity - this.parkList[i].parkingBean.currentNum
                         this.parkList[i].location = `${this.parkList[i].longitude},${this.parkList[i].latitude}`

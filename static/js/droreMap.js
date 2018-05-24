@@ -1760,7 +1760,7 @@ define(function(require, exports, module) {
                 this.overlay = new ol.Overlay({
                     id: id0,
                     element: container,
-                    offset: [-60, -75],
+                    offset: [-60, -72],
                     stopEvent: true, //当鼠标滚轮在地图上滚动时，会触发地图缩放事件，如果在 overlay 之上滚动滚轮，并不会触发缩放事件，如果想鼠标在 overlay 之上也支持缩放，那么将该属性设置为 false
                     autoPan: false,
                     position: coord,
@@ -1901,8 +1901,8 @@ define(function(require, exports, module) {
                             if(featureType == "Point" && this.feature_) { //在手型状态非同一poi点显示
                                 var icon = pool.getIconById(feature.getId());
                                 this.feature_.showName = false;
-                                var prevLayer = pool.getLayerById(this.feature_.subtype);
-                                prevLayer.setZIndex(1);
+                                // var prevLayer = pool.getLayerById(this.feature_.subtype);
+                                // prevLayer.setZIndex(1);
                                 this.feature_ = icon;
                                 icon.showName = true;
                                 var iconLayer = pool.getLayerById(icon.subtype);
@@ -1949,11 +1949,13 @@ define(function(require, exports, module) {
             handleDragEvent: function(event) {
                 var deltaX = event.coordinate[0] - DragMediator.coordinate_[0];
                 var deltaY = event.coordinate[1] - DragMediator.coordinate_[1];
-                if(DragMediator.feature_.constructor == cover.Marker) {
-                    var geometry = DragMediator.feature_.feature.getGeometry();
-                    geometry.translate(deltaX, deltaY);
-                    DragMediator.coordinate_[0] = geometry.getCoordinates()[0];
-                    DragMediator.coordinate_[1] = geometry.getCoordinates()[1];
+                if(DragMediator.feature_!= null){
+                    if(DragMediator.feature_.constructor == cover.Marker) {
+                        var geometry = DragMediator.feature_.feature.getGeometry();
+                        geometry.translate(deltaX, deltaY);
+                        DragMediator.coordinate_[0] = geometry.getCoordinates()[0];
+                        DragMediator.coordinate_[1] = geometry.getCoordinates()[1];
+                    }
                 }
             },
             handleMoveEvent: function(event) {
@@ -2915,6 +2917,8 @@ define(function(require, exports, module) {
                     pool.setSeedLayer(icon.subtype, layer);
                     layer.getSource().addFeature(icon.feature);
                     pool.setSeedIcon(icon.id, icon);
+                    var iconLayer = pool.getLayerById(icon.subtype);
+                    iconLayer.setZIndex(999);
                 },
                 removeChild: function(icon) //删除标签
                 {
@@ -3264,7 +3268,7 @@ define(function(require, exports, module) {
             },
             area: {
                 DrawLayer: drawClass.DrawLayer,
-                addChild: function(drawLayer) {
+                 addChild: function(drawLayer) {
                     if(drawLayer.constructor === drawClass.DrawLayer) {
                         drawClass.drawList.push(drawLayer);
                         mapData._baseMap.addLayer(drawLayer.Layer);

@@ -34,7 +34,7 @@
                     {route: '/controler/camera', img: '../../../static/img/camera.png', desc: "摄像头"},
                     {route: '/controler/broad', img: '../../../static/img/broadcast.png', desc: "广播"},
                     {route: '/controler/wifi', img: '../../../static/img/WiFi.png', desc: "WiFi"},
-                    {route: '/controler/environment', img: '../../../static/img/enviroMon.png', desc: "环境检测"},
+                    {route: '/controler/environment', img: '../../../static/img/detection.svg', desc: "环境检测"},
                     {route: '/controler/warn', img: '../../../static/img/warn.png', desc: "警告"},
                     {route: '/controler/screen', img: '../../../static/img/screen.png', desc: "大屏"},
                     {route: '/controler/person', img: '../../../static/img/personLocation.png', desc: "个人定位"},
@@ -130,7 +130,6 @@
                             img{
                                 vertical-align: middle;
                                 width: rem(18);
-                                height: rem(18);
                             }
                         }
                     }
