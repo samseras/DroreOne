@@ -283,6 +283,7 @@
                 let latitude = info.location.substring(index + 1)
                 let gateObj=[{
                     typeId:3,
+                    mac:info.mac,
                     gateType:info.gateType,
                     name:info.name,
                     model:info.model,
@@ -399,6 +400,7 @@
                     this.gateList=res.devices
                     for (let i=0;i<this.gateList.length;i++){
                         this.gateList[i].checked=false
+                        this.gateList[i].mac=this.gateList[i].mac
                         this.gateList[i].status=true
                         this.gateList[i].location=`${this.gateList[i].longitude},${this.gateList[i].latitude}`
                         this.gateList[i].byTime = -(new Date(this.gateList[i].modifyTime)).getTime()

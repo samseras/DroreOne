@@ -131,17 +131,20 @@
                             </el-option>
                         </el-select>
                     </p>
-                    <p class="width">屏幕宽高:
-                        <el-input type="text" v-model="led.area" :disabled="isDisabled"></el-input>
+                    <p class="width">屏幕宽高(cm):
+                        <el-input type="text" v-model="led.area" :disabled="isDisabled" placeholder="例：22,33"></el-input>
                     </p>
-                    <p class="IP">IP&nbsp;&nbsp;地&nbsp;&nbsp;址:
+                    <!--<p class="IP">IP&nbsp;&nbsp;地&nbsp;&nbsp;址:
                         <el-input type="text" v-model="led.ip" :disabled="isDisabled"></el-input>
-                    </p>
+                    </p>-->
                     <p class="port">设备端口:
                         <el-input type="text" v-model="led.port" :disabled="isDisabled"></el-input>
                     </p>
                     <p class="host">设备编号:
                         <el-input type="text" v-model="led.serialNum" :disabled="isDisabled"></el-input>
+                    </p>
+                    <p class="mac">M&nbsp;&nbsp;&nbsp;a&nbsp;&nbsp;&nbsp;&nbsp;c:
+                        <el-input type="text" v-model="led.mac" :disabled="isDisabled"></el-input>
                     </p>
                     <p class="place" :class="{ps:isDisabled}">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置:<span>{{led.location}}</span>
                         <i class="el-icon-location-outline" @click="showMapDialog"></i>
@@ -197,9 +200,9 @@
                             <el-option value='否' label="否"></el-option>
                         </el-select>
                     </p>
-                    <p class="IP">设&nbsp;&nbsp;备&nbsp;&nbsp;IP:
+                    <!--<p class="IP">设&nbsp;&nbsp;备&nbsp;&nbsp;IP:
                         <el-input type="text" v-model="wifi.ip" :disabled="isDisabled"></el-input>
-                    </p>
+                    </p>-->
 
                     <p class="IP">设备端口:
                         <el-input type="text" v-model="wifi.port" :disabled="isDisabled"></el-input>
@@ -255,11 +258,14 @@
                             </el-option>
                         </el-select>
                     </p >
-                    <p class="IP">设&nbsp;&nbsp;备&nbsp;&nbsp;IP:
+                    <!--<p class="IP">设&nbsp;&nbsp;备&nbsp;&nbsp;IP:
                         <el-input type="text" v-model="monitors.ip" :disabled="isDisabled"></el-input>
-                    </p>
+                    </p>-->
                     <p class="host">设备编号:
                         <el-input type="text" v-model="monitors.serialNum" :disabled="isDisabled"></el-input>
+                    </p>
+                    <p class="mac">M&nbsp;&nbsp;&nbsp;a&nbsp;&nbsp;&nbsp;&nbsp;c:
+                        <el-input type="text" v-model="monitors.mac" :disabled="isDisabled"></el-input>
                     </p>
                     <p class="host">设备端口:
                         <el-input type="text" v-model="monitors.port" :disabled="isDisabled"></el-input>
@@ -360,11 +366,14 @@
                             </el-option>
                         </el-select>
                     </p>
-                    <p class="IP">设&nbsp;&nbsp;备&nbsp;&nbsp;IP:
+                    <!--<p class="IP">设&nbsp;&nbsp;备&nbsp;&nbsp;IP:
                         <el-input type="text" v-model="gate.ip" :disabled="isDisabled"></el-input>
-                    </p>
+                    </p>-->
                     <p class="num">设备编号:
                         <el-input type="text" v-model="gate.serialNum" :disabled="isDisabled"></el-input>
+                    </p>
+                    <p class="mac">M&nbsp;&nbsp;&nbsp;a&nbsp;&nbsp;&nbsp;&nbsp;c:
+                        <el-input type="text" v-model="gate.mac" :disabled="isDisabled"></el-input>
                     </p>
                     <p class="name">端&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;口:
                         <el-input type="text" v-model="gate.port" :disabled="isDisabled"></el-input>
@@ -417,9 +426,12 @@
                     <p class="port">设备端口:
                         <el-input type="text" v-model="police.port" :disabled="isDisabled"></el-input>
                     </p>
-                    <p class="IP">设&nbsp;&nbsp;备&nbsp;&nbsp;IP:
-                        <el-input type="text" v-model="police.ip" :disabled="isDisabled"></el-input>
+                    <p class="mac">M&nbsp;&nbsp;&nbsp;a&nbsp;&nbsp;&nbsp;&nbsp;c:
+                        <el-input type="text" v-model="police.mac" :disabled="isDisabled"></el-input>
                     </p>
+                    <!--<p class="IP">设&nbsp;&nbsp;备&nbsp;&nbsp;IP:
+                        <el-input type="text" v-model="police.ip" :disabled="isDisabled"></el-input>
+                    </p>-->
 
                     <p class="place" :class="{ps:isDisabled}">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置:
                         <span>{{police.location}}</span>
@@ -512,6 +524,7 @@
                    description:''
                },
                led:{
+                   mac:'',
                    positionType:'',
                    name:'',
                    area:'',
@@ -538,6 +551,7 @@
                    port:''
                },
                monitors:{
+                   mac:'',
                    sensorType:'',
                    name:'',
                    model:'',
@@ -563,6 +577,7 @@
                    name:'',
                    model:'',
                    ip:'',
+                   mac:'',
                    serialNum:'',
                    port:'',
                    location:'',
@@ -570,6 +585,7 @@
                    description:''
                },
                police:{
+                   mac:'',
                    sensorType:'',
                    name:'',
                    model:'',
@@ -734,18 +750,22 @@
                        this.$message.error('请输入完整信息')
                        return
                    }
-                   if(!(newInfo.ip && myip.test(newInfo.ip))){
+                   /*if(!(newInfo.ip && myip.test(newInfo.ip))){
                        this.$message.error('请输入有效ip地址！')
                        return
-                   }
+                   }*/
                    if(!(newInfo.port && myport.test(newInfo.port))){
                        this.$message.error('请输入正确端口号！')
                        return
                    }
-                   if(!(newInfo.serialNum && intreg.test(newInfo.serialNum))){
-                       this.$message.error('编号只能输入数字！')
+                   if(!(newInfo.mac && myMac.test(newInfo.mac))){
+                       this.$message.error('请输入正确的MAC编号')
                        return
                    }
+                   /*if(!(newInfo.serialNum && intreg.test(newInfo.serialNum))){
+                       this.$message.error('编号只能输入数字！')
+                       return
+                   }*/
 
                }else if(this.route.includes('wifi')) {
                    newInfo = this.wifi
@@ -758,18 +778,18 @@
                        this.$message.error('请输入完整信息')
                        return
                    }
-                   if(!(newInfo.ip && myip.test(newInfo.ip))){
+                   /*if(!(newInfo.ip && myip.test(newInfo.ip))){
                        this.$message.error('请输入有效ip地址！')
                        return
-                   }
+                   }*/
                    if(!(newInfo.port && myport.test(newInfo.port))){
                        this.$message.error('请输入正确端口号！')
                        return
                    }
-                   if(!(newInfo.serialNum && intreg.test(newInfo.serialNum))){
+                   /*if(!(newInfo.serialNum && intreg.test(newInfo.serialNum))){
                        this.$message.error('编号只能输入数字！')
                        return
-                   }
+                   }*/
                    if(!(newInfo.mac && myMac.test(newInfo.mac))){
                        this.$message.error('请输入正确的MAC编号')
                        return
@@ -786,16 +806,20 @@
                        this.$message.error('请输入完整信息')
                        return
                    }
-                   if(!(newInfo.ip && myip.test(newInfo.ip))){
+                   /*if(!(newInfo.ip && myip.test(newInfo.ip))){
                        this.$message.error('请输入有效ip地址！')
                        return
-                   }
+                   }*/
                    if(!(newInfo.port && myport.test(newInfo.port))){
                        this.$message.error('请输入正确端口号！')
                        return
                    }
-                   if(!(newInfo.serialNum && intreg.test(newInfo.serialNum))){
+                   /*if(!(newInfo.serialNum && intreg.test(newInfo.serialNum))){
                        this.$message.error('编号只能输入数字！')
+                       return
+                   }*/
+                   if(!(newInfo.mac && myMac.test(newInfo.mac))){
+                       this.$message.error('请输入正确的MAC编号')
                        return
                    }
 
@@ -804,8 +828,8 @@
                    if(!(newInfo.name && newInfo.name !=='') ||
                        !(newInfo.hasOwnProperty("model")&& newInfo.model) ||
                        !(newInfo.regionId && newInfo.regionId !=='') ||
-                       !(newInfo.location && newInfo.location !== '') ||
-                       !(newInfo.serialNum && newInfo.serialNum !== '')
+                       !(newInfo.location && newInfo.location !== '')
+                       /*!(newInfo.serialNum && newInfo.serialNum !== '')*/
                    ){
                        this.$message.error('请输入完整信息')
                        return
@@ -826,18 +850,23 @@
                        this.$message.error('请输入完整信息')
                        return
                    }
-                   if(!(newInfo.ip && myip.test(newInfo.ip))){
+                   /*if(!(newInfo.ip && myip.test(newInfo.ip))){
                        this.$message.error('请输入有效ip地址！')
                        return
-                   }
+                   }*/
                    if(!(newInfo.port && myport.test(newInfo.port))){
                        this.$message.error('请输入正确端口号！')
                        return
                    }
-                   if(!(newInfo.serialNum && intreg.test(newInfo.serialNum))){
-                       this.$message.error('编号只能输入数字！')
+                   if(!(newInfo.mac && myMac.test(newInfo.mac))){
+                       this.$message.error('请输入正确的MAC编号')
                        return
                    }
+
+                   /*if(!(newInfo.serialNum && intreg.test(newInfo.serialNum))){
+                       this.$message.error('编号只能输入数字！')
+                       return
+                   }*/
 
                }else if(this.route.includes('police')) {
                    newInfo = this.police
@@ -850,18 +879,22 @@
                        this.$message.error('请输入完整信息')
                        return
                    }
-                   if(!(newInfo.ip && myip.test(newInfo.ip))){
+                   /*if(!(newInfo.ip && myip.test(newInfo.ip))){
                        this.$message.error('请输入有效ip地址！')
                        return
-                   }
+                   }*/
                    if(!(newInfo.port && myport.test(newInfo.port))){
                        this.$message.error('请输入正确端口号！')
                        return
                    }
-                   if(!(newInfo.serialNum && intreg.test(newInfo.serialNum))){
-                       this.$message.error('编号只能输入数字！')
+                   if(!(newInfo.mac && myMac.test(newInfo.mac))){
+                       this.$message.error('请输入正确的MAC编号')
                        return
                    }
+                   /*if(!(newInfo.serialNum && intreg.test(newInfo.serialNum))){
+                       this.$message.error('编号只能输入数字！')
+                       return
+                   }*/
                }
                newInfo.jsonAttr = JSON.stringify(this.obj)
                newInfo.status=true

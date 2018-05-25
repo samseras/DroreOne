@@ -290,7 +290,8 @@
                     sensorType:info.sensorType,
                     name:info.name,
                     model:info.model,
-                    ip:info.ip,
+                    /*ip:info.ip,*/
+                    mac:info.mac,
                     port:info.port,
                     serialNum:info.serialNum,
                     regionId:info.regionId,
@@ -396,6 +397,7 @@
                         this.monitorsList[i].checked=false
                         this.monitorsList[i].status=true
                         this.monitorsList[i].id=this.monitorsList[i].id
+                        this.monitorsList[i].mac=this.monitorsList[i].mac
                         this.monitorsList[i].location=`${this.monitorsList[i].longitude},${this.monitorsList[i].latitude}`
                         this.monitorsList[i].byTime = -(new Date(this.monitorsList[i].modifyTime)).getTime()
                     }

@@ -1,7 +1,7 @@
 <template>
     <div class="personDeploy">
         <div class="title">
-            人员信息
+            {{smallTitle}}
         </div>
         <div class="personContent">
             <div class="funcTitle">
@@ -133,6 +133,7 @@
         name: 'person-deploy',
         data() {
             return {
+                smallTitle:'职业',
                 selectFlag:false,
                 tempSelects:[],
                 isShowPersonCard: true,
@@ -178,30 +179,41 @@
                     switch (this.$route.params.id) {
                         case '1': {
                             imgSrc = './../../../static/img/driveCard.png';
+                            this.smallTitle='司机';
                             break
                         }
                         case '2': {
                             imgSrc = './../../../static/img/boatCard.png';
+                            this.smallTitle='船夫';
                             break
                         }
                         case '3': {
                             imgSrc = './../../../static/img/clearCard.png';
+                            this.smallTitle='安保';
                             break
                         }
                         case '4': {
                             imgSrc = './../../../static/img/clearCard.png';
+                            this.smallTitle='保洁';
                             break
                         }
                         case '5': {
                             imgSrc = './../../../static/img/saleTrickCard.png';
+                            this.smallTitle='售票';
                             break
                         }
                         case '6': {
                             imgSrc = './../../../static/img/trickCard.png';
+                            this.smallTitle='检票';
                             break
                         }
                         case '7': {
                             imgSrc = './../../../static/img/keepServ.png';
+                            this.smallTitle='维保';
+                            break
+                        }
+                        case '8': {
+                            this.smallTitle='管理者';
                             break
                         }
                         default:{
