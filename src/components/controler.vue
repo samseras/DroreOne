@@ -31,14 +31,14 @@
         data() {
             return {
                 title: [
-                    {route: '/controler/camera', img: '../../../static/img/camera.png', desc: "摄像头"},
-                    {route: '/controler/broad', img: '../../../static/img/broadcast.png', desc: "广播"},
-                    {route: '/controler/wifi', img: '../../../static/img/WiFi.png', desc: "WiFi"},
+                    {route: '/controler/camera', img: '../../../static/img/camera.svg', desc: "摄像头"},
+                    {route: '/controler/broad', img: '../../../static/img/broadcast.svg', desc: "广播"},
+                    {route: '/controler/wifi', img: '../../../static/img/wifi.svg', desc: "WiFi"},
                     {route: '/controler/environment', img: '../../../static/img/detection.svg', desc: "环境检测"},
                     {route: '/controler/warn', img: '../../../static/img/warn.png', desc: "警告"},
-                    {route: '/controler/screen', img: '../../../static/img/screen.png', desc: "大屏"},
-                    {route: '/controler/person', img: '../../../static/img/personLocation.png', desc: "个人定位"},
-                    {route: '/controler/car', img: '../../../static/img/car.png', desc: "车船调度"},
+                    {route: '/controler/screen', img: '../../../static/img/led.svg', desc: "大屏"},
+                    {route: '/controler/person', img: '../../../static/img/dmis.svg', desc: "个人定位"},
+                    {route: '/controler/car', img: '../../../static/img/boatCar.svg', desc: "车船调度"},
                     {route: '/controler/light', img: '../../../static/img/light.svg', desc: "路灯"},
                     {route: '/controler/other', img: '../../../static/img/else.png', desc: "其他"}
                 ],
@@ -129,7 +129,7 @@
                             line-height: rem(60);
                             img{
                                 vertical-align: middle;
-                                width: rem(18);
+                                width: rem(22);
                             }
                         }
                     }

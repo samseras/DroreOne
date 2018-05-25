@@ -75,7 +75,7 @@
                 droreMap.interaction.showMove()
                 this.getAllLight();//路灯现有标注
                 // this.getAllGate();//闸机现有标注
-                // this.getAllWifi();//wifi现有标注
+                this.getAllWifi();//wifi现有标注
                 // this.getAllLed();//Led现有标注
                 // this.getAllPolice();//报警柱现有标注
                 this.getAllMonitor();//传感器现有标注
@@ -788,21 +788,21 @@
             },
             async getAllWifi(){//wifi列表
                 await api.wifi.getAllWifi().then((res)=>{
-                    this.wifiList=res.devices
-                    for(let i=0;i<this.wifiList.length;i++){
-                        this.wifiList[i].location = [this.wifiList[i].longitude,this.wifiList[i].latitude]
-                        var Wifi = new droreMap.icon.Marker({
-                            coordinate: droreMap.trans.transFromWgsToLayer(this.wifiList[i].location),
-                            name: this.wifiList[i].name,
-                            subtype: "Wifi",
-                            id: this.wifiList[i].id,
-                            url: "http://label.drore.com/gisLabelTabImage/public/defaults/24*24/wifi.png"
-                        });
-                        droreMap.icon.addChild(Wifi);
-                        Wifi.onclick(function(e) {
-                            alert("这是wifi，id是"+e.data.id);
-                        });
+                    this.iconList=res.devices
+                    for (let i=0;i<this.iconList.length;i++){
+                        this.iconList[i].type="wifi"
+                        this.iconList[i].location = [this.iconList[i].longitude,this.iconList[i].latitude]
+                        if(this.iconList[i].lightStatus){
+                            this.iconList[i].url="/static/img/icon/wifi.png"
+                            this.iconList[i].subtype='Wifi'
+                            this.iconList[i].status=true
+                        } else {
+                            this.iconList[i].url="/static/img/icon/wifi_close.png"
+                            this.iconList[i].subtype='wifi_close'
+                            this.iconList[i].status=false
+                        }
                     }
+                    this.iconShow();
                  }).catch((err)=>{
                     console.log(err)
                 })
@@ -977,9 +977,11 @@
                         if(this.iconList[i].lightStatus){
                             this.iconList[i].url="/static/img/icon/monitors.png"
                             this.iconList[i].subtype='Monitors'
+                            this.iconList[i].status=true
                         } else {
                             this.iconList[i].url="/static/img/icon/monitors_close.png"
                             this.iconList[i].subtype='Monitors_close'
+                            this.iconList[i].status=false
                         }
                     }
                     this.iconShow();
@@ -991,21 +993,21 @@
                 await api.monitor.getAllMonitor().then((res)=>{
                     this.monitorsList=res.devices
                     for (let i=0;i<this.monitorsList.length;i++){
-                        if(this.iconList[i].lightStatus){
-                            this.iconList[i].url="/static/img/icon/monitors.png"
-                            this.iconList[i].subtype='Monitors'
+                        if(this.monitorsList[i].lightStatus){
+                            this.monitorsList[i].url="/static/img/icon/monitors.png"
+                            this.monitorsList[i].subtype='Monitors'
                         } else {
-                            this.iconList[i].url="/static/img/icon/monitors_close.png"
-                            this.iconList[i].subtype='Might_close'
+                            this.monitorsList[i].url="/static/img/icon/monitors_close.png"
+                            this.monitorsList[i].subtype='Might_close'
                         }
                         if(this.monitorsList[i].id === this.getLocationId){
                             this.monitorsList[i].location = [this.monitorsList[i].longitude,this.monitorsList[i].latitude]
                             var iconedit = new droreMap.icon.Marker({
                                 coordinate: droreMap.trans.transFromWgsToLayer(this.monitorsList[i].location),
                                 name: this.monitorsList[i].name,
-                                subtype: this.iconList[i].subtype,
+                                subtype: this.monitorsList[i].subtype,
                                 id: this.monitorsList[i].id,
-                                url: this.iconList[i].url
+                                url: "/static/img/location_on.png"
                             });
                             droreMap.icon.addChild(iconedit);
                             droreMap.interaction.ifDrag = true;
@@ -1022,9 +1024,9 @@
                             var icon1 = new droreMap.icon.Marker({
                                 coordinate: droreMap.trans.transFromWgsToLayer(this.monitorsList[i].location),
                                 name: this.monitorsList[i].name,
-                                subtype: this.iconList[i].subtype,
+                                subtype: this.monitorsList[i].subtype,
                                 id: this.monitorsList[i].id,
-                                url: this.iconList[i].url
+                                url: this.monitorsList[i].url
                             });
                             droreMap.icon.addChild(icon1);
                         }
@@ -2153,6 +2155,15 @@
     }
     .contextmenu.Monitors_damage i{
         background: url("/static/img/icon/Monitors_damage_big.png") no-repeat;
+    }
+    .contextmenu.Wifi i{
+        background: url("/static/img/icon/Wifi_big.png") no-repeat;
+    }
+    .contextmenu.Wifi_close i{
+        background: url("/static/img/icon/Wifi_close_big.png") no-repeat;
+    }
+    .contextmenu.Wifi_damage i{
+        background: url("/static/img/icon/Wifi_damage_big.png") no-repeat;
     }
     .contextmenu.Broadcast i{
         background: url("/static/img/icon/guangboshebei_big.png") no-repeat;
