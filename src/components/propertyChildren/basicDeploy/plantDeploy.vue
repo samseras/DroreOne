@@ -183,14 +183,15 @@
                     }).then(() => {
                         api.plant.deletePlant(this.choseInfoId).then(res => {
                             console.log(res, '删除成功')
-                            for (let i = 0; i < this.choseInfoId.length; i++) {
-                                this.treeList = this.treeList.filter((item, index) => {
-                                    if (item.plant.id === this.choseInfoId[i]){
-                                        this.treeList[index].checked = false
-                                    }
-                                    return item.plant.id !== this.choseInfoId[i]
-                                })
-                            }
+                            // for (let i = 0; i < this.choseInfoId.length; i++) {
+                            //     this.treeList = this.treeList.filter((item, index) => {
+                            //         if (item.plant.id === this.choseInfoId[i]){
+                            //             this.treeList[index].checked = false
+                            //         }
+                            //         return item.plant.id !== this.choseInfoId[i]
+                            //     })
+                            // }
+                            this.getAllPlant()
                             this.$message.success('删除成功')
                             this.choseInfoId = []
                         }).catch(err => {

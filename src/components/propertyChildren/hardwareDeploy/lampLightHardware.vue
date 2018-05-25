@@ -251,14 +251,15 @@
                         type: 'warning'
                     }).then(() => {
                         api.light.deleteLight(this.choseInfoId).then(res =>{
-                            for(let i=0;i<this.choseInfoId.length;i++){
-                                this.lightList=this.lightList.filter((item,index) =>{
-                                    if(item.id===this.choseInfoId[i]){
-                                        this.lightList[index].checked=false
-                                    }
-                                    return item.id !== this.choseInfoId[i]
-                                })
-                            }
+                            // for(let i=0;i<this.choseInfoId.length;i++){
+                            //     this.lightList=this.lightList.filter((item,index) =>{
+                            //         if(item.id===this.choseInfoId[i]){
+                            //             this.lightList[index].checked=false
+                            //         }
+                            //         return item.id !== this.choseInfoId[i]
+                            //     })
+                            // }
+                            this.getAllLight()
                             this.$message.success('删除成功')
                             this.choseInfoId=[]
                         }).catch(err =>{

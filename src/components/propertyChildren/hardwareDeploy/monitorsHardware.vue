@@ -255,14 +255,15 @@
                         type: 'warning'
                     }).then(() => {
                         api.monitor.deleteMonitor(this.choseInfoId).then(res=>{
-                            for(let i=0;i<this.choseInfoId.length;i++){
-                                this.monitorsList=this.monitorsList.filter((item,index)=>{
-                                    if(item.id === this.choseInfoId[i]){
-                                        this.monitorsList[index].checked=false
-                                    }
-                                    return item.id!==this.choseInfoId[i]
-                                })
-                            }
+                            // for(let i=0;i<this.choseInfoId.length;i++){
+                            //     this.monitorsList=this.monitorsList.filter((item,index)=>{
+                            //         if(item.id === this.choseInfoId[i]){
+                            //             this.monitorsList[index].checked=false
+                            //         }
+                            //         return item.id!==this.choseInfoId[i]
+                            //     })
+                            // }
+                            this.getAllMonitor()
                             this.$message.success('删除成功')
                             this.choseInfoId = []
                         }).catch(err =>{

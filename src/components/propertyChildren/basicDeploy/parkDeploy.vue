@@ -200,14 +200,15 @@
                         api.park.deletePark(this.choseInfoId).then(res => {
                             console.log(res, '删除成功')
                             this.$message.success('删除成功')
-                            for (let i = 0; i < this.choseInfoId.length; i++) {
-                                this.parkList = this.parkList.filter((item, index) => {
-                                    if (item.id === this.parkList[i]){
-                                        this.parkList[index].checked = false
-                                    }
-                                    return item.id !== this.choseInfoId[i]
-                                })
-                            }
+                            // for (let i = 0; i < this.choseInfoId.length; i++) {
+                            //     this.parkList = this.parkList.filter((item, index) => {
+                            //         if (item.id === this.parkList[i]){
+                            //             this.parkList[index].checked = false
+                            //         }
+                            //         return item.id !== this.choseInfoId[i]
+                            //     })
+                            // }
+                            this.getAllPark()
                             this.choseInfoId = []
                         }).catch(err => {
                             console.log(err)

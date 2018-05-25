@@ -252,14 +252,15 @@
                         type: 'warning'
                     }).then(() => {
                         api.police.deletePolice(this.choseInfoId).then(res =>{
-                            for(let i=0;i<this.choseInfoId.length;i++){
-                                this.policeList=this.policeList.filter((item,index) =>{
-                                    if(item.id===this.choseInfoId[i]){
-                                        this.policeList[index].checked=false
-                                    }
-                                    return item.id!==this.choseInfoId[i]
-                                })
-                            }
+                            // for(let i=0;i<this.choseInfoId.length;i++){
+                            //     this.policeList=this.policeList.filter((item,index) =>{
+                            //         if(item.id===this.choseInfoId[i]){
+                            //             this.policeList[index].checked=false
+                            //         }
+                            //         return item.id!==this.choseInfoId[i]
+                            //     })
+                            // }
+                            this.getAllPolice()
                             this.$message.success('删除成功')
                             this.choseInfoId=[]
                         }).catch(err =>{
