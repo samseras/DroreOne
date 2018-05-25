@@ -200,7 +200,9 @@
                             noRegion.children.push(item)
                         }
                     })
-                    arr.push(noRegion)
+                    if (noRegion.children.length > 0) {
+                        arr.push(noRegion)
+                    }
                     this.lightInfo = arr
                 }).catch(err =>{
                     console.log(err)
