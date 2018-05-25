@@ -1682,14 +1682,15 @@
             //     droreMap.map.panToCoord(droreMap.trans.transFromWgsToLayer(ol[0]));
             // },
             droreMappopup(e){
-                // console.log(e);
+                console.log(e);
                 var div = document.getElementById('contextmenu_container')
                 var popup = new  droreMap.pop.Popup(div,e.coordinate,"contextmenu_container")
                 droreMap.pop.addChild(popup);
                 $("#contextmenu_container").attr("class","contextmenu "+e.subtype);
-                if(e.status || e.status =="ONLINE"){
+                if(e.status =="ONLINE"){
                     this.open=true
                 }else if(e.status =="OFFLINE"){
+                    console.log();
                     this.open=false
                 }else{
                     this.open=false
@@ -1697,7 +1698,7 @@
                 $("#contextmenu_container").show();
             },
             mapSwitch(){
-                if(this.menulist.data.status){
+                if(this.menulist.data.status =="ONLINE"){
                     alert("关闭，id是"+this.menulist.id);
                 }else {
                     alert("开启，id是"+this.menulist.id);
