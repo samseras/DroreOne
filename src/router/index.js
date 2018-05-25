@@ -8,6 +8,7 @@ import Router from 'vue-router'
 import MicServiceManagementSystem from '@/components/pages/MicroService/MicroServiceManagementSystem'
 import Index from '@/components/pages/index'
 import login from '@/components/pages/login'
+import screen from '@/components/pages/screenShow'
 // import Error from '@/components/pages/err'
 
 import eye from '@/components/pages/eye'
@@ -153,6 +154,10 @@ const routes = [
     {
       path: '/login',
       component: login
+    },
+    {
+        path: '/screen',
+        component: screen
     },
       //全视之眼
     {
