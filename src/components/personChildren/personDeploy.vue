@@ -468,9 +468,12 @@
                 }
             },
             idNumFilter(id) {
-             let leftId =  id.substring(0, 6)
-             let rightId = id.substring(14)
-             return `${leftId}********${rightId}`
+                if(id){
+                    let leftId =  id.substring(0, 6)
+                    let rightId = id.substring(14)
+                    return `${leftId}********${rightId}`
+                }
+
             }
         },
         created() {

@@ -303,11 +303,12 @@
                     </p>
                     <p class="type" v-if="isDisabled">
                         状&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;态：
-                        <el-select v-model="park.parkingBean.state" placeholder="请选择" :disabled="isDisabled">
+                        <el-input type="text"v-model="park.parkingBean.state" :disabled="isDisabled" :maxlength="15"></el-input>
+                        <!--<el-select v-model="park.parkingBean.state" placeholder="请选择" :disabled="isDisabled">
                             <el-option label="充裕" value="充裕"></el-option>
                             <el-option label="已满" value="已满"></el-option>
                             <el-option label="紧张" value="紧张"></el-option>
-                        </el-select>
+                        </el-select>-->
                     </p>
                     <!--<p class="idNum">空余车位：
                         <el-input type="text"v-model="park.parkingBean.surplusNum" :disabled="isDisabled"></el-input>

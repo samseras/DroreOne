@@ -11,6 +11,7 @@
                         @fixedInfo="fixedInfo"
                         :choseId="choseInfoId"
                         :listsLength = "ledList.length"
+                        :personListFlag="selectFlag"
                         @searchAnything="searchAnything"
                         @choseType="choseType"
                         @toggleList="toggleList"
@@ -114,6 +115,8 @@
     export default{
         data(){
             return{
+                selectFlag:false,
+                tempSelects:[],
                 isShowLedCard:true,
                 visible:false,
                 ledList:[
@@ -268,6 +271,7 @@
                             }
                             this.$message.success('删除成功')
                             this.choseInfoId=[]
+                            this.getAllLed()
                         }).catch(err=>{
                             this.$message.error('删除失败，请稍后再试')
                         })
@@ -326,6 +330,7 @@
                 }
             },
             checked(id){
+                this.tempSelects=[];
                 this.ledList = this.ledList.filter(item => {
                     if (item.id === id) {
                         item.checked = item.checked
@@ -339,6 +344,16 @@
                     })
                 }else{
                     this.choseInfoId.push(id)
+                }
+                let that=this;
+                this.ledList.forEach(function(item,i){
+                    (item.checked)&&(that.tempSelects.push(item))
+                })
+                console.log(this.tempSelects)
+                if(this.tempSelects.length===this.ledList.length){
+                    this.selectFlag=true
+                }else{
+                    this.selectFlag=false
                 }
             },
             choseType(type){
@@ -379,6 +394,7 @@
                     }
                 })
                 console.log(this.choseInfoId)
+                this.selectFlag=true
             },
             async getAllLed(){
                 this.isShowLoading=true
@@ -396,6 +412,9 @@
                     }
                     this.ledList = _.sortBy(this.ledList,'byTime')
                     this.checkList = this.ledList
+                    if(this.ledList.length=== 0){
+                        this.selectFlag=false
+                    }
                 }).catch((err)=>{
                     console.log(err)
                 })

@@ -12,6 +12,7 @@
                         @searchAnything="searchAnything"
                         :choseId="choseInfoId"
                         :listsLength = "policeList.length"
+                        :personListFlag="selectFlag"
                         @choseType="choseType"
                         @toggleList="toggleList"
                         @getAllPolice="getAllPolice">
@@ -114,6 +115,8 @@
     export default{
         data(){
             return{
+                selectFlag:false,
+                tempSelects:[],
                 isShowPoliceCard:true,
                 visible:false,
                 policeList:[
@@ -262,6 +265,7 @@
                             }
                             this.$message.success('删除成功')
                             this.choseInfoId=[]
+                            this.getAllPolice()
                         }).catch(err =>{
                             this.$message.error('删除失败,请稍后重试')
                         })
@@ -315,6 +319,7 @@
                 }
             },
             checked(id){
+                this.tempSelects=[];
                 this.policeList = this.policeList.filter(item => {
                     if (item.id === id) {
                         item.checked = item.checked
@@ -328,6 +333,16 @@
                     })
                 }else{
                     this.choseInfoId.push(id)
+                }
+                let that=this;
+                this.policeList.forEach(function(item,i){
+                    (item.checked)&&(that.tempSelects.push(item))
+                })
+                console.log(this.tempSelects)
+                if(this.tempSelects.length===this.policeList.length){
+                    this.selectFlag=true
+                }else{
+                    this.selectFlag=false
                 }
             },
             choseType(type){
@@ -368,6 +383,7 @@
                     }
                 })
                 console.log(this.choseInfoId)
+                this.selectFlag=true
             },
             async getAllPolice(){
                 this.isShowLoading=true
@@ -384,6 +400,9 @@
                     }
                     this.policeList = _.sortBy(this.policeList,'byTime')
                     this.checkList = this.policeList
+                    if(this.cameraList.length=== 0){
+                        this.selectFlag=false
+                    }
                 }).catch((err)=>{
                     console.log(err)
                 })

@@ -12,6 +12,7 @@
                         :choseId="choseInfoId"
                         :listsLength = "monitorsList.length"
                         @searchAnything="searchAnything"
+                        :personListFlag="selectFlag"
                         @choseType="choseType"
                         @toggleList="toggleList"
                         @getAllMonitor="getAllMonitor">
@@ -116,6 +117,8 @@
     export default{
         data(){
             return{
+                selectFlag:false,
+                tempSelects:[],
                 isShowMonitorsCard:true,
                 visible:false,
                 monitorsList:[
@@ -265,6 +268,7 @@
                             }
                             this.$message.success('删除成功')
                             this.choseInfoId = []
+                            this.getAllCamera()
                         }).catch(err =>{
                             this.$message.error('删除失败,请稍后重试')
                         })
@@ -319,6 +323,7 @@
                 }
             },
             checked(id){
+                this.tempSelects=[];
                 this.monitorsList = this.monitorsList.filter(item => {
                     if (item.id === id) {
                         item.checked = item.checked
@@ -332,6 +337,16 @@
                     })
                 }else{
                     this.choseInfoId.push(id)
+                }
+                let that=this;
+                this.monitorsList.forEach(function(item,i){
+                    (item.checked)&&(that.tempSelects.push(item))
+                })
+                console.log(this.tempSelects)
+                if(this.tempSelects.length===this.monitorsList.length){
+                    this.selectFlag=true
+                }else{
+                    this.selectFlag=false
                 }
             },
             choseType(type){
@@ -366,9 +381,11 @@
                         return item.checked == false
                     }
                 })
+                this.selectFlag=true
                 console.log(this.choseInfoId)
             },
             async getAllMonitor(){
+                this.choseInfoId=[];//
                 this.isShowLoading=true
                 await api.monitor.getAllMonitor().then((res)=>{
                     console.log(res,'这是请求')
@@ -383,6 +400,9 @@
                     }
                     this.monitorsList = _.sortBy(this.monitorsList,'byTime')
                     this.checkList = this.monitorsList
+                    if(this.monitorsList.length=== 0){
+                        this.selectFlag=false
+                    }
                 }).catch((err)=>{
                     console.log(err)
                 })

@@ -64,7 +64,7 @@
     import api from '@/api'
 
     export default{
-        props: ['choseId','listsLength'],
+        props: ['choseId','listsLength','personListFlag'],
         data(){
             return{
                 searchKeys:'',
@@ -304,6 +304,14 @@
         watch:{
             '$route' (){
                 this.showPersonJob()
+            },
+            personListFlag(n,o){
+                console.log(n);
+                if(n===true){
+                    this.isSelected=true
+                }else{
+                    this.isSelected=false
+                }
             }
         },
         created(){

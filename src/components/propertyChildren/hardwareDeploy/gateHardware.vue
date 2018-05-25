@@ -12,6 +12,7 @@
                         @searchAnything="searchAnything"
                         :choseId="choseInfoId"
                         :listsLength = "gateList.length"
+                        :personListFlag="selectFlag"
                         @choseType="choseType"
                         @toggleList="toggleList"
                         @getAllGate="getAllGate">
@@ -114,6 +115,8 @@
     export default{
         data(){
             return{
+                selectFlag:false,
+                tempSelects:[],
                 isShowGateCard:true,
                 visible:false,
                 gateList
@@ -261,6 +264,7 @@
                             }
                             this.$message.success('删除成功')
                             this.choseInfoId=[]
+                            this.getAllGate()
                         }).catch(err=>{
                             this.$message.err('删除失败，请稍后重试')
                         })
@@ -315,6 +319,7 @@
                 }
             },
             checked(id){
+                this.tempSelects=[];
                 this.gateList = this.gateList.filter(item => {
                     if (item.id === id) {
                         item.checked = item.checked
@@ -328,6 +333,16 @@
                     })
                 }else{
                     this.choseInfoId.push(id)
+                }
+                let that=this;
+                this.gateList.forEach(function(item,i){
+                    (item.checked)&&(that.tempSelects.push(item))
+                })
+                console.log(this.tempSelects)
+                if(this.tempSelects.length===this.gateList.length){
+                    this.selectFlag=true
+                }else{
+                    this.selectFlag=false
                 }
             },
             choseType(type){
@@ -372,6 +387,7 @@
                     }
                 })
                 console.log(this.choseInfoId)
+                this.selectFlag=true
             },
             async getAllGate(){
                 this.isShowLoading=true
@@ -387,6 +403,9 @@
                     }
                     this.gateList = _.sortBy(this.gateList,'byTime')
                     this.checkList = this.gateList
+                    if(this.gateList.length=== 0){
+                        this.selectFlag=false
+                    }
                 }).catch((err)=>{
                     console.log(err)
                 })
