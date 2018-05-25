@@ -8,8 +8,8 @@
                     <li>
                         <el-switch
                             v-model="open"
-                            active-color="#52c4f2"
-                            inactive-color="#949494">
+                            active-color="#53b6a7"
+                            inactive-color="#808080">
                         </el-switch>
                     </li>
                     <!--<li><img src="../../../../static/img/search.png" class="search" alt=""/></li>-->

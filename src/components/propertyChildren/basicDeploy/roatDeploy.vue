@@ -11,6 +11,7 @@
                         @choseType = 'choseType'
                         @selectedAll = 'selectedAll'
                         @fixedInfo = 'fixedInfo'
+                        :personListFlag="selectFlag"
                         @searchAnything="searchAnything">
                 </Header>
             </div>
@@ -105,6 +106,8 @@
         name: "roat-deploy",
         data(){
             return{
+                selectFlag:false,
+                tempSelects:[],
                 isShowRoatCard: true,
                 checkList: [],
                 filterList: [],
@@ -174,6 +177,7 @@
                             // }
                             this.getAllRoat()
                             this.choseInfoId = []
+                            this.getAllRoat()
                         }).catch(err => {
                             this.$message.error('删除失败，请稍后重试')
                             console.log(err)
@@ -196,6 +200,7 @@
                 }
             },
             checked (id) {
+                this.tempSelects=[];
                 this.roatList = this.roatList.filter(item => {
                     if (item.id === id) {
                         item.checked = item.checked
@@ -208,6 +213,16 @@
                     })
                 } else {
                     this.choseInfoId.push(id)
+                }
+                let that=this;
+                this.roatList.forEach(function(item,i){
+                    (item.checked)&&(that.tempSelects.push(item))
+                })
+                console.log(this.tempSelects)
+                if(this.tempSelects.length===this.roatList.length){
+                    this.selectFlag=true
+                }else{
+                    this.selectFlag=false
                 }
             },
             choseType (type) {
@@ -243,6 +258,7 @@
                         return item.checked === false
                     }
                 })
+                this.selectFlag=true
                 console.log(this.choseInfoId, 'opopop')
             },
             fixInfo (info) {
@@ -336,6 +352,9 @@
                     }
                     this.checkList = this.roatList
                     this.choseInfoId = []
+                    if(this.roatList.length=== 0){
+                        this.selectFlag=false
+                    }
                 }).catch(err => {
                     console.log(err, '请求失败')
                 })

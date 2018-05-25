@@ -10,6 +10,7 @@
                         @toggleList = "toggleList"
                         :choseId="choseInfoId"
                         :listsLength="boatCarList.length"
+                        :personListFlag="selectFlag"
                         @choseType = 'choseType'
                         @selectedAll = 'selectedAll'
                         @fixedInfo = 'fixedInfo'
@@ -129,6 +130,8 @@
         name: 'boatCar-deploy',
         data () {
             return {
+                selectFlag:false,
+                tempSelects:[],
                 isShowBoatCard: true,
                 checkList: [],
                 filterList: [],
@@ -215,6 +218,7 @@
                             this.getAllBoat()
                             this.$message.success('删除成功')
                             this.choseInfoId = []
+                            this.getAllBoat()
                         }).catch(err => {
                             console.log(err, '删除失败')
                             this.$message.error('删除失败，请稍后重试')
@@ -236,6 +240,7 @@
                 }
             },
             getChecked (id) {
+                this.tempSelects=[];
                 this.boatCarList = this.boatCarList.filter(item => {
                     if (item.id === id) {
                         item.checked = item.checked
@@ -251,6 +256,16 @@
                     this.choseInfoId.push(id)
                 }
                 console.log(this.choseInfoId)
+                let that=this;
+                this.boatCarList.forEach(function(item,i){
+                    (item.checked)&&(that.tempSelects.push(item))
+                })
+                console.log(this.tempSelects)
+                if(this.tempSelects.length===this.boatCarList.length){
+                    this.selectFlag=true
+                }else{
+                    this.selectFlag=false
+                }
             },
             choseType (type) {
                 console.log(type)
@@ -285,6 +300,7 @@
                         return item.checked === false
                     }
                 })
+                this.selectFlag=true
                 console.log(this.choseInfoId, 'opopop')
                 this.selectAll(this.choseInfoId)
             },
@@ -395,6 +411,9 @@
                     console.log(this.boatCarList);
                     this.checkList = this.boatCarList
                     this.choseInfoId = []
+                    if(this.boatCarList.length=== 0){
+                        this.selectFlag=false
+                    }
                 }).catch(err => {
                     console.log(err, '请求失败')
                     this.isShowLoading = false

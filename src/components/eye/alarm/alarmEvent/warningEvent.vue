@@ -8,7 +8,8 @@
                 <Header @deletInfo = "deletInfo"
                         @selectedAll = 'selectedAll'
                         @batchEdit = 'batchEdit'
-                        @choseType='choseType'>
+                        @choseType='choseType'
+                        @batchDownload="batchDownload">
                 </Header>
             </div>
             <div class="personList" v-loading="isShowloading">
@@ -146,6 +147,34 @@
             }
         },
         methods: {
+            batchDownload(){
+                console.log(this.choseInfoId)
+                if (this.choseInfoId.length > 0) {
+                        //导出接口
+                        // api.schedulebroadcast.deleteBroadcast(this.choseInfoId).then(res => {
+                        //     console.log(res, '删除成功')
+                        //     this.$message.success('删除成功')
+                        //     for (let i = 0; i < this.choseInfoId.length; i++) {
+                        //         this.broadCastList = this.broadCastList.filter((item, index) => {
+                        //             if (item.id === this.choseInfoId[i]){
+                        //                 this.broadCastList[index].checked = false
+                        //                 this.broadCastList[index].status = false
+                        //             }
+                        //             return item.status !== false
+                        //         })
+                        //     }
+                        //     this.choseInfoId = []
+                        // }).catch(err => {
+                        //     this.$message.error('删除失败，请稍后重试')
+                        //     console.log(err)
+                        //     this.choseInfoId = []
+                        // })
+
+                } else {
+                    this.$message.error('请选择要导出的数据')
+                    return
+                }
+            },
             choseType(type){
                 console.log(type)
                 let dataList = this.warningEventList;

@@ -11,7 +11,7 @@
                         @choseType = 'choseType'
                         @selectedAll = 'selectedAll'
                         @fixedInfo = 'fixedInfo'
-                        :allselflag="allSelFlag"
+                        :personListFlag="selectFlag"
                         @searchAnything="searchAnything">
                 </Header>
             </div>
@@ -118,6 +118,8 @@
         name: 'area-deploy',
         data(){
             return{
+                selectFlag:false,
+                tempSelects:[],
                 isShowAreaCard: true,
                 checkList: [],
                 filterList: [],
@@ -186,6 +188,7 @@
                             // }
                             this.getAllArea()
                             this.choseInfoId = []
+                            this.getAllArea()
                         }).catch(err => {
                             this.$message.error('删除失败，请稍后重试')
                             console.log(err)
@@ -206,8 +209,8 @@
                     this.isShowAreaCard = true
                 }
             },
-            checked (id) {
-
+            checked(id) {
+                this.tempSelects=[];
                 this.areaList = this.areaList.filter(item => {
                     if (item.id === id) {
                         item.checked = item.checked
@@ -222,15 +225,16 @@
                     this.choseInfoId.push(id)
                 }
 
-
-                /*let that=this;
+                let that=this;
                 this.areaList.forEach(function(item,i){
-                    if(item.checked===false){
-                        that.allSelFlag=8
-                    }
-                })*/
-
-
+                    (item.checked)&&(that.tempSelects.push(item))
+                })
+                console.log(this.tempSelects)
+                if(this.tempSelects.length===this.areaList.length){
+                    this.selectFlag=true
+                }else{
+                    this.selectFlag=false
+                }
             },
             choseType (type) {
                 console.log(type)
@@ -264,6 +268,7 @@
                         return item.checked === false
                     }
                 })
+                this.selectFlag=true
                 console.log(this.choseInfoId, 'opopop')
             },
             fixInfo (info) {
@@ -364,6 +369,9 @@
 
                     this.checkList = this.areaList
                     this.choseInfoId = []
+                    if(this.areaList.length=== 0){
+                        this.selectFlag=false
+                    }
                 }).catch(err => {
                     console.log(err, '失败')
                     this.isShowLoading = false

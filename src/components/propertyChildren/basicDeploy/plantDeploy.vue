@@ -11,6 +11,7 @@
                         @choseType = 'choseType'
                         :choseId="choseInfoId"
                         :listsLength="treeList.length"
+                        :personListFlag="selectFlag"
                         @selectedAll = 'selectedAll'
                         @fixedInfo = 'fixedInfo'
                         @searchAnything="searchAnything"
@@ -112,6 +113,8 @@
         name: "tree-deploy",
         data(){
             return{
+                selectFlag:false,
+                tempSelects:[],
                 isShowToiletCard: true,
                 checkList: [],
                 filterList: [],
@@ -198,6 +201,7 @@
                             console.log('删除失败')
                             this.$message.error('删除失败，请稍后重试')
                             this.choseInfoId = []
+                            this.getAllTree()
                         })
                     }).catch(() => {
                         this.$message.info('取消删除')
@@ -214,6 +218,7 @@
                 }
             },
             checked (id) {
+                this.tempSelects=[];
                 this.treeList = this.treeList.filter(item => {
                     if (item.id === id) {
                         item.checked = item.checked
@@ -226,6 +231,16 @@
                     })
                 } else {
                     this.choseInfoId.push(id)
+                }
+                let that=this;
+                this.treeList.forEach(function(item,i){
+                    (item.checked)&&(that.tempSelects.push(item))
+                })
+                console.log(this.tempSelects)
+                if(this.tempSelects.length===this.treeList.length){
+                    this.selectFlag=true
+                }else{
+                    this.selectFlag=false
                 }
             },
             choseType (type) {
@@ -261,6 +276,7 @@
                         return item.checked === false
                     }
                 })
+                this.selectFlag=true
                 console.log(this.choseInfoId, 'opopop')
             },
             async fixInfo (info) {
@@ -377,6 +393,9 @@
                     this.treeList = _.sortBy(this.treeList, 'byTime')
                     this.checkList = this.treeList
                     this.choseInfoId = []
+                    if(this.treeList.length=== 0){
+                        this.selectFlag=false
+                    }
                 }).catch(err => {
                     console.log(err, '请求失败')
                     this.isShowLoading = false

@@ -13,6 +13,7 @@
                         @fixedInfo = 'fixedInfo'
                         :choseId="choseInfoId"
                         :listsLength="parkList.length"
+                        :personListFlag="selectFlag"
                         @searchAnything="searchAnything"
                         @getAllPark="getAllPark">
 
@@ -128,6 +129,8 @@
         name: "park-deploy",
         data(){
             return{
+                selectFlag:false,
+                tempSelects:[],
                 isShowParkCard: true,
                 checkList: [],
                 filterList: [],
@@ -210,6 +213,7 @@
                             // }
                             this.getAllPark()
                             this.choseInfoId = []
+                            this.getAllPark()
                         }).catch(err => {
                             console.log(err)
                             this.$message.error('删除失败，请稍后重试')
@@ -231,6 +235,7 @@
                 }
             },
             checked (id) {
+                this.tempSelects=[];
                 this.parkList = this.parkList.filter(item => {
                     if (item.id === id) {
                         item.checked = item.checked
@@ -244,6 +249,16 @@
                 } else {
                     this.choseInfoId.push(id)
                 }
+                let that=this;
+                this.parkList.forEach(function(item,i){
+                    (item.checked)&&(that.tempSelects.push(item))
+                })
+                console.log(this.tempSelects)
+                if(this.tempSelects.length===this.parkList.length){
+                    this.selectFlag=true
+                }else{
+                    this.selectFlag=false
+                }
             },
             choseType (type) {
                 console.log(type)
@@ -254,7 +269,7 @@
                     })
                 } else {
                     this.parkList = this.parkList.filter((item,index) => {
-                        if (item.parkingBean.type === '0') {
+                        if (item.parkingBean.type === 0) {
                             item.type = '室外'
                         } else{
                             item.type = '室内'
@@ -266,6 +281,8 @@
                         }
                         return item
                     })
+                    console.log(this.parkList)
+                    console.log(this.isShowParkCard)
                 }
             },
             selectedAll (state) {
@@ -282,6 +299,7 @@
                         return item.checked === false
                     }
                 })
+                this.selectFlag=true
                 console.log(this.choseInfoId, 'opopop')
             },
             async fixInfo (info) {
@@ -404,6 +422,9 @@
                     this.parkList = _.sortBy(this.parkList, 'byTime')
                     this.checkList = this.parkList
                     this.choseInfoId = []
+                    if(this.parkList.length=== 0){
+                        this.selectFlag=false
+                    }
                 }).catch(err => {
                     console.log(err)
                     this.isShowLoading = false

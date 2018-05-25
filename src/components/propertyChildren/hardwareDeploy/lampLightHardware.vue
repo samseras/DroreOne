@@ -12,6 +12,7 @@
                         @searchAnything="searchAnything"
                         :listsLength = "lightList.length"
                         :choseId="choseInfoId"
+                        :personListFlag="selectFlag"
                         @choseType="choseType"
                         @toggleList="toggleList"
                         @getAllLight="getAllLight">
@@ -118,6 +119,8 @@
     export default{
         data(){
             return{
+                selectFlag:false,
+                tempSelects:[],
                 isShowLightDetail:true,
                 visible:false,
                 lightList:[ ],
@@ -262,6 +265,7 @@
                             this.getAllLight()
                             this.$message.success('删除成功')
                             this.choseInfoId=[]
+                            this.getAllLight()
                         }).catch(err =>{
                             this.$message.error('删除失败')
                         })
@@ -317,6 +321,7 @@
                 }
             },
             checked(id){
+                this.tempSelects=[];
                 this.lightList = this.lightList.filter(item => {
                     if (item.id === id) {
                         item.checked = item.checked
@@ -330,6 +335,16 @@
                     })
                 }else{
                     this.choseInfoId.push(id)
+                }
+                let that=this;
+                this.lightList.forEach(function(item,i){
+                    (item.checked)&&(that.tempSelects.push(item))
+                })
+                console.log(this.tempSelects)
+                if(this.tempSelects.length===this.lightList.length){
+                    this.selectFlag=true
+                }else{
+                    this.selectFlag=false
                 }
             },
             choseType(type){
@@ -365,6 +380,7 @@
                     }
                 })
                 console.log(this.choseInfoId)
+                this.selectFlag=true
             },
             async getAllLight(){
                 this.isShowLoading=true
@@ -382,6 +398,9 @@
                     }
                     this.lightList = _.sortBy(this.lightList,'byTime')
                     this.checkList = this.lightList
+                    if(this.lightList.length=== 0){
+                        this.selectFlag=false
+                    }
                 }).catch((err)=>{
                     console.log(err)
                 })

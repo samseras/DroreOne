@@ -11,6 +11,7 @@
                         @choseType = 'choseType'
                         :choseId="choseInfoId"
                         :listsLength="indicatorList.length"
+                        :personListFlag="selectFlag"
                         @selectedAll = 'selectedAll'
                         @fixedInfo = 'fixedInfo'
                         @searchAnything="searchAnything"
@@ -104,6 +105,8 @@
         name: "indicator-deploy",
         data () {
             return {
+                selectFlag:false,
+                tempSelects:[],
                 isShowIndicatorCard: true,
                 checkList: [],
                 filterList: [],
@@ -189,6 +192,7 @@
                             this.getAllIndicator()
                             this.$message.success('删除成功')
                             this.choseInfoId = []
+                            this.getAllIndicator()
                         }).catch(err => {
                             console.log(err,'删除失败')
                             this.$message.error('删除失败，请稍后重试')
@@ -209,6 +213,7 @@
                 }
             },
             checked (id) {
+                this.tempSelects=[];
                 this.indicatorList = this.indicatorList.filter(item => {
                     if (item.id === id) {
                         item.checked = item.checked
@@ -221,6 +226,16 @@
                     })
                 } else {
                     this.choseInfoId.push(id)
+                }
+                let that=this;
+                this.indicatorList.forEach(function(item,i){
+                    (item.checked)&&(that.tempSelects.push(item))
+                })
+                console.log(this.tempSelects)
+                if(this.tempSelects.length===this.indicatorList.length){
+                    this.selectFlag=true
+                }else{
+                    this.selectFlag=false
                 }
             },
             choseType (type) {
@@ -261,6 +276,7 @@
                         return item.checked === false
                     }
                 })
+                this.selectFlag=true
                 console.log(this.choseInfoId, 'opopop')
             },
             async fixInfo (info) {
@@ -367,6 +383,9 @@
                     this.indicatorList = _.sortBy(this.indicatorList, 'byTime')
                     this.checkList =this.indicatorList
                     this.choseInfoId = []
+                    if(this.indicatorList.length=== 0){
+                        this.selectFlag=false
+                    }
                 }).catch(err => {
                     console.log(err)
                     this.isShowLoading = false

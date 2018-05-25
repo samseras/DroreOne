@@ -12,6 +12,7 @@
                         @selectedAll='selectedAll'
                         :choseId="choseInfoId"
                         :listsLength="personList.length"
+                        :personListFlag="selectFlag"
                         @fixedInfo='fixedInfo'
                         @searchAnything="searchAnything"
                         @getAllPerson="getAllPerson">
@@ -132,6 +133,8 @@
         name: 'person-deploy',
         data() {
             return {
+                selectFlag:false,
+                tempSelects:[],
                 isShowPersonCard: true,
                 checkList: [],
                 filterList: [],
@@ -245,6 +248,7 @@
                             this.getAllPerson()
                             this.$message.success('删除成功')
                             this.choseInfoId = []
+                            this.getAllPerson()
                         }).catch(err => {
                             console.log(err)
                             this.$message.error('删除失败，请稍后重试')
@@ -265,6 +269,7 @@
                 }
             },
             checked(id) {
+                this.tempSelects=[];
                 this.personList = this.personList.filter(item => {
                     if (item.id === id) {
                         item.checked = item.checked
@@ -279,6 +284,18 @@
                 } else {
                     this.choseInfoId.push(id)
                 }
+                console.log(this.personList)
+                let that=this;
+                this.personList.forEach(function(item,i){
+                    (item.checked)&&(that.tempSelects.push(item))
+                })
+                console.log(this.tempSelects)
+                if(this.tempSelects.length===this.personList.length){
+                    this.selectFlag=true
+                }else{
+                    this.selectFlag=false
+                }
+
             },
             choseType(type) {
                 console.log(type)
@@ -305,6 +322,7 @@
                         item.checked = true
                         this.choseInfoId.push(item.id)
                         return item.checked === true
+
                     } else {
                         console.log('进入这个判断吗')
                         item.checked = false
@@ -312,7 +330,9 @@
                         return item.checked === false
                     }
                 })
+                this.selectFlag=true
                 console.log(this.choseInfoId, 'opopop')
+
             },
             async fixInfo(info) {
                 console.log(info)
@@ -430,6 +450,10 @@
                     this.personList = _.sortBy(this.personList,'byTime')
                     console.log(this.personList, 'p[p[p[p[p[p[p[p[p[p[p[p[p[[pp')
                     this.checkList = this.personList
+                    if(this.personList.length=== 0){
+                        console.log('进来了')
+                        this.selectFlag=false
+                    }
                 }).catch(err => {
                     console.log(err)
                     this.isShowLoading = false
@@ -445,7 +469,7 @@
                 }
             },
             idNumFilter(id) {
-                if (id) {
+                if(id){
                     let leftId =  id.substring(0, 6)
                     let rightId = id.substring(14)
                     return `${leftId}********${rightId}`
