@@ -383,6 +383,7 @@
                 this.selectFlag=true
             },
             async getAllLight(){
+                this.choseInfoId=[];
                 this.isShowLoading=true
                 await api.light.getAllLight().then((res)=>{
                     console.log(res,'这是请求的数据')
@@ -398,9 +399,9 @@
                     }
                     this.lightList = _.sortBy(this.lightList,'byTime')
                     this.checkList = this.lightList
-                    if(this.lightList.length=== 0){
-                        this.selectFlag=false
-                    }
+
+                    this.selectFlag=false
+
                 }).catch((err)=>{
                     console.log(err)
                 })

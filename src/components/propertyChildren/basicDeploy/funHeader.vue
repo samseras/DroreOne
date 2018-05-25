@@ -17,7 +17,7 @@
             <el-button size="mini"plain v-if="isShowHeader" @click="expotInfo"><i class="el-icon-download"></i>导出</el-button>
             <el-button size="mini"plain v-if="isShowHeader" @click="exportTemplate"><i class="el-icon-download"></i>下载模板</el-button>
             <el-button size="mini"plain @click="deleteCard"><i class="el-icon-delete"></i>删除</el-button>
-            <el-button size="mini"plain @click="fixCard"><i class="el-icon-edit"></i>修改</el-button>
+            <el-button size="mini"plain @click="fixCard" v-if="isShowIcon"><i class="el-icon-edit" ></i>修改</el-button>
         </div>
         <!--<div class="filite" v-if="route.includes('person')">-->
             <!--<el-checkbox-group v-model="filterList" @change="choseType">-->

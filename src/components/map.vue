@@ -794,7 +794,7 @@
                         this.iconList[i].location = [this.iconList[i].longitude,this.iconList[i].latitude]
                         if(this.iconList[i].lightStatus){
                             this.iconList[i].url="/static/img/icon/wifi.png"
-                            this.iconList[i].subtype='Wifi'
+                            this.iconList[i].subtype='wifi'
                             this.iconList[i].status=true
                         } else {
                             this.iconList[i].url="/static/img/icon/wifi_close.png"
@@ -811,12 +811,19 @@
                 await api.wifi.getAllWifi().then((res)=>{
                     this.wifiList=res.devices
                     for(let i=0;i<this.wifiList.length;i++){
+                        if(this.wifiList[i].lightStatus){
+                            this.wifiList[i].url="/static/img/icon/wifi.png"
+                            this.wifiList[i].subtype='wifi'
+                        } else {
+                            this.wifiList[i].url="/static/img/icon/wifi_close.png"
+                            this.wifiList[i].subtype='wifi_close'
+                        }
                         if(this.wifiList[i].id === this.getLocationId){
                             this.wifiList[i].location = [this.wifiList[i].longitude,this.wifiList[i].latitude]
                             var iconedit = new droreMap.icon.Marker({
                                 coordinate: droreMap.trans.transFromWgsToLayer(this.wifiList[i].location),
                                 name: this.wifiList[i].name,
-                                subtype: "droreMapinit",
+                                subtype: this.wifiList[i].subtype,
                                 id: this.wifiList[i].id,
                                 url: "/static/img/location_on.png"
                             });
@@ -835,9 +842,9 @@
                             var icon1 = new droreMap.icon.Marker({
                                 coordinate: droreMap.trans.transFromWgsToLayer(this.wifiList[i].location),
                                 name: this.wifiList[i].name,
-                                subtype: "droreMapinit",
+                                subtype:this.wifiList[i].subtype,
                                 id: this.wifiList[i].id,
-                                url: "http://label.drore.com/gisLabelTabImage/public/defaults/24*24/wifi.png"
+                                url: this.wifiList[i].url
                             });
                             droreMap.icon.addChild(icon1);
                         }
@@ -1696,6 +1703,7 @@
                 }
             },
             menuShow(){
+                console.log(this.menulist)
                 this.buildInfo = this.menulist.data
                 this.visible = true
                 this.title = this.menulist.data.type
@@ -2156,14 +2164,14 @@
     .contextmenu.Monitors_damage i{
         background: url("/static/img/icon/Monitors_damage_big.png") no-repeat;
     }
-    .contextmenu.Wifi i{
-        background: url("/static/img/icon/Wifi_big.png") no-repeat;
+    .contextmenu.wifi i{
+        background: url("/static/img/icon/wifi_big.png") no-repeat;
     }
-    .contextmenu.Wifi_close i{
-        background: url("/static/img/icon/Wifi_close_big.png") no-repeat;
+    .contextmenu.wifi_close i{
+        background: url("/static/img/icon/wifi_close_big.png") no-repeat;
     }
-    .contextmenu.Wifi_damage i{
-        background: url("/static/img/icon/Wifi_damage_big.png") no-repeat;
+    .contextmenu.wifi_damage i{
+        background: url("/static/img/icon/wifi_damage_big.png") no-repeat;
     }
     .contextmenu.Broadcast i{
         background: url("/static/img/icon/guangboshebei_big.png") no-repeat;

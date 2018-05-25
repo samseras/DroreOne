@@ -398,6 +398,7 @@
                 this.selectFlag=true
             },
             async getAllLed(){
+                this.choseInfoId=[];
                 this.isShowLoading=true
                 await api.led.getAllLed().then((res)=>{
                     console.log(res,'这是请求的数据')
@@ -413,9 +414,9 @@
                     }
                     this.ledList = _.sortBy(this.ledList,'byTime')
                     this.checkList = this.ledList
-                    if(this.ledList.length=== 0){
-                        this.selectFlag=false
-                    }
+
+                    this.selectFlag=false
+
                 }).catch((err)=>{
                     console.log(err)
                 })

@@ -65,9 +65,9 @@
                             label="操作">
                             <template slot-scope="scope">
                                 <span @click="showTrashDetail(scope.row, '垃圾桶信息',true)">查看</span>
-                                <sapn class="line">|</sapn>
+                                <span class="line">|</span>
                                 <span @click="fixedInfo(scope.row.id )">编辑</span>
-                                <sapn class="line">|</sapn>
+                                <span class="line">|</span>
                                 <span @click="deletInfo(scope.row.id)">删除</span>
                             </template>
                         </el-table-column>
@@ -254,9 +254,9 @@
                 } else {
                     this.trashList = this.trashList.filter((item,index) => {
                         if (item.dustbinBean.type){
-                            item.dustbinBean.typeName = '固定'
-                        } else {
                             item.dustbinBean.typeName = '临时'
+                        } else {
+                            item.dustbinBean.typeName = '固定'
                         }
                         if (type.includes(item.dustbinBean.typeName)){
                             item.status = true
@@ -394,9 +394,9 @@
                     this.trashList = _.sortBy(this.trashList, 'byTime')
                     this.checkList = this.trashList
                     this.choseInfoId = []
-                    if(this.trashList.length=== 0){
-                        this.selectFlag=false
-                    }
+
+                    this.selectFlag=false
+
                 }).catch(err => {
                     console.log(err)
                     this.isShowLoading = false

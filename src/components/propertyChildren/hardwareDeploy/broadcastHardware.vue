@@ -409,6 +409,7 @@
                 console.log(this.choseInfoId)
             },
             async getAllBroadcast(){
+                this.choseInfoId=[];
                 this.isShowLoading=true
                 await api.broadcast.getAllBroadcast().then((res)=>{
                     console.log(res,'这是请求回来的数据')
@@ -423,9 +424,9 @@
                     }
                     this.broadList = _.sortBy(this.broadList,'byTime')
                     this.checkList = this.broadList
-                    if(this.broadList.length=== 0){
-                        this.selectFlag=false
-                    }
+
+                    this.selectFlag=false
+
                 }).catch((err)=>{
                     console.log(err)
                     this.isShowLoading=false

@@ -393,9 +393,9 @@
                     this.treeList = _.sortBy(this.treeList, 'byTime')
                     this.checkList = this.treeList
                     this.choseInfoId = []
-                    if(this.treeList.length=== 0){
-                        this.selectFlag=false
-                    }
+
+                    this.selectFlag=false
+
                 }).catch(err => {
                     console.log(err, '请求失败')
                     this.isShowLoading = false
