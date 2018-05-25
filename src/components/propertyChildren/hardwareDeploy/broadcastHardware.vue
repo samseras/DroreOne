@@ -14,6 +14,7 @@
                         @toggleList="toggleList"
                         @getAllBroadcast="getAllBroadcast"
                         :listsLength = "broadList.length"
+                        :personListFlag="selectFlag"
                         :choseId="choseInfoId">
                 </Header>
             </div>
@@ -114,6 +115,8 @@
     export default{
         data(){
             return{
+                selectFlag:false,
+                tempSelects:[],
                 key:'',
                 isShowBroadCard:true,
                 visible:false,
@@ -271,16 +274,18 @@
                         type: 'warning'
                     }).then(() => {
                         api.broadcast.deleteBroadcast(this.choseInfoId).then(res =>{
-                            for(let i=0;i<this.choseInfoId.length;i++){
-                                this.broadList=this.broadList.filter((item,index)=>{
-                                    if(item.id===this.choseInfoId[i]){
-                                        this.broadList[index].checked=false
-                                    }
-                                    return item.id !== this.choseInfoId[i]
-                                })
-                            }
+                            // for(let i=0;i<this.choseInfoId.length;i++){
+                            //     this.broadList=this.broadList.filter((item,index)=>{
+                            //         if(item.id===this.choseInfoId[i]){
+                            //             this.broadList[index].checked=false
+                            //         }
+                            //         return item.id !== this.choseInfoId[i]
+                            //     })
+                            // }
+                            this.getAllBroadcast()
                             this.$message.success('删除成功')
                             this.choseInfoId=[]
+                            this.getAllBroadcast()
                         }).catch(err =>{
                             this.$message.error('删除失败,请稍后重试')
                         })
@@ -334,6 +339,7 @@
                 }
             },
             checked(id){
+                this.tempSelects=[];
                 this.broadList = this.broadList.filter(item => {
                     if (item.id === id) {
                         item.checked = item.checked
@@ -347,6 +353,16 @@
                     })
                 }else{
                     this.choseInfoId.push(id)
+                }
+                let that=this;
+                this.broadList.forEach(function(item,i){
+                    (item.checked)&&(that.tempSelects.push(item))
+                })
+                console.log(this.tempSelects)
+                if(this.tempSelects.length===this.broadList.length){
+                    this.selectFlag=true
+                }else{
+                    this.selectFlag=false
                 }
             },
             choseType(type){
@@ -389,6 +405,7 @@
                         return item.checked == false
                     }
                 })
+                this.selectFlag=true
                 console.log(this.choseInfoId)
             },
             async getAllBroadcast(){
@@ -406,6 +423,9 @@
                     }
                     this.broadList = _.sortBy(this.broadList,'byTime')
                     this.checkList = this.broadList
+                    if(this.broadList.length=== 0){
+                        this.selectFlag=false
+                    }
                 }).catch((err)=>{
                     console.log(err)
                     this.isShowLoading=false

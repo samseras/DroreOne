@@ -190,14 +190,15 @@
                     }).then(() => {
                         api.scenic.deleteScenic(this.choseInfoId).then(res => {
                             console.log(res, '删除成功')
-                            for (let i = 0; i < this.choseInfoId.length; i++) {
-                                this.scenicList = this.scenicList.filter((item, index) => {
-                                    if (item.id === this.choseInfoId[i]){
-                                        this.scenicList[index].checked = false
-                                    }
-                                    return item.id !== this.choseInfoId[i]
-                                })
-                            }
+                            // for (let i = 0; i < this.choseInfoId.length; i++) {
+                            //     this.scenicList = this.scenicList.filter((item, index) => {
+                            //         if (item.id === this.choseInfoId[i]){
+                            //             this.scenicList[index].checked = false
+                            //         }
+                            //         return item.id !== this.choseInfoId[i]
+                            //     })
+                            // }
+                            this.getAllScenic()
                             this.$message.success('删除成功')
                             this.choseInfoId = []
                             this.getAllScenic()
@@ -279,6 +280,7 @@
                         return item.checked === false
                     }
                 })
+                this.selectFlag=true
                 console.log(this.choseInfoId, 'opopop')
             },
             async fixInfo (info) {

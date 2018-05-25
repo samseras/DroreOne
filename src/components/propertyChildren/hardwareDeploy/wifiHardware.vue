@@ -12,6 +12,7 @@
                         @searchAnything="searchAnything"
                         :choseId="choseInfoId"
                         :listsLength = "wifiList.length"
+                        :personListFlag="selectFlag"
                         @choseType="choseType"
                         @toggleList="toggleList"
                         @getAllWifi = "getAllWifi">
@@ -120,6 +121,8 @@
     export default{
         data(){
             return{
+                selectFlag:false,
+                tempSelects:[],
                 isShowWifiCard:true,
                 visible:false,
                 wifiList:[
@@ -259,16 +262,18 @@
                         type: 'warning'
                     }).then(() => {
                         api.wifi.deleteWifi(this.choseInfoId).then(res=>{
-                            for(let i=0;i<this.choseInfoId.length;i++){
-                                this.wifiList=this.wifiList.filter((item,index)=>{
-                                    if(item.id === this.choseInfoId[i]){
-                                        this.wifiList[index].checked=false
-                                    }
-                                    return item.id!==this.choseInfoId[i]
-                                })
-                            }
+                            // for(let i=0;i<this.choseInfoId.length;i++){
+                            //     this.wifiList=this.wifiList.filter((item,index)=>{
+                            //         if(item.id === this.choseInfoId[i]){
+                            //             this.wifiList[index].checked=false
+                            //         }
+                            //         return item.id!==this.choseInfoId[i]
+                            //     })
+                            // }
+                            this.getAllWifi()
                             this.$message.success('删除成功')
                             this.choseInfoId=[]
+                            this.getAllWifi()
                         }).catch(err=>{
                             this.$message.error('删除失败，请稍后重试')
                         })
@@ -324,6 +329,7 @@
                 }
             },
             checked(id){
+                this.tempSelects=[];
                 this.wifiList = this.wifiList.filter(item => {
                     if (item.id === id) {
                         item.checked = item.checked
@@ -337,6 +343,16 @@
                     })
                 }else{
                     this.choseInfoId.push(id)
+                }
+                let that=this;
+                this.wifiList.forEach(function(item,i){
+                    (item.checked)&&(that.tempSelects.push(item))
+                })
+                console.log(this.tempSelects)
+                if(this.tempSelects.length===this.wifiList.length){
+                    this.selectFlag=true
+                }else{
+                    this.selectFlag=false
                 }
             },
             choseType(type){
@@ -377,6 +393,7 @@
                     }
                 })
                 console.log(this.choseInfoId)
+                this.selectFlag=true
             },
             async getAllWifi(){
                 this.isShowLoading=true
@@ -393,6 +410,9 @@
                     }
                     this.wifiList = _.sortBy(this.wifiList,'byTime')
                     this.checkList = this.wifiList
+                    if(this.wifiList.length=== 0){
+                        this.selectFlag=false
+                    }
                 }).catch((err)=>{
                     console.log(err)
                 })

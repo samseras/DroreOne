@@ -186,15 +186,16 @@
                     }).then(() => {
                         api.dustbin.deleteDustbin(this.choseInfoId).then(res => {
                             console.log(res, '删除成功')
-                            for (let i = 0; i < this.choseInfoId.length; i++) {
-                                this.trashList = this.trashList.filter((item, index) => {
-                                    if (item.dustbinBean.id === this.choseInfoId[i]){
-                                        this.trashList[index].checked = false
-                                        this.trashList[index].status = false
-                                    }
-                                    return item.status === true
-                                })
-                            }
+                            // for (let i = 0; i < this.choseInfoId.length; i++) {
+                            //     this.trashList = this.trashList.filter((item, index) => {
+                            //         if (item.dustbinBean.id === this.choseInfoId[i]){
+                            //             this.trashList[index].checked = false
+                            //             this.trashList[index].status = false
+                            //         }
+                            //         return item.status === true
+                            //     })
+                            // }
+                            this.getAllTrash()
                             this.$message.success('删除成功')
                             this.choseInfoId = []
                             this.getAllTrash()
@@ -281,6 +282,7 @@
                         return item.checked === false
                     }
                 })
+                this.selectFlag=true
                 console.log(this.choseInfoId, 'opopop')
             },
             async fixInfo (info) {
