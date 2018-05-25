@@ -398,6 +398,7 @@
                 this.selectFlag=true
             },
             async getAllLed(){
+                this.choseInfoId=[];
                 this.isShowLoading=true
                 await api.led.getAllLed().then((res)=>{
                     console.log(res,'这是请求的数据')

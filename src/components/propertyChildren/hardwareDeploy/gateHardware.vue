@@ -391,6 +391,7 @@
                 this.selectFlag=true
             },
             async getAllGate(){
+                this.choseInfoId=[];
                 this.isShowLoading=true
                 await api.gate.getAllGate().then((res)=>{
                     console.log(res,'这是拿到的数据')

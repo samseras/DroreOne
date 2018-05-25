@@ -383,6 +383,7 @@
                 this.selectFlag=true
             },
             async getAllLight(){
+                this.choseInfoId=[];
                 this.isShowLoading=true
                 await api.light.getAllLight().then((res)=>{
                     console.log(res,'这是请求的数据')
