@@ -12,7 +12,7 @@
                 <!--批量编辑-->
                 <div class="alarmContent" v-if="route.includes('alarmcolumn') && isBatchEdit">
                     <p class="name">严重等级：
-                        <el-select  v-model="batchLevel.level" size="mini" class="" placeholder="请选择">
+                        <el-select  v-model="batchEdit.level" size="mini" class="" placeholder="请选择">
                             <el-option
                                 v-for="item in levelInfo"
                                 :key="item.value"
@@ -23,10 +23,10 @@
                     </p>
                 </div>
                 <div v-if="route.includes('alarmcolumn') && !isBatchEdit"  class="alarmContent">
-                    <p class="name">名称：
+                    <p class="name">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称：
                         <el-input type="text" v-model='alarmcolumnInfo.name' class="inputText" :maxlength="15" :disabled='isReadonly'></el-input>
                     </p>
-                    <p class="status">报警柱：
+                    <p class="status">报&nbsp;&nbsp;警&nbsp;&nbsp;柱：
                         <el-select  v-model="alarmcolumnInfo.alarmColumn" size="mini" class="" :disabled='isReadonly' multiple placeholder="请选择">
                             <el-option
                                 v-for="item in statusInfo"
@@ -36,7 +36,7 @@
                             </el-option>
                         </el-select>
                     </p>
-                    <p class="level">严重级别：
+                    <p class="level">严重等级：
                         <el-select  v-model="alarmcolumnInfo.level" size="mini" :disabled='isReadonly' class="" placeholder="请选择">
                             <el-option
                                 v-for="item in levelInfo"
@@ -46,13 +46,15 @@
                             </el-option>
                         </el-select>
                     </p>
-                    <p class="deviceRange">设备范围：
+                    <p class="deviceRange">调度范围：
                         <el-input type="text" v-model='alarmcolumnInfo.deviceRange' class="inputText" :maxlength="15" :disabled='isReadonly'></el-input>
+                        (设备)
                     </p>
-                    <p class="safeRange">人员范围：
+                    <p class="safeRange">调度范围：
                         <el-input type="text"  v-model='alarmcolumnInfo.safeRange' class="inputText" :maxlength="15" :disabled='isReadonly'></el-input>
+                        (安保)
                     </p>
-                    <p class="manager">管理者：
+                    <p class="manager">管&nbsp;理&nbsp;&nbsp;者：
                         <el-select  v-model="alarmcolumnInfo.manager" @change="ownerChange" size="mini" multiple class="" placeholder="请选择" :disabled='isReadonly'>
                             <el-option
                                 v-for="item in eventInfo.owner"
@@ -62,7 +64,7 @@
                             </el-option>
                         </el-select>
                     </p>
-                    <p class="description">描述：
+                    <p class="description">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：<br>
                         <textarea name="" v-model='alarmcolumnInfo.description' cols="30"
                                   rows="5" placeholder="请输入描述信息" :disabled='isReadonly'></textarea >
                     </p>
@@ -70,7 +72,7 @@
 
                 <div class="alarmContent" v-if="route.includes('firefighting') && isBatchEdit">
                     <p class="name">严重等级：
-                        <el-select  v-model="batchLevel.level" size="mini" class="" placeholder="请选择">
+                        <el-select  v-model="batchEdit.level" size="mini" class="" placeholder="请选择">
                             <el-option
                                 v-for="item in levelInfo"
                                 :key="item.value"
@@ -81,11 +83,11 @@
                     </p>
                 </div>
                 <div v-if="route.includes('firefighting') && !isBatchEdit"  class="alarmContent">
-                    <p class="name">名称：
+                    <p class="name">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称：
                         <el-input type="text" v-model='firefightingInfo.name' class="inputText" :maxlength="15" :disabled='isReadonly'></el-input>
                     </p>
 
-                    <p class="level">严重级别：
+                    <p class="level">严重等级：
                         <el-select  v-model="firefightingInfo.level" @change="ownerChange" size="mini" multiple class="" placeholder="请选择" :disabled='isReadonly'>
                             <el-option
                                 v-for="item in levelInfo"
@@ -95,13 +97,15 @@
                             </el-option>
                         </el-select>
                     </p>
-                    <p class="deviceRange">设备范围：
+                    <p class="deviceRange">调度范围：
                         <el-input type="text" v-model='firefightingInfo.deviceRange' class="inputText" :maxlength="15" :disabled='isReadonly'></el-input>
+                        (设备)
                     </p>
-                    <p class="safeRange">人员范围：
+                    <p class="safeRange">调度范围：
                         <el-input type="text"  v-model='firefightingInfo.safeRange' class="inputText" :maxlength="15" :disabled='isReadonly'></el-input>
+                        (安保)
                     </p>
-                    <p class="manager">管理者：
+                    <p class="manager">管&nbsp;理&nbsp;&nbsp;者：
                         <el-select  v-model="firefightingInfo.manager" @change="ownerChange" size="mini" multiple class="" placeholder="请选择" :disabled='isReadonly'>
                             <el-option
                                 v-for="item in eventInfo.owner"
@@ -111,7 +115,7 @@
                             </el-option>
                         </el-select>
                     </p>
-                    <p class="description">描述：
+                    <p class="description">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：<br>
                         <textarea name="" v-model='firefightingInfo.description' cols="30"
                                   rows="5" placeholder="请输入描述信息" :disabled='isReadonly'></textarea >
                     </p>
@@ -119,7 +123,7 @@
 
                 <div class="alarmContent" v-if="route.includes('crossborder') && isBatchEdit">
                     <p class="name">严重等级：
-                        <el-select  v-model="batchLevel.level" size="mini" class="" placeholder="请选择">
+                        <el-select  v-model="batchEdit.level" size="mini" class="" placeholder="请选择">
                             <el-option
                                 v-for="item in levelInfo"
                                 :key="item.value"
@@ -130,11 +134,11 @@
                     </p>
                 </div>
                 <div v-if="route.includes('crossborder') && !isBatchEdit"  class="alarmContent">
-                    <p class="name">名称：
+                    <p class="name">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称：
                         <el-input type="text" v-model='crossborderInfo.name' class="inputText" :maxlength="15" :disabled='isReadonly'></el-input>
                     </p>
 
-                    <p class="level">严重级别：
+                    <p class="level">严重等级：
                         <el-select  v-model="crossborderInfo.level" @change="ownerChange" size="mini" multiple class="" placeholder="请选择" :disabled='isReadonly'>
                             <el-option
                                 v-for="item in levelInfo"
@@ -144,13 +148,15 @@
                             </el-option>
                         </el-select>
                     </p>
-                    <p class="deviceRange">设备范围：
+                    <p class="deviceRange">调度范围：
                         <el-input type="text" v-model='crossborderInfo.deviceRange' class="inputText" :maxlength="15" :disabled='isReadonly'></el-input>
+                        (设备)
                     </p>
-                    <p class="safeRange">人员范围：
+                    <p class="safeRange">调度范围：
                         <el-input type="text"  v-model='crossborderInfo.safeRange' class="inputText" :maxlength="15" :disabled='isReadonly'></el-input>
+                        (安保)
                     </p>
-                    <p class="manager">管理者：
+                    <p class="manager">管&nbsp;理&nbsp;&nbsp;者：
                         <el-select  v-model="crossborderInfo.manager" @change="ownerChange" size="mini" multiple class="" placeholder="请选择" :disabled='isReadonly'>
                             <el-option
                                 v-for="item in eventInfo.owner"
@@ -160,7 +166,7 @@
                             </el-option>
                         </el-select>
                     </p>
-                    <p class="description">描述：
+                    <p class="description">描&nbsp;&nbsp;&nbsp;&nbsp;述：<br>
                         <textarea name="" v-model='crossborderInfo.description' cols="30"
                                   rows="5" placeholder="请输入描述信息" :disabled='isReadonly'></textarea >
                     </p>
@@ -168,7 +174,7 @@
 
                 <div class="alarmContent" v-if="route.includes('offtrack') && isBatchEdit">
                     <p class="name">严重等级：
-                        <el-select  v-model="batchLevel.level" size="mini" class="" placeholder="请选择">
+                        <el-select  v-model="batchEdit.level" size="mini" class="" placeholder="请选择">
                             <el-option
                                 v-for="item in levelInfo"
                                 :key="item.value"
@@ -179,7 +185,7 @@
                     </p>
                 </div>
                 <div v-if="route.includes('offtrack') && !isBatchEdit"  class="alarmContent">
-                    <p class="name">名称：
+                    <p class="name">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称：
                         <el-input type="text" v-model='offtrackInfo.name' class="inputText" :maxlength="15" :disabled='isReadonly'></el-input>
                     </p>
                     <p class="patrolScheme">关联计划：
@@ -192,7 +198,7 @@
                             </el-option>
                         </el-select>
                     </p>
-                    <p class="level">严重级别：
+                    <p class="level">严重等级：
                         <el-select  v-model="offtrackInfo.level" @change="ownerChange" size="mini" multiple class="" placeholder="请选择" :disabled='isReadonly'>
                             <el-option
                                 v-for="item in levelInfo"
@@ -204,11 +210,13 @@
                     </p>
                     <p class="divergeTime">偏离时长：
                         <el-input type="text" v-model='offtrackInfo.divergeTime' class="inputText" :maxlength="15" :disabled='isReadonly'></el-input>
+                        (分钟)
                     </p>
                     <p class="divergeValue">偏离阈值：
                         <el-input type="text"  v-model='offtrackInfo.divergeValue' class="inputText" :maxlength="15" :disabled='isReadonly'></el-input>
+                        (米)
                     </p>
-                    <p class="manager">管理者：
+                    <p class="manager">管&nbsp;理&nbsp;&nbsp;者：
                         <el-select  v-model="offtrackInfo.manager" @change="ownerChange" size="mini" multiple class="" placeholder="请选择" :disabled='isReadonly'>
                             <el-option
                                 v-for="item in eventInfo.owner"
@@ -218,7 +226,7 @@
                             </el-option>
                         </el-select>
                     </p>
-                    <p class="description">描述：
+                    <p class="description">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：<br>
                         <textarea name="" v-model='offtrackInfo.description' cols="30"
                                   rows="5" placeholder="请输入描述信息" :disabled='isReadonly'></textarea >
                     </p>
@@ -226,7 +234,7 @@
 
                 <div class="alarmContent" v-if="route.includes('overlimit') && isBatchEdit">
                     <p class="name">严重等级：
-                        <el-select  v-model="batchLevel.level" size="mini" class="" placeholder="请选择">
+                        <el-select  v-model="batchEdit.level" size="mini" class="" placeholder="请选择">
                             <el-option
                                 v-for="item in levelInfo"
                                 :key="item.value"
@@ -237,7 +245,7 @@
                     </p>
                 </div>
                 <div v-if="route.includes('overlimit') && !isBatchEdit"  class="alarmContent">
-                    <p class="name">名称：
+                    <p class="name">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称：
                         <el-input type="text" v-model='overlimitInfo.name' class="inputText" :maxlength="15" :disabled='isReadonly'></el-input>
                     </p>
                     <p class="associatDevice">关联设备：
@@ -250,7 +258,7 @@
                             </el-option>
                         </el-select>
                     </p>
-                    <p class="level">严重级别：
+                    <p class="level">严重等级：
                         <el-select  v-model="overlimitInfo.level" @change="ownerChange" size="mini" multiple class="" placeholder="请选择" :disabled='isReadonly'>
                             <el-option
                                 v-for="item in levelInfo"
@@ -262,8 +270,9 @@
                     </p>
                     <p class="trafficValue">客流阈值：
                         <el-input type="text" v-model='overlimitInfo.trafficValue' class="inputText" :maxlength="15" :disabled='isReadonly'></el-input>
+                        (人)
                     </p>
-                    <p class="manager">管理者：
+                    <p class="manager">管&nbsp;理&nbsp;&nbsp;者：
                         <el-select  v-model="overlimitInfo.manager" @change="ownerChange" size="mini" multiple class="" placeholder="请选择" :disabled='isReadonly'>
                             <el-option
                                 v-for="item in eventInfo.owner"
@@ -273,7 +282,7 @@
                             </el-option>
                         </el-select>
                     </p>
-                    <p class="description">描述：
+                    <p class="description">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：<br>
                         <textarea name="" v-model='overlimitInfo.description' cols="30"
                                   rows="5" placeholder="请输入描述信息" :disabled='isReadonly'></textarea >
                     </p>
@@ -281,7 +290,7 @@
 
                 <div class="alarmContent" v-if="route.includes('waterlevel') && isBatchEdit">
                     <p class="name">严重等级：
-                        <el-select  v-model="batchLevel.level" size="mini" class="" placeholder="请选择">
+                        <el-select  v-model="batchEdit.level" size="mini" class="" placeholder="请选择">
                             <el-option
                                 v-for="item in levelInfo"
                                 :key="item.value"
@@ -292,7 +301,7 @@
                     </p>
                 </div>
                 <div v-if="route.includes('waterlevel') && !isBatchEdit"  class="alarmContent">
-                    <p class="name">名称：
+                    <p class="name">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称：
                         <el-input type="text" v-model='waterlevelInfo.name' class="inputText" :maxlength="15" :disabled='isReadonly'></el-input>
                     </p>
                     <p class="associatDevice">关联设备：
@@ -305,7 +314,7 @@
                             </el-option>
                         </el-select>
                     </p>
-                    <p class="level">严重级别：
+                    <p class="level">严重等级：
                         <el-select  v-model="waterlevelInfo.level" @change="ownerChange" size="mini" multiple class="" placeholder="请选择" :disabled='isReadonly'>
                             <el-option
                                 v-for="item in levelInfo"
@@ -317,11 +326,13 @@
                     </p>
                     <p class="upperLimit">水位上限：
                         <el-input type="text" v-model='waterlevelInfo.upperLimit' class="inputText" :maxlength="15" :disabled='isReadonly'></el-input>
+                        (米)
                     </p>
                     <p class="lowerLimit">水位下限：
                         <el-input type="text" v-model='waterlevelInfo.lowerLimit' class="inputText" :maxlength="15" :disabled='isReadonly'></el-input>
+                        (米)
                     </p>
-                    <p class="manager">管理者：
+                    <p class="manager">管&nbsp;理&nbsp;&nbsp;者：
                         <el-select  v-model="waterlevelInfo.manager" @change="ownerChange" size="mini" multiple class="" placeholder="请选择" :disabled='isReadonly'>
                             <el-option
                                 v-for="item in eventInfo.owner"
@@ -331,7 +342,7 @@
                             </el-option>
                         </el-select>
                     </p>
-                    <p class="description">描述：
+                    <p class="description">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：<br>
                         <textarea name="" v-model='waterlevelInfo.description' cols="30"
                                   rows="5" placeholder="请输入描述信息" :disabled='isReadonly'></textarea >
                     </p>
@@ -339,7 +350,7 @@
 
                 <div class="alarmContent" v-if="route.includes('condition') && isBatchEdit">
                     <p class="name">严重等级：
-                        <el-select  v-model="batchLevel.level" size="mini" class="" placeholder="请选择">
+                        <el-select  v-model="batchEdit.level" size="mini" class="" placeholder="请选择">
                             <el-option
                                 v-for="item in levelInfo"
                                 :key="item.value"
@@ -350,20 +361,20 @@
                     </p>
                 </div>
                 <div v-if="route.includes('condition') && !isBatchEdit"  class="alarmContent">
-                    <p class="name">名称：
+                    <p class="name">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称：
                         <el-input type="text" v-model='conditionInfo.name' class="inputText" :maxlength="15" :disabled='isReadonly'></el-input>
                     </p>
-                    <p class="pointerType">类型：
+                    <p class="pointerType">指标类型：
                         <el-select  v-model="conditionInfo.pointerType" @change="ownerChange" size="mini" class="" placeholder="请选择" :disabled='isReadonly'>
                             <el-option
-                                v-for="item in levelInfo"
+                                v-for="item in type"
                                 :key="item.value"
                                 :label="item.label"
                                 :value="item.value">
                             </el-option>
                         </el-select>
                     </p>
-                    <p class="source">来源：
+                    <p class="source">来&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;源：
                         <el-select  v-model="conditionInfo.source" @change="ownerChange" size="mini" multiple class="" placeholder="请选择" :disabled='isReadonly'>
                             <el-option
                                 v-for="item in levelInfo"
@@ -383,7 +394,7 @@
                             </el-option>
                         </el-select>
                     </p>
-                    <p class="level">严重级别：
+                    <p class="level">严重等级：
                         <el-select  v-model="conditionInfo.level" @change="ownerChange" size="mini" multiple class="" placeholder="请选择" :disabled='isReadonly'>
                             <el-option
                                 v-for="item in levelInfo"
@@ -399,7 +410,7 @@
                     <p class="lowerThreshold">阈值下限：
                         <el-input type="text" v-model='conditionInfo.lowerThreshold' class="inputText" :maxlength="15" :disabled='isReadonly'></el-input>
                     </p>
-                    <p class="manager">管理者：
+                    <p class="manager">管&nbsp;理&nbsp;&nbsp;者：
                         <el-select  v-model="conditionInfo.manager" @change="ownerChange" size="mini" multiple class="" placeholder="请选择" :disabled='isReadonly'>
                             <el-option
                                 v-for="item in eventInfo.owner"
@@ -409,7 +420,7 @@
                             </el-option>
                         </el-select>
                     </p>
-                    <p class="description">描述：
+                    <p class="description">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：<br>
                         <textarea name="" v-model='conditionInfo.description' cols="30"
                                   rows="5" placeholder="请输入描述信息" :disabled='isReadonly'></textarea >
                     </p>
@@ -431,12 +442,13 @@
         data () {
             return{
                 route:'',
-                batchLevel:{
-                    level:''
+                batchEdit:{
+                    level:'',
+                    status:''
                 },
                 alarmcolumnInfo:{
                     batchEdit:{
-                        batchLevel:''
+                        batchEdit:''
                     },
                     name:'',
                     alarmColumn:[],
@@ -515,6 +527,25 @@
                         label:'低'
                     }
                 ],
+                type:[
+                    {
+                        value:'1',
+                        label:'PM2.5'
+                    },
+                    {
+                        value:'2',
+                        label:'温度'
+                    },
+                    {
+                        value:'3',
+                        label:'湿度'
+                    },
+                    {
+                        value:'4',
+                        label:'风力'
+                    }
+
+                ],
                 statusInfo:[
                     {
                         value:'1',
@@ -581,21 +612,44 @@
                 this.$emit('closeDialog')
             },
             saveDialog(){
+                let objArray = [];
                 if (this.route.includes('alarmcolumn')){
                     if(this.isBatchEdit){   //批量编辑
                         console.log(this.choseInfoId);
-                        console.log(this.alarmcolumnInfo.batchEdit.batchLevel)
-                        this.$emit('saveInfo');
+
+                        objArray = this.choseInfoId;
+                        if(!this.batchEdit.level){
+                            return;
+                        }
+                        objArray.forEach((item,index)=>{
+                            item.level = this.batchEdit.level;
+                        })
+
+                        console.log(objArray)
+
+                        this.$emit('saveInfo',objArray);
 
                     }else{  //单个编辑或查看
 
                         console.log(this.alarmcolumnInfo);
-                        this.$emit('saveInfo',this.alarmcolumnInfo);
+                        objArray.push(this.alarmcolumnInfo)
+                        this.$emit('saveInfo',objArray);
                     }
                 }else if(this.route.includes('firefighting')){
                     if(this.isBatchEdit){   //批量编辑
                         console.log(this.choseInfoId);
-                        this.$emit('saveInfo');
+
+                        objArray = this.choseInfoId;
+                        if(!this.batchEdit.level){
+                            return;
+                        }
+                        objArray.forEach((item,index)=>{
+                            item.level = this.batchEdit.level;
+                        })
+
+                        console.log(objArray)
+
+                        this.$emit('saveInfo',objArray);
 
                     }else{  //单个编辑或查看
                         this.$emit('saveInfo');
@@ -643,7 +697,7 @@
             console.log(this.Info,'  Info')
             if (this.route.includes('alarmcolumn')) {
                 this.alarmcolumnInfo = this.Info;
-                // this.alarmcolumnInfo.batchEdit.batchLevel = "1";
+                // this.alarmcolumnInfo.batchEdit.batchEdit = "1";
             } else if(this.route.includes('firefighting')) {
                 // this.getAllBroadcast()
                 this.firefightingInfo = this.Info;
@@ -918,6 +972,7 @@
                 width: 100%;
                 padding: rem(5) rem(10);
                 box-sizing: border-box;
+                text-align: right;
                 border-top: 1px solid #ccc;
                 .el-button{
                     padding: 0;

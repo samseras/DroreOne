@@ -84,7 +84,7 @@
                             placeholder="选择日期">
                         </el-date-picker>
                     </p>
-                    <p class="phoneNum person-driv">驾驶人员：
+                    <!--<p class="phoneNum person-driv">驾驶人员：
                         <el-select v-model="boatCar.driverId" placeholder="请选择" :disabled="isDisabled">
                             <el-option
                                 v-for="item in driverList"
@@ -93,7 +93,7 @@
                                 :value="item.id">
                             </el-option>
                         </el-select>
-                    </p>
+                    </p>-->
                     <p class="phoneNum person-driv">联系电话：
                     <!--<p class="phoneNum person-driv" v-if="isDisabled">联系电话：-->
                         <el-input type="text"v-model="boatCar.driverPhone" :disabled="isDisabled"></el-input>
@@ -218,9 +218,9 @@
                         <el-input type="text"v-model="scenic.scenicspotBean.capacity" :disabled="isDisabled"></el-input>
                     </p>
 
-                    <p class="phoneNum">当前人数：
+                    <!--<p class="phoneNum">当前人数：
                         <el-input type="text"v-model="scenic.scenicspotBean.currentNum" :disabled="isDisabled"></el-input>
-                    </p>
+                    </p>-->
                     <p class="phoneNum">
                         <s>位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置：</s>
                         <span :class="{ps:isDisabled}">{{scenic.location}}</span><i class="el-icon-location-outline" @click="showMapDialog"></i>
@@ -262,9 +262,9 @@
                         <el-input type="text"v-model="shop.businessBean.capacity" :disabled="isDisabled"></el-input>
                     </p>
 
-                    <p class="phoneNum">当前人数：
+                    <!--<p class="phoneNum">当前人数：
                         <el-input type="text"v-model="shop.businessBean.currentNum" :disabled="isDisabled"></el-input>
-                    </p>
+                    </p>-->
                     <p class="phoneNum">
                         <s>位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置：</s>
                         <span :class="{ps:isDisabled}">{{shop.location}}</span><i class="el-icon-location-outline" @click="showMapDialog"></i>
@@ -309,12 +309,12 @@
                             <el-option label="紧张" value="紧张"></el-option>
                         </el-select>
                     </p>
-                    <p class="idNum">空余车位：
+                    <!--<p class="idNum">空余车位：
                         <el-input type="text"v-model="park.parkingBean.surplusNum" :disabled="isDisabled"></el-input>
                     </p>
                     <p class="phoneNum">车位总数：
                         <el-input type="text"v-model="park.parkingBean.capacity" :disabled="isDisabled"></el-input>
-                    </p>
+                    </p>-->
                     <p class="phoneNum">
                         <s>位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置：</s>
                         <span :class="{ps:isDisabled}">{{park.location}}</span>
@@ -589,12 +589,12 @@
                     jobId: this.$route.params.id,
                 },
                 boatCar: {
-                    driverId: '',
+                    /*driverId: '',*/
                     driverPhone: '',
                     boatCarName:'',
                     vehicle: {
                         capacity:'',
-                        driverId: "",
+                        /*driverId: "",*/
                         gpsDeviceId: "",
                         maintenanceDate:"",
                         maintenanceStatus:'',
@@ -627,7 +627,7 @@
                 scenic: {
                     scenicspotBean: {
                         capacity: '',
-                        currentNum: '',
+                       /* currentNum: '',*/
                         name: '',
                     },
                     regionId: '',
@@ -638,7 +638,7 @@
                 shop: {
                     businessBean: {
                         capacity: '',
-                        currentNum: '',
+                        /*currentNum: '',*/
                         name: '',
                         state: '',
                         businessTypeId: ''
@@ -652,9 +652,9 @@
                         type: '',
                         name: '',
                         state: '',
-                        currentNum: '',
-                        surplusNum: '',
-                        capacity: '',
+                        currentNum: ''
+                        /*surplusNum: '',
+                        capacity: '',*/
                     },
                     location: '',
                     regionId: '',
@@ -844,10 +844,10 @@
                         this.$message.error('请填写正确的电话号码')
                         return
                     }
-                    if (!(newInfo.idNum && newInfo.idNum !== '') || !idReg.test(newInfo.idNum)) {
+                   /* if (!(newInfo.idNum && newInfo.idNum !== '') || !idReg.test(newInfo.idNum)) {
                         this.$message.error('请填写正确的身份证号码')
                         return
-                    }
+                    }*/
                 } else if(this.route.includes('boat')) {
                     newInfo = this.boatCar;
                     console.log(newInfo);
@@ -855,7 +855,7 @@
                         !(newInfo.vehicle.serialNum && newInfo.vehicle.serialNum.trim() !== '') ||  //编号改为名称
                         !(newInfo.vehicle.hasOwnProperty("maintenanceStatus") && integerreg.test(newInfo.vehicle.maintenanceStatus)) ||
                         !(newInfo.vehicle.purchaseDate && newInfo.vehicle.purchaseDate !== '') ||
-                        !(newInfo.vehicle.maintenanceDate && newInfo.vehicle.maintenanceDate !== '') ||
+                       /* !(newInfo.vehicle.maintenanceDate && newInfo.vehicle.maintenanceDate !== '') ||*/
                         //!(newInfo.driverId  && newInfo.driverId !== '') ||   //驾驶员信息
                         !(newInfo.vehicle.model && newInfo.vehicle.model.trim() !== '')
                     ){
@@ -887,11 +887,11 @@
                         return
                     }
 
-                    if(!(newInfo.dustbinBean.dustbinCount && newInfo.dustbinBean.dustbinCount !== '') ||
+                    /*if(!(newInfo.dustbinBean.dustbinCount && newInfo.dustbinBean.dustbinCount !== '') ||
                         !intreg.test(newInfo.dustbinBean.dustbinCount)){
                         this.$message.error('个数只能输入数字！')
                         return
-                    }
+                    }*/
                 } else if(this.route.includes('indicator')) {
                     newInfo = this.indicator
                     if(!(newInfo.signboardBean.hasOwnProperty("type") && integerreg.test(newInfo.signboardBean.type)) ||
@@ -916,17 +916,17 @@
                         return
                     }
 
-                    if(!(newInfo.scenicspotBean.capacity && newInfo.scenicspotBean.capacity !== '') ||
+                    /*if(!(newInfo.scenicspotBean.capacity && newInfo.scenicspotBean.capacity !== '') ||
                         !intreg.test(newInfo.scenicspotBean.capacity)){
                         this.$message.error('容量只能输入数字！')
                         return
-                    }
+                    }*/
 
-                    if(!(newInfo.scenicspotBean.currentNum && newInfo.scenicspotBean.currentNum !== '') ||
+                    /*if(!(newInfo.scenicspotBean.currentNum && newInfo.scenicspotBean.currentNum !== '') ||
                         !intreg.test(newInfo.scenicspotBean.currentNum)){
                         this.$message.error('当前人数只能输入数字！')
                         return
-                    }
+                    }*/
 
                 } else if(this.route.includes('shop')) {
                     newInfo = this.shop
@@ -941,17 +941,17 @@
                         return
                     }
 
-                    if(!(newInfo.businessBean.capacity && newInfo.businessBean.capacity !== '') ||
+                    /*if(!(newInfo.businessBean.capacity && newInfo.businessBean.capacity !== '') ||
                         !intreg.test(newInfo.businessBean.capacity)){
                         this.$message.error('容量只能输入数字！')
                         return
-                    }
+                    }*/
 
-                    if(!(newInfo.businessBean.currentNum && newInfo.businessBean.currentNum !== '') ||
+                    /*if(!(newInfo.businessBean.currentNum && newInfo.businessBean.currentNum !== '') ||
                         !intreg.test(newInfo.businessBean.currentNum)){
                         this.$message.error('当前人数只能输入数字！')
                         return
-                    }
+                    }*/
 
                 } else if(this.route.includes('park')) {
                     newInfo = this.park
@@ -967,17 +967,17 @@
                         return
                     }
 
-                    if(!(newInfo.parkingBean.surplusNum && newInfo.parkingBean.surplusNum !== '') ||
+                    /*if(!(newInfo.parkingBean.surplusNum && newInfo.parkingBean.surplusNum !== '') ||
                         !intreg.test(newInfo.parkingBean.surplusNum)){
                         this.$message.error('空余车位只能输入数字！')
                         return
-                    }
+                    }*/
 
-                    if(!(newInfo.parkingBean.capacity && newInfo.parkingBean.capacity !== '') ||
+                    /*if(!(newInfo.parkingBean.capacity && newInfo.parkingBean.capacity !== '') ||
                         !intreg.test(newInfo.parkingBean.capacity)){
                         this.$message.error('车位总数只能输入数字！')
                         return
-                    }
+                    }*/
 
 
                 } else if(this.route.includes('toilet')) {
@@ -1023,11 +1023,11 @@
                     newInfo = this.tree
                     if(!(newInfo.plant.name && newInfo.plant.name.trim() !== '') ||
                         !(newInfo.plant.genera && newInfo.plant.genera !== '') ||
-                        !(newInfo.plant.height && newInfo.plant.height !== '') ||
-                        !(newInfo.plant.plantYear && newInfo.plant.plantYear !== '') ||
+                        /*!(newInfo.plant.height && newInfo.plant.height !== '') ||
+                        !(newInfo.plant.plantYear && newInfo.plant.plantYear !== '') ||*/
                         !(newInfo.location && newInfo.location !== '') ||
-                        !(newInfo.regionId && newInfo.regionId !== '') ||
-                        !(newInfo.plant.description && newInfo.plant.description.trim() !== '')
+                        !(newInfo.regionId && newInfo.regionId !== '')
+                        /*!(newInfo.plant.description && newInfo.plant.description.trim() !== '')*/
                     ){
 
                         this.$message.error('请输入完整信息')
@@ -1038,12 +1038,12 @@
                     newInfo = this.build
 
                     if(!(newInfo.building.name && newInfo.building.name.trim() !== '') ||
-                        !(newInfo.building.layers && newInfo.building.layers !== '') ||
+                        /*!(newInfo.building.layers && newInfo.building.layers !== '') ||
                         !(newInfo.building.height && newInfo.building.height !== '') ||
-                        !(newInfo.building.buildYear && newInfo.building.buildYear !== '') ||
+                        !(newInfo.building.buildYear && newInfo.building.buildYear !== '') ||*/
                         !(newInfo.location && newInfo.location !== '') ||
-                        !(newInfo.regionId && newInfo.regionId !== '') ||
-                        !(newInfo.building.description && newInfo.building.description.trim() !== '')
+                        !(newInfo.regionId && newInfo.regionId !== '')
+                        /*!(newInfo.building.description && newInfo.building.description.trim() !== '')*/
                     ){
 
                         this.$message.error('请输入完整信息')
@@ -1331,8 +1331,7 @@
         }
         .ms-person .el-textarea__inner{
             font-size:.75rem;
-            line-height:1.875rem;
-            color:red;
+            font-family: Arial;
         }
         .el-input.is-disabled .el-input__inner,.el-textarea.is-disabled .el-textarea__inner{
             background-color:transparent;
@@ -1342,6 +1341,7 @@
         }
         .detailDialog .card .boatCardContent .ms .des{
             height:53px;
+            float:left
         }
     }
 </style>
@@ -1759,6 +1759,9 @@
                         width:rem(66)
                     }
                     .des-person{
+                        float:left
+                    }
+                    .des{
                         float:left
                     }
                     div{

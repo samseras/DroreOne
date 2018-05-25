@@ -11,6 +11,7 @@
                         @choseType = 'choseType'
                         @selectedAll = 'selectedAll'
                         @fixedInfo = 'fixedInfo'
+                        :personListFlag="selectFlag"
                         @searchAnything="searchAnything">
                 </Header>
             </div>
@@ -42,8 +43,16 @@
                             </template>
                         </el-table-column>
                         <el-table-column
-                            prop="description"
                             label="描述">
+                            <template slot-scope="scope">
+                                <div class="box" v-if="scope.row.description">
+                                    <div class="bottom">
+                                        <el-tooltip class="item" effect="light" :content=scope.row.description placement="bottom">
+                                            <el-button>{{scope.row.description}}</el-button>
+                                        </el-tooltip>
+                                    </div>
+                                </div>
+                            </template>
                         </el-table-column>
                         <el-table-column
                             label="操作">
@@ -97,6 +106,8 @@
         name: "roat-deploy",
         data(){
             return{
+                selectFlag:false,
+                tempSelects:[],
                 isShowRoatCard: true,
                 checkList: [],
                 filterList: [],
@@ -165,6 +176,7 @@
                                 })
                             }
                             this.choseInfoId = []
+                            this.getAllRoat()
                         }).catch(err => {
                             this.$message.error('删除失败，请稍后重试')
                             console.log(err)
@@ -187,6 +199,7 @@
                 }
             },
             checked (id) {
+                this.tempSelects=[];
                 this.roatList = this.roatList.filter(item => {
                     if (item.id === id) {
                         item.checked = item.checked
@@ -199,6 +212,16 @@
                     })
                 } else {
                     this.choseInfoId.push(id)
+                }
+                let that=this;
+                this.roatList.forEach(function(item,i){
+                    (item.checked)&&(that.tempSelects.push(item))
+                })
+                console.log(this.tempSelects)
+                if(this.tempSelects.length===this.roatList.length){
+                    this.selectFlag=true
+                }else{
+                    this.selectFlag=false
                 }
             },
             choseType (type) {
@@ -327,6 +350,9 @@
                     }
                     this.checkList = this.roatList
                     this.choseInfoId = []
+                    if(this.roatList.length=== 0){
+                        this.selectFlag=false
+                    }
                 }).catch(err => {
                     console.log(err, '请求失败')
                 })
@@ -363,7 +389,22 @@
         }
     }
 </script>
-
+<style>
+    .roatDeploy .box .el-button{
+        border:1px solid transparent
+    }
+    .roatDeploy .box .el-button span{
+        display:inline-block;
+        width:300px;
+        white-space: nowrap ;
+        overflow: hidden ;
+        text-overflow: ellipsis ;
+    }
+    .roatDeploy .el-tooltip__popper {
+        width:300px;
+        word-break:break-all;
+    }
+</style>
 <style lang="scss" scoped type="text/scss">
     .roatDeploy{
         width: 100%;

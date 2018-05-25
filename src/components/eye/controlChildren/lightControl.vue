@@ -12,7 +12,7 @@
                             inactive-color="#949494">
                         </el-switch>
                     </li>
-                    <li><img src="../../../../static/img/search.png" class="search" alt=""/></li>
+                    <!--<li><img src="../../../../static/img/search.png" class="search" alt=""/></li>-->
                 </ul>
             </div>
             <div class="middle">
@@ -81,6 +81,7 @@
         },
         methods: {
             treeShow(){
+                console.log(this.getcontroleLight)
                 if(this.getcontroleLight){
                     this.lightCheckout=this.getcontroleLight
                 }
@@ -145,7 +146,7 @@
             },
             async getAllLight(){
                 await api.light.getAllLight().then(res =>{
-                    console.log(res,'这是请求的数据ddd')
+                    // console.log(res,'这是请求的数据ddd')
                     this.lightList=res.devices
                     this.number=this.lightList.length
                     let regionIdList = []
@@ -158,6 +159,7 @@
                     }
                     this.lightList.forEach(item => {
                         item.label = item.name
+                        item.type = 'light'
                         if (item.lightStatus) {
                             item.icon = '../../../static/img/light_big.svg'
                         } else {
@@ -167,6 +169,7 @@
                             regionIdList.push(item.regionId)
                             let obj = {
                                 label: item.regionName,
+                                type:'light',
                                 id: item.regionId,
                                 children:[]
                             }

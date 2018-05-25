@@ -8,14 +8,13 @@
             <el-button size="mini"plain @click="addNewInfo"><i class="el-icon-circle-plus"></i>添加</el-button>
             <el-checkbox v-model="isSelected" @change="selectedAll">全选</el-checkbox>
             <el-button size="mini"plain @click="deleteCard"><i class="el-icon-delete"></i>删除</el-button>
-            <el-button size="mini"plain @click="batchEdit"><i class="el-icon-edit"></i>编辑</el-button>
+            <el-button size="mini"plain @click="batchEdit"><i class="el-icon-edit"></i>批量修改</el-button>
         </div>
 
         <div class="page">
             <span>当前第1页/共8页</span>
             <span class="upPage"><</span>
             <span class="downPage">></span>
-            <span class="listForm"><i class="el-icon-tickets"></i></span>
         </div>
     </div>
 </template>

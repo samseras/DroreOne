@@ -11,6 +11,7 @@
                         @choseType = 'choseType'
                         :choseId="choseInfoId"
                         :listsLength="shopList.length"
+                        :personListFlag="selectFlag"
                         @selectedAll = 'selectedAll'
                         @fixedInfo = 'fixedInfo'
                         @searchAnything="searchAnything"
@@ -53,11 +54,13 @@
                             prop="businessBean.capacity"
                             label="容量">
                         </el-table-column>
-                        <el-table-column
+
+                        <!--<el-table-column
                             width="100"
                             prop="businessBean.currentNum"
                             label="当前人数">
-                        </el-table-column>
+                        </el-table-column>-->
+
                         <el-table-column
                             prop="location"
                             label="位置">
@@ -92,8 +95,8 @@
                         </div>
                         <div class="specificInfo">
                             <p class="name">所属区域：<span>{{item.regionName}}</span></p>
+                            <p class="idNum">商铺类型：<span>{{item.businessTypeName}}</span></p>
                             <p class="sex">状&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;态：<span>{{item.businessBean.state}}</span></p>
-                            <p class="idNum">当前人数：<span>{{item.businessBean.currentNum}}</span></p>
                             <p class="phoneNum">最大容量：<span>{{item.businessBean.capacity}}</span></p>
                         </div>
                     </div>
@@ -123,6 +126,8 @@
         name: "shop-deploy",
         data () {
             return {
+                selectFlag:false,
+                tempSelects:[],
                 isShowShopCard: true,
                 checkList: [],
                 filterList: [],
@@ -235,6 +240,7 @@
                             }
                             this.$message.success('删除成功')
                             this.choseInfoId = []
+                            this.getAllShop()
                         }).catch(err => {
                             console.log(err)
                             this.$message.error('删除失败，请稍后重试')
@@ -254,6 +260,7 @@
                 }
             },
             checked (id) {
+                this.tempSelects=[];
                 this.shopList = this.shopList.filter(item => {
                     if (item.id === id) {
                         item.checked = item.checked
@@ -268,6 +275,16 @@
                     this.choseInfoId.push(id)
                 }
                 console.log(this.choseInfoId)
+                let that=this;
+                this.shopList.forEach(function(item,i){
+                    (item.checked)&&(that.tempSelects.push(item))
+                })
+                console.log(this.tempSelects)
+                if(this.tempSelects.length===this.shopList.length){
+                    this.selectFlag=true
+                }else{
+                    this.selectFlag=false
+                }
             },
             choseType (type) {
                 console.log(type)
@@ -308,6 +325,7 @@
                 let longitude= info.location.substring(0, index)
                 let latitude = info.location.substring(index + 1)
                 let shopObj = {
+                    description:info.description,
                     id: info.businessBean.id,
                     name: info.businessBean.name,
                     capacity: info.businessBean.capacity,
@@ -345,7 +363,7 @@
                 let longitude= info.location.substring(0, index)
                 let latitude = info.location.substring(index + 1)
                 let shopObj = {
-                    //description:info.description,
+                    description:info.description,
                     name: info.businessBean.name,
                     capacity: info.businessBean.capacity,
                     regionId: info.regionId,
@@ -406,6 +424,7 @@
                         this.shopList[i].checked = false
                         this.shopList[i].status = true
                         this.shopList[i].id = this.shopList[i].businessBean.id
+                        this.shopList[i].description = this.shopList[i].businessBean.description
                         this.shopList[i].location = `${this.shopList[i].longitude},${this.shopList[i].latitude}`
                         this.shopList[i].businessBean.currentNum = this.currentNum
                         if (this.shopList[i].businessBean.capacity == 0 ){
@@ -423,6 +442,9 @@
                     this.shopList = _.sortBy(this.shopList, 'byTime')
                     this.checkList = this.shopList
                     this.choseInfoId = []
+                    if(this.shopList.length=== 0){
+                        this.selectFlag=false
+                    }
                 }).catch(err => {
                     console.log(err)
                     this.isShowLoading = false

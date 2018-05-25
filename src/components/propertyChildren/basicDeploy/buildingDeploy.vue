@@ -12,6 +12,7 @@
                         @selectedAll = 'selectedAll'
                         :choseId="choseInfoId"
                         :listsLength="buildList.length"
+                        :personListFlag="selectFlag"
                         @fixedInfo = 'fixedInfo'
                         @searchAnything="searchAnything"
                         @getAllBuild="getAllBuild">
@@ -118,6 +119,8 @@
         name: "build-deploy",
         data(){
             return{
+                selectFlag:false,
+                tempSelects:[],
                 isShowToiletCard: true,
                 checkList: [],
                 filterList: [],
@@ -202,6 +205,7 @@
                             }
                             this.$message.success('删除成功')
                             this.choseInfoId = []
+                            this.getAllBuild()
                         }).catch(err => {
                             console.log('删除失败')
                             this.$message.error('删除失败，请稍后重试')
@@ -222,6 +226,7 @@
                 }
             },
             checked (id) {
+                this.tempSelects=[];
                 this.buildList = this.buildList.filter(item => {
                     if (item.id === id) {
                         item.checked = item.checked
@@ -236,6 +241,16 @@
                     this.choseInfoId.push(id)
                 }
                 console.log(this.choseInfoId)
+                let that=this;
+                this.buildList.forEach(function(item,i){
+                    (item.checked)&&(that.tempSelects.push(item))
+                })
+                console.log(this.tempSelects)
+                if(this.tempSelects.length===this.buildList.length){
+                    this.selectFlag=true
+                }else{
+                    this.selectFlag=false
+                }
             },
             choseType (type) {
                 console.log(type)
@@ -385,6 +400,9 @@
                     this.buildList = _.sortBy(this.buildList,'byTime')
                     this.checkList = this.buildList
                     this.choseInfoId = []
+                    if(this.buildList.length=== 0){
+                        this.selectFlag=false
+                    }
                 }).catch(err => {
                     console.log(err, '请求失败')
                     this.isShowLoading = false

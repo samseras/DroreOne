@@ -32,11 +32,16 @@
                         </el-table-column>
                         <el-table-column
                             prop="deviceRange"
-                            label="设备调度范围">
+                            label="设备调度范围(m)">
                         </el-table-column>
                         <el-table-column
                             prop="safeRange"
-                            label="安保调度范围">
+                            label="安保调度范围(m)">
+                        </el-table-column>
+                        <el-table-column
+                            sortable
+                            prop="level"
+                            label="严重等级">
                         </el-table-column>
                         <el-table-column
                             sortable

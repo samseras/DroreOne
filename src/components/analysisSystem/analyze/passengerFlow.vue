@@ -90,7 +90,7 @@
                 this.chartW = this.chartR - this.chartL;
                 console.log(this.chartH,"this.chartH")
                 console.log(this.chartW,"this.chartW")
-            },
+             },
             fullscreen(){
                 this.fullHeight = window.screen.availHeight;
                 // this.fullHeight = window.innerHeight;
@@ -115,7 +115,7 @@
                     // $($(".echatsContent")[i]).prev(".echatsTitle").css({"width":this.fullWidth*changeW-14+"px"});
                 };
                 this.moveChart();
-            },
+             },
             showList(){
                 if(!this.checkFull()){
                     let that = this;
@@ -129,7 +129,7 @@
                     this.chartB = this.$refs.content.getBoundingClientRect().bottom;
                     this.chartL = this.$refs.content.getBoundingClientRect().left;
                     this.chartR = this.$refs.content.getBoundingClientRect().right;
-                    this.chartH = this.chartB-this.chartT-40;
+                    this.chartH = this.chartB-this.chartT-42;
                     this.chartW = this.chartR - 220;
                     console.log(this.chartT,"this.chartT")
                     console.log(this.chartB,"this.chartB")
@@ -969,7 +969,7 @@
           '$route' () {
               if (this.$route.path.includes('analyze')) {
                   this.echatList = []  //清空dom 内容
-                  // this.getDom();
+                   this.getDom();
                   this.getEchats()
                   window.SETTIMER = setInterval(this.getRefreshTime,this.getRefresh)
                   console.log(this.radarDom, 'opopopopopopopopopop')

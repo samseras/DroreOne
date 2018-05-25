@@ -11,6 +11,7 @@
                         @choseType = 'choseType'
                         :choseId="choseInfoId"
                         :listsLength="toiletList.length"
+                        :personListFlag="selectFlag"
                         @selectedAll = 'selectedAll'
                         @fixedInfo = 'fixedInfo'
                         @searchAnything="searchAnything"
@@ -105,6 +106,8 @@
         name: "toilet-deploy",
         data(){
             return{
+                selectFlag:false,
+                tempSelects:[],
                 isShowToiletCard: true,
                 checkList: [],
                 filterList: [],
@@ -186,6 +189,7 @@
                             console.log(res, '删除成功')
                             this.$message.success('删除成功')
                             this.choseInfoId = []
+                            this.getAllToilet()
                         }).catch(err => {
                             console.log('删除失败')
                             this.$message.error('删除失败，请稍后重试')
@@ -206,6 +210,7 @@
                 }
             },
             checked (id) {
+                this.tempSelects=[];
                 this.toiletList = this.toiletList.filter(item => {
                     if (item.id === id) {
                         item.checked = item.checked
@@ -218,6 +223,16 @@
                     })
                 } else {
                     this.choseInfoId.push(id)
+                }
+                let that=this;
+                this.toiletList.forEach(function(item,i){
+                    (item.checked)&&(that.tempSelects.push(item))
+                })
+                console.log(this.tempSelects)
+                if(this.tempSelects.length===this.toiletList.length){
+                    this.selectFlag=true
+                }else{
+                    this.selectFlag=false
                 }
             },
             choseType (type) {
@@ -261,6 +276,7 @@
                 let longitude = info.location.substring(0, index)
                 let latitude = info.location.substring(index + 1)
                 let toiletObj = {
+                    description:info.description,
                     id: info.toiletBean.id,
                     name: info.toiletBean.name,
                     regionId: info.regionId,
@@ -295,7 +311,7 @@
                 let longitude = info.location.substring(0, index)
                 let latitude = info.location.substring(index + 1)
                 let toiletObj = {
-                    //description:info.description,
+                    description:info.description,
                     name: info.toiletBean.name,
                     regionId: info.regionId,
                     latitude: latitude,
@@ -353,6 +369,7 @@
                         this.toiletList[i].status = true
                         this.toiletList[i].location = `${this.toiletList[i].longitude},${this.toiletList[i].latitude}`
                         this.toiletList[i].id = this.toiletList[i].toiletBean.id
+                        this.toiletList[i].description = this.toiletList[i].toiletBean.description
                         this.toiletList[i].state = '正常'
                         this.toiletList[i].byTime = -(new Date(this.toiletList[i].toiletBean.modifyTime)).getTime()
                     }
@@ -361,6 +378,9 @@
                     this.toiletList = _.sortBy(this.toiletList, 'byTime')
                     this.checkList = this.toiletList
                     this.choseInfoId = []
+                    if(this.toiletList.length=== 0){
+                        this.selectFlag=false
+                    }
                 }).catch(err => {
                     console.log(err, '请求失败')
                     this.isShowLoading = false

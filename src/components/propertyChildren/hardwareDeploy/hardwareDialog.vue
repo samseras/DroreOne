@@ -1365,10 +1365,9 @@
     .cropper-disabled .cropper-drag-box, .cropper-disabled .cropper-face, .cropper-disabled .cropper-line, .cropper-disabled .cropper-point {
         cursor: not-allowed
     }
-    .el-input.is-disabled .el-input__inner,.el-textarea.is-disabled .el-textarea__inner{
-        background-color:transparent;
-    }
+
 </style>
+
 <style lang="scss" type="text/scss">
     .hardwareDialog{
         width: 100%;
@@ -1545,5 +1544,16 @@
     }
 
 </style>
+<style>
 
+    .el-input.is-disabled .el-input__inner,.el-textarea.is-disabled .el-textarea__inner{
+            background-color:transparent;
+        }
+    .ms .el-textarea__inner{
+            font-size:.75rem;
+            font-family: Arial;
+        }
+
+
+</style>
 

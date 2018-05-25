@@ -12,6 +12,7 @@
                         :choseId="choseInfoId"
                         @selectedAll = 'selectedAll'
                         :listsLength="scenicList.length"
+                        :personListFlag="selectFlag"
                         @fixedInfo = 'fixedInfo'
                         @searchAnything="searchAnything"
                         @getAllScenic="getAllScenic">
@@ -53,11 +54,13 @@
                             prop="scenicspotBean.capacity"
                             label="容量">
                         </el-table-column>
-                        <el-table-column
+
+                        <!--<el-table-column
                             width="100"
                             prop="scenicspotBean.currentNum"
                             label="当前人数">
-                        </el-table-column>
+                        </el-table-column>-->
+
                         <el-table-column
                             prop="location"
                             label="位置">
@@ -86,7 +89,7 @@
                         <div class="specificInfo">
                             <p class="name">所属区域：<span>{{item.regionName}}</span></p>
                             <p class="sex">状&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;态：<span>{{item.scenicspotBean.status}}</span></p>
-                            <p class="idNum">当前人数：<span>{{item.scenicspotBean.currentNum}}</span></p>
+                            <!--<p class="idNum">当前人数：<span>{{item.scenicspotBean.currentNum}}</span></p>-->
                             <p class="phoneNum">最大容量：<span>{{item.scenicspotBean.capacity}}</span></p>
                         </div>
                     </div>
@@ -116,6 +119,8 @@
         name: "scenic-deploy",
         data () {
             return {
+                selectFlag:false,
+                tempSelects:[],
                 isShowScenicCard: true,
                 checkList: [],
                 filterList: [],
@@ -195,6 +200,7 @@
                             }
                             this.$message.success('删除成功')
                             this.choseInfoId = []
+                            this.getAllScenic()
                         }).catch(err => {
                             console.log('删除失败')
                             this.$message.error('删除失败，请稍后重试')
@@ -215,6 +221,7 @@
                 }
             },
             checked (id) {
+                this.tempSelects=[];
                 this.scenicList = this.scenicList.filter(item => {
                     if (item.id === id) {
                         item.checked = item.checked
@@ -227,6 +234,16 @@
                     })
                 } else {
                     this.choseInfoId.push(id)
+                }
+                let that=this;
+                this.scenicList.forEach(function(item,i){
+                    (item.checked)&&(that.tempSelects.push(item))
+                })
+                console.log(this.tempSelects)
+                if(this.tempSelects.length===this.scenicList.length){
+                    this.selectFlag=true
+                }else{
+                    this.selectFlag=false
                 }
             },
             choseType (type) {
@@ -269,6 +286,7 @@
                 let longitude = info.location.substring(0, index)
                 let latitude = info.location.substring(index + 1)
                 let scenicObj = {
+                    description:info.description,
                     id: info.scenicspotBean.id,
                     name: info.scenicspotBean.name,
                     capacity: info.scenicspotBean.capacity,
@@ -302,7 +320,7 @@
                 let longitude = info.location.substring(0, index)
                 let latitude = info.location.substring(index + 1)
                 let scenicObj = {
-                    //description:info.description,
+                    description:info.description,
                     name: info.scenicspotBean.name,
                     capacity: info.scenicspotBean.capacity,
                     regionId: info.regionId,
@@ -360,6 +378,7 @@
                         this.scenicList[i].checked = false
                         this.scenicList[i].status = true
                         this.scenicList[i].id = this.scenicList[i].scenicspotBean.id
+                        this.scenicList[i].description = this.scenicList[i].scenicspotBean.description
                         this.scenicList[i].location = `${this.scenicList[i].longitude},${this.scenicList[i].latitude}`
                         this.scenicList[i].scenicspotBean.currentNum = this.currentNum
                         // scenicspotBean.status
@@ -378,6 +397,9 @@
                     this.scenicList = _.sortBy(this.scenicList, 'byTime')
                     this.checkList = this.scenicList
                     this.choseInfoId = []
+                    if(this.scenicList.length=== 0){
+                        this.selectFlag=false
+                    }
                 }).catch((err)=> {
                     console.log(err)
                     this.isShowLoading = false
