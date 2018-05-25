@@ -254,14 +254,15 @@
                         type: 'warning'
                     }).then(() => {
                         api.gate.deleteGate(this.choseInfoId).then(res=>{
-                            for(let i=0;i<this.choseInfoId.length;i++){
-                                this.gateList=this.gateList.filter((item,index)=>{
-                                    if(item.id===this.choseInfoId[i]){
-                                        this.gateList[index].checked=false
-                                    }
-                                    return item.id!==this.choseInfoId[i]
-                                })
-                            }
+                            // for(let i=0;i<this.choseInfoId.length;i++){
+                            //     this.gateList=this.gateList.filter((item,index)=>{
+                            //         if(item.id===this.choseInfoId[i]){
+                            //             this.gateList[index].checked=false
+                            //         }
+                            //         return item.id!==this.choseInfoId[i]
+                            //     })
+                            // }
+                            this.getAllGate()
                             this.$message.success('删除成功')
                             this.choseInfoId=[]
                             this.getAllGate()

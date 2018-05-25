@@ -262,14 +262,15 @@
                         type: 'warning'
                     }).then(() => {
                         api.wifi.deleteWifi(this.choseInfoId).then(res=>{
-                            for(let i=0;i<this.choseInfoId.length;i++){
-                                this.wifiList=this.wifiList.filter((item,index)=>{
-                                    if(item.id === this.choseInfoId[i]){
-                                        this.wifiList[index].checked=false
-                                    }
-                                    return item.id!==this.choseInfoId[i]
-                                })
-                            }
+                            // for(let i=0;i<this.choseInfoId.length;i++){
+                            //     this.wifiList=this.wifiList.filter((item,index)=>{
+                            //         if(item.id === this.choseInfoId[i]){
+                            //             this.wifiList[index].checked=false
+                            //         }
+                            //         return item.id!==this.choseInfoId[i]
+                            //     })
+                            // }
+                            this.getAllWifi()
                             this.$message.success('删除成功')
                             this.choseInfoId=[]
                             this.getAllWifi()

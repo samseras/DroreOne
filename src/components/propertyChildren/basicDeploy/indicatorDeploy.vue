@@ -181,14 +181,15 @@
                     }).then(() => {
                         api.indicator.deleteIndicator(this.choseInfoId).then(res => {
                             console.log(res, '删除成功')
-                            for (let i = 0; i < this.choseInfoId.length; i++) {
-                                this.indicatorList = this.indicatorList.filter((item, index) => {
-                                    if (item.id === this.choseInfoId[i]){
-                                        this.indicatorList[index].checked = false
-                                    }
-                                    return item.id !== this.choseInfoId[i]
-                                })
-                            }
+                            // for (let i = 0; i < this.choseInfoId.length; i++) {
+                            //     this.indicatorList = this.indicatorList.filter((item, index) => {
+                            //         if (item.id === this.choseInfoId[i]){
+                            //             this.indicatorList[index].checked = false
+                            //         }
+                            //         return item.id !== this.choseInfoId[i]
+                            //     })
+                            // }
+                            this.getAllIndicator()
                             this.$message.success('删除成功')
                             this.choseInfoId = []
                             this.getAllIndicator()

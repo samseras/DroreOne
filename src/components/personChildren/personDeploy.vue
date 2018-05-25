@@ -237,14 +237,15 @@
                     }).then(() => {
                         api.person.deletePerson(this.choseInfoId).then(res => {
                             console.log(res, '删除成功')
-                            for (let i = 0; i < this.choseInfoId.length; i++) {
-                                this.personList = this.personList.filter((item, index) => {
-                                    if (item.id === this.choseInfoId[i]) {
-                                        this.personList[index].checked = false
-                                    }
-                                    return item.id !== this.choseInfoId[i]
-                                })
-                            }
+                            // for (let i = 0; i < this.choseInfoId.length; i++) {
+                            //     this.personList = this.personList.filter((item, index) => {
+                            //         if (item.id === this.choseInfoId[i]) {
+                            //             this.personList[index].checked = false
+                            //         }
+                            //         return item.id !== this.choseInfoId[i]
+                            //     })
+                            // }
+                            this.getAllPerson()
                             this.$message.success('删除成功')
                             this.choseInfoId = []
                             this.getAllPerson()
@@ -472,7 +473,6 @@
                     let rightId = id.substring(14)
                     return `${leftId}********${rightId}`
                 }
-
             }
         },
         created() {

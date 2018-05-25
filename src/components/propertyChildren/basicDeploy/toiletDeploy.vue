@@ -178,14 +178,15 @@
                         //alert(choseInfoId)
                         api.toilet.deleteToilet(this.choseInfoId).then(res => {
 
-                            for (let i = 0; i < this.choseInfoId.length; i++) {
-                                this.toiletList = this.toiletList.filter((item, index) => {
-                                    if (item.toiletBean.id === this.choseInfoId[i]){
-                                        this.toiletList[index].checked = false
-                                    }
-                                    return item.toiletBean.id !== this.choseInfoId[i]
-                                })
-                            }
+                            // for (let i = 0; i < this.choseInfoId.length; i++) {
+                            //     this.toiletList = this.toiletList.filter((item, index) => {
+                            //         if (item.toiletBean.id === this.choseInfoId[i]){
+                            //             this.toiletList[index].checked = false
+                            //         }
+                            //         return item.toiletBean.id !== this.choseInfoId[i]
+                            //     })
+                            // }
+                            this.getAllToilet()
                             console.log(res, '删除成功')
                             this.$message.success('删除成功')
                             this.choseInfoId = []
