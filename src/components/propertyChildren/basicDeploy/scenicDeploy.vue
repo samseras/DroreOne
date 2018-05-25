@@ -12,6 +12,7 @@
                         :choseId="choseInfoId"
                         @selectedAll = 'selectedAll'
                         :listsLength="scenicList.length"
+                        :personListFlag="selectFlag"
                         @fixedInfo = 'fixedInfo'
                         @searchAnything="searchAnything"
                         @getAllScenic="getAllScenic">
@@ -118,6 +119,8 @@
         name: "scenic-deploy",
         data () {
             return {
+                selectFlag:false,
+                tempSelects:[],
                 isShowScenicCard: true,
                 checkList: [],
                 filterList: [],
@@ -197,6 +200,7 @@
                             }
                             this.$message.success('删除成功')
                             this.choseInfoId = []
+                            this.getAllScenic()
                         }).catch(err => {
                             console.log('删除失败')
                             this.$message.error('删除失败，请稍后重试')
@@ -217,6 +221,7 @@
                 }
             },
             checked (id) {
+                this.tempSelects=[];
                 this.scenicList = this.scenicList.filter(item => {
                     if (item.id === id) {
                         item.checked = item.checked
@@ -229,6 +234,16 @@
                     })
                 } else {
                     this.choseInfoId.push(id)
+                }
+                let that=this;
+                this.scenicList.forEach(function(item,i){
+                    (item.checked)&&(that.tempSelects.push(item))
+                })
+                console.log(this.tempSelects)
+                if(this.tempSelects.length===this.scenicList.length){
+                    this.selectFlag=true
+                }else{
+                    this.selectFlag=false
                 }
             },
             choseType (type) {
@@ -382,6 +397,9 @@
                     this.scenicList = _.sortBy(this.scenicList, 'byTime')
                     this.checkList = this.scenicList
                     this.choseInfoId = []
+                    if(this.scenicList.length=== 0){
+                        this.selectFlag=false
+                    }
                 }).catch((err)=> {
                     console.log(err)
                     this.isShowLoading = false

@@ -7,7 +7,8 @@
             <div class="funcTitle">
                 <Header @deletInfo = "deletInfo"
                         @selectedAll = 'selectedAll'
-                        @batchEdit = 'batchEdit'>
+                        @batchEdit = 'batchEdit'
+                        @choseType='choseType'>
                 </Header>
             </div>
             <div class="personList" v-loading="isShowloading">
@@ -32,7 +33,7 @@
                         <el-table-column
                             sortable
                             prop="type"
-                            label="类型">
+                            label="指标类型">
                         </el-table-column>
                         <el-table-column
                             prop="source"
@@ -40,7 +41,7 @@
                         </el-table-column>
                         <el-table-column
                             sortable
-                            prop="status"
+                            prop="status.name"
                             label="状态">
                         </el-table-column>
                         <el-table-column
@@ -51,15 +52,15 @@
                         <el-table-column
                             sortable
                             prop="level"
-                            label="等级">
+                            label="严重等级">
                         </el-table-column>
                         <el-table-column
-                            prop="leader"
+                            prop="owner.name"
                             label="负责人">
                         </el-table-column>
                         <el-table-column
                             sortable
-                            prop="phone"
+                            prop="owner.tel"
                             label="负责人电话">
                         </el-table-column>
                         <el-table-column label="操作" width="200">
@@ -100,22 +101,37 @@
                         id:'sos001',
                         type:'水位监测传感器1',
                         source:'报警柱001',
-                        status:'新告警',
+                        status: {
+                            id:'1',
+                            name :'新告警'
+                        },
                         occuredTime:'2018-05-11 12:20:39',
                         level:'高',
-                        leader:'徐一项',
-                        phone:'18672019008'
+                        owner:{
+                            id:"1",
+                            name:'徐一项',
+                            tel:'18672019008'
+                        },
+
 
                     },
                     {
                         id:'sos002',
                         type:'水位监测传感器1',
                         source:'报警柱002',
-                        status:'处理中',
+                        status: {
+                            id:'2',
+                            name:'处理中'
+
+                        },
                         occuredTime:'2017-01-09 19:33:01',
                         level:'高',
-                        leader:'张三',
-                        phone:'13000100190'
+                        owner:{
+                            id:"2",
+                            name:'张三',
+                            tel:'13000100190'
+                        },
+
                     }
                     ],
                 visible: false,
@@ -130,6 +146,19 @@
             }
         },
         methods: {
+            choseType(type){
+                console.log(type)
+                let dataList = this.warningEventList;
+                let tempList = [];
+                this.warningEventList = this.warningEventList.filter((item,index)=>{
+                    if(type.includes(item.status.id)){
+                        tempList.push(item);
+                    }
+                })
+
+               return this.warningEventList = tempList;
+
+            },
             closeDialog () {
                 this.visible = false
             },

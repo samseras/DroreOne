@@ -27,7 +27,7 @@
 </template>
 
 <script>
-    import {mapMutations} from 'vuex'
+    import {mapMutations,mapGetters} from 'vuex'
     export default {
         props:['Info','regionId','lightList','number','fault','title','lightInfo','lightCheckout'],
         data() {
@@ -114,15 +114,23 @@
             filterText(val) {
                 this.$refs.tree.filter(val);
             },
+            getSearchInfo () {
+                if (this.getSearchInfo.id) {
+                    this.$refs.tree.setCheckedKeys([this.getSearchInfo.id])
+                }
+            },
         },
         computed: {
-
+            ...mapGetters(['getSearchInfo'])
         },
         mounted () {
             let _this = this;
             setTimeout(function() {
                 _this.treeALL();
             }, 100)
+            if (this.getSearchInfo.id) {
+                this.$refs.tree.setCheckedKeys([this.getSearchInfo.id])
+            }
         },
 
     };

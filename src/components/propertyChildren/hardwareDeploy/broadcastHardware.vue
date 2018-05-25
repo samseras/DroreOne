@@ -190,7 +190,7 @@
                 let longitude = info.location.substring(0, index)
                 let latitude = info.location.substring(index + 1)
                 let broadObj=[{
-                    typeId: 2,
+                    typeId: 1,
                     id:info.id,
                     positionType:info.positionType,
                     name:info.name,
@@ -297,7 +297,7 @@
                 let longitude = info.location.substring(0, index)
                 let latitude = info.location.substring(index + 1)
                 let broadObj=[{
-                    typeId: 2,
+                    typeId: 1,
                     positionType:info.positionType,
                     name:info.name,
                     model:info.model,

@@ -11,7 +11,7 @@
             <div class="alarmEventContent">
                 <!--批量编辑-->
                 <div class="alarmContent" v-if="isBatchEdit">
-                    <p class="level">等&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 级：
+                    <p class="level">严重等级：
                     <el-select  v-model="eventInfo.level" size="mini" class="" placeholder="请选择">
                         <el-option
                             v-for="item in levelInfo"
@@ -37,19 +37,19 @@
                     <p class="sex">编&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 号：
                         <el-input type="text" v-model='eventInfo.id' class="inputText" :maxlength="15" :readonly="true"></el-input>
                     </p>
-                    <p class="type">类&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 型：
+                    <p class="type">指标类型：
                         <el-input type="text" v-model='eventInfo.type' class="inputText" :maxlength="15" :readonly='true'></el-input>
                     </p>
                     <p class="source">来&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 源：
                         <el-input type="text"  v-model='eventInfo.source' class="inputText" :maxlength="15" :readonly='true'></el-input>
                     </p>
                     <p class="time">发生时间：
-                        <el-input type="text"  v-model='eventInfo.occurTime' class="inputText" :maxlength="15" :readonly='true'></el-input>
+                        <el-input type="text"  v-model='eventInfo.occuredTime' class="inputText" :maxlength="15" :readonly='true'></el-input>
                     </p>
-                    <p class="role">告警规则：
+                    <p class="role">关联规则：
                         <el-input type="text" v-model='eventInfo.role' class="inputText" :maxlength="15" :readonly='true'></el-input>
                     </p>
-                    <p class="level">等&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;级：
+                    <p class="level">严重等级：
                         <el-select  v-model="eventInfo.level" size="mini" class="" placeholder="请选择" :disabled="isReadonly">
                             <el-option
                                 v-for="item in levelInfo"
@@ -59,20 +59,19 @@
                             </el-option>
                         </el-select>
                     </p>
-                    <p class="owner">负责人：
+                    <p class="owner">负责人员：
                         <el-select  v-model="eventInfo.owner.name" @change="ownerChange" size="mini" class="" placeholder="请选择" :disabled="isReadonly">
                             <el-option
                                 v-for="item in eventInfo.owner"
                                 :key="item.val"
-                                :label="item.name"
-                                :value="item.val">
+                                :label="item.name">{{item.name}}
                             </el-option>
                         </el-select>
                     </p>
                     <p class="tel">电话号码：
                         <el-input type="text" v-model="eventInfo.tel" class="inputText" :maxlength="15" :disabled="isReadonly"></el-input>
                     </p>
-                    <p class="status">状&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 态：
+                    <p class="status">状&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 态:
                         <el-select  v-model="eventInfo.status" size="mini" class="" placeholder="请选择" :disabled="isReadonly">
                             <el-option
                                 v-for="item in statusInfo"
@@ -82,19 +81,15 @@
                             </el-option>
                         </el-select>
                     </p>
-                    <p class="description">描述：
+                    <p class="description">处理备注：<br>
                         <textarea name="" v-model='eventInfo.description' cols="30"
                                   rows="5" placeholder="请输入描述信息" :disabled="isReadonly"></textarea >
                     </p>
-                    <!--<div class="uploadFile">-->
-                        <!--<p class="attachment">附件：</p>-->
-                        <!--<div class="uploadContent"></div>>-->
-                    <!--</div>-->
-                    <div class="attachment">附件：
+                    <div class="attachment">附&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;件：
                         <div v-loading="isShowLoading" class="showFilelist" >
                             <div class="uploadlist" v-for="(item,idx) in fileList" :id="item.id" :key="item.id">
                                 <el-checkbox v-model="item.checked" @change="checked(item.id)" class="checkBoxBtn"></el-checkbox>
-                                <span>{{item.title}}</span>
+                                <span class="downloadThis" @click="downloadFile(item.title)">{{item.title}}</span>
                             </div>
                         </div>
                         <div class="uploadContent">
@@ -131,7 +126,7 @@
      import VueAplayer from 'vue-aplayer'
      import api from '@/api'
     export default {
-        props: ['visible','isReadonly','isBatchEdit','choseInfoId'],
+        props: ['visible','isReadonly','isBatchEdit','choseInfoId','Info'],
         data () {
             return{
                 levelInfo:[
@@ -218,7 +213,7 @@
                     id:'',
                     type:'',
                     source:'',
-                    occurTime:'',
+                    occuredTime:'',
                     role:'',
                     level:'',
                     owner:[
@@ -242,12 +237,20 @@
         methods: {
             ownerChange(val){
                 console.log(val);
-                console.log(this);
+                console.log(this.eventInfo);
+                this.eventInfo.owner.forEach((item,index)=>{
+                    if(item.id == val){
+                        this.eventInfo.tel =  item.tel;
+                    }
+                });
                 let vm = this;
                 // switch(val){
                 //     case 0:
                 //         vm.
                 // }
+            },
+            downloadFile(val){
+                console.log(val)
             },
             closeDialog () {
                 this.$emit('closeDialog')
@@ -308,30 +311,33 @@
                 // }
             },
             deleteFile(){
+                console.log(this.selectFileList);
+                console.log(this.fileList);
                 if(this.selectFileList.length > 0){
-                    this.$confirm('此操作将永久删除该数据, 是否继续?', '提示', {
-                        confirmButtonText: '确定',
-                        cancelButtonText: '取消',
-                        type: 'warning'
-                    }).then(() => {
 
                         var ids = this.selectFileList.map(function(val){
                             return val.id;
                         });
-                        api.alarm.deletFile(ids).then(res => {
-                            console.log(res, '删除成功')
-                            this.$message.success('删除成功')
-                            this.fileList = this.fileList.filter(item => {
-                                return item.id !== id
-                            })
-                        }).catch(err => {
-                            this.$message.error('删除失败，请稍后重试')
-                            console.log(err)
-                            this.choseInfoId = []
+                        let idList = this.fileList.map((item,index)=>{
+                            return item.id;
                         })
-                    }).catch(() => {
-                        this.$message.info('取消删除')
-                    })
+                        this.selectFileList.forEach((item,index)=>{
+                            if(this.idList.includes(item)){
+
+                            }
+                        });
+                        // api.alarm.deletFile(ids).then(res => {
+                        //     console.log(res, '删除成功')
+                        //     this.$message.success('删除成功')
+                        //     this.fileList = this.fileList.filter(item => {
+                        //         return item.id !== id
+                        //     })
+                        // }).catch(err => {
+                        //     this.$message.error('删除失败，请稍后重试')
+                        //     console.log(err)
+                        //     this.choseInfoId = []
+                        // })
+
                 }else{
                     this.$message.error('请选择要删除的文件！');
                 }
@@ -376,7 +382,10 @@
 
         },
         async created () {
-            // this.getAllFile()
+            console.log(this.Info);
+            console.log(this.eventInfo);
+            // this.eventInfo = this.Info;
+
         },
         components : {
 
@@ -555,6 +564,13 @@
                          div {
                              display:inline-block;
                          }
+                    }
+                    .downloadThis{
+                        cursor:pointer;
+                    }
+                    .downloadThis:hover{
+                        color:blue;
+                        text-decoration: underline;
                     }
                 }
                 .processLog{
