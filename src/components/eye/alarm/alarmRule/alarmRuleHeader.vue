@@ -9,6 +9,8 @@
             <el-checkbox v-model="isSelected" @change="selectedAll">全选</el-checkbox>
             <el-button size="mini"plain @click="deleteCard"><i class="el-icon-delete"></i>删除</el-button>
             <el-button size="mini"plain @click="batchEdit"><i class="el-icon-edit"></i>批量修改</el-button>
+            <el-button size="mini"plain @click="batchStart"><i class="el-icon-circle-check"></i>批量启用</el-button>
+            <el-button size="mini"plain @click="batchStop"><i class="el-icon-circle-close"></i>批量停用</el-button>
         </div>
 
         <div class="page">
@@ -44,6 +46,12 @@
             },
             batchEdit () {
                 this.$emit('batchEdit','batchEdit')
+            },
+            batchStart(){
+                this.$emit('batchStart')
+            },
+            batchStop(){
+                this.$emit('batchStop')
             },
             addNewInfo(){
                 this.$emit('addNewInfo')

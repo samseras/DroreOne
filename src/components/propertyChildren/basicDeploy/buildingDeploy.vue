@@ -195,14 +195,15 @@
                     }).then(() => {
                         api.build.deleteBuild(this.choseInfoId).then(res => {
                             console.log(res, '删除成功')
-                            for (let i = 0; i < this.choseInfoId.length; i++) {
-                                this.buildList = this.buildList.filter((item, index) => {
-                                    if (item.building.id === this.choseInfoId[i]){
-                                        this.buildList[index].checked = false
-                                    }
-                                    return item.building.id !== this.choseInfoId[i]
-                                })
-                            }
+                            // for (let i = 0; i < this.choseInfoId.length; i++) {
+                            //     this.buildList = this.buildList.filter((item, index) => {
+                            //         if (item.building.id === this.choseInfoId[i]){
+                            //             this.buildList[index].checked = false
+                            //         }
+                            //         return item.building.id !== this.choseInfoId[i]
+                            //     })
+                            // }
+                            this.getAllBuild()
                             this.$message.success('删除成功')
                             this.choseInfoId = []
                             this.getAllBuild()
@@ -285,6 +286,7 @@
                         return item.checked === false
                     }
                 })
+                this.selectFlag=true
                 console.log(this.choseInfoId, 'opopop')
             },
             async fixInfo (info) {
@@ -400,9 +402,9 @@
                     this.buildList = _.sortBy(this.buildList,'byTime')
                     this.checkList = this.buildList
                     this.choseInfoId = []
-                    if(this.buildList.length=== 0){
-                        this.selectFlag=false
-                    }
+
+                    this.selectFlag=false
+
                 }).catch(err => {
                     console.log(err, '请求失败')
                     this.isShowLoading = false

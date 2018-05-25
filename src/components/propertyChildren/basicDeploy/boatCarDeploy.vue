@@ -207,14 +207,15 @@
                     }).then(() => {
                         api.boat.deleteBoat(this.choseInfoId).then(res => {
                             console.log(res, '删除成功')
-                            for (let i = 0; i < this.choseInfoId.length; i++) {
-                                this.boatCarList = this.boatCarList.filter((item, index) => {
-                                    if (item.id === this.choseInfoId[i]){
-                                        this.boatCarList[index].checked = false
-                                    }
-                                    return item.id !== this.choseInfoId[i]
-                                })
-                            }
+                            // for (let i = 0; i < this.choseInfoId.length; i++) {
+                            //     this.boatCarList = this.boatCarList.filter((item, index) => {
+                            //         if (item.id === this.choseInfoId[i]){
+                            //             this.boatCarList[index].checked = false
+                            //         }
+                            //         return item.id !== this.choseInfoId[i]
+                            //     })
+                            // }
+                            this.getAllBoat()
                             this.$message.success('删除成功')
                             this.choseInfoId = []
                             this.getAllBoat()
@@ -299,6 +300,7 @@
                         return item.checked === false
                     }
                 })
+                this.selectFlag=true
                 console.log(this.choseInfoId, 'opopop')
                 this.selectAll(this.choseInfoId)
             },
@@ -409,9 +411,9 @@
                     console.log(this.boatCarList);
                     this.checkList = this.boatCarList
                     this.choseInfoId = []
-                    if(this.boatCarList.length=== 0){
+                    /*if(this.boatCarList.length=== 0){*/
                         this.selectFlag=false
-                    }
+                    /*}*/
                 }).catch(err => {
                     console.log(err, '请求失败')
                     this.isShowLoading = false

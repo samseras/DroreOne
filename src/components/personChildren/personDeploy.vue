@@ -237,14 +237,15 @@
                     }).then(() => {
                         api.person.deletePerson(this.choseInfoId).then(res => {
                             console.log(res, '删除成功')
-                            for (let i = 0; i < this.choseInfoId.length; i++) {
-                                this.personList = this.personList.filter((item, index) => {
-                                    if (item.id === this.choseInfoId[i]) {
-                                        this.personList[index].checked = false
-                                    }
-                                    return item.id !== this.choseInfoId[i]
-                                })
-                            }
+                            // for (let i = 0; i < this.choseInfoId.length; i++) {
+                            //     this.personList = this.personList.filter((item, index) => {
+                            //         if (item.id === this.choseInfoId[i]) {
+                            //             this.personList[index].checked = false
+                            //         }
+                            //         return item.id !== this.choseInfoId[i]
+                            //     })
+                            // }
+                            this.getAllPerson()
                             this.$message.success('删除成功')
                             this.choseInfoId = []
                             this.getAllPerson()
@@ -321,6 +322,7 @@
                         item.checked = true
                         this.choseInfoId.push(item.id)
                         return item.checked === true
+
                     } else {
                         console.log('进入这个判断吗')
                         item.checked = false
@@ -328,6 +330,7 @@
                         return item.checked === false
                     }
                 })
+                this.selectFlag=true
                 console.log(this.choseInfoId, 'opopop')
 
             },
@@ -447,9 +450,9 @@
                     this.personList = _.sortBy(this.personList,'byTime')
                     console.log(this.personList, 'p[p[p[p[p[p[p[p[p[p[p[p[p[[pp')
                     this.checkList = this.personList
-                    if(this.personList.length=== 0){
-                        this.selectFlag=false
-                    }
+
+                    this.selectFlag=false
+
                 }).catch(err => {
                     console.log(err)
                     this.isShowLoading = false
@@ -465,9 +468,11 @@
                 }
             },
             idNumFilter(id) {
-             let leftId =  id.substring(0, 6)
-             let rightId = id.substring(14)
-             return `${leftId}********${rightId}`
+                if(id){
+                    let leftId =  id.substring(0, 6)
+                    let rightId = id.substring(14)
+                    return `${leftId}********${rightId}`
+                }
             }
         },
         created() {

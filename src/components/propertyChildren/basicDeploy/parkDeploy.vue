@@ -203,14 +203,15 @@
                         api.park.deletePark(this.choseInfoId).then(res => {
                             console.log(res, '删除成功')
                             this.$message.success('删除成功')
-                            for (let i = 0; i < this.choseInfoId.length; i++) {
-                                this.parkList = this.parkList.filter((item, index) => {
-                                    if (item.id === this.parkList[i]){
-                                        this.parkList[index].checked = false
-                                    }
-                                    return item.id !== this.choseInfoId[i]
-                                })
-                            }
+                            // for (let i = 0; i < this.choseInfoId.length; i++) {
+                            //     this.parkList = this.parkList.filter((item, index) => {
+                            //         if (item.id === this.parkList[i]){
+                            //             this.parkList[index].checked = false
+                            //         }
+                            //         return item.id !== this.choseInfoId[i]
+                            //     })
+                            // }
+                            this.getAllPark()
                             this.choseInfoId = []
                             this.getAllPark()
                         }).catch(err => {
@@ -298,6 +299,7 @@
                         return item.checked === false
                     }
                 })
+                this.selectFlag=true
                 console.log(this.choseInfoId, 'opopop')
             },
             async fixInfo (info) {
@@ -420,9 +422,9 @@
                     this.parkList = _.sortBy(this.parkList, 'byTime')
                     this.checkList = this.parkList
                     this.choseInfoId = []
-                    if(this.parkList.length=== 0){
-                        this.selectFlag=false
-                    }
+
+                    this.selectFlag=false
+
                 }).catch(err => {
                     console.log(err)
                     this.isShowLoading = false

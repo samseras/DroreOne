@@ -65,9 +65,9 @@
                             label="操作">
                             <template slot-scope="scope">
                                 <span @click="showTrashDetail(scope.row, '垃圾桶信息',true)">查看</span>
-                                <sapn class="line">|</sapn>
+                                <span class="line">|</span>
                                 <span @click="fixedInfo(scope.row.id )">编辑</span>
-                                <sapn class="line">|</sapn>
+                                <span class="line">|</span>
                                 <span @click="deletInfo(scope.row.id)">删除</span>
                             </template>
                         </el-table-column>
@@ -186,15 +186,16 @@
                     }).then(() => {
                         api.dustbin.deleteDustbin(this.choseInfoId).then(res => {
                             console.log(res, '删除成功')
-                            for (let i = 0; i < this.choseInfoId.length; i++) {
-                                this.trashList = this.trashList.filter((item, index) => {
-                                    if (item.dustbinBean.id === this.choseInfoId[i]){
-                                        this.trashList[index].checked = false
-                                        this.trashList[index].status = false
-                                    }
-                                    return item.status === true
-                                })
-                            }
+                            // for (let i = 0; i < this.choseInfoId.length; i++) {
+                            //     this.trashList = this.trashList.filter((item, index) => {
+                            //         if (item.dustbinBean.id === this.choseInfoId[i]){
+                            //             this.trashList[index].checked = false
+                            //             this.trashList[index].status = false
+                            //         }
+                            //         return item.status === true
+                            //     })
+                            // }
+                            this.getAllTrash()
                             this.$message.success('删除成功')
                             this.choseInfoId = []
                             this.getAllTrash()
@@ -253,9 +254,9 @@
                 } else {
                     this.trashList = this.trashList.filter((item,index) => {
                         if (item.dustbinBean.type){
-                            item.dustbinBean.typeName = '固定'
-                        } else {
                             item.dustbinBean.typeName = '临时'
+                        } else {
+                            item.dustbinBean.typeName = '固定'
                         }
                         if (type.includes(item.dustbinBean.typeName)){
                             item.status = true
@@ -281,6 +282,7 @@
                         return item.checked === false
                     }
                 })
+                this.selectFlag=true
                 console.log(this.choseInfoId, 'opopop')
             },
             async fixInfo (info) {
@@ -392,9 +394,9 @@
                     this.trashList = _.sortBy(this.trashList, 'byTime')
                     this.checkList = this.trashList
                     this.choseInfoId = []
-                    if(this.trashList.length=== 0){
-                        this.selectFlag=false
-                    }
+
+                    this.selectFlag=false
+
                 }).catch(err => {
                     console.log(err)
                     this.isShowLoading = false

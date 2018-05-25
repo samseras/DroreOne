@@ -76,7 +76,7 @@
 
             },
             batchDownload(){
-
+                this.$emit('batchDownload')
             }
         },
         watch: {

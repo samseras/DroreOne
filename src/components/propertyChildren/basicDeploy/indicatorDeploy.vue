@@ -181,14 +181,15 @@
                     }).then(() => {
                         api.indicator.deleteIndicator(this.choseInfoId).then(res => {
                             console.log(res, '删除成功')
-                            for (let i = 0; i < this.choseInfoId.length; i++) {
-                                this.indicatorList = this.indicatorList.filter((item, index) => {
-                                    if (item.id === this.choseInfoId[i]){
-                                        this.indicatorList[index].checked = false
-                                    }
-                                    return item.id !== this.choseInfoId[i]
-                                })
-                            }
+                            // for (let i = 0; i < this.choseInfoId.length; i++) {
+                            //     this.indicatorList = this.indicatorList.filter((item, index) => {
+                            //         if (item.id === this.choseInfoId[i]){
+                            //             this.indicatorList[index].checked = false
+                            //         }
+                            //         return item.id !== this.choseInfoId[i]
+                            //     })
+                            // }
+                            this.getAllIndicator()
                             this.$message.success('删除成功')
                             this.choseInfoId = []
                             this.getAllIndicator()
@@ -275,6 +276,7 @@
                         return item.checked === false
                     }
                 })
+                this.selectFlag=true
                 console.log(this.choseInfoId, 'opopop')
             },
             async fixInfo (info) {
@@ -381,9 +383,9 @@
                     this.indicatorList = _.sortBy(this.indicatorList, 'byTime')
                     this.checkList =this.indicatorList
                     this.choseInfoId = []
-                    if(this.indicatorList.length=== 0){
-                        this.selectFlag=false
-                    }
+
+                    this.selectFlag=false
+
                 }).catch(err => {
                     console.log(err)
                     this.isShowLoading = false

@@ -10,14 +10,14 @@
                 <el-checkbox v-model="isSelected" @change="selectedAll"></el-checkbox>全选
             </el-button>
             <!--<el-button size="mini"plain v-if="isShowHeader">导入</el-button>-->
-            <div v-if="isShowHeader" class="el-upload">
+            <div class="el-upload" v-if="isShowHeader">
                 <el-button size="mini" plain @click="$refs.uploadFile.click()"><i class="el-icon-upload2"></i>导入</el-button>
                 <input type="file" ref="uploadFile" class="importFile" @change="selectFile">
             </div>
-            <el-button size="mini"plain v-if="isShowHeader" @click="expotInfo"><i class="el-icon-download"></i>导出</el-button>
-            <el-button size="mini"plain v-if="isShowHeader" @click="exportTemplate"><i class="el-icon-download"></i>下载模板</el-button>
+            <el-button size="mini"plain @click="expotInfo"><i class="el-icon-download"></i>导出</el-button>
+            <el-button size="mini"plain @click="exportTemplate" v-if="isShowHeader"><i class="el-icon-download"></i>下载模板</el-button>
             <el-button size="mini"plain @click="deleteCard"><i class="el-icon-delete"></i>删除</el-button>
-            <el-button size="mini"plain @click="fixCard"><i class="el-icon-edit"></i>修改</el-button>
+            <el-button size="mini"plain @click="fixCard" v-if="isShowIcon"><i class="el-icon-edit" ></i>修改</el-button>
         </div>
         <!--<div class="filite" v-if="route.includes('person')">-->
             <!--<el-checkbox-group v-model="filterList" @change="choseType">-->
@@ -44,7 +44,7 @@
                 <el-checkbox v-for="item in parkType" :label="item.type | packFilter" :key="item.type"></el-checkbox>
             </el-checkbox-group>
         </div>
-        <div class="page" v-if="isShowHeader">
+        <div class="page">
             <span>当前第1页/共8页</span>
             <span class="upPage"><</span>
             <span class="downPage">></span>
@@ -419,9 +419,10 @@
                 }
             },
             showHeader () {
-                if (this.route.includes('basictype')) {
+                let route = this.$route.path
+                if (route.includes('roat')) {
                     this.isShowHeader = false
-                } else if (this.route.includes('personType')) {
+                } else if (route.includes('area')) {
                     this.isShowHeader = false
                 } else {
                     this.isShowHeader = true

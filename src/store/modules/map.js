@@ -15,7 +15,7 @@ const map = {
         treeData:[],
         controleLight:[],
         controenvironment:[],
-
+        controwifi:[],
     },
     getters: {
         getLocation (state) {
@@ -50,6 +50,10 @@ const map = {
         },
         getcontroleEnvironment(state) {
             return state.controenvironment
+        },
+        getcontroleWifi(state) {
+            console.log(state,"sdfs12312312313dfsd")
+            return state.controwifi
         }
     },
     setters: {},
@@ -93,11 +97,15 @@ const map = {
         },
         [types.CONTROLER_LIGHT] (state, data) {
             state.controleLight = data
-            console.log(state.controleLight,'commit')
+            // console.log(state.controleLight,'commit')
         },
         [types.CONTROLER_ENVIRONMENT] (state, data) {
             state.controenvironment = data
             // console.log(state.controenvironment,'commit')
+        },
+        [types.CONTROLER_WIFI] (state, data) {
+            state.controwifi = data
+            // console.log(state.controwifi,'commit')
         }
     },
     actions: {

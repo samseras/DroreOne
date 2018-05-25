@@ -73,9 +73,11 @@
                             </el-select>
                             <i class="el-icon-location-outline" @click="showMapDialog"></i>
                         </p>
-                        <p class="type">
-                            描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：<textarea name="" v-model="security.inspectionSchedule.description" cols="30"
-                                                                                   rows="5" placeholder="请输入描述信息" style="background: #fafafa"></textarea>
+                        <p class="type textArea">
+                            <!--描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：<textarea name="" v-model="security.inspectionSchedule.description" cols="30"-->
+                                                                                   <!--rows="5" placeholder="请输入描述信息" style="background: #fafafa"></textarea>-->
+                            <span class="description">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：</span>
+                            <el-input type="textarea"  v-model="security.inspectionSchedule.description" :disabled="isDisabled" ></el-input>
                         </p>
                     </div>
                     <!--广播-->
@@ -129,9 +131,11 @@
                             <span v-for="item in broadList.musics" :key="item.id">{{item.title}}</span>
                             <el-button slot="trigger" size="small" type="primary" @click="showBroadcastDialog" :disabled='isDisabled'>曲目编辑</el-button>
                         </p>
-                        <p class="type">
-                            描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：<textarea name="" v-model="broadList.broadcastSchedule.description" cols="30"
-                                                                                   rows="5" placeholder="请输入描述信息"></textarea>
+                        <p class="type textArea">
+                            <!--描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：<textarea name="" v-model="broadList.broadcastSchedule.description" cols="30"-->
+                                                                                   <!--rows="5" placeholder="请输入描述信息"></textarea>-->
+                            <span class="description">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：</span>
+                            <el-input type="textarea"  v-model="broadList.broadcastSchedule.description" :disabled="isDisabled" ></el-input>
                         </p>
                     </div>
                     <!--路灯-->
@@ -176,9 +180,11 @@
                                 @check="handleCheckChange">
                             </el-tree>
                         </p>
-                        <p class="type">
-                            描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：<textarea name="" v-model="lamppost.lightSchedule.description" cols="30"
-                                                                                   rows="5" placeholder="请输入描述信息"></textarea>
+                        <p class="type textArea">
+                            <!--描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：<textarea name="" v-model="lamppost.lightSchedule.description" cols="30"-->
+                                                                                   <!--rows="5" placeholder="请输入描述信息"></textarea>-->
+                            <span class="description">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：</span>
+                            <el-input type="textarea"  v-model="lamppost.lightSchedule.description" :disabled="isDisabled" ></el-input>
                         </p>
                     </div>
                     <!--保洁-->
@@ -242,9 +248,11 @@
                                 </el-option>
                             </el-select>
                         </p>
-                        <p class="type">
-                            描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：<textarea name="" v-model="purifier.cleanSchedule.description" cols="30"
-                                                                                   rows="5" placeholder="请输入描述信息" style="background: #fafafa"></textarea>
+                        <p class="type textArea">
+                            <!--描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：<textarea name="" v-model="" cols="30"-->
+                                                                                   <!--rows="5" placeholder="请输入描述信息" style="background: #fafafa"></textarea>-->
+                            <span class="description">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：</span>
+                            <el-input type="textarea"  v-model="purifier.cleanSchedule.description" :disabled="isDisabled" ></el-input>
                         </p>
                     </div>
                     <!--LED-->
@@ -297,9 +305,9 @@
                             <span v-for="item in screen.contents" :key="item.id">{{item.content}}</span>
                             <el-button slot="trigger" size="small" type="primary" @click = "showScreenDialog" :disabled='isDisabled'>定义内容</el-button>
                         </p>
-                        <p class="type">
-                            描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：<textarea name="" v-model="screen.ledSchedule.description" cols="30"
-                                                                                   rows="5" placeholder="请输入描述信息"></textarea>
+                        <p class="type textArea">
+                            <span class="description">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：</span>
+                            <el-input type="textarea"  v-model="screen.ledSchedule.description" :disabled="isDisabled" ></el-input>
                         </p>
                     </div>
                 </div>
@@ -572,32 +580,46 @@
                 // let regionIdList = []
                 let arr = []
                 let idList = []
+                let noRegion = {
+                    label: '未知片区设备',
+                    id: 10010,
+                    children:[]
+                }
                 list.forEach(item => {
                     item.label = item.name
-                    if (!this.regionIdList.includes(item.regionId)){
-                        this.regionIdList.push(item.regionId)
-                        let obj = {
-                            label: item.regionName,
-                            id: item.regionId,
-                            children:[]
-                        }
-                        arr.push(obj)
-                    }
-                    arr.forEach(item1 => {
-                        if (item1.id == item.regionId){
-                            if (item1.children.length< 1) {
-                                item1.children.push(item)
-                            } else {
-                                item1.children.forEach(item2 => {
-                                    if (!idList.includes(item2.id)){
-                                        idList.push(item.id)
-                                        item1.children.push(item)
-                                    }
-                                })
+                    if (item.regionId) {
+                        if (!this.regionIdList.includes(item.regionId)){
+                            this.regionIdList.push(item.regionId)
+                            let obj = {
+                                label: item.regionName,
+                                id: item.regionId,
+                                children:[]
                             }
+                            arr.push(obj)
                         }
-                    })
+                        arr.forEach(item1 => {
+                            if (item1.id == item.regionId){
+                                if (item1.children.length< 1) {
+                                    item1.children.push(item)
+                                } else {
+                                    item1.children.forEach(item2 => {
+                                        if (!idList.includes(item2.id)){
+                                            idList.push(item.id)
+                                            item1.children.push(item)
+                                        }
+                                    })
+                                }
+                            }
+                        })
+                    } else {
+                        this.regionIdList.push(10010)
+                        noRegion.children.push(item)
+                    }
+
                 })
+                if (noRegion.children.length > 0) {
+                    arr.push(noRegion)
+                }
                 this.options = arr
             },
             async getAllLight (){
@@ -998,6 +1020,13 @@
                         background: #f0f2f5;
                         color: #909399;
                     }
+                    .description{
+                        background: transparent;
+                        color: #606266;
+                    }
+                }
+                .textArea{
+                    border-bottom: none;
                 }
                 .uploadText{
                     overflow: hidden;

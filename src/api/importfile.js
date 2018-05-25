@@ -9,7 +9,7 @@ const importfile={
         console.log(params, 'formdata')
         return axios({
             method:'POST',
-            url:'/device/import/file?type='+params.type,
+            url:getUrl('/device/import/file?type='+params.type),
             processData : false,
             contentType : false,
             data:params.fileParam
