@@ -299,6 +299,7 @@
                         return item.checked === false
                     }
                 })
+                this.selectFlag=true
                 console.log(this.choseInfoId, 'opopop')
                 this.selectAll(this.choseInfoId)
             },

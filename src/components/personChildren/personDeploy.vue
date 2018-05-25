@@ -321,6 +321,7 @@
                         item.checked = true
                         this.choseInfoId.push(item.id)
                         return item.checked === true
+
                     } else {
                         console.log('进入这个判断吗')
                         item.checked = false
@@ -328,6 +329,7 @@
                         return item.checked === false
                     }
                 })
+                this.selectFlag=true
                 console.log(this.choseInfoId, 'opopop')
 
             },
@@ -448,6 +450,7 @@
                     console.log(this.personList, 'p[p[p[p[p[p[p[p[p[p[p[p[p[[pp')
                     this.checkList = this.personList
                     if(this.personList.length=== 0){
+                        console.log('进来了')
                         this.selectFlag=false
                     }
                 }).catch(err => {
