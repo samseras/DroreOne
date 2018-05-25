@@ -1,83 +1,90 @@
 <template>
     <div class="shop">
-        <!--顶部-->
-        <div class="top">
-            <h5>商品列表</h5>
-            <ul>
-                <li><img src="../../../../static/img/search.png" alt=""></li>
-            </ul>
-        </div>
-        <!--搜索-->
-        <input  id="search" placeholder="商品名称">
-        <div class="middle">
-            <div>
-                <el-checkbox style="color:#0FA7E8">商铺个数24个</el-checkbox>
+        <div class="reveal">
+            <!--顶部-->
+            <div class="top">
+                <h5>商铺列表</h5>
+                <ul>
+                    <li>
+                        <img src="../../../../static/img/search.png" alt="">
+                    </li>
+                </ul>
             </div>
-            <div class="bottom">
-                <div class="content" v-for="(item,index) in datal">
-                    <div class="top">
-                        <span style="color:#151212">{{item.title}}</span>
-                        <el-button type="warning">{{item.content}}</el-button>
-                    </div>
-                    <div class="down" style="color: #9B9898;">
-                        <span>容量{{item.total}}个</span>
-                        <span>当前人数{{item.spare}}个</span>
-                    </div>
-
+            <div class="middle">
+                <div class="bottom" id="ztree">
+                    <ScrollContainer>
+                        <shop-ztree
+                            :title="title"
+                            :Info="shopInfo"
+                            :shopCheckout="shopCheckout"
+                            :shopList="shopList"
+                            :number="number"
+                            :regionId="regionId">
+                        </shop-ztree>
+                    </ScrollContainer>
                 </div>
             </div>
-
         </div>
     </div>
-
 </template>
-<script>
 
-    export default{
+<script>
+    import shopZtree from "./children/shopzTree.vue"
+    import ScrollContainer from '@/components/ScrollContainer'
+    import api from '@/api'
+    import {mapGetters} from 'vuex'
+
+    export default {
         data(){
             return{
-                datal:'',
-//                isShow:true
+                number:'0',
+                shopInfo:[],
+                shopCheckout:[],
+                regionId:[],
+                shopList:[],
+                title:'商铺'
             }
         },
-        methods:{
-//            pay(){
-//                shopingData.getShopData((data)=>{
-//                    console.log(data);
-//                })
-//            }
+        components:{
+            shopZtree,
+            ScrollContainer
         },
-        created:function(){
-//            console.log(shopingData.park);
-            this.datal=shopingData.park;
+        methods:{
+            treeShow(){
+                if(this.getcontroleLight){
+                    this.shopCheckout= this.getcontroleLight
+                }
+            },
+            async getAllShop(){
+                await api.shop.getAllShop().then(res =>{
+                    console.log(res,'请求的数据')
+                    this.shopList= res
+                    this.number = this.shopList.length
+                    let regionIdList = []
+                    let arr = []
+                    let idList = []
+                    for(let i=0;i<this.shopList.length;i++){
+                        if(this.regionId.indexOf(this.shopList[i].regionId)==-1){
+                            this.regionId.push(this.shopList[i].regionId)
+                        }
+                    }
+                    this.shopInfo = arr
+                }).catch(err =>{
+                    console.log(err)
+                })
+            }
+
+
+        },
+        created:function () {
+            this.treeShow();
         },
         mounted(){
-//            this.pay();
+            this.getAllShop();
+        },
+        computed:{
+            ...mapGetters(['getcontroleLight'])
         }
     }
 
 </script>
-<style scoped>
-    *{margin:0;padding:0;}
-    ul,li{list-style:none;padding:0;}
-    .shop{width:100%;height:100%;}
-    .shop>div.top{width:100%;height:40px;line-height:40px;display: flex;
-    justify-content:space-between;background:#FAFAFA;}
-    div.top>h5{margin-left:15px;}
-    div.top>ul>li{margin:0 10px;}
-    #search{width:88%;margin:5px 10px;text-indent: 10px;font-size:10px;
-    color:#646464;height:20px;}
-    .middle{width:100%;line-height:30px;background:#fff;overflow:hidden;}
-    .middle>div:first-child{width:100%;height:45px;line-height:45px;
-    border-bottom:1px solid #ccc;}
-    .el-checkbox{margin-left:10px;}
-    /*.middle .bottom{width:100%;}*/
-    .content{max-height: 700px;overflow:auto;border-bottom:1px solid #ccc;padding:7px 10px;}
-    .content .top{height:30px;}
-    .top>span{margin-right:20px;width:100px;box-sizing: border-box;font-size:14px;
-    display: inline-block;}
-    .el-button{padding:4px 20px;}
-    .down{font-size:12px;color:#bcbcbc;}
-    .down>span:first-child{margin-right:60px;}
-
-</style>
