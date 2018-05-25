@@ -396,6 +396,7 @@
                 this.selectFlag=true
             },
             async getAllWifi(){
+                this.choseInfoId=[];
                 this.isShowLoading=true
                 await api.wifi.getAllWifi().then((res)=>{
                     console.log(res,'这是请求回来的数据')

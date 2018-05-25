@@ -388,6 +388,7 @@
                 this.selectFlag=true
             },
             async getAllPolice(){
+                this.choseInfoId=[];
                 this.isShowLoading=true
                 await api.police.getAllPolice().then((res)=>{
                     console.log(res,'这是请求的数据')

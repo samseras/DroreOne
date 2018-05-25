@@ -42,13 +42,7 @@
                 if (!value) return true;
                 return data.label.indexOf(value) !== -1;
             },
-            selectAllCheck(state){
-                if (state) {
-                    this.selectAllCheckBox = true
-                } else {
-                    this.selectAllCheckBox = false
-                }
-                console.log(state);
+            selectAllCheck(){
                 let arr
                 if(this.selectAllCheckBox){
                     this.selectedAll= []
@@ -105,10 +99,7 @@
             }
         },
         created: function () {
-            this.route=this.$route.path
-            if (this.route.includes('light')){
 
-            }
         },
         watch:{
             filterText(val) {
@@ -127,7 +118,7 @@
             let _this = this;
             setTimeout(function() {
                 _this.treeALL();
-            }, 100)
+            }, 300)
             if (this.getSearchInfo.id) {
                 this.$refs.tree.setCheckedKeys([this.getSearchInfo.id])
             }

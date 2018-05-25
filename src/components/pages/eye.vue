@@ -16,7 +16,7 @@
                         <!--<div @click="changeLanguage" v-if="false">切换语言</div>-->
                         <div class="search">
                             <div class="searchInput" ref="searchInput">
-                                <input type="text" v-model="searchContent" @blur="noSearch" placeholder="请输入设备,设施,安保人员名称" @keyup="search"><button class="btn " @click="goPosition"><i class="el-icon-search"></i></button>
+                                <input type="text" v-model="searchContent" @blur="noSearch" placeholder="请输入设备,设施,安保人员名称" @keyup="search" class="searchBox" res="searchBox"><button class="btn " @click="goPosition"><i class="el-icon-search"></i></button>
                                 <button class="closeSearch" @click.stop = "hideSearch"><i class="el-icon-close"></i></button>
                             </div>
                             <div class="searchContent" v-if="searchList.length>0" v-loading="isShowloading">
@@ -72,35 +72,6 @@
     import api from '@/api'
     import {mapMutations} from 'vuex'
 
-    const clickoutside = {
-        // 初始化指令
-        bind(el, binding, vnode) {
-            function documentHandler(e) {
-                // 这里判断点击的元素是否是本身，是本身，则返回
-                if (el.contains(e.target)) {
-                    console.log(e.target,"@@@@@@")
-                    // return false;
-                }
-                // 判断指令中是否绑定了函数
-                    if (binding.expression == "hideShow") {
-                        console.log(binding.expression,"binding.expression")
-                        console.log(binding.value,"binding.value")
-                        // 如果绑定了函数 则调用那个函数，此处binding.value就是handleClose方法
-                        binding.value(e);
-                        return
-                    }
-            }
-            // 给当前元素绑定个私有变量，方便在unbind中可以解除事件监听
-            el.__vueClickOutside__ = documentHandler;
-            document.addEventListener('click', documentHandler);
-        },
-        // update() {},
-        // unbind(el, binding) {
-        //     // 解除事件监听
-        //     document.removeEventListener('click', el.__vueClickOutside__);
-        //     delete el.__vueClickOutside__;
-        // },
-    };
     export default {
         data() {
             return {
@@ -139,7 +110,6 @@
                 ],
             }
         },
-        directives: {clickoutside},
         created () {
             let route = this.$route.path;
             if (route.includes('deploy/')){
@@ -249,7 +219,7 @@
             hideData(hideData){
                  this.isshowHead = hideData;
             },
-            showSearch(){
+            showSearch(e){
                 this.$refs.searchInput.style.opacity = "1";
                 this.$refs.hitSearch.style.opacity = "0";
             },
@@ -287,7 +257,7 @@
             },
             closeSearch (e) {
                 this.searchList = []
-                if (e.target.className === 'el-icon-search') {
+                if (e.target.className === 'el-icon-search' || e.target.className === 'searchBox') {
                     this.showSearch()
                 } else {
                     this.hideSearch()
@@ -445,7 +415,7 @@
         i {
             font-family: iconfont;
             font-style: normal;
-            font-size: 26px;
+            font-size: rem(26);
         }
 
         a {
@@ -465,26 +435,26 @@
             background: #2c3b47;
             display: flex;
             color: #fff;
-            padding-left: 20px;
+            padding-left: rem(20);
         }
 
         .el-col {
             height: 100%;
-            line-height: 60px;
+            line-height: rem(60);
             display: flex;
 
         }
 
         .alleye .el-col:first-child {
-            font-size: 22px;
+            font-size: rem(22);
             position: relative;
         }
 
         .alleye .el-col:first-child img {
-            margin-top: 15px;
-            width: 60px;
-            height: 30px;
-            padding-right: 10px;
+            margin-top: rem(15);
+            width: rem(60);
+            height: rem(30);
+            padding-right: rem(10);
             vertical-align: middle;
         }
         .alleye .el-col:nth-child(2) div{
@@ -512,19 +482,19 @@
             /*margin-left: rem(50);*/
         }
         .control div {
-            margin: 0 5px;
+            margin: 0 rem(5);
             /*line-height: 60px;*/
             cursor: pointer;
         }
         #getTime {
             line-height: 0px;
-            font-size: 16px;
+            font-size: rem(16);
             text-align: center;
         }
 
         .alleye > .el-col:last-child div {
-            line-height: 60px;
-            margin: 0 10px;
+            line-height: rem(60);
+            margin: 0 rem(10);
         }
 
         .alleye > .el-col:last-child div a {
@@ -620,19 +590,19 @@
                 height: rem(100);
                 overflow-y: auto;
                 &::-webkit-scrollbar {
-                    width: 11px;
-                    height: 11px;
+                    width: rem(11);
+                    height: rem(11);
                 }
                 &::-webkit-scrollbar-track {
                     background-color: #F5F5F5;
                 }
                 &::-webkit-scrollbar-thumb {
-                    min-height: 36px;
+                    min-height: rem(36);
                     border: 2px solid transparent;
                     border-top: 3px solid transparent;
                     border-bottom: 3px solid transparent;
                     background-clip: padding-box;
-                    border-radius: 7px;
+                    border-radius: rem(7);
                     background-color: #C4C4C4;
                 }
                 ul{

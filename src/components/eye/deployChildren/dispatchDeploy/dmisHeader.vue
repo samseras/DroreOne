@@ -17,7 +17,7 @@
             <span>当前第1页/共8页</span>
             <span class="upPage"><</span>
             <span class="downPage">></span>
-            <span class="listForm"><i class="el-icon-tickets"></i></span>
+            <!--<span class="listForm"><i class="el-icon-tickets"></i></span>-->
         </div>
     </div>
 </template>

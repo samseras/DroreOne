@@ -72,9 +72,10 @@
         },
         methods: {
             treeShow(){
-                // console.log(this.getcontroleEnvironment.length,'1');
-                if(this.getcontroleEnvironment){
-                    this.lightCheckout=this.getcontroleEnvironment
+                console.log(this.getcontroleWifi,'123123123');
+                if(this.getcontroleWifi){
+                    console.log(this.getcontroleWifi,'123123123');
+                    this.lightCheckout=this.getcontroleWifi
                 }
             },
             showBroadCard() {
@@ -142,48 +143,60 @@
                     let regionIdList = []
                     let arr = []
                     let idList = []
-                    for (let i=0;i<this.lightList.length;i++){
-                        if(this.regionId.indexOf(this.lightList[i].regionId)==-1){
-                            this.regionId.push(this.lightList[i].regionId)
-                        }
+                    let noRegion = {
+                        label: '未知片区设备',
+                        id: '10010',
+                        type:'wifi',
+                        children:[]
                     }
+                    this.lightList.forEach(item => {
+                        if (item.regionId && !this.regionId.includes(item.regionId)) {
+                            this.regionId.push(item.regionId)
+                        }
+                    })
+                    this.regionId.push('10010')
                     this.lightList.forEach(item => {
                         item.label = item.name
                         item.type = 'wifi'
-                        if (item.lightStatus) {
+                        if (item.status =='ONLINE') {
                             item.icon = '../../../static/img/wifi_open.svg'
-                            item.status=true
                         } else {
                             item.icon = '../../../static/img/wifi.svg'
-                            item.status=false
                         }
-                        if (!regionIdList.includes(item.regionId)){
-                            regionIdList.push(item.regionId)
-                            let obj = {
-                                label: item.regionName,
-                                type:'wifi',
-                                id: item.regionId,
-                                children:[]
-                            }
-                            arr.push(obj)
-                        }
-                        arr.forEach(item1 => {
-                            if (item1.id == item.regionId){
-                                if (item1.children.length< 1) {
-                                    item1.children.push(item)
-                                } else {
-                                    item1.children.forEach(item2 => {
-                                        if (!idList.includes(item2.id)){
-                                            idList.push(item.id)
-                                            item1.children.push(item)
-                                        }
-                                    })
+                        if (item.regionId) {
+                            if (!regionIdList.includes(item.regionId)) {
+                                regionIdList.push(item.regionId)
+                                let obj = {
+                                    label: item.regionName,
+                                    type: 'wifi',
+                                    id: item.regionId,
+                                    children: []
                                 }
+                                arr.push(obj)
                             }
-                        })
+                            arr.forEach(item1 => {
+                                if (item1.id == item.regionId) {
+                                    if (item1.children.length < 1) {
+                                        item1.children.push(item)
+                                    } else {
+                                        item1.children.forEach(item2 => {
+                                            if (!idList.includes(item2.id)) {
+                                                idList.push(item.id)
+                                                item1.children.push(item)
+                                            }
+                                        })
+                                    }
+                                }
+                            })
+                        }else {
+                            noRegion.children.push(item)
+                        }
                     })
+                    if (noRegion.children.length > 0) {
+                        arr.push(noRegion)
+                    }
                     this.lightInfo = arr
-
+                    console.log(this.lightInfo,'16565623');
                 }).catch(err =>{
                     console.log(err)
                 })
@@ -200,7 +213,7 @@
             this.drawLine();
         },
         computed: {
-            ...mapGetters(['getcontroleEnvironment'])
+            ...mapGetters(['getcontroleWifi'])
         }
     }
 </script>

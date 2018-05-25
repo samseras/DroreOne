@@ -27,7 +27,6 @@
                         </el-col>
                     </el-row>
                 </el-header>
-
             </el-container>
         </div>
         <div class="analyzeDetails">
