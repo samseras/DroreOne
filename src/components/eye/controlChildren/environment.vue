@@ -143,11 +143,18 @@
                     let regionIdList = []
                     let arr = []
                     let idList = []
+                    let noRegion = {
+                        label: '未知片区设备',
+                        id: '10010',
+                        type:'environment',
+                        children:[]
+                    }
                     for (let i=0;i<this.lightList.length;i++){
                         if(this.regionId.indexOf(this.lightList[i].regionId)==-1){
                             this.regionId.push(this.lightList[i].regionId)
                         }
                     }
+                    this.regionId.push('10010')
                     this.lightList.forEach(item => {
                         item.label = item.name
                         item.type = 'environment'
@@ -158,31 +165,38 @@
                             item.icon = '../../../static/img/detection.svg'
                             item.status=false
                         }
-                        if (!regionIdList.includes(item.regionId)){
-                            regionIdList.push(item.regionId)
-                            let obj = {
-                                label: item.regionName,
-                                type:'environment',
-                                id: item.regionId,
-                                children:[]
-                            }
-                            arr.push(obj)
-                        }
-                        arr.forEach(item1 => {
-                            if (item1.id == item.regionId){
-                                if (item1.children.length< 1) {
-                                    item1.children.push(item)
-                                } else {
-                                    item1.children.forEach(item2 => {
-                                        if (!idList.includes(item2.id)){
-                                            idList.push(item.id)
-                                            item1.children.push(item)
-                                        }
-                                    })
+                        if (item.regionId) {
+                            if (!regionIdList.includes(item.regionId)) {
+                                regionIdList.push(item.regionId)
+                                let obj = {
+                                    label: item.regionName,
+                                    type: 'environment',
+                                    id: item.regionId,
+                                    children: []
                                 }
+                                arr.push(obj)
                             }
-                        })
+                            arr.forEach(item1 => {
+                                if (item1.id == item.regionId) {
+                                    if (item1.children.length < 1) {
+                                        item1.children.push(item)
+                                    } else {
+                                        item1.children.forEach(item2 => {
+                                            if (!idList.includes(item2.id)) {
+                                                idList.push(item.id)
+                                                item1.children.push(item)
+                                            }
+                                        })
+                                    }
+                                }
+                            })
+                        } else {
+                            noRegion.children.push(item)
+                        }
                     })
+                    if (noRegion.children.length > 0) {
+                        arr.push(noRegion)
+                    }
                     this.lightInfo = arr
 
                 }).catch(err =>{
