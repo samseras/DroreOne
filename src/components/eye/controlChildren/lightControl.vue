@@ -158,12 +158,12 @@
                         type:'light',
                         children:[]
                     }
-                    for (let i=0;i<this.lightList.length;i++){
-                        if(this.regionId.indexOf(this.lightList[i].regionId)==-1){
-                            this.regionId.push(this.lightList[i].regionId)
+                    this.lightList.forEach(item => {
+                        if (item.regionId && !this.regionId.includes(item.regionId)) {
+                            this.regionId.push(item.regionId)
                         }
-                    }
-                    this.regionId.push('10010')
+                     })
+                    this.regionId.push(10010)
                     this.lightList.forEach(item => {
                         item.label = item.name
                         item.type = 'light'

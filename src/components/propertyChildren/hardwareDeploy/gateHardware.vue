@@ -391,6 +391,7 @@
                 this.selectFlag=true
             },
             async getAllGate(){
+                this.choseInfoId=[];
                 this.isShowLoading=true
                 await api.gate.getAllGate().then((res)=>{
                     console.log(res,'这是拿到的数据')
@@ -404,9 +405,9 @@
                     }
                     this.gateList = _.sortBy(this.gateList,'byTime')
                     this.checkList = this.gateList
-                    if(this.gateList.length=== 0){
-                        this.selectFlag=false
-                    }
+
+                    this.selectFlag=false
+
                 }).catch((err)=>{
                     console.log(err)
                 })

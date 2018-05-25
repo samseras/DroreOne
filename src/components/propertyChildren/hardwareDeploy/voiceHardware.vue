@@ -175,6 +175,7 @@
                 }
             },
             async getAllCamera(){
+                this.choseInfoId=[];
                 this.isShowLoading=true
                 await api.camera.getAllCamera().then((res) =>{
                     this.isShowLoading = false

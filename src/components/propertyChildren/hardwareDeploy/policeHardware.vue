@@ -387,6 +387,7 @@
                 this.selectFlag=true
             },
             async getAllPolice(){
+                this.choseInfoId=[];
                 this.isShowLoading=true
                 await api.police.getAllPolice().then((res)=>{
                     console.log(res,'这是请求的数据')
@@ -401,9 +402,9 @@
                     }
                     this.policeList = _.sortBy(this.policeList,'byTime')
                     this.checkList = this.policeList
-                    if(this.cameraList.length=== 0){
-                        this.selectFlag=false
-                    }
+
+                    this.selectFlag=false
+
                 }).catch((err)=>{
                     console.log(err)
                 })

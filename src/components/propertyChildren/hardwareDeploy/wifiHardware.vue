@@ -396,6 +396,7 @@
                 this.selectFlag=true
             },
             async getAllWifi(){
+                this.choseInfoId=[];
                 this.isShowLoading=true
                 await api.wifi.getAllWifi().then((res)=>{
                     console.log(res,'这是请求回来的数据')
@@ -410,9 +411,8 @@
                     }
                     this.wifiList = _.sortBy(this.wifiList,'byTime')
                     this.checkList = this.wifiList
-                    if(this.wifiList.length=== 0){
-                        this.selectFlag=false
-                    }
+                    this.selectFlag=false
+
                 }).catch((err)=>{
                     console.log(err)
                 })

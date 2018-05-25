@@ -103,7 +103,7 @@
                     {title: '物业管理', route: ''},
                     {title: '第三方应用', route: ''},
                     {title: '系统配置', route: ''},
-                    {title: '舆情分析', route: ''},
+                    {title: '数据可视化', route: ''},
                     {title: '物联网', route: ''},
                     {title: '官网门户', route: ''},
                     {title: '电子票务', route: ''},
