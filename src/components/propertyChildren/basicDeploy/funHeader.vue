@@ -58,7 +58,7 @@
     import api from '@/api'
     export default {
         name: "fun-header",
-        props:['choseId','listsLength','allselflag'],
+        props:['choseId','listsLength','personListFlag'],
         data () {
             return {
                 filterList: [],
@@ -442,11 +442,14 @@
                 this.showType()
                 this.showHeader()
             },
-            allselflag(n,o){
+            personListFlag(n,o){
                 console.log(n);
-                if(n===8){
-                    this.selected();
+                if(n===true){
+                    this.isSelected=true
+                }else{
+                    this.isSelected=false
                 }
+
 
             }
         },

@@ -11,6 +11,7 @@
                         @choseType = 'choseType'
                         :choseId="choseInfoId"
                         :listsLength="toiletList.length"
+                        :personListFlag="selectFlag"
                         @selectedAll = 'selectedAll'
                         @fixedInfo = 'fixedInfo'
                         @searchAnything="searchAnything"
@@ -105,6 +106,8 @@
         name: "toilet-deploy",
         data(){
             return{
+                selectFlag:false,
+                tempSelects:[],
                 isShowToiletCard: true,
                 checkList: [],
                 filterList: [],
@@ -186,6 +189,7 @@
                             console.log(res, '删除成功')
                             this.$message.success('删除成功')
                             this.choseInfoId = []
+                            this.getAllToilet()
                         }).catch(err => {
                             console.log('删除失败')
                             this.$message.error('删除失败，请稍后重试')
@@ -206,6 +210,7 @@
                 }
             },
             checked (id) {
+                this.tempSelects=[];
                 this.toiletList = this.toiletList.filter(item => {
                     if (item.id === id) {
                         item.checked = item.checked
@@ -218,6 +223,16 @@
                     })
                 } else {
                     this.choseInfoId.push(id)
+                }
+                let that=this;
+                this.toiletList.forEach(function(item,i){
+                    (item.checked)&&(that.tempSelects.push(item))
+                })
+                console.log(this.tempSelects)
+                if(this.tempSelects.length===this.toiletList.length){
+                    this.selectFlag=true
+                }else{
+                    this.selectFlag=false
                 }
             },
             choseType (type) {
@@ -253,6 +268,7 @@
                         return item.checked === false
                     }
                 })
+                this.selectFlag=true
                 console.log(this.choseInfoId, 'opopop')
             },
             async fixInfo (info) {
@@ -363,6 +379,9 @@
                     this.toiletList = _.sortBy(this.toiletList, 'byTime')
                     this.checkList = this.toiletList
                     this.choseInfoId = []
+                    if(this.toiletList.length=== 0){
+                        this.selectFlag=false
+                    }
                 }).catch(err => {
                     console.log(err, '请求失败')
                     this.isShowLoading = false

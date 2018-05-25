@@ -3,24 +3,25 @@
         <el-container>
             <el-header  v-show = "isshowHead">
                 <el-row :gutter="10" class="alleye">
-                    <el-col :xs="6" :sm="7" :md="7" :lg="5" :xl="4">
+                    <el-col :xs="6" :sm="7" :md="6" :lg="5" :xl="4">
                         <img src="../../../static/img/eye.png"/>全视之眼
                     </el-col>
-                    <el-col :xs="3" :sm="3" :md="4" :lg="8" :xl="9" class="control">
+                    <el-col :xs="3" :sm="3" :md="5" :lg="6" :xl="6" class="control">
                         <div v-for="(item,index) in manage" @click="goModule(item,index)"
                              :class="activeIndex === index? 'active':''">{{$t(item)}}
                         </div>
                     </el-col>
-                    <el-col :xs="5" :sm="5" :md="5" :lg="5" :xl="6" id="getTime">
+                    <el-col :xs="5" :sm="5" :md="5" :lg="6" :xl="7" id="getTime">
                         <!--{{currTime | timeFiler}} ({{currTime | weekFiler}})-->
                         <!--<div @click="changeLanguage" v-if="false">切换语言</div>-->
                         <div class="search">
-                            <div class="searchInput">
+                            <div class="searchInput" ref="searchInput">
                                 <input type="text" v-model="searchContent" @blur="noSearch" placeholder="请输入设备,设施,安保人员名称" @keyup="search"><button class="btn " @click="goPosition"><i class="el-icon-search"></i></button>
+                                <button class="closeSearch" @click.stop = "hideSearch"><i class="el-icon-close"></i></button>
                             </div>
                             <div class="searchContent" v-if="searchList.length>0" v-loading="isShowloading">
                                 <ul ref="dev">
-                                    <li
+                                    <li>
                                         v-for="(item,index) in searchList"
                                         :class="searchIndex === index? 'active': ''"
                                         :ref="isCur(index) && 'searchContent'"
@@ -31,7 +32,10 @@
                         </div>
                     </el-col>
 
-                    <el-col :xs="7" :sm="6" :md="5" :lg="3" :xl="2">
+                    <el-col :xs="7" :sm="6" :md="5" :lg="4" :xl="3">
+                        <button @click="showSearch" class="hitSearch" ref="hitSearch">
+                            <i class="el-icon-search"></i>
+                        </button>
                         <div v-for="item in title">
                             <a href="#">
                                 <i v-html="item"></i>
@@ -58,7 +62,6 @@
             <el-main>
                 <router-view @hideHead = "hideData"/>
             </el-main>
-
         </el-container>
     </div>
 </template>
@@ -69,6 +72,35 @@
     import api from '@/api'
     import {mapMutations} from 'vuex'
 
+    const clickoutside = {
+        // 初始化指令
+        bind(el, binding, vnode) {
+            function documentHandler(e) {
+                // 这里判断点击的元素是否是本身，是本身，则返回
+                if (el.contains(e.target)) {
+                    console.log(e.target,"@@@@@@")
+                    // return false;
+                }
+                // 判断指令中是否绑定了函数
+                    if (binding.expression == "hideShow") {
+                        console.log(binding.expression,"binding.expression")
+                        console.log(binding.value,"binding.value")
+                        // 如果绑定了函数 则调用那个函数，此处binding.value就是handleClose方法
+                        binding.value(e);
+                        return
+                    }
+            }
+            // 给当前元素绑定个私有变量，方便在unbind中可以解除事件监听
+            el.__vueClickOutside__ = documentHandler;
+            document.addEventListener('click', documentHandler);
+        },
+        // update() {},
+        // unbind(el, binding) {
+        //     // 解除事件监听
+        //     document.removeEventListener('click', el.__vueClickOutside__);
+        //     delete el.__vueClickOutside__;
+        // },
+    };
     export default {
         data() {
             return {
@@ -107,6 +139,7 @@
                 ],
             }
         },
+        directives: {clickoutside},
         created () {
             let route = this.$route.path;
             if (route.includes('deploy/')){
@@ -216,6 +249,14 @@
             hideData(hideData){
                  this.isshowHead = hideData;
             },
+            showSearch(){
+                this.$refs.searchInput.style.opacity = "1";
+                this.$refs.hitSearch.style.opacity = "0";
+            },
+            hideSearch(){
+                this.$refs.searchInput.style.opacity = "0";
+                this.$refs.hitSearch.style.opacity = "1";
+            },
             goModule(item, index) {
                 console.log(item,'opo')
                 this.$store.commit('SHOW_SEARCH', false)
@@ -244,8 +285,13 @@
             isCur(index) {
                 return index === this.activeIndex
             },
-            closeSearch () {
+            closeSearch (e) {
                 this.searchList = []
+                if (e.target.className === 'el-icon-search') {
+                    this.showSearch()
+                } else {
+                    this.hideSearch()
+                }
             },
             noSearch () {
             },
@@ -329,6 +375,9 @@
                 this.searchList = []
             }
         },
+        mounted(){
+
+        },
         components: {}
     }
 </script>
@@ -340,6 +389,7 @@
         .el-container{
             width: 100%;
             height: 100%;
+            /*position: relative;*/
             min-width: rem(1120);
         }
         .el-header {
@@ -407,6 +457,8 @@
             height: 100%;
             display: flex;
             flex-direction: column;
+            /*position: relative;*/
+
         }
 
         .el-header {
@@ -420,6 +472,7 @@
             height: 100%;
             line-height: 60px;
             display: flex;
+
         }
 
         .alleye .el-col:first-child {
@@ -435,14 +488,34 @@
             vertical-align: middle;
         }
         .alleye .el-col:nth-child(2) div{
-            padding:0 rem(7);
+            padding:0 rem(10);
+        }
+
+        .alleye .el-col:nth-child(4) button{
+            padding-right: rem(10);
+            padding-left: rem(10);
+            background: #2c3b47;
+            border: none;
+            color: #fff;
+            outline: none;
+            padding-top: rem(-14);
+            border: 1px solid #2c3b47;
+            box-sizing: border-box;
+            z-index: 31;
+        }
+        .alleye .el-col:nth-child(4) div{
+            padding-right: rem(10);
+            padding-left: rem(10);
+        }
+        .alleye .el-col:last-child{
+            box-sizing: border-box;
+            /*margin-left: rem(50);*/
         }
         .control div {
             margin: 0 5px;
             /*line-height: 60px;*/
             cursor: pointer;
         }
-
         #getTime {
             line-height: 0px;
             font-size: 16px;
@@ -474,7 +547,7 @@
         .search{
             width: 100%;
             height: 100%;
-            position: relative;
+            /*position: relative;*/
             .searchInput{
                 width: 100%;
                 height: rem(60);
@@ -483,8 +556,10 @@
                 box-sizing: border-box;
                 display: inline-block;
                 overflow: hidden;
+                position: relative;
+                opacity: 0;
                 input{
-                    width: 78%;
+                    width: 60%;
                     height: 100%;
                     outline: none;
                     padding: rem(2) rem(5);
@@ -494,8 +569,26 @@
                     border-radius: rem(2) 0 0 rem(2);
                     /*display: inline-block;*/
                     float: left;
-                    line-height: rem(20);
+                    z-index: 31;
+                    line-height: rem(20);text-indent: rem(40);
                 }
+                .closeSearch{
+                    position: absolute;
+                    left: rem(40);
+                    color: black;
+
+                    display: inline-block;
+                    border:none;
+                    height: rem(24);
+                    outline: none;
+                    border-radius: 0 rem(2) rem(2) 0;
+                    background: #fff;
+                    cursor: pointer;
+                    i{
+                        font-size: rem(16);
+                    }
+                }
+
                 .btn{
                     display: inline-block;
                     width: rem(30);
@@ -509,6 +602,8 @@
                     float: left;
                     cursor: pointer;
                     i{
+                        top:rem(23);
+                        left: rem(340);
                         font-size: rem(14);
                     }
                 }

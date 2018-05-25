@@ -13,6 +13,7 @@
                         @fixedInfo = 'fixedInfo'
                         :choseId="choseInfoId"
                         :listsLength="trashList.length"
+                        :personListFlag="selectFlag"
                         @searchAnything="searchAnything"
                         @getAllTrash="getAllTrash">
 
@@ -114,6 +115,8 @@
         name: "trash-deploy",
         data (){
             return {
+                selectFlag:false,
+                tempSelects:[],
                 isShowTrashCard: true,
                 checkList: [],
                 filterList: [],
@@ -194,6 +197,7 @@
                             }
                             this.$message.success('删除成功')
                             this.choseInfoId = []
+                            this.getAllTrash()
                         }).catch(err => {
                             console.log(err)
                             this.$message.error('删除失败，请稍后重试')
@@ -214,6 +218,7 @@
                 }
             },
             checked (id) {
+                this.tempSelects=[];
                 this.trashList = this.trashList.filter(item => {
                     if (item.id === id) {
                         item.checked = item.checked
@@ -226,6 +231,16 @@
                     })
                 } else {
                     this.choseInfoId.push(id)
+                }
+                let that=this;
+                this.trashList.forEach(function(item,i){
+                    (item.checked)&&(that.tempSelects.push(item))
+                })
+                console.log(this.tempSelects)
+                if(this.tempSelects.length===this.trashList.length){
+                    this.selectFlag=true
+                }else{
+                    this.selectFlag=false
                 }
             },
             choseType (type) {
@@ -266,6 +281,7 @@
                         return item.checked === false
                     }
                 })
+                this.selectFlag=true
                 console.log(this.choseInfoId, 'opopop')
             },
             async fixInfo (info) {
@@ -377,6 +393,9 @@
                     this.trashList = _.sortBy(this.trashList, 'byTime')
                     this.checkList = this.trashList
                     this.choseInfoId = []
+                    if(this.trashList.length=== 0){
+                        this.selectFlag=false
+                    }
                 }).catch(err => {
                     console.log(err)
                     this.isShowLoading = false
