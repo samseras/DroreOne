@@ -397,9 +397,9 @@
                     }
                     this.lightList = _.sortBy(this.lightList,'byTime')
                     this.checkList = this.lightList
-                    if(this.lightList.length=== 0){
-                        this.selectFlag=false
-                    }
+
+                    this.selectFlag=false
+
                 }).catch((err)=>{
                     console.log(err)
                 })

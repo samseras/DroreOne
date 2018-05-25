@@ -351,9 +351,9 @@
                     }
                     this.checkList = this.roatList
                     this.choseInfoId = []
-                    if(this.roatList.length=== 0){
-                        this.selectFlag=false
-                    }
+
+                    this.selectFlag=false
+
                 }).catch(err => {
                     console.log(err, '请求失败')
                 })

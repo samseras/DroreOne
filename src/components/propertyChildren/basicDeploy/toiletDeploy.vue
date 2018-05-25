@@ -379,9 +379,9 @@
                     this.toiletList = _.sortBy(this.toiletList, 'byTime')
                     this.checkList = this.toiletList
                     this.choseInfoId = []
-                    if(this.toiletList.length=== 0){
-                        this.selectFlag=false
-                    }
+
+                    this.selectFlag=false
+
                 }).catch(err => {
                     console.log(err, '请求失败')
                     this.isShowLoading = false

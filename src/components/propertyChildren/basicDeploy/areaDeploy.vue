@@ -368,9 +368,7 @@
 
                     this.checkList = this.areaList
                     this.choseInfoId = []
-                    if(this.areaList.length=== 0){
-                        this.selectFlag=false
-                    }
+                    this.selectFlag=false
                 }).catch(err => {
                     console.log(err, '失败')
                     this.isShowLoading = false

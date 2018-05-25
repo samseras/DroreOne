@@ -422,9 +422,9 @@
                     }
                     this.broadList = _.sortBy(this.broadList,'byTime')
                     this.checkList = this.broadList
-                    if(this.broadList.length=== 0){
-                        this.selectFlag=false
-                    }
+
+                    this.selectFlag=false
+
                 }).catch((err)=>{
                     console.log(err)
                     this.isShowLoading=false

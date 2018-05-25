@@ -398,9 +398,9 @@
                     this.scenicList = _.sortBy(this.scenicList, 'byTime')
                     this.checkList = this.scenicList
                     this.choseInfoId = []
-                    if(this.scenicList.length=== 0){
-                        this.selectFlag=false
-                    }
+
+                    this.selectFlag=false
+
                 }).catch((err)=> {
                     console.log(err)
                     this.isShowLoading = false

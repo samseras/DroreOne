@@ -382,9 +382,9 @@
                     this.indicatorList = _.sortBy(this.indicatorList, 'byTime')
                     this.checkList =this.indicatorList
                     this.choseInfoId = []
-                    if(this.indicatorList.length=== 0){
-                        this.selectFlag=false
-                    }
+
+                    this.selectFlag=false
+
                 }).catch(err => {
                     console.log(err)
                     this.isShowLoading = false

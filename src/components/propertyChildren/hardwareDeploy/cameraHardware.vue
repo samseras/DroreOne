@@ -401,9 +401,9 @@
                     }
                     this.cameraList = _.sortBy(this.cameraList,'byTime')
                     this.checkList = this.cameraList
-                    if(this.cameraList.length=== 0){
-                        this.selectFlag=false
-                    }
+
+                    this.selectFlag=false
+
                 }).catch((err)=> {
                     console.log(err)
                 })

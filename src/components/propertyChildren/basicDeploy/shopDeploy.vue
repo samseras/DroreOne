@@ -75,9 +75,9 @@
                             label="操作">
                             <template slot-scope="scope">
                                 <span @click="showPersonDetail(scope.row, '商圈信息',true )">查看</span>
-                                <sapn class="line">|</sapn>
+                                <span class="line">|</span>
                                 <span @click="fixedInfo(scope.row.id )">编辑</span>
-                                <sapn class="line">|</sapn>
+                                <span class="line">|</span>
                                 <span @click="deletInfo(scope.row.id)">删除</span>
                             </template>
                         </el-table-column>
@@ -443,9 +443,9 @@
                     this.shopList = _.sortBy(this.shopList, 'byTime')
                     this.checkList = this.shopList
                     this.choseInfoId = []
-                    if(this.shopList.length=== 0){
-                        this.selectFlag=false
-                    }
+
+                    this.selectFlag=false
+
                 }).catch(err => {
                     console.log(err)
                     this.isShowLoading = false
