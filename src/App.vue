@@ -12,7 +12,27 @@ export default {
   data(){
   	return {
   	}
-  }
+  },
+    watch: {
+      '$route'() {
+          let route = this.$route.redirectedFrom
+          if (route) {
+              if (route.includes('eye')) {
+                  window.document.getElementsByTagName('title')[0].innerHTML = '全视之眼'
+              } else if (route.includes('property')) {
+                  window.document.getElementsByTagName('title')[0].innerHTML = '数据中心'
+              } else if (route.includes('gisMap')) {
+                  window.document.getElementsByTagName('title')[0].innerHTML = 'GIS地图'
+              } else if (route.includes('analyze')) {
+                  window.document.getElementsByTagName('title')[0].innerHTML = '数据可视化'
+              } else {
+                  window.document.getElementsByTagName('title')[0].innerHTML = 'drore'
+              }
+          } else {
+              window.document.getElementsByTagName('title')[0].innerHTML = 'drore'
+          }
+      }
+    }
 }
 </script>
 
