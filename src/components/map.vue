@@ -44,6 +44,7 @@
                 menulist: {},
                 controleLightList:[],
                 controleEnvironmentList:[],
+                controleWifiList:[],
                 buildInfo:[],
                 visible:false,
                 title:'',
@@ -792,14 +793,12 @@
                     for (let i=0;i<this.iconList.length;i++){
                         this.iconList[i].type="wifi"
                         this.iconList[i].location = [this.iconList[i].longitude,this.iconList[i].latitude]
-                        if(this.iconList[i].lightStatus){
+                        if(this.iconList[i].status ==="ONLINE"){
                             this.iconList[i].url="/static/img/icon/wifi.png"
                             this.iconList[i].subtype='wifi'
-                            this.iconList[i].status=true
                         } else {
                             this.iconList[i].url="/static/img/icon/wifi_close.png"
                             this.iconList[i].subtype='wifi_close'
-                            this.iconList[i].status=false
                         }
                     }
                     this.iconShow();
@@ -1688,9 +1687,11 @@
                 var popup = new  droreMap.pop.Popup(div,e.coordinate,"contextmenu_container")
                 droreMap.pop.addChild(popup);
                 $("#contextmenu_container").attr("class","contextmenu "+e.subtype);
-                if(e.status){
+                if(e.status || e.status =="ONLINE"){
                     this.open=true
-                }else {
+                }else if(e.status =="OFFLINE"){
+                    this.open=false
+                }else{
                     this.open=false
                 }
                 $("#contextmenu_container").show();
@@ -1745,15 +1746,16 @@
                     // console.log(this.getTreeState,'ioioioiooioioiooi')
                     //    这边是全选
                     if (this.getTreeState[0].checked) {//显示
-                        this.controleLightList=[];
-                        // console.log(this.getTreeState,'这111111111111')
                         this.getTreeState.forEach(item => {
                             item.children.forEach(item1 => {
                                 this.treeShow(item1);
-                                if(item.type=='light'){
+                                if(item1.type=='light'){
                                     this.controleLightList.push(item1.id);
-                                }else if(item.type=='environment'){
+                                }else if(item1.type=='environment'){
                                     this.controleEnvironmentList.push(item1.id);
+                                    // console.log(this.controleEnvironmentList,'这111111111111')
+                                }else if(item1.type=='wifi'){
+                                    this.controleWifiList.push(item1.id);
                                 }
                             })
                         })
@@ -1765,6 +1767,8 @@
                                 this.controleLightList=[];
                             }else if(item.type=='environment'){
                                 this.controleEnvironmentList=[];
+                            }else if(item.type=='wifi'){
+                                this.controleWifiList=[];
                             }
                         })
                     }
@@ -1774,13 +1778,16 @@
                         if (this.getTreeState[0].checked.checkedKeys.includes(this.getTreeState[0].id)) {
                             for (let i = 0; i < data.length; i++) {
                                 this.treeShow(data[i]);
-                                // console.log(this.getTreeState[0].type,'123123');
-                                if(this.getTreeState[0].type=='light'){
+                                console.log(this.getTreeState[0]);
+                                if(data[i].type=='light'){
                                     this.controleLightList.push(data[i].id);
                                     this.controleLightList=[...new Set(this.controleLightList)];
-                                }else if(this.getTreeState[0].type=='environment'){
+                                }else if(data[i].type=='environment'){
                                     this.controleEnvironmentList.push(data[i].id);
                                     this.controleEnvironmentList=[...new Set(this.controleEnvironmentList)];
+                                }else if(data[i].type=='wifi'){
+                                    this.controleWifiList.push(data[i].id);
+                                    this.controleWifiList=[...new Set(this.controleWifiList)];
                                 }
                             }
                         }else {
@@ -1797,6 +1804,11 @@
                                     if (index > -1) {
                                         this.controleEnvironmentList.splice(index, 1);
                                     }
+                                }else if(this.getTreeState[0].children[i].type=='wifi'){
+                                    let index = this.controleWifiList.indexOf(this.getTreeState[0].children[i].id);
+                                    if (index > -1) {
+                                        this.controleWifiList.splice(index, 1);
+                                    }
                                 }
                             }
                         }
@@ -1809,6 +1821,9 @@
                             }else if(this.getTreeState[0].type=='environment'){
                                 this.controleEnvironmentList.push(this.getTreeState[0].id);
                                 this.controleEnvironmentList=[...new Set(this.controleEnvironmentList)];
+                            }else if(this.getTreeState[0].type=='wifi'){
+                                this.controleWifiList.push(this.getTreeState[0].id);
+                                this.controleWifiList=[...new Set(this.controleWifiList)];
                             }
                         } else {
                             this.treeHide(this.getTreeState[0]);
@@ -1822,6 +1837,11 @@
                                 if (index > -1) {
                                     this.controleEnvironmentList.splice(index, 1);
                                 }
+                            }else if(this.getTreeState[0].type=='wifi'){
+                                let index = this.controleWifiList.indexOf(this.getTreeState[0].id);
+                                if (index > -1) {
+                                    this.controleWifiList.splice(index, 1);
+                                }
                             }
                         }
                     }
@@ -1829,11 +1849,14 @@
             },
             '$route' (to,from) {
                 if(from.name==='Light'){
-                    console.log(this.controleLightList);
+                    console.log(this.controleLightList,'路灯');
                     this.$store.commit('CONTROLER_LIGHT', this.controleLightList)
                 }else if(from.name==='Environment'){
-                    console.log(this.controleEnvironmentList);
+                    console.log(this.controleEnvironmentList,'传感器');
                     this.$store.commit('CONTROLER_ENVIRONMENT', this.controleEnvironmentList)
+                }else if(from.name==='Wifi'){
+                    console.log(this.controleWifiList,'wifi');
+                    this.$store.commit('CONTROLER_WIFI', this.controleWifiList)
                 }
             }
         },

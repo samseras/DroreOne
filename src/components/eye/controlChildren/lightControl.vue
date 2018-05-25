@@ -154,7 +154,8 @@
                     let idList = []
                     let noRegion = {
                         label: '未知片区设备',
-                        id: 10010,
+                        id: '10010',
+                        type:'light',
                         children:[]
                     }
                     for (let i=0;i<this.lightList.length;i++){
@@ -162,14 +163,16 @@
                             this.regionId.push(this.lightList[i].regionId)
                         }
                     }
-                    this.regionId.push(10010)
+                    this.regionId.push('10010')
                     this.lightList.forEach(item => {
                         item.label = item.name
                         item.type = 'light'
                         if (item.lightStatus) {
                             item.icon = '../../../static/img/light_big.svg'
+                            item.status=true
                         } else {
                             item.icon = '../../../static/img/light.svg'
+                            item.status=false
                         }
                         if (item.regionId) {
                             if (!regionIdList.includes(item.regionId)){
@@ -204,6 +207,7 @@
                         arr.push(noRegion)
                     }
                     this.lightInfo = arr
+                    console.log(this.lightInfo,'16565623');
                 }).catch(err =>{
                     console.log(err)
                 })
