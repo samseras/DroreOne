@@ -422,9 +422,9 @@
                     this.parkList = _.sortBy(this.parkList, 'byTime')
                     this.checkList = this.parkList
                     this.choseInfoId = []
-                    if(this.parkList.length=== 0){
-                        this.selectFlag=false
-                    }
+
+                    this.selectFlag=false
+
                 }).catch(err => {
                     console.log(err)
                     this.isShowLoading = false

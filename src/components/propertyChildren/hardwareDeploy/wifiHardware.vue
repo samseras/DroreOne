@@ -411,9 +411,8 @@
                     }
                     this.wifiList = _.sortBy(this.wifiList,'byTime')
                     this.checkList = this.wifiList
-                    if(this.wifiList.length=== 0){
-                        this.selectFlag=false
-                    }
+                    this.selectFlag=false
+
                 }).catch((err)=>{
                     console.log(err)
                 })

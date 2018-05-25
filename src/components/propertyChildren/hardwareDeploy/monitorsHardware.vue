@@ -401,9 +401,9 @@
                     }
                     this.monitorsList = _.sortBy(this.monitorsList,'byTime')
                     this.checkList = this.monitorsList
-                    if(this.monitorsList.length=== 0){
-                        this.selectFlag=false
-                    }
+
+                    this.selectFlag=false
+
                 }).catch((err)=>{
                     console.log(err)
                 })

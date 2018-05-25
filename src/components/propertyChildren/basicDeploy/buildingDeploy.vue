@@ -402,9 +402,9 @@
                     this.buildList = _.sortBy(this.buildList,'byTime')
                     this.checkList = this.buildList
                     this.choseInfoId = []
-                    if(this.buildList.length=== 0){
-                        this.selectFlag=false
-                    }
+
+                    this.selectFlag=false
+
                 }).catch(err => {
                     console.log(err, '请求失败')
                     this.isShowLoading = false

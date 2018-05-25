@@ -405,9 +405,9 @@
                     }
                     this.gateList = _.sortBy(this.gateList,'byTime')
                     this.checkList = this.gateList
-                    if(this.gateList.length=== 0){
-                        this.selectFlag=false
-                    }
+
+                    this.selectFlag=false
+
                 }).catch((err)=>{
                     console.log(err)
                 })

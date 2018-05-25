@@ -414,9 +414,9 @@
                     }
                     this.ledList = _.sortBy(this.ledList,'byTime')
                     this.checkList = this.ledList
-                    if(this.ledList.length=== 0){
-                        this.selectFlag=false
-                    }
+
+                    this.selectFlag=false
+
                 }).catch((err)=>{
                     console.log(err)
                 })

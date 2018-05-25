@@ -402,9 +402,9 @@
                     }
                     this.policeList = _.sortBy(this.policeList,'byTime')
                     this.checkList = this.policeList
-                    if(this.cameraList.length=== 0){
-                        this.selectFlag=false
-                    }
+
+                    this.selectFlag=false
+
                 }).catch((err)=>{
                     console.log(err)
                 })
