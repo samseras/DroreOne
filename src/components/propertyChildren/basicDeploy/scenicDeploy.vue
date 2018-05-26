@@ -11,10 +11,12 @@
                         @choseType = 'choseType'
                         :choseId="choseInfoId"
                         @selectedAll = 'selectedAll'
-                        :listsLength="scenicList.length"
+                        :listsLength="listLength"
                         :personListFlag="selectFlag"
                         @fixedInfo = 'fixedInfo'
                         @searchAnything="searchAnything"
+                        @nextPage="nextPage"
+                        @previousPage="previousPage"
                         @getAllScenic="getAllScenic">
                 </Header>
             </div>
@@ -75,7 +77,7 @@
                             </template>
                         </el-table-column>
                     </el-table>
-                    <div class="personInfo" v-for="item in scenicList" v-if="isShowScenicCard && item.status">
+                    <div class="personInfo" v-for="(item,index) in scenicList" v-if="isShowScenicCard && item.status">
                         <div class="checkBox">
                             <el-checkbox v-model="item.checked" @change="checked(item.id)" class="checkBtn"></el-checkbox>
                         </div>
@@ -83,7 +85,7 @@
                             <!--<img src="../../../../static/img/scenicCard.png" alt="">-->
                             <img :src="getUrl(item.picturePath)" alt="" @error="imgError">
                             <span class="type">
-                                  {{item.scenicspotBean.name}}
+                                {{item.scenicspotBean.name}}
                                 </span>
                         </div>
                         <div class="specificInfo">
@@ -132,7 +134,9 @@
                 isDisabled: true,
                 title: '',
                 isShowLoading: false,
-                currentNum: 50
+                currentNum: 50,
+                listLength: '',
+                pageNum: 1
             }
         },
         methods: {
@@ -190,14 +194,15 @@
                     }).then(() => {
                         api.scenic.deleteScenic(this.choseInfoId).then(res => {
                             console.log(res, '删除成功')
-                            for (let i = 0; i < this.choseInfoId.length; i++) {
-                                this.scenicList = this.scenicList.filter((item, index) => {
-                                    if (item.id === this.choseInfoId[i]){
-                                        this.scenicList[index].checked = false
-                                    }
-                                    return item.id !== this.choseInfoId[i]
-                                })
-                            }
+                            // for (let i = 0; i < this.choseInfoId.length; i++) {
+                            //     this.scenicList = this.scenicList.filter((item, index) => {
+                            //         if (item.id === this.choseInfoId[i]){
+                            //             this.scenicList[index].checked = false
+                            //         }
+                            //         return item.id !== this.choseInfoId[i]
+                            //     })
+                            // }
+                            this.getAllScenic()
                             this.$message.success('删除成功')
                             this.choseInfoId = []
                             this.getAllScenic()
@@ -369,12 +374,28 @@
                     this.$message.error('请选择一条数据')
                 }
             },
+            previousPage (page) {
+                console.log(page, '这是传过来的pageNum')
+                this.pageNum = page
+                this.getAllScenic()
+            },
+            nextPage (page) {
+                console.log(page, '这个是下一页的pageNUM')
+                this.pageNum = page
+                this.getAllScenic()
+            },
             async getAllScenic () {
                 this.isShowLoading = true
                 await api.scenic.getAllScenic().then((res) => {
                     console.log(res, '这是请求回来的所有数据')
+                    this.listLength = res.length
                     this.isShowLoading = false
                     this.scenicList = res
+                    this.scenicList = this.scenicList.filter((item,index) => {
+                        if (index < (this.pageNum * 35 ) && index > ((this.pageNum -1) * 35 ) - 1 ) {
+                            return item
+                        }
+                    })
                     for (let i = 0; i < this.scenicList.length; i++) {
                         this.scenicList[i].checked = false
                         this.scenicList[i].status = true
@@ -398,9 +419,7 @@
                     this.scenicList = _.sortBy(this.scenicList, 'byTime')
                     this.checkList = this.scenicList
                     this.choseInfoId = []
-                    if(this.scenicList.length=== 0){
-                        this.selectFlag=false
-                    }
+                    this.selectFlag=false
                 }).catch((err)=> {
                     console.log(err)
                     this.isShowLoading = false

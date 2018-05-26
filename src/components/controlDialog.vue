@@ -39,6 +39,30 @@
                         {{this.Monitors.description}}
                     </p>
                 </div>
+                <!--wifi-->
+                <div class="personCardContent" v-if="route.includes('wifi')">
+                    <p class="name">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称：
+                        {{this.WifiList.name}}
+                    </p>
+                    <p class="name">所属片区：
+                        {{this.WifiList.regionName}}
+                    </p>
+                    <p class="name">厂&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;家：
+                        {{this.WifiList.modelName}}
+                    </p>
+                    <p class="name">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：
+                        {{this.WifiList.description}}
+                    </p>
+                    <p class="name">当前连接数：
+                        {{this.WifiList.currentConnections}}
+                    </p>
+                    <p class="name">上行速率：
+                        {{this.WifiList.upRate}}
+                    </p>
+                    <p class="name">下行速率：
+                        {{this.WifiList.downRate}}
+                    </p>
+                </div>
             </div>
         </el-dialog>
     </div>
@@ -53,6 +77,7 @@
                 route:'',
                 LightList:[],
                 Monitors:[],
+                WifiList:[],
             }
         },
         methods: {
@@ -69,6 +94,8 @@
                 this.LightList = this.Info
             }else if(this.route.includes('environment')) {
                 this.Monitors = this.Info
+            }else if(this.route.includes('wifi')) {
+                this.WifiList = this.Info
             }
         },
         computed: {

@@ -1,12 +1,13 @@
 <template>
     <div class="deploy">
-        <el-menu default-active="/deploy/lamppost-Dmis" router>
+        <el-menu :default-active="route" router>
             <ScrollContainer>
                 <template v-for="item in items">
                     <template v-if="item.subs">
                         <el-submenu :index="item.index">
                             <template slot="title"><img :src="item.icon" alt="">{{ item.title }}</template>
-                            <el-menu-item v-for="(subItem,i) in item.subs" :key="i" :index="subItem.index">
+                            <el-menu-item v-for="(subItem,i) in item.subs" :key="i" :index="subItem.index"
+                            :class="subItem.index === route?'active':''">
                                 <img :src="subItem.icon" alt="">
                                 {{ subItem.title }}
                             </el-menu-item>
@@ -31,6 +32,7 @@
     export default{
         data() {
             return {
+                route: this.$route.path,
                 items: [
                     {
                         icon: './../../static/img/dmis.svg',
@@ -82,6 +84,18 @@
             onRoutes(){
                 return this.$route.path.replace();
             }
+        },
+        created () {
+            // let route = this.$route.path
+            // console.log(route, 'opopopopopopopo')
+            // if (route) {
+            //
+            // }
+        },
+        watch: {
+          '$route' () {
+              this.route = this.$route.path
+          }
         },
         components: {
             ScrollContainer
@@ -150,6 +164,10 @@
         .content{
             flex: 1;
             height: 100%;
+        }
+        .active{
+            /*background: #0086b3;*/
+            color: #409EFF;
         }
 
     }

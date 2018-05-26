@@ -23,7 +23,7 @@ const lamppost = {
     deletLamppost(item){
         return axios ({
             method: 'DELETE',
-            url: getUrl('/schedule/light/isenabled'),
+            url: getUrl('/schedule/light'),
             data:{
                 ids:item
             }

@@ -11,6 +11,7 @@
                         @searchAnything="searchAnything"
                         :choseId="choseInfoId"
                         :listsLength = "cameraList.length"
+                        :personListFlag="selectFlag"
                         @fixedInfo="fixedInfo"
                         @choseType="choseType"
                         @toggleList="toggleList"
@@ -109,6 +110,8 @@
     export default{
         data(){
             return{
+                selectFlag:false,
+                tempSelects:[],
                 isShowPersonCard:true,
                 visible:false,
                 cameraList:[],
@@ -247,16 +250,18 @@
                     }).then(() => {
                         api.camera.deleteCamera(this.choseInfoId).then(res=>{
                             console.log(res,'删除成功')
-                            for(let i=0;i<this.choseInfoId.length;i++){
-                                this.cameraList=this.cameraList.filter((item,index)=>{
-                                    if(item.id===this.choseInfoId[i]){
-                                        this.cameraList[index].checked=false
-                                    }
-                                    return item.id !== this.choseInfoId[i]
-                                })
-                            }
+                            // for(let i=0;i<this.choseInfoId.length;i++){
+                            //     this.cameraList=this.cameraList.filter((item,index)=>{
+                            //         if(item.id===this.choseInfoId[i]){
+                            //             this.cameraList[index].checked=false
+                            //         }
+                            //         return item.id !== this.choseInfoId[i]
+                            //     })
+                            // }
+                            this.getAllCamera()
                             this.$message.success('删除成功')
                             this.choseInfoId=[]
+                            this.getAllCamera()
                         }).catch(err=>{
                             console.log(err)
                             this.$message.error('删除失败，请稍后重试')
@@ -314,6 +319,7 @@
                 }
             },
             checked(id){
+                this.tempSelects=[];
                 this.cameraList = this.cameraList.filter(item =>{
                     if(item.id ===id){
                         item.checked = item.checked
@@ -327,6 +333,16 @@
                     })
                 }else{
                     this.choseInfoId.push(id)
+                }
+                let that=this;
+                this.cameraList.forEach(function(item,i){
+                    (item.checked)&&(that.tempSelects.push(item))
+                })
+                console.log(this.tempSelects)
+                if(this.tempSelects.length===this.cameraList.length){
+                    this.selectFlag=true
+                }else{
+                    this.selectFlag=false
                 }
             },
             choseType(type){
@@ -367,6 +383,7 @@
                     }
                 })
                 console.log(this.choseInfoId)
+                this.selectFlag=true
             },
             async getAllCamera () {
                 this.choseInfoId=[];
@@ -385,6 +402,9 @@
                     }
                     this.cameraList = _.sortBy(this.cameraList,'byTime')
                     this.checkList = this.cameraList
+
+                    this.selectFlag=false
+
                 }).catch((err)=> {
                     console.log(err)
                 })

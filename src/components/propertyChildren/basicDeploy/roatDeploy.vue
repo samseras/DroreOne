@@ -167,14 +167,15 @@
                         api.deployRoad.deleteRoute(this.choseInfoId).then(res => {
                             console.log(res, '删除成功')
                             this.$message.success('删除成功')
-                            for (let i = 0; i < this.choseInfoId.length; i++) {
-                                this.roatList = this.roatList.filter((item, index) => {
-                                    if (item.id === this.choseInfoId[i]){
-                                        this.roatList[index].checked = false
-                                    }
-                                    return item.id !== this.choseInfoId[i]
-                                })
-                            }
+                            // for (let i = 0; i < this.choseInfoId.length; i++) {
+                            //     this.roatList = this.roatList.filter((item, index) => {
+                            //         if (item.id === this.choseInfoId[i]){
+                            //             this.roatList[index].checked = false
+                            //         }
+                            //         return item.id !== this.choseInfoId[i]
+                            //     })
+                            // }
+                            this.getAllRoat()
                             this.choseInfoId = []
                             this.getAllRoat()
                         }).catch(err => {
@@ -351,9 +352,9 @@
                     }
                     this.checkList = this.roatList
                     this.choseInfoId = []
-                    if(this.roatList.length=== 0){
-                        this.selectFlag=false
-                    }
+
+                    this.selectFlag=false
+
                 }).catch(err => {
                     console.log(err, '请求失败')
                 })

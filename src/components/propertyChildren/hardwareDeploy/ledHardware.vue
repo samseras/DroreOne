@@ -11,6 +11,7 @@
                         @fixedInfo="fixedInfo"
                         :choseId="choseInfoId"
                         :listsLength = "ledList.length"
+                        :personListFlag="selectFlag"
                         @searchAnything="searchAnything"
                         @choseType="choseType"
                         @toggleList="toggleList"
@@ -114,6 +115,8 @@
     export default{
         data(){
             return{
+                selectFlag:false,
+                tempSelects:[],
                 isShowLedCard:true,
                 visible:false,
                 ledList:[
@@ -258,16 +261,18 @@
                         type: 'warning'
                     }).then(() => {
                         api.led.deleteLed(this.choseInfoId).then(res =>{
-                            for(let i=0;i<this.choseInfoId.length;i++){
-                                this.ledList=this.ledList.filter((item,index)=>{
-                                    if(item.id ===this.choseInfoId[i]){
-                                        this.ledList[index].checked=false
-                                    }
-                                    return item.id!==this.choseInfoId[i]
-                                })
-                            }
+                            // for(let i=0;i<this.choseInfoId.length;i++){
+                            //     this.ledList=this.ledList.filter((item,index)=>{
+                            //         if(item.id ===this.choseInfoId[i]){
+                            //             this.ledList[index].checked=false
+                            //         }
+                            //         return item.id!==this.choseInfoId[i]
+                            //     })
+                            // }
+                            this.getAllLed()
                             this.$message.success('删除成功')
                             this.choseInfoId=[]
+                            this.getAllLed()
                         }).catch(err=>{
                             this.$message.error('删除失败，请稍后再试')
                         })
@@ -286,11 +291,12 @@
                 let screenWidth=info.area.substring(0,item)
                 let screenHeight = info.area.substring(item + 1)
                 let ledObj=[{
+                    mac:info.mac,
                     typeId: 4,
                     positionType:info.positionType,
                     name:info.name,
                     model:info.model,
-                    ip:info.ip,
+                    /*ip:info.ip,*/
                     port:info.port,
                     serialNum:info.serialNum,
                     regionId:info.regionId,
@@ -326,6 +332,7 @@
                 }
             },
             checked(id){
+                this.tempSelects=[];
                 this.ledList = this.ledList.filter(item => {
                     if (item.id === id) {
                         item.checked = item.checked
@@ -339,6 +346,16 @@
                     })
                 }else{
                     this.choseInfoId.push(id)
+                }
+                let that=this;
+                this.ledList.forEach(function(item,i){
+                    (item.checked)&&(that.tempSelects.push(item))
+                })
+                console.log(this.tempSelects)
+                if(this.tempSelects.length===this.ledList.length){
+                    this.selectFlag=true
+                }else{
+                    this.selectFlag=false
                 }
             },
             choseType(type){
@@ -379,8 +396,10 @@
                     }
                 })
                 console.log(this.choseInfoId)
+                this.selectFlag=true
             },
             async getAllLed(){
+                this.choseInfoId=[];
                 this.isShowLoading=true
                 await api.led.getAllLed().then((res)=>{
                     console.log(res,'这是请求的数据')
@@ -390,12 +409,16 @@
                         this.ledList[i].checked=false
                         this.ledList[i].status=true
                         this.ledList[i].id = this.ledList[i].id
+                        this.ledList[i].mac = this.ledList[i].mac
                         this.ledList[i].location=`${this.ledList[i].longitude},${this.ledList[i].latitude}`
                         this.ledList[i].area=`${this.ledList[i].screenWidth},${this.ledList[i].screenHeight}`
                         this.ledList[i].byTime = -(new Date(this.ledList[i].modifyTime)).getTime()
                     }
                     this.ledList = _.sortBy(this.ledList,'byTime')
                     this.checkList = this.ledList
+
+                    this.selectFlag=false
+
                 }).catch((err)=>{
                     console.log(err)
                 })

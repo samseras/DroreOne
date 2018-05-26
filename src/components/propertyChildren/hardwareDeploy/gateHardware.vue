@@ -12,6 +12,7 @@
                         @searchAnything="searchAnything"
                         :choseId="choseInfoId"
                         :listsLength = "gateList.length"
+                        :personListFlag="selectFlag"
                         @choseType="choseType"
                         @toggleList="toggleList"
                         @getAllGate="getAllGate">
@@ -114,6 +115,8 @@
     export default{
         data(){
             return{
+                selectFlag:false,
+                tempSelects:[],
                 isShowGateCard:true,
                 visible:false,
                 gateList
@@ -251,16 +254,18 @@
                         type: 'warning'
                     }).then(() => {
                         api.gate.deleteGate(this.choseInfoId).then(res=>{
-                            for(let i=0;i<this.choseInfoId.length;i++){
-                                this.gateList=this.gateList.filter((item,index)=>{
-                                    if(item.id===this.choseInfoId[i]){
-                                        this.gateList[index].checked=false
-                                    }
-                                    return item.id!==this.choseInfoId[i]
-                                })
-                            }
+                            // for(let i=0;i<this.choseInfoId.length;i++){
+                            //     this.gateList=this.gateList.filter((item,index)=>{
+                            //         if(item.id===this.choseInfoId[i]){
+                            //             this.gateList[index].checked=false
+                            //         }
+                            //         return item.id!==this.choseInfoId[i]
+                            //     })
+                            // }
+                            this.getAllGate()
                             this.$message.success('删除成功')
                             this.choseInfoId=[]
+                            this.getAllGate()
                         }).catch(err=>{
                             this.$message.err('删除失败，请稍后重试')
                         })
@@ -278,6 +283,7 @@
                 let latitude = info.location.substring(index + 1)
                 let gateObj=[{
                     typeId:3,
+                    mac:info.mac,
                     gateType:info.gateType,
                     name:info.name,
                     model:info.model,
@@ -315,6 +321,7 @@
                 }
             },
             checked(id){
+                this.tempSelects=[];
                 this.gateList = this.gateList.filter(item => {
                     if (item.id === id) {
                         item.checked = item.checked
@@ -328,6 +335,16 @@
                     })
                 }else{
                     this.choseInfoId.push(id)
+                }
+                let that=this;
+                this.gateList.forEach(function(item,i){
+                    (item.checked)&&(that.tempSelects.push(item))
+                })
+                console.log(this.tempSelects)
+                if(this.tempSelects.length===this.gateList.length){
+                    this.selectFlag=true
+                }else{
+                    this.selectFlag=false
                 }
             },
             choseType(type){
@@ -372,8 +389,10 @@
                     }
                 })
                 console.log(this.choseInfoId)
+                this.selectFlag=true
             },
             async getAllGate(){
+                this.choseInfoId=[];
                 this.isShowLoading=true
                 await api.gate.getAllGate().then((res)=>{
                     console.log(res,'这是拿到的数据')
@@ -381,12 +400,16 @@
                     this.gateList=res.devices
                     for (let i=0;i<this.gateList.length;i++){
                         this.gateList[i].checked=false
+                        this.gateList[i].mac=this.gateList[i].mac
                         this.gateList[i].status=true
                         this.gateList[i].location=`${this.gateList[i].longitude},${this.gateList[i].latitude}`
                         this.gateList[i].byTime = -(new Date(this.gateList[i].modifyTime)).getTime()
                     }
                     this.gateList = _.sortBy(this.gateList,'byTime')
                     this.checkList = this.gateList
+
+                    this.selectFlag=false
+
                 }).catch((err)=>{
                     console.log(err)
                 })

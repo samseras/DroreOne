@@ -1,7 +1,7 @@
 <template>
     <div class="personDeploy">
         <div class="title">
-            人员信息
+            {{smallTitle}}
         </div>
         <div class="personContent">
             <div class="funcTitle">
@@ -94,12 +94,12 @@
                         <div class="personType" @click.stop="showPersonDetail(item, '人员信息',true)">
                             <img :src="getUrl(item.picturePath)" alt="" @error="imgError">
                             <span class="type">
-                                  {{item.jobName}}
+                                  {{item.name}}
                                 </span>
                         </div>
                         <div class="specificInfo">
-                            <p class="name">
-                                姓&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;名：<span>{{item.name}}</span></p>
+                            <!--<p class="name">
+                                姓&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;名：<span>{{item.name}}</span></p>-->
                             <p class="sex">性&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;别：<span>{{item.gender | sexFilter}}</span>
                             </p>
                             <p class="idNum">身份证号：<span>{{item.idNum | idNumFilter}}</span></p>
@@ -133,6 +133,7 @@
         name: 'person-deploy',
         data() {
             return {
+                smallTitle:'职业',
                 selectFlag:false,
                 tempSelects:[],
                 isShowPersonCard: true,
@@ -178,30 +179,41 @@
                     switch (this.$route.params.id) {
                         case '1': {
                             imgSrc = './../../../static/img/driveCard.png';
+                            this.smallTitle='司机';
                             break
                         }
                         case '2': {
                             imgSrc = './../../../static/img/boatCard.png';
+                            this.smallTitle='船夫';
                             break
                         }
                         case '3': {
                             imgSrc = './../../../static/img/clearCard.png';
+                            this.smallTitle='安保';
                             break
                         }
                         case '4': {
                             imgSrc = './../../../static/img/clearCard.png';
+                            this.smallTitle='保洁';
                             break
                         }
                         case '5': {
                             imgSrc = './../../../static/img/saleTrickCard.png';
+                            this.smallTitle='售票';
                             break
                         }
                         case '6': {
                             imgSrc = './../../../static/img/trickCard.png';
+                            this.smallTitle='检票';
                             break
                         }
                         case '7': {
                             imgSrc = './../../../static/img/keepServ.png';
+                            this.smallTitle='维保';
+                            break
+                        }
+                        case '8': {
+                            this.smallTitle='管理者';
                             break
                         }
                         default:{
@@ -237,14 +249,15 @@
                     }).then(() => {
                         api.person.deletePerson(this.choseInfoId).then(res => {
                             console.log(res, '删除成功')
-                            for (let i = 0; i < this.choseInfoId.length; i++) {
-                                this.personList = this.personList.filter((item, index) => {
-                                    if (item.id === this.choseInfoId[i]) {
-                                        this.personList[index].checked = false
-                                    }
-                                    return item.id !== this.choseInfoId[i]
-                                })
-                            }
+                            // for (let i = 0; i < this.choseInfoId.length; i++) {
+                            //     this.personList = this.personList.filter((item, index) => {
+                            //         if (item.id === this.choseInfoId[i]) {
+                            //             this.personList[index].checked = false
+                            //         }
+                            //         return item.id !== this.choseInfoId[i]
+                            //     })
+                            // }
+                            this.getAllPerson()
                             this.$message.success('删除成功')
                             this.choseInfoId = []
                             this.getAllPerson()
@@ -449,10 +462,9 @@
                     this.personList = _.sortBy(this.personList,'byTime')
                     console.log(this.personList, 'p[p[p[p[p[p[p[p[p[p[p[p[p[[pp')
                     this.checkList = this.personList
-                    if(this.personList.length=== 0){
-                        console.log('进来了')
-                        this.selectFlag=false
-                    }
+
+                    this.selectFlag=false
+
                 }).catch(err => {
                     console.log(err)
                     this.isShowLoading = false
@@ -468,9 +480,11 @@
                 }
             },
             idNumFilter(id) {
-             let leftId =  id.substring(0, 6)
-             let rightId = id.substring(14)
-             return `${leftId}********${rightId}`
+                if(id){
+                    let leftId =  id.substring(0, 6)
+                    let rightId = id.substring(14)
+                    return `${leftId}********${rightId}`
+                }
             }
         },
         created() {

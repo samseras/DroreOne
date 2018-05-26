@@ -10,14 +10,14 @@
                 <el-checkbox v-model="isSelected" @change="selectedAll"></el-checkbox>全选
             </el-button>
             <!--<el-button size="mini"plain v-if="isShowHeader">导入</el-button>-->
-            <div v-if="isShowHeader" class="el-upload">
+            <div class="el-upload" v-if="isShowHeader">
                 <el-button size="mini" plain @click="$refs.uploadFile.click()"><i class="el-icon-upload2"></i>导入</el-button>
                 <input type="file" ref="uploadFile" class="importFile" @change="selectFile">
             </div>
-            <el-button size="mini"plain v-if="isShowHeader" @click="expotInfo"><i class="el-icon-download"></i>导出</el-button>
-            <el-button size="mini"plain v-if="isShowHeader" @click="exportTemplate"><i class="el-icon-download"></i>下载模板</el-button>
+            <el-button size="mini"plain @click="expotInfo"><i class="el-icon-download"></i>导出</el-button>
+            <el-button size="mini"plain @click="exportTemplate" v-if="isShowHeader"><i class="el-icon-download"></i>下载模板</el-button>
             <el-button size="mini"plain @click="deleteCard"><i class="el-icon-delete"></i>删除</el-button>
-            <el-button size="mini"plain @click="fixCard"><i class="el-icon-edit"></i>修改</el-button>
+            <el-button size="mini"plain @click="fixCard" v-if="isShowIcon"><i class="el-icon-edit" ></i>修改</el-button>
         </div>
         <!--<div class="filite" v-if="route.includes('person')">-->
             <!--<el-checkbox-group v-model="filterList" @change="choseType">-->
@@ -44,10 +44,10 @@
                 <el-checkbox v-for="item in parkType" :label="item.type | packFilter" :key="item.type"></el-checkbox>
             </el-checkbox-group>
         </div>
-        <div class="page" v-if="isShowHeader">
-            <span>当前第1页/共8页</span>
-            <span class="upPage"><</span>
-            <span class="downPage">></span>
+        <div class="page">
+            <span>当前第{{currentPageNum}}页/共{{pageAllNum}}页</span>
+            <span class="upPage"@click="previousPage"><</span>
+            <span class="downPage" @click="nextPage">></span>
             <span class="listForm" @click="toggleList('list')" v-if="isShowIcon"><i class="el-icon-tickets"></i></span>
             <span class="cardForm" @click="toggleList('card')" v-if="!isShowIcon"><i class="el-icon-menu"></i></span>
         </div>
@@ -81,7 +81,9 @@
                 isSelected: false,
                 isShowHeader: true,
                 searchContent: '',
-                isShowIcon: true
+                isShowIcon: true,
+                pageAllNum: 1,
+                currentPageNum: 1
             }
         },
         methods: {
@@ -419,13 +421,30 @@
                 }
             },
             showHeader () {
-                if (this.route.includes('basictype')) {
+                let route = this.$route.path
+                if (route.includes('roat')) {
                     this.isShowHeader = false
-                } else if (this.route.includes('personType')) {
+                } else if (route.includes('area')) {
                     this.isShowHeader = false
                 } else {
                     this.isShowHeader = true
                 }
+            },
+            previousPage () {//上一页
+                this.currentPageNum--
+                if(this.currentPageNum < 1) {
+                    this.currentPageNum = 1
+                    return
+                }
+                this.$emit('previousPage',this.currentPageNum)
+            },
+            nextPage () {//下一页
+                this.currentPageNum++
+                if (this.currentPageNum > this.pageAllNum) {
+                    this.currentPageNum = this.pageAllNum
+                    return
+                }
+                this.$emit('nextPage',this.currentPageNum)
             }
         },
         filters: {
@@ -449,8 +468,11 @@
                 }else{
                     this.isSelected=false
                 }
-
-
+            },
+            listsLength () {
+                if (this.listsLength > 0) {
+                    this.pageAllNum = Math.ceil(this.listsLength / 35)
+                }
             }
         },
         created () {

@@ -177,15 +177,16 @@
                         api.area.deleteRegion(this.choseInfoId).then(res => {
                             console.log(res, '删除成功')
                             this.$message.success('删除成功')
-                            for (let i = 0; i < this.choseInfoId.length; i++) {
-                                this.areaList = this.areaList.filter((item, index) => {
-                                    if (item.id === this.choseInfoId[i]){
-                                        this.areaList[index].checked = false
-                                        //this.areaList[index].status = false
-                                    }
-                                    return item.id !== this.choseInfoId[i]
-                                })
-                            }
+                            // for (let i = 0; i < this.choseInfoId.length; i++) {
+                            //     this.areaList = this.areaList.filter((item, index) => {
+                            //         if (item.id === this.choseInfoId[i]){
+                            //             this.areaList[index].checked = false
+                            //             //this.areaList[index].status = false
+                            //         }
+                            //         return item.id !== this.choseInfoId[i]
+                            //     })
+                            // }
+                            this.getAllArea()
                             this.choseInfoId = []
                             this.getAllArea()
                         }).catch(err => {
@@ -368,9 +369,7 @@
 
                     this.checkList = this.areaList
                     this.choseInfoId = []
-                    if(this.areaList.length=== 0){
-                        this.selectFlag=false
-                    }
+                    this.selectFlag=false
                 }).catch(err => {
                     console.log(err, '失败')
                     this.isShowLoading = false

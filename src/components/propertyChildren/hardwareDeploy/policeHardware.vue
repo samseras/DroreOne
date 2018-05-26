@@ -12,6 +12,7 @@
                         @searchAnything="searchAnything"
                         :choseId="choseInfoId"
                         :listsLength = "policeList.length"
+                        :personListFlag="selectFlag"
                         @choseType="choseType"
                         @toggleList="toggleList"
                         @getAllPolice="getAllPolice">
@@ -114,6 +115,8 @@
     export default{
         data(){
             return{
+                selectFlag:false,
+                tempSelects:[],
                 isShowPoliceCard:true,
                 visible:false,
                 policeList:[
@@ -252,16 +255,18 @@
                         type: 'warning'
                     }).then(() => {
                         api.police.deletePolice(this.choseInfoId).then(res =>{
-                            for(let i=0;i<this.choseInfoId.length;i++){
-                                this.policeList=this.policeList.filter((item,index) =>{
-                                    if(item.id===this.choseInfoId[i]){
-                                        this.policeList[index].checked=false
-                                    }
-                                    return item.id!==this.choseInfoId[i]
-                                })
-                            }
+                            // for(let i=0;i<this.choseInfoId.length;i++){
+                            //     this.policeList=this.policeList.filter((item,index) =>{
+                            //         if(item.id===this.choseInfoId[i]){
+                            //             this.policeList[index].checked=false
+                            //         }
+                            //         return item.id!==this.choseInfoId[i]
+                            //     })
+                            // }
+                            this.getAllPolice()
                             this.$message.success('删除成功')
                             this.choseInfoId=[]
+                            this.getAllPolice()
                         }).catch(err =>{
                             this.$message.error('删除失败,请稍后重试')
                         })
@@ -277,12 +282,13 @@
                 let longitude = info.location.substring(0, index)
                 let latitude = info.location.substring(index + 1)
                 let policeObj=[{
+                    mac:info.mac,
                     typeId: 8,
                     sensorType:info.sensorType,
                     name:info.name,
                     model:info.model,
                     serialNum:info.serialNum,
-                    ip:info.ip,
+                    /*ip:info.ip,*/
                     regionId:info.regionId,
                     port:info.port,
                     description:info.description,
@@ -315,6 +321,7 @@
                 }
             },
             checked(id){
+                this.tempSelects=[];
                 this.policeList = this.policeList.filter(item => {
                     if (item.id === id) {
                         item.checked = item.checked
@@ -328,6 +335,16 @@
                     })
                 }else{
                     this.choseInfoId.push(id)
+                }
+                let that=this;
+                this.policeList.forEach(function(item,i){
+                    (item.checked)&&(that.tempSelects.push(item))
+                })
+                console.log(this.tempSelects)
+                if(this.tempSelects.length===this.policeList.length){
+                    this.selectFlag=true
+                }else{
+                    this.selectFlag=false
                 }
             },
             choseType(type){
@@ -368,8 +385,10 @@
                     }
                 })
                 console.log(this.choseInfoId)
+                this.selectFlag=true
             },
             async getAllPolice(){
+                this.choseInfoId=[];
                 this.isShowLoading=true
                 await api.police.getAllPolice().then((res)=>{
                     console.log(res,'这是请求的数据')
@@ -379,11 +398,15 @@
                         this.policeList[i].checked=false
                         this.policeList[i].status=true
                         this.policeList[i].id=this.policeList[i].id
+                        this.policeList[i].mac=this.policeList[i].mac
                         this.policeList[i].location=`${this.policeList[i].longitude},${this.policeList[i].latitude}`
                         this.policeList[i].byTime = -(new Date(this.policeList[i].modifyTime)).getTime()
                     }
                     this.policeList = _.sortBy(this.policeList,'byTime')
                     this.checkList = this.policeList
+
+                    this.selectFlag=false
+
                 }).catch((err)=>{
                     console.log(err)
                 })

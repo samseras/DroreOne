@@ -1,0 +1,91 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" preserveAspectRatio="xMidYMid" width="884" height="93" viewBox="0 0 884 93">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #0d67a5;
+        fill-opacity: 0.5;
+      }
+
+      .cls-1, .cls-2 {
+        stroke: #00e7ff;
+        stroke-linejoin: round;
+        stroke-width: 1px;
+      }
+
+      .cls-1, .cls-2, .cls-3 {
+        filter: url(#drop-shadow-1);
+        fill-rule: evenodd;
+      }
+
+      .cls-2, .cls-3 {
+        fill: #00e7ff;
+      }
+
+      .cls-2 {
+        opacity: 0.8;
+      }
+
+      .cls-4 {
+        fill: #2258ae;
+      }
+
+      .cls-4, .cls-5 {
+        filter: url(#drop-shadow-5);
+      }
+
+      .cls-5 {
+        fill: #50f2ff;
+      }
+    </style>
+
+    <filter id="drop-shadow-1" filterUnits="userSpaceOnUse">
+      <feOffset dx="0.5" dy="0.866" in="SourceAlpha"/>
+      <feGaussianBlur stdDeviation="2.236" result="dropBlur"/>
+      <feFlood flood-opacity="0.35"/>
+      <feComposite operator="in" in2="dropBlur" result="dropShadowComp"/>
+      <feComposite in="SourceGraphic" result="shadowed"/>
+    </filter>
+    <filter id="drop-shadow-5" filterUnits="userSpaceOnUse">
+      <feOffset dx="0.5" dy="0.866" in="SourceAlpha"/>
+      <feGaussianBlur stdDeviation="1.732" result="dropBlur"/>
+      <feFlood flood-color="#062438" flood-opacity="0.4"/>
+      <feComposite operator="in" in2="dropBlur" result="dropShadowComp"/>
+      <feComposite in="SourceGraphic" result="shadowed"/>
+    </filter>
+  </defs>
+  <g>
+    <g style="fill: #0d67a5; filter: url(#drop-shadow-1)">
+      <path d="M862.000,89.000 L862.000,50.000 L856.000,50.000 L856.000,89.000 L851.000,89.000 L851.000,50.000 L845.000,50.000 L845.000,89.000 L659.014,89.000 L650.143,80.132 L650.275,80.000 L239.944,80.000 L240.014,80.070 L231.080,89.000 L45.000,89.000 L45.000,50.000 L39.000,50.000 L39.000,89.000 L34.000,89.000 L34.000,50.000 L28.000,50.000 L28.000,89.000 L8.000,89.000 L8.000,29.000 L882.000,29.000 L882.000,89.000 L862.000,89.000 Z" id="path-1" style="stroke: inherit; filter: none; fill: inherit" class="cls-1"/>
+    </g>
+    <use xlink:href="#path-1" style="stroke: #00e7ff; filter: none; fill: none"/>
+    <g style="fill: #00e7ff; filter: url(#drop-shadow-1)">
+      <path d="M219.000,62.000 L219.000,52.000 L231.000,52.000 L231.000,62.000 L219.000,62.000 ZM207.000,52.000 L215.000,52.000 L215.000,62.000 L207.000,62.000 L207.000,52.000 ZM195.000,52.000 L203.000,52.000 L203.000,62.000 L195.000,62.000 L195.000,52.000 ZM191.000,62.000 L109.000,62.000 L109.000,61.666 L95.580,75.000 L61.999,75.000 L88.292,52.000 L109.000,52.000 L118.727,52.000 L191.000,52.000 L191.000,62.000 Z" id="path-2" style="stroke: inherit; filter: none; fill: inherit" class="cls-2"/>
+    </g>
+    <use xlink:href="#path-2" style="stroke: #00e7ff; filter: none; fill: none"/>
+    <g style="fill: #00e7ff; filter: url(#drop-shadow-1)">
+      <path d="M793.420,75.000 L780.000,61.666 L780.000,62.000 L698.000,62.000 L698.000,52.000 L770.273,52.000 L780.000,52.000 L800.708,52.000 L827.001,75.000 L793.420,75.000 ZM694.000,62.000 L686.000,62.000 L686.000,52.000 L694.000,52.000 L694.000,62.000 ZM674.000,52.000 L682.000,52.000 L682.000,62.000 L674.000,62.000 L674.000,52.000 ZM658.000,52.000 L670.000,52.000 L670.000,62.000 L658.000,62.000 L658.000,52.000 Z" id="path-3" style="stroke: inherit; filter: none; fill: inherit" class="cls-2"/>
+    </g>
+    <use xlink:href="#path-3" style="stroke: #00e7ff; filter: none; fill: none"/>
+    <path d="M654.541,88.500 L234.552,88.500 L241.420,81.570 L241.351,81.500 L647.865,81.500 L647.734,81.632 L654.541,88.500 Z" class="cls-3"/>
+    <g>
+      <g>
+        <rect x="23.5" y="-15" width="6" height="60" class="cls-4"/>
+        <circle cx="26.5" cy="24" r="4" class="cls-5"/>
+      </g>
+      <g>
+        <rect x="34.5" y="-15" width="6" height="60" class="cls-4"/>
+        <circle cx="37.5" cy="24" r="4" class="cls-5"/>
+      </g>
+    </g>
+    <g>
+      <g>
+        <rect x="840.5" y="-15" width="6" height="60" class="cls-4"/>
+        <circle cx="843.5" cy="24" r="4" class="cls-5"/>
+      </g>
+      <g>
+        <rect x="851.5" y="-15" width="6" height="60" class="cls-4"/>
+        <circle cx="854.5" cy="24" r="4" class="cls-5"/>
+      </g>
+    </g>
+  </g>
+</svg>

@@ -44,6 +44,7 @@
                 menulist: {},
                 controleLightList:[],
                 controleEnvironmentList:[],
+                controleWifiList:[],
                 buildInfo:[],
                 visible:false,
                 title:'',
@@ -792,14 +793,12 @@
                     for (let i=0;i<this.iconList.length;i++){
                         this.iconList[i].type="wifi"
                         this.iconList[i].location = [this.iconList[i].longitude,this.iconList[i].latitude]
-                        if(this.iconList[i].lightStatus){
+                        if(this.iconList[i].status ==="ONLINE"){
                             this.iconList[i].url="/static/img/icon/wifi.png"
-                            this.iconList[i].subtype='Wifi'
-                            this.iconList[i].status=true
+                            this.iconList[i].subtype='wifi'
                         } else {
                             this.iconList[i].url="/static/img/icon/wifi_close.png"
                             this.iconList[i].subtype='wifi_close'
-                            this.iconList[i].status=false
                         }
                     }
                     this.iconShow();
@@ -811,12 +810,19 @@
                 await api.wifi.getAllWifi().then((res)=>{
                     this.wifiList=res.devices
                     for(let i=0;i<this.wifiList.length;i++){
+                        if(this.wifiList[i].lightStatus){
+                            this.wifiList[i].url="/static/img/icon/wifi.png"
+                            this.wifiList[i].subtype='wifi'
+                        } else {
+                            this.wifiList[i].url="/static/img/icon/wifi_close.png"
+                            this.wifiList[i].subtype='wifi_close'
+                        }
                         if(this.wifiList[i].id === this.getLocationId){
                             this.wifiList[i].location = [this.wifiList[i].longitude,this.wifiList[i].latitude]
                             var iconedit = new droreMap.icon.Marker({
                                 coordinate: droreMap.trans.transFromWgsToLayer(this.wifiList[i].location),
                                 name: this.wifiList[i].name,
-                                subtype: "droreMapinit",
+                                subtype: this.wifiList[i].subtype,
                                 id: this.wifiList[i].id,
                                 url: "/static/img/location_on.png"
                             });
@@ -835,9 +841,9 @@
                             var icon1 = new droreMap.icon.Marker({
                                 coordinate: droreMap.trans.transFromWgsToLayer(this.wifiList[i].location),
                                 name: this.wifiList[i].name,
-                                subtype: "droreMapinit",
+                                subtype:this.wifiList[i].subtype,
                                 id: this.wifiList[i].id,
-                                url: "http://label.drore.com/gisLabelTabImage/public/defaults/24*24/wifi.png"
+                                url: this.wifiList[i].url
                             });
                             droreMap.icon.addChild(icon1);
                         }
@@ -1676,26 +1682,30 @@
             //     droreMap.map.panToCoord(droreMap.trans.transFromWgsToLayer(ol[0]));
             // },
             droreMappopup(e){
-                // console.log(e);
+                console.log(e);
                 var div = document.getElementById('contextmenu_container')
                 var popup = new  droreMap.pop.Popup(div,e.coordinate,"contextmenu_container")
                 droreMap.pop.addChild(popup);
                 $("#contextmenu_container").attr("class","contextmenu "+e.subtype);
-                if(e.status){
+                if(e.status =="ONLINE"){
                     this.open=true
-                }else {
+                }else if(e.status =="OFFLINE"){
+                    console.log();
+                    this.open=false
+                }else{
                     this.open=false
                 }
                 $("#contextmenu_container").show();
             },
             mapSwitch(){
-                if(this.menulist.data.status){
+                if(this.menulist.data.status =="ONLINE"){
                     alert("关闭，id是"+this.menulist.id);
                 }else {
                     alert("开启，id是"+this.menulist.id);
                 }
             },
             menuShow(){
+                console.log(this.menulist)
                 this.buildInfo = this.menulist.data
                 this.visible = true
                 this.title = this.menulist.data.type
@@ -1737,15 +1747,16 @@
                     // console.log(this.getTreeState,'ioioioiooioioiooi')
                     //    这边是全选
                     if (this.getTreeState[0].checked) {//显示
-                        this.controleLightList=[];
-                        // console.log(this.getTreeState,'这111111111111')
                         this.getTreeState.forEach(item => {
                             item.children.forEach(item1 => {
                                 this.treeShow(item1);
-                                if(item.type=='light'){
+                                if(item1.type=='light'){
                                     this.controleLightList.push(item1.id);
-                                }else if(item.type=='environment'){
+                                }else if(item1.type=='environment'){
                                     this.controleEnvironmentList.push(item1.id);
+                                    // console.log(this.controleEnvironmentList,'这111111111111')
+                                }else if(item1.type=='wifi'){
+                                    this.controleWifiList.push(item1.id);
                                 }
                             })
                         })
@@ -1757,6 +1768,8 @@
                                 this.controleLightList=[];
                             }else if(item.type=='environment'){
                                 this.controleEnvironmentList=[];
+                            }else if(item.type=='wifi'){
+                                this.controleWifiList=[];
                             }
                         })
                     }
@@ -1766,13 +1779,16 @@
                         if (this.getTreeState[0].checked.checkedKeys.includes(this.getTreeState[0].id)) {
                             for (let i = 0; i < data.length; i++) {
                                 this.treeShow(data[i]);
-                                // console.log(this.getTreeState[0].type,'123123');
-                                if(this.getTreeState[0].type=='light'){
+                                console.log(this.getTreeState[0]);
+                                if(data[i].type=='light'){
                                     this.controleLightList.push(data[i].id);
                                     this.controleLightList=[...new Set(this.controleLightList)];
-                                }else if(this.getTreeState[0].type=='environment'){
+                                }else if(data[i].type=='environment'){
                                     this.controleEnvironmentList.push(data[i].id);
                                     this.controleEnvironmentList=[...new Set(this.controleEnvironmentList)];
+                                }else if(data[i].type=='wifi'){
+                                    this.controleWifiList.push(data[i].id);
+                                    this.controleWifiList=[...new Set(this.controleWifiList)];
                                 }
                             }
                         }else {
@@ -1789,6 +1805,11 @@
                                     if (index > -1) {
                                         this.controleEnvironmentList.splice(index, 1);
                                     }
+                                }else if(this.getTreeState[0].children[i].type=='wifi'){
+                                    let index = this.controleWifiList.indexOf(this.getTreeState[0].children[i].id);
+                                    if (index > -1) {
+                                        this.controleWifiList.splice(index, 1);
+                                    }
                                 }
                             }
                         }
@@ -1801,6 +1822,9 @@
                             }else if(this.getTreeState[0].type=='environment'){
                                 this.controleEnvironmentList.push(this.getTreeState[0].id);
                                 this.controleEnvironmentList=[...new Set(this.controleEnvironmentList)];
+                            }else if(this.getTreeState[0].type=='wifi'){
+                                this.controleWifiList.push(this.getTreeState[0].id);
+                                this.controleWifiList=[...new Set(this.controleWifiList)];
                             }
                         } else {
                             this.treeHide(this.getTreeState[0]);
@@ -1814,6 +1838,11 @@
                                 if (index > -1) {
                                     this.controleEnvironmentList.splice(index, 1);
                                 }
+                            }else if(this.getTreeState[0].type=='wifi'){
+                                let index = this.controleWifiList.indexOf(this.getTreeState[0].id);
+                                if (index > -1) {
+                                    this.controleWifiList.splice(index, 1);
+                                }
                             }
                         }
                     }
@@ -1821,11 +1850,14 @@
             },
             '$route' (to,from) {
                 if(from.name==='Light'){
-                    console.log(this.controleLightList);
+                    console.log(this.controleLightList,'路灯');
                     this.$store.commit('CONTROLER_LIGHT', this.controleLightList)
                 }else if(from.name==='Environment'){
-                    console.log(this.controleEnvironmentList);
+                    console.log(this.controleEnvironmentList,'传感器');
                     this.$store.commit('CONTROLER_ENVIRONMENT', this.controleEnvironmentList)
+                }else if(from.name==='Wifi'){
+                    console.log(this.controleWifiList,'wifi');
+                    this.$store.commit('CONTROLER_WIFI', this.controleWifiList)
                 }
             }
         },
@@ -2156,14 +2188,14 @@
     .contextmenu.Monitors_damage i{
         background: url("/static/img/icon/Monitors_damage_big.png") no-repeat;
     }
-    .contextmenu.Wifi i{
-        background: url("/static/img/icon/Wifi_big.png") no-repeat;
+    .contextmenu.wifi i{
+        background: url("/static/img/icon/wifi_big.png") no-repeat;
     }
-    .contextmenu.Wifi_close i{
-        background: url("/static/img/icon/Wifi_close_big.png") no-repeat;
+    .contextmenu.wifi_close i{
+        background: url("/static/img/icon/wifi_close_big.png") no-repeat;
     }
-    .contextmenu.Wifi_damage i{
-        background: url("/static/img/icon/Wifi_damage_big.png") no-repeat;
+    .contextmenu.wifi_damage i{
+        background: url("/static/img/icon/wifi_damage_big.png") no-repeat;
     }
     .contextmenu.Broadcast i{
         background: url("/static/img/icon/guangboshebei_big.png") no-repeat;

@@ -12,6 +12,7 @@
                         :choseId="choseInfoId"
                         :listsLength = "monitorsList.length"
                         @searchAnything="searchAnything"
+                        :personListFlag="selectFlag"
                         @choseType="choseType"
                         @toggleList="toggleList"
                         @getAllMonitor="getAllMonitor">
@@ -116,6 +117,8 @@
     export default{
         data(){
             return{
+                selectFlag:false,
+                tempSelects:[],
                 isShowMonitorsCard:true,
                 visible:false,
                 monitorsList:[
@@ -255,16 +258,18 @@
                         type: 'warning'
                     }).then(() => {
                         api.monitor.deleteMonitor(this.choseInfoId).then(res=>{
-                            for(let i=0;i<this.choseInfoId.length;i++){
-                                this.monitorsList=this.monitorsList.filter((item,index)=>{
-                                    if(item.id === this.choseInfoId[i]){
-                                        this.monitorsList[index].checked=false
-                                    }
-                                    return item.id!==this.choseInfoId[i]
-                                })
-                            }
+                            // for(let i=0;i<this.choseInfoId.length;i++){
+                            //     this.monitorsList=this.monitorsList.filter((item,index)=>{
+                            //         if(item.id === this.choseInfoId[i]){
+                            //             this.monitorsList[index].checked=false
+                            //         }
+                            //         return item.id!==this.choseInfoId[i]
+                            //     })
+                            // }
+                            this.getAllMonitor()
                             this.$message.success('删除成功')
                             this.choseInfoId = []
+                            this.getAllCamera()
                         }).catch(err =>{
                             this.$message.error('删除失败,请稍后重试')
                         })
@@ -285,7 +290,8 @@
                     sensorType:info.sensorType,
                     name:info.name,
                     model:info.model,
-                    ip:info.ip,
+                    /*ip:info.ip,*/
+                    mac:info.mac,
                     port:info.port,
                     serialNum:info.serialNum,
                     regionId:info.regionId,
@@ -319,6 +325,7 @@
                 }
             },
             checked(id){
+                this.tempSelects=[];
                 this.monitorsList = this.monitorsList.filter(item => {
                     if (item.id === id) {
                         item.checked = item.checked
@@ -332,6 +339,16 @@
                     })
                 }else{
                     this.choseInfoId.push(id)
+                }
+                let that=this;
+                this.monitorsList.forEach(function(item,i){
+                    (item.checked)&&(that.tempSelects.push(item))
+                })
+                console.log(this.tempSelects)
+                if(this.tempSelects.length===this.monitorsList.length){
+                    this.selectFlag=true
+                }else{
+                    this.selectFlag=false
                 }
             },
             choseType(type){
@@ -366,9 +383,11 @@
                         return item.checked == false
                     }
                 })
+                this.selectFlag=true
                 console.log(this.choseInfoId)
             },
             async getAllMonitor(){
+                this.choseInfoId=[];//
                 this.isShowLoading=true
                 await api.monitor.getAllMonitor().then((res)=>{
                     console.log(res,'这是请求')
@@ -378,11 +397,15 @@
                         this.monitorsList[i].checked=false
                         this.monitorsList[i].status=true
                         this.monitorsList[i].id=this.monitorsList[i].id
+                        this.monitorsList[i].mac=this.monitorsList[i].mac
                         this.monitorsList[i].location=`${this.monitorsList[i].longitude},${this.monitorsList[i].latitude}`
                         this.monitorsList[i].byTime = -(new Date(this.monitorsList[i].modifyTime)).getTime()
                     }
                     this.monitorsList = _.sortBy(this.monitorsList,'byTime')
                     this.checkList = this.monitorsList
+
+                    this.selectFlag=false
+
                 }).catch((err)=>{
                     console.log(err)
                 })
