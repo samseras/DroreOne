@@ -7,10 +7,10 @@
                         <el-col :xs="8" :sm="8" :md="6" :lg="6" :xl="6" >
                             <img src="../../static/img/eye.png"/>数据可视化汇总
                         </el-col>
-                        <el-col :xs="10" :sm="10" :md="14" :lg="14" :xl="14" class="control">
+                        <el-col :xs="9" :sm="9" :md="13" :lg="13" :xl="13" class="control">
                              <p>内容</p>
                         </el-col>
-                        <el-col :xs="6" :sm="6" :md="4" :lg="4" :xl="4" class="control">
+                        <el-col :xs="5" :sm="5" :md="3" :lg="3" :xl="3" class="control">
                             <div class="func">
                                 <el-menu  class="el-menu-demo" mode="horizontal" router>
                                     <el-submenu index="">
@@ -25,9 +25,11 @@
                                 </el-menu>
                             </div>
                         </el-col>
+                        <el-col :xs="2" :sm="2" :md="2" :lg="2" :xl="2" class="control">
+                            <button class="publish" ><router-link :to="'/screen/'+currenId">发布</router-link></button>
+                        </el-col>
                     </el-row>
                 </el-header>
-
             </el-container>
         </div>
         <div class="analyzeDetails">
@@ -35,7 +37,7 @@
                 <div class="analyzeMenu" v-if="hideList">
                     <ul>
                         <li v-for="(item,index) in sidebarList" @click="isShowAnalyze(item.dashboard_id,index,item.refresh_interval)"  :class="activeIndex === index?'active':''" :id="item.id" :listName = "item.name" >
-                            {{item.name}}
+                            {{item.name}}`
                         </li>
                     </ul>
                 </div>
@@ -67,6 +69,7 @@
             hideList:true,
             isshowHead:true,
             confirmErr:true,
+            currenId:null,
             echatListErr:{
                 pullData:false,
                 errInform:false,
@@ -92,6 +95,7 @@
         isShowAnalyze (id,index,refresh) {
             // console.log(this.$router,"this.$router.path")
             // debugger
+              this.currenId = id;
 	          this.$router.push({path: `/analyze/${id}`});
 	          this.activeIndex = index;
               this.$store.commit('REFRESH_DATA_TYPE', refresh)
@@ -99,6 +103,7 @@
         async getDashboradList(){
            await api.analyze.getDashboradList().then(res => {
                 this.sidebarList = res.result
+               this.currenId = this.sidebarList[0].dashboard_id;
                if(this.sidebarList.length == 0){
                    this.confirmErr = false;
                    this.echatListErr.errInform = false;
@@ -215,6 +220,19 @@
                     height: rem(30);
                     padding-right: rem(10);
                     vertical-align: middle;
+                }
+            }
+            .publish{
+                width: rem(60);
+                height: rem(60);
+                outline: none;
+                border: none;
+                background: none;
+                a{
+                    display: inline-block;
+                    width: rem(60);
+                    height: rem(60);
+                    color: #fff;
                 }
             }
         }

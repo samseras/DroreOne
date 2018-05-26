@@ -163,7 +163,7 @@
                             this.regionId.push(item.regionId)
                         }
                      })
-                    this.regionId.push(10010)
+                    this.regionId.push('10010')
                     this.lightList.forEach(item => {
                         item.label = item.name
                         item.type = 'light'

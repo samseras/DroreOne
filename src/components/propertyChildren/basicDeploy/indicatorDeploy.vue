@@ -263,6 +263,7 @@
                         return item
                     })
                 }
+                console.log(this.indicatorList);
             },
             selectedAll (state) {
                 this.indicatorList = this.indicatorList.filter((item) => {

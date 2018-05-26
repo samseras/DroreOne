@@ -11,7 +11,8 @@
         </header>
 		<div class="main">
             <div class="search">
-                <input type="text" placeholder="请输入关键字" v-model="searchContent" @focus="searchAnything" @blur="noSearch" @keyup="importAnything"><button @click="search">搜索</button>
+                <input type="text" placeholder="请输入关键字" v-model="searchContent" @focus="searchAnything" @blur="noSearch" @keyup="importAnything">
+                <button @click="search">搜索</button>
 
                 <div class="searchContent" v-if="searchList.length > 0" >
                     <ul ref="dev">
@@ -40,7 +41,7 @@
                             </li>
                             <li class="two">
                                 <div class="bigData">
-                                    <div class="change"><a target="_blank" href="http://192.168.0.150:9527/analysis">大数据分析>><img src="../../../static/img/bagData.png"/></a></div>
+                                    <div class="change"><a target="_blank" href="http://192.168.0.150:9527/analysis/public/main.html">大数据分析>><img src="../../../static/img/bagData.png"/></a></div>
                                     <div class="dataCenter change" id="dataCenter"><router-link to="/property">数据中心>><img src="../../../static/img/dataCenter.png"/></router-link></div>
                                 </div>
                                 <div class="eye">
@@ -54,7 +55,6 @@
                     </div>
                     <div id="bottom" class="entrence-cont">
                         <ul>
-
                             <li class="change">
                                 <router-link to="/gisMap">
                                 <div id="GIS">
@@ -210,125 +210,311 @@
 </script>
 <style scoped lang="scss" type="text/scss">
 	a{text-decoration: none;color: #fff;font-size: 12px;}
-	#entrence{width: 100%;height:100%;min-width:1450px;min-height:650px;position:relative;background: url('../../../static/img/index-bg.png') no-repeat;background-size:cover;display: flex;flex-direction: column;}
-    header{width:100%;height: 50px;font-size: 20px;color: #fff;background: url('../../../static/img/index-top.png') no-repeat;}
-    header p{width: 270px;line-height: 50px;margin-left: 120px;float: left;}
-    #getTime{line-height: 50px;font-size: 12px;float: left;margin-left: 740px;}
-    header .user{float: left;width: 100px;line-height: 50px;background: url(../../../static/img/user.png) no-repeat;background-size:14px;background-position: 0 15px;margin-left: 30px;text-indent: 20px;font-size: 14px;}
-    header .indexExit{width: 20px;height:35px;background: url(../../../static/img/exit.png) no-repeat;background-size:14px;background-position: 0 15px;line-height: 35px;float: left;}
-    footer{width:100%;height: 35px;background: rgba(0,0,0,0.1);text-align: center;font-size: 12px;line-height: 35px;color: #fff;}
-    .main{width: 800px;flex:1;margin:120px auto; min-height: 268px;}
-    .search{width:500px;height: 40px;margin: -50px auto 0;background: rgba(0,0,0,0.1);}
-    .search input{width:400px;height: 20px;margin: 10px 0px 10px 10px;border: none;text-indent: 10px;font-size: 12px;}
-    .search button{width:80px;height: 20px;margin: 10px 0px;border:none;background: #f6b75a;color: #fff;font-size: 12px;}
+	#entrence{
+        width: 100%;
+        height:100%;
+        min-width:rem(1450);
+        min-height:rem(650);
+        position:relative;
+        background: url('../../../static/img/index-bg.png') no-repeat;
+        background-size:cover;
+        display: flex;
+        flex-direction: column;
+        header{
+            width:100%;
+            height: rem(50);
+            font-size: rem(20);
+            color: #fff;
+            background: url('../../../static/img/index-top.png') no-repeat;
+            p{
+                width: rem(270);
+                line-height: rem(50);
+                margin-left: rem(120);
+                float: left;
+            }
+            #getTime{
+                line-height: rem(50);
+                font-size: rem(12);
+                float: left;
+                margin-left: rem(740);
+            }
+            .user{
+                float: left;
+                width: rem(100);
+                line-height: rem(50);
+                background: url(../../../static/img/user.png) no-repeat;
+                background-size:rem(14);
+                background-position: 0 rem(15);
+                margin-left: rem(30);
+                text-indent: rem(20);
+                font-size: rem(14);
+            }
+            .indexExit{
+                width: rem(20);
+                height:rem(35);
+                background: url(../../../static/img/exit.png) no-repeat;
+                background-size:rem(14);
+                background-position: 0 rem(15);
+                line-height: rem(35);
+                float: left;
+            }
+        }
+        .main{
+            width: rem(800);
+            flex:1;
+
+            margin:rem(120) auto;
+            min-height: rem(268);
+            .search{
+                width:rem(500);
+                height: rem(40);
+                margin: rem(-50) auto 0;
+                background: rgba(0,0,0,0.1);
+                position: relative;
+                input{
+                    width:rem(400);
+                    height: rem(20);
+                    margin: rem(10) rem(0) rem(10) rem(10);
+                    border: none;
+                    text-indent: rem(10);
+                    font-size: rem(12);
+                }
+                button{
+                    width:rem(80);
+                    height: rem(20);
+                    margin: rem(10) 0;
+                    border:none;
+                    background: #f6b75a;
+                    color: #fff;
+                    font-size: rem(12);
+                }
+                .searchContent {
+                    background: rgba(225,225,225,.6);
+                    position: absolute;
+                    width: 100%;
+                    height: auto;
+                    height: rem(100);
+                    z-index: 9;
+                    border-bottom-left-radius: rem(5);
+                    border-bottom-right-radius: rem(5);
+                    overflow-y: auto;
+                    &::-webkit-scrollbar {
+                        width: rem(11);
+                        height: rem(11);
+                    }
+                    &::-webkit-scrollbar-track {
+                        background-color: #F5F5F5;
+                    }
+                    &::-webkit-scrollbar-thumb {
+                        min-height: rem(36);
+                        border: 2px solid transparent;
+                        border-top: 3px solid transparent;
+                        border-bottom: 3px solid transparent;
+                        background-clip: padding-box;
+                        border-radius: rem(7);
+                        // background-color: rgba(0, 0, 0, 0.2);
+                        background-color: #C4C4C4;
+                    }
+                    ul{
+                        width: 100%;
+                        /*height: 100%;*/
+                        padding: rem(5) rem(10);
+                        box-sizing: border-box;
+                        position: absolute;
+                        li{
+                            width: 100%;
+                            height: rem(24);
+                            line-height: rem(24);
+                            text-align: left;
+                            font-size: rem(12);
+                            cursor: pointer;
+                            &:hover{
+                                background: rgba(58,142,230,.6);
+                                color: #fff;
+                            }
+                        }
+                        .active{
+                            background: rgba(58,142,230,.6);
+                            color: #fff;
+                        }
+                    }
+                }
+            }
+
+             .entrence-cont{
+                 width:rem(770);
+                 margin:rem(15);
+                 margin-top: rem(30);
+                 img{
+
+                     position: absolute;
+                     left: 40%;
+                     top: 40%;
+                     width: rem(25);
+                     height: rem(25);
+                 }
+             }
+            #top{
+                margin-bottom: rem(10);
+                height: 60%;
+                 ul{
+                     width: 100%;
+                     display: flex;
+                     height: 100%;
+
+                     li{
+                         width: 16%;
+                         margin-right: rem(10);
+
+                     }
+                     li:first-child{
+                         width:33%;
+                     }
+                     li:last-child{
+                         background: #44bccd;
+                         margin-right: 0;
+                     }
+                     .one{
+                         .list{
+                             display: flex;
+                             justify-content: space-between;
+                             height: 49%;
+                             .listO{
+                                 width:48%;
+                                 background: #66d354;
+                             }
+                             .listT{
+                                 width:48%;
+                                 background: #6f7dbc;
+                             }
+                         }
+                         .estate{
+                             width: 100%;
+                             height: 48%;
+                             margin-bottom:rem(10);
+                             background: #008dd4;
+                         }
+                     }
+                     .two{
+                         width: 50%;
+                         display: flex;
+                         flex-direction: column;
+                         .bigData{
+                             width:100%;
+                             height: 47.8%;
+                             display: flex;
+                             justify-content: space-between;
+                             margin-bottom: rem(10);
+                             div:first-child{
+                                 width:32%;
+                                 background: #f6b75a;
+                             }
+                              div:last-child{
+                                  width:66%;
+                                  background: #d9776a;
+                              }
+                         }
+                         .eye{
+                             width:100%;
+                             flex:1;
+                             display: flex;
+                             justify-content: space-between;
+                             #eye{
+                                 width:66%;
+                                 background:#3296d2;
+                                 img{
+                                     left: 33%;
+                                     width: rem(100);
+                                     height: rem(30);
+                                 }
+                             }
+                             .change{
+                                 width: 31%;
+                                 position: relative;
+                                 background: #6f7dbc;
+                                 a{
+                                     display: inline-block;
+                                     width: 100%;
+                                 }
+                             }
+                         }
+                     }
+                     #bee img{top: 44%;}
+                 }
+            }
+            #bottom{
+                margin-top: 0;
+                height: 31%;
+                 ul{
+                     width: 100%;
+                     display: flex;
+                     height: 100%;
+                     li{
+                         width: 16%;
+                         margin-left: rem(10);
+                         cursor: pointer;
+                         -webkit-perspective: 4000px;
+                         height: 100%;
+                     }
+                     li:first-child{
+                         width: 33%;
+                         background: #f6b75a;
+                         margin: 0;
+                     }
+                     li:nth-child(2){
+                         background: #44bccd;
+                     }
+                     li:nth-child(3){
+                         background: #66d354;
+                     }
+                     li:nth-child(4){
+                         background: #ff907f;
+                     }
+                     li:nth-child(5){
+                         background: #3296d2;
+                     }
+                 }
 
 
-    .entrence-cont{width:770px;margin:15px;margin-top: 30px;}
-	#top{margin-bottom: 10px;height: 60%;}
-	#top ul{width: 100%;display: flex;height: 100%;}
-	#top li{width: 16%;margin-right: 10px;}
-    #top li:first-child{width:33%;}
-    #top .one .list{display: flex;justify-content: space-between;height: 49%;}
-    .listO{width:48%;background: #66d354;}
-    .listT{width:48%;background: #6f7dbc;}
-	#top .two{width: 50%;display: flex;flex-direction: column;}
-    .two .bigData{width:100%;height: 47.8%;display: flex;justify-content: space-between;margin-bottom: 10px;}
-    .two .eye{width:100%;flex:1;display: flex;justify-content: space-between;}
-     #eye{width:66%;background:#3296d2;}
-    .two .eye div:last-child{width:32%;background: #6f7dbc;}
-    .two .bigData div:first-child{width:32%;background: #f6b75a;}
-    .two .bigData div:last-child{width:66%;background: #d9776a;}
-	#top .three{width: 33%;}
-	#top .three>div{width: 100%;height: 48%;margin-bottom: 10px;}
-	#top .three>div:first-child{background:#e6b000;}
-	#deploy{display: flex;}
-	#top .three #deploy>div{width: 48.2%;margin-right: 10px;background: #019eb1;height: 100%;}
-	#top .three #deploy>div:last-child{margin-right: 0;background: #ad00a7;}
-	#top li:last-child{background: #44bccd;margin-right: 0;}
-
-	#top .one>div:first-child{width: 100%;height: 48%;margin-bottom:10px;background: #008dd4;}
-	ul a{display: block;width: 100%;height: 100%;    padding-top: 10px; padding-left: 14px; box-sizing: border-box}
-
-	#bottom{margin-top: 0;height: 31%;}
-    #bottom ul{width: 100%;display: flex;height: 100%;}
-	#bottom li{width: 16%;margin-left: 10px;cursor: pointer;-webkit-perspective: 4000px;height: 100%;}
-    #bottom li:first-child{width: 33%;background: #f6b75a;margin: 0;}
-    #bottom li:nth-child(2){background: #44bccd;}
-	#bottom li:nth-child(3){background: #66d354;}
-	#bottom li:nth-child(4){background: #ff907f;}
-	#bottom li:nth-child(5){background: #3296d2;}
-
-   .change{box-shadow:0px 3px 8px rgba(0, 0, 0, 0.3);position: relative;}
-   img{position: absolute;left: 40%;top: 40%;width: 25px;height: 25px;}
-   #eye img{left: 33%;width: 100px;height: 30px;}
+            }
+        }
+        footer{
+            width:100%;
+            height: rem(35);
+            background: rgba(0,0,0,0.1);
+            text-align: center;
+            font-size: rem(12);
+            line-height: rem(35);
+            color: #fff;
+        }
+    }
+	ul a{
+        display: block;
+        width: 100%;
+        height: 100%;
+        padding-top: rem(10);
+        padding-left: rem(14);
+        box-sizing: border-box;
+    }
+   .change{
+       box-shadow:0 rem(3) rem(8) rgba(0, 0, 0, 0.3);
+       position: relative;
+   }
    #property img{left: 40%;}
-   #bee img{top: 44%;}
    .estate img,#dataCenter img,#GIS img{left:47%;}
 
-   .change:hover{transform: scale(1.1);transition-duration: 1.5s;z-index: 10;box-shadow: 0px 3px 30px 2px rgba(0,0,0,0.8);}
+   .change:hover{
+       transform: scale(1.1);
+       transition-duration: 1.5s;
+       z-index: 10;
+       box-shadow: 0 rem(3) rem(30) rem(2) rgba(0,0,0,0.8);
+   }
     input:focus{outline: none;}
     button:focus{outline: none;}
-
-
     .conversion{
         background: red;
         width: 100%;
         height: 100%;
-        margin-top: 30px;
-    }
-    .search {
-        position: relative;
-        .searchContent {
-            background: rgba(225,225,225,.6);
-            position: absolute;
-            width: 100%;
-            height: auto;
-            height: rem(100);
-            z-index: 9;
-            border-bottom-left-radius: rem(5);
-            border-bottom-right-radius: rem(5);
-            overflow-y: auto;
-            &::-webkit-scrollbar {
-                width: 11px;
-                height: 11px;
-            }
-            &::-webkit-scrollbar-track {
-                background-color: #F5F5F5;
-            }
-            &::-webkit-scrollbar-thumb {
-                min-height: 36px;
-                border: 2px solid transparent;
-                border-top: 3px solid transparent;
-                border-bottom: 3px solid transparent;
-                background-clip: padding-box;
-                border-radius: 7px;
-                // background-color: rgba(0, 0, 0, 0.2);
-                background-color: #C4C4C4;
-            }
-            ul{
-                width: 100%;
-                /*height: 100%;*/
-                padding: rem(5) rem(10);
-                box-sizing: border-box;
-                position: absolute;
-                li{
-                    width: 100%;
-                    height: rem(24);
-                    line-height: rem(24);
-                    text-align: left;
-                    font-size: rem(12);
-                    cursor: pointer;
-                    &:hover{
-                        background: rgba(58,142,230,.6);
-                        color: #fff;
-                    }
-                }
-                .active{
-                    background: rgba(58,142,230,.6);
-                    color: #fff;
-                }
-            }
-
-        }
+        margin-top: rem(30);
     }
 </style>

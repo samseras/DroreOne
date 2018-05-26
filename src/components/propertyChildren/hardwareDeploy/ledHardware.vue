@@ -291,11 +291,12 @@
                 let screenWidth=info.area.substring(0,item)
                 let screenHeight = info.area.substring(item + 1)
                 let ledObj=[{
+                    mac:info.mac,
                     typeId: 4,
                     positionType:info.positionType,
                     name:info.name,
                     model:info.model,
-                    ip:info.ip,
+                    /*ip:info.ip,*/
                     port:info.port,
                     serialNum:info.serialNum,
                     regionId:info.regionId,
@@ -408,6 +409,7 @@
                         this.ledList[i].checked=false
                         this.ledList[i].status=true
                         this.ledList[i].id = this.ledList[i].id
+                        this.ledList[i].mac = this.ledList[i].mac
                         this.ledList[i].location=`${this.ledList[i].longitude},${this.ledList[i].latitude}`
                         this.ledList[i].area=`${this.ledList[i].screenWidth},${this.ledList[i].screenHeight}`
                         this.ledList[i].byTime = -(new Date(this.ledList[i].modifyTime)).getTime()

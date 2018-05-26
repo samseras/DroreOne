@@ -118,7 +118,7 @@
             let _this = this;
             setTimeout(function() {
                 _this.treeALL();
-            }, 200)
+            }, 300)
             if (this.getSearchInfo.id) {
                 this.$refs.tree.setCheckedKeys([this.getSearchInfo.id])
             }
