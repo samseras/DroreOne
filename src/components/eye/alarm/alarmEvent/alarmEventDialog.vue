@@ -12,7 +12,7 @@
                 <!--批量编辑-->
                 <div class="alarmContent" v-if="isBatchEdit">
                     <p class="level">严重等级：
-                    <el-select  v-model="eventInfo.level" size="mini" class="" placeholder="请选择">
+                    <el-select  v-model="batchEdit.level" size="mini" class="" placeholder="请选择">
                         <el-option
                             v-for="item in levelInfo"
                             :key="item.id"
@@ -22,7 +22,7 @@
                     </el-select>
                 </p>
                     <p class="status">状&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 态：
-                        <el-select  v-model="eventInfo.statusId" size="mini" class="" placeholder="请选择">
+                        <el-select  v-model="batchEdit.status" size="mini" class="" placeholder="请选择">
                             <el-option
                                 v-for="item in statusInfo"
                                 :key="item.id"
@@ -129,6 +129,38 @@
         props: ['visible','isReadonly','isBatchEdit','choseInfoId','Info'],
         data () {
             return{
+                eventInfo:{
+                    serialNum:'',
+                    envTypeId:'',
+                    envTypeName:'',
+                    sourceDeviceId:'',
+                    sourceDeviceName:'',
+                    occurenceTime:'',
+                    alarmRuleId:'',
+                    alarmRuleName:'',
+                    severityId:'',
+                    severityName:'',
+                    statusId:'',
+                    statusName :'',
+                    owner:[
+                        {
+                            val:'1',
+                            name:'aaa',
+                            tel:'111'
+                        },
+                        {
+                            val:'2',
+                            name:'bbb',
+                            tel:'222'
+                        }
+                    ],
+                    tel:'',
+                    description:''
+                },
+                batchEdit:{
+                    level:'',
+                    status:''
+                },
                 levelInfo:[
                     {
                         id:'1',
@@ -208,35 +240,8 @@
                         title:'12123dfgdfgdfgdfg.jpg'
                     }
                 ],
-                selectFileList:[],
-                eventInfo:{
-                    serialNum:'',
-                    envTypeId:'',
-                    envTypeName:'',
-                    sourceDeviceId:'',
-                    sourceDeviceName:'',
-                    occurenceTime:'',
-                    alarmRuleId:'',
-                    alarmRuleName:'',
-                    severityId:'',
-                    severityName:'',
-                    statusId:'',
-                    statusName :'',
-                    owner:[
-                        {
-                            val:'1',
-                            name:'aaa',
-                            tel:'111'
-                        },
-                        {
-                            val:'2',
-                            name:'bbb',
-                            tel:'222'
-                        }
-                    ],
-                    tel:'',
-                    description:''
-                }
+                selectFileList:[]
+
             }
         },
         methods: {
@@ -265,10 +270,26 @@
                 let newInfo = {};
                 if(this.isBatchEdit){    //批量编辑
                     console.log(this.choseInfoId);
-                    console.log(this.level);
-                    console.log(this.status);
-                    this.$emit('saveEditInfo');
 
+                    objArray = this.choseInfos;
+
+                    objArray.forEach((item)=>{
+                        if(!this.batchEdit.level){
+                            item.severityId = this.batchEdit.level;
+                            item.severityName = this.severityId2Name(item.severityId);
+                        }
+                        if(!this.batchEdit.status){
+                            item.statusId = this.batchEdit.status;
+
+                            this.statusInfo.forEach((item)=>{
+                                if(item.statusId == item.id){
+                                    item.statusName = item.name;
+                                }
+                            })
+                        }
+                    })
+                    console.log(objArray)
+                    this.$emit('saveEditInfo',objArray);
                 }else{  //单个编辑或查看
 
                     newInfo = this.eventInfo;

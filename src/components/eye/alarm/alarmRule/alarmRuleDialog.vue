@@ -443,8 +443,7 @@
             return{
                 route:'',
                 batchEdit:{
-                    level:'',
-                    status:''
+                    level:''
                 },
                 alarmcolumnInfo:{
                     id:'',
@@ -874,7 +873,6 @@
             console.log(this.Info,'  Info')
             if (this.route.includes('alarmcolumn')) {
                 this.alarmcolumnInfo = this.Info;
-                // this.alarmcolumnInfo.batchEdit.batchEdit = "1";
             } else if(this.route.includes('firefighting')) {
                 // this.getAllBroadcast()
                 this.firefightingInfo = this.Info;
