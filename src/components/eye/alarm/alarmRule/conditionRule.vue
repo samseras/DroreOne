@@ -37,7 +37,7 @@
                             label="指标类型">
                         </el-table-column>
                         <el-table-column
-                            prop="envDataSource"
+                            prop="envDataSourceName"
                             label="来源">
                         </el-table-column>
                         <el-table-column
@@ -104,7 +104,8 @@
                         name:'环境告警规则1',
                         envTypeId:'1',
                         envTypeName:'温度',
-                        envDataSource:'外部系统',
+                        envDataSource:'0',
+                        envDataSourceName:'外部系统',
                         associatDevice:'温度传感器',
                         upperThreshold:'40℃',
                         lowerThreshold:'-40℃',
@@ -118,7 +119,8 @@
                         name:'环境告警规则2',
                         envTypeId:'2',
                         envTypeName:'PM2.5',
-                        envDataSource:'外部系统',
+                        envDataSource:'1',
+                        envDataSourceName:'内部设备',
                         associatDevice:'水温传感器',
                         upperThreshold:'40℃',
                         lowerThreshold:'-40℃',

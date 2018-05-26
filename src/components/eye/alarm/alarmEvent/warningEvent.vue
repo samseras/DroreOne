@@ -33,16 +33,16 @@
                         </el-table-column>
                         <el-table-column
                             sortable
-                            prop="type"
+                            prop="envTypeName"
                             label="指标类型">
                         </el-table-column>
                         <el-table-column
-                            prop="sourceDevice"
+                            prop="sourceDeviceName"
                             label="来源">
                         </el-table-column>
                         <el-table-column
                             sortable
-                            prop="status.name"
+                            prop="statusName"
                             label="状态">
                         </el-table-column>
                         <el-table-column
@@ -52,7 +52,7 @@
                         </el-table-column>
                         <el-table-column
                             sortable
-                            prop="level"
+                            prop="severityName"
                             label="严重等级">
                         </el-table-column>
                         <el-table-column
@@ -66,8 +66,8 @@
                         </el-table-column>
                         <el-table-column label="操作" width="200">
                             <template slot-scope="scope">
-                                <span @click="editInfo(scope.row,false)" class="edit">编辑</span> |
-                                <span @click="showDetail(scope.row,true)">查看</span> |
+                                <span @click="editInfo(scope.row,false,'编辑告警事件')" class="edit">编辑</span> |
+                                <span @click="showDetail(scope.row,true,'查看告警事件')">查看</span> |
                                 <span @click="deletInfo(scope.row.id)">删除</span>
                             </template>
                         </el-table-column>
@@ -90,7 +90,7 @@
 
 <script>
     import ScrollContainer from '@/components/ScrollContainer'
-    // import api from '@/api'
+    import api from '@/api'
     import Header from './alarmEventHeader'
     import AlarmDetail from './alarmEventDialog'
     // import moment from 'moment'
@@ -100,14 +100,17 @@
                 warningEventList: [
                     {
                         serialNum:'sos001',
-                        alarmType:'水位监测传感器1',
-                        sourceDevice:'报警柱001',
-                        status: {
-                            id:'1',
-                            name :'新告警'
-                        },
+                        alarmRuleId:'2',
+                        alarmRuleName:'消防',
+                        envTypeId:'1',
+                        envTypeName:'温度',
+                        sourceDeviceId:'1',
+                        sourceDeviceName:'报警柱001',
+                        statusId:'1',
+                        statusName :'新告警',
                         occurenceTime:'2018-05-11 12:20:39',
-                        level:'高',
+                        severityId:'1',
+                        severityName:'高',
                         owner:{
                             id:"1",
                             name:'徐一项',
@@ -118,15 +121,17 @@
                     },
                     {
                         serialNum:'sos002',
-                        alarmType:'水位监测传感器1',
-                        sourceDevice:'报警柱002',
-                        status: {
-                            id:'2',
-                            name:'处理中'
-
-                        },
+                        alarmRuleId:'1',
+                        alarmRuleName:'报警柱',
+                        envTypeId:'2',
+                        envTypeName:'PM2.5',
+                        sourceDeviceId:'2',
+                        sourceDeviceName:'报警柱002',
+                        statusId:'2',
+                        statusName :'处理中',
                         occurenceTime:'2017-01-09 19:33:01',
-                        level:'高',
+                        severityId:'2',
+                        severityName:'中',
                         owner:{
                             id:"2",
                             name:'张三',
@@ -196,11 +201,14 @@
                     return item.id
                 })
             },
-            showDetail (info,state) {
+            showDetail (info,state,title) {
                 this.warningEventInfo = info;
                 this.visible = true;
                 this.isBatchEdit = false;
                 this.isReadonly = state;
+                if(title){
+                    this.title = title;
+                }
             },
             deletInfo (id) {
                 console.log(id)
@@ -268,9 +276,9 @@
                     }
                 })
             },
-            editInfo (info,state) {
+            editInfo (info,state,title) {
                 console.log(info);
-                this.showDetail(info,state);
+                this.showDetail(info,state,title);
             },
             batchEdit(){
                 if (this.choseInfoId.length > 0) {

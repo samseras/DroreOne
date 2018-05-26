@@ -29,10 +29,10 @@
                     <p class="status">报&nbsp;&nbsp;警&nbsp;&nbsp;柱：
                         <el-select  v-model="alarmcolumnInfo.relatedDevices" size="mini" class="" :disabled='isReadonly' multiple placeholder="请选择">
                             <el-option
-                                v-for="item in statusInfo"
-                                :key="item.value"
-                                :label="item.label"
-                                :value="item.value">
+                                v-for="item in levelInfo"
+                                :key="item.id"
+                                :label="item.name"
+                                :value="item.id">
                             </el-option>
                         </el-select>
                     </p>
@@ -377,10 +377,10 @@
                     <p class="envDataSource">来&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;源：
                         <el-select  v-model="conditionInfo.envDataSource" size="mini" class="" placeholder="请选择" :disabled='isReadonly'>
                             <el-option
-                                v-for="item in levelInfo"
-                                :key="item.value"
-                                :label="item.label"
-                                :value="item.value">
+                                v-for="item in source"
+                                :key="item.id"
+                                :label="item.name"
+                                :value="item.id">
                             </el-option>
                         </el-select>
                     </p>
@@ -549,22 +549,6 @@
                         name:'低'
                     }
                 ],
-                severityName2Id:{
-                    '高':'1',
-                    '中':'2',
-                    '低':'3'
-                },
-                severityId2Name:{
-                    '1':'高',
-                    '2':'中',
-                    '3':'低'
-                },
-                envTypeId2Name:{
-                    '1':'PM2.5',
-                    '2':'温度',
-                    '3':'湿度',
-                    '4':'风力'
-                },
                 envType:[
                     {
                         id:'1',
@@ -582,20 +566,17 @@
                         id:'4',
                         name:'风力'
                     }
-
                 ],
-                statusInfo:[
+                source:[
                     {
-                        value:'1',
-                        label:'新告警'
+                        id:'0',
+                        name:'外部系统'
                     },
                     {
-                        value:'2',
-                        label:'处理中'
-                    },{
-                        value:'3',
-                        label:'已解决'
+                        id:'1',
+                        name:'内部设备'
                     }
+
                 ],
                 ownerInfo:[
                     {
@@ -640,6 +621,15 @@
             closeDialog () {
                 this.$emit('closeDialog')
             },
+            severityId2Name(severityId){
+                let name = '';
+                this.levelInfo.forEach((item)=>{
+                    if(severityId  == item.id){
+                        name = item.name;
+                    }
+                })
+                return name;
+            },
             saveDialog(){
                 let objArray = [];
                 let newInfo = {};
@@ -651,9 +641,9 @@
                         if(!this.batchEdit.level){
                             return;
                         }
-                        objArray.forEach((item,index)=>{
+                        objArray.forEach((item)=>{
                             item.severityId = this.batchEdit.level;
-                            item.severityName = this.severityId2Name[item.severityId];
+                            item.severityName = this.severityId2Name(item.severityId)
                         })
 
                         console.log(objArray)
@@ -662,17 +652,11 @@
 
                     }else{  //单个编辑或查看或新增
                         console.log(this.alarmcolumnInfo);
-
-                        //接口成功后用最下面的方式
-                        // this.levelInfo.forEach((item,index)=>{
-                        //     if(this.alarmcolumnInfo.severityId == item[index].id){
-                        //         this.alarmcolumnInfo.severityName = item[index].name;
-                        //     }
-                        // })
-
                         newInfo = this.alarmcolumnInfo;
+                        newInfo.severityName = this.severityId2Name(newInfo.severityId)
+
                         console.log(newInfo,"返回的数据")
-                        if (this.alarmcolumnInfo.id) {  //编辑或查看
+                        if (newInfo.id) {  //编辑或查看
                             objArray.push(newInfo)
                             this.$emit('saveEditInfo',objArray)
                         } else { //新增
@@ -689,7 +673,7 @@
                         }
                         objArray.forEach((item,index)=>{
                             item.severityId = this.batchEdit.level;
-                            item.severityName = this.severityId2Name[item.severityId];
+                            item.severityName = this.severityId2Name(item.severityId)
                         })
 
                         console.log(objArray)
@@ -698,16 +682,10 @@
 
                     }else{  //单个编辑或查看
                         console.log(this.firefightingInfo);
-                        this.firefightingInfo.severityName =  this.severityId2Name[this.firefightingInfo.severityId]
-                        //接口成功后用最下面的方式
-                        // this.levelInfo.forEach((item,index)=>{
-                        //     if(this.firefightingInfo.severityId == item[index].id){
-                        //         this.firefightingInfo.severityName = item[index].name;
-                        //     }
-                        // })
-
                         newInfo = this.firefightingInfo;
-                        if (this.firefightingInfo.id) {
+                        newInfo.severityName = this.severityId2Name(newInfo.severityId)
+
+                        if (newInfo.id) {
                             objArray.push(newInfo)
                             this.$emit('saveEditInfo',objArray)
                         } else {
@@ -724,7 +702,7 @@
                         }
                         objArray.forEach((item,index)=>{
                             item.severityId = this.batchEdit.level;
-                            item.severityName = this.severityId2Name[item.severityId];
+                            item.severityName = this.severityId2Name(item.severityId)
                         })
 
                         console.log(objArray)
@@ -732,16 +710,10 @@
 
                     }else{  //单个编辑或查看
                         console.log(this.crossborderInfo);
-                        this.crossborderInfo.severityName =  this.severityId2Name[this.crossborderInfo.severityId]
-                        //接口成功后用最下面的方式
-                        // this.levelInfo.forEach((item,index)=>{
-                        //     if(this.crossborderInfo.severityId == item[index].id){
-                        //         this.crossborderInfo.severityName = item[index].name;
-                        //     }
-                        // })
-
                         newInfo = this.crossborderInfo;
-                        if (this.crossborderInfo.id) {
+                        newInfo.severityName = this.severityId2Name(newInfo.severityId)
+
+                        if (newInfo.id) {
                             objArray.push(newInfo)
                             this.$emit('saveEditInfo',objArray)
                         } else {
@@ -758,7 +730,7 @@
                         }
                         objArray.forEach((item,index)=>{
                             item.severityId = this.batchEdit.level;
-                            item.severityName = this.severityId2Name[item.severityId];
+                            item.severityName = this.severityId2Name(item.severityId)
                         })
 
                         console.log(objArray)
@@ -767,16 +739,10 @@
 
                     }else{  //单个编辑或查看
                         console.log(this.offtrackInfo);
-                        this.offtrackInfo.severityName =  this.severityId2Name[this.offtrackInfo.severityId]
-                        //接口成功后用最下面的方式
-                        // this.levelInfo.forEach((item,index)=>{
-                        //     if(this.offtrackInfo.severityId == item[index].id){
-                        //         this.offtrackInfo.severityName = item[index].name;
-                        //     }
-                        // })
-
                         newInfo = this.offtrackInfo;
-                        if (this.offtrackInfo.id) {
+                        newInfo.severityName = this.severityId2Name(newInfo.severityId)
+
+                        if (newInfo.id) {
                             objArray.push(newInfo)
                             this.$emit('saveEditInfo',objArray)
                         } else {
@@ -793,7 +759,7 @@
                         }
                         objArray.forEach((item,index)=>{
                             item.severityId = this.batchEdit.level;
-                            item.severityName = this.severityId2Name[item.severityId];
+                            item.severityName = this.severityId2Name(item.severityId)
                         })
 
                         console.log(objArray)
@@ -802,16 +768,10 @@
 
                     }else{  //单个编辑或查看
                         console.log(this.overlimitInfo);
-                        this.overlimitInfo.severityName =  this.severityId2Name[this.overlimitInfo.severityId]
-                        //接口成功后用最下面的方式
-                        // this.levelInfo.forEach((item,index)=>{
-                        //     if(this.overlimitInfo.severityId == item[index].id){
-                        //         this.overlimitInfo.severityName = item[index].name;
-                        //     }
-                        // })
-
                         newInfo = this.overlimitInfo;
-                        if (this.overlimitInfo.id) {
+                        newInfo.severityName = this.severityId2Name(newInfo.severityId)
+
+                        if (newInfo.id) {
                             objArray.push(newInfo)
                             this.$emit('saveEditInfo',objArray)
                         } else {
@@ -828,7 +788,7 @@
                         }
                         objArray.forEach((item,index)=>{
                             item.severityId = this.batchEdit.level;
-                            item.severityName = this.severityId2Name[item.severityId];
+                            item.severityName = this.severityId2Name(item.severityId)
                         })
 
                         console.log(objArray)
@@ -837,16 +797,10 @@
 
                     }else{  //单个编辑或查看
                         console.log(this.waterlevelInfo);
-                        this.waterlevelInfo.severityName =  this.severityId2Name[this.waterlevelInfo.severityId]
-                        //接口成功后用最下面的方式
-                        // this.levelInfo.forEach((item,index)=>{
-                        //     if(this.waterlevelInfo.severityId == item[index].id){
-                        //         this.waterlevelInfo.severityName = item[index].name;
-                        //     }
-                        // })
-
                         newInfo = this.waterlevelInfo;
-                        if (this.waterlevelInfo.id) {
+                        newInfo.severityName = this.severityId2Name(newInfo.severityId)
+
+                        if (newInfo.id) {
                             objArray.push(newInfo)
                             this.$emit('saveEditInfo',objArray)
                         } else {
@@ -863,7 +817,7 @@
                         }
                         objArray.forEach((item,index)=>{
                             item.severityId = this.batchEdit.level;
-                            item.severityName = this.severityId2Name[item.severityId];
+                            item.severityName = this.severityId2Name(item.severityId)
                         })
 
                         console.log(objArray)
@@ -872,23 +826,22 @@
 
                     }else{  //单个编辑或查看
                         console.log(this.conditionInfo);
-                        this.conditionInfo.severityName =  this.severityId2Name[this.conditionInfo.severityId]
-                        this.conditionInfo.envTypeName =  this.envTypeId2Name[this.conditionInfo.envTypeId]
-                        //接口成功后用最下面的方式
-                        // this.levelInfo.forEach((item,index)=>{
-                        //     if(this.conditionInfo.severityId == item[index].id){
-                        //         this.conditionInfo.severityName = item[index].name;
-                        //     }
-                        // })
-
-                        // this.envType.forEach((item,index)=>{
-                        //         if(this.conditionInfo.envTypeId == item[index].id){
-                        //             this.conditionInfo.envTypeName = item[index].name;
-                        //         }
-                        // })
-
                         newInfo = this.conditionInfo;
-                        if (this.conditionInfo.id) {
+                        newInfo.severityName = this.severityId2Name(newInfo.severityId)
+
+                        this.envType.forEach((item)=>{
+                            if(newInfo.envTypeId == item.id){
+                                newInfo.envTypeName = item.name;
+                            }
+                        })
+
+                        this.source.forEach((item)=>{
+                            if(newInfo.envDataSource == item.id){
+                                newInfo.envDataSourceName = item.name;
+                            }
+                        })
+
+                        if (newInfo.id) {
                             objArray.push(newInfo)
                             this.$emit('saveEditInfo',objArray)
                         } else {

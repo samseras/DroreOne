@@ -22,7 +22,7 @@
                     </el-select>
                 </p>
                     <p class="status">状&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 态：
-                        <el-select  v-model="eventInfo.status" size="mini" class="" placeholder="请选择">
+                        <el-select  v-model="eventInfo.statusId" size="mini" class="" placeholder="请选择">
                             <el-option
                                 v-for="item in statusInfo"
                                 :key="item.id"
@@ -38,19 +38,19 @@
                         <el-input type="text" v-model='eventInfo.serialNum' class="inputText" :maxlength="15" :readonly="true"></el-input>
                     </p>
                     <p class="type">指标类型：
-                        <el-input type="text" v-model='eventInfo.alarmType' class="inputText" :maxlength="15" :readonly='true'></el-input>
+                        <el-input type="text" v-model='eventInfo.envTypeName' class="inputText" :maxlength="15" :readonly='true'></el-input>
                     </p>
                     <p class="sourceDevice">来&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 源：
-                        <el-input type="text"  v-model='eventInfo.sourceDevice' class="inputText" :maxlength="15" :readonly='true'></el-input>
+                        <el-input type="text"  v-model='eventInfo.sourceDeviceName' class="inputText" :maxlength="15" :readonly='true'></el-input>
                     </p>
                     <p class="occurenceTime">发生时间：
                         <el-input type="text"  v-model='eventInfo.occurenceTime' class="inputText" :maxlength="15" :readonly='true'></el-input>
                     </p>
                     <p class="alarmRule">关联规则：
-                        <el-input type="text" v-model='eventInfo.alarmRule' class="inputText" :maxlength="15" :readonly='true'></el-input>
+                        <el-input type="text" v-model='eventInfo.alarmRuleName' class="inputText" :maxlength="15" :readonly='true'></el-input>
                     </p>
                     <p class="level">严重等级：
-                        <el-select  v-model="eventInfo.level" size="mini" class="" placeholder="请选择" :disabled="isReadonly">
+                        <el-select  v-model="eventInfo.severityId" size="mini" class="" placeholder="请选择" :disabled="isReadonly">
                             <el-option
                                 v-for="item in levelInfo"
                                 :key="item.id"
@@ -72,7 +72,7 @@
                         <el-input type="text" v-model="eventInfo.tel" class="inputText" :maxlength="15" :disabled="isReadonly"></el-input>
                     </p>
                     <p class="status">状&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 态:
-                        <el-select  v-model="eventInfo.status" size="mini" class="" placeholder="请选择" :disabled="isReadonly">
+                        <el-select  v-model="eventInfo.statusId" size="mini" class="" placeholder="请选择" :disabled="isReadonly">
                             <el-option
                                 v-for="item in statusInfo"
                                 :key="item.id"
@@ -211,11 +211,17 @@
                 selectFileList:[],
                 eventInfo:{
                     serialNum:'',
-                    alarmType:'',
-                    sourceDevice:'',
+                    envTypeId:'',
+                    envTypeName:'',
+                    sourceDeviceId:'',
+                    sourceDeviceName:'',
                     occurenceTime:'',
-                    alarmRule:'',
-                    level:'',
+                    alarmRuleId:'',
+                    alarmRuleName:'',
+                    severityId:'',
+                    severityName:'',
+                    statusId:'',
+                    statusName :'',
                     owner:[
                         {
                             val:'1',
@@ -229,7 +235,6 @@
                         }
                     ],
                     tel:'',
-                    status:'',
                     description:''
                 }
             }
@@ -256,15 +261,35 @@
                 this.$emit('closeDialog')
             },
             saveDialog(){
-                //批量编辑
-                if(this.isBatchEdit){
+                let objArray = [];
+                let newInfo = {};
+                if(this.isBatchEdit){    //批量编辑
                     console.log(this.choseInfoId);
                     console.log(this.level);
                     console.log(this.status);
-                    this.$emit('addAlarmEvent');
+                    this.$emit('saveEditInfo');
 
                 }else{  //单个编辑或查看
-                    this.$emit('addAlarmEvent');
+
+                    newInfo = this.eventInfo;
+                    this.statusInfo.forEach((item)=>{
+                        if(newInfo.statusId == item.id){
+                            newInfo.statusName = item.name;
+                        }
+                    })
+
+                    this.levelInfo.forEach((item)=>{
+                        if(newInfo.severityId == item.id){
+                            newInfo.severityName = item.name;
+                        }
+                    })
+
+                    if (newInfo.id) {  //编辑或查看
+                        objArray.push(newInfo)
+                        this.$emit('saveEditInfo',objArray)
+                    } else { //新增
+                        this.$emit('saveInfo',newInfo)
+                    }
                 }
 
             },
@@ -400,8 +425,7 @@
         },
         async created () {
             console.log(this.Info);
-            console.log(this.eventInfo);
-            // this.eventInfo = this.Info;
+            this.eventInfo = this.Info;
 
         },
         components : {
