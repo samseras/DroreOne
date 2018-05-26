@@ -28,31 +28,31 @@
                             </template>
                         </el-table-column>
                         <el-table-column
-                            prop="id"
+                            prop="serialNum"
                             label="编号">
                         </el-table-column>
                         <el-table-column
                             sortable
-                            prop="type"
+                            prop="envTypeName"
                             label="指标类型">
                         </el-table-column>
                         <el-table-column
-                            prop="source"
+                            prop="sourceDeviceName"
                             label="来源">
                         </el-table-column>
                         <el-table-column
                             sortable
-                            prop="status.name"
+                            prop="statusName"
                             label="状态">
                         </el-table-column>
                         <el-table-column
-                            prop="occuredTime"
+                            prop="occurenceTime"
                             label="发生时间"
                             width="180">
                         </el-table-column>
                         <el-table-column
                             sortable
-                            prop="level"
+                            prop="severityName"
                             label="严重等级">
                         </el-table-column>
                         <el-table-column
@@ -66,8 +66,8 @@
                         </el-table-column>
                         <el-table-column label="操作" width="200">
                             <template slot-scope="scope">
-                                <span @click="editInfo(scope.row,false)" class="edit">编辑</span> |
-                                <span @click="showDetail(scope.row,true)">查看</span> |
+                                <span @click="editInfo(scope.row,false,'编辑告警事件')" class="edit">编辑</span> |
+                                <span @click="showDetail(scope.row,true,'查看告警事件')">查看</span> |
                                 <span @click="deletInfo(scope.row.id)">删除</span>
                             </template>
                         </el-table-column>
@@ -90,7 +90,7 @@
 
 <script>
     import ScrollContainer from '@/components/ScrollContainer'
-    // import api from '@/api'
+    import api from '@/api'
     import Header from './alarmEventHeader'
     import AlarmDetail from './alarmEventDialog'
     // import moment from 'moment'
@@ -99,15 +99,18 @@
             return{
                 warningEventList: [
                     {
-                        id:'sos001',
-                        type:'水位监测传感器1',
-                        source:'报警柱001',
-                        status: {
-                            id:'1',
-                            name :'新告警'
-                        },
-                        occuredTime:'2018-05-11 12:20:39',
-                        level:'高',
+                        serialNum:'sos001',
+                        alarmRuleId:'2',
+                        alarmRuleName:'消防',
+                        envTypeId:'1',
+                        envTypeName:'温度',
+                        sourceDeviceId:'1',
+                        sourceDeviceName:'报警柱001',
+                        statusId:'1',
+                        statusName :'新告警',
+                        occurenceTime:'2018-05-11 12:20:39',
+                        severityId:'1',
+                        severityName:'高',
                         owner:{
                             id:"1",
                             name:'徐一项',
@@ -117,16 +120,18 @@
 
                     },
                     {
-                        id:'sos002',
-                        type:'水位监测传感器1',
-                        source:'报警柱002',
-                        status: {
-                            id:'2',
-                            name:'处理中'
-
-                        },
-                        occuredTime:'2017-01-09 19:33:01',
-                        level:'高',
+                        serialNum:'sos002',
+                        alarmRuleId:'1',
+                        alarmRuleName:'报警柱',
+                        envTypeId:'2',
+                        envTypeName:'PM2.5',
+                        sourceDeviceId:'2',
+                        sourceDeviceName:'报警柱002',
+                        statusId:'2',
+                        statusName :'处理中',
+                        occurenceTime:'2017-01-09 19:33:01',
+                        severityId:'2',
+                        severityName:'中',
                         owner:{
                             id:"2",
                             name:'张三',
@@ -196,11 +201,14 @@
                     return item.id
                 })
             },
-            showDetail (info,state) {
+            showDetail (info,state,title) {
                 this.warningEventInfo = info;
                 this.visible = true;
                 this.isBatchEdit = false;
                 this.isReadonly = state;
+                if(title){
+                    this.title = title;
+                }
             },
             deletInfo (id) {
                 console.log(id)
@@ -268,15 +276,14 @@
                     }
                 })
             },
-            editInfo (info,state) {
+            editInfo (info,state,title) {
                 console.log(info);
-                this.showDetail(info,state);
+                this.showDetail(info,state,title);
             },
             batchEdit(){
                 if (this.choseInfoId.length > 0) {
                     console.log('batchEdit')
                     this.isBatchEdit = true;
-                    // this.warningEventInfo = info;
                     this.visible = true;
                 } else {
                     this.$message.error('请选择要编辑的数据')
@@ -285,9 +292,25 @@
             },
             addAlarmEvent(){
 
-            }
+            },
+            async getAllAlarmEvent () {
+                this.isShowLoading = true
+                await   api.alarm.getAllAlarmEvent().then(res => {
+                                console.log(res, '请求成功')
+                                this.isShowLoading = false
+                                this.warningEventList = res
+                                this.warningEventList.forEach(item => {
+                                    item.checked = false;
+
+                                })
+                        }).catch(err => {
+                            console.log(err, '请求失败')
+                            this.isShowLoading = false
+                        })
+            },
         },
         created () {
+            this.getAllAlarmEvent();
         },
         components: {
             ScrollContainer,

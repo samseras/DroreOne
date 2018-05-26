@@ -17,25 +17,806 @@
                     </el-col>
                     <el-col :xs="4" :sm="7" :md="6" :lg="4" :xl="4">
                             <a class="getBack" href=""><img src="../../../static/img/screenHome.svg" alt=""></a>
-                            <div><img src="../../../static/img/screenSetting.svg" alt=""></div>
+                            <div class="skinPeeler ">
+                                <el-menu  class="el-menu-demo" mode="horizontal" router>
+                                    <el-submenu index="">
+                                        <template slot="title">
+                                            <span class="Admin">换肤</span>
+                                            <img src="../../../static/img/screenSetting.svg" alt="">
+                                        </template>
+                                        <el-menu-item index="">皮肤一</el-menu-item>
+                                        <el-menu-item index="/droreone">皮肤二</el-menu-item>
+                                        <el-menu-item index="/login">皮肤三</el-menu-item>
+                                    </el-submenu>
+                                </el-menu>
+                            </div>
                     </el-col>
                 </el-row>
             </el-header>
+            <el-main>
+                <div class = "contentForm" ref="content" >
+                    <div class = "echatsForm" v-for = "(item,index) in echartsContent" :style = "{width:item.pos_width+'%',height:item.pos_height+'%',left:item.pos_left+'%',top:item.pos_top+'%'}"
+                         v-dragging = "{ item: item, list: echartsContent, group: 'item' }"
+                         :key="item.title"
+                         :id="item.id"
+                         :scenario_id = "item.scenario_id" >
+                        <div class = "echatsTitle">
+                            <p class = "title"></p>
+                        </div>
+                        <div class="echatsContent" :id="item.scenario_id" ref="chartHeight" >
+
+
+                        </div>
+                    </div>
+                </div>
+            </el-main>
         </el-container>
     </div>
 </template>
 
 <script>
+    import api from "@/api"
     import moment from 'moment'
     export default {
         props: [],
         data () {
              return{
+                 echartsContent:[],
                  currTime: new Date(),  //当前时间
+                 barDom:null,
+                 pieDom:null,
+                 roseDom:null,
+                 candlestickDom:null,
+                 radarDom:null,
+                 relativebarDom:null,
+                 RingDom:null,
+                 scatterDom:null,
+                 lineDom:null,
+                 gaugeDom:null,
+                 funnelDom:null,
+                 chartH:null,
+                 chartW:null
              }
         },
         methods:{
+            getDom(){
+                this.chartT = this.$refs.content.getBoundingClientRect().top;
+                this.chartB = this.$refs.content.getBoundingClientRect().bottom;
+                this.chartL = this.$refs.content.getBoundingClientRect().left;
+                this.chartR = this.$refs.content.getBoundingClientRect().right;
+                this.chartH = this.chartB - this.chartT;
+                this.chartW = this.chartR - this.chartL;
+                console.log(this.chartH,"this.chartH")
+                console.log(this.chartW,"this.chartW")
+            },
+            async getContent(){
+                let id = this.$route.params.id;
+                await api.analyze.getStreamDataById(id).then(res=> {
+                    this.echartsContent = res.result;
+                     console.log(res.result,"结果")
+                    let scenarioId,chartId,chartDomH;
+                    for(let i=0;i<this.echartsContent.length;i++){
+                        scenarioId = this.echartsContent[i].scenario_id;
+                        chartId = this.echartsContent[i].id;
+                        chartDomH = this.echartsContent[i].pos_height/100;
+                        this.getchartKind(scenarioId,chartDomH);
+                        console.log(scenarioId,"scenarioId")
+                        console.log(chartDomH,"chartDomH")
+                    };
 
+                }).catch(err => {
+                    console.log(err)
+                })
+             },
+            async getchartKind(scenarioId,chartDomH){
+                await api.analyze.getChartDashboardName(scenarioId).then(res=>{
+                    let chartDomHpx;
+                    this.kind = res.result;
+                    let kindName = res.result;
+                        chartDomHpx = this.chartH*chartDomH-34+"px";
+                    console.log(chartDomHpx,"chartDomHpx")
+                    $("#"+scenarioId).css("height",chartDomHpx);
+                    switch(kindName) {
+                        case "component_sink_bar":
+                            this.getBarData(scenarioId);
+                            break;
+                        case "component_sink_pie":
+                            this.getPieData(scenarioId);
+                            break;
+                        case "component_sink_rose":
+                            this.getRoseData(scenarioId);
+                            break;
+                        case "component_sink_funnel":
+                            this.getFunnelData(scenarioId);
+                            break;
+                        case "component_sink_line":
+                            this.getLineData(scenarioId);
+                            break;
+                        case "component_sink_scatter":
+                            this.getScatterData(scenarioId);
+                            break;
+                        case "component_sink_ring":
+                            this.getRingData(scenarioId);
+                            break;
+                        case "component_sink_relativebar":
+                            this.getRelativebarData(scenarioId);
+                            break;
+                        case "component_sink_gauge":
+                            this.getGaugeData(scenarioId);
+                            break;
+                        case "component_sink_radar":
+                            this.getRadarData(scenarioId);
+                            break;
+                        case "component_sink_candlestick":
+                            this.getCandlestickData(scenarioId);
+                            break;
+                    }
+                }).catch(err => {
+                    console.log(err)
+                })
+            },
+            async getBarData(scenarioId){
+                let bar0ption,barResult,bigDom;
+                await api.analyze.getScenarioMapData(scenarioId).then(res=>{
+                    this.echatData = res.result;
+                    barResult = JSON.parse(res.result);
+                    // console.log(barResult, 'sdsdfhdsfhsdf')
+                    var title = barResult.title;
+                    //var subtitle = chartData.subtitle;
+                    var legendData = barResult.legendData;
+                    var seriesData = barResult.seriesData;
+                    var valueNames = barResult.valueNames;
+                    if(barResult.subtitle==''){
+                        var colors = ['#C1232B', '#B5C334', '#FCCE10', '#ff6600'];
+                    }else {
+                        var color = barResult.subtitle;
+                        var colors = color.split(",");
+                    }
+                    $("#"+scenarioId).prev().find(".title").text(barResult.title);
+                    this.barDom = this.$echarts.init(document.getElementById(scenarioId));
+                    bar0ption={
+                        title: {
+                            text: '',
+                        },
+                        color: colors,
+                        grid: {
+                            left: '3%',
+                            right: '4%',
+                            bottom: '3%',
+                            containLabel: true
+                        },
+                        legend: {
+                            data: valueNames,
+                            align: 'left',
+                            textStyle:{
+                                color:"#fff"
+                            }
+                        },
+                        tooltip: {},
+                        xAxis: {
+                            data: legendData,
+                            axisLine:{
+                                lineStyle:{
+                                    color:"#fff"
+                                }
+                            }
+                        },
+                        yAxis: {
+                            axisLine:{
+                                lineStyle:{
+                                    color:"#fff"
+                                }
+                            },
+                            splitLine:{
+                                show:true,
+                                lineStyle:{
+                                    color:["#6a9dd2"]
+                                }
+                            }
+                        },
+                        series: seriesData
+                    };
+                    this.barDom.setOption(bar0ption);
+                }).catch(err => {
+                    console.log(err)
+                })
+            },
+            async getPieData(scenarioId){
+                let pie0ption,pieResult;
+                await api.analyze.getScenarioMapData(scenarioId).then(res=>{
+                    this.echatData = res.result;
+                    pieResult = JSON.parse(res.result);
+                    // console.log(pieResult,"这是返回的pie数据");
+                    var title = pieResult.title;
+                    var subtitle = pieResult.subtitle;
+                    var legendData = pieResult.legendData;
+                    var seriesName = pieResult.seriesName;
+                    var seriesData = pieResult.seriesData;
+                    var indicator = pieResult.indicator;
+                    $("#"+scenarioId).prev().find(".title").text(pieResult.title);
+                    this.pieDom = this.$echarts.init(document.getElementById(scenarioId));
+                    pie0ption = {
+                        title:{
+                            text:'',
+                            textStyle : {
+                                color: '#fff',
+                                fontSize:18
+                            }
+                        },
+                        tooltip : {
+                            trigger: 'item',
+                            formatter: "{a} <br/>{b} : {c} ({d}%)"
+                        },
+
+                        legend: {
+                            icon: 'circle',
+                            orient: 'vertical',
+                            right: '7%',
+                            top:'10%',
+                            // bottom:'30px',
+                            data:legendData,
+                            textStyle:{color:"#949494"}
+                        },
+                        series : [
+                            {
+                                name: title,
+                                type: 'pie',
+                                radius : '55%',
+                                center: ['38%','45%'],
+                                data:seriesData,
+                                itemStyle: {
+                                    emphasis: {
+                                        shadowBlur: 10,
+                                        shadowOffsetX: 0,
+                                        shadowColor: 'rgba(0, 0, 0, 0.5)'
+                                    }
+                                }
+                            }
+                        ],
+                        color:['#68c6e0','#9acc5d','#f98860','#ffcc79','#f8bfdf']
+                    };
+                    this.pieDom.setOption(pie0ption);
+                }).catch(err => {
+                    console.log(err)
+                })
+            },
+            async getRoseData(scenarioId){
+                let rose0ption,roseResult;
+                await api.analyze.getScenarioMapData(scenarioId).then(res=>{
+                    this.echatData = res.result;
+                    roseResult = JSON.parse(res.result);
+                    //   console.log(res,"这是返回的rose数据");
+                    var title = roseResult.title;
+                    var legendData = roseResult.legendData;
+                    var seriesData = roseResult.seriesData;
+                    var nameColumn = roseResult.nameColumn;
+                    $("#"+scenarioId).prev().find(".title").text(roseResult.title);
+                    this.roseDom = this.$echarts.init(document.getElementById(scenarioId));
+                    rose0ption={
+                        title : {
+                            text: '',
+                            x:'center'
+                        },
+                        tooltip : {
+                            trigger: 'item',
+                            formatter: "{a} <br/>{b} : {c} ({d}%)"
+                        },
+                        legend: {
+                            left:'3%',
+                            top:'5%',
+                            bottom:'5%',
+                            x : 'center',
+                            data:legendData,
+                            textStyle:{
+                                color:"#fff"
+                            }
+                            // orient: 'vertical'
+                        },
+                        calculable : true,
+                        series : [
+                            {
+                                name:title,
+                                type:'pie',
+                                radius : [30, 70],
+                                center : ['55%', '45%'],
+                                roseType : 'area',
+                                label: {
+                                    normal: {
+                                        show: true
+                                    },
+                                    emphasis: {
+                                        show: true
+                                    }
+                                },
+                                lableLine: {
+                                    normal: {
+                                        show: true
+                                    },
+                                    emphasis: {
+                                        show: true
+                                    }
+                                },
+                                data:seriesData
+                            }
+
+                        ]
+                    };
+                    this.roseDom.setOption(rose0ption);
+                }).catch(err => {
+                    console.log(err)
+                })
+            },
+            async getFunnelData(scenarioId){
+                let funnel0ption,funnelResult;
+                await api.analyze.getScenarioMapData(scenarioId).then(res=>{
+                    this.echatData = res.result;
+                    funnelResult = JSON.parse(res.result);
+                    var title = funnelResult.title;
+                    var nameColumn = funnelResult.nameColumn;
+                    var legendData = funnelResult.legendData;
+                    var seriesData = funnelResult.seriesData;
+                    //    console.log(res,"这是返回的funnel数据");
+                    $("#"+scenarioId).prev().find(".title").text(funnelResult.title);
+                    this.funnelDom = this.$echarts.init(document.getElementById(scenarioId));
+                    funnel0ption = {
+                        title: {
+                            text: ''
+                        },
+                        tooltip: {
+                            trigger: 'item',
+                            formatter: "{a} <br/>{b} : {c}%"
+                        },
+                        legend: {
+                            data: legendData,
+                            textStyle:{
+                                color:"#fff"
+                            }
+                        },
+                        calculable: true,
+                        series: [
+                            {
+                                name:nameColumn,
+                                type:'funnel',
+                                left: '10%',
+                                top: 30,
+                                //x2: 80,
+                                bottom: 30,
+                                width: '80%',
+                                // height: {totalHeight} - y - y2,
+                                min: 0,
+                                max: 200,
+                                minSize: '0%',
+                                maxSize: '100%',
+                                sort: 'descending',
+                                gap: 2,
+                                label: {
+                                    normal: {
+                                        show: true,
+                                        position: 'inside'
+                                    },
+                                    emphasis: {
+                                        textStyle: {
+                                            fontSize: 20
+                                        }
+                                    }
+                                },
+                                labelLine: {
+                                    normal: {
+                                        length: 10,
+                                        lineStyle: {
+                                            width: 1,
+                                            type: 'solid'
+                                        }
+                                    }
+                                },
+                                itemStyle: {
+                                    normal: {
+                                        borderColor: '#fff',
+                                        borderWidth: 1
+                                    }
+                                },
+                                data: seriesData
+                            }
+                        ],
+                        color:['#68c6e0','#9acc5d','#f98860','#ffcc79','#f8bfdf']
+                    };
+                    this.funnelDom.setOption(funnel0ption);
+                }).catch(err => {
+                    console.log(err)
+                })
+            },
+            async getLineData(scenarioId){
+                let line0ption,lineResult;
+                await api.analyze.getScenarioMapData(scenarioId).then(res=>{
+                    this.echatData = res.result;
+                    lineResult = JSON.parse(res.result);
+                    // console.log(lineResult,"这是返回的line数据");
+                    var title = lineResult.title;
+                    var legendData = lineResult.legendData;
+                    var seriesData = lineResult.seriesData;
+                    var valueColumns = lineResult.valueColumns;
+                    $("#"+scenarioId).prev().find(".title").text(lineResult.title);
+                    this.lineDom = this.$echarts.init(document.getElementById(scenarioId));
+                    line0ption = {
+                        tooltip: {
+                            trigger: 'axis'
+                        },
+                        legend: {
+                            data:valueColumns,
+                            x:"83%",
+                            textStyle:{
+                                color:"#fff"
+                            }
+                        },
+                        grid: {
+                            left: '3%',
+                            right: '4%',
+                            bottom: '3%',
+                            containLabel: true
+                        },
+                        xAxis: {
+                            type: 'category',
+                            boundaryGap: false,
+                            data:legendData,
+                            axisLine:{
+                                lineStyle:{
+                                    color:"#fff"
+                                }
+                            },
+                            splitLine:{
+                                show:true,
+                                lineStyle:{
+                                    color:["#707e8e"]
+                                }
+                            }
+                        },
+                        yAxis: {
+                            type: 'value',
+                            axisLine:{
+                                lineStyle:{
+                                    color:"#fff"
+                                }
+                            },
+                            splitLine:{
+                                show:true,
+                                lineStyle:{
+                                    color:["#707e8e"]
+                                }
+                            }
+                        },
+                        series: seriesData,
+                        color:["#189cdc","#fbf396"]
+                    };
+                    this.lineDom.setOption(line0ption);
+                }).catch(err => {
+                    console.log(err)
+                })
+            },
+            async getScatterData(scenarioId){
+                let scatter0ption,scatterResult;
+                await api.analyze.getScenarioMapData(scenarioId).then(res=>{
+                    this.echatData = res.result;
+                    //    console.log(res,"这是返scatter回的scatter数据");
+                    scatterResult = JSON.parse(res.result);
+                    var title = scatterResult.title;
+                    var xColumn = scatterResult.xColumn;
+                    var yColumn = scatterResult.yColumn;
+                    var seriesData = scatterResult.seriesData;
+                    $("#"+scenarioId).prev().find(".title").text(scatterResult.title);
+                    this.scatterDom = this.$echarts.init(document.getElementById(scenarioId));
+                    scatter0ption = {
+                        tooltip: {trigger: 'axis'},
+                        grid: {
+                            left: '5%',
+                            right: '20%',
+                            bottom: '5%',
+                            top:'15%',
+                            containLabel: true
+                        },
+                        xAxis: {name:xColumn},
+                        yAxis: {name:yColumn},
+                        series: [{
+                            type: 'scatter',
+                            symbolSize: 20,
+                            data:seriesData
+                        }]
+                    };
+                    this.scatterDom.setOption(scatter0ption);
+                }).catch(err => {
+                    console.log(err)
+                })
+            },
+            async getRingData(scenarioId){
+                let ring0ption,ringResult;
+                await api.analyze.getScenarioMapData(scenarioId).then(res=>{
+                    this.echatData = res.result;
+                    //   console.log(res,"这是返回的ring数据");
+                    ringResult = JSON.parse(res.result);
+                    var legendData = ringResult.legendData;
+                    var seriesData = ringResult.seriesData;
+                    var nameColumn = ringResult.nameColumn;
+                    var title = ringResult.title;
+                    $("#"+scenarioId).prev().find(".title").text(ringResult.title);
+                    this.ringDom = this.$echarts.init(document.getElementById(scenarioId));
+                    ring0ption = {
+                        tooltip: {
+                            trigger: 'item',
+                            formatter: "{a} <br/>{b}: {c} ({d}%)"
+                        },
+                        legend: {
+                            orient: 'vertical',
+                            top:'11%',
+                            left:'3%',
+                            data:legendData,
+                            textStyle:{
+                                color:"#fff"
+                            }
+                        },
+                        series: [
+                            {
+                                name:title,
+                                type:'pie',
+                                radius: ['50%', '70%'],
+                                avoidLabelOverlap: true,
+                                label: {
+                                    normal: {
+                                        show: false,
+                                        position: 'center'
+                                    },
+                                    emphasis: {
+                                        show: true,
+                                        textStyle: {
+                                            fontSize: '12',
+                                            fontWeight: 'lighter'
+                                        }
+                                    }
+                                },
+                                labelLine: {
+                                    normal: {
+                                        show: false
+                                    }
+                                },
+                                data:seriesData
+                            }
+                        ],
+                        color:['yellowgreen','cornflowerblue','darkgoldenrod','blueviolet','hotpink']
+                    };
+                    this.ringDom.setOption(ring0ption);
+                }).catch(err => {
+                    console.log(err)
+                })
+            },
+            async getRelativebarData(scenarioId){
+                let relativebar0ption,relativebarResult;
+                await api.analyze.getScenarioMapData(scenarioId).then(res=>{
+                    this.echatData = res.result;
+                    console.log(res,"这是返回的relativebar数据");
+                    relativebarResult = JSON.parse(res.result);
+                    $("#"+scenarioId).prev().find(".title").text(relativebarResult.title);
+                    this.relativebarDom = this.$echarts.init(document.getElementById(scenarioId));
+                    relativebar0ption = {
+                        tooltip : {
+                            trigger: 'axis',
+                            axisPointer : {            // 坐标轴指示器，坐标轴触发有效
+                                type : 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+                            }
+                        },
+                        legend: {
+                            data:relativebarResult.lengeData
+                        },
+                        grid: {
+                            left: '3%',
+                            right: '4%',
+                            bottom: '8%',
+                            top:'8%',
+                            containLabel: true
+                        },
+                        xAxis : [
+                            {
+                                type : 'value'
+                            }
+                        ],
+                        yAxis : [
+                            {
+                                type : 'category',
+                                axisTick : {show: false},
+                                data : relativebarResult.yData
+                            }
+                        ],
+                        series : [
+                            {
+                                name:'利润',
+                                type:'bar',
+                                label: {
+                                    normal: {
+                                        show: true,
+                                        position: 'inside'
+                                    }
+                                },
+                                data:relativebarResult.value.data
+                            },
+                            {
+                                name:'收入',
+                                type:'bar',
+                                stack: '总量',
+                                label: {
+                                    normal: {
+                                        show: true
+                                    }
+                                },
+                                data:relativebarResult.value.justValue
+                            },
+                            {
+                                name:'支出',
+                                type:'bar',
+                                stack: '总量',
+                                label: {
+                                    normal: {
+                                        show: true,
+                                        position: 'left'
+                                    }
+                                },
+                                data:relativebarResult.value.loseValue
+                            }
+                        ]
+                    };
+                    this.relativebarDom.setOption(relativebar0ption);
+                }).catch(err => {
+                    console.log(err)
+                })
+            },
+            async getGaugeData(scenarioId){
+                let gauge0ption,gaugeResult;
+                await api.analyze.getScenarioMapData(scenarioId).then(res=>{
+                    this.echatData = res.result;
+                    //  console.log(res,"这是返回的gauge数据");
+                    gaugeResult = JSON.parse(res.result);
+                    // var title = gaugeResult.title;
+                    var title = gaugeResult.seriesData[0].name;
+                    var nameColumn = gaugeResult.nameColumn;
+                    var minValue = gaugeResult.minValue;
+                    var maxValue = gaugeResult.maxValue;
+                    var seriesData = gaugeResult.seriesData;
+                    delete seriesData[0].name;
+                    $("#"+scenarioId).prev().find(".title").text(title);
+                    this.gaugeDom = this.$echarts.init(document.getElementById(scenarioId));
+                    gauge0ption = {
+                        tooltip : {
+                            formatter: "{a} <br/>{b} : {c}%"
+                        },
+                        series: [
+                            {
+                                name: nameColumn,
+                                type: 'gauge',
+                                min: minValue,
+                                max: maxValue,
+                                detail: {
+                                    formatter:'{value}'
+                                },
+                                data: seriesData
+                            }
+                        ]
+                    };
+                    // setInterval(function () {
+                    //     gaugeResult.series[0].data[0].value = (Math.random() * 100).toFixed(2) - 0;
+                    //     this.gaugeDom.setOption(gauge0ption, true);
+                    // },2000);
+                    this.gaugeDom.setOption(gauge0ption);
+                }).catch(err => {
+                    console.log(err)
+                })
+            },
+            async getCandlestickData(scenarioId){
+                let candlestick0ption,candlestickResult;
+                await api.analyze.getScenarioMapData(scenarioId).then(res=>{
+                    this.echatData = res.result;
+                    //    console.log(res,"这是返回的candlestick数据");
+                    candlestickResult = JSON.parse(res.result);
+                    var title = candlestickResult.title;
+                    var legendData = candlestickResult.legendData;
+                    var seriesData = candlestickResult.seriesData;
+                    $("#"+scenarioId).prev().find(".title").text(candlestickResult.title);
+                    this.candlestickDom = this.$echarts.init(document.getElementById(scenarioId));
+                    candlestick0ption = {
+                        title:
+                            {
+                                text: ''
+                            },
+                        grid: {
+                            left: '5%',
+                            right: '5%',
+                            bottom: '10%',
+                            top:'10%',
+                            containLabel: true
+                        },
+                        xAxis:
+                            {
+                                data: legendData
+                            },
+                        yAxis: {},
+                        series:
+                            [
+                                {
+                                    type: 'k',
+                                    data: seriesData
+                                }
+                            ]
+                    };
+                    this.candlestickDom.setOption(candlestick0ption);
+                }).catch(err => {
+                    console.log(err)
+                })
+            },
+            async getRadarData(scenarioId){
+                let radar0ption,radarResult;
+                await api.analyze.getScenarioMapData(scenarioId).then(res=>{
+                    this.echatData = res.result;
+                    // console.log(res,"这是返回的radar数据");
+                    radarResult = JSON.parse(res.result);
+                    var legendData = radarResult.legendData;
+                    var seriesName = radarResult.seriesName;
+                    var seriesData = radarResult.seriesData;
+                    var indicator = radarResult.indicator;
+
+                    $("#"+scenarioId).prev().find(".title").text(radarResult.title);
+                    this.radarDom = this.$echarts.init(document.getElementById(scenarioId));
+                    radar0ption = {
+                        title: {
+                            text: '',
+                            subtext: ''
+                        },
+                        tooltip: {},
+                        legend: {
+                            data: legendData,
+                            x: '83%',
+                            orient: 'vertical',
+                            textStyle:{
+                                color:"#fff"
+                            }
+                        },
+                        radar: {
+                            name: {
+                                textStyle: {
+                                    color: "#fff",
+                                    backgroundColor: "#999",
+                                    borderRadius: 3,
+                                    padding: [
+                                        3,
+                                        5
+                                    ]
+                                }
+                            },
+                            indicator: indicator
+                        },
+                        "series": [
+                            {
+                                name: seriesName,
+                                type: "radar",
+                                data: seriesData
+                            }
+                        ]
+                    };
+                    this.radarDom.setOption(radar0ption);
+                }).catch(err => {
+                    console.log(err)
+                })
+            },
+            requestFullScreen() {
+                let docElm = document.documentElement;
+                if (docElm.requestFullscreen) {
+                    docElm.requestFullscreen();
+                }
+                else if (docElm.msRequestFullscreen) {
+                    docElm = document.body; //overwrite the element (for IE)
+                    docElm.msRequestFullscreen();
+                }
+                else if (docElm.mozRequestFullScreen) {
+                    docElm.mozRequestFullScreen();
+                }
+                else if (docElm.webkitRequestFullScreen) {
+                    docElm.webkitRequestFullScreen();
+                }
+            },
 
         },
         filters: {
@@ -55,14 +836,17 @@
                 return moment(item).format('YY:MM:DD')
             },
         },
-        created(){
-
+         created () {
+             this.getContent();
+            console.log(this.$route.params.id,"@@@@@@@@@@@")
         },
         mounted () {
-
+            this.requestFullScreen();
+            this.getDom();
         }
     }
 </script>
+
 <style lang="scss" scoped>
   .screenShow{
       width: 100%;
@@ -74,7 +858,7 @@
           flex-direction: column;
           .el-header{
               width: 100%;
-              height: rem(93);
+              height: rem(93)!important;
               /*background: #5daf34;*/
               .el-row{
                   height: rem(93);
@@ -103,10 +887,6 @@
                   .el-col:last-child{
                       display: flex;
                       height: 100%;
-                      div{
-                          width: rem(50);
-                          height: rem(93);
-                      }
                       .getBack{
                           display: block;
                           padding-left: rem(40);
@@ -117,6 +897,96 @@
                           height: rem(25);
                           margin-top: rem(30);
                       }
+                      .skinPeeler{
+                          width: rem(100);
+                          height: 100%;
+                          .Admin{
+                              display: inline-block;
+                              height: rem(93);
+                              line-height: rem(93);
+                          }
+                          img{
+                              margin-top: 0;
+                              margin-left: rem(5);
+                          }
+                      }
+                  }
+              }
+          }
+          .el-main{
+              flex: 1;
+              .contentForm {
+                  width: 100%;
+                  height: 100%;
+                  position: relative;
+                  cursor: pointer;
+                  .echatsForm {
+                      position: absolute;
+                      float: left;
+                      border-radius: rem(5);
+                      /*padding: 0 rem(10) rem(10) 0;*/
+                      box-sizing: border-box;
+                      background-color: rgba(0,0,0,0.2);
+                      .echatsTitle {
+                          position: relative;
+                          width: 100%;
+                          padding: rem(5) rem(10);
+                          box-sizing: border-box;
+                          text-align: left;
+                          color: #666;
+                          /*background: #f6f6f6;*/
+                          border-radius: rem(5);
+                          border: none;
+                          border-bottom-right-radius: rem(0);
+                          border-bottom-left-radius: rem(0);
+                          p {
+                              width: 100%;
+                              padding-right: rem(100);
+                              overflow: hidden;
+                              text-overflow: ellipsis;
+                              white-space: nowrap;
+                              box-sizing: border-box;
+                              display: inline-block;
+                              font-size: rem(14);
+                              color: #17e4db;
+                          }
+                          .echatsBtn {
+                              position: absolute;
+                              display: inline-block;
+                              right: rem(15);
+                              top: rem(6);
+                              i {
+                                  padding: 0;
+                                  width: rem(25);
+                                  font-size: rem(18);
+                                  color: #999;
+                                  font-weight: 600;
+                                  margin-right: rem(1);
+                              }
+                              img {
+                                  width: rem(14);
+                                  height: rem(14);
+                                  margin-right: rem(2);
+                                  margin-top: rem(3);
+                              }
+                          }
+                          .echatsBox {
+                              position: fixed;
+                              left: 0;
+                              top: 0;
+                              width: 100%;
+                              height: 100%;
+                              background: #000;
+                              opacity: 0.3;
+                          }
+
+                      }
+                      .echatsContent {
+                          width: 100%;
+                          box-sizing: border-box;
+                          border-top: none;
+                          border-bottom-right-radius: rem(5);
+                      }
                   }
               }
           }
@@ -124,6 +994,52 @@
   }
 
 </style>
-<style lang="scss" scoped>
+<style lang="scss">
+    .screenShow{
+        .el-menu-demo,.el-menu--horizontal,.el-menu{
+            background-color: transparent;
+        }
+        .func .el-menu{
+            border-bottom: none;
+            height: rem(93);
+        }
+        .el-menu--horizontal{
+            height: rem(93);
+            border-bottom: none;
+        }
+        .el-menu--horizontal>.el-submenu .el-submenu__title{
+            color: #fff;
+            height: rem(93);
+            width: rem(100);
+        }
+        .el-menu--horizontal>.el-submenu .el-submenu__title:hover{
+            background-color: transparent;
+        }
+        .func .el-submenu__title img{
+            display: inline-block;
+            width: rem(20);
+            height: rem(20);
+            vertical-align: middle;
+            margin-top: rem(-4);
+            margin-left: rem(5);
+        }
+        .el-menu--horizontal>.el-submenu.is-active .el-submenu__title{
+            width: rem(100);
+            border-bottom: none;
+        }
+        .el-submenu.is-active .el-submenu__title{
+            width: rem(100);
+            border-bottom: none;
+        }
+        .el-menu--popup-bottom-start .el-menu-item{
+            width: rem(93);
+        }
+        .el-main{
+            /*background: #00B83F;*/
+            padding: 0;
+            margin: rem(20);
+            margin-top: 0;
+        }
+    }
 
 </style>

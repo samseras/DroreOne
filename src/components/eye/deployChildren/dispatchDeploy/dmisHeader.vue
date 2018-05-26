@@ -9,8 +9,8 @@
              <el-checkbox v-model="isSelected" @change="selectedAll">全选</el-checkbox>
 
             <el-button size="mini"plain @click="deleteCard"><i class="el-icon-delete"></i>删除</el-button>
-            <el-button size="mini"plain @click="startPlan"><i class="el-icon-circle-check-outline"></i>开始</el-button>
-            <el-button size="mini"plain @click="endPlan"><i class="el-icon-circle-close-outline"></i>停止</el-button>
+            <el-button size="mini"plain @click="startPlan"><img src="./../../../../../static/img/start.svg" alt="">开始</el-button>
+            <el-button size="mini"plain @click="endPlan"><img src="./../../../../../static/img/stop.svg" alt="">停止</el-button>
         </div>
 
         <div class="page">
@@ -152,6 +152,12 @@
 
                 i{
                     margin-right: rem(3);
+                }
+                img{
+                    width: rem(15);
+                    height: rem(15);
+                    vertical-align: middle;
+                    margin-right: rem(4);
                 }
             }
             .el-button.selectedAll{

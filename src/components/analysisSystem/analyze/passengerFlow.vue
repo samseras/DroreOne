@@ -72,6 +72,7 @@
                 gaugeDom:null,
                 funnelDom:null,
                 isAllScreen:false,
+                // currenId:null,
                 isErr:true,
                 echatListErr:{
                     pullData:false,
@@ -204,6 +205,7 @@
                 this.isShowLoading = true
                 let id = this.$route.params.id;
 
+
                 await api.analyze.getStreamDataById(id).then(res=> {
                     // console.log(res,'nimeide ')
                     this.isShowloading = false;
@@ -263,7 +265,6 @@
                   smallCharDom.resize();
             },
             moveChart(){
-
                 if(this.barDom!=undefined){
                     this.barDom.resize();
                 };
