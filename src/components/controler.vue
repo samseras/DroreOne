@@ -64,7 +64,13 @@
                 this.$store.commit('SHOW_SEARCH', this.isShowControler)
             },
             goControlModule (index) {
-                this.isShowControler = true
+                if(this.isShowControler){
+                    if(this.activeIndex ==index){
+                        this.isShowControler = false
+                    }
+                }else {
+                    this.isShowControler = true
+                }
                 this.$store.commit('SHOW_SEARCH', this.isShowControler)
                 this.activeIndex = index
             }
