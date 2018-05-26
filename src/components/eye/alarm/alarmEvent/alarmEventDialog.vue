@@ -15,9 +15,9 @@
                     <el-select  v-model="eventInfo.level" size="mini" class="" placeholder="请选择">
                         <el-option
                             v-for="item in levelInfo"
-                            :key="item.value"
-                            :label="item.label"
-                            :value="item.value">
+                            :key="item.id"
+                            :label="item.name"
+                            :value="item.id">
                         </el-option>
                     </el-select>
                 </p>
@@ -25,37 +25,37 @@
                         <el-select  v-model="eventInfo.status" size="mini" class="" placeholder="请选择">
                             <el-option
                                 v-for="item in statusInfo"
-                                :key="item.value"
-                                :label="item.label"
-                                :value="item.value">
+                                :key="item.id"
+                                :label="item.name"
+                                :value="item.id">
                             </el-option>
                         </el-select>
                     </p>
                 </div>
 
                 <div v-else  class="alarmContent">
-                    <p class="sex">编&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 号：
-                        <el-input type="text" v-model='eventInfo.id' class="inputText" :maxlength="15" :readonly="true"></el-input>
+                    <p class="serialNum">编&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 号：
+                        <el-input type="text" v-model='eventInfo.serialNum' class="inputText" :maxlength="15" :readonly="true"></el-input>
                     </p>
                     <p class="type">指标类型：
-                        <el-input type="text" v-model='eventInfo.type' class="inputText" :maxlength="15" :readonly='true'></el-input>
+                        <el-input type="text" v-model='eventInfo.alarmType' class="inputText" :maxlength="15" :readonly='true'></el-input>
                     </p>
-                    <p class="source">来&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 源：
-                        <el-input type="text"  v-model='eventInfo.source' class="inputText" :maxlength="15" :readonly='true'></el-input>
+                    <p class="sourceDevice">来&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 源：
+                        <el-input type="text"  v-model='eventInfo.sourceDevice' class="inputText" :maxlength="15" :readonly='true'></el-input>
                     </p>
-                    <p class="time">发生时间：
-                        <el-input type="text"  v-model='eventInfo.occuredTime' class="inputText" :maxlength="15" :readonly='true'></el-input>
+                    <p class="occurenceTime">发生时间：
+                        <el-input type="text"  v-model='eventInfo.occurenceTime' class="inputText" :maxlength="15" :readonly='true'></el-input>
                     </p>
-                    <p class="role">关联规则：
-                        <el-input type="text" v-model='eventInfo.role' class="inputText" :maxlength="15" :readonly='true'></el-input>
+                    <p class="alarmRule">关联规则：
+                        <el-input type="text" v-model='eventInfo.alarmRule' class="inputText" :maxlength="15" :readonly='true'></el-input>
                     </p>
                     <p class="level">严重等级：
                         <el-select  v-model="eventInfo.level" size="mini" class="" placeholder="请选择" :disabled="isReadonly">
                             <el-option
                                 v-for="item in levelInfo"
-                                :key="item.value"
-                                :label="item.label"
-                                :value="item.value">
+                                :key="item.id"
+                                :label="item.name"
+                                :value="item.id">
                             </el-option>
                         </el-select>
                     </p>
@@ -75,9 +75,9 @@
                         <el-select  v-model="eventInfo.status" size="mini" class="" placeholder="请选择" :disabled="isReadonly">
                             <el-option
                                 v-for="item in statusInfo"
-                                :key="item.value"
-                                :label="item.label"
-                                :value="item.value">
+                                :key="item.id"
+                                :label="item.name"
+                                :value="item.id">
                             </el-option>
                         </el-select>
                     </p>
@@ -131,28 +131,28 @@
             return{
                 levelInfo:[
                     {
-                        value:'1',
-                        label:'高'
+                        id:'1',
+                        name:'高'
                     },
                     {
-                        value:'2',
-                        label:'中'
+                        id:'2',
+                        name:'中'
                     },{
-                        value:'3',
-                        label:'低'
+                        id:'3',
+                        name:'低'
                     }
                 ],
                 statusInfo:[
                     {
-                        value:'1',
-                        label:'新告警'
+                        id:'1',
+                        name:'新告警'
                     },
                     {
-                        value:'2',
-                        label:'处理中'
+                        id:'2',
+                        name:'处理中'
                     },{
-                        value:'3',
-                        label:'已解决'
+                        id:'3',
+                        name:'已解决'
                     }
                 ],
                 ownerInfo:[
@@ -210,11 +210,11 @@
                 ],
                 selectFileList:[],
                 eventInfo:{
-                    id:'',
-                    type:'',
-                    source:'',
-                    occuredTime:'',
-                    role:'',
+                    serialNum:'',
+                    alarmType:'',
+                    sourceDevice:'',
+                    occurenceTime:'',
+                    alarmRule:'',
                     level:'',
                     owner:[
                         {
@@ -374,7 +374,24 @@
                     this.isShowLoading = false
                     console.log(err, '请求失败')
                 })
+            },
+            async getSeverityType(){
+                await api.alarm.getSeverityType().then(res => {
+                    console.log(res, '查询严重等级成功')
+                    this.levelInfo = res
+                }).catch(err => {
+                    console.log(err, '查询严重等级失败')
+                })
+            },
+            async getAlarmEventStatus(){
+                await api.alarm.getAlarmEventStatus().then(res => {
+                    console.log(res, '查询告警事情状态成功')
+                    this.statusInfo = res
+                }).catch(err => {
+                    console.log(err, '查询告警事情状态失败')
+                })
             }
+
 
 
         },

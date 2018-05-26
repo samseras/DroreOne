@@ -42,7 +42,8 @@
                     <!--multiple-->
                     <!--:limit="3">-->
                 <div class="el-upload">
-                    <i size="small" type="primary" class="el-icon-message" @click="$refs.uploadMusic.click()"></i>
+                    <!--<i size="small" type="primary" class="el-icon-message" ></i>-->
+                    <img src="./../../../../../static/img/uploadFile.svg" alt="" @click="$refs.uploadMusic.click()">
                     <input type="file" ref="uploadMusic" class="musicFile" @change="selectMusic">
                 </div>
                 <!--</el-upload>-->
@@ -343,6 +344,10 @@
                 position: absolute;
                 top: rem(80);
                 right: rem(40);
+                img{
+                    vertical-align: middle;
+                    margin-top: rem(-3);
+                }
                 .musicFile{
                     width: 0;
                     height: 0;

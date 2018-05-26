@@ -94,12 +94,12 @@
                         <div class="personType" @click.stop="showPersonDetail(item, '人员信息',true)">
                             <img :src="getUrl(item.picturePath)" alt="" @error="imgError">
                             <span class="type">
-                                  {{item.jobName}}
+                                  {{item.name}}
                                 </span>
                         </div>
                         <div class="specificInfo">
-                            <p class="name">
-                                姓&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;名：<span>{{item.name}}</span></p>
+                            <!--<p class="name">
+                                姓&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;名：<span>{{item.name}}</span></p>-->
                             <p class="sex">性&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;别：<span>{{item.gender | sexFilter}}</span>
                             </p>
                             <p class="idNum">身份证号：<span>{{item.idNum | idNumFilter}}</span></p>
