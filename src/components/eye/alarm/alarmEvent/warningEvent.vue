@@ -28,7 +28,7 @@
                             </template>
                         </el-table-column>
                         <el-table-column
-                            prop="id"
+                            prop="serialNum"
                             label="编号">
                         </el-table-column>
                         <el-table-column
@@ -37,7 +37,7 @@
                             label="指标类型">
                         </el-table-column>
                         <el-table-column
-                            prop="source"
+                            prop="sourceDevice"
                             label="来源">
                         </el-table-column>
                         <el-table-column
@@ -46,7 +46,7 @@
                             label="状态">
                         </el-table-column>
                         <el-table-column
-                            prop="occuredTime"
+                            prop="occurenceTime"
                             label="发生时间"
                             width="180">
                         </el-table-column>
@@ -99,14 +99,14 @@
             return{
                 warningEventList: [
                     {
-                        id:'sos001',
-                        type:'水位监测传感器1',
-                        source:'报警柱001',
+                        serialNum:'sos001',
+                        alarmType:'水位监测传感器1',
+                        sourceDevice:'报警柱001',
                         status: {
                             id:'1',
                             name :'新告警'
                         },
-                        occuredTime:'2018-05-11 12:20:39',
+                        occurenceTime:'2018-05-11 12:20:39',
                         level:'高',
                         owner:{
                             id:"1",
@@ -117,15 +117,15 @@
 
                     },
                     {
-                        id:'sos002',
-                        type:'水位监测传感器1',
-                        source:'报警柱002',
+                        serialNum:'sos002',
+                        alarmType:'水位监测传感器1',
+                        sourceDevice:'报警柱002',
                         status: {
                             id:'2',
                             name:'处理中'
 
                         },
-                        occuredTime:'2017-01-09 19:33:01',
+                        occurenceTime:'2017-01-09 19:33:01',
                         level:'高',
                         owner:{
                             id:"2",
@@ -276,7 +276,6 @@
                 if (this.choseInfoId.length > 0) {
                     console.log('batchEdit')
                     this.isBatchEdit = true;
-                    // this.warningEventInfo = info;
                     this.visible = true;
                 } else {
                     this.$message.error('请选择要编辑的数据')
@@ -285,9 +284,25 @@
             },
             addAlarmEvent(){
 
-            }
+            },
+            async getAllAlarmEvent () {
+                this.isShowLoading = true
+                await   api.alarm.getAllAlarmEvent().then(res => {
+                                console.log(res, '请求成功')
+                                this.isShowLoading = false
+                                this.warningEventList = res
+                                this.warningEventList.forEach(item => {
+                                    item.checked = false;
+
+                                })
+                        }).catch(err => {
+                            console.log(err, '请求失败')
+                            this.isShowLoading = false
+                        })
+            },
         },
         created () {
+            this.getAllAlarmEvent();
         },
         components: {
             ScrollContainer,
