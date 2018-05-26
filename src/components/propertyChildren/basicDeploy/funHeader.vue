@@ -45,9 +45,9 @@
             </el-checkbox-group>
         </div>
         <div class="page">
-            <span>当前第1页/共8页</span>
-            <span class="upPage"><</span>
-            <span class="downPage">></span>
+            <span>当前第{{currentPageNum}}页/共{{pageAllNum}}页</span>
+            <span class="upPage"@click="previousPage"><</span>
+            <span class="downPage" @click="nextPage">></span>
             <span class="listForm" @click="toggleList('list')" v-if="isShowIcon"><i class="el-icon-tickets"></i></span>
             <span class="cardForm" @click="toggleList('card')" v-if="!isShowIcon"><i class="el-icon-menu"></i></span>
         </div>
@@ -81,7 +81,9 @@
                 isSelected: false,
                 isShowHeader: true,
                 searchContent: '',
-                isShowIcon: true
+                isShowIcon: true,
+                pageAllNum: 1,
+                currentPageNum: 1
             }
         },
         methods: {
@@ -427,6 +429,22 @@
                 } else {
                     this.isShowHeader = true
                 }
+            },
+            previousPage () {//上一页
+                this.currentPageNum--
+                if(this.currentPageNum < 1) {
+                    this.currentPageNum = 1
+                    return
+                }
+                this.$emit('previousPage',this.currentPageNum)
+            },
+            nextPage () {//下一页
+                this.currentPageNum++
+                if (this.currentPageNum > this.pageAllNum) {
+                    this.currentPageNum = this.pageAllNum
+                    return
+                }
+                this.$emit('nextPage',this.currentPageNum)
             }
         },
         filters: {
@@ -450,8 +468,11 @@
                 }else{
                     this.isSelected=false
                 }
-
-
+            },
+            listsLength () {
+                if (this.listsLength > 0) {
+                    this.pageAllNum = Math.ceil(this.listsLength / 35)
+                }
             }
         },
         created () {
