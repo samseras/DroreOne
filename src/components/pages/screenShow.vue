@@ -17,10 +17,23 @@
                     </el-col>
                     <el-col :xs="4" :sm="7" :md="6" :lg="4" :xl="4">
                             <a class="getBack" href=""><img src="../../../static/img/screenHome.svg" alt=""></a>
-                            <div><img src="../../../static/img/screenSetting.svg" alt=""></div>
+                            <div class="skinPeeler ">
+                                <el-menu  class="el-menu-demo" mode="horizontal" router>
+                                    <el-submenu index="">
+                                        <template slot="title">
+                                            <span class="Admin">换肤</span>
+                                            <img src="../../../static/img/screenSetting.svg" alt="">
+                                        </template>
+                                        <el-menu-item index="">皮肤一</el-menu-item>
+                                        <el-menu-item index="/droreone">皮肤二</el-menu-item>
+                                        <el-menu-item index="/login">皮肤三</el-menu-item>
+                                    </el-submenu>
+                                </el-menu>
+                            </div>
                     </el-col>
                 </el-row>
             </el-header>
+            <el-main>Main</el-main>
         </el-container>
     </div>
 </template>
@@ -55,14 +68,15 @@
                 return moment(item).format('YY:MM:DD')
             },
         },
-        created(){
-
+         created () {
+            console.log(this.$route.params.id,"@@@@@@@@@@@")
         },
         mounted () {
 
         }
     }
 </script>
+
 <style lang="scss" scoped>
   .screenShow{
       width: 100%;
@@ -74,7 +88,7 @@
           flex-direction: column;
           .el-header{
               width: 100%;
-              height: rem(93);
+              height: rem(93)!important;
               /*background: #5daf34;*/
               .el-row{
                   height: rem(93);
@@ -103,10 +117,10 @@
                   .el-col:last-child{
                       display: flex;
                       height: 100%;
-                      div{
-                          width: rem(50);
-                          height: rem(93);
-                      }
+                      /*div{*/
+                          /*width: rem(50);*/
+                          /*height: rem(93);*/
+                      /*}*/
                       .getBack{
                           display: block;
                           padding-left: rem(40);
@@ -117,8 +131,36 @@
                           height: rem(25);
                           margin-top: rem(30);
                       }
+                      .skinPeeler{
+                          width: rem(100);
+                          height: 100%;
+
+                          .el-menu-demo{
+                              width: 100%;
+                              height: 100%;
+                              background: none;
+                              border-bottom: none;
+                              .el-submenu{
+                                  width: 100%;
+                                  height: 100%;
+                                  border-bottom: none;
+                                  .el-submenu__title{
+                                      border-bottom: none;
+                                      height: rem(93);
+                                  }
+                                  .el-menu-item{
+                                      width: rem(100);
+                                      height: rem(30);
+
+                                  }
+                              }
+                          }
+                      }
                   }
               }
+          }
+          el-main{
+
           }
       }
   }

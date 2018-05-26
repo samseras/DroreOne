@@ -156,7 +156,7 @@ const routes = [
       component: login
     },
     {
-        path: '/screen',
+        path: "/screen/:id",
         component: screen
     },
       //全视之眼
