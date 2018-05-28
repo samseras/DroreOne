@@ -74,6 +74,7 @@
                 this.getAllTree();//植物现有标注
                 this.getAllBuild();//建筑现有标注
                 this.overView();//鹰眼
+                this.getAllRoat();// 路线输出
             }else if (route.includes('controler')) {
                 droreMap.interaction.enableMapClick = true
                 droreMap.interaction.showMove()
@@ -1434,7 +1435,7 @@
                             areaEvets1.setVisible(true)
                             droreMap.area.addChild(areaEvets1)
                         }else {
-                            var areaEvets = new droreMap.area.DrawLayer("areaList", 'rgba(255, 255, 255, 0.1)', "blue")
+                            var areaEvets = new droreMap.area.DrawLayer("areaList", 'rgba(255, 255, 255, 0.1)', "#26bbf0")
                             let geo = JSON.parse(this.areaList[i].geo);
                             let ol = geo[0];
                             let arrayObj = new Array();
@@ -1480,7 +1481,7 @@
                 await api.deployRoad.getAllRoute().then(res => {
                     console.log(res, '请求路网成功')
                     for (var i = 0; i < res.length; i++) {
-                        var areaEvtList =new droreMap.road.RoadLayer('ROUTE_list', 'blue', 'blue')
+                        var areaEvtList =new droreMap.road.RoadLayer('ROUTE_list', '#26bbf0', 'blue')
                         let geo =JSON.parse(res[i].geo);
                         let area = [];
                         for(var j = 0; j < geo.length; j++) {
@@ -1690,6 +1691,8 @@
                         let that = this;
                         icon.onclick(function (e) {
                             that.menulist = e.data;
+                            that.droreMappopup(that.menulist);
+                            that.menuShow()
                             console.log( that.menulist,'123123123');
                         });
                     }
@@ -2402,5 +2405,37 @@
     }
     .contextmenu.Broadcast i{
         background: url("/static/img/icon/guangboshebei_big.png") no-repeat;
+    }
+    .contextmenu.trash,.contextmenu.scenic,.contextmenu.construction,.contextmenu.plant,.contextmenu.park,.contextmenu.toilet,.contextmenu.indicator,.contextmenu.shop{
+        background: none;
+        width: 0;
+        height: 0;
+        button,.mapSwitch{
+            display: none;
+        }
+    }
+    .contextmenu.trash i{
+        background: url("/static/img/icon/trash_big.png") no-repeat;
+    }
+    .contextmenu.scenic i{
+        background: url("/static/img/icon/scenic_big.png") no-repeat;
+    }
+    .contextmenu.construction i{
+        background: url("/static/img/icon/construction_big.png") no-repeat;
+    }
+    .contextmenu.plant i{
+        background: url("/static/img/icon/plant_big.png") no-repeat;
+    }
+    .contextmenu.park i{
+        background: url("/static/img/icon/park_big.png") no-repeat;
+    }
+    .contextmenu.toilet i{
+        background: url("/static/img/icon/toilet_big.png") no-repeat;
+    }
+    .contextmenu.indicator i{
+        background: url("/static/img/icon/indicator_big.png") no-repeat;
+    }
+    .contextmenu.shop i{
+        background: url("/static/img/icon/shop_big.png") no-repeat;
     }
 </style>
