@@ -60,11 +60,12 @@
                         </el-select>
                     </p>
                     <p class="owner">负责人员：
-                        <el-select  v-model="eventInfo.owner.name" @change="ownerChange" size="mini" class="" placeholder="请选择" :disabled="isReadonly">
+                        <el-select  v-model="eventInfo.owner.id" @change="ownerChange" size="mini" class="" placeholder="请选择" :disabled="isReadonly">
                             <el-option
-                                v-for="item in eventInfo.owner"
-                                :key="item.val"
-                                :label="item.name">{{item.name}}
+                                v-for="item in ownerInfo"
+                                :key="item.id"
+                                :label="item.name"
+                                :value="item.id">
                             </el-option>
                         </el-select>
                     </p>
@@ -126,7 +127,7 @@
      import VueAplayer from 'vue-aplayer'
      import api from '@/api'
     export default {
-        props: ['visible','isReadonly','isBatchEdit','choseInfoId','Info'],
+        props: ['visible','isReadonly','isBatchEdit','choseInfoId','Info','isfixedHeight'],
         data () {
             return{
                 eventInfo:{
@@ -144,14 +145,12 @@
                     statusName :'',
                     owner:[
                         {
-                            val:'1',
-                            name:'aaa',
-                            tel:'111'
+                            id:'',
+                            name:''
                         },
                         {
-                            val:'2',
-                            name:'bbb',
-                            tel:'222'
+                            id:'',
+                            name:''
                         }
                     ],
                     tel:'',
@@ -189,15 +188,19 @@
                 ],
                 ownerInfo:[
                     {
-                        value:'0',
-                        label:'aaa'
+                        id:'1',
+                        name:'aaa',
+                        tel:'111'
+
                     },
                     {
-                        value:'1',
-                        label:'bbb'
+                        id:'2',
+                        name:'bbb',
+                        tel:'222'
                     },{
-                        value:'2',
-                        label:'ccc'
+                        id:'3',
+                        name:'ccc',
+                        tel:'333'
                     }
                 ],
                 isShowLoading: false,
@@ -248,16 +251,11 @@
             ownerChange(val){
                 console.log(val);
                 console.log(this.eventInfo);
-                this.eventInfo.owner.forEach((item,index)=>{
+                this.ownerInfo.forEach((item,index)=>{
                     if(item.id == val){
                         this.eventInfo.tel =  item.tel;
                     }
                 });
-                let vm = this;
-                // switch(val){
-                //     case 0:
-                //         vm.
-                // }
             },
             downloadFile(val){
                 console.log(val)
@@ -609,16 +607,16 @@
             width: 100%;
             height: 100%;
             .alarmContent {
-                width: 100%;
-                height: 100%;
-                position: relative;
-                .uploadContent{
-                    text-align: right;
-                    .multiFile{
-                        display: none;
-                    }
-                }
-                .attachment{
+                 width: 100%;
+                 height: 100%;
+                 position: relative;
+                 .uploadContent{
+                     text-align: right;
+                     .multiFile{
+                         display: none;
+                     }
+                 }
+                 .attachment{
                      .showFilelist{
                          display: flex;
                          flex-wrap: wrap;
@@ -626,89 +624,89 @@
                          div {
                              display:inline-block;
                          }
-                    }
-                    .downloadThis{
-                        cursor:pointer;
-                    }
-                    .downloadThis:hover{
-                        color:blue;
-                        text-decoration: underline;
-                    }
-                }
-                .processLog{
-                    /*text-align: cente;*/
-                    p{
-                        border-bottom: 0;
-                    }
-                    .processDiv{
+                     }
+                     .downloadThis{
+                         cursor:pointer;
+                     }
+                     .downloadThis:hover{
+                         color:blue;
+                         text-decoration: underline;
+                     }
+                 }
+                 .processLog{
+                     /*text-align: cente;*/
+                     p{
+                         border-bottom: 0;
+                     }
+                     .processDiv{
 
-                    }
-                    .processTime{
-                        width:30%;
-                        float:left;
-                    }
-                    .processContent{
-                        overflow: hidden;
-                    }
-                }
-                p{
-                    margin-top: rem(8);
-                    border-bottom: 1px solid #ccc;
-                    font-size: rem(12);
-                    input{
-                        border: none;
-                        list-style: none;
-                        outline: none;
-                        font-size: rem(12);
-                    }
-                    select{
-                        border: none;
-                        outline: none;
-                        width: rem(100);
-                        font-size: rem(12);
-                        option{
-                            appearance:none;
-                            list-style: none;
-                            border: none;
-                            width: 100%;
-                            outline: none;
-                            padding: 0;
-                            margin: 0;
-                            /*border:  1px solid #ccc;*/
-                            background: #fff;
+                     }
+                     .processTime{
+                         width:30%;
+                         float:left;
+                     }
+                     .processContent{
+                         overflow: hidden;
+                     }
+                 }
+                 p{
+                     margin-top: rem(8);
+                     border-bottom: 1px solid #ccc;
+                     font-size: rem(12);
+                     input{
+                         border: none;
+                         list-style: none;
+                         outline: none;
+                         font-size: rem(12);
+                     }
+                     select{
+                         border: none;
+                         outline: none;
+                         width: rem(100);
+                         font-size: rem(12);
+                         option{
+                             appearance:none;
+                             list-style: none;
+                             border: none;
+                             width: 100%;
+                             outline: none;
+                             padding: 0;
+                             margin: 0;
+                             /*border:  1px solid #ccc;*/
+                             background: #fff;
 
-                        }
-                    }
-                    img {
-                        display: inline-block;
-                        width: rem(20);
-                        height: rem(20);
-                        border-radius: 50%;
-                        vertical-align: middle;
-                    }
-                    .location{
-                        width: rem(470);
-                    }
-                    textarea{
-                        resize: none;
-                        outline: none;
-                        padding: rem(3);
-                        box-sizing: border-box;
-                        border-radius: rem(5);
-                        border: 1px solid #ccc;
-                        line-height: rem(28);
-                        width: rem(490);
-                    }
-                    i{
-                        font-size: rem(16);
-                    }
-                    span{
-                        background: #f0f2f5;
-                        color: #909399;
-                    }
-                }
+                         }
+                     }
+                     img {
+                         display: inline-block;
+                         width: rem(20);
+                         height: rem(20);
+                         border-radius: 50%;
+                         vertical-align: middle;
+                     }
+                     .location{
+                         width: rem(470);
+                     }
+                     textarea{
+                         resize: none;
+                         outline: none;
+                         padding: rem(3);
+                         box-sizing: border-box;
+                         border-radius: rem(5);
+                         border: 1px solid #ccc;
+                         line-height: rem(28);
+                         width: rem(490);
+                     }
+                     i{
+                         font-size: rem(16);
+                     }
+                     span{
+                         background: #f0f2f5;
+                         color: #909399;
+                     }
+                 }
 
-            }
+             }
             .cardFooter {
                 width: 100%;
                 padding: rem(5) rem(10);

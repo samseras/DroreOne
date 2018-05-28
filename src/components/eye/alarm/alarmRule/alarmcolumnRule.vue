@@ -187,6 +187,10 @@
                 if (id) {
                     this.choseInfoId = [id]
                 }else{
+                    if(this.choseInfoId.length == 0){
+                        this.$message.error('请选择要删除的数据')
+                        return
+                    }
                     this.choseInfoId = this.choseInfos.map(item=>item.id)
                 }
                 if ( this.choseInfoId.length > 0) {
