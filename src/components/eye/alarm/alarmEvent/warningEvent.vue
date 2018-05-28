@@ -149,8 +149,7 @@
                 title:'',
                 selection:[],
                 isShowloading: false,
-                isBatchEdit:false,
-                isfixedHeight:false
+                isBatchEdit:false
 
             }
         },
@@ -209,7 +208,6 @@
                 this.visible = true;
                 this.isBatchEdit = false;
                 this.isReadonly = state;
-                this.isfixedHeight = true;
                 if(title){
                     this.title = title;
                 }
@@ -303,7 +301,11 @@
                 }
             },
             saveEditInfo(){ //编辑保存
+                if(this.isBatchEdit){  //批量编辑保存
 
+                }else{  //单个编辑保存
+
+                }
             },
             saveInfo(){  //新增保存
 

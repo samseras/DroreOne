@@ -12,9 +12,9 @@
             <el-button size="mini" plain @click="batchDownload"><i class="el-icon-download"></i>导出</el-button>
 
         </div>
-        <div class="filite">
+        <div class="checkStyle">
             <el-checkbox-group v-model="filterList" @change="choseType">
-                <el-checkbox v-for="item in statusInfo" :label="item.id">{{item.name}}</el-checkbox>
+                <el-checkbox v-for="item in statusInfo" :label="item.name">{{item.name}}</el-checkbox>
             </el-checkbox-group>
         </div>
 
@@ -94,7 +94,7 @@
             }
         },
         created () {
-            this.getStatusType();
+            // this.getStatusType();
             this.showPersonJob()
         }
     }
@@ -163,7 +163,7 @@
         .funcBtn{
             margin-left: rem(20);
             margin-top: rem(4);
-            .filite{
+            .checkStyle{
                 margin-left: rem(50);
                 .el-checkbox{
                     margin-left: rem(10);
