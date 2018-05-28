@@ -48,17 +48,29 @@
                     return
                 }
                 let checkedKeysId = this.$refs.tree.getCheckedKeys()
+                console.log(checkedKeysId, 'opopopopopopopopopopopop')
+                console.log(node.key, 'xsaccsdcsdcbsdcahjcbjhsdcnmbcjsg')
                 if (checkedKeysId.length < 1) {
                     checkedKeysId.push(node.key)
                 } else {
                     if (checkedKeysId.includes(node.key)) {//去掉选中点
+                        console.log(888888888888888)
                         checkedKeysId = checkedKeysId.filter(item => {
-                            return item !== node.key
+                            // return item !== node.key
+                            if (item !== node.key) {
+                                return item
+                            }
                         })
                     } else {
                         checkedKeysId.push(node.key)//选中点
                     }
                 }
+                console.log(checkedKeysId, '这是选择后的ID')
+               this.regionId.forEach(item => {
+                   checkedKeysId = checkedKeysId.filter(item1 => {
+                       return item !== item1
+                   })
+               })
                 this.$refs.tree.setCheckedKeys(checkedKeysId)
             },
             selectAllCheck(){
