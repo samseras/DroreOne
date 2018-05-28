@@ -158,12 +158,10 @@
                     this.lightList.forEach(item => {
                         item.label = item.name
                         item.type = 'environment'
-                        if (item.lightStatus) {
+                        if (item.status ==="ONLINE")  {
                             item.icon = '../../../static/img/detection_open.svg'
-                            item.status=true
                         } else {
                             item.icon = '../../../static/img/detection.svg'
-                            item.status=false
                         }
                         if (item.regionId) {
                             if (!regionIdList.includes(item.regionId)) {
