@@ -457,7 +457,9 @@
                         this.personList[i].name = this.personList[i].personBean.name
                         this.personList[i].phone = this.personList[i].personBean.phone
                         this.personList[i].description = this.personList[i].personBean.description
+                        this.personList[i].personBean.modifyTime=this.personList[i].personBean.modifyTime.replace("-","/")
                         this.personList[i].byTime = -(new Date(this.personList[i].personBean.modifyTime)).getTime()
+                        console.log(new Date(this.personList[i].personBean.modifyTime).getTime())
                     }
                     this.personList = _.sortBy(this.personList,'byTime')
                     console.log(this.personList, 'p[p[p[p[p[p[p[p[p[p[p[p[p[[pp')
