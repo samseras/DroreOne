@@ -373,6 +373,7 @@
                         this.toiletList[i].id = this.toiletList[i].toiletBean.id
                         this.toiletList[i].description = this.toiletList[i].toiletBean.description
                         this.toiletList[i].state = '正常'
+                        this.toiletList[i].toiletBean.modifyTime=this.toiletList[i].toiletBean.modifyTime.replace("-","/")
                         this.toiletList[i].byTime = -(new Date(this.toiletList[i].toiletBean.modifyTime)).getTime()
                     }
 

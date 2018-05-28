@@ -15,9 +15,9 @@
                         <el-select  v-model="batchEdit.level" size="mini" class="" placeholder="请选择">
                             <el-option
                                 v-for="item in levelInfo"
-                                :key="item.value"
-                                :label="item.label"
-                                :value="item.value">
+                                :key="item.id"
+                                :label="item.name"
+                                :value="item.id">
                             </el-option>
                         </el-select>
                     </p>
@@ -27,41 +27,46 @@
                         <el-input type="text" v-model='alarmcolumnInfo.name' class="inputText" :maxlength="15" :disabled='isReadonly'></el-input>
                     </p>
                     <p class="status">报&nbsp;&nbsp;警&nbsp;&nbsp;柱：
-                        <el-select  v-model="alarmcolumnInfo.alarmColumn" size="mini" class="" :disabled='isReadonly' multiple placeholder="请选择">
+                        <el-select  v-model="alarmcolumnInfo.relatedDevices" size="mini" class="" :disabled='isReadonly' multiple placeholder="请选择">
                             <el-option
-                                v-for="item in statusInfo"
-                                :key="item.value"
-                                :label="item.label"
-                                :value="item.value">
+                                v-for="item in policeInfo"
+                                :key="item.id"
+                                :label="item.name"
+                                :value="item.id">
                             </el-option>
                         </el-select>
                     </p>
-                    <p class="level">严重等级：
-                        <el-select  v-model="alarmcolumnInfo.level" size="mini" :disabled='isReadonly' class="" placeholder="请选择">
+                    <p class="severityName">严重等级：
+                        <el-select  v-model="alarmcolumnInfo.severityId" size="mini" :disabled='isReadonly' class="" placeholder="请选择">
                             <el-option
                                 v-for="item in levelInfo"
-                                :key="item.value"
-                                :label="item.label"
-                                :value="item.value">
+                                :key="item.id"
+                                :label="item.name"
+                                :value="item.id">
                             </el-option>
                         </el-select>
                     </p>
-                    <p class="deviceRange">调度范围：
-                        <el-input type="text" v-model='alarmcolumnInfo.deviceRange' class="inputText" :maxlength="15" :disabled='isReadonly'></el-input>
+                    <p class="deviceScope">调度范围：
+                        <el-input type="text" v-model='alarmcolumnInfo.deviceScope' class="inputText" :maxlength="15" :disabled='isReadonly'></el-input>
                         (设备)
                     </p>
-                    <p class="safeRange">调度范围：
-                        <el-input type="text"  v-model='alarmcolumnInfo.safeRange' class="inputText" :maxlength="15" :disabled='isReadonly'></el-input>
+                    <p class="securityScope">调度范围：
+                        <el-input type="text"  v-model='alarmcolumnInfo.securityScope' class="inputText" :maxlength="15" :disabled='isReadonly'></el-input>
                         (安保)
                     </p>
-                    <p class="manager">管&nbsp;理&nbsp;&nbsp;者：
-                        <el-select  v-model="alarmcolumnInfo.manager" @change="ownerChange" size="mini" multiple class="" placeholder="请选择" :disabled='isReadonly'>
-                            <el-option
-                                v-for="item in eventInfo.owner"
-                                :key="item.val"
-                                :label="item.name"
-                                :value="item.val">
-                            </el-option>
+                    <p class="relatedManager">管&nbsp;理&nbsp;&nbsp;者：
+                        <el-select v-model="alarmcolumnInfo.relatedManager" size="mini" multiple placeholder="请选择" :disabled='isReadonly'>
+                            <el-option-group
+                                v-for="group in personInfo"
+                                :key="group.label"
+                                :label="group.label">
+                                <el-option
+                                    v-for="item in group.options"
+                                    :key="item.id"
+                                    :label="item.name"
+                                    :value="item.id">
+                                </el-option>
+                            </el-option-group>
                         </el-select>
                     </p>
                     <p class="description">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：<br>
@@ -75,9 +80,9 @@
                         <el-select  v-model="batchEdit.level" size="mini" class="" placeholder="请选择">
                             <el-option
                                 v-for="item in levelInfo"
-                                :key="item.value"
-                                :label="item.label"
-                                :value="item.value">
+                                :key="item.id"
+                                :label="item.name"
+                                :value="item.id">
                             </el-option>
                         </el-select>
                     </p>
@@ -87,32 +92,37 @@
                         <el-input type="text" v-model='firefightingInfo.name' class="inputText" :maxlength="15" :disabled='isReadonly'></el-input>
                     </p>
 
-                    <p class="level">严重等级：
-                        <el-select  v-model="firefightingInfo.level" @change="ownerChange" size="mini" multiple class="" placeholder="请选择" :disabled='isReadonly'>
+                    <p class="severityName">严重等级：
+                        <el-select  v-model="firefightingInfo.severityId" @change="ownerChange" size="mini" class="" placeholder="请选择" :disabled='isReadonly'>
                             <el-option
                                 v-for="item in levelInfo"
-                                :key="item.value"
-                                :label="item.label"
-                                :value="item.value">
+                                :key="item.id"
+                                :label="item.name"
+                                :value="item.id">
                             </el-option>
                         </el-select>
                     </p>
-                    <p class="deviceRange">调度范围：
-                        <el-input type="text" v-model='firefightingInfo.deviceRange' class="inputText" :maxlength="15" :disabled='isReadonly'></el-input>
+                    <p class="deviceScope">调度范围：
+                        <el-input type="text" v-model='firefightingInfo.deviceScope' class="inputText" :maxlength="15" :disabled='isReadonly'></el-input>
                         (设备)
                     </p>
-                    <p class="safeRange">调度范围：
-                        <el-input type="text"  v-model='firefightingInfo.safeRange' class="inputText" :maxlength="15" :disabled='isReadonly'></el-input>
+                    <p class="securityScope">调度范围：
+                        <el-input type="text"  v-model='firefightingInfo.securityScope' class="inputText" :maxlength="15" :disabled='isReadonly'></el-input>
                         (安保)
                     </p>
-                    <p class="manager">管&nbsp;理&nbsp;&nbsp;者：
-                        <el-select  v-model="firefightingInfo.manager" @change="ownerChange" size="mini" multiple class="" placeholder="请选择" :disabled='isReadonly'>
-                            <el-option
-                                v-for="item in eventInfo.owner"
-                                :key="item.val"
-                                :label="item.name"
-                                :value="item.val">
-                            </el-option>
+                    <p class="relatedManager">管&nbsp;理&nbsp;&nbsp;者：
+                        <el-select v-model="firefightingInfo.relatedManager" size="mini" multiple placeholder="请选择" :disabled='isReadonly'>
+                            <el-option-group
+                                v-for="group in personInfo"
+                                :key="group.label"
+                                :label="group.label">
+                                <el-option
+                                    v-for="item in group.options"
+                                    :key="item.id"
+                                    :label="item.name"
+                                    :value="item.id">
+                                </el-option>
+                            </el-option-group>
                         </el-select>
                     </p>
                     <p class="description">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：<br>
@@ -126,9 +136,9 @@
                         <el-select  v-model="batchEdit.level" size="mini" class="" placeholder="请选择">
                             <el-option
                                 v-for="item in levelInfo"
-                                :key="item.value"
-                                :label="item.label"
-                                :value="item.value">
+                                :key="item.id"
+                                :label="item.name"
+                                :value="item.id">
                             </el-option>
                         </el-select>
                     </p>
@@ -138,32 +148,37 @@
                         <el-input type="text" v-model='crossborderInfo.name' class="inputText" :maxlength="15" :disabled='isReadonly'></el-input>
                     </p>
 
-                    <p class="level">严重等级：
-                        <el-select  v-model="crossborderInfo.level" @change="ownerChange" size="mini" multiple class="" placeholder="请选择" :disabled='isReadonly'>
+                    <p class="severityName">严重等级：
+                        <el-select  v-model="crossborderInfo.severityId" size="mini" multiple class="" placeholder="请选择" :disabled='isReadonly'>
                             <el-option
                                 v-for="item in levelInfo"
-                                :key="item.value"
-                                :label="item.label"
-                                :value="item.value">
+                                :key="item.id"
+                                :label="item.name"
+                                :value="item.id">
                             </el-option>
                         </el-select>
                     </p>
-                    <p class="deviceRange">调度范围：
-                        <el-input type="text" v-model='crossborderInfo.deviceRange' class="inputText" :maxlength="15" :disabled='isReadonly'></el-input>
+                    <p class="deviceScope">调度范围：
+                        <el-input type="text" v-model='crossborderInfo.deviceScope' class="inputText" :maxlength="15" :disabled='isReadonly'></el-input>
                         (设备)
                     </p>
-                    <p class="safeRange">调度范围：
-                        <el-input type="text"  v-model='crossborderInfo.safeRange' class="inputText" :maxlength="15" :disabled='isReadonly'></el-input>
+                    <p class="securityScope">调度范围：
+                        <el-input type="text"  v-model='crossborderInfo.securityScope' class="inputText" :maxlength="15" :disabled='isReadonly'></el-input>
                         (安保)
                     </p>
-                    <p class="manager">管&nbsp;理&nbsp;&nbsp;者：
-                        <el-select  v-model="crossborderInfo.manager" @change="ownerChange" size="mini" multiple class="" placeholder="请选择" :disabled='isReadonly'>
-                            <el-option
-                                v-for="item in eventInfo.owner"
-                                :key="item.val"
-                                :label="item.name"
-                                :value="item.val">
-                            </el-option>
+                    <p class="relatedManager">管&nbsp;理&nbsp;&nbsp;者：
+                        <el-select v-model="crossborderInfo.relatedManager" size="mini" multiple placeholder="请选择" :disabled='isReadonly'>
+                            <el-option-group
+                                v-for="group in personInfo"
+                                :key="group.label"
+                                :label="group.label">
+                                <el-option
+                                    v-for="item in group.options"
+                                    :key="item.id"
+                                    :label="item.name"
+                                    :value="item.id">
+                                </el-option>
+                            </el-option-group>
                         </el-select>
                     </p>
                     <p class="description">描&nbsp;&nbsp;&nbsp;&nbsp;述：<br>
@@ -177,9 +192,9 @@
                         <el-select  v-model="batchEdit.level" size="mini" class="" placeholder="请选择">
                             <el-option
                                 v-for="item in levelInfo"
-                                :key="item.value"
-                                :label="item.label"
-                                :value="item.value">
+                                :key="item.id"
+                                :label="item.name"
+                                :value="item.id">
                             </el-option>
                         </el-select>
                     </p>
@@ -188,42 +203,47 @@
                     <p class="name">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称：
                         <el-input type="text" v-model='offtrackInfo.name' class="inputText" :maxlength="15" :disabled='isReadonly'></el-input>
                     </p>
-                    <p class="patrolScheme">关联计划：
-                        <el-select  v-model="offtrackInfo.patrolScheme" @change="ownerChange" size="mini" multiple class="" placeholder="请选择" :disabled='isReadonly'>
+                    <p class="relatedSchedule">关联计划：
+                        <el-select  v-model="offtrackInfo.relatedSchedule" size="mini" multiple class="" placeholder="请选择" :disabled='isReadonly'>
                             <el-option
-                                v-for="item in levelInfo"
-                                :key="item.value"
-                                :label="item.label"
-                                :value="item.value">
+                                v-for="item in patrolInfo"
+                                :key="item.id"
+                                :label="item.name"
+                                :value="item.id">
                             </el-option>
                         </el-select>
                     </p>
-                    <p class="level">严重等级：
-                        <el-select  v-model="offtrackInfo.level" @change="ownerChange" size="mini" multiple class="" placeholder="请选择" :disabled='isReadonly'>
+                    <p class="severityName">严重等级：
+                        <el-select  v-model="offtrackInfo.severityId" size="mini" multiple class="" placeholder="请选择" :disabled='isReadonly'>
                             <el-option
                                 v-for="item in levelInfo"
-                                :key="item.value"
-                                :label="item.label"
-                                :value="item.value">
+                                :key="item.id"
+                                :label="item.name"
+                                :value="item.id">
                             </el-option>
                         </el-select>
                     </p>
-                    <p class="divergeTime">偏离时长：
-                        <el-input type="text" v-model='offtrackInfo.divergeTime' class="inputText" :maxlength="15" :disabled='isReadonly'></el-input>
+                    <p class="extendThreshold">偏离时长：
+                        <el-input type="text" v-model='offtrackInfo.extendThreshold' class="inputText" :maxlength="15" :disabled='isReadonly'></el-input>
                         (分钟)
                     </p>
-                    <p class="divergeValue">偏离阈值：
-                        <el-input type="text"  v-model='offtrackInfo.divergeValue' class="inputText" :maxlength="15" :disabled='isReadonly'></el-input>
+                    <p class="upperThreshold">偏离阈值：
+                        <el-input type="text"  v-model='offtrackInfo.upperThreshold' class="inputText" :maxlength="15" :disabled='isReadonly'></el-input>
                         (米)
                     </p>
-                    <p class="manager">管&nbsp;理&nbsp;&nbsp;者：
-                        <el-select  v-model="offtrackInfo.manager" @change="ownerChange" size="mini" multiple class="" placeholder="请选择" :disabled='isReadonly'>
-                            <el-option
-                                v-for="item in eventInfo.owner"
-                                :key="item.val"
-                                :label="item.name"
-                                :value="item.val">
-                            </el-option>
+                    <p class="relatedManager">管&nbsp;理&nbsp;&nbsp;者：
+                        <el-select v-model="offtrackInfo.relatedManager" size="mini" multiple placeholder="请选择" :disabled='isReadonly'>
+                            <el-option-group
+                                v-for="group in personInfo"
+                                :key="group.label"
+                                :label="group.label">
+                                <el-option
+                                    v-for="item in group.options"
+                                    :key="item.id"
+                                    :label="item.name"
+                                    :value="item.id">
+                                </el-option>
+                            </el-option-group>
                         </el-select>
                     </p>
                     <p class="description">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：<br>
@@ -237,9 +257,9 @@
                         <el-select  v-model="batchEdit.level" size="mini" class="" placeholder="请选择">
                             <el-option
                                 v-for="item in levelInfo"
-                                :key="item.value"
-                                :label="item.label"
-                                :value="item.value">
+                                :key="item.id"
+                                :label="item.name"
+                                :value="item.id">
                             </el-option>
                         </el-select>
                     </p>
@@ -248,8 +268,8 @@
                     <p class="name">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称：
                         <el-input type="text" v-model='overlimitInfo.name' class="inputText" :maxlength="15" :disabled='isReadonly'></el-input>
                     </p>
-                    <p class="associatDevice">关联设备：
-                        <el-select  v-model="overlimitInfo.associatDevice" @change="ownerChange" size="mini" multiple class="" placeholder="请选择" :disabled='isReadonly'>
+                    <p class="relatedDevice">关联设备：
+                        <el-select  v-model="overlimitInfo.relatedDevice" size="mini" multiple class="" placeholder="请选择" :disabled='isReadonly'>
                             <el-option
                                 v-for="item in levelInfo"
                                 :key="item.value"
@@ -258,28 +278,33 @@
                             </el-option>
                         </el-select>
                     </p>
-                    <p class="level">严重等级：
-                        <el-select  v-model="overlimitInfo.level" @change="ownerChange" size="mini" multiple class="" placeholder="请选择" :disabled='isReadonly'>
+                    <p class="severityName">严重等级：
+                        <el-select  v-model="overlimitInfo.severityId" size="mini" multiple class="" placeholder="请选择" :disabled='isReadonly'>
                             <el-option
                                 v-for="item in levelInfo"
-                                :key="item.value"
-                                :label="item.label"
-                                :value="item.value">
+                                :key="item.id"
+                                :label="item.name"
+                                :value="item.id">
                             </el-option>
                         </el-select>
                     </p>
-                    <p class="trafficValue">客流阈值：
-                        <el-input type="text" v-model='overlimitInfo.trafficValue' class="inputText" :maxlength="15" :disabled='isReadonly'></el-input>
+                    <p class="upperThreshold">客流阈值：
+                        <el-input type="text" v-model='overlimitInfo.upperThreshold' class="inputText" :maxlength="15" :disabled='isReadonly'></el-input>
                         (人)
                     </p>
-                    <p class="manager">管&nbsp;理&nbsp;&nbsp;者：
-                        <el-select  v-model="overlimitInfo.manager" @change="ownerChange" size="mini" multiple class="" placeholder="请选择" :disabled='isReadonly'>
-                            <el-option
-                                v-for="item in eventInfo.owner"
-                                :key="item.val"
-                                :label="item.name"
-                                :value="item.val">
-                            </el-option>
+                    <p class="relatedManager">管&nbsp;理&nbsp;&nbsp;者：
+                        <el-select v-model="overlimitInfo.relatedManager" size="mini" multiple placeholder="请选择" :disabled='isReadonly'>
+                            <el-option-group
+                                v-for="group in personInfo"
+                                :key="group.label"
+                                :label="group.label">
+                                <el-option
+                                    v-for="item in group.options"
+                                    :key="item.id"
+                                    :label="item.name"
+                                    :value="item.id">
+                                </el-option>
+                            </el-option-group>
                         </el-select>
                     </p>
                     <p class="description">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：<br>
@@ -293,9 +318,9 @@
                         <el-select  v-model="batchEdit.level" size="mini" class="" placeholder="请选择">
                             <el-option
                                 v-for="item in levelInfo"
-                                :key="item.value"
-                                :label="item.label"
-                                :value="item.value">
+                                :key="item.id"
+                                :label="item.name"
+                                :value="item.id">
                             </el-option>
                         </el-select>
                     </p>
@@ -304,8 +329,8 @@
                     <p class="name">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称：
                         <el-input type="text" v-model='waterlevelInfo.name' class="inputText" :maxlength="15" :disabled='isReadonly'></el-input>
                     </p>
-                    <p class="associatDevice">关联设备：
-                        <el-select  v-model="waterlevelInfo.associatDevice" @change="ownerChange" size="mini" multiple class="" placeholder="请选择" :disabled='isReadonly'>
+                    <p class="relatedDevice">关联设备：
+                        <el-select  v-model="waterlevelInfo.relatedDevice" size="mini" multiple class="" placeholder="请选择" :disabled='isReadonly'>
                             <el-option
                                 v-for="item in levelInfo"
                                 :key="item.value"
@@ -314,32 +339,37 @@
                             </el-option>
                         </el-select>
                     </p>
-                    <p class="level">严重等级：
-                        <el-select  v-model="waterlevelInfo.level" @change="ownerChange" size="mini" multiple class="" placeholder="请选择" :disabled='isReadonly'>
+                    <p class="severityName">严重等级：
+                        <el-select  v-model="waterlevelInfo.severityId" size="mini" multiple class="" placeholder="请选择" :disabled='isReadonly'>
                             <el-option
                                 v-for="item in levelInfo"
-                                :key="item.value"
-                                :label="item.label"
-                                :value="item.value">
-                            </el-option>
-                        </el-select>
-                    </p>
-                    <p class="upperLimit">水位上限：
-                        <el-input type="text" v-model='waterlevelInfo.upperLimit' class="inputText" :maxlength="15" :disabled='isReadonly'></el-input>
-                        (米)
-                    </p>
-                    <p class="lowerLimit">水位下限：
-                        <el-input type="text" v-model='waterlevelInfo.lowerLimit' class="inputText" :maxlength="15" :disabled='isReadonly'></el-input>
-                        (米)
-                    </p>
-                    <p class="manager">管&nbsp;理&nbsp;&nbsp;者：
-                        <el-select  v-model="waterlevelInfo.manager" @change="ownerChange" size="mini" multiple class="" placeholder="请选择" :disabled='isReadonly'>
-                            <el-option
-                                v-for="item in eventInfo.owner"
-                                :key="item.val"
+                                :key="item.id"
                                 :label="item.name"
-                                :value="item.val">
+                                :value="item.id">
                             </el-option>
+                        </el-select>
+                    </p>
+                    <p class="upperThreshold">水位上限：
+                        <el-input type="text" v-model='waterlevelInfo.upperThreshold' class="inputText" :maxlength="15" :disabled='isReadonly'></el-input>
+                        (米)
+                    </p>
+                    <p class="lowerThreshold">水位下限：
+                        <el-input type="text" v-model='waterlevelInfo.lowerThreshold' class="inputText" :maxlength="15" :disabled='isReadonly'></el-input>
+                        (米)
+                    </p>
+                    <p class="relatedManager">管&nbsp;理&nbsp;&nbsp;者：
+                        <el-select v-model="waterlevelInfo.relatedManager" size="mini" multiple placeholder="请选择" :disabled='isReadonly'>
+                            <el-option-group
+                                v-for="group in personInfo"
+                                :key="group.label"
+                                :label="group.label">
+                                <el-option
+                                    v-for="item in group.options"
+                                    :key="item.id"
+                                    :label="item.name"
+                                    :value="item.id">
+                                </el-option>
+                            </el-option-group>
                         </el-select>
                     </p>
                     <p class="description">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：<br>
@@ -353,9 +383,9 @@
                         <el-select  v-model="batchEdit.level" size="mini" class="" placeholder="请选择">
                             <el-option
                                 v-for="item in levelInfo"
-                                :key="item.value"
-                                :label="item.label"
-                                :value="item.value">
+                                :key="item.id"
+                                :label="item.name"
+                                :value="item.id">
                             </el-option>
                         </el-select>
                     </p>
@@ -364,18 +394,28 @@
                     <p class="name">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称：
                         <el-input type="text" v-model='conditionInfo.name' class="inputText" :maxlength="15" :disabled='isReadonly'></el-input>
                     </p>
-                    <p class="pointerType">指标类型：
-                        <el-select  v-model="conditionInfo.pointerType" @change="ownerChange" size="mini" class="" placeholder="请选择" :disabled='isReadonly'>
+                    <p class="envType">指标类型：
+                        <el-select  v-model="conditionInfo.envTypeId"  size="mini" class="" placeholder="请选择" :disabled='isReadonly'>
                             <el-option
-                                v-for="item in type"
-                                :key="item.value"
-                                :label="item.label"
-                                :value="item.value">
+                                v-for="item in envType"
+                                :key="item.id"
+                                :label="item.name"
+                                :value="item.id">
                             </el-option>
                         </el-select>
                     </p>
-                    <p class="source">来&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;源：
-                        <el-select  v-model="conditionInfo.source" @change="ownerChange" size="mini" multiple class="" placeholder="请选择" :disabled='isReadonly'>
+                    <p class="envDataSource">来&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;源：
+                        <el-select  v-model="conditionInfo.envDataSource" size="mini" class="" placeholder="请选择" :disabled='isReadonly'>
+                            <el-option
+                                v-for="item in source"
+                                :key="item.id"
+                                :label="item.name"
+                                :value="item.id">
+                            </el-option>
+                        </el-select>
+                    </p>
+                    <p class="relatedDevice">关联设备：
+                        <el-select  v-model="conditionInfo.relatedDevice" size="mini" multiple class="" placeholder="请选择" :disabled='isReadonly'>
                             <el-option
                                 v-for="item in levelInfo"
                                 :key="item.value"
@@ -384,23 +424,13 @@
                             </el-option>
                         </el-select>
                     </p>
-                    <p class="associatDevice">关联设备：
-                        <el-select  v-model="conditionInfo.associatDevice" @change="ownerChange" size="mini" multiple class="" placeholder="请选择" :disabled='isReadonly'>
+                    <p class="severityName">严重等级：
+                        <el-select  v-model="conditionInfo.severityId"  size="mini" class="" placeholder="请选择" :disabled='isReadonly'>
                             <el-option
                                 v-for="item in levelInfo"
-                                :key="item.value"
-                                :label="item.label"
-                                :value="item.value">
-                            </el-option>
-                        </el-select>
-                    </p>
-                    <p class="level">严重等级：
-                        <el-select  v-model="conditionInfo.level" @change="ownerChange" size="mini" multiple class="" placeholder="请选择" :disabled='isReadonly'>
-                            <el-option
-                                v-for="item in levelInfo"
-                                :key="item.value"
-                                :label="item.label"
-                                :value="item.value">
+                                :key="item.id"
+                                :label="item.name"
+                                :value="item.id">
                             </el-option>
                         </el-select>
                     </p>
@@ -410,14 +440,19 @@
                     <p class="lowerThreshold">阈值下限：
                         <el-input type="text" v-model='conditionInfo.lowerThreshold' class="inputText" :maxlength="15" :disabled='isReadonly'></el-input>
                     </p>
-                    <p class="manager">管&nbsp;理&nbsp;&nbsp;者：
-                        <el-select  v-model="conditionInfo.manager" @change="ownerChange" size="mini" multiple class="" placeholder="请选择" :disabled='isReadonly'>
-                            <el-option
-                                v-for="item in eventInfo.owner"
-                                :key="item.val"
-                                :label="item.name"
-                                :value="item.val">
-                            </el-option>
+                    <p class="relatedManager">管&nbsp;理&nbsp;&nbsp;者：
+                        <el-select v-model="conditionInfo.relatedManager" size="mini" multiple placeholder="请选择" :disabled='isReadonly'>
+                            <el-option-group
+                                v-for="group in personInfo"
+                                :key="group.label"
+                                :label="group.label">
+                                <el-option
+                                    v-for="item in group.options"
+                                    :key="item.id"
+                                    :label="item.name"
+                                    :value="item.id">
+                                </el-option>
+                            </el-option-group>
                         </el-select>
                     </p>
                     <p class="description">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：<br>
@@ -426,7 +461,7 @@
                     </p>
                 </div>
 
-                <div class=""slot="footer" class="dialog-footer cardFooter">
+                <div v-if="!isReadonly" class=""slot="footer" class="dialog-footer cardFooter">
                     <el-button size="mini" class="hold" @click='saveDialog'>保存</el-button>
                     <el-button size="mini" @click = 'closeDialog'>取消</el-button>
                 </div>
@@ -436,268 +471,491 @@
 </template>
 
 <script>
-     import api from '@/api'
+    import api from '@/api'
     export default {
-        props: ['visible','title','isReadonly','isBatchEdit','choseInfoId','Info'],
+        props: ['visible','title','isReadonly','isBatchEdit','choseInfos','Info'],
         data () {
             return{
                 route:'',
                 batchEdit:{
-                    level:'',
-                    status:''
+                    level:''
                 },
                 alarmcolumnInfo:{
+                    id:'',
                     batchEdit:{
                         batchEdit:''
                     },
                     name:'',
-                    alarmColumn:[],
-                    level:'',
-                    deviceRange:'',
-                    safeRange:'',
-                    manager:[],
-                    description:''
+                    relatedDevices:[],
+                    severityId:'',
+                    severityName:'',
+                    deviceScope:'',
+                    securityScope:'',
+                    relatedManager:'',
+                    relatedManagerName:'',
+                    description:'',
+                    isEnabled:false
                 },
                 firefightingInfo:{
+                    id:'',
                     name:'',
-                    level:'',
-                    deviceRange:'',
-                    safeRange:'',
-                    manager:[],
-                    description:''
+                    severityId:'',
+                    severityName:'',
+                    deviceScope:'',
+                    securityScope:'',
+                    relatedManager:[],
+                    description:'',
+                    isEnabled:false
                 },
                 crossborderInfo:{
+                    id:'',
                     name:'',
-                    level:'',
-                    deviceRange:'',
-                    safeRange:'',
-                    manager:[],
-                    description:''
+                    severityId:'',
+                    severityName:'',
+                    deviceScope:'',
+                    securityScope:'',
+                    relatedManager:[],
+                    description:'',
+                    isEnabled:false
                 },
                 speedingInfo:{
 
                 },
                 offtrackInfo:{
+                    id:'',
                     name:'',
-                    level:'',
-                    patrolScheme:'',
-                    divergeTime:'',
-                    divergeValue:'',
-                    manager:[],
-                    description:''
+                    severityId:'',
+                    severityName:'',
+                    relatedSchedule:'',
+                    extendThreshold:'',
+                    upperThreshold:'',
+                    relatedManager:[],
+                    description:'',
+                    isEnabled:false
                 },
                 overlimitInfo:{
+                    id:'',
                     name:'',
-                    associatDevice:[],
-                    level:'',
-                    trafficValue:'',
-                    manager:'',
-                    description:''
+                    relatedDevice:[],
+                    severityId:'',
+                    severityName:'',
+                    upperThreshold:'',
+                    relatedManager:[],
+                    description:'',
+                    isEnabled:false
                 },
                 waterlevelInfo:{
+                    id:'',
                     name:'',
-                    associatDevice:[],
-                    level:'',
-                    upperLimit:'',
-                    lowerLimit:'',
-                    manager:'',
-                    description:''
-                },
-                conditionInfo:{
-                    name:'',
-                    pointerType:'',
-                    source:'',
-                    associatDevice:[],
-                    level:'',
+                    relatedDevice:[],
+                    severityId:'',
+                    severityName:'',
                     upperThreshold:'',
                     lowerThreshold:'',
-                    manager:'',
-                    description:''
+                    relatedManager:[],
+                    description:'',
+                    isEnabled:false
                 },
+                conditionInfo:{
+                    id:'',
+                    name:'',
+                    envTypeId:'',
+                    envTypeName:'',
+                    envDataSource:'',
+                    relatedDevice:[],
+                    severityId:'',
+                    severityName:'',
+                    upperThreshold:'',
+                    lowerThreshold:'',
+                    relatedManager:[],
+                    description:'',
+                    isEnabled:false
+                },
+                policeInfo:[],
+                patrolInfo:[],
                 levelInfo:[
                     {
-                        value:'1',
-                        label:'高'
+                        id:'1',
+                        name:'高'
                     },
                     {
-                        value:'2',
-                        label:'中'
+                        id:'2',
+                        name:'中'
                     },{
-                        value:'3',
-                        label:'低'
+                        id:'3',
+                        name:'低'
                     }
                 ],
-                type:[
+                envType:[
                     {
-                        value:'1',
-                        label:'PM2.5'
+                        id:'1',
+                        name:'PM2.5'
                     },
                     {
-                        value:'2',
-                        label:'温度'
+                        id:'2',
+                        name:'温度'
                     },
                     {
-                        value:'3',
-                        label:'湿度'
+                        id:'3',
+                        name:'湿度'
                     },
                     {
-                        value:'4',
-                        label:'风力'
+                        id:'4',
+                        name:'风力'
+                    }
+                ],
+                source:[
+                    {
+                        id:'0',
+                        name:'外部系统'
+                    },
+                    {
+                        id:'1',
+                        name:'内部设备'
                     }
 
-                ],
-                statusInfo:[
-                    {
-                        value:'1',
-                        label:'新告警'
-                    },
-                    {
-                        value:'2',
-                        label:'处理中'
-                    },{
-                        value:'3',
-                        label:'已解决'
-                    }
                 ],
                 ownerInfo:[
                     {
-                        value:'0',
-                        label:'aaa'
+                        id:'0',
+                        name:'aaa'
                     },
                     {
-                        value:'1',
-                        label:'bbb'
+                        id:'1',
+                        name:'bbb'
                     },{
-                        value:'2',
-                        label:'ccc'
+                        id:'2',
+                        name:'ccc'
                     }
                 ],
-                isShowLoading: false,
-                eventInfo:{
-                    id:'',
-                    type:'',
-                    source:'',
-                    occurTime:'',
-                    role:'',
-                    level:'',
-                    owner:[
-                        {
-                            val:'1',
-                            name:'aaa',
-                            tel:'111'
-                        },
-                        {
-                            val:'2',
-                            name:'bbb',
-                            tel:'222'
-                        }
-                    ],
-                    tel:'',
-                    status:'',
-                    description:''
-                }
+                personInfo:[],
+                isShowLoading: false
             }
         },
         methods: {
-            ownerChange(val){
-                console.log(val);
-                console.log(this);
-                let vm = this;
-                // switch(val){
-                //     case 0:
-                //         vm.
-                // }
-            },
             closeDialog () {
                 this.$emit('closeDialog')
             },
+            severityId2Name(severityId){
+                let name = '';
+                this.levelInfo.forEach((item)=>{
+                    if(severityId  == item.id){
+                        name = item.name;
+                    }
+                })
+                return name;
+            },
             saveDialog(){
                 let objArray = [];
+                let newInfo = {};
                 if (this.route.includes('alarmcolumn')){
                     if(this.isBatchEdit){   //批量编辑
-                        console.log(this.choseInfoId);
+                        console.log(this.choseInfos);
 
-                        objArray = this.choseInfoId;
+                        objArray = this.choseInfos;
                         if(!this.batchEdit.level){
                             return;
                         }
-                        objArray.forEach((item,index)=>{
-                            item.level = this.batchEdit.level;
+                        objArray.forEach((item)=>{
+                            item.severityId = this.batchEdit.level;
+                            item.severityName = this.severityId2Name(item.severityId)
                         })
 
                         console.log(objArray)
 
-                        this.$emit('saveInfo',objArray);
+                        this.$emit('saveEditInfo',objArray);
 
-                    }else{  //单个编辑或查看
-
+                    }else{  //单个编辑或查看或新增
                         console.log(this.alarmcolumnInfo);
-                        objArray.push(this.alarmcolumnInfo)
-                        this.$emit('saveInfo',objArray);
+                        newInfo = this.alarmcolumnInfo;
+                        newInfo.severityName = this.severityId2Name(newInfo.severityId)
+                        newInfo.relatedDevices = newInfo.relatedDevices.join(",")
+                        newInfo.relatedManager = newInfo.relatedManager.join(",")
+                        console.log(newInfo,"返回的数据")
+                        if (newInfo.id) {  //编辑或查看
+                            objArray.push(newInfo)
+                            this.$emit('saveEditInfo',objArray)
+                        } else { //新增
+                            this.$emit('saveInfo',newInfo)
+                        }
                     }
                 }else if(this.route.includes('firefighting')){
                     if(this.isBatchEdit){   //批量编辑
-                        console.log(this.choseInfoId);
+                        console.log(this.choseInfos);
 
-                        objArray = this.choseInfoId;
+                        objArray = this.choseInfos;
                         if(!this.batchEdit.level){
                             return;
                         }
                         objArray.forEach((item,index)=>{
-                            item.level = this.batchEdit.level;
+                            item.severityId = this.batchEdit.level;
+                            item.severityName = this.severityId2Name(item.severityId)
                         })
 
                         console.log(objArray)
 
-                        this.$emit('saveInfo',objArray);
+                        this.$emit('saveEditInfo',objArray);
 
                     }else{  //单个编辑或查看
-                        this.$emit('saveInfo');
+                        console.log(this.firefightingInfo);
+                        newInfo = this.firefightingInfo;
+                        newInfo.severityName = this.severityId2Name(newInfo.severityId)
+                        newInfo.relatedManager = newInfo.relatedManager.join(",")
+                        if (newInfo.id) {
+                            objArray.push(newInfo)
+                            this.$emit('saveEditInfo',objArray)
+                        } else {
+                            this.$emit('saveInfo',newInfo)
+                        }
                     }
                 }else if(this.route.includes('crossborder')){
                     if(this.isBatchEdit){   //批量编辑
-                        console.log(this.choseInfoId);
-                        this.$emit('saveInfo');
+                        console.log(this.choseInfos);
+
+                        objArray = this.choseInfos;
+                        if(!this.batchEdit.level){
+                            return;
+                        }
+                        objArray.forEach((item,index)=>{
+                            item.severityId = this.batchEdit.level;
+                            item.severityName = this.severityId2Name(item.severityId)
+                        })
+
+                        console.log(objArray)
+                        this.$emit('saveEditInfo',objArray);
 
                     }else{  //单个编辑或查看
-                        this.$emit('saveInfo');
+                        console.log(this.crossborderInfo);
+                        newInfo = this.crossborderInfo;
+                        newInfo.severityName = this.severityId2Name(newInfo.severityId)
+                        newInfo.relatedManager = newInfo.relatedManager.join(",")
+                        if (newInfo.id) {
+                            objArray.push(newInfo)
+                            this.$emit('saveEditInfo',objArray)
+                        } else {
+                            this.$emit('saveInfo',newInfo)
+                        }
                     }
                 }else if(this.route.includes('offtrack')){
                     if(this.isBatchEdit){   //批量编辑
-                        console.log(this.choseInfoId);
-                        this.$emit('saveInfo');
+                        console.log(this.choseInfos);
+
+                        objArray = this.choseInfos;
+                        if(!this.batchEdit.level){
+                            return;
+                        }
+                        objArray.forEach((item,index)=>{
+                            item.severityId = this.batchEdit.level;
+                            item.severityName = this.severityId2Name(item.severityId)
+                        })
+
+                        console.log(objArray)
+
+                        this.$emit('saveEditInfo',objArray);
 
                     }else{  //单个编辑或查看
-                        this.$emit('saveInfo');
+                        console.log(this.offtrackInfo);
+                        newInfo = this.offtrackInfo;
+                        newInfo.severityName = this.severityId2Name(newInfo.severityId)
+                        newInfo.relatedManager = newInfo.relatedManager.join(",")
+                        if (newInfo.id) {
+                            objArray.push(newInfo)
+                            this.$emit('saveEditInfo',objArray)
+                        } else {
+                            this.$emit('saveInfo',newInfo)
+                        }
                     }
                 }else if(this.route.includes('overlimit')){
                     if(this.isBatchEdit){   //批量编辑
-                        console.log(this.choseInfoId);
-                        this.$emit('saveInfo');
+                        console.log(this.choseInfos);
+
+                        objArray = this.choseInfos;
+                        if(!this.batchEdit.level){
+                            return;
+                        }
+                        objArray.forEach((item,index)=>{
+                            item.severityId = this.batchEdit.level;
+                            item.severityName = this.severityId2Name(item.severityId)
+                        })
+
+                        console.log(objArray)
+
+                        this.$emit('saveEditInfo',objArray);
 
                     }else{  //单个编辑或查看
-                        this.$emit('saveInfo');
+                        console.log(this.overlimitInfo);
+                        newInfo = this.overlimitInfo;
+                        newInfo.severityName = this.severityId2Name(newInfo.severityId)
+                        newInfo.relatedManager = newInfo.relatedManager.join(",")
+                        if (newInfo.id) {
+                            objArray.push(newInfo)
+                            this.$emit('saveEditInfo',objArray)
+                        } else {
+                            this.$emit('saveInfo',newInfo)
+                        }
                     }
                 }else if(this.route.includes('waterlevel')){
                     if(this.isBatchEdit){   //批量编辑
-                        console.log(this.choseInfoId);
-                        this.$emit('saveInfo');
+                        console.log(this.choseInfos);
+
+                        objArray = this.choseInfos;
+                        if(!this.batchEdit.level){
+                            return;
+                        }
+                        objArray.forEach((item,index)=>{
+                            item.severityId = this.batchEdit.level;
+                            item.severityName = this.severityId2Name(item.severityId)
+                        })
+
+                        console.log(objArray)
+
+                        this.$emit('saveEditInfo',objArray);
 
                     }else{  //单个编辑或查看
-                        this.$emit('saveInfo');
+                        console.log(this.waterlevelInfo);
+                        newInfo = this.waterlevelInfo;
+                        newInfo.severityName = this.severityId2Name(newInfo.severityId)
+                        newInfo.relatedManager = newInfo.relatedManager.join(",")
+                        if (newInfo.id) {
+                            objArray.push(newInfo)
+                            this.$emit('saveEditInfo',objArray)
+                        } else {
+                            this.$emit('saveInfo',newInfo)
+                        }
                     }
                 }else if(this.route.includes('condition')){
+                    if(this.isBatchEdit){   //批量编辑
+                        console.log(this.choseInfos);
 
+                        objArray = this.choseInfos;
+                        if(!this.batchEdit.level){
+                            return;
+                        }
+                        objArray.forEach((item,index)=>{
+                            item.severityId = this.batchEdit.level;
+                            item.severityName = this.severityId2Name(item.severityId)
+                        })
+
+                        console.log(objArray)
+
+                        this.$emit('saveEditInfo',objArray);
+
+                    }else{  //单个编辑或查看
+                        console.log(this.conditionInfo);
+                        newInfo = this.conditionInfo;
+                        newInfo.severityName = this.severityId2Name(newInfo.severityId)
+                        newInfo.relatedManager = newInfo.relatedManager.join(",")
+                        this.envType.forEach((item)=>{
+                            if(newInfo.envTypeId == item.id){
+                                newInfo.envTypeName = item.name;
+                            }
+                        })
+
+                        this.source.forEach((item)=>{
+                            if(newInfo.envDataSource == item.id){
+                                newInfo.envDataSourceName = item.name;
+                            }
+                        })
+
+                        if (newInfo.id) {
+                            objArray.push(newInfo)
+                            this.$emit('saveEditInfo',objArray)
+                        } else {
+                            this.$emit('saveInfo',newInfo)
+                        }
+                    }
                 }
 
+            },
+            async getSeverityType(){
+                await api.alarm.getSeverityType().then(res => {
+                    console.log(res, '查询严重等级成功')
+                    this.levelInfo = res
+                }).catch(err => {
+                    console.log(err, '查询严重等级失败')
+                })
+            },
+            async getEnvType(){
+                await api.alarm.getEnvType().then(res => {
+                    console.log(res, '查询环境类型成功')
+                    this.envType = res
+                }).catch(err => {
+                    console.log(err, '查询环境类型失败')
+                })
+            },
+            async getPersonInfo(){
+                // let personInfo = [];
+                let r1 = await this.getPerson(3);
+                let r2 = await this.getPerson(8);
+
+                console.log(r1,'severity');
+                console.log(r2,'manager');
+                if(r1.length > 0){
+                    this.personInfo.push(this.addPersonn(r1));
+                }
+                if(r2.length > 0){
+                    this.personInfo.push(this.addPersonn(r2));
+                }
+            },
+            addPersonn(array){
+                let temp = array.map((item)=>{
+                    return {
+                        id: item.personBean.id,
+                        name:item.personBean.name,
+                        phone:item.personBean.phone
+                    }
+                })
+                return {
+                    label:array[0].jobName,
+                    options:temp
+                }
+            },
+            async getPerson(type){
+                let personInfo = [];
+                await api.person.getJobPerson(type).then(res => {
+                    console.log(res, '请求成功')
+                    personInfo = res;
+                }).catch(err => {
+                    console.log(err, '请求失败')
+                })
+                return personInfo;
+            },
+            async getPoliceDevice(){
+                await api.police.getAllPolice().then(res => {
+                    console.log(res, '请求成功')
+                    this.policeInfo = res.devices;
+                }).catch(err => {
+                    console.log(err, '请求失败')
+                })
+            },
+            async getSchedules(){
+                await api.patrol.getAllPatrol().then(res => {
+                    console.log(res, '请求成功')
+                    this.patrolInfo = res.map((item)=>{
+                        return item.inspectionSchedule;
+                    });
+                    console.log(res)
+                }).catch(err => {
+                    console.log(err, '请求失败')
+                })
+            },
+            init(){
+                //人员
+                this.getPersonInfo();
+                //报警柱设备
+                this.getPoliceDevice();
+                //关联巡检计划
+                this.getSchedules();
             }
+
+
         },
         async created () {
+            this.init();
             this.route = this.$route.path
             console.log(this.Info,'  Info')
             if (this.route.includes('alarmcolumn')) {
                 this.alarmcolumnInfo = this.Info;
-                // this.alarmcolumnInfo.batchEdit.batchEdit = "1";
             } else if(this.route.includes('firefighting')) {
                 // this.getAllBroadcast()
                 this.firefightingInfo = this.Info;
@@ -720,6 +978,7 @@
                 this.waterlevelInfo = this.Info;
             } else if(this.route.includes('condition')){
                 this.conditionInfo = this.Info;
+                // this.getEnvType();
             }
         },
         watch:{

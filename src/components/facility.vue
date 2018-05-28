@@ -34,6 +34,7 @@
                   {route:'/facility/shop',img:'../../../static/img/shop.svg',desc:"商铺"},
                   {route:'/facility/build',img:'../../../static/img/build.svg',desc:"建筑"},
                   {route:'/facility/scenic',img:'../../../static/img/scenic.svg',desc:"景点"},
+                  {route:'/facility/trash',img:'../../../static/img/trash.svg',desc:"垃圾桶"},
                   {route:'/facility/plant',img:'../../../static/img/plant.svg',desc:"植物"},
                   {route:'/facility/indicator',img:'../../../static/img/indicator.svg',desc:"指示牌"}
                  ],
@@ -58,9 +59,15 @@
             this.$store.commit('SHOW_SEARCH', this.isShowControler)
         },
         goRouteModule (index) {
-            this.isShowControler = true
+            if(this.isShowControler){
+                if(this.activeIndex ==index){
+                    this.isShowControler = false
+                }
+            }else {
+                this.isShowControler = true
+            }
             this.$store.commit('SHOW_SEARCH', this.isShowControler)
-          this.activeIndex = index
+            this.activeIndex = index
         }
     },
       watch: {
@@ -108,20 +115,20 @@
                     flex: 1;
                     padding-top: rem(40);
                     box-sizing: border-box;
-                    background: #EFF7F2;
+                    background: #f2f2f2;
                     li{
                         width: 100%;
-                        height: rem(50);
+                        height: rem(60);
+                        cursor: pointer;
                         a{
                             display: block;
                             width: 100%;
                             text-align: center;
                             height: 100%;
-                            line-height: rem(40);
+                            line-height: rem(60);
                             img{
                                 vertical-align: middle;
-                                width: rem(18);
-                                height: rem(18);
+                                width: rem(22);
                             }
                         }
                     }

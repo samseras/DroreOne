@@ -11,7 +11,7 @@
                         @fixedInfo="fixedInfo"
                         @searchAnything="searchAnything"
                         :choseId="choseInfoId"
-                        :listsLength = "policeList.length"
+                        :listsLength = "listLength"
                         :personListFlag="selectFlag"
                         @choseType="choseType"
                         @toggleList="toggleList"
@@ -129,7 +129,10 @@
                 isDisabled:true,
                 filterList: [],
                 title:'',
-                isShowLoading:false
+                isShowLoading:false,
+                currentNum: 50,
+                listLength: '',
+                pageNum: 1
             }
         },
         methods:{
@@ -387,19 +390,37 @@
                 console.log(this.choseInfoId)
                 this.selectFlag=true
             },
+            previousPage (page) {
+                console.log(page, '这是传过来的pageNum')
+                this.pageNum = page
+                this.getAllPolice()
+            },
+            nextPage (page) {
+                console.log(page, '这个是下一页的pageNUM')
+                this.pageNum = page
+                this.getAllPolice()
+            },
             async getAllPolice(){
                 this.choseInfoId=[];
                 this.isShowLoading=true
                 await api.police.getAllPolice().then((res)=>{
                     console.log(res,'这是请求的数据')
+                    this.listLength = res.devices.length
                     this.isShowLoading=false
                     this.policeList=res.devices
+                    this.policeList = this.policeList.filter((item,index) => {
+                        if (index < (this.pageNum * 35 ) && index > ((this.pageNum -1) * 35 ) - 1 ) {
+                            return item
+                        }
+                    })
+
                     for (let i=0;i<this.policeList.length;i++){
                         this.policeList[i].checked=false
                         this.policeList[i].status=true
                         this.policeList[i].id=this.policeList[i].id
                         this.policeList[i].mac=this.policeList[i].mac
                         this.policeList[i].location=`${this.policeList[i].longitude},${this.policeList[i].latitude}`
+                        this.policeList[i].modifyTime=this.policeList[i].modifyTime.replace("-","/")
                         this.policeList[i].byTime = -(new Date(this.policeList[i].modifyTime)).getTime()
                     }
                     this.policeList = _.sortBy(this.policeList,'byTime')

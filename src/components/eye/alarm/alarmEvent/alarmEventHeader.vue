@@ -8,13 +8,13 @@
 
             <el-checkbox v-model="isSelected" @change="selectedAll">全选</el-checkbox>
             <el-button size="mini"plain @click="deleteCard"><i class="el-icon-delete"></i>删除</el-button>
-            <el-button size="mini"plain @click="batchEdit"><i class="el-icon-edit"></i>编辑</el-button>
+            <el-button size="mini"plain @click="batchEdit"><i class="el-icon-edit"></i>批量修改</el-button>
             <el-button size="mini" plain @click="batchDownload"><i class="el-icon-download"></i>导出</el-button>
 
         </div>
-        <div class="filite">
+        <div class="checkStyle">
             <el-checkbox-group v-model="filterList" @change="choseType">
-                <el-checkbox v-for="item in status" :label="item.id">{{item.name}}</el-checkbox>
+                <el-checkbox v-for="item in statusInfo" :label="item.name">{{item.name}}</el-checkbox>
             </el-checkbox-group>
         </div>
 
@@ -28,6 +28,7 @@
 </template>
 
 <script>
+    import api from '@/api'
     export default {
         data () {
             return {
@@ -36,7 +37,7 @@
                 isShowJobType: true,
                 isShowIndicatorType: true,
                 isShowTrashType: true,
-                status:[
+                statusInfo:[
                     {
                         id:'1',
                         name: '新告警',
@@ -77,6 +78,14 @@
             },
             batchDownload(){
                 this.$emit('batchDownload')
+            },
+            async getStatusType(){
+                await api.alarm.getAlarmEventStatus().then(res => {
+                    console.log(res, '查询告警事情状态成功')
+                    this.statusInfo = res
+                }).catch(err => {
+                    console.log(err, '查询告警事情状态失败')
+                })
             }
         },
         watch: {
@@ -85,6 +94,7 @@
             }
         },
         created () {
+            // this.getStatusType();
             this.showPersonJob()
         }
     }
@@ -153,7 +163,7 @@
         .funcBtn{
             margin-left: rem(20);
             margin-top: rem(4);
-            .filite{
+            .checkStyle{
                 margin-left: rem(50);
                 .el-checkbox{
                     margin-left: rem(10);

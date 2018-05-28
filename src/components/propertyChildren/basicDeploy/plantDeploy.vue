@@ -388,6 +388,7 @@
                         this.treeList[i].id = this.treeList[i].plant.id
                         this.treeList[i].description = this.treeList[i].plant.description
                         // this.treeList[i].state = '正常'
+                        this.treeList[i].plant.modifyTime=this.treeList[i].plant.modifyTime.replace("-","/")
                         this.treeList[i].byTime = -(new Date(this.treeList[i].plant.modifyTime)).getTime()
                     }
                     this.treeList = _.sortBy(this.treeList, 'byTime')

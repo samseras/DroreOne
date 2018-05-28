@@ -397,6 +397,7 @@
                         this.buildList[i].location = `${this.buildList[i].longitude},${this.buildList[i].latitude}`
                         this.buildList[i].id = this.buildList[i].building.id
                         // this.treeList[i].state = '正常'
+                        this.buildList[i].building.modifyTime=this.buildList[i].building.modifyTime.replace("-","/")
                         this.buildList[i].byTime = -(new Date(this.buildList[i].building.modifyTime)).getTime()
                     }
                     this.buildList = _.sortBy(this.buildList,'byTime')

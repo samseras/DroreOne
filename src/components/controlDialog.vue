@@ -9,58 +9,27 @@
             class="dialog echatDialog"
             center>
             <div class="card">
-                <!--路灯-->
-                <div class="personCardContent" v-if="route.includes('light')">
+                <div class="personCardContent">
                     <p class="name">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称：
-                        {{this.LightList.name}}
+                        {{this.Info.name}}
                     </p>
                     <p class="name">所属片区：
-                        {{this.LightList.regionName}}
+                        {{this.Info.regionName}}
                     </p>
-                    <p class="name">厂&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;家：
-                        {{this.LightList.modelName}}
+                    <p class="name" v-if="wifiShow">当前连接数：
+                        {{this.Info.currentConnections}}
                     </p>
-                    <p class="name">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：
-                        {{this.LightList.description}}
+                    <p class="name" v-if="wifiShow">上行速率：
+                        {{this.Info.upRate}}
                     </p>
-                </div>
-                <!--传感器-->
-                <div class="personCardContent" v-if="route.includes('environment')">
-                    <p class="name">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称：
-                        {{this.Monitors.name}}
+                    <p class="name" v-if="wifiShow">下行速率：
+                        {{this.Info.downRate}}
                     </p>
-                    <p class="name">所属片区：
-                        {{this.Monitors.regionName}}
-                    </p>
-                    <p class="name">厂&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;家：
-                        {{this.Monitors.modelName}}
+                    <p class="name" v-if="facility">厂&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;家：
+                        {{this.Info.modelName}}
                     </p>
                     <p class="name">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：
-                        {{this.Monitors.description}}
-                    </p>
-                </div>
-                <!--wifi-->
-                <div class="personCardContent" v-if="route.includes('wifi')">
-                    <p class="name">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称：
-                        {{this.WifiList.name}}
-                    </p>
-                    <p class="name">所属片区：
-                        {{this.WifiList.regionName}}
-                    </p>
-                    <p class="name">厂&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;家：
-                        {{this.WifiList.modelName}}
-                    </p>
-                    <p class="name">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：
-                        {{this.WifiList.description}}
-                    </p>
-                    <p class="name">当前连接数：
-                        {{this.WifiList.currentConnections}}
-                    </p>
-                    <p class="name">上行速率：
-                        {{this.WifiList.upRate}}
-                    </p>
-                    <p class="name">下行速率：
-                        {{this.WifiList.downRate}}
+                        {{this.Info.description}}
                     </p>
                 </div>
             </div>
@@ -75,9 +44,8 @@
         data () {
             return {
                 route:'',
-                LightList:[],
-                Monitors:[],
-                WifiList:[],
+                wifiShow:false,
+                facility:true,
             }
         },
         methods: {
@@ -89,13 +57,43 @@
 
         },
         created () {
-            this.route = this.$route.path
-            if(this.route.includes('light')) {
-                this.LightList = this.Info
-            }else if(this.route.includes('environment')) {
-                this.Monitors = this.Info
-            }else if(this.route.includes('wifi')) {
-                this.WifiList = this.Info
+            if(this.Info.type==="wifi"){
+                this.wifiShow=true
+            }
+            if(this.Info.type==="卫生间"){
+                this.Info.description=this.Info.toiletBean.description
+                this.facility=false
+            }
+            if(this.Info.type==="停车场"){
+                this.Info.description=this.Info.parkingBean.description
+                this.facility=false
+            }
+            if(this.Info.type==="建筑"){
+                this.Info.description=this.Info.building.description
+                this.facility=false
+            }
+            if(this.Info.type==="商圈"){
+                this.Info.description=this.Info.businessBean.description
+                this.facility=false
+            }
+            if(this.Info.type==="景点"){
+                this.Info.description=this.Info.scenicspotBean.description
+                this.facility=false
+            }
+            if(this.Info.type==="垃圾桶"){
+                this.Info.description=this.Info.dustbinBean.description
+                this.facility=false
+            }
+            if(this.Info.type==="植物"){
+                this.Info.description=this.Info.plant.description
+                this.facility=false
+            }
+            if(this.Info.type==="指示牌"){
+                this.Info.description=this.Info.signboardBean.description
+                this.facility=false
+            }
+            if(this.Info.regionName==null){
+                this.Info.regionName="未知片区设备"
             }
         },
         computed: {

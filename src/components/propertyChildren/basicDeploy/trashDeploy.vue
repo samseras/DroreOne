@@ -389,6 +389,7 @@
                         this.trashList[i].status = true
                         this.trashList[i].id = this.trashList[i].dustbinBean.id
                         this.trashList[i].description = this.trashList[i].dustbinBean.description
+                        this.trashList[i].dustbinBean.modifyTime=this.trashList[i].dustbinBean.modifyTime.replace("-","/")
                         this.trashList[i].byTime = -(new Date(this.trashList[i].dustbinBean.modifyTime)).getTime()
                     }
                     this.trashList = _.sortBy(this.trashList, 'byTime')

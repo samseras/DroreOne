@@ -16,6 +16,9 @@ const map = {
         controleLight:[],
         controenvironment:[],
         controwifi:[],
+        controbroad:[],
+        controcamera:[],
+        controled:[],
     },
     getters: {
         getLocation (state) {
@@ -52,8 +55,16 @@ const map = {
             return state.controenvironment
         },
         getcontroleWifi(state) {
-            console.log(state,"sdfs12312312313dfsd")
             return state.controwifi
+        },
+        getcontroBroad(state) {
+            return state.controbroad
+        },
+        getcontroCamera(state) {
+            return state.controcamera
+        },
+        getcontroLed(state) {
+            return state.controled
         }
     },
     setters: {},
@@ -105,6 +116,18 @@ const map = {
         },
         [types.CONTROLER_WIFI] (state, data) {
             state.controwifi = data
+            // console.log(state.controwifi,'commit')
+        },
+        [types.CONTROLER_BROAD] (state, data) {
+            state.controbroad = data
+            // console.log(state.controwifi,'commit')
+        },
+        [types.CONTROLER_CAMERA] (state, data) {
+            state.controcamera = data
+            // console.log(state.controwifi,'commit')
+        },
+        [types.CONTROLER_LED] (state, data) {
+            state.controled = data
             // console.log(state.controwifi,'commit')
         }
     },

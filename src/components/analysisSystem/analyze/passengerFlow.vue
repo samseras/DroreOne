@@ -877,7 +877,6 @@
                             left: '5%',
                             right: '5%',
                             bottom: '10%',
-                            top:'10%',
                             containLabel: true
                         },
                         xAxis:

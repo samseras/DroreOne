@@ -72,14 +72,12 @@
         },
         methods: {
             treeShow(){
-                console.log(this.getcontroleWifi,'123123123');
                 if(this.getcontroleWifi){
-                    console.log(this.getcontroleWifi,'123123123');
+                    // console.log(this.getcontroleWifi,'123123123');
                     this.lightCheckout=this.getcontroleWifi
                 }
             },
             showBroadCard() {
-                console.log(777)
                 this.isShowBroadCard = true
             },
             newagenda: function () {
@@ -158,7 +156,7 @@
                     this.lightList.forEach(item => {
                         item.label = item.name
                         item.type = 'wifi'
-                        if (item.status =='ONLINE') {
+                        if (item.status ==="ONLINE")  {
                             item.icon = '../../../static/img/wifi_open.svg'
                         } else {
                             item.icon = '../../../static/img/wifi.svg'
