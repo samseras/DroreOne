@@ -301,7 +301,6 @@
                                 this.warningEventList = res
                                 this.warningEventList.forEach(item => {
                                     item.checked = false;
-
                                 })
                         }).catch(err => {
                             console.log(err, '请求失败')

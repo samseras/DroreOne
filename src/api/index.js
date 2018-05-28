@@ -34,6 +34,7 @@ import publi from './public'
 import importfile from './importfile'
 import exportFile from './exportFile'
 import alarm from './alarm'
+import login from './login'
 
 
 export default {
@@ -69,5 +70,6 @@ export default {
     publi,
     importfile,
     exportFile,
-    alarm
+    alarm,
+    login
 }
