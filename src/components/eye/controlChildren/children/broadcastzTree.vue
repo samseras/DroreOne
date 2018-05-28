@@ -18,7 +18,7 @@
             :filter-node-method="filterNode"
             ref="tree"
             @check="handleCheckChange">
-            <span class="custom-tree-node" slot-scope="{ node, Info }">
+            <span class="custom-tree-node" slot-scope="{ node, Info }" @click="getChecked(node,Info)">
                 <img class="icon" :src="node.icon"/>
                 <span>{{ node.label }}</span>
             </span>
@@ -41,6 +41,24 @@
             filterNode(value, data) {
                 if (!value) return true;
                 return data.label.indexOf(value) !== -1;
+            },
+            getChecked (node,info) {
+                if (this.regionId.includes(node.key)) {
+                    return
+                }
+                let checkedKeysId = this.$refs.tree.getCheckedKeys()
+                if (checkedKeysId.length < 1) {
+                    checkedKeysId.push(node.key)
+                } else {
+                    if (checkedKeysId.includes(node.key)) {//去掉选中点
+                        checkedKeysId = checkedKeysId.filter(item => {
+                            return item !== node.key
+                        })
+                    } else {
+                        checkedKeysId.push(node.key)//选中点
+                    }
+                }
+                this.$refs.tree.setCheckedKeys(checkedKeysId)
             },
             selectAllCheck(){
                 let arr
