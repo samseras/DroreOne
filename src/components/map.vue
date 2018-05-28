@@ -1790,7 +1790,6 @@
                 droreMap.icon.IconStyleById(data.id,true);
             },
             treeShowID(data){
-                console.log(data,'qweqwewe')
                 droreMap.icon.IconStyleById(data,true);
             },
             treeHide(data){
