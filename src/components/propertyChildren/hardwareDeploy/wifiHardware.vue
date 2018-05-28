@@ -13,6 +13,8 @@
                         :choseId="choseInfoId"
                         :listsLength = "wifiList.length"
                         :personListFlag="selectFlag"
+                        @nextPage="nextPage"
+                        @previousPage="previousPage"
                         @choseType="choseType"
                         @toggleList="toggleList"
                         @getAllWifi = "getAllWifi">
@@ -135,7 +137,10 @@
                 isDisabled:true,
                 filterList: [],
                 title:'',
-                isShowLoading:false
+                isShowLoading:false,
+                currentNum: 50,
+                listLength: '',
+                pageNum: 1
             }
         },
         methods:{
@@ -395,13 +400,30 @@
                 console.log(this.choseInfoId)
                 this.selectFlag=true
             },
+            previousPage (page) {
+                console.log(page, '这是传过来的pageNum')
+                this.pageNum = page
+                this.getAllWifi()
+            },
+            nextPage (page) {
+                console.log(page, '这个是下一页的pageNUM')
+                this.pageNum = page
+                this.getAllWifi()
+            },
             async getAllWifi(){
                 this.choseInfoId=[];
                 this.isShowLoading=true
                 await api.wifi.getAllWifi().then((res)=>{
                     console.log(res,'这是请求回来的数据')
+                    this.listLength = res.devices.length
                     this.isShowLoading=false
                     this.wifiList=res.devices
+                    this.wifiList = this.wifiList.filter((item,index) => {
+                        if (index < (this.pageNum * 35 ) && index > ((this.pageNum -1) * 35 ) - 1 ) {
+                            return item
+                        }
+                    })
+
                     for(let i=0;i<this.wifiList.length;i++){
                         this.wifiList[i].checked=false
                         this.wifiList[i].status=true

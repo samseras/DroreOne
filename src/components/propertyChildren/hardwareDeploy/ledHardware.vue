@@ -10,8 +10,10 @@
                         @selectedAll="selectedAll"
                         @fixedInfo="fixedInfo"
                         :choseId="choseInfoId"
-                        :listsLength = "ledList.length"
+                        :listsLength = "listLength"
                         :personListFlag="selectFlag"
+                        @nextPage="nextPage"
+                        @previousPage="previousPage"
                         @searchAnything="searchAnything"
                         @choseType="choseType"
                         @toggleList="toggleList"
@@ -71,7 +73,7 @@
                         </el-table-column>
                     </el-table>
 
-                    <div class="personInfo" v-for="item in ledList" v-if="isShowLedCard && item.status">
+                    <div class="personInfo" v-for="(item,index) in ledList" v-if="isShowLedCard && item.status">
                         <div class="checkBox">
                             <el-checkbox v-model="item.checked" @change="checked(item.id)" class="checkBtn"></el-checkbox>
                         </div>
@@ -130,7 +132,10 @@
                 isDisabled:true,
                 filterList: [],
                 title:'',
-                isShowLoading:false
+                isShowLoading:false,
+                currentNum: 50,
+                listLength: '',
+                pageNum: 1
             }
         },
         methods:{
@@ -398,13 +403,30 @@
                 console.log(this.choseInfoId)
                 this.selectFlag=true
             },
+            previousPage (page) {
+                console.log(page, '这是传过来的pageNum')
+                this.pageNum = page
+                this.getAllLed()
+            },
+            nextPage (page) {
+                console.log(page, '这个是下一页的pageNUM')
+                this.pageNum = page
+                this.getAllLed()
+            },
             async getAllLed(){
                 this.choseInfoId=[];
                 this.isShowLoading=true
                 await api.led.getAllLed().then((res)=>{
                     console.log(res,'这是请求的数据')
+                    this.listLength = res.devices.length
                     this.isShowLoading=false
                     this.ledList=res.devices
+                    this.ledList = this.ledList.filter((item,index) => {
+                        if (index < (this.pageNum * 35 ) && index > ((this.pageNum -1) * 35 ) - 1 ) {
+                            return item
+                        }
+                    })
+
                     for (let i=0;i<this.ledList.length;i++){
                         this.ledList[i].checked=false
                         this.ledList[i].status=true

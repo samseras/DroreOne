@@ -10,9 +10,11 @@
                         @selectedAll="selectedAll"
                         @fixedInfo="fixedInfo"
                         :choseId="choseInfoId"
-                        :listsLength = "monitorsList.length"
+                        :listsLength = "listLength"
                         @searchAnything="searchAnything"
                         :personListFlag="selectFlag"
+                        @nextPage="nextPage"
+                        @previousPage="previousPage"
                         @choseType="choseType"
                         @toggleList="toggleList"
                         @getAllMonitor="getAllMonitor">
@@ -132,7 +134,10 @@
                 isDisabled:true,
                 filterList: [],
                 title:'',
-                isShowLoading:false
+                isShowLoading:false,
+                currentNum: 50,
+                listLength: '',
+                pageNum: 1
             }
         },
         methods:{
@@ -386,13 +391,30 @@
                 this.selectFlag=true
                 console.log(this.choseInfoId)
             },
+            previousPage (page) {
+                console.log(page, '这是传过来的pageNum')
+                this.pageNum = page
+                this.getAllMonitor()
+            },
+            nextPage (page) {
+                console.log(page, '这个是下一页的pageNUM')
+                this.pageNum = page
+                this.getAllMonitor()
+            },
             async getAllMonitor(){
                 this.choseInfoId=[];//
                 this.isShowLoading=true
                 await api.monitor.getAllMonitor().then((res)=>{
                     console.log(res,'这是请求')
+                    this.listLength = res.devices.length
                     this.isShowLoading=false
                     this.monitorsList=res.devices
+                    this.monitorsList = this.monitorsList.filter((item,index) => {
+                        if (index < (this.pageNum * 35 ) && index > ((this.pageNum -1) * 35 ) - 1 ) {
+                            return item
+                        }
+                    })
+
                     for (let i=0;i<this.monitorsList.length;i++){
                         this.monitorsList[i].checked=false
                         this.monitorsList[i].status=true

@@ -458,6 +458,7 @@
         },
         watch: {
             '$route' () {
+                this.currentPageNum = 1
                 this.showType()
                 this.showHeader()
             },
