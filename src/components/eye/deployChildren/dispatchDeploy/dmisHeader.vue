@@ -1,7 +1,7 @@
 <template>
     <div class="dmisHeader">
         <div class="searchInfo">
-            <input type="text" placeholder="Search Anything">
+            <input type="text" placeholder="Search Anything" v-model="searchContent" @keyup="startSearch">
             <i class="el-icon-search"></i>
         </div>
         <div class="funcBtn">
@@ -11,10 +11,14 @@
             <el-button size="mini"plain @click="deleteCard"><i class="el-icon-delete"></i>删除</el-button>
             <el-button size="mini"plain @click="startPlan"><img src="./../../../../../static/img/start.svg" alt="">开始</el-button>
             <el-button size="mini"plain @click="endPlan"><img src="./../../../../../static/img/stop.svg" alt="">停止</el-button>
+            <el-checkbox-group v-model="filterList" @change="choseType">
+                <el-checkbox  label="开启"></el-checkbox>
+                <el-checkbox  label="关闭"></el-checkbox>
+            </el-checkbox-group>
         </div>
 
         <div class="page">
-            <span>当前第1页/共8页</span>
+            <span>当前第1页/共1页</span>
             <span class="upPage"><</span>
             <span class="downPage">></span>
             <!--<span class="listForm"><i class="el-icon-tickets"></i></span>-->
@@ -24,6 +28,7 @@
 
 <script>
     export default {
+        props:['selectLength', 'listLength'],
         name: "fun-header",
         data () {
             return {
@@ -31,10 +36,17 @@
                 isSelected: false,
                 isShowJobType: true,
                 isShowIndicatorType: true,
-                isShowTrashType: true
+                isShowTrashType: true,
+                searchContent: '',
+                filterList: []
             }
         },
         methods: {
+            startSearch () {
+                // if (this.searchContent !== '') {
+                this.$emit('searchAnything', this.searchContent)
+                // }
+            },
             addNewInfo () {
                 // console.log(this.$route.path, 'opop')
 
@@ -51,11 +63,11 @@
             //     this.$emit('toggleList',type)
             // },
             choseType () {
+                console.log(this.filterList, 'opopopopopop')
                 this.$emit('choseType',this.filterList)
             },
 
             selectedAll () {
-                console.log(this.isSelected, 'zhehis')
                 this.$emit('selectedAll', this.isSelected)
             },
             fixCard () {
@@ -75,6 +87,13 @@
         watch: {
             '$route' () {
                 this.showPersonJob()
+            },
+            selectLength () {
+                if (this.selectLength  === this.listLength && this.listLength > 0) {
+                    this.isSelected = true
+                } else  {
+                    this.isSelected = false
+                }
             }
         },
         created () {
@@ -92,6 +111,9 @@
         .el-checkbox__inner{
             margin-top: rem(2);
             margin-right: rem(2);
+        }
+        .el-checkbox{
+            margin-left: rem(10);
         }
     }
     .personList{

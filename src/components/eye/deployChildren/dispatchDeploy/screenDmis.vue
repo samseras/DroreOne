@@ -9,6 +9,9 @@
                         @deletInfo = "deletInfo"
                         @selectedAll = 'selectedAll'
                         @startEndPlan="startEndPlan"
+                        @searchAnything="searchAnything"
+                        :selectLength="choseInfoId.length"
+                        :listLength="screenList.length"
                         @fixedInfo = 'fixedInfo'>
                 </Header>
             </div>
@@ -49,9 +52,16 @@
                                 <span>{{scope.row.ledSchedule.startTime}}~{{scope.row.ledSchedule.endTime}}</span>
                             </template>
                         </el-table-column>
+                        <el-table-column
+                            label="状态">
+                            <template slot-scope="scope">
+                                <span v-if="scope.row.ledSchedule.enabled">已开启</span>
+                                <span v-else>已停止</span>
+                            </template>
+                        </el-table-column>
                         <el-table-column label="操作" width="200">
                             <template slot-scope="scope">
-                                <span @click="fixedInfo(scope.row,'LED编辑')" class="edit">编辑</span> |
+                                <span @click="fixedInfo(scope.row,'修改LED播放计划')" class="edit">编辑</span> |
                                 <span @click="stop(scope.row,)" v-if="scope.row.ledSchedule.enabled">停止 |</span>
                                 <span @click="stop(scope.row,)" v-else="!scope.row.ledSchedule.enabled">开始 |</span>
                                 <span @click="showPersonDetail(scope.row,'LED信息',true)">查看</span> |
@@ -103,8 +113,31 @@
             }
         },
         methods: {
+            searchAnything (info) {
+                console.log(info, '这是要过滤的')
+                if (info.trim() !== '') {
+                    this.screenList = this.checkList.filter(item => {
+                        if (item.ledSchedule.name.includes(info)) {
+                            return item
+                        }
+                        if (item.ledSchedule.description.includes(info)) {
+                            return item
+                        }
+                    })
+                } else {
+                    this.getAllScreenLed()
+                }
+            },
             startEndPlan (state) {
                 console.log(this.choseInfoId, 'opopopop')
+                if(this.choseInfoId.length < 1) {
+                    if(state === 'start') {
+                        this.$message.error('请选择要开启的数据信息')
+                    } else {
+                        this.$message.error('请选择要关闭的数据信息')
+                    }
+                    return
+                }
                 let choseId = []
                 choseId = this.screenList.filter(item => {
                     if (this.choseInfoId.includes(item.id)) {
@@ -131,6 +164,22 @@
                     }
                     return
                 }
+                if (state === 'end') {
+                    this.$confirm('确定要停止所选的计划吗, 是否继续?', '提示', {
+                        confirmButtonText: '确定',
+                        cancelButtonText: '取消',
+                        type: 'warning'
+                    }).then(() => {
+                        this.startEndPlanApi(choseId, state)
+                    }).catch(() => {
+                        this.$message.info('计划停止取消')
+                        return
+                    })
+                } else {
+                    this.startEndPlanApi(choseId, state)
+                }
+            },
+            startEndPlanApi(choseId, state) {
                 api.scheduleled.stareEndPlan(choseId).then(res => {
                     console.log(res, '更改状态成功')
                     if (state === 'start') {
@@ -171,29 +220,8 @@
                 this.isDisabled = state;
             },
             addNewInfo () {
-                this.showPersonDetail({ledSchedule:{}}, '添加硬件调度',false)
+                this.showPersonDetail({ledSchedule:{}}, '添加LED播放计划',false)
                 this.isDisabled = false
-            },
-            deletChose(id){
-                this.$confirm('此操作将永久删除该数据, 是否继续?', '提示', {
-                    confirmButtonText: '确定',
-                    cancelButtonText: '取消',
-                    type: 'warning'
-                }).then(() => {
-                    for (let i = 0; i < this.choseInfoId.length; i++) {
-                        this.areaList = this.areaList.filter((item, index) => {
-                            if (item.id === this.choseInfoId[i]) {
-                                this.areaList[index].checked = false
-                            }
-                            return item.id !== this.choseInfoId[i]
-                        })
-                    }
-                    this.$message.success('删除成功')
-                    this.choseInfoId = []
-                }).catch(() => {
-                    this.$message.info('取消删除')
-                })
-                //   })
             },
             deletInfo (id) {
                 if (id) {
@@ -369,6 +397,8 @@
                             item.ledSchedule.days = item.ledSchedule.days.split(',')
                         }
                     })
+                    this.choseInfoId = []
+                    this.checkList = this.screenList
                 }).catch(err => {
                     console.log(err, '请求失败')
                     this.isShowLoading = false

@@ -206,7 +206,7 @@
                     <p class="relatedSchedule">关联计划：
                         <el-select  v-model="offtrackInfo.relatedSchedule" size="mini" multiple class="" placeholder="请选择" :disabled='isReadonly'>
                             <el-option
-                                v-for="item in levelInfo"
+                                v-for="item in patrolInfo"
                                 :key="item.id"
                                 :label="item.name"
                                 :value="item.id">
@@ -572,6 +572,7 @@
                     isEnabled:false
                 },
                 policeInfo:[],
+                patrolInfo:[],
                 levelInfo:[
                     {
                         id:'1',
@@ -668,7 +669,7 @@
                         console.log(this.alarmcolumnInfo);
                         newInfo = this.alarmcolumnInfo;
                         newInfo.severityName = this.severityId2Name(newInfo.severityId)
-
+                        newInfo.relatedDevices = newInfo.relatedDevices.join(",")
                         newInfo.relatedManager = newInfo.relatedManager.join(",")
                         console.log(newInfo,"返回的数据")
                         if (newInfo.id) {  //编辑或查看
@@ -927,11 +928,24 @@
                     console.log(err, '请求失败')
                 })
             },
+            async getSchedules(){
+                await api.patrol.getAllPatrol().then(res => {
+                    console.log(res, '请求成功')
+                    this.patrolInfo = res.map((item)=>{
+                        return item.inspectionSchedule;
+                    });
+                    console.log(res)
+                }).catch(err => {
+                    console.log(err, '请求失败')
+                })
+            },
             init(){
-                //获取人员数据
+                //人员
                 this.getPersonInfo();
-                //获取报警柱设备数据
+                //报警柱设备
                 this.getPoliceDevice();
+                //关联巡检计划
+                this.getSchedules();
             }
 
 

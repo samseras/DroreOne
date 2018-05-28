@@ -60,7 +60,7 @@
      import VueAplayer from 'vue-aplayer'
      import api from '@/api'
     export default {
-        props: ['visible'],
+        props: ['visible','broadList'],
         name: "map-dialog",
         data () {
             return{
@@ -96,10 +96,15 @@
                     var form = new FormData();
                     form.append('f1',file);
                     console.log(form, 'opopopopoppopop')
+                    this.isShowLoading = true
                     api.schedulebroadcast.createMusic(form).then(res => {
+                        this.isShowLoading = false
                         console.log(res, '上传成功')
+                        this.$message.success('上传音频成功')
+                        this.getAllMusic()
                     }).catch(err => {
                         this.$message.error('上传音频失败，请稍后重试')
+                        this.isShowLoading = false
                         console.log(err, '上传失败')
                     })
                 }
@@ -216,6 +221,16 @@
                         item.checked =false
                         item.pic = ''
                         item.artist = 'drore'
+                        if (this.broadList && this.broadList.length > 0) {
+                            console.log(this.broadList, 'opopoppopoopopopopop')
+                            this.broadList.forEach(item1 => {
+                                if (item.id === item1.id) {
+                                    item.checked = true
+                                }
+                                this.checked(item1.id)
+                            })
+                        }
+
                     })
                 }).catch(err => {
                     this.isShowLoading = false
