@@ -405,6 +405,7 @@
                         this.boatCarList[i].status = true
                         this.boatCarList[i].id = this.boatCarList[i].vehicle.id
                         this.boatCarList[i].description = this.boatCarList[i].vehicle.description
+                        this.boatCarList[i].vehicle.modifyTime=this.boatCarList[i].vehicle.modifyTime.replace("-","/")
                         this.boatCarList[i].byTime = -(new Date(this.boatCarList[i].vehicle.modifyTime)).getTime()
                     }
                     this.boatCarList = _.sortBy(this.boatCarList,'byTime')

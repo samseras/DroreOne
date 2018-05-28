@@ -11,10 +11,12 @@
                         @choseType='choseType'
                         @selectedAll='selectedAll'
                         :choseId="choseInfoId"
-                        :listsLength="personList.length"
+                        :listsLength="listLength"
                         :personListFlag="selectFlag"
                         @fixedInfo='fixedInfo'
                         @searchAnything="searchAnything"
+                        @nextPage="nextPage"
+                        @previousPage="previousPage"
                         @getAllPerson="getAllPerson">
                 </Header>
             </div>
@@ -86,7 +88,7 @@
                             </template>
                         </el-table-column>
                     </el-table>
-                    <div class="personInfo" v-for="item in personList" v-if="isShowPersonCard && item.status">
+                    <div class="personInfo" v-for="(item,index) in personList" v-if="isShowPersonCard && item.status">
                         <div class="checkBox">
                             <el-checkbox v-model="item.checked" @change="checked(item.id)"
                                          class="checkBtn"></el-checkbox>
@@ -147,7 +149,10 @@
                 isDisabled: true,
                 title: '',
                 isShowLoading: false,
-                isShowDialogLoading: false
+                isShowDialogLoading: false,
+                currentNum: 50,
+                listLength: '',
+                pageNum: 1
             }
         },
         methods: {
@@ -439,14 +444,31 @@
                     this.$message.error('请选择要修改的人员')
                 }
             },
+            previousPage (page) {
+                console.log(page, '这是传过来的pageNum')
+                this.pageNum = page
+                this.getAllPerson()
+            },
+            nextPage (page) {
+                console.log(page, '这个是下一页的pageNUM')
+                this.pageNum = page
+                this.getAllPerson()
+            },
+
             async getAllPerson() {
                 this.choseInfoId = []       //人员切换左侧选项卡去掉上项的默认选择
                 this.isShowLoading = true
                 let id = this.$route.params.id
                 await api.person.getJobPerson(id).then(res => {
                     console.log(res, '这是请求回来的')
+                    this.listLength = res.length
                     this.isShowLoading = false
                     this.personList = res
+                    this.personList = this.personList.filter((item,index) => {
+                        if (index < (this.pageNum * 35 ) && index > ((this.pageNum -1) * 35 ) - 1 ) {
+                            return item
+                        }
+                    })
                     for (let i = 0; i < this.personList.length; i++) {
                         this.personList[i].checked = false
                         this.personList[i].status = true
@@ -457,7 +479,9 @@
                         this.personList[i].name = this.personList[i].personBean.name
                         this.personList[i].phone = this.personList[i].personBean.phone
                         this.personList[i].description = this.personList[i].personBean.description
+                        this.personList[i].personBean.modifyTime=this.personList[i].personBean.modifyTime.replace("-","/")
                         this.personList[i].byTime = -(new Date(this.personList[i].personBean.modifyTime)).getTime()
+                        console.log(new Date(this.personList[i].personBean.modifyTime).getTime())
                     }
                     this.personList = _.sortBy(this.personList,'byTime')
                     console.log(this.personList, 'p[p[p[p[p[p[p[p[p[p[p[p[p[[pp')
@@ -493,6 +517,7 @@
         },
         watch: {
             '$route' () {
+                this.pageNum = 1
                 this.personList = []
                 this.getAllPerson()
             }

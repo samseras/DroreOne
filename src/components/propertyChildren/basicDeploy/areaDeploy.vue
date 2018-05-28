@@ -362,6 +362,7 @@
                         this.areaList[i].checked = false
                         this.areaList[i].status = true
                         this.areaList[i].location = this.areaList[i].geo
+                        this.areaList[i].modifyTime=this.areaList[i].modifyTime.replace("-","/")
                         this.areaList[i].byTime = -(new Date(this.areaList[i].modifyTime)).getTime()
                     }
                     console.log(this.areaList)

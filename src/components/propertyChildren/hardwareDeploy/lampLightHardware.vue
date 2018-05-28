@@ -10,9 +10,11 @@
                         @selectedAll="selectedAll"
                         @fixedInfo="fixedInfo"
                         @searchAnything="searchAnything"
-                        :listsLength = "lightList.length"
+                        :listsLength = "listLength"
                         :choseId="choseInfoId"
                         :personListFlag="selectFlag"
+                        @nextPage="nextPage"
+                        @previousPage="previousPage"
                         @choseType="choseType"
                         @toggleList="toggleList"
                         @getAllLight="getAllLight">
@@ -76,7 +78,7 @@
                         </el-table-column>
                     </el-table>
 
-                    <div class="personInfo" v-for="item in lightList" v-if="isShowLightDetail && item.status">
+                    <div class="personInfo" v-for="(item,index) in lightList" v-if="isShowLightDetail && item.status">
                         <div class="checkBox">
                             <el-checkbox v-model="item.checked" @change="checked(item.id)" class="checkBtn"></el-checkbox>
                         </div>
@@ -132,7 +134,10 @@
                 isDisabled:true,
                 filterList: [],
                 title:'',
-                isShowLoading:false
+                isShowLoading:false,
+                currentNum: 50,
+                listLength: '',
+                pageNum: 1
             }
         },
         methods:{
@@ -382,19 +387,37 @@
                 console.log(this.choseInfoId)
                 this.selectFlag=true
             },
+            previousPage (page) {
+                console.log(page, '这是传过来的pageNum')
+                this.pageNum = page
+                this.getAllLight()
+            },
+            nextPage (page) {
+                console.log(page, '这个是下一页的pageNUM')
+                this.pageNum = page
+                this.getAllLight()
+            },
             async getAllLight(){
                 this.choseInfoId=[];
                 this.isShowLoading=true
                 await api.light.getAllLight().then((res)=>{
                     console.log(res,'这是请求的数据')
                     this.isShowLoading=false
+                    this.listLength = res.devices.length
                     this.lightList=res.devices
+                    this.lightList = this.lightList.filter((item,index) => {
+                        if (index < (this.pageNum * 35 ) && index > ((this.pageNum -1) * 35 ) - 1 ) {
+                            return item
+                        }
+                    })
+
                     for (let i=0;i<this.lightList.length;i++){
 
                         this.lightList[i].checked=false
                         this.lightList[i].status=true
 
                         this.lightList[i].location=`${this.lightList[i].longitude},${this.lightList[i].latitude}`
+                        this.lightList[i].modifyTime=this.lightList[i].modifyTime.replace("-","/")
                         this.lightList[i].byTime = -(new Date(this.lightList[i].modifyTime)).getTime()
                     }
                     this.lightList = _.sortBy(this.lightList,'byTime')

@@ -50,7 +50,7 @@
                         </el-table-column>
                         <el-table-column
                             sortable
-                            prop="relatedManager"
+                            prop="relatedManagerName"
                             label="管理者">
                         </el-table-column>
                         <el-table-column label="操作" width="200">
@@ -85,7 +85,6 @@
     import api from '@/api'
     import Header from './alarmRuleHeader'
     import AlarmDetail from './alarmRuleDialog'
-    // import moment from 'moment'
     export default {
         data(){
             return{
@@ -98,7 +97,8 @@
                         severityName:'高',
                         deviceScope:'100米',
                         securityScope:'200米',
-                        relatedManager:'马云',
+                        relatedManager:'0',
+                        relatedManagerName:'aaa',
                         isEnabled:false
 
                     },
@@ -110,7 +110,8 @@
                         severityName:'中',
                         deviceScope:'400米',
                         securityScope:'700米',
-                        relatedManager:'徐一项',
+                        relatedManager:'1',
+                        relatedManagerName:'bbb',
                         isEnabled:false
 
                     },
@@ -187,6 +188,10 @@
                 if (id) {
                     this.choseInfoId = [id]
                 }else{
+                    if(this.choseInfoId.length == 0){
+                        this.$message.error('请选择要删除的数据')
+                        return
+                    }
                     this.choseInfoId = this.choseInfos.map(item=>item.id)
                 }
                 if ( this.choseInfoId.length > 0) {
@@ -252,7 +257,7 @@
                 })
             },
             saveEditInfo(objArray){ //编辑保存
-                if(isBatchEdit){  //批量编辑保存
+                if(this.isBatchEdit){  //批量编辑保存
 
                 }else{  //单个编辑保存
 
@@ -294,6 +299,47 @@
                         this.choseInfos = []
                     })
             },
+            init(){
+                // this.getAllAlarmRule();
+                this.getPersonInfo();
+            },
+            async getPersonInfo(){
+                let personInfo = [];
+                let r1 = await this.getPerson(3);
+                let r2 = await this.getPerson(8);
+
+                console.log(r1,'severity');
+                console.log(r2,'manager');
+                if(r1.length > 0){
+                    personInfo.push(this.addPersonn(r1));
+                }
+                if(r2.length > 0){
+                    personInfo.push(this.addPersonn(r2));
+                }
+            },
+            addPersonn(array){
+                let temp = array.map((item)=>{
+                    return {
+                        id: item.personBean.id,
+                        name:item.personBean.name,
+                        phone:item.personBean.phone
+                    }
+                })
+                return {
+                    label:array[0].jobName,
+                    options:temp
+                }
+            },
+            async getPerson(type){
+                let personInfo = [];
+                await api.person.getJobPerson(type).then(res => {
+                    console.log(res, '请求成功')
+                    personInfo = res;
+                }).catch(err => {
+                    console.log(err, '请求失败')
+                })
+                return personInfo;
+            },
             async getAllAlarmRule(){
                 this.isShowLoading = true
                 let id = '';
@@ -320,7 +366,8 @@
             }
         },
         created () {
-            this.getAllAlarmRule();
+
+            this.init();
         },
         components: {
             ScrollContainer,

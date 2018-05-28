@@ -284,6 +284,7 @@
                 let index = info.location.includes(',')?info.location.indexOf(','):info.location.indexOf('，')
                 let longitude= info.location.substring(0, index)
                 let latitude = info.location.substring(index + 1)
+
                 let indicatorObj = {
                     description:info.description,
                     id: info.signboardBean.id,
@@ -302,7 +303,7 @@
                         return
                     })
                 } else {
-                    toiletObj.pictureId = info.pictureId
+                    indicatorObj.pictureId = info.pictureId
                 }
                 console.log(indicatorObj, 'this is trashObj')
                 await api.indicator.updateIndicator(JSON.stringify(indicatorObj)).then(res => {
@@ -379,6 +380,7 @@
                         this.indicatorList[i].id = this.indicatorList[i].signboardBean.id
                         this.indicatorList[i].description = this.indicatorList[i].signboardBean.description
                         this.indicatorList[i].location = `${this.indicatorList[i].longitude},${this.indicatorList[i].latitude}`
+                        this.indicatorList[i].signboardBean.modifyTime=this.indicatorList[i].signboardBean.modifyTime.replace("-","/")
                         this.indicatorList[i].byTime = -(new Date(this.indicatorList[i].signboardBean.modifyTime)).getTime()
                     }
                     this.indicatorList = _.sortBy(this.indicatorList, 'byTime')

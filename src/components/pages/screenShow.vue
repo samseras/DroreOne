@@ -75,7 +75,47 @@
                  gaugeDom:null,
                  funnelDom:null,
                  chartH:null,
-                 chartW:null
+                 chartW:null,
+                 backgroundImg:null,
+                 echartColor:null,
+                 idx:0,
+                 attr:[
+                     {
+                         index:0,
+                         backgroundImg:"../../../static/img/screenHead.svg",
+                         echartColor:[
+                             ["#189ddd"],
+                             ["#f8cf59","#d94539"],
+                             ["#10ccf5","#fbf396"],
+                             ["#4bf9ff","#ffccf8"],
+                             ["#30a6fb","#047ae3","#0abdea","#4beefd","#02daff","#2a517d","#11447c"],
+                             ["#189ddd","#fbf396","#ffccf8","#ffccf8"],["#fbf396","#189ddd"]
+                         ]
+                     },{
+                         index:1,
+                         backgroundImg:"../../../static/img/screenHead.svg",
+                         echartColor:[
+                             ["#189ddd"],
+                             ["#f8cf59","#d94539"],
+                             ["#10ccf5","#fbf396"],
+                             ["#4bf9ff","#ffccf8"],
+                             ["#30a6fb","#047ae3","#0abdea","#4beefd","#02daff","#2a517d","#11447c"],
+                             ["#189ddd","#fbf396","#ffccf8","#ffccf8"],["#fbf396","#189ddd"]
+                         ]
+                     },
+                     {
+                         index:2,
+                         backgroundImg:"../../../static/img/screenHead.svg",
+                         echartColor:[
+                             ["#189ddd"],
+                             ["#f8cf59","#d94539"],
+                             ["#10ccf5","#fbf396"],
+                             ["#4bf9ff","#ffccf8"],
+                             ["#30a6fb","#047ae3","#0abdea","#4beefd","#02daff","#2a517d","#11447c"],
+                             ["#189ddd","#fbf396","#ffccf8","#ffccf8"],["#fbf396","#189ddd"]
+                         ]
+                     }
+                 ]
              }
         },
         methods:{
@@ -88,6 +128,21 @@
                 this.chartW = this.chartR - this.chartL;
                 console.log(this.chartH,"this.chartH")
                 console.log(this.chartW,"this.chartW")
+            },
+            async init(){
+               for(let i=0;i<this.attr.length;i++){
+                  if(this.attr[i].index == this.idx){
+                     this.backgroundImg = this.attr[i].backgroundImg;
+                  }
+               }
+                // await api.analyze.getTemplate().then(res=>{
+                //
+                //
+                //
+                //
+                //}).catch(err=>{
+                //
+                // })
             },
             async getContent(){
                 let id = this.$route.params.id;
@@ -841,6 +896,7 @@
             console.log(this.$route.params.id,"@@@@@@@@@@@")
         },
         mounted () {
+            // this.init();
             this.requestFullScreen();
             this.getDom();
         }
@@ -926,6 +982,7 @@
                       border-radius: rem(5);
                       /*padding: 0 rem(10) rem(10) 0;*/
                       box-sizing: border-box;
+                      border: 1px solid #29517c;
                       background-color: rgba(0,0,0,0.2);
                       .echatsTitle {
                           position: relative;

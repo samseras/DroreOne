@@ -417,6 +417,7 @@
                                 this.parkList[i].parkingBean.state = '已满'
                             }
                         }
+                        this.parkList[i].parkingBean.modifyTime=this.parkList[i].parkingBean.modifyTime.replace("-","/")
                         this.parkList[i].byTime = -(new Date(this.parkList[i].parkingBean.modifyTime)).getTime()
                     }
                     this.parkList = _.sortBy(this.parkList, 'byTime')

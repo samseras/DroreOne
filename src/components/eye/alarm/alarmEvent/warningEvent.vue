@@ -79,9 +79,10 @@
                               :isReadonly="isReadonly"
                               @closeDialog ="closeDialog"
                               :title = "title"
-                              @addAlarmEvent="addAlarmEvent"
+                              @saveEditInfo="saveEditInfo"
+                              @saveInfo="saveInfo"
                               :isBatchEdit="isBatchEdit"
-                              :choseInfoId = 'choseInfoId'>
+                              :choseInfos = 'choseInfos'>
                 </AlarmDetail>
             </div>
         </div>
@@ -113,7 +114,7 @@
                         severityName:'高',
                         owner:{
                             id:"1",
-                            name:'徐一项',
+                            name:'aaa',
                             tel:'18672019008'
                         },
 
@@ -134,7 +135,7 @@
                         severityName:'中',
                         owner:{
                             id:"2",
-                            name:'张三',
+                            name:'bbb',
                             tel:'13000100190'
                         },
 
@@ -142,7 +143,8 @@
                     ],
                 visible: false,
                 warningEventInfo: {},
-                choseInfoId: [],
+                choseInfos: [],
+                choseInfoId:[],
                 isReadonly: true,
                 title:'',
                 selection:[],
@@ -153,26 +155,26 @@
         },
         methods: {
             batchDownload(){
-                console.log(this.choseInfoId)
-                if (this.choseInfoId.length > 0) {
+                console.log(this.choseInfos)
+                if (this.choseInfos.length > 0) {
                         //导出接口
-                        // api.schedulebroadcast.deleteBroadcast(this.choseInfoId).then(res => {
+                        // api.schedulebroadcast.deleteBroadcast(this.choseInfos).then(res => {
                         //     console.log(res, '删除成功')
                         //     this.$message.success('删除成功')
-                        //     for (let i = 0; i < this.choseInfoId.length; i++) {
+                        //     for (let i = 0; i < this.choseInfos.length; i++) {
                         //         this.broadCastList = this.broadCastList.filter((item, index) => {
-                        //             if (item.id === this.choseInfoId[i]){
+                        //             if (item.id === this.choseInfos[i]){
                         //                 this.broadCastList[index].checked = false
                         //                 this.broadCastList[index].status = false
                         //             }
                         //             return item.status !== false
                         //         })
                         //     }
-                        //     this.choseInfoId = []
+                        //     this.choseInfos = []
                         // }).catch(err => {
                         //     this.$message.error('删除失败，请稍后重试')
                         //     console.log(err)
-                        //     this.choseInfoId = []
+                        //     this.choseInfos = []
                         // })
 
                 } else {
@@ -197,7 +199,7 @@
                 this.visible = false
             },
             handleSelectionChange(selection) {
-                this.choseInfoId = selection.map(item => {
+                this.choseInfos = selection.map(item => {
                     return item.id
                 })
             },
@@ -212,9 +214,15 @@
             },
             deletInfo (id) {
                 console.log(id)
-                console.log(this.choseInfoId)
+                console.log(this.choseInfos)
                 if (id) {
                     this.choseInfoId = [id]
+                }else{
+                    if(this.choseInfoId.length == 0){
+                        this.$message.error('请选择要删除的数据')
+                        return
+                    }
+                    this.choseInfoId = this.choseInfos.map(item=>item.id)
                 }
                 if (this.choseInfoId.length > 0) {
                     this.$confirm('此操作将永久删除该数据, 是否继续?', '提示', {
@@ -222,24 +230,26 @@
                         cancelButtonText: '取消',
                         type: 'warning'
                     }).then(() => {
-                        // api.schedulebroadcast.deleteBroadcast(this.choseInfoId).then(res => {
-                        //     console.log(res, '删除成功')
-                        //     this.$message.success('删除成功')
-                        //     for (let i = 0; i < this.choseInfoId.length; i++) {
-                        //         this.broadCastList = this.broadCastList.filter((item, index) => {
-                        //             if (item.id === this.choseInfoId[i]){
-                        //                 this.broadCastList[index].checked = false
-                        //                 this.broadCastList[index].status = false
-                        //             }
-                        //             return item.status !== false
-                        //         })
-                        //     }
-                        //     this.choseInfoId = []
-                        // }).catch(err => {
-                        //     this.$message.error('删除失败，请稍后重试')
-                        //     console.log(err)
-                        //     this.choseInfoId = []
-                        // })
+                        api.alarm.deleteAlarmRule(this.choseInfoId).then(res => {
+                            console.log(res, '删除成功')
+                            this.$message.success('删除成功')
+                            for (let i = 0; i < this.choseInfos.length; i++) {
+                                this.alarmcolumnList = this.alarmcolumnList.filter((item, index) => {
+                                    if (item.id === this.choseInfos[i].id){
+                                        this.alarmcolumnList[index].checked = false
+                                        this.alarmcolumnList[index].status = false
+                                    }
+                                    return item.status !== false
+                                })
+                            }
+                            this.choseInfos = []
+                            this.choseInfoId = []
+                        }).catch(err => {
+                            this.$message.error('删除失败，请稍后重试')
+                            console.log(err)
+                            this.choseInfos = []
+                            this.choseInfoId = []
+                        })
                     }).catch(() => {
                         this.$message.info('取消删除')
                     })
@@ -255,23 +265,23 @@
                     }
                     return item
                 })
-                if (this.choseInfoId.includes(id)) {
-                    this.choseInfoId = this.choseInfoId.filter((item) =>{
+                if (this.choseInfos.includes(id)) {
+                    this.choseInfos = this.choseInfos.filter((item) =>{
                         return item !== id
                     })
                 } else {
-                    this.choseInfoId.push(id)
+                    this.choseInfos.push(id)
                 }
             },
             selectedAll (state) {
                 this.warningEventList = this.warningEventList.filter((item) => {
                     if (state === true) {
                         item.checked = true
-                        this.choseInfoId.push(item.id)
+                        this.choseInfos.push(item.id)
                         return item.checked === true
                     } else {
                         item.checked = false
-                        this.choseInfoId = []
+                        this.choseInfos = []
                         return item.checked === false
                     }
                 })
@@ -281,7 +291,7 @@
                 this.showDetail(info,state,title);
             },
             batchEdit(){
-                if (this.choseInfoId.length > 0) {
+                if (this.choseInfos.length > 0) {
                     console.log('batchEdit')
                     this.isBatchEdit = true;
                     this.visible = true;
@@ -290,7 +300,14 @@
                     return
                 }
             },
-            addAlarmEvent(){
+            saveEditInfo(){ //编辑保存
+                if(this.isBatchEdit){  //批量编辑保存
+
+                }else{  //单个编辑保存
+
+                }
+            },
+            saveInfo(){  //新增保存
 
             },
             async getAllAlarmEvent () {
@@ -301,7 +318,6 @@
                                 this.warningEventList = res
                                 this.warningEventList.forEach(item => {
                                     item.checked = false;
-
                                 })
                         }).catch(err => {
                             console.log(err, '请求失败')

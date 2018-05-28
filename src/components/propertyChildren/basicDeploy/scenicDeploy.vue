@@ -414,6 +414,7 @@
                                 this.scenicList[i].scenicspotBean.statu = '已满'
                             }
                         }
+                        this.scenicList[i].scenicspotBean.modifyTime=this.scenicList[i].scenicspotBean.modifyTime.replace("-","/")
                         this.scenicList[i].byTime = -(new Date(this.scenicList[i].scenicspotBean.modifyTime)).getTime()
                     }
                     this.scenicList = _.sortBy(this.scenicList, 'byTime')
