@@ -302,7 +302,7 @@
                         return
                     })
                 } else {
-                    toiletObj.pictureId = info.pictureId
+                    indicatorObj.pictureId = info.pictureId
                 }
                 console.log(indicatorObj, 'this is trashObj')
                 await api.indicator.updateIndicator(JSON.stringify(indicatorObj)).then(res => {

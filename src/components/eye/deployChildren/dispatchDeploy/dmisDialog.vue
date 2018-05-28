@@ -126,10 +126,10 @@
                         <!--<el-radio v-model="radio" label="1">是</el-radio>-->
                         <!--<el-radio v-model="radio" label="0">否</el-radio>-->
                         <!--</p>-->
-                        <p class="uploadText">定义内容：
+                        <p class="uploadText"><span class="updataTitle">定义内容：</span>
                             <!--<input type="text"v-model="broadList.musicIds" class="inputText">-->
                             <span v-for="item in broadList.musics" :key="item.id">{{item.title}}</span>
-                            <el-button slot="trigger" size="small" type="primary" @click="showBroadcastDialog" :disabled='isDisabled'>曲目编辑</el-button>
+                            <el-button slot="trigger" size="small" type="primary" @click="showBroadcastDialog" v-if='!isDisabled'>曲目编辑</el-button>
                         </p>
                         <p class="type textArea">
                             <!--描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：<textarea name="" v-model="broadList.broadcastSchedule.description" cols="30"-->
@@ -301,9 +301,9 @@
                         <!--<el-radio v-model="radio" label="1">是</el-radio>-->
                         <!--<el-radio v-model="radio" label="0">否</el-radio>-->
                         <!--</p>-->
-                        <p class="uploadText">定义内容：
+                        <p class="uploadText"><span class="updataTitle">定义内容：</span>
                             <span v-for="item in screen.contents" :key="item.id">{{item.content}}</span>
-                            <el-button slot="trigger" size="small" type="primary" @click = "showScreenDialog" :disabled='isDisabled'>定义内容</el-button>
+                            <el-button slot="trigger" size="small" type="primary" @click = "showScreenDialog" v-if="!isDisabled" >定义内容</el-button>
                         </p>
                         <p class="type textArea">
                             <span class="description">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：</span>
@@ -318,8 +318,8 @@
             </div>
         </el-dialog>
         <MapDialog v-if="mapVisible" :visible="mapVisible" class="map" @closeMapDialog = 'closeMapDialog'></MapDialog>
-        <broadcastDialog v-if="broadcastVisible" :visible="broadcastVisible" class="broadcastContent" @closeBroadcastDialog = 'closeBroadcastDialog' @saveMusicList = "musicList"></broadcastDialog>
-        <ScreenDialog v-if="screenVisible" :visible="screenVisible" class="screenContent" @closeScreenDialog = 'closeScreenDialog' @saveContent="saveContent"></ScreenDialog>
+        <broadcastDialog v-if="broadcastVisible" :visible="broadcastVisible" :broadList="broadList.musics" class="broadcastContent" @closeBroadcastDialog = 'closeBroadcastDialog' @saveMusicList = "musicList"></broadcastDialog>
+        <ScreenDialog v-if="screenVisible" :visible="screenVisible" :screenContentList="screen.contents" class="screenContent" @closeScreenDialog = 'closeScreenDialog' @saveContent="saveContent"></ScreenDialog>
     </div>
 </template>
 
@@ -1029,20 +1029,26 @@
                     border-bottom: none;
                 }
                 .uploadText{
+                    width: 100%;
                     overflow: hidden;
                     text-overflow: ellipsis;
                     white-space: nowrap;
-                    height: rem(30);
                     margin-top: 0;
                     padding-top: rem(10);
-                    padding-right:rem(85);
+                    .updataTitle {
+                        background: transparent;
+                        color: #606266;
+                        margin-bottom: rem(5);
+                    }
                     span{
                         margin-right: rem(10);
+                        padding: 0 rem(5);
+                        margin-bottom: rem(3);
+                        float: left;
                     }
                     button{
-                        float: right;
-                        margin-right: rem(-80);
                         margin-top: rem(-5);
+                        float: right;
                     }
                 }
             }

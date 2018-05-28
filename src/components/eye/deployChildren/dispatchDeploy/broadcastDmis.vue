@@ -9,13 +9,16 @@
                         @deletInfo = "deletInfo"
                         @selectedAll = 'selectedAll'
                         @startEndPlan="startEndPlan"
+                        @searchAnything="searchAnything"
+                        :selectLength="choseInfoId.length"
+                        :listLength="broadCastList.length"
+                        @choseType="choseType"
                         @fixedInfo = 'fixedInfo'>
                 </Header>
             </div>
             <div class="personList" v-loading="isShowloading">
                 <ScrollContainer>
                     <el-table
-                        v-if="isShowAreaCard"
                         ref="multipleTable"
                         :data="broadCastList"
                         tooltip-effect="dark"
@@ -23,7 +26,7 @@
                         @selection-change="handleSelectionChange">
                         <el-table-column
                             width="50">
-                            <template slot-scope="scope">
+                            <template slot-scope="scope" v-if="scope.row.status">
                                 <el-checkbox v-model="scope.row.checked" @change="checked(scope.row.id)" class="checkBoxBtn"></el-checkbox>
                             </template>
                         </el-table-column>
@@ -49,18 +52,20 @@
                                 <span>{{scope.row.broadcastSchedule.startTime}}~{{scope.row.broadcastSchedule.endTime}}</span>
                             </template>
                         </el-table-column>
-                        <!--<el-table-column-->
-                            <!--prop="repetition"-->
-                            <!--label="重复调度"-->
-                            <!--sortable>-->
-                        <!--</el-table-column>-->
+                        <el-table-column
+                            label="状态">
+                            <template slot-scope="scope">
+                                <span v-if="scope.row.broadcastSchedule.enabled">已开启</span>
+                                <span v-else>已停止</span>
+                            </template>
+                        </el-table-column>
                         <el-table-column label="操作" width="200">
                             <template slot-scope="scope">
-                                <span @click="fixedInfo(scope.row,'广播编辑')" class="edit">编辑</span> |
+                                <span @click="fixedInfo(scope.row,'修改广播计划')" class="edit">编辑</span> |
                                 <span @click="stop(scope.row)" v-if="scope.row.broadcastSchedule.enabled">停止 |</span>
                                 <span @click="stop(scope.row)" v-if="!scope.row.broadcastSchedule.enabled">开始 |</span>
                                 <span @click="showPersonDetail(scope.row,'广播信息',true)">查看</span> |
-                                <span @click="deletInfo(scope.row.id,'片区信息')">删除</span>
+                                <span @click="deletInfo(scope.row.id,)">删除</span>
                             </template>
                         </el-table-column>
                     </el-table>
@@ -89,7 +94,6 @@
         name: 'area-deploy',
         data(){
             return{
-                isShowAreaCard: true,
                 checkList: [],
                 filterList: [],
                 broadCastList: [],
@@ -108,8 +112,31 @@
             }
         },
         methods: {
+            searchAnything (info) {
+                console.log(info, '这是要过滤的')
+                if (info.trim() !== '') {
+                    this.broadCastList = this.checkList.filter(item => {
+                        if (item.broadcastSchedule.name.includes(info)) {
+                            return item
+                        }
+                        if (item.broadcastSchedule.description.includes(info)) {
+                            return item
+                        }
+                    })
+                } else {
+                    this.getAllBroadcast()
+                }
+            },
             startEndPlan (state) {
                 console.log(this.choseInfoId, 'opopopop')
+                if(this.choseInfoId.length < 1) {
+                    if(state === 'start') {
+                        this.$message.error('请选择要开启的数据信息')
+                    } else {
+                        this.$message.error('请选择要关闭的数据信息')
+                    }
+                    return
+                }
                 let choseId = []
                 choseId = this.broadCastList.filter(item => {
                     if (this.choseInfoId.includes(item.id)) {
@@ -136,6 +163,22 @@
                     }
                     return
                 }
+                if (state === 'end') {
+                    this.$confirm('确定要停止所选的计划吗, 是否继续?', '提示', {
+                        confirmButtonText: '确定',
+                        cancelButtonText: '取消',
+                        type: 'warning'
+                    }).then(() => {
+                        this.startEndPlanApi(choseId, state)
+                    }).catch(() => {
+                        this.$message.info('计划停止取消')
+                        return
+                    })
+                } else {
+                    this.startEndPlanApi(choseId, state)
+                }
+            },
+            startEndPlanApi(choseId, state) {
                 api.schedulebroadcast.stareEndPlan(choseId).then(res => {
                     console.log(res, '更改状态成功')
                     if (state === 'start') {
@@ -174,7 +217,7 @@
                 this.isDisabled = state
             },
             addNewInfo () {
-                this.showPersonDetail({broadcastSchedule:{}}, '添加广播播放',false)
+                this.showPersonDetail({broadcastSchedule:{}}, '添加广播播放计划',false)
                 this.isDisabled = false
             },
             deletInfo (id) {
@@ -347,6 +390,32 @@
                    console.log(err, '失败')
                })
             },
+            choseType (type) {
+                console.log(type, '这是传过来的')
+                type = type.map(item => {
+                    if (item === '开启') {
+                        return true
+                    } else{
+                        return false
+                    }
+                })
+                console.log(type, '这是过滤后的')
+                if (type.length === 0){
+                    this.broadCastList = this.broadCastList.filter((item) => {
+                        item.status = true
+                        return item
+                    })
+                } else {
+                    this.broadCastList = this.broadCastList.filter((item,index) => {
+                        if (type.includes(item.broadcastSchedule.enabled)) {
+                            item.status = true
+                        } else {
+                            item.status = false
+                        }
+                        return item
+                    })
+                }
+            },
             async getAllBroadcast () {
                 this.isShowLoading = true
                 await api.schedulebroadcast.getAllBroadcast().then(res => {
@@ -355,6 +424,7 @@
                     this.broadCastList = res
                     this.broadCastList.forEach(item => {
                         item.checked = false;
+                        item.status = true
                         item.broadcastSchedule.time = [item.broadcastSchedule.startDate,item.broadcastSchedule.endDate]
                         item.broadcastSchedule.watchTime = [`2018-04-25,${item.broadcastSchedule.startTime}`,`2018-04-25,${item.broadcastSchedule.endTime}`]
                         item.id = item.broadcastSchedule.id
@@ -370,6 +440,8 @@
                             })
                         }
                     })
+                    this.choseInfoId = []
+                    this.checkList = this.broadCastList
                 }).catch(err => {
                     console.log(err, '请求失败')
                     this.isShowLoading = false

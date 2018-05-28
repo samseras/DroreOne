@@ -34,7 +34,7 @@
 <script>
     import api from '@/api'
     export default {
-        props: ['visible'],
+        props: ['visible','screenContentList'],
         name: "LED-dialog",
         data () {
             return{
@@ -126,6 +126,14 @@
                     this.contentList = res
                     this.contentList.forEach(item => {
                         item.checked = false
+                        if (this.screenContentList && this.screenContentList.length > 0) {
+                            this.screenContentList.forEach(item1 => {
+                                if (item.id === item1.id) {
+                                    item.checked = true
+                                    this.checked(item1.id)
+                                }
+                            })
+                        }
                     })
                 }).catch(err => {
                     console.log(err, '请求失败')
@@ -137,6 +145,11 @@
         },
         components : {
 
+        },
+        watch: {
+            screenContentList () {
+                console.log (this.screenContentList, 'jgscsdchjkg')
+            }
         },
         mounted(){
             let that = this;

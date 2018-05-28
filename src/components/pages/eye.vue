@@ -21,7 +21,7 @@
                             </div>
                             <div class="searchContent" v-if="searchList.length>0" v-loading="isShowloading">
                                 <ul ref="dev">
-                                    <li>
+                                    <li
                                         v-for="(item,index) in searchList"
                                         :class="searchIndex === index? 'active': ''"
                                         :ref="isCur(index) && 'searchContent'"
@@ -31,7 +31,6 @@
                             </div>
                         </div>
                     </el-col>
-
                     <el-col :xs="7" :sm="6" :md="5" :lg="4" :xl="3">
                         <button @click="showSearch" class="hitSearch" ref="hitSearch">
                             <i class="el-icon-search"></i>
@@ -517,7 +516,7 @@
         .search{
             width: 100%;
             height: 100%;
-            /*position: relative;*/
+            position: relative;
             .searchInput{
                 width: 100%;
                 height: rem(60);
@@ -580,7 +579,7 @@
             }
             .searchContent{
                 position: absolute;
-                width: 80%;
+                width: 62%;
                 background: rgba(161, 187, 79, 0.6);
                 border-bottom-left-radius: rem(5);
                 border-bottom-right-radius: rem(5);
