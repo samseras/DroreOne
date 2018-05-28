@@ -17,7 +17,7 @@
  	    			<form>
  	    				<input type="text" v-model="username" id="userid" placeholder="请输入用户名"/>
  	    				<input type="password" v-model="password" id="userpass" placeholder="请输入密码"/>
- 	    				<input type="text" name="checkname" id="checkCode" placeholder="请输入验证码" />
+ 	    				<input type="text" name="checkname" id="checkCode" placeholder="请输入验证码" @blur="regForm()"/>
  	    				<input type="text" name="codename" id="Code" @click="changeCheckCode"/>
  	    				<input type="button" @click="loginOn" value="登录" id="submit">
  	    			</form>
@@ -30,6 +30,7 @@
 <script>
 	// import tableDatas from "../../../API/entrance.js"
 	// import users from "../../../API/user.json"
+    import api from "@/api"
 	export default {
 		data() {
 	        return {
@@ -42,14 +43,19 @@
 
 		},
 		methods:{
-			regForm : function() {
+			regForm () {
 				let s = $('#checkCode').val().toLowerCase();
 				let x= $('#Code').val().toLowerCase();
 				var reg1 = /^[a-zA-Z_]\w{4-14}$/;
 				var reg2 = /\d{5,16}/;
-				return reg1.test($('#userid').val()) && reg2.test($('#userpass').val()) && s == x;
+				if(s == x){
+
+                }else{
+                    $('#checkCode').val("");
+                }
+				// return reg1.test($('#userid').val()) && reg2.test($('#userpass').val()) && s == x;
 			},
-			changeCheckCode:function(){
+			changeCheckCode(){
 				//随机产生验证码
 			    $("#Code").val(function(){
 			    	var code="";
@@ -62,32 +68,26 @@
 					 return code;
 				});
 			},
-			loginOn:function(){
-				/*if(this.regForm()){*/
-					var obj={
-						user:this.username,
-						word:this.password
-					};
-					console.log(obj)
-				/*tableDatas.findUser(obj,(data)=>{
-					console.log(data)
-					if(data.length>0){
-						var local = window.localStorage;
-						local.setItem('nowUser',this.username)
-						location.href = "/MicServiceManagementSystem";
-					}
-				})*/
-
-
-				/*}else{
-					  alert('格式不正确！')
-				}*/
-
-
-				location.href = "/droreone";
+            async loginOn(){
+				if($('#checkCode').val() !== "") {
+                    var obj = {
+                        username: this.username,
+                        password: this.password
+                    };
+                    console.log(obj)
+                    await api.login.userLogin(obj).then(res => {
+                        console.log(res, "@@@@@@@@@")
+                          location.href = "/droreone";
+                    }).catch(err => {
+                        this.$message.info('登录失败')
+                        console.log(err, '登录失败')
+                    })
+                }else{
+                    this.$message.info('验证码不能为空')
+                }
 			}
 		},
-		mounted:function(){
+		mounted(){
 			this.changeCheckCode()
 			// this.users.push(users);
 		}

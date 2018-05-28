@@ -127,7 +127,7 @@
      import VueAplayer from 'vue-aplayer'
      import api from '@/api'
     export default {
-        props: ['visible','isReadonly','isBatchEdit','choseInfoId','Info','isfixedHeight'],
+        props: ['visible','isReadonly','isBatchEdit','choseInfoId','Info'],
         data () {
             return{
                 eventInfo:{

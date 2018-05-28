@@ -11,8 +11,10 @@
                         @fixedInfo="fixedInfo"
                         @searchAnything="searchAnything"
                         :choseId="choseInfoId"
-                        :listsLength = "gateList.length"
+                        :listsLength = "listLength"
                         :personListFlag="selectFlag"
+                        @nextPage="nextPage"
+                        @previousPage="previousPage"
                         @choseType="choseType"
                         @toggleList="toggleList"
                         @getAllGate="getAllGate">
@@ -71,7 +73,7 @@
                         </el-table-column>
                     </el-table>
 
-                    <div class="personInfo" v-for="item in gateList" v-if="isShowGateCard && item.status">
+                    <div class="personInfo" v-for="(item,index) in gateList" v-if="isShowGateCard && item.status">
                         <div class="checkBox">
                             <el-checkbox v-model="item.checked" @change="checked(item.id)" class="checkBtn"></el-checkbox>
                         </div>
@@ -131,7 +133,10 @@
                 isDisabled:true,
                 filterList: [],
                 title:'',
-                isShowLoading:false
+                isShowLoading:false,
+                currentNum: 50,
+                listLength: '',
+                pageNum: 1
             }
         },
         methods:{
@@ -391,13 +396,30 @@
                 console.log(this.choseInfoId)
                 this.selectFlag=true
             },
+            previousPage (page) {
+                console.log(page, '这是传过来的pageNum')
+                this.pageNum = page
+                this.getAllGate()
+            },
+            nextPage (page) {
+                console.log(page, '这个是下一页的pageNUM')
+                this.pageNum = page
+                this.getAllGate()
+            },
             async getAllGate(){
                 this.choseInfoId=[];
                 this.isShowLoading=true
                 await api.gate.getAllGate().then((res)=>{
                     console.log(res,'这是拿到的数据')
                     this.isShowLoading=false
+                    this.listLength = res.devices.length
                     this.gateList=res.devices
+                    this.gateList = this.gateList.filter((item,index) => {
+                        if (index < (this.pageNum * 35 ) && index > ((this.pageNum -1) * 35 ) - 1 ) {
+                            return item
+                        }
+                    })
+
                     for (let i=0;i<this.gateList.length;i++){
                         this.gateList[i].checked=false
                         this.gateList[i].mac=this.gateList[i].mac
