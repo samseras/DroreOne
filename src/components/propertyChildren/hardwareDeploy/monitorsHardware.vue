@@ -399,6 +399,7 @@
                         this.monitorsList[i].id=this.monitorsList[i].id
                         this.monitorsList[i].mac=this.monitorsList[i].mac
                         this.monitorsList[i].location=`${this.monitorsList[i].longitude},${this.monitorsList[i].latitude}`
+                        this.monitorsList[i].modifyTime=this.monitorsList[i].modifyTime.replace("-","/")
                         this.monitorsList[i].byTime = -(new Date(this.monitorsList[i].modifyTime)).getTime()
                     }
                     this.monitorsList = _.sortBy(this.monitorsList,'byTime')

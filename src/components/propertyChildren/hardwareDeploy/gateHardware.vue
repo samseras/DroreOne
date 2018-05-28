@@ -403,6 +403,7 @@
                         this.gateList[i].mac=this.gateList[i].mac
                         this.gateList[i].status=true
                         this.gateList[i].location=`${this.gateList[i].longitude},${this.gateList[i].latitude}`
+                        this.gateList[i].modifyTime=this.gateList[i].modifyTime.replace("-","/")
                         this.gateList[i].byTime = -(new Date(this.gateList[i].modifyTime)).getTime()
                     }
                     this.gateList = _.sortBy(this.gateList,'byTime')

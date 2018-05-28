@@ -441,6 +441,7 @@
                         this.broadList[i].status = true
                         this.broadList[i].id=this.broadList[i].id
                         this.broadList[i].location=`${this.broadList[i].longitude},${this.broadList[i].latitude}`
+                        this.broadList[i].modifyTime=this.broadList[i].modifyTime.replace("-","/")
                         this.broadList[i].byTime = -(new Date(this.broadList[i].modifyTime)).getTime()
                     }
                     this.broadList = _.sortBy(this.broadList,'byTime')

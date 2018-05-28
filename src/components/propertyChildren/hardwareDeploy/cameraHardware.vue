@@ -420,6 +420,7 @@
                         this.cameraList[i].status = true
                         this.cameraList[i].id=this.cameraList[i].id
                         this.cameraList[i].location = `${this.cameraList[i].longitude},${this.cameraList[i].latitude}`
+                        this.cameraList[i].modifyTime=this.cameraList[i].modifyTime.replace("-","/")
                         this.cameraList[i].byTime = -(new Date(this.cameraList[i].modifyTime)).getTime()
                     }
                     this.cameraList = _.sortBy(this.cameraList,'byTime')

@@ -400,6 +400,7 @@
                         this.policeList[i].id=this.policeList[i].id
                         this.policeList[i].mac=this.policeList[i].mac
                         this.policeList[i].location=`${this.policeList[i].longitude},${this.policeList[i].latitude}`
+                        this.policeList[i].modifyTime=this.policeList[i].modifyTime.replace("-","/")
                         this.policeList[i].byTime = -(new Date(this.policeList[i].modifyTime)).getTime()
                     }
                     this.policeList = _.sortBy(this.policeList,'byTime')

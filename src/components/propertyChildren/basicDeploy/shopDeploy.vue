@@ -439,6 +439,7 @@
                                 this.shopList[i].businessBean.state = '充裕'
                             }
                         }
+                        this.shopList[i].businessBean.modifyTime=this.shopList[i].businessBean.modifyTime.replace("-","/")
                         this.shopList[i].byTime = -(new Date(this.shopList[i].businessBean.modifyTime)).getTime()
                     }
                     this.shopList = _.sortBy(this.shopList, 'byTime')

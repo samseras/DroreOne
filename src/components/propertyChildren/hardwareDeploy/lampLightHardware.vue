@@ -395,6 +395,7 @@
                         this.lightList[i].status=true
 
                         this.lightList[i].location=`${this.lightList[i].longitude},${this.lightList[i].latitude}`
+                        this.lightList[i].modifyTime=this.lightList[i].modifyTime.replace("-","/")
                         this.lightList[i].byTime = -(new Date(this.lightList[i].modifyTime)).getTime()
                     }
                     this.lightList = _.sortBy(this.lightList,'byTime')

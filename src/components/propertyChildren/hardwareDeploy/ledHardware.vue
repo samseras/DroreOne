@@ -412,6 +412,7 @@
                         this.ledList[i].mac = this.ledList[i].mac
                         this.ledList[i].location=`${this.ledList[i].longitude},${this.ledList[i].latitude}`
                         this.ledList[i].area=`${this.ledList[i].screenWidth},${this.ledList[i].screenHeight}`
+                        this.ledList[i].modifyTime=this.ledList[i].modifyTime.replace("-","/")
                         this.ledList[i].byTime = -(new Date(this.ledList[i].modifyTime)).getTime()
                     }
                     this.ledList = _.sortBy(this.ledList,'byTime')

@@ -407,6 +407,7 @@
                         this.wifiList[i].status=true
                         this.wifiList[i].id=this.wifiList[i].id
                         this.wifiList[i].location=`${this.wifiList[i].longitude},${this.wifiList[i].latitude}`
+                        this.wifiList[i].modifyTime=this.wifiList[i].modifyTime.replace("-","/")
                         this.wifiList[i].byTime = -(new Date(this.wifiList[i].modifyTime)).getTime()
                     }
                     this.wifiList = _.sortBy(this.wifiList,'byTime')
