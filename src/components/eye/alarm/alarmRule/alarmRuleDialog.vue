@@ -29,7 +29,7 @@
                     <p class="status">报&nbsp;&nbsp;警&nbsp;&nbsp;柱：
                         <el-select  v-model="alarmcolumnInfo.relatedDevices" size="mini" class="" :disabled='isReadonly' multiple placeholder="请选择">
                             <el-option
-                                v-for="item in levelInfo"
+                                v-for="item in policeInfo"
                                 :key="item.id"
                                 :label="item.name"
                                 :value="item.id">
@@ -55,13 +55,18 @@
                         (安保)
                     </p>
                     <p class="relatedManager">管&nbsp;理&nbsp;&nbsp;者：
-                        <el-select  v-model="alarmcolumnInfo.relatedManager" size="mini" multiple class="" placeholder="请选择" :disabled='isReadonly'>
-                            <el-option
-                                v-for="item in eventInfo.owner"
-                                :key="item.val"
-                                :label="item.name"
-                                :value="item.val">
-                            </el-option>
+                        <el-select v-model="alarmcolumnInfo.relatedManager" size="mini" multiple placeholder="请选择" :disabled='isReadonly'>
+                            <el-option-group
+                                v-for="group in personInfo"
+                                :key="group.label"
+                                :label="group.label">
+                                <el-option
+                                    v-for="item in group.options"
+                                    :key="item.id"
+                                    :label="item.name"
+                                    :value="item.id">
+                                </el-option>
+                            </el-option-group>
                         </el-select>
                     </p>
                     <p class="description">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：<br>
@@ -106,13 +111,18 @@
                         (安保)
                     </p>
                     <p class="relatedManager">管&nbsp;理&nbsp;&nbsp;者：
-                        <el-select  v-model="firefightingInfo.relatedManager" @change="ownerChange" size="mini" multiple class="" placeholder="请选择" :disabled='isReadonly'>
-                            <el-option
-                                v-for="item in eventInfo.owner"
-                                :key="item.val"
-                                :label="item.name"
-                                :value="item.val">
-                            </el-option>
+                        <el-select v-model="firefightingInfo.relatedManager" size="mini" multiple placeholder="请选择" :disabled='isReadonly'>
+                            <el-option-group
+                                v-for="group in personInfo"
+                                :key="group.label"
+                                :label="group.label">
+                                <el-option
+                                    v-for="item in group.options"
+                                    :key="item.id"
+                                    :label="item.name"
+                                    :value="item.id">
+                                </el-option>
+                            </el-option-group>
                         </el-select>
                     </p>
                     <p class="description">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：<br>
@@ -157,13 +167,18 @@
                         (安保)
                     </p>
                     <p class="relatedManager">管&nbsp;理&nbsp;&nbsp;者：
-                        <el-select  v-model="crossborderInfo.relatedManager" size="mini" multiple class="" placeholder="请选择" :disabled='isReadonly'>
-                            <el-option
-                                v-for="item in eventInfo.owner"
-                                :key="item.val"
-                                :label="item.name"
-                                :value="item.val">
-                            </el-option>
+                        <el-select v-model="crossborderInfo.relatedManager" size="mini" multiple placeholder="请选择" :disabled='isReadonly'>
+                            <el-option-group
+                                v-for="group in personInfo"
+                                :key="group.label"
+                                :label="group.label">
+                                <el-option
+                                    v-for="item in group.options"
+                                    :key="item.id"
+                                    :label="item.name"
+                                    :value="item.id">
+                                </el-option>
+                            </el-option-group>
                         </el-select>
                     </p>
                     <p class="description">描&nbsp;&nbsp;&nbsp;&nbsp;述：<br>
@@ -217,13 +232,18 @@
                         (米)
                     </p>
                     <p class="relatedManager">管&nbsp;理&nbsp;&nbsp;者：
-                        <el-select  v-model="offtrackInfo.relatedManager"  size="mini" multiple class="" placeholder="请选择" :disabled='isReadonly'>
-                            <el-option
-                                v-for="item in eventInfo.owner"
-                                :key="item.val"
-                                :label="item.name"
-                                :value="item.val">
-                            </el-option>
+                        <el-select v-model="offtrackInfo.relatedManager" size="mini" multiple placeholder="请选择" :disabled='isReadonly'>
+                            <el-option-group
+                                v-for="group in personInfo"
+                                :key="group.label"
+                                :label="group.label">
+                                <el-option
+                                    v-for="item in group.options"
+                                    :key="item.id"
+                                    :label="item.name"
+                                    :value="item.id">
+                                </el-option>
+                            </el-option-group>
                         </el-select>
                     </p>
                     <p class="description">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：<br>
@@ -273,13 +293,18 @@
                         (人)
                     </p>
                     <p class="relatedManager">管&nbsp;理&nbsp;&nbsp;者：
-                        <el-select  v-model="overlimitInfo.relatedManager" size="mini" multiple class="" placeholder="请选择" :disabled='isReadonly'>
-                            <el-option
-                                v-for="item in eventInfo.owner"
-                                :key="item.val"
-                                :label="item.name"
-                                :value="item.val">
-                            </el-option>
+                        <el-select v-model="overlimitInfo.relatedManager" size="mini" multiple placeholder="请选择" :disabled='isReadonly'>
+                            <el-option-group
+                                v-for="group in personInfo"
+                                :key="group.label"
+                                :label="group.label">
+                                <el-option
+                                    v-for="item in group.options"
+                                    :key="item.id"
+                                    :label="item.name"
+                                    :value="item.id">
+                                </el-option>
+                            </el-option-group>
                         </el-select>
                     </p>
                     <p class="description">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：<br>
@@ -333,13 +358,18 @@
                         (米)
                     </p>
                     <p class="relatedManager">管&nbsp;理&nbsp;&nbsp;者：
-                        <el-select  v-model="waterlevelInfo.relatedManager" size="mini" multiple class="" placeholder="请选择" :disabled='isReadonly'>
-                            <el-option
-                                v-for="item in eventInfo.owner"
-                                :key="item.val"
-                                :label="item.name"
-                                :value="item.val">
-                            </el-option>
+                        <el-select v-model="waterlevelInfo.relatedManager" size="mini" multiple placeholder="请选择" :disabled='isReadonly'>
+                            <el-option-group
+                                v-for="group in personInfo"
+                                :key="group.label"
+                                :label="group.label">
+                                <el-option
+                                    v-for="item in group.options"
+                                    :key="item.id"
+                                    :label="item.name"
+                                    :value="item.id">
+                                </el-option>
+                            </el-option-group>
                         </el-select>
                     </p>
                     <p class="description">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：<br>
@@ -411,13 +441,18 @@
                         <el-input type="text" v-model='conditionInfo.lowerThreshold' class="inputText" :maxlength="15" :disabled='isReadonly'></el-input>
                     </p>
                     <p class="relatedManager">管&nbsp;理&nbsp;&nbsp;者：
-                        <el-select  v-model="conditionInfo.relatedManager" @change="ownerChange" size="mini" multiple class="" placeholder="请选择" :disabled='isReadonly'>
-                            <el-option
-                                v-for="item in eventInfo.owner"
-                                :key="item.val"
-                                :label="item.name"
-                                :value="item.val">
-                            </el-option>
+                        <el-select v-model="conditionInfo.relatedManager" size="mini" multiple placeholder="请选择" :disabled='isReadonly'>
+                            <el-option-group
+                                v-for="group in personInfo"
+                                :key="group.label"
+                                :label="group.label">
+                                <el-option
+                                    v-for="item in group.options"
+                                    :key="item.id"
+                                    :label="item.name"
+                                    :value="item.id">
+                                </el-option>
+                            </el-option-group>
                         </el-select>
                     </p>
                     <p class="description">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：<br>
@@ -456,7 +491,8 @@
                     severityName:'',
                     deviceScope:'',
                     securityScope:'',
-                    relatedManager:[],
+                    relatedManager:'',
+                    relatedManagerName:'',
                     description:'',
                     isEnabled:false
                 },
@@ -535,6 +571,7 @@
                     description:'',
                     isEnabled:false
                 },
+                policeInfo:[],
                 levelInfo:[
                     {
                         id:'1',
@@ -579,41 +616,19 @@
                 ],
                 ownerInfo:[
                     {
-                        value:'0',
-                        label:'aaa'
+                        id:'0',
+                        name:'aaa'
                     },
                     {
-                        value:'1',
-                        label:'bbb'
+                        id:'1',
+                        name:'bbb'
                     },{
-                        value:'2',
-                        label:'ccc'
+                        id:'2',
+                        name:'ccc'
                     }
                 ],
-                isShowLoading: false,
-                eventInfo:{
-                    id:'',
-                    type:'',
-                    envDataSource:'',
-                    occurTime:'',
-                    role:'',
-                    level:'',
-                    owner:[
-                        {
-                            val:'1',
-                            name:'aaa',
-                            tel:'111'
-                        },
-                        {
-                            val:'2',
-                            name:'bbb',
-                            tel:'222'
-                        }
-                    ],
-                    tel:'',
-                    status:'',
-                    description:''
-                }
+                personInfo:[],
+                isShowLoading: false
             }
         },
         methods: {
@@ -654,6 +669,7 @@
                         newInfo = this.alarmcolumnInfo;
                         newInfo.severityName = this.severityId2Name(newInfo.severityId)
 
+                        newInfo.relatedManager = newInfo.relatedManager.join(",")
                         console.log(newInfo,"返回的数据")
                         if (newInfo.id) {  //编辑或查看
                             objArray.push(newInfo)
@@ -683,7 +699,7 @@
                         console.log(this.firefightingInfo);
                         newInfo = this.firefightingInfo;
                         newInfo.severityName = this.severityId2Name(newInfo.severityId)
-
+                        newInfo.relatedManager = newInfo.relatedManager.join(",")
                         if (newInfo.id) {
                             objArray.push(newInfo)
                             this.$emit('saveEditInfo',objArray)
@@ -711,7 +727,7 @@
                         console.log(this.crossborderInfo);
                         newInfo = this.crossborderInfo;
                         newInfo.severityName = this.severityId2Name(newInfo.severityId)
-
+                        newInfo.relatedManager = newInfo.relatedManager.join(",")
                         if (newInfo.id) {
                             objArray.push(newInfo)
                             this.$emit('saveEditInfo',objArray)
@@ -740,7 +756,7 @@
                         console.log(this.offtrackInfo);
                         newInfo = this.offtrackInfo;
                         newInfo.severityName = this.severityId2Name(newInfo.severityId)
-
+                        newInfo.relatedManager = newInfo.relatedManager.join(",")
                         if (newInfo.id) {
                             objArray.push(newInfo)
                             this.$emit('saveEditInfo',objArray)
@@ -769,7 +785,7 @@
                         console.log(this.overlimitInfo);
                         newInfo = this.overlimitInfo;
                         newInfo.severityName = this.severityId2Name(newInfo.severityId)
-
+                        newInfo.relatedManager = newInfo.relatedManager.join(",")
                         if (newInfo.id) {
                             objArray.push(newInfo)
                             this.$emit('saveEditInfo',objArray)
@@ -798,7 +814,7 @@
                         console.log(this.waterlevelInfo);
                         newInfo = this.waterlevelInfo;
                         newInfo.severityName = this.severityId2Name(newInfo.severityId)
-
+                        newInfo.relatedManager = newInfo.relatedManager.join(",")
                         if (newInfo.id) {
                             objArray.push(newInfo)
                             this.$emit('saveEditInfo',objArray)
@@ -827,7 +843,7 @@
                         console.log(this.conditionInfo);
                         newInfo = this.conditionInfo;
                         newInfo.severityName = this.severityId2Name(newInfo.severityId)
-
+                        newInfo.relatedManager = newInfo.relatedManager.join(",")
                         this.envType.forEach((item)=>{
                             if(newInfo.envTypeId == item.id){
                                 newInfo.envTypeName = item.name;
@@ -865,10 +881,63 @@
                 }).catch(err => {
                     console.log(err, '查询环境类型失败')
                 })
+            },
+            async getPersonInfo(){
+                // let personInfo = [];
+                let r1 = await this.getPerson(3);
+                let r2 = await this.getPerson(8);
+
+                console.log(r1,'severity');
+                console.log(r2,'manager');
+                if(r1.length > 0){
+                    this.personInfo.push(this.addPersonn(r1));
+                }
+                if(r2.length > 0){
+                    this.personInfo.push(this.addPersonn(r2));
+                }
+            },
+            addPersonn(array){
+                let temp = array.map((item)=>{
+                    return {
+                        id: item.personBean.id,
+                        name:item.personBean.name,
+                        phone:item.personBean.phone
+                    }
+                })
+                return {
+                    label:array[0].jobName,
+                    options:temp
+                }
+            },
+            async getPerson(type){
+                let personInfo = [];
+                await api.person.getJobPerson(type).then(res => {
+                    console.log(res, '请求成功')
+                    personInfo = res;
+                }).catch(err => {
+                    console.log(err, '请求失败')
+                })
+                return personInfo;
+            },
+            async getPoliceDevice(){
+                await api.police.getAllPolice().then(res => {
+                    console.log(res, '请求成功')
+                    this.policeInfo = res.devices;
+                }).catch(err => {
+                    console.log(err, '请求失败')
+                })
+            },
+            init(){
+                //获取人员数据
+                this.getPersonInfo();
+                //获取报警柱设备数据
+                this.getPoliceDevice();
             }
+
 
         },
         async created () {
+            this.init();
             this.route = this.$route.path
             console.log(this.Info,'  Info')
             if (this.route.includes('alarmcolumn')) {
@@ -895,7 +964,7 @@
                 this.waterlevelInfo = this.Info;
             } else if(this.route.includes('condition')){
                 this.conditionInfo = this.Info;
-                this.getEnvType();
+                // this.getEnvType();
             }
         },
         watch:{

@@ -10,11 +10,13 @@
                         @selectedAll="selectedAll"
                         @searchAnything="searchAnything"
                         :choseId="choseInfoId"
-                        :listsLength = "cameraList.length"
+                        :listsLength = "listLength"
                         :personListFlag="selectFlag"
                         @fixedInfo="fixedInfo"
                         @choseType="choseType"
                         @toggleList="toggleList"
+                        @nextPage="nextPage"
+                        @previousPage="previousPage"
                         @getAllCamera="getAllCamera">
                 </Header>
             </div>
@@ -66,7 +68,7 @@
                         </el-table-column>
                     </el-table>
 
-                    <div class="personInfo" v-for="item in cameraList" v-if="isShowPersonCard && item.status">
+                    <div class="personInfo" v-for="(item,index) in cameraList" v-if="isShowPersonCard && item.status">
                         <div class="checkBox">
                             <el-checkbox v-model="item.checked" @change="checked(item.id)" class="checkBtn"></el-checkbox>
                         </div>
@@ -123,7 +125,10 @@
                 isDisabled:true,
                 filterList: [],
                 title:'',
-                isShowLoading: false
+                isShowLoading: false,
+                currentNum: 50,
+                listLength: '',
+                pageNum: 1
             }
         },
         methods:{
@@ -385,14 +390,31 @@
                 console.log(this.choseInfoId)
                 this.selectFlag=true
             },
+            previousPage (page) {
+                console.log(page, '这是传过来的pageNum')
+                this.pageNum = page
+                this.getAllCamera ()
+            },
+            nextPage (page) {
+                console.log(page, '这个是下一页的pageNUM')
+                this.pageNum = page
+                this.getAllCamera ()
+            },
             async getAllCamera () {
                 this.choseInfoId=[];
                 console.log("aaaaaaaaaaaaaaaaa")
                 this.isShowLoading = true
                 await api.camera.getAllCamera().then((res) => {
                     console.log(res, '这是请求回来的所有数据')
+                    this.listLength = res.devices.length
                     this.isShowLoading = false
                     this.cameraList = res.devices
+                    this.cameraList = this.cameraList.filter((item,index) => {
+                        if (index < (this.pageNum * 35 ) && index > ((this.pageNum -1) * 35 ) - 1 ) {
+                            return item
+                        }
+                    })
+
                     for (let i=0; i < this.cameraList.length; i++) {
                         this.cameraList[i].checked = false
                         this.cameraList[i].status = true

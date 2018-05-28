@@ -12,8 +12,10 @@
                         @fixedInfo="fixedInfo"
                         @choseType="choseType"
                         @toggleList="toggleList"
+                        @nextPage="nextPage"
+                        @previousPage="previousPage"
                         @getAllBroadcast="getAllBroadcast"
-                        :listsLength = "broadList.length"
+                        :listsLength = "listLength"
                         :personListFlag="selectFlag"
                         :choseId="choseInfoId">
                 </Header>
@@ -71,7 +73,7 @@
                         </el-table-column>
                     </el-table>
 
-                    <div class="personInfo" v-for="item in broadList" v-if="isShowBroadCard && item.status">
+                    <div class="personInfo" v-for="(item,index) in broadList" v-if="isShowBroadCard && item.status">
                         <div class="checkBox">
                             <!--<input type="checkbox" :checked="item.checked" class="checkBtn" @change="checked(item.id)">-->
                             <el-checkbox v-model="item.checked" @change="checked(item.id)" class="checkBtn"></el-checkbox>
@@ -129,9 +131,11 @@
                 isDisabled:true,
                 filterList: [],
                 choseId:[],
-
                 title:'',
-                isShowLoading:false
+                isShowLoading:false,
+                currentNum: 50,
+                listLength: '',
+                pageNum: 1
             }
         },
         methods:{
@@ -408,6 +412,16 @@
                 this.selectFlag=true
                 console.log(this.choseInfoId)
             },
+            previousPage (page) {
+                console.log(page, '这是传过来的pageNum')
+                this.pageNum = page
+                this.getAllBroadcast()
+            },
+            nextPage (page) {
+                console.log(page, '这个是下一页的pageNUM')
+                this.pageNum = page
+                this.getAllBroadcast()
+            },
             async getAllBroadcast(){
                 this.choseInfoId=[];
                 this.isShowLoading=true
@@ -415,6 +429,13 @@
                     console.log(res,'这是请求回来的数据')
                     this.isShowLoading=false
                     this.broadList=res.devices
+                    this.listLength = res.devices.length
+
+                    this.broadList = this.broadList.filter((item,index) => {
+                        if (index < (this.pageNum * 35 ) && index > ((this.pageNum -1) * 35 ) - 1 ) {
+                            return item
+                        }
+                    })
                     for (let i=0;i<this.broadList.length;i++) {
                         this.broadList[i].checked = false
                         this.broadList[i].status = true
