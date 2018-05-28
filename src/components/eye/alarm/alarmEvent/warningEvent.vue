@@ -28,31 +28,31 @@
                             </template>
                         </el-table-column>
                         <el-table-column
-                            prop="id"
+                            prop="serialNum"
                             label="编号">
                         </el-table-column>
                         <el-table-column
                             sortable
-                            prop="type"
+                            prop="envTypeName"
                             label="指标类型">
                         </el-table-column>
                         <el-table-column
-                            prop="source"
+                            prop="sourceDeviceName"
                             label="来源">
                         </el-table-column>
                         <el-table-column
                             sortable
-                            prop="status.name"
+                            prop="statusName"
                             label="状态">
                         </el-table-column>
                         <el-table-column
-                            prop="occuredTime"
+                            prop="occurenceTime"
                             label="发生时间"
                             width="180">
                         </el-table-column>
                         <el-table-column
                             sortable
-                            prop="level"
+                            prop="severityName"
                             label="严重等级">
                         </el-table-column>
                         <el-table-column
@@ -66,8 +66,8 @@
                         </el-table-column>
                         <el-table-column label="操作" width="200">
                             <template slot-scope="scope">
-                                <span @click="editInfo(scope.row,false)" class="edit">编辑</span> |
-                                <span @click="showDetail(scope.row,true)">查看</span> |
+                                <span @click="editInfo(scope.row,false,'编辑告警事件')" class="edit">编辑</span> |
+                                <span @click="showDetail(scope.row,true,'查看告警事件')">查看</span> |
                                 <span @click="deletInfo(scope.row.id)">删除</span>
                             </template>
                         </el-table-column>
@@ -79,9 +79,10 @@
                               :isReadonly="isReadonly"
                               @closeDialog ="closeDialog"
                               :title = "title"
-                              @addAlarmEvent="addAlarmEvent"
+                              @saveEditInfo="saveEditInfo"
+                              @saveInfo="saveInfo"
                               :isBatchEdit="isBatchEdit"
-                              :choseInfoId = 'choseInfoId'>
+                              :choseInfos = 'choseInfos'>
                 </AlarmDetail>
             </div>
         </div>
@@ -90,7 +91,7 @@
 
 <script>
     import ScrollContainer from '@/components/ScrollContainer'
-    // import api from '@/api'
+    import api from '@/api'
     import Header from './alarmEventHeader'
     import AlarmDetail from './alarmEventDialog'
     // import moment from 'moment'
@@ -99,37 +100,42 @@
             return{
                 warningEventList: [
                     {
-                        id:'sos001',
-                        type:'水位监测传感器1',
-                        source:'报警柱001',
-                        status: {
-                            id:'1',
-                            name :'新告警'
-                        },
-                        occuredTime:'2018-05-11 12:20:39',
-                        level:'高',
+                        serialNum:'sos001',
+                        alarmRuleId:'2',
+                        alarmRuleName:'消防',
+                        envTypeId:'1',
+                        envTypeName:'温度',
+                        sourceDeviceId:'1',
+                        sourceDeviceName:'报警柱001',
+                        statusId:'1',
+                        statusName :'新告警',
+                        occurenceTime:'2018-05-11 12:20:39',
+                        severityId:'1',
+                        severityName:'高',
                         owner:{
                             id:"1",
-                            name:'徐一项',
+                            name:'aaa',
                             tel:'18672019008'
                         },
 
 
                     },
                     {
-                        id:'sos002',
-                        type:'水位监测传感器1',
-                        source:'报警柱002',
-                        status: {
-                            id:'2',
-                            name:'处理中'
-
-                        },
-                        occuredTime:'2017-01-09 19:33:01',
-                        level:'高',
+                        serialNum:'sos002',
+                        alarmRuleId:'1',
+                        alarmRuleName:'报警柱',
+                        envTypeId:'2',
+                        envTypeName:'PM2.5',
+                        sourceDeviceId:'2',
+                        sourceDeviceName:'报警柱002',
+                        statusId:'2',
+                        statusName :'处理中',
+                        occurenceTime:'2017-01-09 19:33:01',
+                        severityId:'2',
+                        severityName:'中',
                         owner:{
                             id:"2",
-                            name:'张三',
+                            name:'bbb',
                             tel:'13000100190'
                         },
 
@@ -137,37 +143,39 @@
                     ],
                 visible: false,
                 warningEventInfo: {},
-                choseInfoId: [],
+                choseInfos: [],
+                choseInfoId:[],
                 isReadonly: true,
                 title:'',
                 selection:[],
                 isShowloading: false,
-                isBatchEdit:false
+                isBatchEdit:false,
+                isfixedHeight:false
 
             }
         },
         methods: {
             batchDownload(){
-                console.log(this.choseInfoId)
-                if (this.choseInfoId.length > 0) {
+                console.log(this.choseInfos)
+                if (this.choseInfos.length > 0) {
                         //导出接口
-                        // api.schedulebroadcast.deleteBroadcast(this.choseInfoId).then(res => {
+                        // api.schedulebroadcast.deleteBroadcast(this.choseInfos).then(res => {
                         //     console.log(res, '删除成功')
                         //     this.$message.success('删除成功')
-                        //     for (let i = 0; i < this.choseInfoId.length; i++) {
+                        //     for (let i = 0; i < this.choseInfos.length; i++) {
                         //         this.broadCastList = this.broadCastList.filter((item, index) => {
-                        //             if (item.id === this.choseInfoId[i]){
+                        //             if (item.id === this.choseInfos[i]){
                         //                 this.broadCastList[index].checked = false
                         //                 this.broadCastList[index].status = false
                         //             }
                         //             return item.status !== false
                         //         })
                         //     }
-                        //     this.choseInfoId = []
+                        //     this.choseInfos = []
                         // }).catch(err => {
                         //     this.$message.error('删除失败，请稍后重试')
                         //     console.log(err)
-                        //     this.choseInfoId = []
+                        //     this.choseInfos = []
                         // })
 
                 } else {
@@ -192,21 +200,31 @@
                 this.visible = false
             },
             handleSelectionChange(selection) {
-                this.choseInfoId = selection.map(item => {
+                this.choseInfos = selection.map(item => {
                     return item.id
                 })
             },
-            showDetail (info,state) {
+            showDetail (info,state,title) {
                 this.warningEventInfo = info;
                 this.visible = true;
                 this.isBatchEdit = false;
                 this.isReadonly = state;
+                this.isfixedHeight = true;
+                if(title){
+                    this.title = title;
+                }
             },
             deletInfo (id) {
                 console.log(id)
-                console.log(this.choseInfoId)
+                console.log(this.choseInfos)
                 if (id) {
                     this.choseInfoId = [id]
+                }else{
+                    if(this.choseInfoId.length == 0){
+                        this.$message.error('请选择要删除的数据')
+                        return
+                    }
+                    this.choseInfoId = this.choseInfos.map(item=>item.id)
                 }
                 if (this.choseInfoId.length > 0) {
                     this.$confirm('此操作将永久删除该数据, 是否继续?', '提示', {
@@ -214,24 +232,26 @@
                         cancelButtonText: '取消',
                         type: 'warning'
                     }).then(() => {
-                        // api.schedulebroadcast.deleteBroadcast(this.choseInfoId).then(res => {
-                        //     console.log(res, '删除成功')
-                        //     this.$message.success('删除成功')
-                        //     for (let i = 0; i < this.choseInfoId.length; i++) {
-                        //         this.broadCastList = this.broadCastList.filter((item, index) => {
-                        //             if (item.id === this.choseInfoId[i]){
-                        //                 this.broadCastList[index].checked = false
-                        //                 this.broadCastList[index].status = false
-                        //             }
-                        //             return item.status !== false
-                        //         })
-                        //     }
-                        //     this.choseInfoId = []
-                        // }).catch(err => {
-                        //     this.$message.error('删除失败，请稍后重试')
-                        //     console.log(err)
-                        //     this.choseInfoId = []
-                        // })
+                        api.alarm.deleteAlarmRule(this.choseInfoId).then(res => {
+                            console.log(res, '删除成功')
+                            this.$message.success('删除成功')
+                            for (let i = 0; i < this.choseInfos.length; i++) {
+                                this.alarmcolumnList = this.alarmcolumnList.filter((item, index) => {
+                                    if (item.id === this.choseInfos[i].id){
+                                        this.alarmcolumnList[index].checked = false
+                                        this.alarmcolumnList[index].status = false
+                                    }
+                                    return item.status !== false
+                                })
+                            }
+                            this.choseInfos = []
+                            this.choseInfoId = []
+                        }).catch(err => {
+                            this.$message.error('删除失败，请稍后重试')
+                            console.log(err)
+                            this.choseInfos = []
+                            this.choseInfoId = []
+                        })
                     }).catch(() => {
                         this.$message.info('取消删除')
                     })
@@ -247,47 +267,65 @@
                     }
                     return item
                 })
-                if (this.choseInfoId.includes(id)) {
-                    this.choseInfoId = this.choseInfoId.filter((item) =>{
+                if (this.choseInfos.includes(id)) {
+                    this.choseInfos = this.choseInfos.filter((item) =>{
                         return item !== id
                     })
                 } else {
-                    this.choseInfoId.push(id)
+                    this.choseInfos.push(id)
                 }
             },
             selectedAll (state) {
                 this.warningEventList = this.warningEventList.filter((item) => {
                     if (state === true) {
                         item.checked = true
-                        this.choseInfoId.push(item.id)
+                        this.choseInfos.push(item.id)
                         return item.checked === true
                     } else {
                         item.checked = false
-                        this.choseInfoId = []
+                        this.choseInfos = []
                         return item.checked === false
                     }
                 })
             },
-            editInfo (info,state) {
+            editInfo (info,state,title) {
                 console.log(info);
-                this.showDetail(info,state);
+                this.showDetail(info,state,title);
             },
             batchEdit(){
-                if (this.choseInfoId.length > 0) {
+                if (this.choseInfos.length > 0) {
                     console.log('batchEdit')
                     this.isBatchEdit = true;
-                    // this.warningEventInfo = info;
                     this.visible = true;
                 } else {
                     this.$message.error('请选择要编辑的数据')
                     return
                 }
             },
-            addAlarmEvent(){
+            saveEditInfo(){ //编辑保存
 
-            }
+            },
+            saveInfo(){  //新增保存
+
+            },
+            async getAllAlarmEvent () {
+                this.isShowLoading = true
+                await   api.alarm.getAllAlarmEvent().then(res => {
+                                console.log(res, '请求成功')
+                                this.isShowLoading = false
+                                this.warningEventList = res
+                                this.warningEventList.forEach(item => {
+                                    item.checked = false;
+
+                                })
+                        }).catch(err => {
+                            console.log(err, '请求失败')
+                            this.isShowLoading = false
+                        })
+            },
         },
         created () {
+            this.getAllAlarmEvent();
         },
         components: {
             ScrollContainer,

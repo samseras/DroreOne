@@ -58,9 +58,15 @@
             this.$store.commit('SHOW_SEARCH', this.isShowControler)
         },
         goRouteModule (index) {
-            this.isShowControler = true
+            if(this.isShowControler){
+                if(this.activeIndex ==index){
+                    this.isShowControler = false
+                }
+            }else {
+                this.isShowControler = true
+            }
             this.$store.commit('SHOW_SEARCH', this.isShowControler)
-          this.activeIndex = index
+            this.activeIndex = index
         }
     },
       watch: {

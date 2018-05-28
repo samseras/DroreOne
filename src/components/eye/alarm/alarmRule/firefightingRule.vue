@@ -8,7 +8,8 @@
                 <Header @deletInfo = "deletInfo"
                         @selectedAll = 'selectedAll'
                         @batchEdit = 'batchEdit'
-                        @addNewInfo="addNewInfo">
+                        @addNewInfo="addNewInfo"
+                        @batchEnabled="batchEnabled">
                 </Header>
             </div>
             <div class="personList" v-loading="isShowloading">
@@ -19,7 +20,7 @@
                         tooltip-effect="dark"
                         style="width: 100%"
                         @selection-change="handleSelectionChange"
-                        :default-sort = "{prop: 'manager', order: 'descending'}">
+                        :default-sort = "{prop: 'relatedManager', order: 'descending'}">
                         <el-table-column
                             width="50">
                             <template slot-scope="scope">
@@ -35,27 +36,29 @@
                             <!--label="关联报警柱">-->
                         <!--</el-table-column>-->
                         <el-table-column
-                            prop="deviceRange"
+                            prop="deviceScope"
                             label="设备调度范围(m)">
                         </el-table-column>
                         <el-table-column
-                            prop="safeRange"
+                            prop="securityScope"
                             label="安保调度范围(m)">
                         </el-table-column>
                         <el-table-column
                             sortable
-                            prop="level"
+                            prop="severityName"
                             label="严重等级">
                         </el-table-column>
                         <el-table-column
                             sortable
-                            prop="manager"
+                            prop="relatedrelatedManager"
                             label="管理者">
                         </el-table-column>
                         <el-table-column label="操作" width="200">
                             <template slot-scope="scope">
                                 <span @click="editInfo(scope.row,false,'编辑消防告警规则')" class="edit">编辑</span> |
                                 <span @click="showDetail(scope.row,true,'查看消防告警规则')">查看</span> |
+                                <span v-if="scope.row.isEnabled" @click="enabledClick(scope.row,false)">停用</span>
+                                <span v-else @click="enabledClick(scope.row,true)">启用</span>
                                 <span @click="deletInfo(scope.row.id)">删除</span>
                             </template>
                         </el-table-column>
@@ -68,8 +71,9 @@
                              @closeDialog ="closeDialog"
                              :title = "title"
                              @saveInfo="saveInfo"
+                             @saveEditInfo="saveEditInfo"
                              :isBatchEdit="isBatchEdit"
-                             :choseInfoId = 'choseInfoId'>
+                             :choseInfos = 'choseInfos'>
                 </AlarmDetail>
             </div>
         </div>
@@ -78,7 +82,7 @@
 
 <script>
     import ScrollContainer from '@/components/ScrollContainer'
-    // import api from '@/api'
+    import api from '@/api'
     import Header from './alarmRuleHeader'
     import AlarmDetail from './alarmRuleDialog'
     // import moment from 'moment'
@@ -87,23 +91,32 @@
             return{
                 firefightingList: [
                     {
+                        id:"1",
                         name:'消防告警规则1',
-                        deviceRange:'100米',
-                        safeRange:'200米',
-                        manager:'程杰'
+                        deviceScope:'100米',
+                        securityScope:'200米',
+                        relatedManager:'程杰',
+                        severityId:'2',
+                        severityName:'中',
+                        isEnabled:false
 
                     },
                     {
+                        id:'2',
                         name:'消防告警规则2',
-                        deviceRange:'400米',
-                        safeRange:'700米',
-                        manager:'新电视'
+                        deviceScope:'400米',
+                        securityScope:'700米',
+                        relatedManager:'新电视',
+                        severityId:'2',
+                        severityName:'中',
+                        isEnabled:false
 
                     },
                 ],
                 firefightingInfo:{},
                 visible: false,
-                choseInfoId: [],
+                choseInfos: [],
+                choseInfoId:[],
                 isReadonly: true,
                 title:'',
                 selection:[],
@@ -116,11 +129,21 @@
             addNewInfo () {
                 this.showDetail({},false,'添加消防告警规则',)
             },
+            enabledClick(obj,flag){
+                console.log(obj)
+                console.log(flag)
+                obj.isEnabled = flag;
+                if(flag){
+                    //启用
+                }else{
+                    //停用
+                }
+            },
             closeDialog () {
                 this.visible = false
             },
             handleSelectionChange(selection) {
-                this.choseInfoId = selection.map(item => {
+                this.choseInfos = selection.map(item => {
                     return item.id
                 })
             },
@@ -135,9 +158,15 @@
             },
             deletInfo (id) {
                 console.log(id)
-                console.log(this.choseInfoId)
+                console.log(this.choseInfos)
                 if (id) {
                     this.choseInfoId = [id]
+                }else{
+                    if(this.choseInfoId.length == 0){
+                        this.$message.error('请选择要删除的数据')
+                        return
+                    }
+                    this.choseInfoId = this.choseInfos.map(item=>item.id)
                 }
                 if (this.choseInfoId.length > 0) {
                     this.$confirm('此操作将永久删除该数据, 是否继续?', '提示', {
@@ -145,24 +174,26 @@
                         cancelButtonText: '取消',
                         type: 'warning'
                     }).then(() => {
-                        // api.schedulebroadcast.deleteBroadcast(this.choseInfoId).then(res => {
-                        //     console.log(res, '删除成功')
-                        //     this.$message.success('删除成功')
-                        //     for (let i = 0; i < this.choseInfoId.length; i++) {
-                        //         this.broadCastList = this.broadCastList.filter((item, index) => {
-                        //             if (item.id === this.choseInfoId[i]){
-                        //                 this.broadCastList[index].checked = false
-                        //                 this.broadCastList[index].status = false
-                        //             }
-                        //             return item.status !== false
-                        //         })
-                        //     }
-                        //     this.choseInfoId = []
-                        // }).catch(err => {
-                        //     this.$message.error('删除失败，请稍后重试')
-                        //     console.log(err)
-                        //     this.choseInfoId = []
-                        // })
+                        api.alarm.deleteAlarmRule(this.choseInfoId).then(res => {
+                            console.log(res, '删除成功')
+                            this.$message.success('删除成功')
+                            for (let i = 0; i < this.choseInfos.length; i++) {
+                                this.firefightingList = this.firefightingList.filter((item, index) => {
+                                    if (item.id === this.choseInfos[i].id){
+                                        this.firefightingList[index].checked = false
+                                        this.firefightingList[index].status = false
+                                    }
+                                    return item.status !== false
+                                })
+                            }
+                            this.choseInfos = []
+                            this.choseInfoId = []
+                        }).catch(err => {
+                            this.$message.error('删除失败，请稍后重试')
+                            console.log(err)
+                            this.choseInfos = []
+                            this.choseInfoId = []
+                        })
                     }).catch(() => {
                         this.$message.info('取消删除')
                     })
@@ -171,30 +202,31 @@
                     return
                 }
             },
-            checked (id) {
-                this.firefightingList = this.firefightingList.filter(item => {
-                    if (item.id === id) {
-                        item.checked = item.checked
+            checked (row) {
+                console.log(row)
+                this.firefightingList.forEach(item => {
+                    if (item.id === row.id) {
+                        item.checked = row.checked
                     }
-                    return item
                 })
-                if (this.choseInfoId.includes(id)) {
-                    this.choseInfoId = this.choseInfoId.filter((item) =>{
-                        return item !== id
+                if (this.choseInfos.includes(row)) {
+                    this.choseInfos = this.choseInfos.filter((item) =>{
+                        return item !== row
                     })
                 } else {
-                    this.choseInfoId.push(id)
+                    this.choseInfos.push(row)
                 }
+
             },
             selectedAll (state) {
                 this.firefightingList = this.firefightingList.filter((item) => {
                     if (state === true) {
                         item.checked = true
-                        this.choseInfoId.push(item.id)
+                        this.choseInfos.push(item.id)
                         return item.checked === true
                     } else {
                         item.checked = false
-                        this.choseInfoId = []
+                        this.choseInfos = []
                         return item.checked === false
                     }
                 })
@@ -204,10 +236,9 @@
                 this.showDetail(info,state,title);
             },
             batchEdit(){
-                if (this.choseInfoId.length > 0) {
+                if (this.choseInfos.length > 0) {
                     console.log('batchEdit')
                     this.isBatchEdit = true;
-                    // this.warningEventInfo = info;
                     this.visible = true;
                     this.title="编辑消防告警规则"
                 } else {
@@ -215,11 +246,77 @@
                     return
                 }
             },
-            saveInfo(){
+            batchEnabled(flag){
+                if(flag){
+                    //批量启用
+                    if (this.choseInfos.length > 0) {
 
+
+                    } else {
+                        this.$message.error('请选择要启用的数据')
+                        return
+                    }
+                }else{
+                    //批量停用
+                    if (this.choseInfos.length > 0) {
+
+
+                    } else {
+                        this.$message.error('请选择要停用的数据')
+                        return
+                    }
+                }
+            },
+            saveInfo(){
+                //TODO 1 获取并设置info.alarmTypeId
+
+                // TODO 2 保存请求
+                api.alarm.createAlarmRule(info).then(res => {
+                    console.log(res, '保存成功')
+                    this.$message.success('保存成功')
+                    this.firefightingList = this.firefightingList.filter((item, index) => {
+                        if (item.id === this.choseInfos[i]){
+                            this.firefightingList[index].checked = false
+                            this.firefightingList[index].status = false
+                        }
+                        return item.status !== false
+                    })
+                    this.choseInfos = []
+                }).catch(err => {
+                    this.$message.error('保存失败，请稍后重试')
+                    console.log(err)
+                    this.choseInfos = []
+                })
+            },
+            saveEditInfo(){
+
+            },
+            async getAllAlarmRule(){
+                this.isShowLoading = true
+                let id = '';
+                await api.alarm.getAllAlarmRule(id).then(res => {
+                    console.log(res, '请求成功')
+                    this.isShowLoading = false
+                    this.firefightingList = res
+                    this.firefightingList.forEach(item => {
+                        item.checked = false;
+                    })
+                }).catch(err => {
+                    console.log(err, '请求失败')
+                    this.isShowLoading = false
+                })
+            },
+            async getAlarmType(){
+                await api.alarm.getAlarmType().then(res => {
+                    console.log(res, '请求成功')
+
+                }).catch(err => {
+                    console.log(err, '请求失败')
+                })
             }
         },
         created () {
+            this.getAllAlarmRule()
         },
         components: {
             ScrollContainer,

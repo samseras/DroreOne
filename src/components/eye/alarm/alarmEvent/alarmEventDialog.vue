@@ -12,59 +12,60 @@
                 <!--批量编辑-->
                 <div class="alarmContent" v-if="isBatchEdit">
                     <p class="level">严重等级：
-                    <el-select  v-model="eventInfo.level" size="mini" class="" placeholder="请选择">
+                    <el-select  v-model="batchEdit.level" size="mini" class="" placeholder="请选择">
                         <el-option
                             v-for="item in levelInfo"
-                            :key="item.value"
-                            :label="item.label"
-                            :value="item.value">
+                            :key="item.id"
+                            :label="item.name"
+                            :value="item.id">
                         </el-option>
                     </el-select>
                 </p>
                     <p class="status">状&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 态：
-                        <el-select  v-model="eventInfo.status" size="mini" class="" placeholder="请选择">
+                        <el-select  v-model="batchEdit.status" size="mini" class="" placeholder="请选择">
                             <el-option
                                 v-for="item in statusInfo"
-                                :key="item.value"
-                                :label="item.label"
-                                :value="item.value">
+                                :key="item.id"
+                                :label="item.name"
+                                :value="item.id">
                             </el-option>
                         </el-select>
                     </p>
                 </div>
 
                 <div v-else  class="alarmContent">
-                    <p class="sex">编&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 号：
-                        <el-input type="text" v-model='eventInfo.id' class="inputText" :maxlength="15" :readonly="true"></el-input>
+                    <p class="serialNum">编&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 号：
+                        <el-input type="text" v-model='eventInfo.serialNum' class="inputText" :maxlength="15" :readonly="true"></el-input>
                     </p>
                     <p class="type">指标类型：
-                        <el-input type="text" v-model='eventInfo.type' class="inputText" :maxlength="15" :readonly='true'></el-input>
+                        <el-input type="text" v-model='eventInfo.envTypeName' class="inputText" :maxlength="15" :readonly='true'></el-input>
                     </p>
-                    <p class="source">来&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 源：
-                        <el-input type="text"  v-model='eventInfo.source' class="inputText" :maxlength="15" :readonly='true'></el-input>
+                    <p class="sourceDevice">来&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 源：
+                        <el-input type="text"  v-model='eventInfo.sourceDeviceName' class="inputText" :maxlength="15" :readonly='true'></el-input>
                     </p>
-                    <p class="time">发生时间：
-                        <el-input type="text"  v-model='eventInfo.occuredTime' class="inputText" :maxlength="15" :readonly='true'></el-input>
+                    <p class="occurenceTime">发生时间：
+                        <el-input type="text"  v-model='eventInfo.occurenceTime' class="inputText" :maxlength="15" :readonly='true'></el-input>
                     </p>
-                    <p class="role">关联规则：
-                        <el-input type="text" v-model='eventInfo.role' class="inputText" :maxlength="15" :readonly='true'></el-input>
+                    <p class="alarmRule">关联规则：
+                        <el-input type="text" v-model='eventInfo.alarmRuleName' class="inputText" :maxlength="15" :readonly='true'></el-input>
                     </p>
                     <p class="level">严重等级：
-                        <el-select  v-model="eventInfo.level" size="mini" class="" placeholder="请选择" :disabled="isReadonly">
+                        <el-select  v-model="eventInfo.severityId" size="mini" class="" placeholder="请选择" :disabled="isReadonly">
                             <el-option
                                 v-for="item in levelInfo"
-                                :key="item.value"
-                                :label="item.label"
-                                :value="item.value">
+                                :key="item.id"
+                                :label="item.name"
+                                :value="item.id">
                             </el-option>
                         </el-select>
                     </p>
                     <p class="owner">负责人员：
-                        <el-select  v-model="eventInfo.owner.name" @change="ownerChange" size="mini" class="" placeholder="请选择" :disabled="isReadonly">
+                        <el-select  v-model="eventInfo.owner.id" @change="ownerChange" size="mini" class="" placeholder="请选择" :disabled="isReadonly">
                             <el-option
-                                v-for="item in eventInfo.owner"
-                                :key="item.val"
-                                :label="item.name">{{item.name}}
+                                v-for="item in ownerInfo"
+                                :key="item.id"
+                                :label="item.name"
+                                :value="item.id">
                             </el-option>
                         </el-select>
                     </p>
@@ -72,12 +73,12 @@
                         <el-input type="text" v-model="eventInfo.tel" class="inputText" :maxlength="15" :disabled="isReadonly"></el-input>
                     </p>
                     <p class="status">状&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 态:
-                        <el-select  v-model="eventInfo.status" size="mini" class="" placeholder="请选择" :disabled="isReadonly">
+                        <el-select  v-model="eventInfo.statusId" size="mini" class="" placeholder="请选择" :disabled="isReadonly">
                             <el-option
                                 v-for="item in statusInfo"
-                                :key="item.value"
-                                :label="item.label"
-                                :value="item.value">
+                                :key="item.id"
+                                :label="item.name"
+                                :value="item.id">
                             </el-option>
                         </el-select>
                     </p>
@@ -126,46 +127,80 @@
      import VueAplayer from 'vue-aplayer'
      import api from '@/api'
     export default {
-        props: ['visible','isReadonly','isBatchEdit','choseInfoId','Info'],
+        props: ['visible','isReadonly','isBatchEdit','choseInfoId','Info','isfixedHeight'],
         data () {
             return{
+                eventInfo:{
+                    serialNum:'',
+                    envTypeId:'',
+                    envTypeName:'',
+                    sourceDeviceId:'',
+                    sourceDeviceName:'',
+                    occurenceTime:'',
+                    alarmRuleId:'',
+                    alarmRuleName:'',
+                    severityId:'',
+                    severityName:'',
+                    statusId:'',
+                    statusName :'',
+                    owner:[
+                        {
+                            id:'',
+                            name:''
+                        },
+                        {
+                            id:'',
+                            name:''
+                        }
+                    ],
+                    tel:'',
+                    description:''
+                },
+                batchEdit:{
+                    level:'',
+                    status:''
+                },
                 levelInfo:[
                     {
-                        value:'1',
-                        label:'高'
+                        id:'1',
+                        name:'高'
                     },
                     {
-                        value:'2',
-                        label:'中'
+                        id:'2',
+                        name:'中'
                     },{
-                        value:'3',
-                        label:'低'
+                        id:'3',
+                        name:'低'
                     }
                 ],
                 statusInfo:[
                     {
-                        value:'1',
-                        label:'新告警'
+                        id:'1',
+                        name:'新告警'
                     },
                     {
-                        value:'2',
-                        label:'处理中'
+                        id:'2',
+                        name:'处理中'
                     },{
-                        value:'3',
-                        label:'已解决'
+                        id:'3',
+                        name:'已解决'
                     }
                 ],
                 ownerInfo:[
                     {
-                        value:'0',
-                        label:'aaa'
+                        id:'1',
+                        name:'aaa',
+                        tel:'111'
+
                     },
                     {
-                        value:'1',
-                        label:'bbb'
+                        id:'2',
+                        name:'bbb',
+                        tel:'222'
                     },{
-                        value:'2',
-                        label:'ccc'
+                        id:'3',
+                        name:'ccc',
+                        tel:'333'
                     }
                 ],
                 isShowLoading: false,
@@ -208,46 +243,19 @@
                         title:'12123dfgdfgdfgdfg.jpg'
                     }
                 ],
-                selectFileList:[],
-                eventInfo:{
-                    id:'',
-                    type:'',
-                    source:'',
-                    occuredTime:'',
-                    role:'',
-                    level:'',
-                    owner:[
-                        {
-                            val:'1',
-                            name:'aaa',
-                            tel:'111'
-                        },
-                        {
-                            val:'2',
-                            name:'bbb',
-                            tel:'222'
-                        }
-                    ],
-                    tel:'',
-                    status:'',
-                    description:''
-                }
+                selectFileList:[]
+
             }
         },
         methods: {
             ownerChange(val){
                 console.log(val);
                 console.log(this.eventInfo);
-                this.eventInfo.owner.forEach((item,index)=>{
+                this.ownerInfo.forEach((item,index)=>{
                     if(item.id == val){
                         this.eventInfo.tel =  item.tel;
                     }
                 });
-                let vm = this;
-                // switch(val){
-                //     case 0:
-                //         vm.
-                // }
             },
             downloadFile(val){
                 console.log(val)
@@ -256,15 +264,51 @@
                 this.$emit('closeDialog')
             },
             saveDialog(){
-                //批量编辑
-                if(this.isBatchEdit){
+                let objArray = [];
+                let newInfo = {};
+                if(this.isBatchEdit){    //批量编辑
                     console.log(this.choseInfoId);
-                    console.log(this.level);
-                    console.log(this.status);
-                    this.$emit('addAlarmEvent');
 
+                    objArray = this.choseInfos;
+
+                    objArray.forEach((item)=>{
+                        if(!this.batchEdit.level){
+                            item.severityId = this.batchEdit.level;
+                            item.severityName = this.severityId2Name(item.severityId);
+                        }
+                        if(!this.batchEdit.status){
+                            item.statusId = this.batchEdit.status;
+
+                            this.statusInfo.forEach((item)=>{
+                                if(item.statusId == item.id){
+                                    item.statusName = item.name;
+                                }
+                            })
+                        }
+                    })
+                    console.log(objArray)
+                    this.$emit('saveEditInfo',objArray);
                 }else{  //单个编辑或查看
-                    this.$emit('addAlarmEvent');
+
+                    newInfo = this.eventInfo;
+                    this.statusInfo.forEach((item)=>{
+                        if(newInfo.statusId == item.id){
+                            newInfo.statusName = item.name;
+                        }
+                    })
+
+                    this.levelInfo.forEach((item)=>{
+                        if(newInfo.severityId == item.id){
+                            newInfo.severityName = item.name;
+                        }
+                    })
+
+                    if (newInfo.id) {  //编辑或查看
+                        objArray.push(newInfo)
+                        this.$emit('saveEditInfo',objArray)
+                    } else { //新增
+                        this.$emit('saveInfo',newInfo)
+                    }
                 }
 
             },
@@ -374,7 +418,24 @@
                     this.isShowLoading = false
                     console.log(err, '请求失败')
                 })
+            },
+            async getSeverityType(){
+                await api.alarm.getSeverityType().then(res => {
+                    console.log(res, '查询严重等级成功')
+                    this.levelInfo = res
+                }).catch(err => {
+                    console.log(err, '查询严重等级失败')
+                })
+            },
+            async getAlarmEventStatus(){
+                await api.alarm.getAlarmEventStatus().then(res => {
+                    console.log(res, '查询告警事情状态成功')
+                    this.statusInfo = res
+                }).catch(err => {
+                    console.log(err, '查询告警事情状态失败')
+                })
             }
+
 
 
         },
@@ -383,8 +444,7 @@
         },
         async created () {
             console.log(this.Info);
-            console.log(this.eventInfo);
-            // this.eventInfo = this.Info;
+            this.eventInfo = this.Info;
 
         },
         components : {
@@ -547,16 +607,16 @@
             width: 100%;
             height: 100%;
             .alarmContent {
-                width: 100%;
-                height: 100%;
-                position: relative;
-                .uploadContent{
-                    text-align: right;
-                    .multiFile{
-                        display: none;
-                    }
-                }
-                .attachment{
+                 width: 100%;
+                 height: 100%;
+                 position: relative;
+                 .uploadContent{
+                     text-align: right;
+                     .multiFile{
+                         display: none;
+                     }
+                 }
+                 .attachment{
                      .showFilelist{
                          display: flex;
                          flex-wrap: wrap;
@@ -564,89 +624,89 @@
                          div {
                              display:inline-block;
                          }
-                    }
-                    .downloadThis{
-                        cursor:pointer;
-                    }
-                    .downloadThis:hover{
-                        color:blue;
-                        text-decoration: underline;
-                    }
-                }
-                .processLog{
-                    /*text-align: cente;*/
-                    p{
-                        border-bottom: 0;
-                    }
-                    .processDiv{
+                     }
+                     .downloadThis{
+                         cursor:pointer;
+                     }
+                     .downloadThis:hover{
+                         color:blue;
+                         text-decoration: underline;
+                     }
+                 }
+                 .processLog{
+                     /*text-align: cente;*/
+                     p{
+                         border-bottom: 0;
+                     }
+                     .processDiv{
 
-                    }
-                    .processTime{
-                        width:30%;
-                        float:left;
-                    }
-                    .processContent{
-                        overflow: hidden;
-                    }
-                }
-                p{
-                    margin-top: rem(8);
-                    border-bottom: 1px solid #ccc;
-                    font-size: rem(12);
-                    input{
-                        border: none;
-                        list-style: none;
-                        outline: none;
-                        font-size: rem(12);
-                    }
-                    select{
-                        border: none;
-                        outline: none;
-                        width: rem(100);
-                        font-size: rem(12);
-                        option{
-                            appearance:none;
-                            list-style: none;
-                            border: none;
-                            width: 100%;
-                            outline: none;
-                            padding: 0;
-                            margin: 0;
-                            /*border:  1px solid #ccc;*/
-                            background: #fff;
+                     }
+                     .processTime{
+                         width:30%;
+                         float:left;
+                     }
+                     .processContent{
+                         overflow: hidden;
+                     }
+                 }
+                 p{
+                     margin-top: rem(8);
+                     border-bottom: 1px solid #ccc;
+                     font-size: rem(12);
+                     input{
+                         border: none;
+                         list-style: none;
+                         outline: none;
+                         font-size: rem(12);
+                     }
+                     select{
+                         border: none;
+                         outline: none;
+                         width: rem(100);
+                         font-size: rem(12);
+                         option{
+                             appearance:none;
+                             list-style: none;
+                             border: none;
+                             width: 100%;
+                             outline: none;
+                             padding: 0;
+                             margin: 0;
+                             /*border:  1px solid #ccc;*/
+                             background: #fff;
 
-                        }
-                    }
-                    img {
-                        display: inline-block;
-                        width: rem(20);
-                        height: rem(20);
-                        border-radius: 50%;
-                        vertical-align: middle;
-                    }
-                    .location{
-                        width: rem(470);
-                    }
-                    textarea{
-                        resize: none;
-                        outline: none;
-                        padding: rem(3);
-                        box-sizing: border-box;
-                        border-radius: rem(5);
-                        border: 1px solid #ccc;
-                        line-height: rem(28);
-                        width: rem(490);
-                    }
-                    i{
-                        font-size: rem(16);
-                    }
-                    span{
-                        background: #f0f2f5;
-                        color: #909399;
-                    }
-                }
+                         }
+                     }
+                     img {
+                         display: inline-block;
+                         width: rem(20);
+                         height: rem(20);
+                         border-radius: 50%;
+                         vertical-align: middle;
+                     }
+                     .location{
+                         width: rem(470);
+                     }
+                     textarea{
+                         resize: none;
+                         outline: none;
+                         padding: rem(3);
+                         box-sizing: border-box;
+                         border-radius: rem(5);
+                         border: 1px solid #ccc;
+                         line-height: rem(28);
+                         width: rem(490);
+                     }
+                     i{
+                         font-size: rem(16);
+                     }
+                     span{
+                         background: #f0f2f5;
+                         color: #909399;
+                     }
+                 }
 
-            }
+             }
             .cardFooter {
                 width: 100%;
                 padding: rem(5) rem(10);
