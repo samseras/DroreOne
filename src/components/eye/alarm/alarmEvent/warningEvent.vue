@@ -141,6 +141,49 @@
 
                     }
                     ],
+                warningEventListTemp:[
+                    {
+                        serialNum:'sos001',
+                        alarmRuleId:'2',
+                        alarmRuleName:'消防',
+                        envTypeId:'1',
+                        envTypeName:'温度',
+                        sourceDeviceId:'1',
+                        sourceDeviceName:'报警柱001',
+                        statusId:'1',
+                        statusName :'新告警',
+                        occurenceTime:'2018-05-11 12:20:39',
+                        severityId:'1',
+                        severityName:'高',
+                        owner:{
+                            id:"1",
+                            name:'aaa',
+                            tel:'18672019008'
+                        },
+
+
+                    },
+                    {
+                        serialNum:'sos002',
+                        alarmRuleId:'1',
+                        alarmRuleName:'报警柱',
+                        envTypeId:'2',
+                        envTypeName:'PM2.5',
+                        sourceDeviceId:'2',
+                        sourceDeviceName:'报警柱002',
+                        statusId:'2',
+                        statusName :'处理中',
+                        occurenceTime:'2017-01-09 19:33:01',
+                        severityId:'2',
+                        severityName:'中',
+                        owner:{
+                            id:"2",
+                            name:'bbb',
+                            tel:'13000100190'
+                        },
+
+                    }
+                ],
                 visible: false,
                 warningEventInfo: {},
                 choseInfos: [],
@@ -184,13 +227,14 @@
             },
             choseType(type){
                 console.log(type)
-                let dataList = this.warningEventList;
+                let dataList = this.warningEventListTemp;
                 let tempList = [];
-                this.warningEventList = this.warningEventList.filter((item,index)=>{
-                    if(type.includes(item.status.id)){
-                        tempList.push(item);
-                    }
-                })
+                if(type.length > 0){
+                    tempList = dataList.filter((item)=>type.includes(item.statusId))
+                }else{
+                    tempList = dataList;
+                }
+
 
                return this.warningEventList = tempList;
 
@@ -316,6 +360,7 @@
                                 console.log(res, '请求成功')
                                 this.isShowLoading = false
                                 this.warningEventList = res
+                                this.warningEventListTemp = res
                                 this.warningEventList.forEach(item => {
                                     item.checked = false;
                                 })

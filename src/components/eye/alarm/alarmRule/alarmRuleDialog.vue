@@ -93,7 +93,7 @@
                     </p>
 
                     <p class="severityName">严重等级：
-                        <el-select  v-model="firefightingInfo.severityId" @change="ownerChange" size="mini" class="" placeholder="请选择" :disabled='isReadonly'>
+                        <el-select  v-model="firefightingInfo.severityId" size="mini" class="" placeholder="请选择" :disabled='isReadonly'>
                             <el-option
                                 v-for="item in levelInfo"
                                 :key="item.id"
@@ -149,7 +149,7 @@
                     </p>
 
                     <p class="severityName">严重等级：
-                        <el-select  v-model="crossborderInfo.severityId" size="mini" multiple class="" placeholder="请选择" :disabled='isReadonly'>
+                        <el-select  v-model="crossborderInfo.severityId" size="mini" placeholder="请选择" :disabled='isReadonly'>
                             <el-option
                                 v-for="item in levelInfo"
                                 :key="item.id"
@@ -214,7 +214,7 @@
                         </el-select>
                     </p>
                     <p class="severityName">严重等级：
-                        <el-select  v-model="offtrackInfo.severityId" size="mini" multiple class="" placeholder="请选择" :disabled='isReadonly'>
+                        <el-select  v-model="offtrackInfo.severityId" size="mini" class="" placeholder="请选择" :disabled='isReadonly'>
                             <el-option
                                 v-for="item in levelInfo"
                                 :key="item.id"
@@ -284,7 +284,7 @@
                         </el-select>
                     </p>
                     <p class="severityName">严重等级：
-                        <el-select  v-model="overlimitInfo.severityId" size="mini" multiple class="" placeholder="请选择" :disabled='isReadonly'>
+                        <el-select  v-model="overlimitInfo.severityId" size="mini" class="" placeholder="请选择" :disabled='isReadonly'>
                             <el-option
                                 v-for="item in levelInfo"
                                 :key="item.id"
@@ -345,7 +345,7 @@
                         </el-select>
                     </p>
                     <p class="severityName">严重等级：
-                        <el-select  v-model="waterlevelInfo.severityId" size="mini" multiple class="" placeholder="请选择" :disabled='isReadonly'>
+                        <el-select  v-model="waterlevelInfo.severityId" size="mini" class="" placeholder="请选择" :disabled='isReadonly'>
                             <el-option
                                 v-for="item in levelInfo"
                                 :key="item.id"
@@ -410,7 +410,7 @@
                         </el-select>
                     </p>
                     <p class="envDataSource">来&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;源：
-                        <el-select  v-model="conditionInfo.envDataSource" size="mini" class="" placeholder="请选择" :disabled='isReadonly'>
+                        <el-select  v-model="conditionInfo.envDataSource" @change = "sourceChange" size="mini" class="" placeholder="请选择" :disabled='isReadonly'>
                             <el-option
                                 v-for="item in source"
                                 :key="item.id"
@@ -420,7 +420,7 @@
                         </el-select>
                     </p>
                     <p class="relatedDevice">关联设备：
-                        <el-select  v-model="conditionInfo.relatedDevice" size="mini" multiple class="" placeholder="请选择" :disabled='isReadonly'>
+                        <el-select  v-model="conditionInfo.relatedDevice" size="mini" multiple class="" placeholder="请选择" :disabled='isReadonly || deviceReadOnly'>
                             <el-option
                                 v-for="item in levelInfo"
                                 :key="item.value"
@@ -635,10 +635,14 @@
                 ],
                 personInfo:[],
                 alarmType:[],
-                isShowLoading: false
+                isShowLoading: false,
+                deviceReadOnly:false
             }
         },
         methods: {
+            sourceChange(val){
+                val == '0' ? this.deviceReadOnly  = true : this.deviceReadOnly  = false
+            },
             closeDialog () {
                 this.$emit('closeDialog')
             },
@@ -1038,14 +1042,21 @@
             console.log(this.Info,'  Info')
             if (this.route.includes('alarmcolumn')) {
                 this.alarmcolumnInfo = this.Info;
+                if(!this.alarmcolumnInfo.id){   //如果为新增，严重等级默认为高
+                    this.alarmcolumnInfo.severityId = '1';
+                }
             } else if(this.route.includes('firefighting')) {
                 // this.getAllBroadcast()
                 this.firefightingInfo = this.Info;
-
-                this.timeSelect = this.broadList.broadcastSchedule.watchTime
+                if(!this.firefightingInfo.id){
+                    this.firefightingInfo.severityId = '1';
+                }
             } else if(this.route.includes('crossborder')) {
                 // this.getAllLight()
                 this.crossborderInfo = this.Info;
+                if(!this.crossborderInfo.id){
+                    this.crossborderInfo.severityId = '1'
+                }
 
             } else if(this.route.includes('speeding')) {
                 // this.getAllPurifierPerson()
@@ -1054,12 +1065,28 @@
 
             } else if(this.route.includes('offtrack')) {
                 this.offtrackInfo = this.Info;
+                if(!this.offtrackInfo.id){
+                    this.offtrackInfo.severityId = '3';
+                }
             } else if(this.route.includes('overlimit')){
                 this.overlimitInfo = this.Info;
+                if(!this.overlimitInfo.id){
+                    this.overlimitInfo.severityId = '1';
+                }
             } else if(this.route.includes('waterlevel')){
                 this.waterlevelInfo = this.Info;
+                if(!this.waterlevelInfo.id){
+                    this.waterlevelInfo.severityId = '2';
+                }
             } else if(this.route.includes('condition')){
                 this.conditionInfo = this.Info;
+                if(!this.conditionInfo.id){
+                    this.conditionInfo.severityId = '3';
+                }
+                //来源为外部系统，关联设备不可用
+                if(this.conditionInfo.envDataSource == "0"){
+                    this.deviceReadOnly = true;
+                }
                 // this.getEnvType();
             }
         },
