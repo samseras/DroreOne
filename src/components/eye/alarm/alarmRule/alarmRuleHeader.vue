@@ -47,7 +47,7 @@
             batchEdit () {
                 this.$emit('batchEdit','batchEdit')
             },
-            batchEnabled(falg){
+            batchEnabled(flag){
                 this.$emit('batchEnabled',flag)
             },
             addNewInfo(){

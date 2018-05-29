@@ -50,7 +50,7 @@
                         </el-table-column>
                         <el-table-column
                             sortable
-                            prop="relatedManagerName"
+                            prop="relatedManagerNames"
                             label="管理者">
                         </el-table-column>
                         <el-table-column label="操作" width="200">
@@ -97,9 +97,9 @@
                         severityName:'高',
                         deviceScope:'100米',
                         securityScope:'200米',
-                        relatedManager:'0',
-                        relatedManagerName:'aaa',
-                        isEnabled:false
+                        relatedManagerIds:'0',
+                        relatedManagerNames:'aaa',
+                        isEnabled:true
 
                     },
                     {
@@ -110,9 +110,9 @@
                         severityName:'中',
                         deviceScope:'400米',
                         securityScope:'700米',
-                        relatedManager:'1',
-                        relatedManagerName:'bbb',
-                        isEnabled:false
+                        relatedManagerIds:'1',
+                        relatedManagerNames:'bbb',
+                        isEnabled:true
 
                     },
                 ],
@@ -135,34 +135,92 @@
             },
             enabledClick(obj,flag){
                 console.log(obj)
-                console.log(flag)
-                obj.isEnabled = flag;
-                if(flag){
-                    //启用
-                }else{
-                    //停用
-                }
+                let param = obj;
+                param.isEnabled = flag;
+
+                api.alarm.updateAlarmRule([param]).then(res => {
+                    obj.isEnabled = flag
+                    if (obj.isEnabled) {
+                        this.$message.success('调度计划已开启')
+                    }else {
+                        this.$message.success('调度计划已关闭')
+                    }
+                }).then(err => {
+                    console.log(err, '失败')
+                })
             },
             batchEnabled(flag){
+                if(this.choseInfoId.length == 0){
+                    if(flag){
+                        this.$message.error('请选择要启用的数据')
+                    }else{
+                        this.$message.error('请选择要停用的数据')
+                    }
+                    return;
+                }
+                let choseId = []
+                choseId = this.alarmcolumnList.filter(item => {
+                    if (this.choseInfoId.includes(item.id)) {
+                        if (flag) {
+                            if (!item.isEnabled) {
+                                return item
+                            }
+                        } else {
+                            if (item.isEnabled) {
+                                return item
+                            }
+                        }
+                    }
+                })
+
+                if(choseId.length == 0) {
+                    if (flag) {
+                        this.$message.info('当前选中的计划已开启')
+                    } else {
+                        this.$message.info('当前选中的计划已关闭')
+                    }
+                    return
+                }
                 if(flag){
                     //批量启用
-                    if (this.choseInfos.length > 0) {
-
-
-                    } else {
-                        this.$message.error('请选择要启用的数据')
-                        return
-                    }
+                    this.startEndPlan(choseId, flag)
                 }else{
                     //批量停用
-                    if (this.choseInfos.length > 0) {
-
-
-                    } else {
-                        this.$message.error('请选择要停用的数据')
+                    this.$confirm('确定要停止所选的计划吗, 是否继续?', '提示', {
+                        confirmButtonText: '确定',
+                        cancelButtonText: '取消',
+                        type: 'warning'
+                    }).then(() => {
+                        this.startEndPlan(choseId, flag)
+                    }).catch(() => {
+                        this.$message.info('计划停止取消')
                         return
-                    }
+                    })
                 }
+            },
+            startEndPlan(choseId, flag) {
+                api.alarm.updateAlarmRule(choseId).then(res => {
+                    console.log(res, '更改状态成功')
+                    if (flag) {
+                        this.$message.success('计划开启成功')
+                    } else {
+                        this.$message.success('计划关闭成功')
+                    }
+                    choseId.forEach(item => {
+                        this.alarmcolumnList.forEach(item1 => {
+                            if (item.id === item1.id) {
+                                item1.isEnabled = !item1.isEnabled
+                            }
+                        })
+                    })
+                }).catch(err => {
+                    console.log(err, '计划开启失败')
+                    if (flag) {
+                        this.$message.error('计划开启失败，请稍后重试')
+                    } else {
+                        this.$message.error('计划关闭失败，请稍后重试')
+                    }
+                })
             },
             closeDialog () {
                 this.visible = false
@@ -194,6 +252,24 @@
                     }
                     this.choseInfoId = this.choseInfos.map(item=>item.id)
                 }
+
+                let isDelete = false
+                this.choseInfoId.forEach(item => {
+                    this.alarmcolumnList.forEach(item1 => {
+                        if (item === item1.id) {
+                            if (item1.isEnabled) {
+                                isDelete = true
+                                this.$message.info('所选计划已经开启，请关闭后再删除')
+                                return
+                            }
+                        }
+                    })
+                })
+                if (isDelete) {
+                    return
+                }
+
+
                 if ( this.choseInfoId.length > 0) {
                     this.$confirm('此操作将永久删除该数据, 是否继续?', '提示', {
                         confirmButtonText: '确定',
@@ -239,19 +315,26 @@
                     this.choseInfos = this.choseInfos.filter((item) =>{
                         return item !== row
                     })
+                    this.choseInfoId = this.choseInfoId.filter((item) =>{
+                        return item !== row.id
+                    })
                 } else {
                     this.choseInfos.push(row)
+                    this.choseInfoId.push(row.id)
                 }
+
             },
             selectedAll (state) {
                 this.alarmcolumnList = this.alarmcolumnList.filter((item) => {
                     if (state === true) {
                         item.checked = true
-                        this.choseInfos.push(item.id)
+                        this.choseInfos.push(item)
+                        this.choseInfoId.push(item.id)
                         return item.checked === true
                     } else {
                         item.checked = false
                         this.choseInfos = []
+                        this.choseInfoId = []
                         return item.checked === false
                     }
                 })
@@ -301,48 +384,11 @@
             },
             init(){
                 // this.getAllAlarmRule();
-                this.getPersonInfo();
             },
-            async getPersonInfo(){
-                let personInfo = [];
-                let r1 = await this.getPerson(3);
-                let r2 = await this.getPerson(8);
 
-                console.log(r1,'severity');
-                console.log(r2,'manager');
-                if(r1.length > 0){
-                    personInfo.push(this.addPersonn(r1));
-                }
-                if(r2.length > 0){
-                    personInfo.push(this.addPersonn(r2));
-                }
-            },
-            addPersonn(array){
-                let temp = array.map((item)=>{
-                    return {
-                        id: item.personBean.id,
-                        name:item.personBean.name,
-                        phone:item.personBean.phone
-                    }
-                })
-                return {
-                    label:array[0].jobName,
-                    options:temp
-                }
-            },
-            async getPerson(type){
-                let personInfo = [];
-                await api.person.getJobPerson(type).then(res => {
-                    console.log(res, '请求成功')
-                    personInfo = res;
-                }).catch(err => {
-                    console.log(err, '请求失败')
-                })
-                return personInfo;
-            },
             async getAllAlarmRule(){
                 this.isShowLoading = true
-                let id = '';
+                let id = this.getAlarmType().id;
                 await api.alarm.getAllAlarmRule(id).then(res => {
                     console.log(res, '请求成功')
                     this.isShowLoading = false
@@ -357,12 +403,15 @@
                 })
             },
             async getAlarmType(){
-                await api.alarm.getAlarmType().then(res => {
+                let alarmRoleInfo = {};
+                const name = '报警柱';
+                await api.alarm.getAlarmType(name).then(res => {
                     console.log(res, '请求成功')
-
+                    alarmRoleInfo = res;
                 }).catch(err => {
                     console.log(err, '请求失败')
                 })
+                return alarmRoleInfo;
             }
         },
         created () {

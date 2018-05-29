@@ -55,7 +55,7 @@
                         (安保)
                     </p>
                     <p class="relatedManager">管&nbsp;理&nbsp;&nbsp;者：
-                        <el-select v-model="alarmcolumnInfo.relatedManager" size="mini" multiple placeholder="请选择" :disabled='isReadonly'>
+                        <el-select v-model="alarmcolumnInfo.relatedManagerIds" size="mini" multiple placeholder="请选择" :disabled='isReadonly'>
                             <el-option-group
                                 v-for="group in personInfo"
                                 :key="group.label"
@@ -111,7 +111,7 @@
                         (安保)
                     </p>
                     <p class="relatedManager">管&nbsp;理&nbsp;&nbsp;者：
-                        <el-select v-model="firefightingInfo.relatedManager" size="mini" multiple placeholder="请选择" :disabled='isReadonly'>
+                        <el-select v-model="firefightingInfo.relatedManagerIds" size="mini" multiple placeholder="请选择" :disabled='isReadonly'>
                             <el-option-group
                                 v-for="group in personInfo"
                                 :key="group.label"
@@ -167,7 +167,7 @@
                         (安保)
                     </p>
                     <p class="relatedManager">管&nbsp;理&nbsp;&nbsp;者：
-                        <el-select v-model="crossborderInfo.relatedManager" size="mini" multiple placeholder="请选择" :disabled='isReadonly'>
+                        <el-select v-model="crossborderInfo.relatedManagerIds" size="mini" multiple placeholder="请选择" :disabled='isReadonly'>
                             <el-option-group
                                 v-for="group in personInfo"
                                 :key="group.label"
@@ -232,7 +232,7 @@
                         (米)
                     </p>
                     <p class="relatedManager">管&nbsp;理&nbsp;&nbsp;者：
-                        <el-select v-model="offtrackInfo.relatedManager" size="mini" multiple placeholder="请选择" :disabled='isReadonly'>
+                        <el-select v-model="offtrackInfo.relatedManagerIds" size="mini" multiple placeholder="请选择" :disabled='isReadonly'>
                             <el-option-group
                                 v-for="group in personInfo"
                                 :key="group.label"
@@ -270,12 +270,17 @@
                     </p>
                     <p class="relatedDevice">关联设备：
                         <el-select  v-model="overlimitInfo.relatedDevice" size="mini" multiple class="" placeholder="请选择" :disabled='isReadonly'>
-                            <el-option
-                                v-for="item in levelInfo"
-                                :key="item.value"
-                                :label="item.label"
-                                :value="item.value">
-                            </el-option>
+                            <el-option-group
+                                v-for="group in overlimitDeviceInfo"
+                                :key="group.label"
+                                :label="group.label">
+                                <el-option
+                                    v-for="item in group.options"
+                                    :key="item.id"
+                                    :label="item.name"
+                                    :value="item.id">
+                                </el-option>
+                            </el-option-group>
                         </el-select>
                     </p>
                     <p class="severityName">严重等级：
@@ -293,7 +298,7 @@
                         (人)
                     </p>
                     <p class="relatedManager">管&nbsp;理&nbsp;&nbsp;者：
-                        <el-select v-model="overlimitInfo.relatedManager" size="mini" multiple placeholder="请选择" :disabled='isReadonly'>
+                        <el-select v-model="overlimitInfo.relatedManagerIds" size="mini" multiple placeholder="请选择" :disabled='isReadonly'>
                             <el-option-group
                                 v-for="group in personInfo"
                                 :key="group.label"
@@ -358,7 +363,7 @@
                         (米)
                     </p>
                     <p class="relatedManager">管&nbsp;理&nbsp;&nbsp;者：
-                        <el-select v-model="waterlevelInfo.relatedManager" size="mini" multiple placeholder="请选择" :disabled='isReadonly'>
+                        <el-select v-model="waterlevelInfo.relatedManagerIds" size="mini" multiple placeholder="请选择" :disabled='isReadonly'>
                             <el-option-group
                                 v-for="group in personInfo"
                                 :key="group.label"
@@ -441,7 +446,7 @@
                         <el-input type="text" v-model='conditionInfo.lowerThreshold' class="inputText" :maxlength="15" :disabled='isReadonly'></el-input>
                     </p>
                     <p class="relatedManager">管&nbsp;理&nbsp;&nbsp;者：
-                        <el-select v-model="conditionInfo.relatedManager" size="mini" multiple placeholder="请选择" :disabled='isReadonly'>
+                        <el-select v-model="conditionInfo.relatedManagerIds" size="mini" multiple placeholder="请选择" :disabled='isReadonly'>
                             <el-option-group
                                 v-for="group in personInfo"
                                 :key="group.label"
@@ -491,8 +496,7 @@
                     severityName:'',
                     deviceScope:'',
                     securityScope:'',
-                    relatedManager:'',
-                    relatedManagerName:'',
+                    relatedManagerIds:[],
                     description:'',
                     isEnabled:false
                 },
@@ -503,7 +507,7 @@
                     severityName:'',
                     deviceScope:'',
                     securityScope:'',
-                    relatedManager:[],
+                    relatedManagerIds:[],
                     description:'',
                     isEnabled:false
                 },
@@ -514,7 +518,7 @@
                     severityName:'',
                     deviceScope:'',
                     securityScope:'',
-                    relatedManager:[],
+                    relatedManagerIds:[],
                     description:'',
                     isEnabled:false
                 },
@@ -529,7 +533,7 @@
                     relatedSchedule:'',
                     extendThreshold:'',
                     upperThreshold:'',
-                    relatedManager:[],
+                    relatedManagerIds:[],
                     description:'',
                     isEnabled:false
                 },
@@ -540,7 +544,7 @@
                     severityId:'',
                     severityName:'',
                     upperThreshold:'',
-                    relatedManager:[],
+                    relatedManagerIds:[],
                     description:'',
                     isEnabled:false
                 },
@@ -552,7 +556,7 @@
                     severityName:'',
                     upperThreshold:'',
                     lowerThreshold:'',
-                    relatedManager:[],
+                    relatedManagerIds:[],
                     description:'',
                     isEnabled:false
                 },
@@ -567,11 +571,12 @@
                     severityName:'',
                     upperThreshold:'',
                     lowerThreshold:'',
-                    relatedManager:[],
+                    relatedManagerIds:[],
                     description:'',
                     isEnabled:false
                 },
                 policeInfo:[],
+                overlimitDeviceInfo:[],
                 patrolInfo:[],
                 levelInfo:[
                     {
@@ -670,7 +675,7 @@
                         newInfo = this.alarmcolumnInfo;
                         newInfo.severityName = this.severityId2Name(newInfo.severityId)
                         newInfo.relatedDevices = newInfo.relatedDevices.join(",")
-                        newInfo.relatedManager = newInfo.relatedManager.join(",")
+                        newInfo.relatedManagerIds = newInfo.relatedManagerIds.join(",")
                         console.log(newInfo,"返回的数据")
                         if (newInfo.id) {  //编辑或查看
                             objArray.push(newInfo)
@@ -700,7 +705,7 @@
                         console.log(this.firefightingInfo);
                         newInfo = this.firefightingInfo;
                         newInfo.severityName = this.severityId2Name(newInfo.severityId)
-                        newInfo.relatedManager = newInfo.relatedManager.join(",")
+                        newInfo.relatedManagerIds = newInfo.relatedManagerIds.join(",")
                         if (newInfo.id) {
                             objArray.push(newInfo)
                             this.$emit('saveEditInfo',objArray)
@@ -728,7 +733,7 @@
                         console.log(this.crossborderInfo);
                         newInfo = this.crossborderInfo;
                         newInfo.severityName = this.severityId2Name(newInfo.severityId)
-                        newInfo.relatedManager = newInfo.relatedManager.join(",")
+                        newInfo.relatedManagerIds = newInfo.relatedManagerIds.join(",")
                         if (newInfo.id) {
                             objArray.push(newInfo)
                             this.$emit('saveEditInfo',objArray)
@@ -757,7 +762,7 @@
                         console.log(this.offtrackInfo);
                         newInfo = this.offtrackInfo;
                         newInfo.severityName = this.severityId2Name(newInfo.severityId)
-                        newInfo.relatedManager = newInfo.relatedManager.join(",")
+                        newInfo.relatedManagerIds = newInfo.relatedManagerIds.join(",")
                         if (newInfo.id) {
                             objArray.push(newInfo)
                             this.$emit('saveEditInfo',objArray)
@@ -786,7 +791,8 @@
                         console.log(this.overlimitInfo);
                         newInfo = this.overlimitInfo;
                         newInfo.severityName = this.severityId2Name(newInfo.severityId)
-                        newInfo.relatedManager = newInfo.relatedManager.join(",")
+                        newInfo.relatedManagerIdsIds = newInfo.relatedManagerIds.join(",")
+                        newInfo.relatedDeviceIds = newInfo.relatedDevices.join(",")
                         if (newInfo.id) {
                             objArray.push(newInfo)
                             this.$emit('saveEditInfo',objArray)
@@ -815,7 +821,7 @@
                         console.log(this.waterlevelInfo);
                         newInfo = this.waterlevelInfo;
                         newInfo.severityName = this.severityId2Name(newInfo.severityId)
-                        newInfo.relatedManager = newInfo.relatedManager.join(",")
+                        newInfo.relatedManagerIds = newInfo.relatedManagerIds.join(",")
                         if (newInfo.id) {
                             objArray.push(newInfo)
                             this.$emit('saveEditInfo',objArray)
@@ -844,7 +850,7 @@
                         console.log(this.conditionInfo);
                         newInfo = this.conditionInfo;
                         newInfo.severityName = this.severityId2Name(newInfo.severityId)
-                        newInfo.relatedManager = newInfo.relatedManager.join(",")
+                        newInfo.relatedManagerIds = newInfo.relatedManagerIds.join(",")
                         this.envType.forEach((item)=>{
                             if(newInfo.envTypeId == item.id){
                                 newInfo.envTypeName = item.name;
@@ -939,13 +945,45 @@
                     console.log(err, '请求失败')
                 })
             },
+            async getGateDevice(){
+                let gateInfo = {};
+                await api.gate.getAllGate().then(res => {
+                    console.log(res, '请求成功')
+                    gateInfo.label = "闸机";
+                    gateInfo.options = res.devices;
+                }).catch(err => {
+                    console.log(err, '请求失败')
+                })
+                return gateInfo;
+            },
+            async getCameraDevice(){
+                let cameraInfo = {};
+                await api.camera.getAllCamera().then(res => {
+                    console.log(res, '请求成功')
+                    cameraInfo.label = "摄像头";
+                    cameraInfo.options = res.devices;
+                }).catch(err => {
+                    console.log(err, '请求失败')
+                })
+                return cameraInfo;
+            },
+            async getOverlimitDevice(){
+                let r1 = await this.getCameraDevice();
+                let r2 = await this.getGateDevice();
+
+                this.overlimitDeviceInfo.push(r1)
+                this.overlimitDeviceInfo.push(r2)
+
+            },
             init(){
                 //人员
                 this.getPersonInfo();
-                //报警柱设备
+                //关联设备（报警柱）  --报警柱
                 this.getPoliceDevice();
-                //关联巡检计划
+                //关联巡检计划  --偏离轨迹
                 this.getSchedules();
+                // 关联设备（闸机，摄像头）  --客流量
+                this.getOverlimitDevice();
             }
 
 
