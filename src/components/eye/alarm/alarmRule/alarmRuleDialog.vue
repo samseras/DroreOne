@@ -634,6 +634,7 @@
                     }
                 ],
                 personInfo:[],
+                alarmType:[],
                 isShowLoading: false
             }
         },
@@ -649,6 +650,11 @@
                     }
                 })
                 return name;
+            },
+            getAlarmTypeId(typeName){
+                 let typeInfo =  this.alarmType.filter(item=> item.name == typeName)
+
+                  return typeInfo.id
             },
             saveDialog(){
                 let objArray = [];
@@ -676,6 +682,10 @@
                         newInfo.severityName = this.severityId2Name(newInfo.severityId)
                         newInfo.relatedDevices = newInfo.relatedDevices.join(",")
                         newInfo.relatedManagerIds = newInfo.relatedManagerIds.join(",")
+                        newInfo.isEnabled =true;//默认启用
+                        //获取规则类型
+                        console.log(this.alarmType)
+                        newInfo.alarmTypeId = this.getAlarmTypeId("报警柱")
                         console.log(newInfo,"返回的数据")
                         if (newInfo.id) {  //编辑或查看
                             objArray.push(newInfo)
@@ -706,6 +716,10 @@
                         newInfo = this.firefightingInfo;
                         newInfo.severityName = this.severityId2Name(newInfo.severityId)
                         newInfo.relatedManagerIds = newInfo.relatedManagerIds.join(",")
+                        newInfo.isEnabled =true;//默认启用
+                        //获取规则类型
+                        console.log(this.alarmType)
+                        newInfo.alarmTypeId = this.getAlarmTypeId("消防")
                         if (newInfo.id) {
                             objArray.push(newInfo)
                             this.$emit('saveEditInfo',objArray)
@@ -734,6 +748,10 @@
                         newInfo = this.crossborderInfo;
                         newInfo.severityName = this.severityId2Name(newInfo.severityId)
                         newInfo.relatedManagerIds = newInfo.relatedManagerIds.join(",")
+                        newInfo.isEnabled =true;//默认启用
+                        //获取规则类型
+                        console.log(this.alarmType)
+                        newInfo.alarmTypeId = this.getAlarmTypeId("越界")
                         if (newInfo.id) {
                             objArray.push(newInfo)
                             this.$emit('saveEditInfo',objArray)
@@ -763,6 +781,10 @@
                         newInfo = this.offtrackInfo;
                         newInfo.severityName = this.severityId2Name(newInfo.severityId)
                         newInfo.relatedManagerIds = newInfo.relatedManagerIds.join(",")
+                        newInfo.isEnabled =true;//默认启用
+                        //获取规则类型
+                        console.log(this.alarmType)
+                        newInfo.alarmTypeId = this.getAlarmTypeId("偏离轨迹")
                         if (newInfo.id) {
                             objArray.push(newInfo)
                             this.$emit('saveEditInfo',objArray)
@@ -793,6 +815,10 @@
                         newInfo.severityName = this.severityId2Name(newInfo.severityId)
                         newInfo.relatedManagerIdsIds = newInfo.relatedManagerIds.join(",")
                         newInfo.relatedDeviceIds = newInfo.relatedDevices.join(",")
+                        newInfo.isEnabled =true;//默认启用
+                        //获取规则类型
+                        console.log(this.alarmType)
+                        newInfo.alarmTypeId = this.getAlarmTypeId("客流量超限")
                         if (newInfo.id) {
                             objArray.push(newInfo)
                             this.$emit('saveEditInfo',objArray)
@@ -822,6 +848,10 @@
                         newInfo = this.waterlevelInfo;
                         newInfo.severityName = this.severityId2Name(newInfo.severityId)
                         newInfo.relatedManagerIds = newInfo.relatedManagerIds.join(",")
+                        newInfo.isEnabled =true;//默认启用
+                        //获取规则类型
+                        console.log(this.alarmType)
+                        newInfo.alarmTypeId = this.getAlarmTypeId("水位")
                         if (newInfo.id) {
                             objArray.push(newInfo)
                             this.$emit('saveEditInfo',objArray)
@@ -851,6 +881,10 @@
                         newInfo = this.conditionInfo;
                         newInfo.severityName = this.severityId2Name(newInfo.severityId)
                         newInfo.relatedManagerIds = newInfo.relatedManagerIds.join(",")
+                        newInfo.isEnabled =true;//默认启用
+                        //获取规则类型
+                        console.log(this.alarmType)
+                        newInfo.alarmTypeId = this.getAlarmTypeId("环境")
                         this.envType.forEach((item)=>{
                             if(newInfo.envTypeId == item.id){
                                 newInfo.envTypeName = item.name;
@@ -975,6 +1009,14 @@
                 this.overlimitDeviceInfo.push(r2)
 
             },
+            async getAlarmType(){
+                await api.alarm.getAlarmType().then(res => {
+                    console.log(res, '请求成功')
+                    this.alarmType = res;
+                }).catch(err => {
+                    console.log(err, '请求失败')
+                })
+            },
             init(){
                 //人员
                 this.getPersonInfo();
@@ -984,6 +1026,8 @@
                 this.getSchedules();
                 // 关联设备（闸机，摄像头）  --客流量
                 this.getOverlimitDevice();
+
+                this.getAlarmType();
             }
 
 

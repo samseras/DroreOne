@@ -47,10 +47,10 @@ const alarm = {
             url: getUrl('/alarm/rule?id='+id)
         })
     },
-    getAlarmType(name){
+    getAlarmType(){
         return axios ({
             method: 'GET',
-            url: getUrl('alarm/type?name='+name)
+            url: getUrl('alarm/type')
         })
     },
     getSeverityType(){

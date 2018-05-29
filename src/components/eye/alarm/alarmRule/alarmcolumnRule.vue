@@ -125,7 +125,8 @@
                 title:'',
                 selection:[],
                 isShowloading: false,
-                isBatchEdit:false
+                isBatchEdit:false,
+                alarmType:[]
 
             }
         },
@@ -364,23 +365,24 @@
             saveInfo(info){
                 //TODO 1 获取并设置info.alarmTypeId
 
+                console.log(info)
                 // TODO 2 保存请求
-                api.alarm.createAlarmRule(info).then(res => {
-                        console.log(res, '保存成功')
-                        this.$message.success('保存成功')
-                        this.alarmcolumnList = this.alarmcolumnList.filter((item, index) => {
-                            if (item.id === this.choseInfos[i]){
-                                this.alarmcolumnList[index].checked = false
-                                this.alarmcolumnList[index].status = false
-                            }
-                            return item.status !== false
-                        })
-                        this.choseInfos = []
-                    }).catch(err => {
-                        this.$message.error('保存失败，请稍后重试')
-                        console.log(err)
-                        this.choseInfos = []
-                    })
+                // api.alarm.createAlarmRule(info).then(res => {
+                //         console.log(res, '保存成功')
+                //         this.$message.success('保存成功')
+                //         this.alarmcolumnList = this.alarmcolumnList.filter((item, index) => {
+                //             if (item.id === this.choseInfos[i]){
+                //                 this.alarmcolumnList[index].checked = false
+                //                 this.alarmcolumnList[index].status = false
+                //             }
+                //             return item.status !== false
+                //         })
+                //         this.choseInfos = []
+                // }).catch(err => {
+                //     this.$message.error('保存失败，请稍后重试')
+                //     console.log(err)
+                //     this.choseInfos = []
+                // })
             },
             init(){
                 // this.getAllAlarmRule();
@@ -388,7 +390,7 @@
 
             async getAllAlarmRule(){
                 this.isShowLoading = true
-                let id = this.getAlarmType().id;
+                let id = this.getAlarmTypeId("报警柱")
                 await api.alarm.getAllAlarmRule(id).then(res => {
                     console.log(res, '请求成功')
                     this.isShowLoading = false
@@ -402,17 +404,20 @@
                     this.isShowLoading = false
                 })
             },
+            getAlarmTypeId(typeName){
+                let typeInfo =  this.alarmType.filter(item=> item.name == typeName)
+
+                return typeInfo.id
+            },
             async getAlarmType(){
-                let alarmRoleInfo = {};
-                const name = '报警柱';
-                await api.alarm.getAlarmType(name).then(res => {
+                await api.alarm.getAlarmType().then(res => {
                     console.log(res, '请求成功')
-                    alarmRoleInfo = res;
+                    this.alarmType = res;
                 }).catch(err => {
                     console.log(err, '请求失败')
                 })
-                return alarmRoleInfo;
-            }
+            },
+
         },
         created () {
 
