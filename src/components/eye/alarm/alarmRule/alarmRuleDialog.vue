@@ -1024,6 +1024,7 @@
             init(){
                 //人员
                 this.getPersonInfo();
+                console.log(this.personInfo)
                 //关联设备（报警柱）  --报警柱
                 this.getPoliceDevice();
                 //关联巡检计划  --偏离轨迹
