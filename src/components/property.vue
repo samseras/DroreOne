@@ -148,6 +148,7 @@
             display: flex;
             .el-menu {
                 width: 15%;
+
             }
             .content {
                 flex: 1;

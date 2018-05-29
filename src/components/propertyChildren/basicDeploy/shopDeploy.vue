@@ -10,8 +10,10 @@
                         @toggleList = "toggleList"
                         @choseType = 'choseType'
                         :choseId="choseInfoId"
-                        :listsLength="shopList.length"
+                        :listsLength="listLength"
                         :personListFlag="selectFlag"
+                        @nextPage="nextPage"
+                        @previousPage="previousPage"
                         @selectedAll = 'selectedAll'
                         @fixedInfo = 'fixedInfo'
                         @searchAnything="searchAnything"
@@ -139,7 +141,9 @@
                 isDisabled: true,
                 title: '',
                 isShowLoading: false,
-                currentNum: 50
+                currentNum: 50,
+                listLength: '',
+                pageNum: 1
             }
         },
         methods: {
@@ -416,12 +420,29 @@
                     this.$message.error('请选择一条数据')
                 }
             },
+            previousPage (page) {
+                console.log(page, '这是传过来的pageNum')
+                this.pageNum = page
+                this.getAllShop ()
+            },
+            nextPage (page) {
+                console.log(page, '这个是下一页的pageNUM')
+                this.pageNum = page
+                this.getAllShop ()
+            },
             async getAllShop () {
                 this.isShowLoading = true
                 await api.shop.getAllShop().then(res => {
                     console.log(res, '这是所有商铺')
+                    this.listLength =res.length
                     this.isShowLoading = false
                     this.shopList = res
+                    this.shopList = this.shopList.filter((item,index) =>{
+                        if(index <(this.pageNum*35)&& index>(this.pageNum-1)*35-1){
+                            return item
+                        }
+                    })
+
                     for (let i = 0; i < this.shopList.length; i++) {
                         this.shopList[i].checked = false
                         this.shopList[i].status = true

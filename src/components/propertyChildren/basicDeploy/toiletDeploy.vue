@@ -10,8 +10,10 @@
                         @toggleList = "toggleList"
                         @choseType = 'choseType'
                         :choseId="choseInfoId"
-                        :listsLength="toiletList.length"
+                        :listsLength="listLength"
                         :personListFlag="selectFlag"
+                        @nextPage="nextPage"
+                        @previousPage="previousPage"
                         @selectedAll = 'selectedAll'
                         @fixedInfo = 'fixedInfo'
                         @searchAnything="searchAnything"
@@ -118,7 +120,10 @@
                 choseList: [],
                 isDisabled: true,
                 title: '',
-                isShowLoading: false
+                isShowLoading: false,
+                currentNum: 50,
+                listLength: '',
+                pageNum: 1
             }
         },
         methods: {
@@ -360,12 +365,31 @@
                     this.$message.error('请选择一条数据')
                 }
             },
+            previousPage (page) {
+                console.log(page, '这是传过来的pageNum')
+                this.pageNum = page
+                this.getAllToilet ()
+            },
+            nextPage (page) {
+                console.log(page, '这个是下一页的pageNUM')
+                this.pageNum = page
+                this.getAllToilet ()
+            },
+
             async getAllToilet () {
                 this.isShowLoading = true
                 await api.toilet.getAllToilet().then(res => {
                     console.log(res, '这是请求回来的所有')
+                    this.listLength = res.length
                     this.isShowLoading = false
                     this.toiletList = res
+                    this.toiletList = this.toiletList.filter((item,index) =>{
+                        if(index < (this.pageNum*35)&& index>(this.pageNum-1)*35 -1){
+                            return item
+                        }
+                    })
+
+
                     for (let i = 0; i < this.toiletList.length; i++) {
                         this.toiletList[i].checked = false
                         this.toiletList[i].status = true
