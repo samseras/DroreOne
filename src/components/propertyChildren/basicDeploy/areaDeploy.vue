@@ -10,6 +10,9 @@
                         @toggleList = "toggleList"
                         @choseType = 'choseType'
                         @selectedAll = 'selectedAll'
+                        :listsLength = 'listLength'
+                        @nextPage="nextPage"
+                        @previousPage="previousPage"
                         @fixedInfo = 'fixedInfo'
                         :personListFlag="selectFlag"
                         @searchAnything="searchAnything">
@@ -131,7 +134,10 @@
                 isDisabled: true,
                 title: '',
                 isShowLoading : false,
-                allSelFlag:-1
+                allSelFlag:-1,
+                currentNum: 50,
+                listLength: '',
+                pageNum: 1
             }
         },
         methods: {
@@ -352,12 +358,29 @@
                     this.$message.error('请选择一条数据')
                 }
             },
+            previousPage (page) {
+                console.log(page, '这是传过来的pageNum')
+                this.pageNum = page
+                this.getAllArea()
+            },
+            nextPage (page) {
+                console.log(page, '这个是下一页的pageNUM')
+                this.pageNum = page
+                this.getAllArea()
+            },
             async getAllArea () {
                 this.isShowLoading = true
                 await api.area.getAllRegion().then(res => {
                     console.log(res, '这是请求回来的片区')
+                    this.listLength = res.length
                     this.isShowLoading = false
                     this.areaList = res
+                    this.areaList = this.areaList.filter((item,index) => {
+                        if (index < (this.pageNum * 35 ) && index > ((this.pageNum -1) * 35 ) - 1 ) {
+                            return item
+                        }
+                    })
+
                     for (let i = 0; i < this.areaList.length; i++) {
                         this.areaList[i].checked = false
                         this.areaList[i].status = true

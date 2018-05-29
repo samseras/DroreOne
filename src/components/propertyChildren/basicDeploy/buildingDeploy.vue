@@ -11,8 +11,10 @@
                         @choseType = 'choseType'
                         @selectedAll = 'selectedAll'
                         :choseId="choseInfoId"
-                        :listsLength="buildList.length"
+                        :listsLength="listLength"
                         :personListFlag="selectFlag"
+                        @nextPage="nextPage"
+                        @previousPage="previousPage"
                         @fixedInfo = 'fixedInfo'
                         @searchAnything="searchAnything"
                         @getAllBuild="getAllBuild">
@@ -131,7 +133,10 @@
                 choseList: [],
                 isDisabled: true,
                 title: '',
-                isShowLoading: false
+                isShowLoading: false,
+                currentNum: 50,
+                listLength: '',
+                pageNum: 1
             }
         },
         methods: {
@@ -385,12 +390,29 @@
                     this.$message.error('请选择一条数据')
                 }
             },
+            previousPage (page) {
+                console.log(page, '这是传过来的pageNum')
+                this.pageNum = page
+                this.getAllBuild ()
+            },
+            nextPage (page) {
+                console.log(page, '这个是下一页的pageNUM')
+                this.pageNum = page
+                this.getAllBuild ()
+            },
             async getAllBuild () {
                 this.isShowLoading = true
                 await api.build.getAllBuild().then(res => {
                     console.log(res, '这是请求回来的所有')
+                    this.listLength = res.length
                     this.isShowLoading = false
                     this.buildList = res
+                    this.buildList = this.buildList.filter((item,index) =>{
+                        if(index < (this.pageNum*35)&& index>(this.pageNum-1)*35 -1){
+                            return item
+                        }
+                    })
+
                     for (let i = 0; i < this.buildList.length; i++) {
                         this.buildList[i].checked = false
                         this.buildList[i].status = true
