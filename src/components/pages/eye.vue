@@ -85,16 +85,16 @@
                 searchIndex: 0,
                 isShowloading: false,
                 facilityType: [
-                    {type: 1,route: '/facility/build'},
-                    {type: 2,route: '/facility/shop'},
-                    {type: 4,route: '/facility/dustbin'},
-                    {type: 5,route: '/facility/park'},
-                    {type: 6,route: '/facility/scenicName'},
-                    {type: 8,route: '/facility/build'},//植物
-                    {type: 9,route: '/facility/build'},//指示牌
-                    {type: 10,route: '/facility/build'},//卫生间
-                    {type: 12,route: '/facility/road'},
-                    {type: 14,route: '/facility/build'},//片区
+                    {type: 1,route: '/facility/build'},//建筑
+                    {type: 2,route: '/facility/shop'},//商圈
+                    {type: 4,route: '/facility/trash'},//垃圾桶
+                    {type: 5,route: '/facility/park'},//停车场
+                    {type: 6,route: '/facility/scenic'},//景点
+                    {type: 8,route: '/facility/plant'},//植物
+                    {type: 9,route: '/facility/indicator'},//指示牌
+                    {type: 10,route: '/facility/toilet'},//卫生间
+                    {type: 12,route: '/facility/road'},//路网
+                    {type: 14,route: '/facility/road'},//片区
                     {type: 301,route: '/controler/broad'},//广播
                     {type: 302,route: '/controler/camera'},//摄像头
                     {type: 303,route: '/controler/broad'},//闸机

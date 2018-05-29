@@ -47,7 +47,9 @@
                         <el-input type="text"  v-model='eventInfo.occurenceTime' class="inputText" :maxlength="15" :readonly='true'></el-input>
                     </p>
                     <p class="alarmRule">关联规则：
-                        <el-input type="text" v-model='eventInfo.alarmRuleName' class="inputText" :maxlength="15" :readonly='true'></el-input>
+                        <!--<el-input type="text" v-model='eventInfo.alarmRuleName' class="inputText" :maxlength="15" :readonly='true'></el-input>-->
+                        <span class="inputText el-input showRuleDetail">{{eventInfo.alarmRuleName}}</span>
+                        <!--<div class="inputText el-input"></div>-->
                     </p>
                     <p class="level">严重等级：
                         <el-select  v-model="eventInfo.severityId" size="mini" class="" placeholder="请选择" :disabled="isReadonly">
@@ -60,17 +62,22 @@
                         </el-select>
                     </p>
                     <p class="owner">负责人员：
-                        <el-select  v-model="eventInfo.owner.id" @change="ownerChange" size="mini" class="" placeholder="请选择" :disabled="isReadonly">
-                            <el-option
-                                v-for="item in ownerInfo"
-                                :key="item.id"
-                                :label="item.name"
-                                :value="item.id">
-                            </el-option>
+                        <el-select  v-model="eventInfo.ownerId" @change="ownerChange" size="mini" class="" placeholder="请选择" :disabled="isReadonly">
+                            <el-option-group
+                                v-for="group in personInfo"
+                                :key="group.label"
+                                :label="group.label">
+                                <el-option
+                                    v-for="item in group.options"
+                                    :key="item.id"
+                                    :label="item.name"
+                                    :value="item.id">
+                                </el-option>
+                            </el-option-group>
                         </el-select>
                     </p>
                     <p class="tel">电话号码：
-                        <el-input type="text" v-model="eventInfo.tel" class="inputText" :maxlength="15" :disabled="isReadonly"></el-input>
+                        <el-input type="text" v-model="eventInfo.ownerTel" class="inputText" :maxlength="15" :disabled="true"></el-input>
                     </p>
                     <p class="status">状&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 态:
                         <el-select  v-model="eventInfo.statusId" size="mini" class="" placeholder="请选择" :disabled="isReadonly">
@@ -143,17 +150,10 @@
                     severityName:'',
                     statusId:'',
                     statusName :'',
-                    owner:[
-                        {
-                            id:'',
-                            name:''
-                        },
-                        {
-                            id:'',
-                            name:''
-                        }
-                    ],
-                    tel:'',
+                    relatedManagerIds:[],
+                    ownerId:"",
+                    ownerName:'',
+                    ownerTel:'',
                     description:''
                 },
                 batchEdit:{
@@ -243,7 +243,8 @@
                         title:'12123dfgdfgdfgdfg.jpg'
                     }
                 ],
-                selectFileList:[]
+                selectFileList:[],
+                personInfo:[]
 
             }
         },
@@ -251,11 +252,17 @@
             ownerChange(val){
                 console.log(val);
                 console.log(this.eventInfo);
-                this.ownerInfo.forEach((item,index)=>{
-                    if(item.id == val){
-                        this.eventInfo.tel =  item.tel;
-                    }
-                });
+                this.getTelById(val);
+            },
+            getTelById(id){
+                if(this.personInfo.length > 0){
+                    this.personInfo.forEach((item)=>{
+                        if(item.options.id == id){
+                            this.eventInfo.ownerTel =  item.options.phone;
+                            this.eventInfo.ownerName = item.options.name;
+                        }
+                    });
+                }
             },
             downloadFile(val){
                 console.log(val)
@@ -387,19 +394,7 @@
                 }
             },
             init () {
-                // let that = this;
-                // that.fileList.forEach(function(item){
-                //     if(item.checked){
-                //         if(that.selectFileList.indexOf(item.title) === -1 ){
-                //             // console.log(that.selectFileList.indexOf(item.title))
-                //             that.selectFileList.push(item.title)
-                //             that.playMusicList.push(item);
-                //         }
-                //     }
-                // })
-                // that.fileList.forEach(function(item){
-                //     that.songNameList.push(item.title);
-                // })
+                this.getPersonInfo();
             },
             async getAllFile () {
                 this.isShowLoading = true
@@ -434,6 +429,42 @@
                 }).catch(err => {
                     console.log(err, '查询告警事情状态失败')
                 })
+            },
+            async getPersonInfo(){
+                let r1 = await this.getPerson(3);
+                let r2 = await this.getPerson(8);
+
+                console.log(r1,'severity');
+                console.log(r2,'manager');
+                if(r1.length > 0){
+                    this.personInfo.push(this.addPersonn(r1));
+                }
+                if(r2.length > 0){
+                    this.personInfo.push(this.addPersonn(r2));
+                }
+            },
+            addPersonn(array){
+                let temp = array.map((item)=>{
+                    return {
+                        id: item.personBean.id,
+                        name:item.personBean.name,
+                        phone:item.personBean.phone
+                    }
+                })
+                return {
+                    label:array[0].jobName,
+                    options:temp
+                }
+            },
+            async getPerson(type){
+                let personInfo = [];
+                await api.person.getJobPerson(type).then(res => {
+                    console.log(res, '请求成功')
+                    personInfo = res;
+                }).catch(err => {
+                    console.log(err, '请求失败')
+                })
+                return personInfo;
             }
 
 
@@ -443,17 +474,17 @@
 
         },
         async created () {
+            this.init();
             console.log(this.Info);
             this.eventInfo = this.Info;
-
+            if(this.eventInfo.ownerId){
+                this.getNameById(this.eventInfo.ownerId);
+            }
         },
         components : {
 
         },
          mounted () {
-            //异步加载
-             this.init();
-
         }
     }
 </script>
@@ -616,6 +647,16 @@
                          display: none;
                      }
                  }
+                .alarmRule{
+                    .showRuleDetail{
+                        cursor:pointer;
+                        margin-left: rem(15);
+                    }
+                    .showRuleDetail:hover{
+                        color:blue;
+                        text-decoration: underline;
+                    }
+                }
                  .attachment{
                      .showFilelist{
                          display: flex;
@@ -700,10 +741,10 @@
                      i{
                          font-size: rem(16);
                      }
-                     span{
-                         background: #f0f2f5;
-                         color: #909399;
-                     }
+                     /*span{*/
+                         /*background: #f0f2f5;*/
+                         /*color: #909399;*/
+                     /*}*/
                  }
 
              }

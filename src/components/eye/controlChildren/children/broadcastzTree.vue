@@ -43,7 +43,8 @@
                 return data.label.indexOf(value) !== -1;
             },
             getChecked (node,info) {
-                if (this.regionId.includes(node.key)) {
+                console.log(node.data,'123123')
+                if (this.regionId.includes(node.data.id)) {
                     return
                 }
                 let checkedKeysId = this.$refs.tree.getCheckedKeys()

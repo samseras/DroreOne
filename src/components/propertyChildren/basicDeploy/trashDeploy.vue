@@ -12,8 +12,10 @@
                         @selectedAll = 'selectedAll'
                         @fixedInfo = 'fixedInfo'
                         :choseId="choseInfoId"
-                        :listsLength="trashList.length"
+                        :listsLength="listLength"
                         :personListFlag="selectFlag"
+                        @nextPage="nextPage"
+                        @previousPage="previousPage"
                         @searchAnything="searchAnything"
                         @getAllTrash="getAllTrash">
 
@@ -129,7 +131,10 @@
                 isDisabled: true,
                 title: '',
                 choseId:[],
-                isShowLoading: false
+                isShowLoading: false,
+                currentNum: 50,
+                listLength: '',
+                pageNum: 1
             }
         },
         methods : {
@@ -377,13 +382,31 @@
                     this.$message.error('请选择一条数据')
                 }
             },
+            previousPage (page) {
+                console.log(page, '这是传过来的pageNum')
+                this.pageNum = page
+                this.getAllTrash ()
+            },
+            nextPage (page) {
+                console.log(page, '这个是下一页的pageNUM')
+                this.pageNum = page
+                this.getAllTrash ()
+            },
+
             async getAllTrash () {
                 console.log('垃圾桶')
                 this.isShowLoading = true
                 await api.dustbin.getAllDustbin().then(res => {
                     console.log(res, '这是请求回来的数据')
+                    this.listLength = res.length
                     this.isShowLoading = false
                     this.trashList = res
+                    this.trashList = this.trashList.filter((item,index) =>{
+                        if(index < (this.pageNum*35)&& index>(this.pageNum-1)*35 -1){
+                            return item
+                        }
+                    })
+
                     for (let i = 0; i < this.trashList.length; i++) {
                         this.trashList[i].location = `${this.trashList[i].longitude},${this.trashList[i].latitude}`
                         this.trashList[i].checked = false

@@ -55,7 +55,7 @@
                         (安保)
                     </p>
                     <p class="relatedManager">管&nbsp;理&nbsp;&nbsp;者：
-                        <el-select v-model="alarmcolumnInfo.relatedManager" size="mini" multiple placeholder="请选择" :disabled='isReadonly'>
+                        <el-select v-model="alarmcolumnInfo.relatedManagerIds" size="mini" multiple placeholder="请选择" :disabled='isReadonly'>
                             <el-option-group
                                 v-for="group in personInfo"
                                 :key="group.label"
@@ -93,7 +93,7 @@
                     </p>
 
                     <p class="severityName">严重等级：
-                        <el-select  v-model="firefightingInfo.severityId" @change="ownerChange" size="mini" class="" placeholder="请选择" :disabled='isReadonly'>
+                        <el-select  v-model="firefightingInfo.severityId" size="mini" class="" placeholder="请选择" :disabled='isReadonly'>
                             <el-option
                                 v-for="item in levelInfo"
                                 :key="item.id"
@@ -111,7 +111,7 @@
                         (安保)
                     </p>
                     <p class="relatedManager">管&nbsp;理&nbsp;&nbsp;者：
-                        <el-select v-model="firefightingInfo.relatedManager" size="mini" multiple placeholder="请选择" :disabled='isReadonly'>
+                        <el-select v-model="firefightingInfo.relatedManagerIds" size="mini" multiple placeholder="请选择" :disabled='isReadonly'>
                             <el-option-group
                                 v-for="group in personInfo"
                                 :key="group.label"
@@ -149,7 +149,7 @@
                     </p>
 
                     <p class="severityName">严重等级：
-                        <el-select  v-model="crossborderInfo.severityId" size="mini" multiple class="" placeholder="请选择" :disabled='isReadonly'>
+                        <el-select  v-model="crossborderInfo.severityId" size="mini" placeholder="请选择" :disabled='isReadonly'>
                             <el-option
                                 v-for="item in levelInfo"
                                 :key="item.id"
@@ -167,7 +167,7 @@
                         (安保)
                     </p>
                     <p class="relatedManager">管&nbsp;理&nbsp;&nbsp;者：
-                        <el-select v-model="crossborderInfo.relatedManager" size="mini" multiple placeholder="请选择" :disabled='isReadonly'>
+                        <el-select v-model="crossborderInfo.relatedManagerIds" size="mini" multiple placeholder="请选择" :disabled='isReadonly'>
                             <el-option-group
                                 v-for="group in personInfo"
                                 :key="group.label"
@@ -214,7 +214,7 @@
                         </el-select>
                     </p>
                     <p class="severityName">严重等级：
-                        <el-select  v-model="offtrackInfo.severityId" size="mini" multiple class="" placeholder="请选择" :disabled='isReadonly'>
+                        <el-select  v-model="offtrackInfo.severityId" size="mini" class="" placeholder="请选择" :disabled='isReadonly'>
                             <el-option
                                 v-for="item in levelInfo"
                                 :key="item.id"
@@ -232,7 +232,7 @@
                         (米)
                     </p>
                     <p class="relatedManager">管&nbsp;理&nbsp;&nbsp;者：
-                        <el-select v-model="offtrackInfo.relatedManager" size="mini" multiple placeholder="请选择" :disabled='isReadonly'>
+                        <el-select v-model="offtrackInfo.relatedManagerIds" size="mini" multiple placeholder="请选择" :disabled='isReadonly'>
                             <el-option-group
                                 v-for="group in personInfo"
                                 :key="group.label"
@@ -270,16 +270,21 @@
                     </p>
                     <p class="relatedDevice">关联设备：
                         <el-select  v-model="overlimitInfo.relatedDevice" size="mini" multiple class="" placeholder="请选择" :disabled='isReadonly'>
-                            <el-option
-                                v-for="item in levelInfo"
-                                :key="item.value"
-                                :label="item.label"
-                                :value="item.value">
-                            </el-option>
+                            <el-option-group
+                                v-for="group in overlimitDeviceInfo"
+                                :key="group.label"
+                                :label="group.label">
+                                <el-option
+                                    v-for="item in group.options"
+                                    :key="item.id"
+                                    :label="item.name"
+                                    :value="item.id">
+                                </el-option>
+                            </el-option-group>
                         </el-select>
                     </p>
                     <p class="severityName">严重等级：
-                        <el-select  v-model="overlimitInfo.severityId" size="mini" multiple class="" placeholder="请选择" :disabled='isReadonly'>
+                        <el-select  v-model="overlimitInfo.severityId" size="mini" class="" placeholder="请选择" :disabled='isReadonly'>
                             <el-option
                                 v-for="item in levelInfo"
                                 :key="item.id"
@@ -293,7 +298,7 @@
                         (人)
                     </p>
                     <p class="relatedManager">管&nbsp;理&nbsp;&nbsp;者：
-                        <el-select v-model="overlimitInfo.relatedManager" size="mini" multiple placeholder="请选择" :disabled='isReadonly'>
+                        <el-select v-model="overlimitInfo.relatedManagerIds" size="mini" multiple placeholder="请选择" :disabled='isReadonly'>
                             <el-option-group
                                 v-for="group in personInfo"
                                 :key="group.label"
@@ -340,7 +345,7 @@
                         </el-select>
                     </p>
                     <p class="severityName">严重等级：
-                        <el-select  v-model="waterlevelInfo.severityId" size="mini" multiple class="" placeholder="请选择" :disabled='isReadonly'>
+                        <el-select  v-model="waterlevelInfo.severityId" size="mini" class="" placeholder="请选择" :disabled='isReadonly'>
                             <el-option
                                 v-for="item in levelInfo"
                                 :key="item.id"
@@ -358,7 +363,7 @@
                         (米)
                     </p>
                     <p class="relatedManager">管&nbsp;理&nbsp;&nbsp;者：
-                        <el-select v-model="waterlevelInfo.relatedManager" size="mini" multiple placeholder="请选择" :disabled='isReadonly'>
+                        <el-select v-model="waterlevelInfo.relatedManagerIds" size="mini" multiple placeholder="请选择" :disabled='isReadonly'>
                             <el-option-group
                                 v-for="group in personInfo"
                                 :key="group.label"
@@ -405,7 +410,7 @@
                         </el-select>
                     </p>
                     <p class="envDataSource">来&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;源：
-                        <el-select  v-model="conditionInfo.envDataSource" size="mini" class="" placeholder="请选择" :disabled='isReadonly'>
+                        <el-select  v-model="conditionInfo.envDataSource" @change = "sourceChange" size="mini" class="" placeholder="请选择" :disabled='isReadonly'>
                             <el-option
                                 v-for="item in source"
                                 :key="item.id"
@@ -415,7 +420,7 @@
                         </el-select>
                     </p>
                     <p class="relatedDevice">关联设备：
-                        <el-select  v-model="conditionInfo.relatedDevice" size="mini" multiple class="" placeholder="请选择" :disabled='isReadonly'>
+                        <el-select  v-model="conditionInfo.relatedDevice" size="mini" multiple class="" placeholder="请选择" :disabled='isReadonly || deviceReadOnly'>
                             <el-option
                                 v-for="item in levelInfo"
                                 :key="item.value"
@@ -441,7 +446,7 @@
                         <el-input type="text" v-model='conditionInfo.lowerThreshold' class="inputText" :maxlength="15" :disabled='isReadonly'></el-input>
                     </p>
                     <p class="relatedManager">管&nbsp;理&nbsp;&nbsp;者：
-                        <el-select v-model="conditionInfo.relatedManager" size="mini" multiple placeholder="请选择" :disabled='isReadonly'>
+                        <el-select v-model="conditionInfo.relatedManagerIds" size="mini" multiple placeholder="请选择" :disabled='isReadonly'>
                             <el-option-group
                                 v-for="group in personInfo"
                                 :key="group.label"
@@ -491,8 +496,7 @@
                     severityName:'',
                     deviceScope:'',
                     securityScope:'',
-                    relatedManager:'',
-                    relatedManagerName:'',
+                    relatedManagerIds:[],
                     description:'',
                     isEnabled:false
                 },
@@ -503,7 +507,7 @@
                     severityName:'',
                     deviceScope:'',
                     securityScope:'',
-                    relatedManager:[],
+                    relatedManagerIds:[],
                     description:'',
                     isEnabled:false
                 },
@@ -514,7 +518,7 @@
                     severityName:'',
                     deviceScope:'',
                     securityScope:'',
-                    relatedManager:[],
+                    relatedManagerIds:[],
                     description:'',
                     isEnabled:false
                 },
@@ -529,7 +533,7 @@
                     relatedSchedule:'',
                     extendThreshold:'',
                     upperThreshold:'',
-                    relatedManager:[],
+                    relatedManagerIds:[],
                     description:'',
                     isEnabled:false
                 },
@@ -540,7 +544,7 @@
                     severityId:'',
                     severityName:'',
                     upperThreshold:'',
-                    relatedManager:[],
+                    relatedManagerIds:[],
                     description:'',
                     isEnabled:false
                 },
@@ -552,7 +556,7 @@
                     severityName:'',
                     upperThreshold:'',
                     lowerThreshold:'',
-                    relatedManager:[],
+                    relatedManagerIds:[],
                     description:'',
                     isEnabled:false
                 },
@@ -567,11 +571,12 @@
                     severityName:'',
                     upperThreshold:'',
                     lowerThreshold:'',
-                    relatedManager:[],
+                    relatedManagerIds:[],
                     description:'',
                     isEnabled:false
                 },
                 policeInfo:[],
+                overlimitDeviceInfo:[],
                 patrolInfo:[],
                 levelInfo:[
                     {
@@ -629,10 +634,15 @@
                     }
                 ],
                 personInfo:[],
-                isShowLoading: false
+                alarmType:[],
+                isShowLoading: false,
+                deviceReadOnly:false
             }
         },
         methods: {
+            sourceChange(val){
+                val == '0' ? this.deviceReadOnly  = true : this.deviceReadOnly  = false
+            },
             closeDialog () {
                 this.$emit('closeDialog')
             },
@@ -644,6 +654,11 @@
                     }
                 })
                 return name;
+            },
+            getAlarmTypeId(typeName){
+                 let typeInfo =  this.alarmType.filter(item=> item.name == typeName)
+
+                  return typeInfo.id
             },
             saveDialog(){
                 let objArray = [];
@@ -670,7 +685,11 @@
                         newInfo = this.alarmcolumnInfo;
                         newInfo.severityName = this.severityId2Name(newInfo.severityId)
                         newInfo.relatedDevices = newInfo.relatedDevices.join(",")
-                        newInfo.relatedManager = newInfo.relatedManager.join(",")
+                        newInfo.relatedManagerIds = newInfo.relatedManagerIds.join(",")
+                        newInfo.isEnabled =true;//默认启用
+                        //获取规则类型
+                        console.log(this.alarmType)
+                        newInfo.alarmTypeId = this.getAlarmTypeId("报警柱")
                         console.log(newInfo,"返回的数据")
                         if (newInfo.id) {  //编辑或查看
                             objArray.push(newInfo)
@@ -700,7 +719,11 @@
                         console.log(this.firefightingInfo);
                         newInfo = this.firefightingInfo;
                         newInfo.severityName = this.severityId2Name(newInfo.severityId)
-                        newInfo.relatedManager = newInfo.relatedManager.join(",")
+                        newInfo.relatedManagerIds = newInfo.relatedManagerIds.join(",")
+                        newInfo.isEnabled =true;//默认启用
+                        //获取规则类型
+                        console.log(this.alarmType)
+                        newInfo.alarmTypeId = this.getAlarmTypeId("消防")
                         if (newInfo.id) {
                             objArray.push(newInfo)
                             this.$emit('saveEditInfo',objArray)
@@ -728,7 +751,11 @@
                         console.log(this.crossborderInfo);
                         newInfo = this.crossborderInfo;
                         newInfo.severityName = this.severityId2Name(newInfo.severityId)
-                        newInfo.relatedManager = newInfo.relatedManager.join(",")
+                        newInfo.relatedManagerIds = newInfo.relatedManagerIds.join(",")
+                        newInfo.isEnabled =true;//默认启用
+                        //获取规则类型
+                        console.log(this.alarmType)
+                        newInfo.alarmTypeId = this.getAlarmTypeId("越界")
                         if (newInfo.id) {
                             objArray.push(newInfo)
                             this.$emit('saveEditInfo',objArray)
@@ -757,7 +784,11 @@
                         console.log(this.offtrackInfo);
                         newInfo = this.offtrackInfo;
                         newInfo.severityName = this.severityId2Name(newInfo.severityId)
-                        newInfo.relatedManager = newInfo.relatedManager.join(",")
+                        newInfo.relatedManagerIds = newInfo.relatedManagerIds.join(",")
+                        newInfo.isEnabled =true;//默认启用
+                        //获取规则类型
+                        console.log(this.alarmType)
+                        newInfo.alarmTypeId = this.getAlarmTypeId("偏离轨迹")
                         if (newInfo.id) {
                             objArray.push(newInfo)
                             this.$emit('saveEditInfo',objArray)
@@ -786,7 +817,12 @@
                         console.log(this.overlimitInfo);
                         newInfo = this.overlimitInfo;
                         newInfo.severityName = this.severityId2Name(newInfo.severityId)
-                        newInfo.relatedManager = newInfo.relatedManager.join(",")
+                        newInfo.relatedManagerIdsIds = newInfo.relatedManagerIds.join(",")
+                        newInfo.relatedDeviceIds = newInfo.relatedDevices.join(",")
+                        newInfo.isEnabled =true;//默认启用
+                        //获取规则类型
+                        console.log(this.alarmType)
+                        newInfo.alarmTypeId = this.getAlarmTypeId("客流量超限")
                         if (newInfo.id) {
                             objArray.push(newInfo)
                             this.$emit('saveEditInfo',objArray)
@@ -815,7 +851,11 @@
                         console.log(this.waterlevelInfo);
                         newInfo = this.waterlevelInfo;
                         newInfo.severityName = this.severityId2Name(newInfo.severityId)
-                        newInfo.relatedManager = newInfo.relatedManager.join(",")
+                        newInfo.relatedManagerIds = newInfo.relatedManagerIds.join(",")
+                        newInfo.isEnabled =true;//默认启用
+                        //获取规则类型
+                        console.log(this.alarmType)
+                        newInfo.alarmTypeId = this.getAlarmTypeId("水位")
                         if (newInfo.id) {
                             objArray.push(newInfo)
                             this.$emit('saveEditInfo',objArray)
@@ -844,7 +884,11 @@
                         console.log(this.conditionInfo);
                         newInfo = this.conditionInfo;
                         newInfo.severityName = this.severityId2Name(newInfo.severityId)
-                        newInfo.relatedManager = newInfo.relatedManager.join(",")
+                        newInfo.relatedManagerIds = newInfo.relatedManagerIds.join(",")
+                        newInfo.isEnabled =true;//默认启用
+                        //获取规则类型
+                        console.log(this.alarmType)
+                        newInfo.alarmTypeId = this.getAlarmTypeId("环境")
                         this.envType.forEach((item)=>{
                             if(newInfo.envTypeId == item.id){
                                 newInfo.envTypeName = item.name;
@@ -939,13 +983,56 @@
                     console.log(err, '请求失败')
                 })
             },
+            async getGateDevice(){
+                let gateInfo = {};
+                await api.gate.getAllGate().then(res => {
+                    console.log(res, '请求成功')
+                    gateInfo.label = "闸机";
+                    gateInfo.options = res.devices;
+                }).catch(err => {
+                    console.log(err, '请求失败')
+                })
+                return gateInfo;
+            },
+            async getCameraDevice(){
+                let cameraInfo = {};
+                await api.camera.getAllCamera().then(res => {
+                    console.log(res, '请求成功')
+                    cameraInfo.label = "摄像头";
+                    cameraInfo.options = res.devices;
+                }).catch(err => {
+                    console.log(err, '请求失败')
+                })
+                return cameraInfo;
+            },
+            async getOverlimitDevice(){
+                let r1 = await this.getCameraDevice();
+                let r2 = await this.getGateDevice();
+
+                this.overlimitDeviceInfo.push(r1)
+                this.overlimitDeviceInfo.push(r2)
+
+            },
+            async getAlarmType(){
+                await api.alarm.getAlarmType().then(res => {
+                    console.log(res, '请求成功')
+                    this.alarmType = res;
+                }).catch(err => {
+                    console.log(err, '请求失败')
+                })
+            },
             init(){
                 //人员
                 this.getPersonInfo();
-                //报警柱设备
+                console.log(this.personInfo)
+                //关联设备（报警柱）  --报警柱
                 this.getPoliceDevice();
-                //关联巡检计划
+                //关联巡检计划  --偏离轨迹
                 this.getSchedules();
+                // 关联设备（闸机，摄像头）  --客流量
+                this.getOverlimitDevice();
+
+                this.getAlarmType();
             }
 
 
@@ -956,14 +1043,21 @@
             console.log(this.Info,'  Info')
             if (this.route.includes('alarmcolumn')) {
                 this.alarmcolumnInfo = this.Info;
+                if(!this.alarmcolumnInfo.id){   //如果为新增，严重等级默认为高
+                    this.alarmcolumnInfo.severityId = '1';
+                }
             } else if(this.route.includes('firefighting')) {
                 // this.getAllBroadcast()
                 this.firefightingInfo = this.Info;
-
-                this.timeSelect = this.broadList.broadcastSchedule.watchTime
+                if(!this.firefightingInfo.id){
+                    this.firefightingInfo.severityId = '1';
+                }
             } else if(this.route.includes('crossborder')) {
                 // this.getAllLight()
                 this.crossborderInfo = this.Info;
+                if(!this.crossborderInfo.id){
+                    this.crossborderInfo.severityId = '1'
+                }
 
             } else if(this.route.includes('speeding')) {
                 // this.getAllPurifierPerson()
@@ -972,12 +1066,28 @@
 
             } else if(this.route.includes('offtrack')) {
                 this.offtrackInfo = this.Info;
+                if(!this.offtrackInfo.id){
+                    this.offtrackInfo.severityId = '3';
+                }
             } else if(this.route.includes('overlimit')){
                 this.overlimitInfo = this.Info;
+                if(!this.overlimitInfo.id){
+                    this.overlimitInfo.severityId = '1';
+                }
             } else if(this.route.includes('waterlevel')){
                 this.waterlevelInfo = this.Info;
+                if(!this.waterlevelInfo.id){
+                    this.waterlevelInfo.severityId = '2';
+                }
             } else if(this.route.includes('condition')){
                 this.conditionInfo = this.Info;
+                if(!this.conditionInfo.id){
+                    this.conditionInfo.severityId = '3';
+                }
+                //来源为外部系统，关联设备不可用
+                if(this.conditionInfo.envDataSource == "0"){
+                    this.deviceReadOnly = true;
+                }
                 // this.getEnvType();
             }
         },

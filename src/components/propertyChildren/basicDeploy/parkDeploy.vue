@@ -12,8 +12,10 @@
                         @selectedAll = 'selectedAll'
                         @fixedInfo = 'fixedInfo'
                         :choseId="choseInfoId"
-                        :listsLength="parkList.length"
+                        :listsLength="listLength"
                         :personListFlag="selectFlag"
+                        @nextPage="nextPage"
+                        @previousPage="previousPage"
                         @searchAnything="searchAnything"
                         @getAllPark="getAllPark">
 
@@ -143,7 +145,9 @@
                 title: '',
                 choseId:[],
                 isShowLoading: false,
-                currentNum: 50
+                currentNum: 50,
+                listLength: '',
+                pageNum: 1
             }
         },
         methods: {
@@ -391,12 +395,30 @@
                     this.$message.error('请选择一条数据')
                 }
             },
+            previousPage (page) {
+                console.log(page, '这是传过来的pageNum')
+                this.pageNum = page
+                this.getAllPark ()
+            },
+            nextPage (page) {
+                console.log(page, '这个是下一页的pageNUM')
+                this.pageNum = page
+                this.getAllPark ()
+            },
             async getAllPark () {
                 this.isShowLoading = true
                 await api.park.getAllPark().then(res => {
                     console.log(res, '这是数据')
+                    this.listLength = res.length
                     this.isShowLoading = false
                     this.parkList = res
+                    this.parkList = this.parkList.filter((item,index) =>{
+                        if(index <(this.pageNum*35) && index>(this.pageNum-1)*35-1){
+                            return item
+                        }
+                    })
+
+
                     for (let i = 0; i < this.parkList.length; i++) {
                         this.parkList[i].checked = false
                         this.parkList[i].status = true

@@ -9,8 +9,10 @@
                         @deletInfo = "deletInfo"
                         @toggleList = "toggleList"
                         :choseId="choseInfoId"
-                        :listsLength="boatCarList.length"
+                        :listsLength="listLength"
                         :personListFlag="selectFlag"
+                        @nextPage="nextPage"
+                        @previousPage="previousPage"
                         @choseType = 'choseType'
                         @selectedAll = 'selectedAll'
                         @fixedInfo = 'fixedInfo'
@@ -141,7 +143,10 @@
                 isDisabled: true,
                 title: '',
                 isShowLoading: false,
-                selection: []
+                selection: [],
+                currentNum: 50,
+                listLength: '',
+                pageNum: 1
             }
         },
         methods: {
@@ -392,12 +397,30 @@
                      this.$message.error('请选择一条数据')
                  }
             },
+            previousPage (page) {
+                console.log(page, '这是传过来的pageNum')
+                this.pageNum = page
+                this.getAllBoat ()
+            },
+            nextPage (page) {
+                console.log(page, '这个是下一页的pageNUM')
+                this.pageNum = page
+                this.getAllBoat ()
+            },
             async getAllBoat (){
                 this.isShowLoading = true
                 await api.boat.getAllBoat().then(res => {
                     this.isShowLoading = false
+                    this.listLength = res.length;
                     this.boatCarList = res
+                    this.boatCarList = this.boatCarList.filter((item,index) => {
+                        if (index < (this.pageNum * 35 ) && index > ((this.pageNum -1) * 35 ) - 1 ) {
+                            return item
+                        }
+                    })
+
                     console.log(res, '这是请求回来的')
+
                     for (let i = 0; i < this.boatCarList.length; i++) {
                         this.boatCarList[i].checked = false
                         this.boatCarList[i].status = true

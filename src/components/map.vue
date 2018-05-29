@@ -2340,12 +2340,14 @@
             background-size: cover;
             top:rem(22);
             right: rem(20);
+            display: none;
         }
         button.menuPhone{
             background: url("/static/img/menuPhone.svg");
             background-size: cover;
             right:rem(5);
             bottom: rem(8);
+            display: none;
         }
     }
     .contextmenu.Light i{
