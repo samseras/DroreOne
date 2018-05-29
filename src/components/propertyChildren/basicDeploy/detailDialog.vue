@@ -56,7 +56,7 @@
                         </el-select>
                     </p>
                     <p class="sex">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称：
-                        <el-input type="text"v-model="boatCar.vehicle.serialNum" :disabled="isDisabled"></el-input>
+                        <el-input type="text"v-model="boatCar.vehicle.serialNum" :maxlength="15" :disabled="isDisabled"></el-input>
                     </p>
                     <p class="type wrapstyle">维护状态：
                         <el-select v-model="boatCar.vehicle.maintenanceStatus" placeholder="请选择" :disabled="isDisabled">
@@ -94,7 +94,8 @@
                             </el-option>
                         </el-select>
                     </p>-->
-                    <p class="phoneNum person-driv">联系电话：
+                    <!--目前车船人员不显示，暂时隐藏-->
+                    <p class="phoneNum " v-if="false">联系电话：
                     <!--<p class="phoneNum person-driv" v-if="isDisabled">联系电话：-->
                         <el-input type="text"v-model="boatCar.driverPhone" :disabled="isDisabled"></el-input>
                     </p>
@@ -103,7 +104,7 @@
                     </p>
                     <p class="textarea ms">
                         <span class="des">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：</span>
-                        <el-input type="textarea"  v-model="boatCar.vehicle.description" :disabled="isDisabled" ></el-input>
+                        <el-input type="textarea"  v-model="boatCar.vehicle.description" :maxlength="140" :disabled="isDisabled" ></el-input>
                     </p>
                     <div class="img">
                         <img :src="getUrl(boatCar.picturePath)" alt="" v-if="isDisabled" @error="imgError">
@@ -137,7 +138,7 @@
                     </p>
                     <p class="textarea ms">
                         <span class="des">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：</span>
-                        <el-input type="textarea"  v-model="indicator.description" :disabled="isDisabled" ></el-input>
+                        <el-input type="textarea"  v-model="indicator.description" :disabled="isDisabled" :maxlength="140"></el-input>
                     </p>
                     <div class="img">
                         <img :src="getUrl(indicator.picturePath)" alt="" v-if="isDisabled" @error="imgError">
@@ -182,7 +183,7 @@
                     </p>
                     <p class="textarea ms">
                         <span class="des">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：</span>
-                        <el-input type="textarea"  v-model="trash.description" :disabled="isDisabled" ></el-input>
+                        <el-input type="textarea"  v-model="trash.description" :disabled="isDisabled" :maxlength="140"></el-input>
                     </p>
                     <div class="img">
                         <img :src="getUrl(trash.picturePath)" alt="" v-if="isDisabled" @error="imgError">
@@ -227,7 +228,7 @@
                     </p>
                     <p class="textarea ms">
                         <span class="des">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：</span>
-                        <el-input type="textarea"  v-model="scenic.description" :disabled="isDisabled" ></el-input>
+                        <el-input type="textarea"  v-model="scenic.description" :disabled="isDisabled" :maxlength="140"></el-input>
                     </p>
                     <div class="img">
                         <img :src="getUrl(scenic.picturePath)" alt="" v-if="isDisabled" @error="imgError">
@@ -259,7 +260,7 @@
                         </el-select>
                     </p>
                     <p class="idNum">容&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;量：
-                        <el-input type="text"v-model="shop.businessBean.capacity" :disabled="isDisabled"></el-input>
+                        <el-input type="text"v-model="shop.businessBean.capacity" :disabled="isDisabled" ></el-input>
                     </p>
 
                     <!--<p class="phoneNum">当前人数：
@@ -281,7 +282,7 @@
                     </p>
                     <p class="textarea ms">
                         <span class="des">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：</span>
-                        <el-input type="textarea"  v-model="shop.description" :disabled="isDisabled" ></el-input>
+                        <el-input type="textarea"  v-model="shop.description" :disabled="isDisabled" :maxlength="140"></el-input>
                     </p>
                     <div class="img">
                         <img :src="getUrl(shop.picturePath)" alt="" v-if="isDisabled" @error="imgError">
@@ -333,7 +334,7 @@
                     </p>
                     <p class="textarea ms">
                         <span class="des">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：</span>
-                        <el-input type="textarea"  v-model="park.description" :disabled="isDisabled" ></el-input>
+                        <el-input type="textarea"  v-model="park.description" :disabled="isDisabled" :maxlength="140"></el-input>
                     </p>
                     <div class="img">
                         <img :src="getUrl(park.picturePath)" alt="" v-if="isDisabled" @error="imgError">
@@ -370,7 +371,7 @@
                     </p>
                     <p class="textarea ms">
                         <span class="des">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：</span>
-                        <el-input type="textarea"  v-model="toilet.description" :disabled="isDisabled" ></el-input>
+                        <el-input type="textarea"  v-model="toilet.description" :disabled="isDisabled" :maxlength="140"></el-input>
                     </p>
                     <div class="img">
                         <img :src="getUrl(toilet.picturePath)" alt="" v-if="isDisabled" @error="imgError">
@@ -393,7 +394,7 @@
                     </p>
                     <p class="textarea ms">
                         <span class="des">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：</span>
-                        <el-input type="textarea"  v-model="area.description" :disabled="isDisabled" ></el-input>
+                        <el-input type="textarea"  v-model="area.description" :disabled="isDisabled" :maxlength="140"></el-input>
                     </p>
                 </div>
                 <!--路网-->
@@ -416,7 +417,7 @@
                     </p>
                     <p class="textarea ms">
                         <span class="des">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：</span>
-                        <el-input type="textarea"  v-model="roat.description" :disabled="isDisabled" ></el-input>
+                        <el-input type="textarea"  v-model="roat.description" :disabled="isDisabled" :maxlength="140"></el-input>
                     </p>
                 </div>
                 <!--设施类行-->
@@ -473,7 +474,7 @@
                     </p>
                     <p class="textarea ms">
                         <span class="des">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：</span>
-                        <el-input type="textarea"  v-model="tree.plant.description" :disabled="isDisabled" ></el-input>
+                        <el-input type="textarea"  v-model="tree.plant.description" :disabled="isDisabled" :maxlength="140"></el-input>
                     </p>
                     <div class="img">
                         <img :src="getUrl(tree.picturePath)" alt="" v-if="isDisabled" @error="imgError">
@@ -517,7 +518,7 @@
                     </p>
                     <p class="textarea ms">
                         <span class="des">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：</span>
-                        <el-input type="textarea"  v-model="build.building.description" :disabled="isDisabled" ></el-input>
+                        <el-input type="textarea"  v-model="build.building.description" :disabled="isDisabled" :maxlength="140"></el-input>
                     </p>
                     <div class="img">
                         <img :src="getUrl(build.picturePath)" alt="" v-if="isDisabled" @error="imgError">
@@ -1767,9 +1768,6 @@
                         box-sizing: border-box;
                         border-radius: rem(5);
                     }
-                }
-                .person-driv{
-                    display:none;
                 }
                 .ms{
                     span{
