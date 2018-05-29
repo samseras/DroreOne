@@ -59,8 +59,17 @@
                         </el-table-column>
 
                         <el-table-column
-                            prop="description"
                             label="描述">
+                            <template slot-scope="scope">
+                                <div class="box" v-if="scope.row.description">
+                                    <div class="bottom">
+                                        <el-tooltip class="item" effect="light" :content=scope.row.description placement="bottom">
+                                            <el-button>{{scope.row.description}}</el-button>
+                                        </el-tooltip>
+                                    </div>
+                                </div>
+                            </template>
+
                         </el-table-column>
                         <el-table-column>
                             <template slot-scope="scope">
@@ -468,6 +477,17 @@
         }
         .el-checkbox__inner{
             margin-top:rem(5);
+        }
+        .cameraList .el-button{
+            border:1px solid transparent;
+            text-align: left;
+        }
+        .cameraList .box .el-button span{
+            display:inline-block;
+            width: 200px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
     }
 </style>
