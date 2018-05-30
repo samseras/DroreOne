@@ -62,6 +62,7 @@
 
 <script>
     import api from '@/api'
+    import {mapGetters,mapMutations} from 'vuex'
 
     export default{
         props: ['choseId','listsLength','personListFlag'],
@@ -93,6 +94,7 @@
             }
         },
         methods:{
+            ...mapMutations(['SHOWHARDWAREICON']),
             startSearch () {
                 // if (this.searchContent !== '') {
                 this.$emit('searchAnything', this.searchContent)
@@ -285,6 +287,7 @@
                     this.isShowIcon = true
                 }
                 this.$emit('toggleList',type)
+                this.$store.commit('SHOWHARDWAREICON',type)
             },
             downloadTemplate(){
                 window.location.href="/static/template/devices_import.csv";
@@ -335,10 +338,17 @@
                 if (this.listsLength > 0) {
                     this.pageAllNum = Math.ceil(this.listsLength / 35)
                 }
+            },
+            getHardWareIcon () {
+                this.toggleList(this.getHardWareIcon)
             }
         },
         created(){
             this.showPersonJob()
+            this.toggleList(this.getHardWareIcon)
+        },
+        computed: {
+            ...mapGetters(['getHardWareIcon'])
         }
     }
 </script>

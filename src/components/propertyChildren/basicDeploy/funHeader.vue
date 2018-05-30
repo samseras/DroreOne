@@ -56,9 +56,11 @@
 
 <script>
     import api from '@/api'
+    import {mapGetters,mapMutations} from 'vuex'
     export default {
         name: "fun-header",
         props:['choseId','listsLength','personListFlag'],
+
         data () {
             return {
                 filterList: [],
@@ -87,6 +89,7 @@
             }
         },
         methods: {
+            ...mapMutations(['SHOWBASICICON']),
             startSearch () {
                 // if (this.searchContent !== '') {
                     this.$emit('searchAnything', this.searchContent)
@@ -393,6 +396,7 @@
                     this.isShowIcon = true
                 }
                 this.$emit('toggleList',type)
+                this.$store.commit('SHOWBASICICON',type)
             },
             choseType () {
                 console.log(this.filterList, 'opopopopopo')
@@ -474,11 +478,19 @@
                 if (this.listsLength > 0) {
                     this.pageAllNum = Math.ceil(this.listsLength / 35)
                 }
+            },
+            getBasicIcon () {
+                console.log(this.getBasicIcon, 'ioioiooiooi')
+                this.toggleList(this.getBasicIcon)
             }
         },
         created () {
             this.showType()
             this.showHeader()
+            this.toggleList(this.getBasicIcon)
+        },
+        computed:{
+            ...mapGetters(['getBasicIcon'])
         }
     }
 </script>
