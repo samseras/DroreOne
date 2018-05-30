@@ -16,7 +16,7 @@
                             <el-input type="text"v-model="security.inspectionSchedule.name"class="inputText" :maxlength="15" :disabled='isDisabled'></el-input>
                         </p>
                         <p class="time">时&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 间：
-                            <el-checkbox-group v-model = "filterList" @change="security.inspectionSchedule.customizedDays = false" :disabled='isDisabled'>
+                            <el-checkbox-group v-model="filterList" @change="selectDays" :disabled='isDisabled'>
                                 <el-checkbox v-for="item in week" :label="item.id" :key="item.id">{{item.type}}</el-checkbox>
                             </el-checkbox-group>
                             <el-checkbox label="自定义" @change="weekCustom(security.inspectionSchedule.customizedDays)" v-model="security.inspectionSchedule.customizedDays" :disabled='isDisabled'></el-checkbox>
@@ -86,7 +86,7 @@
                             <el-input type="text"v-model="broadList.broadcastSchedule.name" class="inputText" :maxlength="15" :disabled='isDisabled'></el-input>
                         </p>
                         <p class="time">时&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 间：
-                            <el-checkbox-group v-model="filterList" @change="broadList.broadcastSchedule.customizedDays = false" :disabled='isDisabled'>
+                            <el-checkbox-group v-model="filterList" @change="selectDays" :disabled='isDisabled'>
                                 <el-checkbox v-for="item in week" :label="item.id" :key="item.id">{{item.type}}</el-checkbox>
                             </el-checkbox-group>
                             <el-checkbox label="自定义" @change="weekCustom(broadList.broadcastSchedule.customizedDays)" v-model="broadList.broadcastSchedule.customizedDays" :disabled='isDisabled'></el-checkbox>
@@ -126,10 +126,10 @@
                         <!--<el-radio v-model="radio" label="1">是</el-radio>-->
                         <!--<el-radio v-model="radio" label="0">否</el-radio>-->
                         <!--</p>-->
-                        <p class="uploadText">定义内容：
+                        <p class="uploadText"><span class="updataTitle">定义内容：</span>
                             <!--<input type="text"v-model="broadList.musicIds" class="inputText">-->
                             <span v-for="item in broadList.musics" :key="item.id">{{item.title}}</span>
-                            <el-button slot="trigger" size="small" type="primary" @click="showBroadcastDialog" :disabled='isDisabled'>曲目编辑</el-button>
+                            <el-button slot="trigger" size="small" type="primary" @click="showBroadcastDialog" v-if='!isDisabled'>曲目编辑</el-button>
                         </p>
                         <p class="type textArea">
                             <!--描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：<textarea name="" v-model="broadList.broadcastSchedule.description" cols="30"-->
@@ -144,7 +144,8 @@
                             <el-input type="text" v-model="lamppost.lightSchedule.name" class="inputText" :maxlength="15" :disabled='isDisabled'></el-input>
                         </p>
                         <p class="time">时&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 间：
-                            <el-checkbox-group v-model="filterList" @change="lamppost.lightSchedule.customizedDays = false" :disabled='isDisabled'>
+                            <!--<el-checkbox-group v-model="filterList" @change="lamppost.lightSchedule.customizedDays = false" :disabled='isDisabled'>-->
+                            <el-checkbox-group v-model="filterList" @change="selectDays" :disabled='isDisabled'>
                                 <el-checkbox v-for="item in week" :label="item.id" :key="item.id">{{item.type}}</el-checkbox>
                             </el-checkbox-group>
                             <el-checkbox label="自定义" @change="weekCustom(lamppost.lightSchedule.customizedDays)" v-model="lamppost.lightSchedule.customizedDays" :disabled='isDisabled'></el-checkbox>
@@ -193,7 +194,7 @@
                             <el-input type="text"v-model="purifier.cleanSchedule.name"class="inputText" :maxlength="15" :disabled='isDisabled'></el-input>
                         </p>
                         <p class="time">时&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 间：
-                            <el-checkbox-group v-model="filterList" @change="purifier.cleanSchedule.customizedDays = false" :disabled='isDisabled'>
+                            <el-checkbox-group v-model="filterList" @change="selectDays" :disabled='isDisabled'>
                                 <el-checkbox v-for="item in week" :label="item.id" :key="item.id">{{item.type}}</el-checkbox>
                             </el-checkbox-group>
                             <el-checkbox label="自定义" @change="weekCustom(purifier.cleanSchedule.customizedDays)" v-model="purifier.cleanSchedule.customizedDays":disabled='isDisabled' ></el-checkbox>
@@ -261,7 +262,7 @@
                             <el-input type="text"v-model="screen.ledSchedule.name" class="inputText" :disabled="isDisabled" :maxlength="15"></el-input>
                         </p>
                         <p class="time">时&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 间：
-                            <el-checkbox-group v-model="filterList" @change="screen.ledSchedule.customizedDays = false" :disabled='isDisabled'>
+                            <el-checkbox-group v-model="filterList" @change="selectDays" :disabled='isDisabled'>
                                 <el-checkbox v-for="item in week" :label="item.id" :key="item.id">{{item.type}}</el-checkbox>
                             </el-checkbox-group>
                             <el-checkbox label="自定义" @change="weekCustom(screen.ledSchedule.customizedDays)" v-model="screen.ledSchedule.customizedDays" :disabled='isDisabled'></el-checkbox>
@@ -301,9 +302,9 @@
                         <!--<el-radio v-model="radio" label="1">是</el-radio>-->
                         <!--<el-radio v-model="radio" label="0">否</el-radio>-->
                         <!--</p>-->
-                        <p class="uploadText">定义内容：
+                        <p class="uploadText"><span class="updataTitle">定义内容：</span>
                             <span v-for="item in screen.contents" :key="item.id">{{item.content}}</span>
-                            <el-button slot="trigger" size="small" type="primary" @click = "showScreenDialog" :disabled='isDisabled'>定义内容</el-button>
+                            <el-button slot="trigger" size="small" type="primary" @click = "showScreenDialog" v-if="!isDisabled" >定义内容</el-button>
                         </p>
                         <p class="type textArea">
                             <span class="description">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：</span>
@@ -318,8 +319,8 @@
             </div>
         </el-dialog>
         <MapDialog v-if="mapVisible" :visible="mapVisible" class="map" @closeMapDialog = 'closeMapDialog'></MapDialog>
-        <broadcastDialog v-if="broadcastVisible" :visible="broadcastVisible" class="broadcastContent" @closeBroadcastDialog = 'closeBroadcastDialog' @saveMusicList = "musicList"></broadcastDialog>
-        <ScreenDialog v-if="screenVisible" :visible="screenVisible" class="screenContent" @closeScreenDialog = 'closeScreenDialog' @saveContent="saveContent"></ScreenDialog>
+        <broadcastDialog v-if="broadcastVisible" :visible="broadcastVisible" :broadList="broadList.musics" class="broadcastContent" @closeBroadcastDialog = 'closeBroadcastDialog' @saveMusicList = "musicList"></broadcastDialog>
+        <ScreenDialog v-if="screenVisible" :visible="screenVisible" :screenContentList="screen.contents" class="screenContent" @closeScreenDialog = 'closeScreenDialog' @saveContent="saveContent"></ScreenDialog>
     </div>
 </template>
 
@@ -395,7 +396,8 @@
                         customizedShift: '',
                         description: '',
                         classTime: [],
-                        days: []
+                        days: [],
+                        routeId:''
                     },
                     cleanerIds: [],
                     regionIds: []
@@ -451,6 +453,20 @@
             }
         },
         methods: {
+            selectDays () {
+                let route = this.$route.path
+                if (route.includes('lamppost')) {
+                    this.lamppost.lightSchedule.customizedDays = false
+                } else if (route.includes('broadcast')) {
+                    this.broadList.broadcastSchedule.customizedDays = false
+                } else if (route.includes('screen')) {
+                    this.screen.ledSchedule.customizedDays = false
+                } else  if (route.includes('purifier')) {
+                    this.purifier.cleanSchedule.customizedDays = false
+                } else if (route.includes('security')) {
+                    this.security.inspectionSchedule.customizedDays = false
+                }
+            },
             handleCheckChange (data,checked) {//此处形参data不能删除，必须使用第二个形参
                 let choseId = checked.checkedKeys.filter(item => {
                     if (!this.regionIdList.includes(item)) {
@@ -481,6 +497,41 @@
             addNewInfo () {
                 let newInfo = {}
                 if (this.route.includes('security')) {
+                    console.log(!this.security.inspectionSchedule.name, '这个是啥')
+                    if (!this.security.inspectionSchedule.name || this.security.inspectionSchedule.name === ''){
+                        this.$message.error('请输入完整信息')
+                        return
+                    }
+                    if (!this.security.securityIds || this.security.securityIds.length < 1) {
+                        this.$message.error('请选择巡更人员')
+                        return
+                    }
+                if (!this.security.inspectionSchedule.routeId || this.security.inspectionSchedule.routeId === '') {
+                        this.$message.error('请选择巡更路线')
+                        return
+                    }
+                    if(this.security.inspectionSchedule.customizedDays === undefined) {
+                        if(this.filterList === [] || this.daySelect === [] || this.daySelect === undefined){
+                            this.$message.error('请选择开启日期')
+                            return
+                        }
+                    }else {
+                        if ((this.filterList.length < 1 && this.daySelect === undefined) || (this.filterList.length < 1 && this.daySelect.length < 1)) {
+                            this.$message.error('请选择开启日期')
+                            return
+                        }
+                    }
+                    if (this.security.inspectionSchedule.customizedShift === undefined ){
+                        if(this.classesList === [] || this.timeSelect === [] || this.timeSelect === undefined) {
+                            this.$message.error('请选择开启班次或时间')
+                            return
+                        }
+                    }else {
+                        if ((this.classesList.length < 1 && this.timeSelect === undefined) || (this.classesList.length < 1 && this.timeSelect.length < 1)) {
+                            this.$message.error('请选择开启班次或时间')
+                            return
+                        }
+                    }
                     if (!this.security.inspectionSchedule.customizedDays) {
                         this.security.inspectionSchedule.days = this.filterList.join()
                     } else {
@@ -493,6 +544,33 @@
                     }
                     newInfo = this.security
                 } else if(this.route.includes('broadcast')) {
+                    if (!(this.broadList.broadcastSchedule.name && this.broadList.broadcastSchedule.name !== '')) {
+                        this.$message.error('请输入完整信息')
+                        return
+                    }
+                    if(this.broadList.broadcastSchedule.customizedDays === undefined) {
+                        if(this.filterList === [] || this.daySelect === [] || this.daySelect === undefined){
+                            this.$message.error('请选择开启日期')
+                            return
+                        }
+                    } else {
+                        if ((this.filterList.length < 1 && this.daySelect === undefined) || (this.filterList.length < 1 && this.daySelect.length < 1)) {
+                            this.$message.error('请选择开启日期')
+                            return
+                        }
+                    }
+                    if(this.timeSelect === [] || this.timeSelect === undefined) {
+                        this.$message.error('请选择开启班次或时间')
+                        return
+                    }
+                    if (!this.broadList.broadcastIds || this.broadList.broadcastIds.length < 1) {
+                        this.$message.error('请选择关联的广播')
+                        return
+                    }
+                    if(!(this.broadList.musics && this.broadList.musics)){
+                        this.$message.error('请选择需要播放的音频')
+                        return
+                    }
                     if (!this.broadList.broadcastSchedule.customizedDays) {
                         this.broadList.broadcastSchedule.days = this.filterList.join()
                     }else {
@@ -501,6 +579,27 @@
                     this.broadList.broadcastSchedule.watchTime = this.timeSelect
                     newInfo = this.broadList
                 } else if(this.route.includes('lamppost')) {
+                    if ((!this.lamppost.lightSchedule.name || this.lamppost.lightSchedule.name === '')
+                        || (!this.lamppost.lightIds || this.lamppost.lightIds.length < 1)) {
+                        this.$message.error('请输入完整信息')
+                        return
+                    }
+                    if(this.lamppost.lightSchedule.customizedDays === undefined) {
+                        if(this.filterList === [] || this.daySelect === [] || this.daySelect === undefined){
+                            this.$message.error('请选择开启日期')
+                            return
+                        }
+                    }else {
+                        if ((this.filterList.length < 1 && this.daySelect === undefined) || (this.filterList.length < 1 && this.daySelect.length < 1)) {
+                            this.$message.error('请选择开启日期')
+                            return
+                        }
+                    }
+                    if(this.timeSelect === [] || this.timeSelect === undefined) {
+                        this.$message.error('请选择开启时间')
+                        return
+                    }
+
                     if (!this.lamppost.lightSchedule.customizedDays) {
                         this.lamppost.lightSchedule.days = this.filterList.join()
                     }else {
@@ -509,6 +608,40 @@
                     this.lamppost.lightSchedule.watchTime = this.timeSelect
                     newInfo = this.lamppost
                 } else if(this.route.includes('purifier')) {
+                    if (!(this.purifier.cleanSchedule.name && this.purifier.cleanSchedule.name !== '')) {
+                        this.$message.error('请输入完整信息')
+                        return
+                    }
+                    if(this.purifier.cleanSchedule.customizedDays === undefined) {
+                        if(this.filterList === [] || this.daySelect === [] || this.daySelect === undefined){
+                            this.$message.error('请选择开启日期')
+                            return
+                        }
+                    }else {
+                        if ((this.filterList.length < 1 && this.daySelect === undefined) || (this.filterList.length < 1 && this.daySelect.length < 1)) {
+                            this.$message.error('请选择开启日期')
+                            return
+                        }
+                    }
+                    if (this.purifier.cleanSchedule.customizedShift === undefined ){
+                        if(this.classesList === [] || this.timeSelect === [] || this.timeSelect === undefined) {
+                            this.$message.error('请选择开启班次或时间')
+                            return
+                        }
+                    }else {
+                        if ((this.classesList.length < 1 && this.timeSelect === undefined) || (this.classesList.length < 1 && this.timeSelect.length < 1)) {
+                            this.$message.error('请选择开启班次或时间')
+                            return
+                        }
+                    }
+                    if (this.purifier.cleanerIds && this.purifier.cleanerIds.length < 1) {
+                        this.$message.error('请选择保洁人员')
+                        return
+                    }
+                    if (this.purifier.regionIds && this.purifier.regionIds.length < 1) {
+                        this.$message.error('请选择保洁的片区')
+                        return
+                    }
                     if (!this.purifier.cleanSchedule.customizedDays) {
                         this.purifier.cleanSchedule.days = this.filterList.join()
                     }else {
@@ -521,6 +654,30 @@
                     }
                     newInfo = this.purifier
                 } else if(this.route.includes('screen')) {
+                    if (!(this.screen.ledSchedule.name && this.screen.ledSchedule.name !== '')
+                        || !(this.screen.ledIds && this.screen.ledIds !== [])) {
+                        this.$message.error('请输入完整信息')
+                        return
+                    }
+                    if(this.screen.ledSchedule.customizedDays === undefined) {
+                        if(this.filterList === [] || this.daySelect === [] || this.daySelect === undefined){
+                            this.$message.error('请选择开启日期')
+                            return
+                        }
+                    }else {
+                        if ((this.filterList.length < 1 && this.daySelect === undefined) || (this.filterList.length < 1 && this.daySelect.length < 1)) {
+                            this.$message.error('请选择开启日期')
+                            return
+                        }
+                    }
+                    if(this.timeSelect === [] || this.timeSelect === undefined) {
+                        this.$message.error('请选择开启班次或时间')
+                        return
+                    }
+                    if(!this.screen.contents || this.screen.contents.length < 1){
+                        this.$message.error('请选择需要播放的内容')
+                        return
+                    }
                     if (!this.screen.ledSchedule.customizedDays) {
                         this.screen.ledSchedule.days = this.filterList.join()
                     }else {
@@ -954,6 +1111,9 @@
         .el-tree-node__label {
             font-size: rem(12);
         }
+         .textArea .el-textarea{
+            font-size: rem(12);
+        }
     }
 </style>
 <style lang="scss" scoped type="text/scss">
@@ -1029,20 +1189,26 @@
                     border-bottom: none;
                 }
                 .uploadText{
+                    width: 100%;
                     overflow: hidden;
                     text-overflow: ellipsis;
                     white-space: nowrap;
-                    height: rem(30);
                     margin-top: 0;
                     padding-top: rem(10);
-                    padding-right:rem(85);
+                    .updataTitle {
+                        background: transparent;
+                        color: #606266;
+                        margin-bottom: rem(5);
+                    }
                     span{
                         margin-right: rem(10);
+                        padding: 0 rem(5);
+                        margin-bottom: rem(3);
+                        float: left;
                     }
                     button{
-                        float: right;
-                        margin-right: rem(-80);
                         margin-top: rem(-5);
+                        float: right;
                     }
                 }
             }

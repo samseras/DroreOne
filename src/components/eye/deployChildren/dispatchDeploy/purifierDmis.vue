@@ -9,6 +9,10 @@
                         @deletInfo = "deletInfo"
                         @selectedAll = 'selectedAll'
                         @startEndPlan="startEndPlan"
+                        @searchAnything="searchAnything"
+                        @choseType="choseType"
+                        :selectLength="choseInfoId.length"
+                        :listLength="purifierList.length"
                         @fixedInfo = 'fixedInfo'>
                 </Header>
             </div>
@@ -27,15 +31,17 @@
                             </template>
                         </el-table-column>
                         <el-table-column
+                            width="120"
                             prop="cleanSchedule.name"
-                            label="调度人员"
-                            sortable
-                            width="120">
+                            label="名称">
                         </el-table-column>
                         <el-table-column
                             width="120"
-                            prop="type"
-                            label="名称">
+                            label="状态">
+                            <template slot-scope="scope">
+                                <span v-if="scope.row.cleanSchedule.enabled">已开启</span>
+                                <span v-else>已停止</span>
+                            </template>
                         </el-table-column>
                         <el-table-column
                             prop="cleanerIds.length"
@@ -44,7 +50,7 @@
                         </el-table-column>
                         <el-table-column
                             width="240"
-                            label="时间">
+                            label="执行日期">
                             <template slot-scope="scope">
                                 <span v-if="scope.row.cleanSchedule.customizedDays">{{scope.row.cleanSchedule.startDate}}~{{scope.row.cleanSchedule.endDate}}</span>
                                 <span v-if="!scope.row.cleanSchedule.customizedDays">{{scope.row.cleanSchedule.days | weekFilter}}</span>
@@ -64,9 +70,15 @@
                                 <span  class="regionName" v-for="item in scope.row.regions">{{item.name}}</span>
                             </template>
                         </el-table-column>
+                        <el-table-column
+                            label="描述">
+                            <template slot-scope="scope">
+                                <span class="description">{{scope.row.cleanSchedule.description}}</span>
+                            </template>
+                        </el-table-column>
                         <el-table-column label="操作" width="200">
                             <template slot-scope="scope">
-                                <span @click="fixedInfo(scope.row,'保洁信息编辑')">编辑</span> |
+                                <span @click="fixedInfo(scope.row,'修改保洁计划')">编辑</span> |
                                 <span @click="stop(scope.row)" v-if="scope.row.cleanSchedule.enabled">停止 |</span>
                                 <span @click="stop(scope.row)" v-else="!scope.row.cleanSchedule.enabled">开始 |</span>
                                 <span @click="showPersonDetail(scope.row,'保洁信息',true)">查看</span> |
@@ -132,8 +144,31 @@
             }
         },
         methods: {
+            searchAnything (info) {
+                console.log(info, '这是要过滤的')
+                if (info.trim() !== '') {
+                    this.purifierList = this.checkList.filter(item => {
+                        if (item.cleanSchedule.name.includes(info)) {
+                            return item
+                        }
+                        if (item.cleanSchedule.description.includes(info)) {
+                            return item
+                        }
+                    })
+                } else {
+                    this.getAllPurifier()
+                }
+            },
             startEndPlan (state) {
                 console.log(this.choseInfoId, 'opopopop')
+                if(this.choseInfoId.length < 1) {
+                    if(state === 'start') {
+                        this.$message.error('请选择要开启的数据信息')
+                    } else {
+                        this.$message.error('请选择要关闭的数据信息')
+                    }
+                    return
+                }
                 let choseId = []
                 choseId = this.purifierList.filter(item => {
                     if (this.choseInfoId.includes(item.id)) {
@@ -160,6 +195,22 @@
                     }
                     return
                 }
+                if (state === 'end') {
+                    this.$confirm('确定要停止所选的计划吗, 是否继续?', '提示', {
+                        confirmButtonText: '确定',
+                        cancelButtonText: '取消',
+                        type: 'warning'
+                    }).then(() => {
+                        this.startEndPlanApi(choseId, state)
+                    }).catch(() => {
+                        this.$message.info('计划停止取消')
+                        return
+                    })
+                } else {
+                    this.startEndPlanApi(choseId, state)
+                }
+            },
+            startEndPlanApi(choseId, state) {
                 api.purifier.stareEndPlan(choseId).then(res => {
                     console.log(res, '更改状态成功')
                     if (state === 'start') {
@@ -198,7 +249,7 @@
                 this.purifierInfo = info
             },
             addNewInfo () {
-                this.showPersonDetail({cleanSchedule: {},}, '添加人员调度',false)
+                this.showPersonDetail({cleanSchedule: {},}, '添加保洁计划',false)
             },
             deletInfo (id) {
                 if (id) {
@@ -366,6 +417,32 @@
                     console.log(err, '失败')
                 })
             },
+            choseType (type) {
+                console.log(type, '这是传过来的')
+                type = type.map(item => {
+                    if (item === '开启') {
+                        return true
+                    } else{
+                        return false
+                    }
+                })
+                console.log(type, '这是过滤后的')
+                if (type.length === 0){
+                    this.purifierList = this.checkList.filter((item) => {
+                        item.status = true
+                        return item
+                    })
+                } else {
+                    this.purifierList = this.checkList.filter((item,index) => {
+                        if (type.includes(item.cleanSchedule.enabled)) {
+                            item.status = true
+                        } else {
+                            item.status = false
+                        }
+                        return item.status === true
+                    })
+                }
+            },
             async getAllPurifier () {
                 this.isShowLoading = true
                 await api.purifier.getPurifierList().then(res => {
@@ -389,6 +466,8 @@
                             item.regionIds = [item.regions[0].id]
                         }
                     })
+                    this.choseInfoId = []
+                    this.checkList = this.purifierList
                 }).catch(err => {
                     console.log(err, '请求失败')
                     this.isShowLoading = false
@@ -518,7 +597,16 @@
                             line-height: rem(22);
                         }
                     }
-
+                }
+                .description {
+                    display: inline-block;
+                    width: rem(150);
+                    text-align: left;
+                    padding-right: rem(5);
+                    line-height: rem(20);
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    white-space: nowrap;
                 }
             }
         }

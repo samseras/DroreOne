@@ -10,8 +10,10 @@
                         @toggleList = "toggleList"
                         @choseType = 'choseType'
                         :choseId="choseInfoId"
-                        :listsLength="treeList.length"
+                        :listsLength="listLength"
                         :personListFlag="selectFlag"
+                        @nextPage="nextPage"
+                        @previousPage="previousPage"
                         @selectedAll = 'selectedAll'
                         @fixedInfo = 'fixedInfo'
                         @searchAnything="searchAnything"
@@ -39,6 +41,11 @@
                             width="120">
                         </el-table-column>
                         <el-table-column
+                            prop="plant.genera"
+                            label="科目"
+                            width="120">
+                        </el-table-column>
+                        <el-table-column
                             width="180"
                             prop="regionName"
                             label="所属片区">
@@ -61,22 +68,24 @@
                             width="150"
                             label="操作">
                             <template slot-scope="scope">
-                                <span @click="showPersonDetail(scope.row, '植物信息',true)">查看</span>
-                                <span class="line">|</span>
-                                <span @click="fixedInfo(scope.row.id )">编辑</span>
-                                <span class="line">|</span>
-                                <span @click="deletInfo(scope.row.id)">删除</span>
+                                <div class="handle">
+                                    <span @click="showPersonDetail(scope.row, '植物信息',true)">查看</span>
+                                    <span class="line">|</span>
+                                    <span @click="fixedInfo(scope.row.id )">编辑</span>
+                                    <span class="line">|</span>
+                                    <span @click="deletInfo(scope.row.id)">删除</span>
+                                </div>
                             </template>
                         </el-table-column>
                     </el-table>
-                    <div class="personInfo judge-title" v-for="item in treeList" v-if="isShowToiletCard && item.status">
+                    <div class="personInfo" v-for="item in treeList" v-if="isShowToiletCard && item.status">
                         <div class="checkBox">
                             <el-checkbox v-model="item.checked" @change="checked(item.id)" class="checkBtn"></el-checkbox>
                         </div>
                         <div class="personType" @click.stop="showPersonDetail(item, '植物信息',true)">
                             <!--<img src="../../../../static/img/botanyCard.png" alt="">-->
                             <img :src="getUrl(item.picturePath)" alt="" @error="imgError">
-                            <span class="type">
+                            <span class="type plantName">
                                   {{item.plant.name}}
                                 </span>
                         </div>
@@ -125,7 +134,10 @@
                 choseList: [],
                 isDisabled: true,
                 title: '',
-                isShowLoading: false
+                isShowLoading: false,
+                currentNum: 50,
+                listLength: '',
+                pageNum: 1
             }
         },
         methods: {
@@ -176,7 +188,7 @@
             },
             deletInfo (id) {
                 if (id) {
-                    //this.choseInfoId.push(id)
+                    this.choseInfoId = [id]
                 }
                 if (this.choseInfoId.length > 0) {
                     this.$confirm('此操作将永久删除该数据, 是否继续?', '提示', {
@@ -356,7 +368,7 @@
             },
             fixedInfo (id) {
                 if (id) {
-                    //this.choseInfoId.push(id)
+                    this.choseInfoId = [id]
                 }
                 if (this.choseInfoId.length > 1) {
                     this.$message.warning('至多选择一个数据修改')
@@ -375,12 +387,29 @@
                     this.$message.error('请选择一条数据')
                 }
             },
+            previousPage (page) {
+                console.log(page, '这是传过来的pageNum')
+                this.pageNum = page
+                this.getAllTree ()
+            },
+            nextPage (page) {
+                console.log(page, '这个是下一页的pageNUM')
+                this.pageNum = page
+                this.getAllTree ()
+            },
             async getAllTree () {
                 this.isShowLoading = true
                 await api.plant.getAllPlant().then(res => {
                     console.log(res, '这是请求回来的所有')
+                    this.listLength = res.length
                     this.isShowLoading = false
                     this.treeList = res
+                    this.treeList = this.treeList.filter((item,index) =>{
+                        if(index < (this.pageNum*35)&& index>(this.pageNum-1)*35 -1){
+                            return item
+                        }
+                    })
+
                     for (let i = 0; i < this.treeList.length; i++) {
                         this.treeList[i].checked = false
                         this.treeList[i].status = true
@@ -388,6 +417,7 @@
                         this.treeList[i].id = this.treeList[i].plant.id
                         this.treeList[i].description = this.treeList[i].plant.description
                         // this.treeList[i].state = '正常'
+                        this.treeList[i].plant.modifyTime=this.treeList[i].plant.modifyTime.replace("-","/")
                         this.treeList[i].byTime = -(new Date(this.treeList[i].plant.modifyTime)).getTime()
                     }
                     this.treeList = _.sortBy(this.treeList, 'byTime')
@@ -497,9 +527,9 @@
                             width: rem(100);
                             float: right;
                             text-align: right;
-                            padding-right: rem(5);
                             line-height: rem(20);
                             color: #fff;
+                            padding-right: rem(5);
                             overflow: hidden;
                             text-overflow: ellipsis;
                             white-space: nowrap;
@@ -518,15 +548,13 @@
                         }
                     }
                 }
+                .handle{
+                    span{
+                        cursor: pointer;
+                    }
+                }
             }
         }
     }
 
-</style>
-<style>
-    .judge-title  .cell{
-        white-space: nowrap ;
-        overflow: hidden ;
-        text-overflow: ellipsis ;
-    }
 </style>

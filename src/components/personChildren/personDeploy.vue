@@ -80,11 +80,13 @@
                         <el-table-column
                             label="操作">
                             <template slot-scope="scope">
-                                <span @click="fixedInfo(scope.row.id )">编辑</span>
-                                <span class="line">|</span>
-                                <span @click="showPersonDetail(scope.row, '人员信息',true)">查看</span>
-                                <span class="line">|</span>
-                                <span @click="deletInfo(scope.row.id)">删除</span>
+                                <div class="handle">
+                                    <span @click="fixedInfo(scope.row.id )">编辑</span>
+                                    <span class="line">|</span>
+                                    <span @click="showPersonDetail(scope.row, '人员信息',true)">查看</span>
+                                    <span class="line">|</span>
+                                    <span @click="deletInfo(scope.row.id)">删除</span>
+                                </div>
                             </template>
                         </el-table-column>
                     </el-table>
@@ -244,7 +246,7 @@
             },
             deletInfo(id) {
                 if (id) {
-                    //this.choseInfoId.push(id)
+                    this.choseInfoId = [id]
                 }
                 if (this.choseInfoId.length > 0) {
                     this.$confirm('此操作将永久删除该数据, 是否继续?', '提示', {
@@ -425,7 +427,7 @@
             },
             fixedInfo(id) {
                 if (id) {
-                    //this.choseInfoId.push(id)
+                    this.choseInfoId = [id]
                 }
                 if (this.choseInfoId.length > 1) {
                     this.$message.warning('至多选择一个数据修改')
@@ -529,11 +531,12 @@
         }
     }
 </script>
-<style>
+<style lang="scss" type="text/scss">
     .personDeploy .box .el-button{
         border:1px solid transparent;
         padding-left:0px;
         text-align:left;
+        background: transparent;
     }
     .personDeploy .box .el-button span{
         display:inline-block;
@@ -547,6 +550,7 @@
         word-break:break-all;
         text-align: left;
     }
+
 </style>
 <style lang="scss" scoped type="text/scss">
     .personDeploy {
@@ -624,10 +628,17 @@
                             background: red;
                         }
                         span {
+                            display: inline-block;
+                            width: rem(100);
                             float: right;
-                            margin-right: rem(20);
+                            text-align: right;
+                            padding-right: rem(5);
                             line-height: rem(20);
                             color: #fff;
+                            overflow: hidden;
+                            text-overflow: ellipsis;
+                            white-space: nowrap;
+                            box-sizing: border-box;
                         }
                     }
                     .specificInfo {
@@ -641,6 +652,12 @@
                             white-space: nowrap;
                         }
                     }
+                }
+                .handle {
+                    span{
+                        cursor: pointer;
+                    }
+
                 }
             }
         }

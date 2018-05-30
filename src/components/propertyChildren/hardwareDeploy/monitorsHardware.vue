@@ -58,18 +58,29 @@
                             label="所属片区">
                         </el-table-column>
                         <el-table-column
-                            prop="description"
                             label="描述">
+                            <template slot-scope="scope">
+                                <div class="box" v-if="scope.row.description">
+                                    <div class="bottom">
+                                        <el-tooltip class="item" effect="light" :content=scope.row.description placement="bottom">
+                                            <el-button>{{scope.row.description}}</el-button>
+                                        </el-tooltip>
+                                    </div>
+                                </div>
+                            </template>
                         </el-table-column>
 
-                        <el-table-column label="操作">
-
+                        <el-table-column
+                            label="操作"
+                            width="150">
                             <template slot-scope="scope">
-                                <span @click="showMonitorDetail(scope.row, '传感器信息',true)">查看</span>
-                                <span class="line">|</span>
-                                <span @click="fixedInfo(scope.row.id )">编辑</span>
-                                <span class="line">|</span>
-                                <span @click="deletInfo(scope.row.id)">删除</span>
+                                <div class="handle">
+                                    <span @click="showMonitorDetail(scope.row, '传感器信息',true)">查看</span>
+                                    <span class="line">|</span>
+                                    <span @click="fixedInfo(scope.row.id )">编辑</span>
+                                    <span class="line">|</span>
+                                    <span @click="deletInfo(scope.row.id)">删除</span>
+                                </div>
                             </template>
                         </el-table-column>
                     </el-table>
@@ -234,7 +245,7 @@
             },
             fixedInfo(id){
                 if(id){
-                    this.choseInfoId.push(id)
+                    this.choseInfoId = [id]
                 }
                 if(this.choseInfoId.length>1){
                     this.$message.warning('至多选择一条数据')
@@ -254,7 +265,7 @@
             },
             deletInfo(id){
                 if (id) {
-                    this.choseInfoId.push(id)
+                    this.choseInfoId = [id]
                 }
                 if (this.choseInfoId.length > 0) {
                     this.$confirm('此操作将永久删除该数据, 是否继续?', '提示', {
@@ -274,7 +285,6 @@
                             this.getAllMonitor()
                             this.$message.success('删除成功')
                             this.choseInfoId = []
-                            this.getAllCamera()
                         }).catch(err =>{
                             this.$message.error('删除失败,请稍后重试')
                         })
@@ -359,15 +369,15 @@
             choseType(type){
                 console.log(type)
                 if(type.length===0){
-                    this.monitorsList=this.monitorsList.filter((item)=>{
+                    this.monitorsList=this.checkList.filter((item)=>{
                         item.status=true
                         return item.status === true
                     })
                 }else{
-                    this.monitorsList=this.monitorsList.filter((item,index)=>{
+                    this.monitorsList=this.checkList.filter((item,index)=>{
                         if(type.includes(item.type)){
                             item.status=true
-                        }else if(!type.includes(item.type)){
+                        }else {
                             item.status=false
                             console.log(item.type)
                         }
@@ -421,6 +431,7 @@
                         this.monitorsList[i].id=this.monitorsList[i].id
                         this.monitorsList[i].mac=this.monitorsList[i].mac
                         this.monitorsList[i].location=`${this.monitorsList[i].longitude},${this.monitorsList[i].latitude}`
+                        this.monitorsList[i].modifyTime=this.monitorsList[i].modifyTime.replace("-","/")
                         this.monitorsList[i].byTime = -(new Date(this.monitorsList[i].modifyTime)).getTime()
                     }
                     this.monitorsList = _.sortBy(this.monitorsList,'byTime')
@@ -454,6 +465,19 @@
         }
         .el-checkbox__inner{
             margin-top:rem(5);
+        }
+        .cameraList .el-button{
+            border:1px solid transparent;
+            text-align: left;
+            background: transparent;
+            padding: 0;
+        }
+        .cameraList .box .el-button span{
+            display:inline-block;
+            width: 150px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
     }
 
@@ -564,6 +588,11 @@
                             -webkit-box-orient:vertical;
                             -webkit-line-clamp:2;
                         }
+                    }
+                }
+                .handle{
+                    span{
+                        cursor: pointer;
                     }
                 }
             }

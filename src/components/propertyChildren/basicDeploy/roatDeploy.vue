@@ -12,6 +12,9 @@
                         @selectedAll = 'selectedAll'
                         @fixedInfo = 'fixedInfo'
                         :personListFlag="selectFlag"
+                        :listsLength = 'listLength'
+                        @nextPage="nextPage"
+                        @previousPage="previousPage"
                         @searchAnything="searchAnything">
                 </Header>
             </div>
@@ -34,6 +37,9 @@
                             prop="name"
                             label="路线名称"
                             width="120">
+                            <template slot-scope="scope">
+                                <span class="overflow">{{scope.row.name}}</span>
+                            </template>
                         </el-table-column>
                         <el-table-column
                             label="路线类型"
@@ -57,11 +63,13 @@
                         <el-table-column
                             label="操作">
                             <template slot-scope="scope">
-                                <span @click="showPersonDetail(scope.row,'路网信息',true)">查看</span>
-                                <span class="line">|</span>
-                                <span @click="fixedInfo(scope.row.id )">编辑</span>
-                                <span class="line">|</span>
-                                <span @click="deletInfo(scope.row.id)">删除</span>
+                                <div class="handle">
+                                    <span @click="showPersonDetail(scope.row,'路网信息',true)">查看</span>
+                                    <span class="line">|</span>
+                                    <span @click="fixedInfo(scope.row.id )">编辑</span>
+                                    <span class="line">|</span>
+                                    <span @click="deletInfo(scope.row.id)">删除</span>
+                                </div>
                             </template>
                         </el-table-column>
                     </el-table>
@@ -118,7 +126,10 @@
                 choseList: [],
                 isDisabled: true,
                 title: '',
-                isShowLoading: false
+                isShowLoading: false,
+                currentNum: 50,
+                listLength: '',
+                pageNum: 1
             }
         },
         methods: {
@@ -156,7 +167,7 @@
             },
             deletInfo (id) {
                 if (id) {
-                    /*this.choseInfoId.push(id)*/
+                    this.choseInfoId = [id]
                 }
                 if (this.choseInfoId.length > 0) {
                     this.$confirm('此操作将永久删除该数据, 是否继续?', '提示', {
@@ -308,7 +319,7 @@
             },
             fixedInfo (id) {
                 if (id) {
-                    //this.choseInfoId.push(id)
+                    this.choseInfoId = [id]
                 }
                 if (this.choseInfoId.length > 1) {
                     this.$message.warning('至多选择一个数据修改')
@@ -326,12 +337,28 @@
                     this.$message.error('请选择一条数据')
                 }
             },
+            previousPage (page) {
+                console.log(page, '这是传过来的pageNum')
+                this.pageNum = page
+                this.getAllRoat()
+            },
+            nextPage (page) {
+                console.log(page, '这个是下一页的pageNUM')
+                this.pageNum = page
+                this.getAllRoat()
+            },
             async getAllRoat () {
                 this.isShowLoading = true
                 await api.deployRoad.getAllRoute().then(res => {
                     console.log(res, '请求路网成功')
+                    this.listLength = res.length
                     this.isShowLoading = false
                     this.roatList = res
+                    this.roatList = this.roatList.filter((item,index) => {
+                        if (index < (this.pageNum * 35 ) && index > ((this.pageNum -1) * 35 ) - 1 ) {
+                            return item
+                        }
+                    })
                     for (let i = 0; i < this.roatList.length; i++) {
                         this.roatList[i].checked = false
                         this.roatList[i].status = true
@@ -393,7 +420,10 @@
 </script>
 <style>
     .roatDeploy .box .el-button{
-        border:1px solid transparent
+        border:1px solid transparent;
+        background: transparent;
+        text-align: left;
+        padding: 0;
     }
     .roatDeploy .box .el-button span{
         display:inline-block;
@@ -519,7 +549,18 @@
                         }
                     }
                 }
+                .handle {
+                    span{
+                        cursor: pointer;
+                    }
+                }
             }
+        }
+        .overflow {
+            display: inline-block;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            display:inline-block;
         }
     }
 

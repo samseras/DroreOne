@@ -35,7 +35,7 @@ import importfile from './importfile'
 import exportFile from './exportFile'
 import alarm from './alarm'
 import login from './login'
-
+import controler from './controler'
 
 export default {
     analyze,
@@ -71,5 +71,6 @@ export default {
     importfile,
     exportFile,
     alarm,
-    login
+    login,
+    controler,
 }

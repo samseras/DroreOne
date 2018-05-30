@@ -10,8 +10,10 @@
                         @toggleList = "toggleList"
                         @choseType = 'choseType'
                         :choseId="choseInfoId"
-                        :listsLength="toiletList.length"
+                        :listsLength="listLength"
                         :personListFlag="selectFlag"
+                        @nextPage="nextPage"
+                        @previousPage="previousPage"
                         @selectedAll = 'selectedAll'
                         @fixedInfo = 'fixedInfo'
                         @searchAnything="searchAnything"
@@ -34,14 +36,18 @@
                             </template>
                         </el-table-column>
                         <el-table-column
-                            prop="toiletBean.name"
                             label="名称"
                             width="140">
+                            <template slot-scope="scope">
+                                <span class="overflow">{{scope.row.toiletBean.name}}</span>
+                            </template>
                         </el-table-column>
                         <el-table-column
                             width="130"
-                            prop="regionName"
                             label="所属片区">
+                            <template slot-scope="scope">
+                                <span class="overflow">{{scope.row.regionName}}</span>
+                            </template>
                         </el-table-column>
                         <el-table-column
                             width="100"
@@ -56,11 +62,13 @@
                             width="150"
                             label="操作">
                             <template slot-scope="scope">
-                                <span @click="showPersonDetail(scope.row, '卫生间信息',true)">查看</span>
-                                <span class="line">|</span>
-                                <span @click="fixedInfo(scope.row.id )">编辑</span>
-                                <span class="line">|</span>
-                                <span @click="deletInfo(scope.row.id)">删除</span>
+                                <div class="handle">
+                                    <span @click="showPersonDetail(scope.row, '卫生间信息',true)">查看</span>
+                                    <span class="line">|</span>
+                                    <span @click="fixedInfo(scope.row.id )">编辑</span>
+                                    <span class="line">|</span>
+                                    <span @click="deletInfo(scope.row.id)">删除</span>
+                                </div>
                             </template>
                         </el-table-column>
                     </el-table>
@@ -79,6 +87,7 @@
                             <p class="name">所属区域：<span>{{item.regionName}}</span></p>
                             <p class="sex">状&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;态：<span>{{item.state}}</span></p>
                             <p class="phoneNum">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置：<span>{{item.location}}</span></p>
+                            <p class="sex text">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：<span>{{item.description}}</span></p>
                         </div>
                     </div>
                 </ScrollContainer>
@@ -118,7 +127,10 @@
                 choseList: [],
                 isDisabled: true,
                 title: '',
-                isShowLoading: false
+                isShowLoading: false,
+                currentNum: 50,
+                listLength: '',
+                pageNum: 1
             }
         },
         methods: {
@@ -167,7 +179,7 @@
             },
             deletInfo (id) {
                 if (id) {
-                    //this.choseInfoId.push(id)
+                    this.choseInfoId = [id]
                 }
                 if (this.choseInfoId.length > 0) {
                     this.$confirm('此操作将永久删除该数据, 是否继续?', '提示', {
@@ -341,7 +353,7 @@
             },
             fixedInfo (id) {
                 if (id) {
-                    //this.choseInfoId.push(id)
+                    this.choseInfoId = [id]
                 }
                 if (this.choseInfoId.length > 1) {
                     this.$message.warning('至多选择一个数据修改')
@@ -360,12 +372,31 @@
                     this.$message.error('请选择一条数据')
                 }
             },
+            previousPage (page) {
+                console.log(page, '这是传过来的pageNum')
+                this.pageNum = page
+                this.getAllToilet ()
+            },
+            nextPage (page) {
+                console.log(page, '这个是下一页的pageNUM')
+                this.pageNum = page
+                this.getAllToilet ()
+            },
+
             async getAllToilet () {
                 this.isShowLoading = true
                 await api.toilet.getAllToilet().then(res => {
                     console.log(res, '这是请求回来的所有')
+                    this.listLength = res.length
                     this.isShowLoading = false
                     this.toiletList = res
+                    this.toiletList = this.toiletList.filter((item,index) =>{
+                        if(index < (this.pageNum*35)&& index>(this.pageNum-1)*35 -1){
+                            return item
+                        }
+                    })
+
+
                     for (let i = 0; i < this.toiletList.length; i++) {
                         this.toiletList[i].checked = false
                         this.toiletList[i].status = true
@@ -373,6 +404,7 @@
                         this.toiletList[i].id = this.toiletList[i].toiletBean.id
                         this.toiletList[i].description = this.toiletList[i].toiletBean.description
                         this.toiletList[i].state = '正常'
+                        this.toiletList[i].toiletBean.modifyTime=this.toiletList[i].toiletBean.modifyTime.replace("-","/")
                         this.toiletList[i].byTime = -(new Date(this.toiletList[i].toiletBean.modifyTime)).getTime()
                     }
 
@@ -506,7 +538,19 @@
                         }
                     }
                 }
+                .handle {
+                    span{
+                        cursor: pointer;
+                    }
+
+                }
             }
+        }
+        .overflow {
+            display: inline-block;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            display:inline-block;
         }
     }
 

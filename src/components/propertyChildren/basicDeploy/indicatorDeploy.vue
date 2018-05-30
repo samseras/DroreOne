@@ -10,8 +10,10 @@
                         @toggleList = "toggleList"
                         @choseType = 'choseType'
                         :choseId="choseInfoId"
-                        :listsLength="indicatorList.length"
+                        :listsLength="listLength"
                         :personListFlag="selectFlag"
+                        @nextPage="nextPage"
+                        @previousPage="previousPage"
                         @selectedAll = 'selectedAll'
                         @fixedInfo = 'fixedInfo'
                         @searchAnything="searchAnything"
@@ -36,7 +38,7 @@
                         </el-table-column>
                         <el-table-column
                             label="类型"
-                            width="120">
+                            width="150">
                             <template slot-scope="scope">
                                <span>{{scope.row.signboardBean.type | typeFilter}}</span>
                             </template>
@@ -47,7 +49,6 @@
                             label="所属片区">
                         </el-table-column>
                         <el-table-column
-                            width="500"
                             prop="location"
                             label="位置">
                         </el-table-column>
@@ -55,11 +56,13 @@
                             width="150"
                             label="操作">
                             <template slot-scope="scope">
-                                <span @click="showPersonDetail(scope.row, '指示牌信息',true)">查看</span>
-                                <span class="line">|</span>
-                                <span @click="fixedInfo(scope.row.id )">编辑</span>
-                                <span class="line">|</span>
-                                <span @click="deletInfo(scope.row.id)">删除</span>
+                                <div class="handle">
+                                    <span @click="showPersonDetail(scope.row, '指示牌信息',true)">查看</span>
+                                    <span class="line">|</span>
+                                    <span @click="fixedInfo(scope.row.id )">编辑</span>
+                                    <span class="line">|</span>
+                                    <span @click="deletInfo(scope.row.id)">删除</span>
+                                </div>
                             </template>
                         </el-table-column>
                     </el-table>
@@ -117,7 +120,11 @@
                 choseList: [],
                 isDisabled: true,
                 title: '',
-                isShowLoading: false
+                isShowLoading: false,
+                currentNum: 50,
+                listLength: '',
+                pageNum: 1
+
             }
         },
         methods: {
@@ -171,7 +178,7 @@
             },
             deletInfo (id) {
                 if (id) {
-                    //this.choseInfoId.push(id)
+                    this.choseInfoId = [id]
                 }
                 if (this.choseInfoId.length > 0) {
                     this.$confirm('此操作将永久删除该数据, 是否继续?', '提示', {
@@ -241,12 +248,12 @@
             choseType (type) {
                 console.log(type)
                 if (type.length === 0){
-                    this.indicatorList = this.indicatorList.filter((item) => {
+                    this.indicatorList = this.checkList.filter((item) => {
                         item.status = true
                         return item.status === true
                     })
                 } else {
-                    this.indicatorList = this.indicatorList.filter((item,index) => {
+                    this.indicatorList = this.checkList.filter((item,index) => {
                         if (item.signboardBean.type == 0){
                             item.type = '标语'
                         } else if (item.signboardBean.type == 1){
@@ -260,7 +267,7 @@
                             item.status = false
                             console.log(item.type, 'p[p[p[');
                         }
-                        return item
+                        return item.status === true
                     })
                 }
                 console.log(this.indicatorList);
@@ -284,6 +291,7 @@
                 let index = info.location.includes(',')?info.location.indexOf(','):info.location.indexOf('，')
                 let longitude= info.location.substring(0, index)
                 let latitude = info.location.substring(index + 1)
+
                 let indicatorObj = {
                     description:info.description,
                     id: info.signboardBean.id,
@@ -302,7 +310,7 @@
                         return
                     })
                 } else {
-                    toiletObj.pictureId = info.pictureId
+                    indicatorObj.pictureId = info.pictureId
                 }
                 console.log(indicatorObj, 'this is trashObj')
                 await api.indicator.updateIndicator(JSON.stringify(indicatorObj)).then(res => {
@@ -348,7 +356,7 @@
             },
             fixedInfo (id) {
                 if (id) {
-                    //this.choseInfoId.push(id)
+                    this.choseInfoId = [id]
                 }
                 if (this.choseInfoId.length > 1) {
                     this.$message.warning('至多选择一个数据修改')
@@ -367,18 +375,35 @@
                     this.$message.error('请选择一条数据')
                 }
             },
+            previousPage (page) {
+                console.log(page, '这是传过来的pageNum')
+                this.pageNum = page
+                this.getAllIndicator ()
+            },
+            nextPage (page) {
+                console.log(page, '这个是下一页的pageNUM')
+                this.pageNum = page
+                this.getAllIndicator ()
+            },
             async getAllIndicator () {
                 this.isShowLoading = true
                 await api.indicator.getAllIndicator().then(res => {
                     console.log(res, '这是数据')
+                    this.listLength = res.length
                     this.isShowLoading = false
                     this.indicatorList = res
+                    this.indicatorList = this.indicatorList.filter((item,index) =>{
+                        if(index < (this.pageNum*35)&& index>(this.pageNum-1)*35 -1){
+                            return item
+                        }
+                    })
                     for (let i = 0; i < this.indicatorList.length; i++) {
                         this.indicatorList[i].checked = false
                         this.indicatorList[i].status = true
                         this.indicatorList[i].id = this.indicatorList[i].signboardBean.id
                         this.indicatorList[i].description = this.indicatorList[i].signboardBean.description
                         this.indicatorList[i].location = `${this.indicatorList[i].longitude},${this.indicatorList[i].latitude}`
+                        this.indicatorList[i].signboardBean.modifyTime=this.indicatorList[i].signboardBean.modifyTime.replace("-","/")
                         this.indicatorList[i].byTime = -(new Date(this.indicatorList[i].signboardBean.modifyTime)).getTime()
                     }
                     this.indicatorList = _.sortBy(this.indicatorList, 'byTime')
@@ -520,6 +545,11 @@
                             text-overflow: ellipsis;
                             white-space: nowrap;
                         }
+                    }
+                }
+                .handle{
+                    span{
+                        cursor: pointer;
                     }
                 }
             }

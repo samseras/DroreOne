@@ -4,7 +4,7 @@
             :visible="visible"
             :close-on-click-modal = false
             title="告警事件处理"
-            :before-close="closeDialog"
+            :before-close="closeEventDialog"
             width="40%"
             class="dialog edit_Dialog"
             center>
@@ -47,7 +47,9 @@
                         <el-input type="text"  v-model='eventInfo.occurenceTime' class="inputText" :maxlength="15" :readonly='true'></el-input>
                     </p>
                     <p class="alarmRule">关联规则：
-                        <el-input type="text" v-model='eventInfo.alarmRuleName' class="inputText" :maxlength="15" :readonly='true'></el-input>
+                        <!--<el-input type="text" v-model='eventInfo.alarmRuleName' class="inputText" :maxlength="15" :readonly='true'></el-input>-->
+                        <span class="inputText el-input showRuleDetail" @click="showRuleDetail">{{eventInfo.alarmRuleName}}</span>
+                        <!--<div class="inputText el-input"></div>-->
                     </p>
                     <p class="level">严重等级：
                         <el-select  v-model="eventInfo.severityId" size="mini" class="" placeholder="请选择" :disabled="isReadonly">
@@ -60,17 +62,22 @@
                         </el-select>
                     </p>
                     <p class="owner">负责人员：
-                        <el-select  v-model="eventInfo.owner.id" @change="ownerChange" size="mini" class="" placeholder="请选择" :disabled="isReadonly">
-                            <el-option
-                                v-for="item in ownerInfo"
-                                :key="item.id"
-                                :label="item.name"
-                                :value="item.id">
-                            </el-option>
+                        <el-select  v-model="eventInfo.ownerId" @change="ownerChange" size="mini" class="" placeholder="请选择" :disabled="isReadonly">
+                            <el-option-group
+                                v-for="group in personInfo"
+                                :key="group.label"
+                                :label="group.label">
+                                <el-option
+                                    v-for="item in group.options"
+                                    :key="item.id"
+                                    :label="item.name"
+                                    :value="item.id">
+                                </el-option>
+                            </el-option-group>
                         </el-select>
                     </p>
                     <p class="tel">电话号码：
-                        <el-input type="text" v-model="eventInfo.tel" class="inputText" :maxlength="15" :disabled="isReadonly"></el-input>
+                        <el-input type="text" v-model="eventInfo.ownerTel" class="inputText" :maxlength="15" :disabled="true"></el-input>
                     </p>
                     <p class="status">状&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 态:
                         <el-select  v-model="eventInfo.statusId" size="mini" class="" placeholder="请选择" :disabled="isReadonly">
@@ -89,14 +96,14 @@
                     <div class="attachment">附&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;件：
                         <div v-loading="isShowLoading" class="showFilelist" >
                             <div class="uploadlist" v-for="(item,idx) in fileList" :id="item.id" :key="item.id">
-                                <el-checkbox v-model="item.checked" @change="checked(item.id)" class="checkBoxBtn"></el-checkbox>
+                                <el-checkbox v-model="item.checked" class="checkBoxBtn"></el-checkbox>
                                 <span class="downloadThis" @click="downloadFile(item.title)">{{item.title}}</span>
                             </div>
                         </div>
                         <div class="uploadContent">
                             <el-button size="mini" class="hold" @click="$refs.uploadFile.click()" :disabled="isReadonly">上传附件</el-button>
-                             <el-button size="mini" class="hold" @click="deleteFile" :disabled="isReadonly">删除文件</el-button>
-                            <input type="file" ref="uploadFile" class="multiFile" @change="selectFile">
+                             <el-button size="mini" class="hold" @click="deleteFile" :disabled="isReadonly || emptyFile">删除文件</el-button>
+                            <input type="file" ref="uploadFile" class="multiFile"  multiple="multiple" @change="selectFile">
                         </div>
                     </div>
 
@@ -120,12 +127,20 @@
                 </div>
             </div>
         </el-dialog>
+        <AlarmDetail  v-if="ruleVisible"
+                      :ruleVisible="ruleVisible"
+                      @closeDialog ="closeDialog"
+                      :alarmRuleId="eventInfo.alarmRuleId">
+
+        </AlarmDetail>
     </div>
+
 </template>
 
 <script>
      import VueAplayer from 'vue-aplayer'
      import api from '@/api'
+     import AlarmDetail from '../alarmRule/alarmRuleDialog'
     export default {
         props: ['visible','isReadonly','isBatchEdit','choseInfoId','Info'],
         data () {
@@ -143,17 +158,10 @@
                     severityName:'',
                     statusId:'',
                     statusName :'',
-                    owner:[
-                        {
-                            id:'',
-                            name:''
-                        },
-                        {
-                            id:'',
-                            name:''
-                        }
-                    ],
-                    tel:'',
+                    relatedManagerIds:[],
+                    ownerId:"",
+                    ownerName:'',
+                    ownerTel:'',
                     description:''
                 },
                 batchEdit:{
@@ -243,24 +251,40 @@
                         title:'12123dfgdfgdfgdfg.jpg'
                     }
                 ],
-                selectFileList:[]
+                personInfo:[],
+                ruleVisible:false,
+                emptyFile:false
 
             }
         },
         methods: {
+            closeDialog () {
+                this.ruleVisible = false
+            },
+            showRuleDetail(){
+                console.log(this.eventInfo.alarmRuleId)
+                console.log(this.eventInfo.alarmRuleName)
+                this.ruleVisible = true;
+            },
             ownerChange(val){
                 console.log(val);
                 console.log(this.eventInfo);
-                this.ownerInfo.forEach((item,index)=>{
-                    if(item.id == val){
-                        this.eventInfo.tel =  item.tel;
-                    }
-                });
+                this.getTelById(val);
+            },
+            getTelById(id){
+                if(this.personInfo.length > 0){
+                    this.personInfo.forEach((item)=>{
+                        if(item.options.id == id){
+                            this.eventInfo.ownerTel =  item.options.phone;
+                            this.eventInfo.ownerName = item.options.name;
+                        }
+                    });
+                }
             },
             downloadFile(val){
                 console.log(val)
             },
-            closeDialog () {
+            closeEventDialog () {
                 this.$emit('closeDialog')
             },
             saveDialog(){
@@ -303,42 +327,27 @@
                         }
                     })
 
-                    if (newInfo.id) {  //编辑或查看
-                        objArray.push(newInfo)
-                        this.$emit('saveEditInfo',objArray)
-                    } else { //新增
-                        this.$emit('saveInfo',newInfo)
-                    }
-                }
+                     //编辑或查看
+                    objArray.push(newInfo)
 
-            },
-            checked (id) {
-                console.log(id)
-                console.log(this.selectFileList)
-                this.fileList = this.fileList.filter(item => {
-                    if (item.id === id) {
-                        item.checked = item.checked
-                    }
-                    return item
-                })
-                if (this.selectFileList.includes(id)) {
-                    this.selectFileList = this.selectFileList.filter((item) =>{
-                        return item !== id
-                    })
-                } else {
-                    this.selectFileList.push(id)
+                    //1.上传附件
+                    //  this.uploadAttachment();
+                    //2.保存修改
+                    this.$emit('saveEditInfo',objArray)
+
                 }
-                console.log(this.selectFileList)
 
             },
             selectFile (e) {
                 console.log(e.target.files[0], 'opopopopopops')
-                let file = e.target.files[0]
-                var obj = {
-                    id:'123',
-                    title:file.name
-                }
-                this.fileList.push(obj);
+                let files = e.target.files.map((item,index)=>{
+                    return {
+                        id:index,
+                        title:item.name
+                    }
+                })
+
+                this.fileList.concat(files);
                 // if (!file.type.includes('jpg')) {
                 //     this.$message.error('请上传jpg格式文件，谢谢！');
                 //     return
@@ -355,51 +364,24 @@
                 // }
             },
             deleteFile(){
-                console.log(this.selectFileList);
                 console.log(this.fileList);
-                if(this.selectFileList.length > 0){
-
-                        var ids = this.selectFileList.map(function(val){
-                            return val.id;
-                        });
-                        let idList = this.fileList.map((item,index)=>{
-                            return item.id;
-                        })
-                        this.selectFileList.forEach((item,index)=>{
-                            if(this.idList.includes(item)){
-
-                            }
-                        });
-                        // api.alarm.deletFile(ids).then(res => {
-                        //     console.log(res, '删除成功')
-                        //     this.$message.success('删除成功')
-                        //     this.fileList = this.fileList.filter(item => {
-                        //         return item.id !== id
-                        //     })
-                        // }).catch(err => {
-                        //     this.$message.error('删除失败，请稍后重试')
-                        //     console.log(err)
-                        //     this.choseInfoId = []
-                        // })
-
-                }else{
+                let isSelect = false;
+                this.fileList.forEach((item)=>{
+                    if(item.checked){
+                        isSelect = true;
+                    }
+                })
+                if(!isSelect){
                     this.$message.error('请选择要删除的文件！');
+                    return;
                 }
+
+                this.fileList = this.fileList.filter((item)=> !item.checked)
+                    this.$message.success('删除成功')
+
             },
             init () {
-                // let that = this;
-                // that.fileList.forEach(function(item){
-                //     if(item.checked){
-                //         if(that.selectFileList.indexOf(item.title) === -1 ){
-                //             // console.log(that.selectFileList.indexOf(item.title))
-                //             that.selectFileList.push(item.title)
-                //             that.playMusicList.push(item);
-                //         }
-                //     }
-                // })
-                // that.fileList.forEach(function(item){
-                //     that.songNameList.push(item.title);
-                // })
+                this.getPersonInfo();
             },
             async getAllFile () {
                 this.isShowLoading = true
@@ -407,6 +389,9 @@
                     this.isShowLoading = false
                     console.log(res, '请求成功')
                     this.fileList = res
+                    if(this.fileList.length == 0){
+                        this.emptyFile = true;
+                    }
                     this.fileList.forEach(item => {
                         let endNum = item.path.lastIndexOf('_')
                         let startNum = item.path.lastIndexOf('/') + 1
@@ -434,26 +419,59 @@
                 }).catch(err => {
                     console.log(err, '查询告警事情状态失败')
                 })
+            },
+            async getPersonInfo(){
+                let r1 = await this.getPerson(3);
+                let r2 = await this.getPerson(8);
+
+                console.log(r1,'severity');
+                console.log(r2,'manager');
+                if(r1.length > 0){
+                    this.personInfo.push(this.addPersonn(r1));
+                }
+                if(r2.length > 0){
+                    this.personInfo.push(this.addPersonn(r2));
+                }
+            },
+            addPersonn(array){
+                let temp = array.map((item)=>{
+                    return {
+                        id: item.personBean.id,
+                        name:item.personBean.name,
+                        phone:item.personBean.phone
+                    }
+                })
+                return {
+                    label:array[0].jobName,
+                    options:temp
+                }
+            },
+            async getPerson(type){
+                let personInfo = [];
+                await api.person.getJobPerson(type).then(res => {
+                    console.log(res, '请求成功')
+                    personInfo = res;
+                }).catch(err => {
+                    console.log(err, '请求失败')
+                })
+                return personInfo;
             }
-
-
-
         },
         watch:{
 
         },
         async created () {
+            this.init();
             console.log(this.Info);
             this.eventInfo = this.Info;
-
+            if(this.eventInfo.ownerId){
+                this.getNameById(this.eventInfo.ownerId);
+            }
         },
         components : {
-
+            AlarmDetail
         },
          mounted () {
-            //异步加载
-             this.init();
-
         }
     }
 </script>
@@ -616,6 +634,16 @@
                          display: none;
                      }
                  }
+                .alarmRule{
+                    .showRuleDetail{
+                        cursor:pointer;
+                        margin-left: rem(15);
+                    }
+                    .showRuleDetail:hover{
+                        color:blue;
+                        text-decoration: underline;
+                    }
+                }
                  .attachment{
                      .showFilelist{
                          display: flex;
@@ -700,10 +728,10 @@
                      i{
                          font-size: rem(16);
                      }
-                     span{
-                         background: #f0f2f5;
-                         color: #909399;
-                     }
+                     /*span{*/
+                         /*background: #f0f2f5;*/
+                         /*color: #909399;*/
+                     /*}*/
                  }
 
              }
