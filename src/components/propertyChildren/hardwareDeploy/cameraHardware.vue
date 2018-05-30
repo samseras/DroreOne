@@ -586,6 +586,10 @@
                 }
             }
         }
+        .checkBoxBtn{
+            width:rem(15);
+            height:rem(15);
+        }
     }
 </style>
 

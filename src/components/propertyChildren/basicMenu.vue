@@ -1,6 +1,9 @@
 <template>
     <div class="basicMenu">
-        <el-menu default-active="/basic-property/basictype" router :default-openeds="openeds">
+        <el-menu default-active="/basic-property/basictype" router
+                 text-color="#fff"
+                 active-text-color="#ffd04b"
+                 :default-openeds="openeds">
             <ScrollContainer>
                 <template v-for="item in items">
                     <template v-if="item.subs">
@@ -161,7 +164,10 @@
     }
 </script>
 
-<style lang="scss">
+<style lang="scss" type="text/scss">
+    .basicMenu .el-submenu .el-menu-item:hover{
+        background-color:#283446;
+    }
     .basicMenu .el-submenu .el-menu-item {
         width: 100%;
         height: rem(40);
@@ -169,6 +175,8 @@
         padding: rem(0) !important;
         padding-left: rem(20) !important;
         font-size: rem(14);
+        color:#999ca2;
+        background-color:#485462;
         img{
             display: inline-block;
             width: rem(18);
@@ -180,6 +188,9 @@
         }
     }
     .basicMenu .el-submenu__title{
+        background-color:#434e5c;
+        border-top: 1px solid #4e5b6b;
+        color:#fff;
         img{
             width: rem(25);
             height: rem(25);
@@ -192,7 +203,7 @@
         width: 100%;
         height: rem(55);
         line-height: rem(55);
-        border-bottom: 1px solid #e0e0e0;
+        border-bottom: 1px solid #4e5b6b;
         img{
             width: rem(25);
             height: rem(25);
@@ -209,8 +220,11 @@
         text-align: left;
         font-size: rem(14);
     }
-    .basicMenu .el-submenu{
-        border-bottom: 1px solid #e0e0e0;
+    /*.basicMenu .el-submenu{*/
+        /*border-bottom: 1px solid #e0e0e0;*/
+    /*}*/
+    .basicMenu .el-menu{
+        background-color: #485462;
     }
 </style>
 <style scoped type="text/scss" lang="scss">

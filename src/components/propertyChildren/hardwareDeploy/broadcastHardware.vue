@@ -491,13 +491,13 @@
 
 <style lang="scss" type="text/scss">
     .broadHard{
-        .el-checkbox__label{
-            padding-left:rem(5);
-            font-size:rem(13);
-        }
-        .el-checkbox__inner{
-            margin-top:rem(5);
-        }
+        /*.el-checkbox__label{*/
+            /*padding-left:rem(5);*/
+            /*font-size:rem(13);*/
+        /*}*/
+        /*.el-checkbox__inner{*/
+            /*margin-top:rem(5);*/
+        /*}*/
         .cameraList .el-button{
             border:1px solid transparent;
             text-align: left;
