@@ -358,8 +358,8 @@
                 if (this.choseInfos.length > 0) {
                     console.log('batchEdit')
                     this.isBatchEdit = true;
-                    // this.warningEventInfo = info;
                     this.visible = true;
+                    this.isReadonly = false;
                     this.title="编辑环境告警规则"
                 } else {
                     this.$message.error('请选择要编辑的数据')
