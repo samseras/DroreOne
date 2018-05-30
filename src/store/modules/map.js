@@ -19,6 +19,14 @@ const map = {
         controbroad:[],
         controcamera:[],
         controled:[],
+        facilitypark:[],
+        facilitytoilet:[],
+        facilityshop:[],
+        facilitybuild:[],
+        facilityscenic:[],
+        facilitytrash:[],
+        facilityplant:[],
+        facilityindicator:[],
     },
     getters: {
         getLocation (state) {
@@ -65,6 +73,30 @@ const map = {
         },
         getcontroLed(state) {
             return state.controled
+        },
+        getfacilityPark(state) {
+            return state.facilitypark
+        },
+        getfacilityToilet(state) {
+            return state.facilitytoilet
+        },
+        getfacilityShop(state) {
+            return state.facilityshop
+        },
+        getfacilityBuild(state) {
+            return state.facilitybuild
+        },
+        getfacilityScenic(state) {
+            return state.facilityscenic
+        },
+        getfacilityTrash(state) {
+            return state.facilitytrash
+        },
+        getfacilityPlant(state) {
+            return state.facilityplant
+        },
+        getfacilityIndicator(state) {
+            return state.facilityindicator
         }
     },
     setters: {},
@@ -128,6 +160,38 @@ const map = {
         },
         [types.CONTROLER_LED] (state, data) {
             state.controled = data
+            // console.log(state.controwifi,'commit')
+        },
+        [types.FACILITY_PARK] (state, data) {
+            state.facilitypark = data
+            // console.log(state.controwifi,'commit')
+        },
+        [types.FACILITY_TOILET] (state, data) {
+            state.facilitytoilet = data
+            // console.log(state.controwifi,'commit')
+        },
+        [types.FACILITY_SHOP] (state, data) {
+            state.facilityshop = data
+            // console.log(state.controwifi,'commit')
+        },
+        [types.FACILITY_BUILD] (state, data) {
+            state.facilitybuild = data
+            // console.log(state.controwifi,'commit')
+        },
+        [types.FACILITY_SCENIC] (state, data) {
+            state.facilityscenic= data
+            // console.log(state.controwifi,'commit')
+        },
+        [types.FACILITY_TRASH] (state, data) {
+            state.facilitytrash= data
+            // console.log(state.controwifi,'commit')
+        },
+        [types.FACILITY_PLANT] (state, data) {
+            state.facilityplant= data
+            // console.log(state.controwifi,'commit')
+        },
+        [types.FACILITY_INDICATOR] (state, data) {
+            state.facilityindicator= data
             // console.log(state.controwifi,'commit')
         }
     },

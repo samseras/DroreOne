@@ -158,10 +158,12 @@
                     this.lightList.forEach(item => {
                         item.label = item.name
                         item.type = 'led'
-                        if (item.status ==="ONLINE")  {
-                            item.icon = '../../../static/img/led_open.svg'
-                        } else {
+                        if (item.status =="FAULT")  {
+                            item.icon = '../../../static/img/led_damage.svg'
+                        } else  if (item.status =="OFFLINE") {
                             item.icon = '../../../static/img/led.svg'
+                        }else {
+                            item.icon = '../../../static/img/led_open.svg'
                         }
                         if (item.regionId) {
                             if (!regionIdList.includes(item.regionId)) {

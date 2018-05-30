@@ -11,7 +11,7 @@
                 <i class="el-icon-d-arrow-right" v-if="exhibition" @click="packUpHidden(1)"></i>
                 <i class="el-icon-d-arrow-left" v-if="!exhibition" @click="packUpHidden(0)"></i>
                 <ul>
-                    <li v-for="(item, index) in title" :class="activeIndex === index? 'active':''" @click="goRouteModule(index)">
+                    <li v-for="(item, index) in title" v-if="item.controlShow" :class="activeIndex === index? 'active':''" @click="goRouteModule(index)">
                         <router-link :to="item.route"><img :src="item.img" :alt="item.desc" :title="item.desc">
                         </router-link>
                     </li>
@@ -24,19 +24,21 @@
 <script>
     import Map from '@/components/map'
     import {mapGetters,mapMutations} from 'vuex'
+    import api from '@/api'
+
     export default {
         data () {
             return {
                 title:[
-                  {route:'/facility/road',img:'../../../static/img/roat.svg',desc:"路网"},
-                  {route:'/facility/park',img:'../../../static/img/park.svg',desc:"停车场"},
-                  {route:'/facility/toilet',img:'../../../static/img/toilet.svg',desc:"卫生间"},
-                  {route:'/facility/shop',img:'../../../static/img/shop.svg',desc:"商铺"},
-                  {route:'/facility/build',img:'../../../static/img/build.svg',desc:"建筑"},
-                  {route:'/facility/scenic',img:'../../../static/img/scenic.svg',desc:"景点"},
-                  {route:'/facility/trash',img:'../../../static/img/trash.svg',desc:"垃圾桶"},
-                  {route:'/facility/plant',img:'../../../static/img/plant.svg',desc:"植物"},
-                  {route:'/facility/indicator',img:'../../../static/img/indicator.svg',desc:"指示牌"}
+                  {name:'ROAD',route:'/facility/road',img:'../../../static/img/roat.svg',desc:"路网",controlShow:true},
+                  {name:'PARKING',route:'/facility/park',img:'../../../static/img/park.svg',desc:"停车场",controlShow:false},
+                  {name:'TOILET',route:'/facility/toilet',img:'../../../static/img/toilet.svg',desc:"卫生间",controlShow:false},
+                  {name:'BUSINESS',route:'/facility/shop',img:'../../../static/img/shop.svg',desc:"商铺",controlShow:false},
+                  {name:'BUILDING',route:'/facility/build',img:'../../../static/img/build.svg',desc:"建筑",controlShow:false},
+                  {name:'SCENICSPOT',route:'/facility/scenic',img:'../../../static/img/scenic.svg',desc:"景点",controlShow:false},
+                  {name:'DUSTBIN',route:'/facility/trash',img:'../../../static/img/trash.svg',desc:"垃圾桶",controlShow:false},
+                  {name:'PLANT',route:'/facility/plant',img:'../../../static/img/plant.svg',desc:"植物",controlShow:false},
+                  {name:'SIGNBOARD',route:'/facility/indicator',img:'../../../static/img/indicator.svg',desc:"指示牌",controlShow:false}
                  ],
           isShowControler: false,
           exhibition: true,
@@ -50,6 +52,7 @@
         if (this.getSearchInfo.id) {
             this.isShowControler = true
         }
+        this.getAllControler()
       },
     methods:{
         ...mapMutations(['SHOW_SEARCH']),
@@ -68,6 +71,27 @@
             }
             this.$store.commit('SHOW_SEARCH', this.isShowControler)
             this.activeIndex = index
+        },
+        async getAllControler(){
+            await api.controler.getAllControler().then((res)=>{
+                // console.log(res,'这是请求回来的数据')
+                this.controler=res
+                for(let i=0;i< this.controler.length;i++){
+                    for(let j=0;j< this.title.length;j++){
+                        if(this.title[j].name===this.controler[i].name){
+                            if(this.controler[i].value==="ON"){
+                                this.title[j].controlShow= true
+                            }else if(this.controler[i].value==="OFF"){
+                                this.title[j].controlShow= false
+                            }
+                        }
+                    }
+                }
+                console.log(this.title)
+            }).catch((err)=>{
+                console.log(err)
+            })
+
         }
     },
       watch: {

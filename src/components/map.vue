@@ -48,6 +48,14 @@
                 controleBroadList:[],
                 controleCameraList:[],
                 controleLedList:[],
+                facilityPark:[],
+                facilityToilet:[],
+                facilityShop:[],
+                facilityBuild:[],
+                facilityScenic:[],
+                facilityTrash:[],
+                facilityPlant:[],
+                facilityIndicator:[],
                 buildInfo:[],
                 visible:false,
                 title:'',
@@ -74,7 +82,7 @@
                 this.getAllTree();//植物现有标注
                 this.getAllBuild();//建筑现有标注
                 this.overView();//鹰眼
-                this.getAllRoat();// 路线输出
+                // this.getAllRoat();// 路线输出
             }else if (route.includes('controler')) {
                 droreMap.interaction.enableMapClick = true
                 droreMap.interaction.showMove()
@@ -687,12 +695,15 @@
                     for (let i=0;i<this.iconList.length;i++){
                         this.iconList[i].type="路灯"
                         this.iconList[i].location = [this.iconList[i].longitude,this.iconList[i].latitude]
-                        if(this.iconList[i].status ==="ONLINE"){
-                            this.iconList[i].url="/static/img/icon/Light.png"
-                            this.iconList[i].subtype='Light'
-                        } else {
+                        if(this.iconList[i].status =="FAULT"){
+                            this.iconList[i].url="/static/img/icon/Light_damage.png"
+                            this.iconList[i].subtype='Light_damage'
+                        } else if(this.iconList[i].status =="OFFLINE") {
                             this.iconList[i].url="/static/img/icon/Light_close.png"
                             this.iconList[i].subtype='Light_close'
+                        }else {
+                            this.iconList[i].url="/static/img/icon/Light.png"
+                            this.iconList[i].subtype='Light'
                         }
                     }
                     this.iconShow();
@@ -704,12 +715,15 @@
                 await api.light.getAllLight().then((res)=>{
                     this.lightList=res.devices
                     for (let i=0;i<this.lightList.length;i++){
-                        if(this.lightList[i].status ==="ONLINE"){
-                            this.lightList[i].url="/static/img/icon/Light.png"
-                            this.lightList[i].subtype='Light'
-                        } else {
+                        if(this.lightList[i].status ==="FAULT"){
+                            this.lightList[i].url="/static/img/icon/Light_damage.png"
+                            this.lightList[i].subtype='Light_damage'
+                        } else if(this.lightList[i].status ==="OFFLINE") {
                             this.lightList[i].url="/static/img/icon/Light_close.png"
                             this.lightList[i].subtype='Light_close'
+                        }else {
+                            this.lightList[i].url="/static/img/icon/Light.png"
+                            this.lightList[i].subtype='Light'
                         }
                         if(this.lightList[i].id === this.getLocationId){
                             this.lightList[i].location = [this.lightList[i].longitude,this.lightList[i].latitude]
@@ -816,12 +830,15 @@
                     for (let i=0;i<this.iconList.length;i++){
                         this.iconList[i].type="wifi"
                         this.iconList[i].location = [this.iconList[i].longitude,this.iconList[i].latitude]
-                        if(this.iconList[i].status ==="ONLINE"){
-                            this.iconList[i].url="/static/img/icon/wifi.png"
-                            this.iconList[i].subtype='wifi'
-                        } else {
+                        if(this.iconList[i].status =="FAULT"){
+                            this.iconList[i].url="/static/img/icon/wifi_damage.png"
+                            this.iconList[i].subtype='wifi_damage'
+                        } else if(this.iconList[i].status =="OFFLINE") {
                             this.iconList[i].url="/static/img/icon/wifi_close.png"
                             this.iconList[i].subtype='wifi_close'
+                        }else {
+                            this.iconList[i].url="/static/img/icon/wifi.png"
+                            this.iconList[i].subtype='wifi'
                         }
                     }
                     this.iconShow();
@@ -833,12 +850,15 @@
                 await api.wifi.getAllWifi().then((res)=>{
                     this.wifiList=res.devices
                     for(let i=0;i<this.wifiList.length;i++){
-                        if(this.wifiList[i].lightStatus){
+                        if(this.wifiList[i].status =="FAULT"){
                             this.wifiList[i].url="/static/img/icon/wifi.png"
                             this.wifiList[i].subtype='wifi'
-                        } else {
+                        } else if(this.wifiList[i].status =="OFFLINE"){
                             this.wifiList[i].url="/static/img/icon/wifi_close.png"
                             this.wifiList[i].subtype='wifi_close'
+                        }else {
+                            this.wifiList[i].url="/static/img/icon/wifi.png"
+                            this.wifiList[i].subtype='wifi'
                         }
                         if(this.wifiList[i].id === this.getLocationId){
                             this.wifiList[i].location = [this.wifiList[i].longitude,this.wifiList[i].latitude]
@@ -886,12 +906,15 @@
                     for (let i=0;i<this.iconList.length;i++){
                         this.iconList[i].type="大屏"
                         this.iconList[i].location = [this.iconList[i].longitude,this.iconList[i].latitude]
-                        if(this.iconList[i].status ==="ONLINE"){
-                            this.iconList[i].url="/static/img/icon/led.png"
-                            this.iconList[i].subtype='led'
-                        } else {
+                        if(this.iconList[i].status =="FAULT"){
+                            this.iconList[i].url="/static/img/icon/monitors_damage.png"
+                            this.iconList[i].subtype='led_damage'
+                        } else if(this.iconList[i].status =="OFFLINE") {
                             this.iconList[i].url="/static/img/icon/led_close.png"
                             this.iconList[i].subtype='led_close'
+                        }else {
+                            this.iconList[i].url="/static/img/icon/led.png"
+                            this.iconList[i].subtype='led'
                         }
                     }
                     this.iconShow();
@@ -903,12 +926,15 @@
                 await api.led.getAllLed().then((res)=>{
                     this.ledList=res.devices
                     for (let i=0;i<this.ledList.length;i++){
-                        if(this.ledList[i].status ==="ONLINE"){
-                            this.ledList[i].url="/static/img/icon/led.png"
-                            this.ledList[i].subtype='Led'
-                        } else {
+                        if(this.ledList[i].status =="FAULT"){
+                            this.ledList[i].url="/static/img/icon/led_damage.png"
+                            this.ledList[i].subtype='led_damage'
+                        } else  if(this.ledList[i].status =="OFFLINE"){
                             this.ledList[i].url="/static/img/icon/led_close.png"
-                            this.ledList[i].subtype='Led_close'
+                            this.ledList[i].subtype='led_close'
+                        }else {
+                            this.ledList[i].url="/static/img/icon/led.png"
+                            this.ledList[i].subtype='led'
                         }
                         if(this.ledList[i].id === this.getLocationId){
                             this.ledList[i].location = [this.ledList[i].longitude,this.ledList[i].latitude]
@@ -1014,12 +1040,15 @@
                     for (let i=0;i<this.iconList.length;i++){
                         this.iconList[i].type="传感器"
                         this.iconList[i].location = [this.iconList[i].longitude,this.iconList[i].latitude]
-                        if(this.iconList[i].status ==="ONLINE"){
-                            this.iconList[i].url="/static/img/icon/monitors.png"
-                            this.iconList[i].subtype='Monitors'
-                        } else {
+                        if(this.iconList[i].status =="FAULT"){
+                            this.iconList[i].url="/static/img/icon/monitors_damage.png"
+                            this.iconList[i].subtype='Monitors_damage'
+                        } else if(this.iconList[i].status =="OFFLINE") {
                             this.iconList[i].url="/static/img/icon/monitors_close.png"
                             this.iconList[i].subtype='Monitors_close'
+                        }else {
+                            this.iconList[i].url="/static/img/icon/monitors.png"
+                            this.iconList[i].subtype='Monitors'
                         }
                     }
                     this.iconShow();
@@ -1031,12 +1060,15 @@
                 await api.monitor.getAllMonitor().then((res)=>{
                     this.monitorsList=res.devices
                     for (let i=0;i<this.monitorsList.length;i++){
-                        if(this.monitorsList[i].lightStatus){
-                            this.monitorsList[i].url="/static/img/icon/monitors.png"
-                            this.monitorsList[i].subtype='Monitors'
-                        } else {
+                        if(this.monitorsList[i].status =="FAULT"){
+                            this.monitorsList[i].url="/static/img/icon/monitors_damage.png"
+                            this.monitorsList[i].subtype='Monitors_damage'
+                        } else  if(this.monitorsList[i].status =="OFFLINE"){
                             this.monitorsList[i].url="/static/img/icon/monitors_close.png"
                             this.monitorsList[i].subtype='Might_close'
+                        }else {
+                            this.monitorsList[i].url="/static/img/icon/monitors.png"
+                            this.monitorsList[i].subtype='Monitors'
                         }
                         if(this.monitorsList[i].id === this.getLocationId){
                             this.monitorsList[i].location = [this.monitorsList[i].longitude,this.monitorsList[i].latitude]
@@ -1084,12 +1116,15 @@
                     for (let i=0;i<this.iconList.length;i++){
                         this.iconList[i].type="广播"
                         this.iconList[i].location = [this.iconList[i].longitude,this.iconList[i].latitude]
-                        if(this.iconList[i].status ==="ONLINE"){
-                            this.iconList[i].url="/static/img/icon/broadcast.png"
-                            this.iconList[i].subtype='broadcast'
-                        } else {
+                        if(this.iconList[i].status =="FAULT"){
+                            this.iconList[i].url="/static/img/icon/broadcast_damage.png"
+                            this.iconList[i].subtype='broadcast_damage'
+                        } else if(this.iconList[i].status =="OFFLINE") {
                             this.iconList[i].url="/static/img/icon/broadcast_close.png"
                             this.iconList[i].subtype='broadcast_close'
+                        }else {
+                            this.iconList[i].url="/static/img/icon/broadcast.png"
+                            this.iconList[i].subtype='broadcast'
                         }
                     }
                     this.iconShow();
@@ -1102,12 +1137,15 @@
                 await api.broadcast.getAllBroadcast().then((res)=>{
                     this.broadList=res.devices
                     for (let i=0;i<this.broadList.length;i++) {
-                        if(this.broadList[i].status ==="ONLINE"){
-                            this.broadList[i].url="/static/img/icon/broadcast.png"
-                            this.broadList[i].subtype='broadcast'
-                        } else {
+                        if(this.broadList[i].status =="FAULT"){
+                            this.broadList[i].url="/static/img/icon/broadcast_damage.png"
+                            this.broadList[i].subtype='broadcast_damage'
+                        }else if(this.broadList[i].status =="OFFLINE"){
                             this.broadList[i].url="/static/img/icon/broadcast_close.png"
                             this.broadList[i].subtype='broadcast_close'
+                        }else {
+                            this.broadList[i].url="/static/img/icon/broadcast.png"
+                            this.broadList[i].subtype='broadcast'
                         }
                         if(this.broadList[i].id === this.getLocationId){
                             this.broadList[i].location = [this.broadList[i].longitude,this.broadList[i].latitude]
@@ -1156,12 +1194,15 @@
                     for (let i=0;i<this.iconList.length;i++){
                         this.iconList[i].type="摄像头"
                         this.iconList[i].location = [this.iconList[i].longitude,this.iconList[i].latitude]
-                        if(this.iconList[i].status ==="ONLINE"){
-                            this.iconList[i].url="/static/img/icon/camera.png"
-                            this.iconList[i].subtype='camera'
-                        } else {
+                        if(this.iconList[i].status =="FAULT"){
+                            this.iconList[i].url="/static/img/icon/camera_damage.png"
+                            this.iconList[i].subtype='camera_damage'
+                        } else if(this.iconList[i].status =="OFFLINE") {
                             this.iconList[i].url="/static/img/icon/camera_close.png"
                             this.iconList[i].subtype='camera_close'
+                        }else {
+                            this.iconList[i].url="/static/img/icon/camera.png"
+                            this.iconList[i].subtype='camera'
                         }
                     }
                     this.iconShow();
@@ -1173,12 +1214,15 @@
                 await api.camera.getAllCamera().then((res) => {
                     this.cameraList = res.devices
                     for (let i=0; i < this.cameraList.length; i++) {
-                        if(this.cameraList[i].lightStatus){
-                            this.cameraList[i].url="/static/img/icon/camera.png"
-                            this.cameraList[i].subtype='camera'
-                        } else {
+                        if(this.cameraList[i].status =="FAULT"){
+                            this.cameraList[i].url="/static/img/icon/camera_damage.png"
+                            this.cameraList[i].subtype='camera_damage'
+                        } else if(this.cameraList[i].status =="OFFLINE") {
                             this.cameraList[i].url="/static/img/icon/camera_close.png"
                             this.cameraList[i].subtype='camera_close'
+                        }else {
+                            this.cameraList[i].url="/static/img/icon/camera.png"
+                            this.cameraList[i].subtype='camera'
                         }
                         if(this.cameraList[i].id === this.getLocationId){
                             this.cameraList[i].location = [this.cameraList[i].longitude,this.cameraList[i].latitude]
@@ -1490,6 +1534,7 @@
                         }
                         var data = {"id": res[i].id, "name": res[i].name,"constructor":''}
                         areaEvtList.addRoad(area, data)
+                        console.log(areaEvtList)
                         droreMap.road.addRoadLayer(areaEvtList)
                     }
                 }).catch(err => {
@@ -1687,7 +1732,7 @@
                         });
                         this.controler();//之前打的点
                     }else if(route.includes('facility')){
-                        // droreMap.icon.IconStyleById(icon.id,false);
+                        droreMap.icon.IconStyleById(icon.id,false);
                         let that = this;
                         icon.onclick(function (e) {
                             that.menulist = e.data;
@@ -1695,6 +1740,7 @@
                             that.menuShow()
                             console.log( that.menulist,'123123123');
                         });
+                        this.facility();//之前打的点
                     }
                 }
             },
@@ -1753,8 +1799,6 @@
                 $("#contextmenu_container").attr("class","contextmenu "+e.subtype);
                 if(e.data.status =="ONLINE"){
                     this.open=true
-                }else if(e.data.status =="OFFLINE"){
-                    this.open=false
                 }else{
                     this.open=false
                 }
@@ -1796,6 +1840,22 @@
                 droreMap.icon.IconStyleById(data.id,false);
                 this.menuDelete();
             },
+            roadShow(data){
+                let areaEvtList=data.id
+                areaEvtList =new droreMap.road.RoadLayer('ROUTE_list', '#26bbf0', 'blue')
+                let geo =JSON.parse(data.geo);
+                let area = [];
+                for(var j = 0; j < geo.length; j++) {
+                    let wgs=droreMap.trans.transFromWgsToLayer(geo[j])
+                    area.push(wgs);
+                }
+                var data = {"id": data.id, "name": data.name,"constructor":''}
+                areaEvtList.addRoad(area, data)
+                droreMap.road.addRoadLayer(areaEvtList)
+            },
+            roadHide(data){
+                droreMap.road.removeAll()
+            },
             controler(){
                 if(this.getcontroleLight.length > 0){
                     for (let i=0;i<this.getcontroleLight.length;i++) {
@@ -1827,6 +1887,48 @@
                         this.treeShowID(this.getcontroLed[i]);
                     }
                 }
+            },
+            facility(){
+                if(this.getfacilityPark.length > 0){
+                    for (let i=0;i<this.getfacilityPark.length;i++) {
+                        this.treeShowID(this.getfacilityPark[i]);
+                    }
+                }
+                if(this.getfacilityToilet.length > 0){
+                    for (let i=0;i<this.getfacilityToilet.length;i++) {
+                        this.treeShowID(this.getfacilityToilet[i]);
+                    }
+                }
+                if(this.getfacilityShop.length > 0){
+                    for (let i=0;i<this.getfacilityShop.length;i++) {
+                        this.treeShowID(this.getfacilityShop[i]);
+                    }
+                }
+                if(this.getfacilityBuild.length > 0){
+                    for (let i=0;i<this.getfacilityBuild.length;i++) {
+                        this.treeShowID(this.getfacilityBuild[i]);
+                    }
+                }
+                if(this.getfacilityScenic.length > 0){
+                    for (let i=0;i<this.getfacilityScenic.length;i++) {
+                        this.treeShowID(this.getfacilityScenic[i]);
+                    }
+                }
+                if(this.getfacilityTrash.length > 0){
+                    for (let i=0;i<this.getfacilityTrash.length;i++) {
+                        this.treeShowID(this.getfacilityTrash[i]);
+                    }
+                }
+                if(this.getfacilityPlant.length > 0){
+                    for (let i=0;i<this.getfacilityPlant.length;i++) {
+                        this.treeShowID(this.getfacilityPlant[i]);
+                    }
+                }
+                if(this.getfacilityIndicator.length > 0){
+                    for (let i=0;i<this.getfacilityIndicator.length;i++) {
+                        this.treeShowID(this.getfacilityIndicator[i]);
+                    }
+                }
             }
         },
         components: {
@@ -1845,39 +1947,106 @@
                     if (this.getTreeState[0].checked) {//显示
                         this.getTreeState.forEach(item => {
                             item.children.forEach(item1 => {
-                                this.treeShow(item1);
+                                if(item1.typeroad=='road'){
+                                    this.roadShow(item1);
+                                }else {
+                                    this.treeShow(item1);
+                                }
+                                console.log(item1.type,5645646545645641)
                                 if(item1.type=='light'){
                                     this.controleLightList.push(item1.id);
+                                    this.$store.commit('CONTROLER_LIGHT', this.controleLightList)
                                 }else if(item1.type=='environment'){
                                     this.controleEnvironmentList.push(item1.id);
-                                    // console.log(this.controleEnvironmentList,'这111111111111')
+                                    this.$store.commit('CONTROLER_ENVIRONMENT', this.controleEnvironmentList)
                                 }else if(item1.type=='wifi'){
                                     this.controleWifiList.push(item1.id);
+                                    this.$store.commit('CONTROLER_WIFI', this.controleWifiList)
                                 }else if(item1.type =='broad'){
                                     this.controleBroadList.push(item1.id);
+                                    this.$store.commit('CONTROLER_BROAD', this.controleBroadList)
                                 }else if(item1.type =='camera'){
                                     this.controleCameraList.push(item1.id);
+                                    this.$store.commit('CONTROLER_CAMERA', this.controleCameraList)
                                 } else if(item1.type =='led'){
                                     this.controleLedList.push(item1.id);
+                                    this.$store.commit('CONTROLER_LED', this.controleLedList)
+                                } else if(item1.type =='park'){
+                                    this.facilityPark.push(item1.id);
+                                    this.$store.commit('FACILITY_PARK', this.facilityPark)
+                                } else if(item1.type =='toilet'){
+                                    this.facilityToilet.push(item1.id);
+                                    this.$store.commit('FACILITY_TOILET', this.facilityToilet)
+                                } else if(item1.type =='shop'){
+                                    this.facilityShop.push(item1.id);
+                                    this.$store.commit('FACILITY_SHOP', this.facilityShop)
+                                } else if(item1.type =='build'){
+                                    this.facilityBuild.push(item1.id);
+                                    this.$store.commit('FACILITY_BUILD', this.facilityBuild)
+                                } else if(item1.type =='scenic'){
+                                    this.facilityScenic.push(item1.id);
+                                    this.$store.commit('FACILITY_SCENIC', this.facilityScenic)
+                                } else if(item1.type =='trash'){
+                                    this.facilityTrash.push(item1.id);
+                                    this.$store.commit('FACILITY_TRASH', this.facilityTrash)
+                                } else if(item1.type =='plant'){
+                                    this.facilityPlant.push(item1.id);
+                                    this.$store.commit('FACILITY_PLANT', this.facilityPlant)
+                                } else if(item1.type =='indicator'){
+                                    this.facilityIndicator.push(item1.id);
+                                    this.$store.commit('FACILITY_INDICATOR', this.facilityIndicator)
                                 }
                             })
                         })
                     }else {//隐藏
-                        // console.log('在这报错22222222222222')
                         this.getTreeState.forEach(item => {
-                            this.treeHide(item)
+                            if(item.typeroad=='road'){
+                                this.roadHide(item);
+                            }else {
+                                this.treeHide(item);
+                            }
                             if(item.type=='light'){
                                 this.controleLightList=[];
+                                this.$store.commit('CONTROLER_LIGHT', this.controleLightList)
                             }else if(item.type=='environment'){
                                 this.controleEnvironmentList=[];
+                                this.$store.commit('CONTROLER_ENVIRONMENT', this.controleEnvironmentList)
                             }else if(item.type=='wifi'){
                                 this.controleWifiList=[];
+                                this.$store.commit('CONTROLER_WIFI', this.controleWifiList)
                             }else if(item.type=='broad'){
                                 this.controleBroadList=[];
+                                this.$store.commit('CONTROLER_BROAD', this.controleBroadList)
                             }else if(item.type=='camera'){
                                 this.controleCameraList=[];
+                                this.$store.commit('CONTROLER_CAMERA', this.controleCameraList)
                             }else if(item.type=='led'){
                                 this.controleLedList=[];
+                                this.$store.commit('CONTROLER_LED', this.controleLedList)
+                            } else if(item.type =='park'){
+                                this.facilityPark=[];
+                                this.$store.commit('FACILITY_PARK', this.facilityPark)
+                            } else if(item.type =='toilet'){
+                                this.facilityToilet=[];
+                                this.$store.commit('FACILITY_TOILET', this.facilityToilet)
+                            } else if(item.type =='shop'){
+                                this.facilityShop=[];
+                                this.$store.commit('FACILITY_SHOP', this.facilityShop)
+                            } else if(item.type =='build'){
+                                this.facilityBuild=[];
+                                this.$store.commit('FACILITY_BUILD', this.facilityBuild)
+                            } else if(item.type =='scenic'){
+                                this.facilityScenic=[];
+                                this.$store.commit('FACILITY_SCENIC', this.facilityScenic)
+                            } else if(item.type =='trash'){
+                                this.facilityTrash=[];
+                                this.$store.commit('FACILITY_TRASH', this.facilityTrash)
+                            } else if(item.type =='plant'){
+                                this.facilityPlant=[];
+                                this.$store.commit('FACILITY_PLANT', this.facilityPlant)
+                            } else if(item.type =='indicator'){
+                                this.facilityIndicator=[];
+                                this.$store.commit('FACILITY_INDICATOR', this.facilityIndicator)
                             }
                         })
                     }
@@ -1886,152 +2055,316 @@
                         let data = this.getTreeState[0].children
                         if (this.getTreeState[0].checked.checkedKeys.includes(this.getTreeState[0].id)) {
                             for (let i = 0; i < data.length; i++) {
-                                this.treeShow(data[i]);
+                                if(!data[i].typeroad){
+                                    this.treeShow(data[i]);
+                                }
                                 // console.log(this.getTreeState[0]);
                                 if(data[i].type=='light'){
                                     this.controleLightList.push(data[i].id);
                                     this.controleLightList=[...new Set(this.controleLightList)];
+                                    this.$store.commit('CONTROLER_LIGHT', this.controleLightList)
                                 }else if(data[i].type=='environment'){
                                     this.controleEnvironmentList.push(data[i].id);
                                     this.controleEnvironmentList=[...new Set(this.controleEnvironmentList)];
+                                    this.$store.commit('CONTROLER_ENVIRONMENT', this.controleEnvironmentList)
                                 }else if(data[i].type=='wifi'){
                                     this.controleWifiList.push(data[i].id);
                                     this.controleWifiList=[...new Set(this.controleWifiList)];
+                                    this.$store.commit('CONTROLER_WIFI', this.controleWifiList)
                                 }else if(data[i].type=='broad'){
                                     this.controleBroadList.push(data[i].id);
                                     this.controleBroadList=[...new Set(this.controleBroadList)];
+                                    this.$store.commit('CONTROLER_BROAD', this.controleBroadList)
                                 }else if(data[i].type=='camera'){
                                     this.controleCameraList.push(data[i].id);
                                     this.controleCameraList=[...new Set(this.controleCameraList)];
+                                    this.$store.commit('CONTROLER_CAMERA', this.controleCameraList)
                                 }else if(data[i].type=='led'){
                                     this.controleLedList.push(data[i].id);
                                     this.controleLedList=[...new Set(this.controleLedList)];
+                                    this.$store.commit('CONTROLER_LED', this.controleLedList)
+                                } else if(data[i].type =='park'){
+                                    this.facilityPark.push(data[i].id);
+                                    this.facilityPark=[...new Set(this.facilityPark)];
+                                    this.$store.commit('FACILITY_PARK', this.facilityPark)
+                                } else if(data[i].type =='toilet'){
+                                    this.facilityToilet.push(data[i].id);
+                                    this.facilityToilet=[...new Set(this.facilityToilet)];
+                                    this.$store.commit('FACILITY_TOILET', this.facilityToilet)
+                                } else if(data[i].type =='shop'){
+                                    this.facilityShop.push(data[i].id);
+                                    this.facilityShop=[...new Set(this.facilityShop)];
+                                    this.$store.commit('FACILITY_SHOP', this.facilityShop)
+                                } else if(data[i].type =='build'){
+                                    this.facilityBuild.push(data[i].id);
+                                    this.facilityBuild=[...new Set(this.facilityBuild)];
+                                    this.$store.commit('FACILITY_BUILD', this.facilityBuild)
+                                }else if(data[i].type =='scenic'){
+                                    this.facilityScenic.push(data[i].id);
+                                    this.facilityScenic=[...new Set(this.facilityScenic)];
+                                    this.$store.commit('FACILITY_SCENIC', this.facilityScenic)
+                                } else if(data[i].type =='trash'){
+                                    this.facilityTrash.push(data[i].id);
+                                    this.facilityTrash=[...new Set(this.facilityTrash)];
+                                    this.$store.commit('FACILITY_TRASH', this.facilityTrash)
+                                } else if(data[i].type =='plant'){
+                                    this.facilityPlant.push(data[i].id);
+                                    this.facilityPlant=[...new Set(this.facilityPlant)];
+                                    this.$store.commit('FACILITY_PLANT', this.facilityPlant)
+                                } else if(data[i].type =='indicator'){
+                                    this.facilityIndicator.push(data[i].id);
+                                    this.facilityIndicator=[...new Set(this.facilityIndicator)];
+                                    this.$store.commit('FACILITY_INDICATOR', this.facilityIndicator)
                                 }
                             }
                         }else {
                             for (let i = 0; i < this.getTreeState[0].children.length; i++) {
                                 // console.log(this.getTreeState[0].children)
-                                this.treeHide(this.getTreeState[0].children[i]);
+                                if(!this.getTreeState[0].children[i].typeroad){
+                                    this.treeHide(this.getTreeState[0].children[i]);
+                                }
                                 if(this.getTreeState[0].children[i].type=='light'){
                                     let index = this.controleLightList.indexOf(this.getTreeState[0].children[i].id);
                                     if (index > -1) {
                                         this.controleLightList.splice(index, 1);
                                     }
+                                    this.$store.commit('CONTROLER_LIGHT', this.controleLightList)
                                 }else if(this.getTreeState[0].children[i].type=='environment'){
                                     let index = this.controleEnvironmentList.indexOf(this.getTreeState[0].children[i].id);
                                     if (index > -1) {
                                         this.controleEnvironmentList.splice(index, 1);
                                     }
+                                    this.$store.commit('CONTROLER_ENVIRONMENT', this.controleEnvironmentList)
                                 }else if(this.getTreeState[0].children[i].type=='wifi'){
                                     let index = this.controleWifiList.indexOf(this.getTreeState[0].children[i].id);
                                     if (index > -1) {
                                         this.controleWifiList.splice(index, 1);
                                     }
+                                    this.$store.commit('CONTROLER_WIFI', this.controleWifiList)
+                                }else if(this.getTreeState[0].children[i].type=='broad'){
+                                    let index = this.controleBroadList.indexOf(this.getTreeState[0].children[i].id);
+                                    if (index > -1) {
+                                        this.controleBroadList.splice(index, 1);
+                                    }
+                                    this.$store.commit('CONTROLER_BROAD', this.controleBroadList)
                                 }else if(this.getTreeState[0].children[i].type=='camera'){
                                     let index = this.controleCameraList.indexOf(this.getTreeState[0].children[i].id);
                                     if (index > -1) {
                                         this.controleCameraList.splice(index, 1);
                                     }
+                                    this.$store.commit('CONTROLER_CAMERA', this.controleCameraList)
                                 }else if(this.getTreeState[0].children[i].type=='led'){
                                     let index = this.controleLedList.indexOf(this.getTreeState[0].children[i].id);
                                     if (index > -1) {
                                         this.controleLedList.splice(index, 1);
                                     }
+                                    this.$store.commit('CONTROLER_LED', this.controleLedList)
+                                }else if(this.getTreeState[0].children[i].type=='park'){
+                                    let index = this.facilityPark.indexOf(this.getTreeState[0].children[i].id);
+                                    if (index > -1) {
+                                        this.facilityPark.splice(index, 1);
+                                    }
+                                    this.$store.commit('CONTROLER_LED', this.facilityPark)
+                                } else if(this.getTreeState[0].children[i].type =='toilet'){
+                                    let index = this.facilityToilet.indexOf(this.getTreeState[0].children[i].id);
+                                    if (index > -1) {
+                                        this.facilityToilet.splice(index, 1);
+                                    }
+                                    this.$store.commit('FACILITY_TOILET', this.facilityToilet)
+                                }else if(this.getTreeState[0].children[i].type =='shop'){
+                                    let index = this.facilityShop.indexOf(this.getTreeState[0].children[i].id);
+                                    if (index > -1) {
+                                        this.facilityShop.splice(index, 1);
+                                    }
+                                    this.$store.commit('FACILITY_SHOP', this.facilityShop)
+                                }else if(this.getTreeState[0].children[i].type =='build'){
+                                    let index = this.facilityBuild.indexOf(this.getTreeState[0].children[i].id);
+                                    if (index > -1) {
+                                        this.facilityBuild.splice(index, 1);
+                                    }
+                                    this.$store.commit('FACILITY_BUILD', this.facilityBuild)
+                                }else if(this.getTreeState[0].children[i].type =='scenic'){
+                                    let index = this.facilityScenic.indexOf(this.getTreeState[0].children[i].id);
+                                    if (index > -1) {
+                                        this.facilityScenic.splice(index, 1);
+                                    }
+                                    this.$store.commit('FACILITY_SCENIC', this.facilityScenic)
+                                } else if(this.getTreeState[0].children[i].type =='trash'){
+                                    let index = this.facilityTrash.indexOf(this.getTreeState[0].children[i].id);
+                                    if (index > -1) {
+                                        this.facilityTrash.splice(index, 1);
+                                    }
+                                    this.$store.commit('FACILITY_TRASH', this.facilityTrash)
+                                } else if(this.getTreeState[0].children[i].type =='plant'){
+                                    let index = this.facilityPlant.indexOf(this.getTreeState[0].children[i].id);
+                                    if (index > -1) {
+                                        this.facilityPlant.splice(index, 1);
+                                    }
+                                    this.$store.commit('FACILITY_PLANT', this.facilityPlant)
+                                } else if(this.getTreeState[0].children[i].type=='indicator'){
+                                    let index = this.facilityIndicator.indexOf(this.getTreeState[0].children[i].id);
+                                    if (index > -1) {
+                                        this.facilityIndicator.splice(index, 1);
+                                    }
+                                    this.$store.commit('FACILITY_INDICATOR', this.facilityIndicator)
                                 }
                             }
                         }
                     }else {
                         if (this.getTreeState[0].checked.checkedKeys.includes(this.getTreeState[0].id)) {
-                            this.treeShow(this.getTreeState[0]);
+                            if(!this.getTreeState[0].typeroad){
+                                this.treeShow(this.getTreeState[0]);
+                            }
                             if(this.getTreeState[0].type=='light'){
                                 this.controleLightList.push(this.getTreeState[0].id);
                                 this.controleLightList=[...new Set(this.controleLightList)];
+                                this.$store.commit('CONTROLER_LIGHT', this.controleLightList)
                             }else if(this.getTreeState[0].type=='environment'){
                                 this.controleEnvironmentList.push(this.getTreeState[0].id);
                                 this.controleEnvironmentList=[...new Set(this.controleEnvironmentList)];
+                                this.$store.commit('CONTROLER_ENVIRONMENT', this.controleEnvironmentList)
                             }else if(this.getTreeState[0].type=='wifi'){
                                 this.controleWifiList.push(this.getTreeState[0].id);
                                 this.controleWifiList=[...new Set(this.controleWifiList)];
+                                this.$store.commit('CONTROLER_WIFI', this.controleWifiList)
                             }else if(this.getTreeState[0].type=='broad'){
                                 this.controleBroadList.push(this.getTreeState[0].id);
                                 this.controleBroadList=[...new Set(this.controleBroadList)];
+                                this.$store.commit('CONTROLER_BROAD', this.controleBroadList)
                             }else if(this.getTreeState[0].type=='camera'){
                                 this.controleCameraList.push(this.getTreeState[0].id);
                                 this.controleCameraList=[...new Set(this.controleCameraList)];
+                                this.$store.commit('CONTROLER_CAMERA', this.controleCameraList)
                             }else if(this.getTreeState[0].type=='led'){
                                 this.controleLedList.push(this.getTreeState[0].id);
                                 this.controleLedList=[...new Set(this.controleLedList)];
+                                this.$store.commit('CONTROLER_LED', this.controleLedList)
+                            }else if(this.getTreeState[0].type=='park'){
+                                this.facilityPark.push(this.getTreeState[0].id);
+                                this.facilityPark=[...new Set(this.facilityPark)];
+                                this.$store.commit('CONTROLER_LED', this.facilityPark)
+                            }else if(this.getTreeState[0].type =='toilet'){
+                                this.facilityToilet.push(this.getTreeState[0].id);
+                                this.facilityToilet=[...new Set(this.facilityToilet)];
+                                this.$store.commit('FACILITY_TOILET', this.facilityToilet)
+                            }else if(this.getTreeState[0].type =='shop'){
+                                this.facilityShop.push(this.getTreeState[0].id);
+                                this.facilityShop=[...new Set(this.facilityShop)];
+                                this.$store.commit('FACILITY_SHOP', this.facilityShop)
+                            }else if(this.getTreeState[0].type =='build'){
+                                this.facilityBuild.push(this.getTreeState[0].id);
+                                this.facilityBuild=[...new Set(this.facilityBuild)];
+                                this.$store.commit('FACILITY_BUILD', this.facilityBuild)
+                            }else if(this.getTreeState[0].type =='scenic'){
+                                this.facilityScenic.push(this.getTreeState[0].id);
+                                this.facilityScenic=[...new Set(this.facilityScenic)];
+                                this.$store.commit('FACILITY_SCENIC', this.facilityScenic)
+                            } else if(this.getTreeState[0].type  =='trash'){
+                                this.facilityTrash.push(this.getTreeState[0].id);
+                                this.facilityTrash=[...new Set(this.facilityTrash)];
+                                this.$store.commit('FACILITY_TRASH', this.facilityTrash)
+                            } else if(this.getTreeState[0].type  =='plant'){
+                                this.facilityPlant.push(this.getTreeState[0].id);
+                                this.facilityPlant=[...new Set(this.facilityPlant)];
+                                this.$store.commit('FACILITY_PLANT', this.facilityPlant)
+                            } else if(this.getTreeState[0].type=='indicator'){
+                                this.facilityIndicator.push(this.getTreeState[0].id);
+                                this.facilityIndicator=[...new Set(this.facilityIndicator)];
+                                this.$store.commit('FACILITY_INDICATOR', this.facilityIndicator)
                             }
                         } else {
-                            this.treeHide(this.getTreeState[0]);
+                            if(!this.getTreeState[0].typeroad){
+                                this.treeHide(this.getTreeState[0]);
+                            }
                             if(this.getTreeState[0].type=='light'){
                                 let index = this.controleLightList.indexOf(this.getTreeState[0].id);
                                 if (index > -1) {
                                     this.controleLightList.splice(index, 1);
                                 }
+                                this.$store.commit('CONTROLER_LIGHT', this.controleLightList)
                             }else if(this.getTreeState[0].type=='environment'){
                                 let index = this.controleEnvironmentList.indexOf(this.getTreeState[0].id);
                                 if (index > -1) {
                                     this.controleEnvironmentList.splice(index, 1);
                                 }
+                                this.$store.commit('CONTROLER_ENVIRONMENT', this.controleEnvironmentList)
                             }else if(this.getTreeState[0].type=='wifi'){
                                 let index = this.controleWifiList.indexOf(this.getTreeState[0].id);
                                 if (index > -1) {
                                     this.controleWifiList.splice(index, 1);
                                 }
+                                this.$store.commit('CONTROLER_WIFI', this.controleWifiList)
                             }else if(this.getTreeState[0].type=='broad'){
                                 let index = this.controleBroadList.indexOf(this.getTreeState[0].id);
                                 if (index > -1) {
                                     this.controleBroadList.splice(index, 1);
                                 }
+                                this.$store.commit('CONTROLER_BROAD', this.controleBroadList)
                             }else if(this.getTreeState[0].type=='camera'){
                                 let index = this.controleCameraList.indexOf(this.getTreeState[0].id);
                                 if (index > -1) {
                                     this.controleCameraList.splice(index, 1);
                                 }
+                                this.$store.commit('CONTROLER_CAMERA', this.controleCameraList)
                             }else if(this.getTreeState[0].type=='led'){
                                 let index = this.controleLedList.indexOf(this.getTreeState[0].id);
                                 if (index > -1) {
                                     this.controleLedList.splice(index, 1);
                                 }
+                                this.$store.commit('CONTROLER_LED', this.controleLedList)
+                            }else if(this.getTreeState[0].type=='park'){
+                                let index = this.facilityPark.indexOf(this.getTreeState[0].id);
+                                if (index > -1) {
+                                    this.facilityPark.splice(index, 1);
+                                }
+                                this.$store.commit('CONTROLER_LED', this.facilityPark)
+                            }else if(this.getTreeState[0].type =='toilet'){
+                                let index = this.facilityToilet.indexOf(this.getTreeState[0].id);
+                                if (index > -1) {
+                                    this.facilityToilet.splice(index, 1);
+                                }
+                                this.$store.commit('FACILITY_TOILET', this.facilityToilet)
+                            }else if(this.getTreeState[0].type =='shop'){
+                                let index = this.facilityShop.indexOf(this.getTreeState[0].id);
+                                if (index > -1) {
+                                    this.facilityShop.splice(index, 1);
+                                }
+                                this.$store.commit('FACILITY_SHOP', this.facilityShop)
+                            }else if(this.getTreeState[0].type =='build'){
+                                let index = this.facilityBuild.indexOf(this.getTreeState[0].id);
+                                if (index > -1) {
+                                    this.facilityBuild.splice(index, 1);
+                                }
+                                this.$store.commit('FACILITY_BUILD', this.facilityBuild)
+                            }else if(this.getTreeState[0].type =='scenic'){
+                                let index = this.facilityScenic.indexOf(this.getTreeState[0].id);
+                                if (index > -1) {
+                                    this.facilityScenic.splice(index, 1);
+                                }
+                                this.$store.commit('FACILITY_SCENIC', this.facilityScenic)
+                            }else if(this.getTreeState[0].type  =='trash'){
+                                let index = this.facilityTrash.indexOf(this.getTreeState[0].id);
+                                if (index > -1) {
+                                    this.facilityTrash.splice(index, 1);
+                                }
+                                this.$store.commit('FACILITY_TRASH', this.facilityTrash)
+                            } else if(this.getTreeState[0].type  =='plant'){
+                                let index = this.facilityPlant.indexOf(this.getTreeState[0].id);
+                                if (index > -1) {
+                                    this.facilityPlant.splice(index, 1);
+                                }
+                                this.$store.commit('FACILITY_PLANT', this.facilityPlant)
+                            } else if(this.getTreeState[0].type=='indicator'){
+                                let index = this.facilityIndicator.indexOf(this.getTreeState[0].id);
+                                if (index > -1) {
+                                    this.facilityIndicator.splice(index, 1);
+                                }
+                                this.$store.commit('FACILITY_INDICATOR', this.facilityIndicator)
                             }
                         }
                     }
                 }
             },
-            '$route' (to,from) {
-                if(from.name==='Light'){
-                    // this.controleLedList.push(this.getcontroleLight);
-                    // this.controleLedList=[...new Set(this.controleLedList)];
-                    console.log(this.controleLightList,'路灯');
-                    this.$store.commit('CONTROLER_LIGHT', this.controleLightList)
-                }else if(from.name==='Environment'){
-                    // this.controleEnvironmentList.push(this.getcontroleEnvironment);
-                    // this.controleEnvironmentList=[...new Set(this.controleEnvironmentList)];
-                    console.log(this.controleEnvironmentList,'传感器');
-                    this.$store.commit('CONTROLER_ENVIRONMENT', this.controleEnvironmentList)
-                }else if(from.name==='Wifi'){
-                    // this.controleWifiList.push(this.getcontroleWifi);
-                    // this.controleWifiList=[...new Set(this.controleWifiList)];
-                    console.log(this.controleWifiList,'wifi');
-                    this.$store.commit('CONTROLER_WIFI', this.controleWifiList)
-                } else if(from.name==='Broad'){
-                    // this.controleBroadList.push(this.getcontroBroad);
-                    // this.controleBroadList=[...new Set(this.controleBroadList)];
-                    console.log(this.controleBroadList,'广播');
-                    this.$store.commit('CONTROLER_BROAD', this.controleBroadList)
-                } else if(from.name==='Camera'){
-                    // this.controleCameraList.push(this.getcontroCamera);
-                    // this.controleCameraList=[...new Set(this.controleCameraList)];
-                    console.log(this.controleCameraList,'摄像头');
-                    this.$store.commit('CONTROLER_CAMERA', this.controleCameraList)
-                } else if(from.name==='Screen'){
-                    // this.controleWifiList.push(this.getcontroLed);
-                    // this.controleLedList=[...new Set(this.controleLedList)];
-                    console.log(this.controleLedList,'Led大屏');
-                    this.$store.commit('CONTROLER_LED', this.controleLedList)
-                }
-            }
         },
         computed: {
             ...mapGetters([
@@ -2043,7 +2376,15 @@
                 'getcontroleWifi',
                 'getcontroBroad',
                 'getcontroCamera',
-                'getcontroLed'
+                'getcontroLed',
+                'getfacilityPark',
+                'getfacilityToilet',
+                'getfacilityShop',
+                'getfacilityBuild',
+                'getfacilityScenic',
+                'getfacilityTrash',
+                'getfacilityPlant',
+                'getfacilityIndicator'
             ])
         }
     }
@@ -2280,14 +2621,14 @@
             line-height: rem(16);
             .el-switch__core{
                 height: rem(16);
-                .el-switch__button{
-                    width: rem(12);
-                    height: rem(12);
-                }
+            }
+            .el-switch__core:after{
+                width: rem(12);
+                height: rem(12);
             }
         }
-        .mapSwitch.is-checked .el-switch__button{
-            transform: translate3d(10px, 0px, 0px)!important;
+        .mapSwitch.el-switch.is-checked .el-switch__core::after{
+            margin-left: -13px;
         }
     }
 </style>
@@ -2321,19 +2662,23 @@
         .mapSwitch{
             position: absolute;
             left:rem(5);
-            bottom:rem(8);
+            bottom:rem(12);
         }
         button.menuShow{
             background: url("/static/img/menuShow.svg");
             background-size: cover;
-            top:rem(22);
-            left:rem(20);
+            top:rem(10);
+            left: rem(50);
+            /*top:rem(22);*/
+            /*left:rem(20);*/
         }
         button.menuOperation{
             background: url("/static/img/menuOperation.svg");
             background-size: cover;
-            top:rem(10);
-            left: rem(50);
+            right:rem(7);
+            bottom: rem(12);
+            /*top:rem(10);*/
+            /*left: rem(50);*/
         }
         button.menuBroadcast{
             background: url("/static/img/menuPhone.svg");
