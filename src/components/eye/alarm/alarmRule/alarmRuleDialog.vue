@@ -1,7 +1,7 @@
 <template>
     <div class="alarmRuleDialog">
         <el-dialog
-            :visible="visible"
+            :visible="visible || ruleVisible"
             :close-on-click-modal = false
             :title="title"
             :before-close="closeDialog"
@@ -22,7 +22,7 @@
                         </el-select>
                     </p>
                 </div>
-                <div v-if="route.includes('alarmcolumn') && !isBatchEdit"  class="alarmContent">
+                <div v-if="(route.includes('alarmcolumn') && !isBatchEdit) || ruleInfo.alarmTypeId == '2'"  class="alarmContent">
                     <p class="name">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称：
                         <el-input type="text" v-model='alarmcolumnInfo.name' class="inputText" :maxlength="15" :disabled='isReadonly'></el-input>
                     </p>
@@ -478,7 +478,7 @@
 <script>
     import api from '@/api'
     export default {
-        props: ['visible','title','isReadonly','isBatchEdit','choseInfos','Info','alarmRuleId'],
+        props: ['visible','ruleVisible','title','isReadonly','isBatchEdit','choseInfos','Info','alarmRuleId'],
         data () {
             return{
                 route:'',
@@ -636,7 +636,8 @@
                 personInfo:[],
                 alarmType:[],
                 isShowLoading: false,
-                deviceReadOnly:false
+                deviceReadOnly:false,
+                ruleInfo:{}
             }
         },
         methods: {
@@ -1048,25 +1049,38 @@
             initEventDialog(){
                 this.isReadonly = true;
                 //调查询rule接口
-               let ruleInfo = this.getAlarmRuleById(this.alarmRuleId);
-                console.log(ruleInfo)
-                //判断
-                switch (ruleInfo.alarmTypeId) {
-                    case 2:
-                        this.alarmcolumnInfo = ruleInfo;
-                    case 3:
-                        this.firefightingInfo = ruleInfo;
-                    case 4:
-                        this.crossborderInfo = ruleInfo;
-                    case 6:
-                        this.offtrackInfo = ruleInfo;
-                    case 7:
-                        this.overlimitInfo = ruleInfo;
-                    case 8:
-                        this.waterlevelInfo = ruleInfo;
-                    case 9:
-                        this.conditionInfo = ruleInfo;
+               // let ruleInfo = this.getAlarmRuleById(this.alarmRuleId);
+                this.ruleInfo = {
+                    id:'1',
+                    name:'sos报警规则01',
+                    relatedDevices:[],
+                    severityId:'1',
+                    severityName:'高',
+                    deviceScope:'100米',
+                    securityScope:'200米',
+                    relatedManagerIds:'0',
+                    relatedManagerNames:'aaa',
+                    isEnabled:true,
+                    alarmTypeId :'2'
                 }
+                this.alarmcolumnInfo = this.ruleInfo;
+                //判断
+                // switch (ruleInfo.alarmTypeId) {
+                //     case 2:
+                //         this.alarmcolumnInfo = ruleInfo;
+                //     case 3:
+                //         this.firefightingInfo = ruleInfo;
+                //     case 4:
+                //         this.crossborderInfo = ruleInfo;
+                //     case 6:
+                //         this.offtrackInfo = ruleInfo;
+                //     case 7:
+                //         this.overlimitInfo = ruleInfo;
+                //     case 8:
+                //         this.waterlevelInfo = ruleInfo;
+                //     case 9:
+                //         this.conditionInfo = ruleInfo;
+                // }
 
             },
             initRuleDialog(){
@@ -1119,7 +1133,6 @@
                     if(this.conditionInfo.envDataSource == "0"){
                         this.deviceReadOnly = true;
                     }
-                    // this.getEnvType();
                 }
             }
         },

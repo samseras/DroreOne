@@ -4,7 +4,7 @@
             :visible="visible"
             :close-on-click-modal = false
             title="告警事件处理"
-            :before-close="closeDialog"
+            :before-close="closeEventDialog"
             width="40%"
             class="dialog edit_Dialog"
             center>
@@ -96,14 +96,14 @@
                     <div class="attachment">附&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;件：
                         <div v-loading="isShowLoading" class="showFilelist" >
                             <div class="uploadlist" v-for="(item,idx) in fileList" :id="item.id" :key="item.id">
-                                <el-checkbox v-model="item.checked" @change="checked(item.id)" class="checkBoxBtn"></el-checkbox>
+                                <el-checkbox v-model="item.checked" class="checkBoxBtn"></el-checkbox>
                                 <span class="downloadThis" @click="downloadFile(item.title)">{{item.title}}</span>
                             </div>
                         </div>
                         <div class="uploadContent">
                             <el-button size="mini" class="hold" @click="$refs.uploadFile.click()" :disabled="isReadonly">上传附件</el-button>
-                             <el-button size="mini" class="hold" @click="deleteFile" :disabled="isReadonly">删除文件</el-button>
-                            <input type="file" ref="uploadFile" class="multiFile" @change="selectFile">
+                             <el-button size="mini" class="hold" @click="deleteFile" :disabled="isReadonly || emptyFile">删除文件</el-button>
+                            <input type="file" ref="uploadFile" class="multiFile"  multiple="multiple" @change="selectFile">
                         </div>
                     </div>
 
@@ -128,6 +128,8 @@
             </div>
         </el-dialog>
         <AlarmDetail  v-if="ruleVisible"
+                      :ruleVisible="ruleVisible"
+                      @closeDialog ="closeDialog"
                       :alarmRuleId="eventInfo.alarmRuleId">
 
         </AlarmDetail>
@@ -249,13 +251,16 @@
                         title:'12123dfgdfgdfgdfg.jpg'
                     }
                 ],
-                selectFileList:[],
                 personInfo:[],
-                ruleVisible:false
+                ruleVisible:false,
+                emptyFile:false
 
             }
         },
         methods: {
+            closeDialog () {
+                this.ruleVisible = false
+            },
             showRuleDetail(){
                 console.log(this.eventInfo.alarmRuleId)
                 console.log(this.eventInfo.alarmRuleName)
@@ -279,7 +284,7 @@
             downloadFile(val){
                 console.log(val)
             },
-            closeDialog () {
+            closeEventDialog () {
                 this.$emit('closeDialog')
             },
             saveDialog(){
@@ -322,42 +327,27 @@
                         }
                     })
 
-                    if (newInfo.id) {  //编辑或查看
-                        objArray.push(newInfo)
-                        this.$emit('saveEditInfo',objArray)
-                    } else { //新增
-                        this.$emit('saveInfo',newInfo)
-                    }
-                }
+                     //编辑或查看
+                    objArray.push(newInfo)
 
-            },
-            checked (id) {
-                console.log(id)
-                console.log(this.selectFileList)
-                this.fileList = this.fileList.filter(item => {
-                    if (item.id === id) {
-                        item.checked = item.checked
-                    }
-                    return item
-                })
-                if (this.selectFileList.includes(id)) {
-                    this.selectFileList = this.selectFileList.filter((item) =>{
-                        return item !== id
-                    })
-                } else {
-                    this.selectFileList.push(id)
+                    //1.上传附件
+                    //  this.uploadAttachment();
+                    //2.保存修改
+                    this.$emit('saveEditInfo',objArray)
+
                 }
-                console.log(this.selectFileList)
 
             },
             selectFile (e) {
                 console.log(e.target.files[0], 'opopopopopops')
-                let file = e.target.files[0]
-                var obj = {
-                    id:'123',
-                    title:file.name
-                }
-                this.fileList.push(obj);
+                let files = e.target.files.map((item,index)=>{
+                    return {
+                        id:index,
+                        title:item.name
+                    }
+                })
+
+                this.fileList.concat(files);
                 // if (!file.type.includes('jpg')) {
                 //     this.$message.error('请上传jpg格式文件，谢谢！');
                 //     return
@@ -374,36 +364,21 @@
                 // }
             },
             deleteFile(){
-                console.log(this.selectFileList);
                 console.log(this.fileList);
-                if(this.selectFileList.length > 0){
-
-                        var ids = this.selectFileList.map(function(val){
-                            return val.id;
-                        });
-                        let idList = this.fileList.map((item,index)=>{
-                            return item.id;
-                        })
-                        this.selectFileList.forEach((item,index)=>{
-                            if(this.idList.includes(item)){
-
-                            }
-                        });
-                        // api.alarm.deletFile(ids).then(res => {
-                        //     console.log(res, '删除成功')
-                        //     this.$message.success('删除成功')
-                        //     this.fileList = this.fileList.filter(item => {
-                        //         return item.id !== id
-                        //     })
-                        // }).catch(err => {
-                        //     this.$message.error('删除失败，请稍后重试')
-                        //     console.log(err)
-                        //     this.choseInfoId = []
-                        // })
-
-                }else{
+                let isSelect = false;
+                this.fileList.forEach((item)=>{
+                    if(item.checked){
+                        isSelect = true;
+                    }
+                })
+                if(!isSelect){
                     this.$message.error('请选择要删除的文件！');
+                    return;
                 }
+
+                this.fileList = this.fileList.filter((item)=> !item.checked)
+                    this.$message.success('删除成功')
+
             },
             init () {
                 this.getPersonInfo();
@@ -414,6 +389,9 @@
                     this.isShowLoading = false
                     console.log(res, '请求成功')
                     this.fileList = res
+                    if(this.fileList.length == 0){
+                        this.emptyFile = true;
+                    }
                     this.fileList.forEach(item => {
                         let endNum = item.path.lastIndexOf('_')
                         let startNum = item.path.lastIndexOf('/') + 1

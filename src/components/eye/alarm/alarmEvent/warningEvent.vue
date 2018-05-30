@@ -80,7 +80,6 @@
                               @closeDialog ="closeDialog"
                               :title = "title"
                               @saveEditInfo="saveEditInfo"
-                              @saveInfo="saveInfo"
                               :isBatchEdit="isBatchEdit"
                               :choseInfos = 'choseInfos'>
                 </AlarmDetail>
@@ -339,9 +338,6 @@
                 }else{  //单个编辑保存
 
                 }
-            },
-            saveInfo(){  //新增保存
-
             },
             async getAllAlarmEvent () {
                 this.isShowLoading = true
