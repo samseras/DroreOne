@@ -154,7 +154,7 @@
 
 <style lang="scss" type="text/scss">
     .hardwareMenu .el-submenu .el-menu-item:hover{
-        background-color:#808080;
+        background-color:#283446;
     }
     .hardwareMenu .el-submenu .el-menu-item {
         width: 100%;
@@ -178,6 +178,7 @@
     }
     .hardwareMenu .el-submenu__title{
         background-color:#434e5c;
+        border-top: 1px solid #4e5b6b;
         color:#fff;
         img{
             width: rem(25);
@@ -208,6 +209,9 @@
         text-align: left;
         /*padding-left: rem(8);*/
         font-size: rem(14);
+    }
+    .hardwareMenu .el-menu{
+        background-color: #485462;
     }
 </style>
 <style scoped type="text/scss" lang="scss">

@@ -51,7 +51,7 @@
                     </p>
                     <p class="description ms">
                         <span class="des">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：</span>
-                        <el-input type="textarea" v-model="camera.description" :disabled="isDisabled"></el-input>
+                        <el-input type="textarea" v-model="camera.description" :disabled="isDisabled" :maxlength="140"></el-input>
                     </p>
                     <div class="img">
                         <img :src="getUrl(camera.picturePath)" alt="" v-if="isDisabled" @error="imgError">
@@ -102,7 +102,7 @@
                     </p>
                     <p class="describe ms">
                         <span class="des">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述:</span>
-                        <el-input type="textarea" v-model="broadCast.description" :disabled="isDisabled" ></el-input>
+                        <el-input type="textarea" v-model="broadCast.description" :disabled="isDisabled" :maxlength="140"></el-input>
                     </p>
                     <div class="img">
                         <img :src="getUrl(broadCast.picturePath)" alt="" v-if="isDisabled" @error="imgError">
@@ -163,7 +163,7 @@
                     <p class="describe textarea ms">
                         <span class="des">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：</span>
 
-                        <el-input type="textarea" v-model="led.description" :disabled="isDisabled"></el-input>
+                        <el-input type="textarea" v-model="led.description" :disabled="isDisabled" :maxlength="140"></el-input>
                     </p>
                     <div class="img">
                         <img :src="getUrl(led.picturePath)" alt="" v-if="isDisabled" @error="imgError">
@@ -229,7 +229,7 @@
                    <p class="describe ms">
                        <span class="des">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：</span>
 
-                        <el-input type="textarea" v-model="wifi.description" :disabled="isDisabled" ></el-input>
+                        <el-input type="textarea" v-model="wifi.description" :disabled="isDisabled" :maxlength="140"></el-input>
                     </p>
                     <div class="img">
                         <img :src="getUrl(wifi.picturePath)" alt="" v-if="isDisabled" @error="imgError">
@@ -286,7 +286,7 @@
                     <p class="describe ms">
                         <span class="des">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述:</span>
 
-                        <el-input type="textarea" v-model="monitors.description" :disabled="isDisabled"></el-input>
+                        <el-input type="textarea" v-model="monitors.description" :disabled="isDisabled" :maxlength="140"></el-input>
                     </p>
                     <div class="img">
                         <img :src="getUrl(monitors.picturePath)" alt="" v-if="isDisabled" @error="imgError">
@@ -335,7 +335,7 @@
                     <p class="describe ms">
                         <span class="des">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述:</span>
 
-                        <el-input type="textarea" v-model="Light.description" :disabled="isDisabled"></el-input>
+                        <el-input type="textarea" v-model="Light.description" :disabled="isDisabled" :maxlength="140"></el-input>
                     </p>
                     <div class="img">
                         <img :src="getUrl(Light.picturePath)" alt="" v-if="isDisabled" @error="imgError">
@@ -390,7 +390,7 @@
                     </p>
                     <p class="describe ms">
                         <span class="des">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述:</span>
-                        <el-input type="textarea"  v-model="gate.description" :disabled="isDisabled"></el-input>
+                        <el-input type="textarea"  v-model="gate.description" :disabled="isDisabled" :maxlength="140"></el-input>
                     </p>
                     <div class="img">
                         <img :src="getUrl(gate.picturePath)" alt="" v-if="isDisabled" @error="imgError">
@@ -446,7 +446,7 @@
                     <p class="describe ms">
                         <span class="des">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述:</span>
 
-                        <el-input type="textarea" v-model="police.description" :disabled="isDisabled" ></el-input>
+                        <el-input type="textarea" v-model="police.description" :disabled="isDisabled" :maxlength="140"></el-input>
                     </p>
                     <div class="img">
                         <img :src="getUrl(police.picturePath)" alt="" v-if="isDisabled" @error="imgError">

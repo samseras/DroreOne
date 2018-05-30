@@ -10,6 +10,7 @@
                         @selectedAll = 'selectedAll'
                         @startEndPlan="startEndPlan"
                         @searchAnything="searchAnything"
+                        @choseType="choseType"
                         :selectLength="choseInfoId.length"
                         :listLength="screenList.length"
                         @fixedInfo = 'fixedInfo'>
@@ -30,17 +31,23 @@
                                 <el-checkbox v-model="scope.row.checked" @change="checked(scope.row.id)" class="checkBoxBtn"></el-checkbox>
                             </template>
                         </el-table-column>
-
                         <el-table-column
                             prop="ledSchedule.name"
                             label="名称">
+                        </el-table-column>
+                        <el-table-column
+                            label="状态">
+                            <template slot-scope="scope">
+                                <span v-if="scope.row.ledSchedule.enabled">已开启</span>
+                                <span v-else>已停止</span>
+                            </template>
                         </el-table-column>
                         <el-table-column
                             prop="ledIds.length"
                             label="硬件总数">
                         </el-table-column>
                         <el-table-column
-                            label="时间">
+                            label="执行日期">
                             <template slot-scope="scope">
                                 <span v-if="scope.row.ledSchedule.customizedDays">{{scope.row.ledSchedule.startDate}}~{{scope.row.ledSchedule.endDate}}</span>
                                 <span v-if="!scope.row.ledSchedule.customizedDays">{{scope.row.ledSchedule.days | weekFilter}}</span>
@@ -53,10 +60,9 @@
                             </template>
                         </el-table-column>
                         <el-table-column
-                            label="状态">
+                            label="描述">
                             <template slot-scope="scope">
-                                <span v-if="scope.row.ledSchedule.enabled">已开启</span>
-                                <span v-else>已停止</span>
+                                <span class="description">{{scope.row.ledSchedule.description}}</span>
                             </template>
                         </el-table-column>
                         <el-table-column label="操作" width="200">
@@ -382,6 +388,32 @@
                     console.log(err, '失败')
                 })
             },
+            choseType (type) {
+                console.log(type, '这是传过来的')
+                type = type.map(item => {
+                    if (item === '开启') {
+                        return true
+                    } else{
+                        return false
+                    }
+                })
+                console.log(type, '这是过滤后的')
+                if (type.length === 0){
+                    this.screenList = this.checkList.filter((item) => {
+                        item.status = true
+                        return item
+                    })
+                } else {
+                    this.screenList = this.checkList.filter((item,index) => {
+                        if (type.includes(item.ledSchedule.enabled)) {
+                            item.status = true
+                        } else {
+                            item.status = false
+                        }
+                        return item.status === true
+                    })
+                }
+            },
             async getAllScreenLed () {
                 this.isShowLoading = true
                 await api.scheduleled.getAllScerrnLed().then(res => {
@@ -507,6 +539,16 @@
                             line-height: rem(22);
                         }
                     }
+                }
+                .description {
+                    display: inline-block;
+                    width: rem(150);
+                    text-align: left;
+                    padding-right: rem(5);
+                    line-height: rem(20);
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    white-space: nowrap;
                 }
             }
         }

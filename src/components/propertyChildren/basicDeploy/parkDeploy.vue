@@ -12,8 +12,10 @@
                         @selectedAll = 'selectedAll'
                         @fixedInfo = 'fixedInfo'
                         :choseId="choseInfoId"
-                        :listsLength="parkList.length"
+                        :listsLength="listLength"
                         :personListFlag="selectFlag"
+                        @nextPage="nextPage"
+                        @previousPage="previousPage"
                         @searchAnything="searchAnything"
                         @getAllPark="getAllPark">
 
@@ -44,7 +46,7 @@
                             width="120"
                             label="类型">
                             <template slot-scope="scope">
-                                <span>{{scope.row.parkingBean.type}}</span>
+                                <span>{{scope.row.parkingBean.type | typeFilter}}</span>
                             </template>
                         </el-table-column>
                         <el-table-column
@@ -143,7 +145,9 @@
                 title: '',
                 choseId:[],
                 isShowLoading: false,
-                currentNum: 50
+                currentNum: 50,
+                listLength: '',
+                pageNum: 1
             }
         },
         methods: {
@@ -191,8 +195,8 @@
                 this.isDisabled = false
             },
             deletInfo (id) {
-                if (id){
-                    this.choseInfoId.push(id)
+                if (id) {
+                    this.choseInfoId = [id]
                 }
                 if (this.choseInfoId.length > 0){
                     this.$confirm('此操作将永久删除该数据, 是否继续?', '提示', {
@@ -263,12 +267,12 @@
             choseType (type) {
                 console.log(type)
                 if (type.length === 0){
-                    this.parkList = this.parkList.filter((item) => {
+                    this.parkList = this.checkList.filter((item) => {
                         item.status = true
                         return item
                     })
                 } else {
-                    this.parkList = this.parkList.filter((item,index) => {
+                    this.parkList = this.checkList.filter((item,index) => {
                         if (item.parkingBean.type === 0) {
                             item.type = '室外'
                         } else{
@@ -279,7 +283,7 @@
                         } else if(!type.includes(item.type)){
                             item.status = false
                         }
-                        return item
+                        return item.status === true
                     })
                     console.log(this.parkList)
                     console.log(this.isShowParkCard)
@@ -391,12 +395,30 @@
                     this.$message.error('请选择一条数据')
                 }
             },
+            previousPage (page) {
+                console.log(page, '这是传过来的pageNum')
+                this.pageNum = page
+                this.getAllPark ()
+            },
+            nextPage (page) {
+                console.log(page, '这个是下一页的pageNUM')
+                this.pageNum = page
+                this.getAllPark ()
+            },
             async getAllPark () {
                 this.isShowLoading = true
                 await api.park.getAllPark().then(res => {
                     console.log(res, '这是数据')
+                    this.listLength = res.length
                     this.isShowLoading = false
                     this.parkList = res
+                    this.parkList = this.parkList.filter((item,index) =>{
+                        if(index <(this.pageNum*35) && index>(this.pageNum-1)*35-1){
+                            return item
+                        }
+                    })
+
+
                     for (let i = 0; i < this.parkList.length; i++) {
                         this.parkList[i].checked = false
                         this.parkList[i].status = true
@@ -434,6 +456,15 @@
         },
         created () {
             this.getAllPark()
+        },
+        filters: {
+            typeFilter (item) {
+                if (item && item == 0) {
+                    return '室外'
+                } else {
+                    return '室内'
+                }
+            }
         },
         components: {
             ScrollContainer,

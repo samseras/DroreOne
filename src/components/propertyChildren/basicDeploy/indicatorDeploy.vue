@@ -10,8 +10,10 @@
                         @toggleList = "toggleList"
                         @choseType = 'choseType'
                         :choseId="choseInfoId"
-                        :listsLength="indicatorList.length"
+                        :listsLength="listLength"
                         :personListFlag="selectFlag"
+                        @nextPage="nextPage"
+                        @previousPage="previousPage"
                         @selectedAll = 'selectedAll'
                         @fixedInfo = 'fixedInfo'
                         @searchAnything="searchAnything"
@@ -117,7 +119,11 @@
                 choseList: [],
                 isDisabled: true,
                 title: '',
-                isShowLoading: false
+                isShowLoading: false,
+                currentNum: 50,
+                listLength: '',
+                pageNum: 1
+
             }
         },
         methods: {
@@ -171,7 +177,7 @@
             },
             deletInfo (id) {
                 if (id) {
-                    //this.choseInfoId.push(id)
+                    this.choseInfoId = [id]
                 }
                 if (this.choseInfoId.length > 0) {
                     this.$confirm('此操作将永久删除该数据, 是否继续?', '提示', {
@@ -241,12 +247,12 @@
             choseType (type) {
                 console.log(type)
                 if (type.length === 0){
-                    this.indicatorList = this.indicatorList.filter((item) => {
+                    this.indicatorList = this.checkList.filter((item) => {
                         item.status = true
                         return item.status === true
                     })
                 } else {
-                    this.indicatorList = this.indicatorList.filter((item,index) => {
+                    this.indicatorList = this.checkList.filter((item,index) => {
                         if (item.signboardBean.type == 0){
                             item.type = '标语'
                         } else if (item.signboardBean.type == 1){
@@ -260,7 +266,7 @@
                             item.status = false
                             console.log(item.type, 'p[p[p[');
                         }
-                        return item
+                        return item.status === true
                     })
                 }
                 console.log(this.indicatorList);
@@ -368,12 +374,28 @@
                     this.$message.error('请选择一条数据')
                 }
             },
+            previousPage (page) {
+                console.log(page, '这是传过来的pageNum')
+                this.pageNum = page
+                this.getAllIndicator ()
+            },
+            nextPage (page) {
+                console.log(page, '这个是下一页的pageNUM')
+                this.pageNum = page
+                this.getAllIndicator ()
+            },
             async getAllIndicator () {
                 this.isShowLoading = true
                 await api.indicator.getAllIndicator().then(res => {
                     console.log(res, '这是数据')
+                    this.listLength = res.length
                     this.isShowLoading = false
                     this.indicatorList = res
+                    this.indicatorList = this.indicatorList.filter((item,index) =>{
+                        if(index < (this.pageNum*35)&& index>(this.pageNum-1)*35 -1){
+                            return item
+                        }
+                    })
                     for (let i = 0; i < this.indicatorList.length; i++) {
                         this.indicatorList[i].checked = false
                         this.indicatorList[i].status = true

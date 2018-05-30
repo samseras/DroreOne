@@ -20,7 +20,7 @@
                         tooltip-effect="dark"
                         style="width: 100%"
                         @selection-change="handleSelectionChange"
-                        :default-sort = "{prop: 'relatedManager', order: 'descending'}">
+                        :default-sort = "{prop: 'relatedManagerNames', order: 'descending'}">
                         <el-table-column
                             width="50">
                             <template slot-scope="scope">
@@ -46,7 +46,7 @@
                         </el-table-column>
                         <el-table-column
                             sortable
-                            prop="relatedManager"
+                            prop="relatedManagerNames"
                             label="管理者">
                         </el-table-column>
                         <el-table-column label="操作" width="200">
@@ -91,7 +91,8 @@
                         name:'越界告警规则1',
                         deviceScope:'100米',
                         securityScope:'200米',
-                        relatedManager:'程杰',
+                        relatedManagerIds:'1',
+                        relatedManagerNames:'程杰',
                         severityId:'1',
                         severityName:'高',
                         isEnabled:false
@@ -102,7 +103,8 @@
                         name:'越界告警规则2',
                         deviceScope:'400米',
                         securityScope:'700米',
-                        relatedManager:'新电视',
+                        relatedManagerIds:'2',
+                        relatedManagerNames:'新电视',
                         severityId:'2',
                         severityName:'中',
                         isEnabled:false
@@ -127,13 +129,91 @@
             },
             enabledClick(obj,flag){
                 console.log(obj)
-                console.log(flag)
-                obj.isEnabled = flag;
-                if(flag){
-                    //启用
-                }else{
-                    //停用
+                let param = obj;
+                param.isEnabled = flag;
+                api.alarm.updateAlarmRule([param]).then(res => {
+                    obj.isEnabled = flag
+                    if (obj.isEnabled) {
+                        this.$message.success('调度计划已开启')
+                    }else {
+                        this.$message.success('调度计划已关闭')
+                    }
+                }).then(err => {
+                    console.log(err, '失败')
+                })
+            },
+            batchEnabled(flag){
+                if(this.choseInfoId.length == 0){
+                    if(flag){
+                        this.$message.error('请选择要启用的数据')
+                    }else{
+                        this.$message.error('请选择要停用的数据')
+                    }
+                    return;
                 }
+                let choseId = []
+                choseId = this.crossborderList.filter(item => {
+                    if (this.choseInfoId.includes(item.id)) {
+                        if (flag) {
+                            if (!item.isEnabled) {
+                                return item
+                            }
+                        } else {
+                            if (item.isEnabled) {
+                                return item
+                            }
+                        }
+                    }
+                })
+
+                if(choseId.length == 0) {
+                    if (flag) {
+                        this.$message.info('当前选中的计划已开启')
+                    } else {
+                        this.$message.info('当前选中的计划已关闭')
+                    }
+                    return
+                }
+                if(flag){
+                    //批量启用
+                    this.startEndPlan(choseId, flag)
+                }else{
+                    //批量停用
+                    this.$confirm('确定要停止所选的计划吗, 是否继续?', '提示', {
+                        confirmButtonText: '确定',
+                        cancelButtonText: '取消',
+                        type: 'warning'
+                    }).then(() => {
+                        this.startEndPlan(choseId, flag)
+                    }).catch(() => {
+                        this.$message.info('计划停止取消')
+                        return
+                    })
+                }
+            },
+            startEndPlan(choseId, flag) {
+                api.alarm.updateAlarmRule(choseId).then(res => {
+                    console.log(res, '更改状态成功')
+                    if (flag) {
+                        this.$message.success('计划开启成功')
+                    } else {
+                        this.$message.success('计划关闭成功')
+                    }
+                    choseId.forEach(item => {
+                        this.crossborderList.forEach(item1 => {
+                            if (item.id === item1.id) {
+                                item1.isEnabled = !item1.isEnabled
+                            }
+                        })
+                    })
+                }).catch(err => {
+                    console.log(err, '计划开启失败')
+                    if (flag) {
+                        this.$message.error('计划开启失败，请稍后重试')
+                    } else {
+                        this.$message.error('计划关闭失败，请稍后重试')
+                    }
+                })
             },
             closeDialog () {
                 this.visible = false
@@ -164,6 +244,23 @@
                     }
                     this.choseInfoId = this.choseInfos.map(item=>item.id)
                 }
+
+                let isDelete = false
+                this.choseInfoId.forEach(item => {
+                    this.crossborderList.forEach(item1 => {
+                        if (item === item1.id) {
+                            if (item1.isEnabled) {
+                                isDelete = true
+                                this.$message.info('所选计划已经开启，请关闭后再删除')
+                                return
+                            }
+                        }
+                    })
+                })
+                if (isDelete) {
+                    return
+                }
+
                 if (this.choseInfoId.length > 0) {
                     this.$confirm('此操作将永久删除该数据, 是否继续?', '提示', {
                         confirmButtonText: '确定',
@@ -209,8 +306,12 @@
                     this.choseInfos = this.choseInfos.filter((item) =>{
                         return item !== row
                     })
+                    this.choseInfoId = this.choseInfoId.filter((item) =>{
+                        return item !== row.id
+                    })
                 } else {
                     this.choseInfos.push(row)
+                    this.choseInfoId.push(row.id)
                 }
 
             },
@@ -218,11 +319,13 @@
                 this.crossborderList = this.crossborderList.filter((item) => {
                     if (state === true) {
                         item.checked = true
-                        this.choseInfos.push(item.id)
+                        this.choseInfos.push(item)
+                        this.choseInfoId.push(item.id)
                         return item.checked === true
                     } else {
                         item.checked = false
                         this.choseInfos = []
+                        this.choseInfoId = []
                         return item.checked === false
                     }
                 })
@@ -236,31 +339,11 @@
                     console.log('batchEdit')
                     this.isBatchEdit = true;
                     this.visible = true;
+                    this.isReadonly = false;
                     this.title="编辑越界告警规则"
                 } else {
                     this.$message.error('请选择要编辑的数据')
                     return
-                }
-            },
-            batchEnabled(flag){
-                if(flag){
-                    //批量启用
-                    if (this.choseInfos.length > 0) {
-
-
-                    } else {
-                        this.$message.error('请选择要启用的数据')
-                        return
-                    }
-                }else{
-                    //批量停用
-                    if (this.choseInfos.length > 0) {
-
-
-                    } else {
-                        this.$message.error('请选择要停用的数据')
-                        return
-                    }
                 }
             },
             saveInfo(){
