@@ -189,7 +189,7 @@
             },
             deletInfo (id) {
                 if (id) {
-                    //this.choseInfoId.push(id)
+                    this.choseInfoId = [id]
                 }
                 console.log(this.choseInfoId)
                 if (this.choseInfoId.length > 0) {

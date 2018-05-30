@@ -46,7 +46,7 @@
                             width="120"
                             label="类型">
                             <template slot-scope="scope">
-                                <span>{{scope.row.parkingBean.type}}</span>
+                                <span>{{scope.row.parkingBean.type | typeFilter}}</span>
                             </template>
                         </el-table-column>
                         <el-table-column
@@ -195,8 +195,8 @@
                 this.isDisabled = false
             },
             deletInfo (id) {
-                if (id){
-                    this.choseInfoId.push(id)
+                if (id) {
+                    this.choseInfoId = [id]
                 }
                 if (this.choseInfoId.length > 0){
                     this.$confirm('此操作将永久删除该数据, 是否继续?', '提示', {
@@ -267,12 +267,12 @@
             choseType (type) {
                 console.log(type)
                 if (type.length === 0){
-                    this.parkList = this.parkList.filter((item) => {
+                    this.parkList = this.checkList.filter((item) => {
                         item.status = true
                         return item
                     })
                 } else {
-                    this.parkList = this.parkList.filter((item,index) => {
+                    this.parkList = this.checkList.filter((item,index) => {
                         if (item.parkingBean.type === 0) {
                             item.type = '室外'
                         } else{
@@ -283,7 +283,7 @@
                         } else if(!type.includes(item.type)){
                             item.status = false
                         }
-                        return item
+                        return item.status === true
                     })
                     console.log(this.parkList)
                     console.log(this.isShowParkCard)
@@ -456,6 +456,15 @@
         },
         created () {
             this.getAllPark()
+        },
+        filters: {
+            typeFilter (item) {
+                if (item && item == 0) {
+                    return '室外'
+                } else {
+                    return '室内'
+                }
+            }
         },
         components: {
             ScrollContainer,

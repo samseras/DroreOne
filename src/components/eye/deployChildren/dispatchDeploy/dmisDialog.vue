@@ -16,7 +16,7 @@
                             <el-input type="text"v-model="security.inspectionSchedule.name"class="inputText" :maxlength="15" :disabled='isDisabled'></el-input>
                         </p>
                         <p class="time">时&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 间：
-                            <el-checkbox-group v-model = "filterList" @change="security.inspectionSchedule.customizedDays = false" :disabled='isDisabled'>
+                            <el-checkbox-group v-model="filterList" @change="selectDays" :disabled='isDisabled'>
                                 <el-checkbox v-for="item in week" :label="item.id" :key="item.id">{{item.type}}</el-checkbox>
                             </el-checkbox-group>
                             <el-checkbox label="自定义" @change="weekCustom(security.inspectionSchedule.customizedDays)" v-model="security.inspectionSchedule.customizedDays" :disabled='isDisabled'></el-checkbox>
@@ -86,7 +86,7 @@
                             <el-input type="text"v-model="broadList.broadcastSchedule.name" class="inputText" :maxlength="15" :disabled='isDisabled'></el-input>
                         </p>
                         <p class="time">时&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 间：
-                            <el-checkbox-group v-model="filterList" @change="broadList.broadcastSchedule.customizedDays = false" :disabled='isDisabled'>
+                            <el-checkbox-group v-model="filterList" @change="selectDays" :disabled='isDisabled'>
                                 <el-checkbox v-for="item in week" :label="item.id" :key="item.id">{{item.type}}</el-checkbox>
                             </el-checkbox-group>
                             <el-checkbox label="自定义" @change="weekCustom(broadList.broadcastSchedule.customizedDays)" v-model="broadList.broadcastSchedule.customizedDays" :disabled='isDisabled'></el-checkbox>
@@ -144,7 +144,8 @@
                             <el-input type="text" v-model="lamppost.lightSchedule.name" class="inputText" :maxlength="15" :disabled='isDisabled'></el-input>
                         </p>
                         <p class="time">时&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 间：
-                            <el-checkbox-group v-model="filterList" @change="lamppost.lightSchedule.customizedDays = false" :disabled='isDisabled'>
+                            <!--<el-checkbox-group v-model="filterList" @change="lamppost.lightSchedule.customizedDays = false" :disabled='isDisabled'>-->
+                            <el-checkbox-group v-model="filterList" @change="selectDays" :disabled='isDisabled'>
                                 <el-checkbox v-for="item in week" :label="item.id" :key="item.id">{{item.type}}</el-checkbox>
                             </el-checkbox-group>
                             <el-checkbox label="自定义" @change="weekCustom(lamppost.lightSchedule.customizedDays)" v-model="lamppost.lightSchedule.customizedDays" :disabled='isDisabled'></el-checkbox>
@@ -193,7 +194,7 @@
                             <el-input type="text"v-model="purifier.cleanSchedule.name"class="inputText" :maxlength="15" :disabled='isDisabled'></el-input>
                         </p>
                         <p class="time">时&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 间：
-                            <el-checkbox-group v-model="filterList" @change="purifier.cleanSchedule.customizedDays = false" :disabled='isDisabled'>
+                            <el-checkbox-group v-model="filterList" @change="selectDays" :disabled='isDisabled'>
                                 <el-checkbox v-for="item in week" :label="item.id" :key="item.id">{{item.type}}</el-checkbox>
                             </el-checkbox-group>
                             <el-checkbox label="自定义" @change="weekCustom(purifier.cleanSchedule.customizedDays)" v-model="purifier.cleanSchedule.customizedDays":disabled='isDisabled' ></el-checkbox>
@@ -261,7 +262,7 @@
                             <el-input type="text"v-model="screen.ledSchedule.name" class="inputText" :disabled="isDisabled" :maxlength="15"></el-input>
                         </p>
                         <p class="time">时&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 间：
-                            <el-checkbox-group v-model="filterList" @change="screen.ledSchedule.customizedDays = false" :disabled='isDisabled'>
+                            <el-checkbox-group v-model="filterList" @change="selectDays" :disabled='isDisabled'>
                                 <el-checkbox v-for="item in week" :label="item.id" :key="item.id">{{item.type}}</el-checkbox>
                             </el-checkbox-group>
                             <el-checkbox label="自定义" @change="weekCustom(screen.ledSchedule.customizedDays)" v-model="screen.ledSchedule.customizedDays" :disabled='isDisabled'></el-checkbox>
@@ -452,6 +453,20 @@
             }
         },
         methods: {
+            selectDays () {
+                let route = this.$route.path
+                if (route.includes('lamppost')) {
+                    this.lamppost.lightSchedule.customizedDays = false
+                } else if (route.includes('broadcast')) {
+                    this.lamppost.broadcastSchedule.customizedDays = false
+                } else if (route.includes('screen')) {
+                    this.lamppost.ledSchedule.customizedDays = false
+                } else  if (route.includes('purifier')) {
+                    this.lamppost.cleanSchedule.customizedDays = false
+                } else if (route.includes('security')) {
+                    this.lamppost.inspectionSchedule.customizedDays = false
+                }
+            },
             handleCheckChange (data,checked) {//此处形参data不能删除，必须使用第二个形参
                 let choseId = checked.checkedKeys.filter(item => {
                     if (!this.regionIdList.includes(item)) {
@@ -564,7 +579,7 @@
                     this.broadList.broadcastSchedule.watchTime = this.timeSelect
                     newInfo = this.broadList
                 } else if(this.route.includes('lamppost')) {
-                    if ((!this.lamppost.lightSchedule.name || this.lamppost.lightSchedule.name !== '')
+                    if ((!this.lamppost.lightSchedule.name || this.lamppost.lightSchedule.name === '')
                         || (!this.lamppost.lightIds || this.lamppost.lightIds.length < 1)) {
                         this.$message.error('请输入完整信息')
                         return

@@ -36,11 +36,18 @@
                             label="名称">
                         </el-table-column>
                         <el-table-column
+                            label="状态">
+                            <template slot-scope="scope">
+                                <span v-if="scope.row.broadcastSchedule.enabled">已开启</span>
+                                <span v-else>已停止</span>
+                            </template>
+                        </el-table-column>
+                        <el-table-column
                             prop="broadcastIds.length"
                             label="硬件总数">
                         </el-table-column>
                         <el-table-column
-                            label="时间">
+                            label="执行日期">
                             <template slot-scope="scope">
                                 <span v-if="scope.row.broadcastSchedule.customizedDays">{{scope.row.broadcastSchedule.startDate}}~{{scope.row.broadcastSchedule.endDate}}</span>
                                 <span v-if="!scope.row.broadcastSchedule.customizedDays">{{scope.row.broadcastSchedule.days | weekFilter}}</span>
@@ -53,10 +60,9 @@
                             </template>
                         </el-table-column>
                         <el-table-column
-                            label="状态">
+                            label="描述">
                             <template slot-scope="scope">
-                                <span v-if="scope.row.broadcastSchedule.enabled">已开启</span>
-                                <span v-else>已停止</span>
+                                <span class="description">{{scope.row.broadcastSchedule.description}}</span>
                             </template>
                         </el-table-column>
                         <el-table-column label="操作" width="200">
@@ -404,18 +410,18 @@
                 })
                 console.log(type, '这是过滤后的')
                 if (type.length === 0){
-                    this.broadCastList = this.broadCastList.filter((item) => {
+                    this.broadCastList = this.checkList.filter((item) => {
                         item.status = true
                         return item
                     })
                 } else {
-                    this.broadCastList = this.broadCastList.filter((item,index) => {
+                    this.broadCastList = this.checkList.filter((item,index) => {
                         if (type.includes(item.broadcastSchedule.enabled)) {
                             item.status = true
                         } else {
                             item.status = false
                         }
-                        return item
+                        return item.status === true
                     })
                 }
             },
@@ -553,6 +559,16 @@
                             line-height: rem(22);
                         }
                     }
+                }
+                .description {
+                    display: inline-block;
+                    width: rem(150);
+                    text-align: left;
+                    padding-right: rem(5);
+                    line-height: rem(20);
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    white-space: nowrap;
                 }
             }
         }

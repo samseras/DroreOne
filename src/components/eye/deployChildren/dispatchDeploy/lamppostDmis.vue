@@ -10,6 +10,7 @@
                         @selectedAll = 'selectedAll'
                         @startEndPlan="startEndPlan"
                         @searchAnything="searchAnything"
+                        @choseType="choseType"
                         :selectLength="choseInfoId.length"
                         :listLength="lamppostList.length"
                         @fixedInfo = 'fixedInfo'>
@@ -37,15 +38,18 @@
                             width="120">
                         </el-table-column>
                         <el-table-column
-                            prop="lightSchedule.description"
-                            label="描述">
+                            label="状态">
+                            <template slot-scope="scope">
+                                <span v-if="scope.row.lightSchedule.enabled">已开启</span>
+                                <span v-else>已停止</span>
+                            </template>
                         </el-table-column>
                         <el-table-column
                             prop="lightIds.length"
                             label="硬件总数">
                         </el-table-column>
                         <el-table-column
-                            label="时间">
+                            label="执行日期">
                             <template slot-scope="scope">
                                 <span v-if="scope.row.lightSchedule.customizedDays">{{scope.row.lightSchedule.startDate}}~{{scope.row.lightSchedule.endDate}}</span>
                                 <span v-if="!scope.row.lightSchedule.customizedDays">{{scope.row.lightSchedule.days | weekFilter}}</span>
@@ -58,10 +62,9 @@
                             </template>
                         </el-table-column>
                         <el-table-column
-                            label="状态">
+                            label="描述">
                             <template slot-scope="scope">
-                                <span v-if="scope.row.lightSchedule.enabled">已开启</span>
-                                <span v-else>已停止</span>
+                                <span class="description">{{scope.row.lightSchedule.description}}</span>
                             </template>
                         </el-table-column>
                         <el-table-column label="操作" width="200">
@@ -223,6 +226,32 @@
                 this.choseInfoId = selection.map(item => {
                     return item.id
                 })
+            },
+            choseType (type) {
+                console.log(type, '这是传过来的')
+                type = type.map(item => {
+                    if (item === '开启') {
+                        return true
+                    } else{
+                        return false
+                    }
+                })
+                console.log(type, '这是过滤后的')
+                if (type.length === 0){
+                    this.lamppostList = this.checkList.filter((item) => {
+                        item.status = true
+                        return item
+                    })
+                } else {
+                    this.lamppostList = this.checkList.filter((item,index) => {
+                        if (type.includes(item.lightSchedule.enabled)) {
+                            item.status = true
+                        } else {
+                            item.status = false
+                        }
+                        return item.status === true
+                    })
+                }
             },
             async getLamppostList (){
                 this.isShowLoading = true
@@ -525,6 +554,16 @@
                             line-height: rem(22);
                         }
                     }
+                }
+                .description {
+                    display: inline-block;
+                    width: rem(150);
+                    text-align: left;
+                    padding-right: rem(5);
+                    line-height: rem(20);
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    white-space: nowrap;
                 }
             }
         }

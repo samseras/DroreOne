@@ -224,7 +224,7 @@
             deletInfo (id) {
                 console.log(this.choseInfoId)
                 if (id) {
-                    //this.choseInfoId.push(id)
+                    this.choseInfoId = [id]
                 }
                 if (this.choseInfoId.length > 0) {
                     this.$confirm('此操作将永久删除该数据, 是否继续?', '提示', {
@@ -294,18 +294,18 @@
             choseType (type) {
                 console.log(type)
                 if (type.length === 0){
-                    this.shopList = this.shopList.filter((item) => {
+                    this.shopList = this.checkList.filter((item) => {
                         item.status = true
                         return item
                     })
                 } else {
-                    this.shopList = this.shopList.filter((item,index) => {
+                    this.shopList = this.checkList.filter((item,index) => {
                         if (type.includes(item.businessTypeName)){
                             item.status = true
                         } else if(!type.includes(item.businessTypeName)){
                             item.status = false
                         }
-                        return item
+                        return item.status === true
                     })
                 }
             },

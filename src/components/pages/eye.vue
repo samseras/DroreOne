@@ -256,7 +256,6 @@
             },
             closeSearch (e) {
                 //showSearch
-                console.log(e.target.className, '这个点击的是什么')
                 this.searchList = []
                 if (e.target.className.includes('showSearch') || e.target.className === 'searchBox') {
                     this.showSearch()

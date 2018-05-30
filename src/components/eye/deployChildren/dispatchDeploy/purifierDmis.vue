@@ -10,6 +10,7 @@
                         @selectedAll = 'selectedAll'
                         @startEndPlan="startEndPlan"
                         @searchAnything="searchAnything"
+                        @choseType="choseType"
                         :selectLength="choseInfoId.length"
                         :listLength="purifierList.length"
                         @fixedInfo = 'fixedInfo'>
@@ -30,15 +31,17 @@
                             </template>
                         </el-table-column>
                         <el-table-column
+                            width="120"
                             prop="cleanSchedule.name"
-                            label="调度人员"
-                            sortable
-                            width="120">
+                            label="名称">
                         </el-table-column>
                         <el-table-column
                             width="120"
-                            prop="type"
-                            label="名称">
+                            label="状态">
+                            <template slot-scope="scope">
+                                <span v-if="scope.row.cleanSchedule.enabled">已开启</span>
+                                <span v-else>已停止</span>
+                            </template>
                         </el-table-column>
                         <el-table-column
                             prop="cleanerIds.length"
@@ -47,7 +50,7 @@
                         </el-table-column>
                         <el-table-column
                             width="240"
-                            label="时间">
+                            label="执行日期">
                             <template slot-scope="scope">
                                 <span v-if="scope.row.cleanSchedule.customizedDays">{{scope.row.cleanSchedule.startDate}}~{{scope.row.cleanSchedule.endDate}}</span>
                                 <span v-if="!scope.row.cleanSchedule.customizedDays">{{scope.row.cleanSchedule.days | weekFilter}}</span>
@@ -68,10 +71,9 @@
                             </template>
                         </el-table-column>
                         <el-table-column
-                            label="状态">
+                            label="描述">
                             <template slot-scope="scope">
-                                <span v-if="scope.row.cleanSchedule.enabled">已开启</span>
-                                <span v-else>已停止</span>
+                                <span class="description">{{scope.row.cleanSchedule.description}}</span>
                             </template>
                         </el-table-column>
                         <el-table-column label="操作" width="200">
@@ -415,6 +417,32 @@
                     console.log(err, '失败')
                 })
             },
+            choseType (type) {
+                console.log(type, '这是传过来的')
+                type = type.map(item => {
+                    if (item === '开启') {
+                        return true
+                    } else{
+                        return false
+                    }
+                })
+                console.log(type, '这是过滤后的')
+                if (type.length === 0){
+                    this.purifierList = this.checkList.filter((item) => {
+                        item.status = true
+                        return item
+                    })
+                } else {
+                    this.purifierList = this.checkList.filter((item,index) => {
+                        if (type.includes(item.cleanSchedule.enabled)) {
+                            item.status = true
+                        } else {
+                            item.status = false
+                        }
+                        return item.status === true
+                    })
+                }
+            },
             async getAllPurifier () {
                 this.isShowLoading = true
                 await api.purifier.getPurifierList().then(res => {
@@ -569,7 +597,16 @@
                             line-height: rem(22);
                         }
                     }
-
+                }
+                .description {
+                    display: inline-block;
+                    width: rem(150);
+                    text-align: left;
+                    padding-right: rem(5);
+                    line-height: rem(20);
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    white-space: nowrap;
                 }
             }
         }

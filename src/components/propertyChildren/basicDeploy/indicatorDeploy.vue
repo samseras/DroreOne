@@ -177,7 +177,7 @@
             },
             deletInfo (id) {
                 if (id) {
-                    //this.choseInfoId.push(id)
+                    this.choseInfoId = [id]
                 }
                 if (this.choseInfoId.length > 0) {
                     this.$confirm('此操作将永久删除该数据, 是否继续?', '提示', {
@@ -247,12 +247,12 @@
             choseType (type) {
                 console.log(type)
                 if (type.length === 0){
-                    this.indicatorList = this.indicatorList.filter((item) => {
+                    this.indicatorList = this.checkList.filter((item) => {
                         item.status = true
                         return item.status === true
                     })
                 } else {
-                    this.indicatorList = this.indicatorList.filter((item,index) => {
+                    this.indicatorList = this.checkList.filter((item,index) => {
                         if (item.signboardBean.type == 0){
                             item.type = '标语'
                         } else if (item.signboardBean.type == 1){
@@ -266,7 +266,7 @@
                             item.status = false
                             console.log(item.type, 'p[p[p[');
                         }
-                        return item
+                        return item.status === true
                     })
                 }
                 console.log(this.indicatorList);
