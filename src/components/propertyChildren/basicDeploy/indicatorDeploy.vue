@@ -38,7 +38,7 @@
                         </el-table-column>
                         <el-table-column
                             label="类型"
-                            width="120">
+                            width="150">
                             <template slot-scope="scope">
                                <span>{{scope.row.signboardBean.type | typeFilter}}</span>
                             </template>
@@ -49,7 +49,6 @@
                             label="所属片区">
                         </el-table-column>
                         <el-table-column
-                            width="500"
                             prop="location"
                             label="位置">
                         </el-table-column>
@@ -57,11 +56,13 @@
                             width="150"
                             label="操作">
                             <template slot-scope="scope">
-                                <span @click="showPersonDetail(scope.row, '指示牌信息',true)">查看</span>
-                                <span class="line">|</span>
-                                <span @click="fixedInfo(scope.row.id )">编辑</span>
-                                <span class="line">|</span>
-                                <span @click="deletInfo(scope.row.id)">删除</span>
+                                <div class="handle">
+                                    <span @click="showPersonDetail(scope.row, '指示牌信息',true)">查看</span>
+                                    <span class="line">|</span>
+                                    <span @click="fixedInfo(scope.row.id )">编辑</span>
+                                    <span class="line">|</span>
+                                    <span @click="deletInfo(scope.row.id)">删除</span>
+                                </div>
                             </template>
                         </el-table-column>
                     </el-table>
@@ -355,7 +356,7 @@
             },
             fixedInfo (id) {
                 if (id) {
-                    //this.choseInfoId.push(id)
+                    this.choseInfoId = [id]
                 }
                 if (this.choseInfoId.length > 1) {
                     this.$message.warning('至多选择一个数据修改')
@@ -544,6 +545,11 @@
                             text-overflow: ellipsis;
                             white-space: nowrap;
                         }
+                    }
+                }
+                .handle{
+                    span{
+                        cursor: pointer;
                     }
                 }
             }

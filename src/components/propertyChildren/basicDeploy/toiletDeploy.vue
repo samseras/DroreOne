@@ -36,14 +36,18 @@
                             </template>
                         </el-table-column>
                         <el-table-column
-                            prop="toiletBean.name"
                             label="名称"
                             width="140">
+                            <template slot-scope="scope">
+                                <span class="overflow">{{scope.row.toiletBean.name}}</span>
+                            </template>
                         </el-table-column>
                         <el-table-column
                             width="130"
-                            prop="regionName"
                             label="所属片区">
+                            <template slot-scope="scope">
+                                <span class="overflow">{{scope.row.regionName}}</span>
+                            </template>
                         </el-table-column>
                         <el-table-column
                             width="100"
@@ -58,11 +62,13 @@
                             width="150"
                             label="操作">
                             <template slot-scope="scope">
-                                <span @click="showPersonDetail(scope.row, '卫生间信息',true)">查看</span>
-                                <span class="line">|</span>
-                                <span @click="fixedInfo(scope.row.id )">编辑</span>
-                                <span class="line">|</span>
-                                <span @click="deletInfo(scope.row.id)">删除</span>
+                                <div class="handle">
+                                    <span @click="showPersonDetail(scope.row, '卫生间信息',true)">查看</span>
+                                    <span class="line">|</span>
+                                    <span @click="fixedInfo(scope.row.id )">编辑</span>
+                                    <span class="line">|</span>
+                                    <span @click="deletInfo(scope.row.id)">删除</span>
+                                </div>
                             </template>
                         </el-table-column>
                     </el-table>
@@ -81,6 +87,7 @@
                             <p class="name">所属区域：<span>{{item.regionName}}</span></p>
                             <p class="sex">状&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;态：<span>{{item.state}}</span></p>
                             <p class="phoneNum">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置：<span>{{item.location}}</span></p>
+                            <p class="sex text">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：<span>{{item.description}}</span></p>
                         </div>
                     </div>
                 </ScrollContainer>
@@ -346,7 +353,7 @@
             },
             fixedInfo (id) {
                 if (id) {
-                    //this.choseInfoId.push(id)
+                    this.choseInfoId = [id]
                 }
                 if (this.choseInfoId.length > 1) {
                     this.$message.warning('至多选择一个数据修改')
@@ -531,7 +538,19 @@
                         }
                     }
                 }
+                .handle {
+                    span{
+                        cursor: pointer;
+                    }
+
+                }
             }
+        }
+        .overflow {
+            display: inline-block;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            display:inline-block;
         }
     }
 

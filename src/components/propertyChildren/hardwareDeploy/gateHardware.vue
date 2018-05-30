@@ -38,8 +38,10 @@
                         </el-table-column>
 
                         <el-table-column
-                            prop="name"
                             label="闸机名称">
+                            <template slot-scope="scope">
+                                <span class="overflow">{{scope.row.name}}</span>
+                            </template>
                         </el-table-column>
 
                         <el-table-column
@@ -70,13 +72,17 @@
                                 </div>
                             </template>
                         </el-table-column>
-                        <el-table-column>
+                        <el-table-column
+                            label="操作"
+                            width="150">
                             <template slot-scope="scope">
-                                <span @click="showGateDetail(scope.row, '闸机信息',true)">查看</span>
-                                <span class="line">|</span>
-                                <span @click="fixedInfo(scope.row.id )">编辑</span>
-                                <span class="line">|</span>
-                                <span @click="deletInfo(scope.row.id)">删除</span>
+                                <div class="handle">
+                                    <span @click="showGateDetail(scope.row, '闸机信息',true)">查看</span>
+                                    <span class="line">|</span>
+                                    <span @click="fixedInfo(scope.row.id )">编辑</span>
+                                    <span class="line">|</span>
+                                    <span @click="deletInfo(scope.row.id)">删除</span>
+                                </div>
                             </template>
                         </el-table-column>
                     </el-table>
@@ -96,7 +102,6 @@
                             <p class="area">所属区域：<span>{{item.regionName}}</span></p>
                             <p class="type">类&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;型：<span>{{item.gateType | changeType}}</span></p>
                             <p class="sex text">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：<span>{{item.description}}</span></p>
-
                         </div>
                     </div>
                 </ScrollContainer>
@@ -105,7 +110,7 @@
                           :Info="gateInfo"
                           :title="title"
                           :isDisabled="isDisabled"
-                          @closeInfoDialog="visible=false"
+                          @closeInfoDialog="closeDialog"
                           @addNewInfo="addGate"
                           @fixInfo="fixInfo">
 
@@ -238,7 +243,7 @@
             },
             fixedInfo(id){
                 if (id) {
-                    this.choseInfoId.push(id)
+                    this.choseInfoId = [id]
                 }
                 if(this.choseInfoId.length > 1) {
                     this.$message.warning('至多选择一条数据')
@@ -258,7 +263,7 @@
             },
             deletInfo(id){
                 if (id) {
-                    this.choseInfoId.push(id)
+                    this.choseInfoId = [id]
                 }
                 if (this.choseInfoId.length > 0) {
                     this.$confirm('此操作将永久删除该数据, 是否继续?', '提示', {
@@ -278,7 +283,6 @@
                             this.getAllGate()
                             this.$message.success('删除成功')
                             this.choseInfoId=[]
-                            this.getAllGate()
                         }).catch(err=>{
                             this.$message.err('删除失败，请稍后重试')
                         })
@@ -363,12 +367,12 @@
             choseType(type){
                 console.log(type)
                 if(type.length===0){
-                    this.gateList=this.gateList.filter((item)=>{
+                    this.gateList=this.checkList.filter((item)=>{
                         item.status=true
                         return item
                     })
                 }else{
-                    this.gateList=this.gateList.filter((item,index)=>{
+                    this.gateList=this.checkList.filter((item,index)=>{
                         if(item.gateType == 1){
                             item.type = '翼闸'
                         }else if(item.gateType == 2){
@@ -380,11 +384,11 @@
                         }
                         if(type.includes(item.type)){
                             item.status=true
-                        }else if(!type.includes(item.type)){
+                        }else{
                             item.status=false
                             console.log(item.type)
                         }
-                        return item
+                        return item.status === true
                     })
                 }
             },
@@ -485,6 +489,8 @@
         .cameraList .el-button{
             border:1px solid transparent;
             text-align: left;
+            background: transparent;
+            padding: 0;
         }
         .cameraList .box .el-button span{
             display:inline-block;
@@ -568,10 +574,17 @@
                             top:rem(-10);
                         }
                         span{
-                            float:right;
-                            margin-right:rem(20);
-                            line-height: rem(25);
-                            color:#fff;
+                            display: inline-block;
+                            width: rem(100);
+                            float: right;
+                            text-align: right;
+                            line-height: rem(20);
+                            color: #fff;
+                            padding-right: rem(5);
+                            overflow: hidden;
+                            text-overflow: ellipsis;
+                            white-space: nowrap;
+                            box-sizing: border-box;
                         }
                     }
                     .specificInfo{
@@ -604,7 +617,18 @@
                         }
                     }
                 }
+                .handle {
+                    span{
+                        cursor: pointer;
+                    }
+                }
             }
+        }
+        .overflow {
+            display: inline-block;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            display:inline-block;
         }
     }
 </style>
