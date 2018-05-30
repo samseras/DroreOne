@@ -385,10 +385,13 @@
                    }else {
                        this.$message.success('调度计划已开启')
                    }
-
                }).then(err => {
                    console.log(err, '失败')
                })
+            },
+            filterType (value, row, column) {
+                const property = column['property'];
+                return row[property] === value;
             },
             choseType (type) {
                 console.log(type, '这是传过来的')

@@ -33,7 +33,7 @@
                     </el-col>
                     <el-col :xs="7" :sm="6" :md="5" :lg="4" :xl="3">
                         <button @click="showSearch" class="hitSearch" ref="hitSearch">
-                            <i class="el-icon-search"></i>
+                            <i class="el-icon-search showSearch"></i>
                         </button>
                         <div v-for="item in title">
                             <a href="#">
@@ -255,8 +255,10 @@
                 return index === this.activeIndex
             },
             closeSearch (e) {
+                //showSearch
+                console.log(e.target.className, '这个点击的是什么')
                 this.searchList = []
-                if (e.target.className === 'el-icon-search' || e.target.className === 'searchBox') {
+                if (e.target.className.includes('showSearch') || e.target.className === 'searchBox') {
                     this.showSearch()
                 } else {
                     this.hideSearch()

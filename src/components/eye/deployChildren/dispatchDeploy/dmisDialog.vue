@@ -395,7 +395,8 @@
                         customizedShift: '',
                         description: '',
                         classTime: [],
-                        days: []
+                        days: [],
+                        routeId:''
                     },
                     cleanerIds: [],
                     regionIds: []
@@ -481,6 +482,41 @@
             addNewInfo () {
                 let newInfo = {}
                 if (this.route.includes('security')) {
+                    console.log(!this.security.inspectionSchedule.name, '这个是啥')
+                    if (!this.security.inspectionSchedule.name || this.security.inspectionSchedule.name === ''){
+                        this.$message.error('请输入完整信息')
+                        return
+                    }
+                    if (!this.security.securityIds || this.security.securityIds.length < 1) {
+                        this.$message.error('请选择巡更人员')
+                        return
+                    }
+                if (!this.security.inspectionSchedule.routeId || this.security.inspectionSchedule.routeId === '') {
+                        this.$message.error('请选择巡更路线')
+                        return
+                    }
+                    if(this.security.inspectionSchedule.customizedDays === undefined) {
+                        if(this.filterList === [] || this.daySelect === [] || this.daySelect === undefined){
+                            this.$message.error('请选择开启日期')
+                            return
+                        }
+                    }else {
+                        if ((this.filterList.length < 1 && this.daySelect === undefined) || (this.filterList.length < 1 && this.daySelect.length < 1)) {
+                            this.$message.error('请选择开启日期')
+                            return
+                        }
+                    }
+                    if (this.security.inspectionSchedule.customizedShift === undefined ){
+                        if(this.classesList === [] || this.timeSelect === [] || this.timeSelect === undefined) {
+                            this.$message.error('请选择开启班次或时间')
+                            return
+                        }
+                    }else {
+                        if ((this.classesList.length < 1 && this.timeSelect === undefined) || (this.classesList.length < 1 && this.timeSelect.length < 1)) {
+                            this.$message.error('请选择开启班次或时间')
+                            return
+                        }
+                    }
                     if (!this.security.inspectionSchedule.customizedDays) {
                         this.security.inspectionSchedule.days = this.filterList.join()
                     } else {
@@ -493,6 +529,33 @@
                     }
                     newInfo = this.security
                 } else if(this.route.includes('broadcast')) {
+                    if (!(this.broadList.broadcastSchedule.name && this.broadList.broadcastSchedule.name !== '')) {
+                        this.$message.error('请输入完整信息')
+                        return
+                    }
+                    if(this.broadList.broadcastSchedule.customizedDays === undefined) {
+                        if(this.filterList === [] || this.daySelect === [] || this.daySelect === undefined){
+                            this.$message.error('请选择开启日期')
+                            return
+                        }
+                    } else {
+                        if ((this.filterList.length < 1 && this.daySelect === undefined) || (this.filterList.length < 1 && this.daySelect.length < 1)) {
+                            this.$message.error('请选择开启日期')
+                            return
+                        }
+                    }
+                    if(this.timeSelect === [] || this.timeSelect === undefined) {
+                        this.$message.error('请选择开启班次或时间')
+                        return
+                    }
+                    if (!this.broadList.broadcastIds || this.broadList.broadcastIds.length < 1) {
+                        this.$message.error('请选择关联的广播')
+                        return
+                    }
+                    if(!(this.broadList.musics && this.broadList.musics)){
+                        this.$message.error('请选择需要播放的音频')
+                        return
+                    }
                     if (!this.broadList.broadcastSchedule.customizedDays) {
                         this.broadList.broadcastSchedule.days = this.filterList.join()
                     }else {
@@ -501,6 +564,27 @@
                     this.broadList.broadcastSchedule.watchTime = this.timeSelect
                     newInfo = this.broadList
                 } else if(this.route.includes('lamppost')) {
+                    if ((!this.lamppost.lightSchedule.name || this.lamppost.lightSchedule.name !== '')
+                        || (!this.lamppost.lightIds || this.lamppost.lightIds.length < 1)) {
+                        this.$message.error('请输入完整信息')
+                        return
+                    }
+                    if(this.lamppost.lightSchedule.customizedDays === undefined) {
+                        if(this.filterList === [] || this.daySelect === [] || this.daySelect === undefined){
+                            this.$message.error('请选择开启日期')
+                            return
+                        }
+                    }else {
+                        if ((this.filterList.length < 1 && this.daySelect === undefined) || (this.filterList.length < 1 && this.daySelect.length < 1)) {
+                            this.$message.error('请选择开启日期')
+                            return
+                        }
+                    }
+                    if(this.timeSelect === [] || this.timeSelect === undefined) {
+                        this.$message.error('请选择开启时间')
+                        return
+                    }
+
                     if (!this.lamppost.lightSchedule.customizedDays) {
                         this.lamppost.lightSchedule.days = this.filterList.join()
                     }else {
@@ -509,6 +593,40 @@
                     this.lamppost.lightSchedule.watchTime = this.timeSelect
                     newInfo = this.lamppost
                 } else if(this.route.includes('purifier')) {
+                    if (!(this.purifier.cleanSchedule.name && this.purifier.cleanSchedule.name !== '')) {
+                        this.$message.error('请输入完整信息')
+                        return
+                    }
+                    if(this.purifier.cleanSchedule.customizedDays === undefined) {
+                        if(this.filterList === [] || this.daySelect === [] || this.daySelect === undefined){
+                            this.$message.error('请选择开启日期')
+                            return
+                        }
+                    }else {
+                        if ((this.filterList.length < 1 && this.daySelect === undefined) || (this.filterList.length < 1 && this.daySelect.length < 1)) {
+                            this.$message.error('请选择开启日期')
+                            return
+                        }
+                    }
+                    if (this.purifier.cleanSchedule.customizedShift === undefined ){
+                        if(this.classesList === [] || this.timeSelect === [] || this.timeSelect === undefined) {
+                            this.$message.error('请选择开启班次或时间')
+                            return
+                        }
+                    }else {
+                        if ((this.classesList.length < 1 && this.timeSelect === undefined) || (this.classesList.length < 1 && this.timeSelect.length < 1)) {
+                            this.$message.error('请选择开启班次或时间')
+                            return
+                        }
+                    }
+                    if (this.purifier.cleanerIds && this.purifier.cleanerIds.length < 1) {
+                        this.$message.error('请选择保洁人员')
+                        return
+                    }
+                    if (this.purifier.regionIds && this.purifier.regionIds.length < 1) {
+                        this.$message.error('请选择保洁的片区')
+                        return
+                    }
                     if (!this.purifier.cleanSchedule.customizedDays) {
                         this.purifier.cleanSchedule.days = this.filterList.join()
                     }else {
@@ -521,6 +639,30 @@
                     }
                     newInfo = this.purifier
                 } else if(this.route.includes('screen')) {
+                    if (!(this.screen.ledSchedule.name && this.screen.ledSchedule.name !== '')
+                        || !(this.screen.ledIds && this.screen.ledIds !== [])) {
+                        this.$message.error('请输入完整信息')
+                        return
+                    }
+                    if(this.screen.ledSchedule.customizedDays === undefined) {
+                        if(this.filterList === [] || this.daySelect === [] || this.daySelect === undefined){
+                            this.$message.error('请选择开启日期')
+                            return
+                        }
+                    }else {
+                        if ((this.filterList.length < 1 && this.daySelect === undefined) || (this.filterList.length < 1 && this.daySelect.length < 1)) {
+                            this.$message.error('请选择开启日期')
+                            return
+                        }
+                    }
+                    if(this.timeSelect === [] || this.timeSelect === undefined) {
+                        this.$message.error('请选择开启班次或时间')
+                        return
+                    }
+                    if(!this.screen.contents || this.screen.contents.length < 1){
+                        this.$message.error('请选择需要播放的内容')
+                        return
+                    }
                     if (!this.screen.ledSchedule.customizedDays) {
                         this.screen.ledSchedule.days = this.filterList.join()
                     }else {
@@ -952,6 +1094,9 @@
             }
         }
         .el-tree-node__label {
+            font-size: rem(12);
+        }
+         .textArea .el-textarea{
             font-size: rem(12);
         }
     }

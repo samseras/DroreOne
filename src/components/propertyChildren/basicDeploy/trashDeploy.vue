@@ -82,11 +82,12 @@
                             <!--<img src="../../../../static/img/wasteCard.png" alt="">-->
                             <img :src="getUrl(item.picturePath)" alt="" @error="imgError">
                             <span class="type">
-                                  {{item.dustbinBean.type | typeFilter}}垃圾桶
+                                {{item.dustbinBean.name}}
                                 </span>
                         </div>
                         <div class="specificInfo">
-                            <p class="name">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称：<span>{{item.dustbinBean.name}}</span></p>
+                            <!--<p class="name">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称：<span>{{item.dustbinBean.name}}</span></p>-->
+                            <p class="sex">状&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;态：<span>{{item.dustbinBean.type | typeFilter}}垃圾桶</span></p>
                             <p class="name">所属区域：<span>{{item.regionName}}</span></p>
                             <p class="sex" v-if="false">状&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;态：<span>{{item.dustbinBean.status}}</span></p>
                             <p class="phoneNum">垃圾筒数：<span>{{item.dustbinBean.dustbinCount}}</span></p>
