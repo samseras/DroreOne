@@ -87,10 +87,10 @@
                 droreMap.interaction.enableMapClick = true
                 droreMap.interaction.showMove()
                 this.getAllLight();//路灯现有标注
-                // this.getAllGate();//闸机现有标注
+                this.getAllGate();//闸机现有标注
                 this.getAllWifi();//wifi现有标注
                 this.getAllLed();//Led现有标注
-                // this.getAllPolice();//报警柱现有标注
+                this.getAllPolice();//报警柱现有标注
                 this.getAllMonitor();//传感器现有标注
                 this.getAllBroadcast();//广播现有标注
                 this.getAllCamera();//摄像头现有标注
@@ -772,8 +772,8 @@
                     for (let i=0;i<this.iconList.length;i++){
                         this.iconList[i].type="闸机"
                         this.iconList[i].location = [this.iconList[i].longitude,this.iconList[i].latitude]
-                        this.iconList[i].url="/static/img/icon/police.png"
-                        this.iconList[i].subtype='police'
+                        this.iconList[i].url="/static/img/icon/gate.png"
+                        this.iconList[i].subtype='gate'
                     }
                     this.iconShow();
                 }).catch((err)=>{
@@ -789,9 +789,9 @@
                             var iconedit = new droreMap.icon.Marker({
                                 coordinate: droreMap.trans.transFromWgsToLayer(this.gateList[i].location),
                                 name: this.gateList[i].name,
-                                subtype: "police",
+                                subtype: "gate",
                                 id: this.gateList[i].id,
-                                url: "/static/img/icon/police_on.png"
+                                url: "/static/img/icon/gate_on.png"
                             });
                             droreMap.icon.addChild(iconedit);
                             droreMap.interaction.ifDrag = true;
@@ -813,9 +813,9 @@
                             var icon1 = new droreMap.icon.Marker({
                                 coordinate: droreMap.trans.transFromWgsToLayer(this.gateList[i].location),
                                 name: this.gateList[i].name,
-                                subtype: "police",
+                                subtype: "gate",
                                 id: this.gateList[i].id,
-                                url: "/static/img/icon/police.png"
+                                url: "/static/img/icon/gate.png"
                             });
                             droreMap.icon.addChild(icon1);
                         }
@@ -1726,10 +1726,18 @@
                     if(route.includes('controler')){
                         droreMap.icon.IconStyleById(icon.id,false);
                         let that = this;
-                        icon.onclick(function (e) {
-                            that.menulist = e.data;
-                            that.droreMappopup(that.menulist);
-                        });
+                        if((icon.subtype=="police")||(icon.subtype=="gate") ){
+                            icon.onclick(function (e) {
+                                that.menulist = e.data;
+                                that.droreMappopup(that.menulist);
+                                that.menuShow()
+                            });
+                        }else {
+                            icon.onclick(function (e) {
+                                that.menulist = e.data;
+                                that.droreMappopup(that.menulist);
+                            });
+                        }
                         this.controler();//之前打的点
                     }else if(route.includes('facility')){
                         droreMap.icon.IconStyleById(icon.id,false);
@@ -1757,6 +1765,7 @@
                 this.overView();//鹰眼
             },
             searchShow() {//搜索
+                console.log(this.getSearchInfo,'123123');
                 this.getSearchInfo.location = [this.getSearchInfo.longitude,this.getSearchInfo.latitude]
                 droreMap.map.panToCoord(droreMap.trans.transFromWgsToLayer(this.getSearchInfo.location));
                 droreMap.icon.IconStyleById(this.getSearchInfo.id,true);
@@ -2752,13 +2761,16 @@
     .contextmenu.Broadcast i{
         background: url("/static/img/icon/guangboshebei_big.png") no-repeat;
     }
-    .contextmenu.trash,.contextmenu.scenic,.contextmenu.construction,.contextmenu.plant,.contextmenu.park,.contextmenu.toilet,.contextmenu.indicator,.contextmenu.shop{
+    .contextmenu.gate,.contextmenu.police,.contextmenu.trash,.contextmenu.scenic,.contextmenu.construction,.contextmenu.plant,.contextmenu.park,.contextmenu.toilet,.contextmenu.indicator,.contextmenu.shop{
         background: none;
         width: 0;
         height: 0;
         button,.mapSwitch{
             display: none;
         }
+    }
+    .contextmenu.gate i,.contextmenu.police i{
+        display: none;
     }
     .contextmenu.trash i{
         background: url("/static/img/icon/trash_big.png") no-repeat;
