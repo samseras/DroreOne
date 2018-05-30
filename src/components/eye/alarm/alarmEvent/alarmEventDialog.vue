@@ -48,7 +48,7 @@
                     </p>
                     <p class="alarmRule">关联规则：
                         <!--<el-input type="text" v-model='eventInfo.alarmRuleName' class="inputText" :maxlength="15" :readonly='true'></el-input>-->
-                        <span class="inputText el-input showRuleDetail">{{eventInfo.alarmRuleName}}</span>
+                        <span class="inputText el-input showRuleDetail" @click="showRuleDetail">{{eventInfo.alarmRuleName}}</span>
                         <!--<div class="inputText el-input"></div>-->
                     </p>
                     <p class="level">严重等级：
@@ -127,12 +127,18 @@
                 </div>
             </div>
         </el-dialog>
+        <AlarmDetail  v-if="ruleVisible"
+                      :alarmRuleId="eventInfo.alarmRuleId">
+
+        </AlarmDetail>
     </div>
+
 </template>
 
 <script>
      import VueAplayer from 'vue-aplayer'
      import api from '@/api'
+     import AlarmDetail from '../alarmRule/alarmRuleDialog'
     export default {
         props: ['visible','isReadonly','isBatchEdit','choseInfoId','Info'],
         data () {
@@ -244,11 +250,17 @@
                     }
                 ],
                 selectFileList:[],
-                personInfo:[]
+                personInfo:[],
+                ruleVisible:false
 
             }
         },
         methods: {
+            showRuleDetail(){
+                console.log(this.eventInfo.alarmRuleId)
+                console.log(this.eventInfo.alarmRuleName)
+                this.ruleVisible = true;
+            },
             ownerChange(val){
                 console.log(val);
                 console.log(this.eventInfo);
@@ -466,9 +478,6 @@
                 })
                 return personInfo;
             }
-
-
-
         },
         watch:{
 
@@ -482,7 +491,7 @@
             }
         },
         components : {
-
+            AlarmDetail
         },
          mounted () {
         }
