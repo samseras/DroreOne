@@ -478,7 +478,7 @@
 <script>
     import api from '@/api'
     export default {
-        props: ['visible','title','isReadonly','isBatchEdit','choseInfos','Info'],
+        props: ['visible','title','isReadonly','isBatchEdit','choseInfos','Info','alarmRuleId'],
         data () {
             return{
                 route:'',
@@ -1021,9 +1021,21 @@
                     console.log(err, '请求失败')
                 })
             },
-            init(){
+            async getAlarmRuleById(id){
+                let result = {}
+                await api.alarm.getAllAlarmRule(id).then(res => {
+                    console.log(res, '请求成功')
+                    result = res;
+                }).catch(err => {
+                    console.log(err, '请求失败')
+                })
+                console.log(result)
+                return result;
+            },
+            initData(){
                 //人员
                 this.getPersonInfo();
+                console.log(this.personInfo)
                 //关联设备（报警柱）  --报警柱
                 this.getPoliceDevice();
                 //关联巡检计划  --偏离轨迹
@@ -1032,62 +1044,91 @@
                 this.getOverlimitDevice();
 
                 this.getAlarmType();
+            },
+            initEventDialog(){
+                this.isReadonly = true;
+                //调查询rule接口
+               let ruleInfo = this.getAlarmRuleById(this.alarmRuleId);
+                console.log(ruleInfo)
+                //判断
+                switch (ruleInfo.alarmTypeId) {
+                    case 2:
+                        this.alarmcolumnInfo = ruleInfo;
+                    case 3:
+                        this.firefightingInfo = ruleInfo;
+                    case 4:
+                        this.crossborderInfo = ruleInfo;
+                    case 6:
+                        this.offtrackInfo = ruleInfo;
+                    case 7:
+                        this.overlimitInfo = ruleInfo;
+                    case 8:
+                        this.waterlevelInfo = ruleInfo;
+                    case 9:
+                        this.conditionInfo = ruleInfo;
+                }
+
+            },
+            initRuleDialog(){
+                this.route = this.$route.path
+                console.log(this.Info,'Info')
+                if (this.route.includes('alarmcolumn')) {
+                    this.alarmcolumnInfo = this.Info;
+                    if(!this.alarmcolumnInfo.id){   //如果为新增，严重等级默认为高
+                        this.alarmcolumnInfo.severityId = '1';
+                    }
+                } else if(this.route.includes('firefighting')) {
+                    // this.getAllBroadcast()
+                    this.firefightingInfo = this.Info;
+                    if(!this.firefightingInfo.id){
+                        this.firefightingInfo.severityId = '1';
+                    }
+                } else if(this.route.includes('crossborder')) {
+                    // this.getAllLight()
+                    this.crossborderInfo = this.Info;
+                    if(!this.crossborderInfo.id){
+                        this.crossborderInfo.severityId = '1'
+                    }
+
+                } else if(this.route.includes('speeding')) {
+                    // this.getAllPurifierPerson()
+                    // this.getAllRegion()
+                    this.speedingInfo = this.Info;
+
+                } else if(this.route.includes('offtrack')) {
+                    this.offtrackInfo = this.Info;
+                    if(!this.offtrackInfo.id){
+                        this.offtrackInfo.severityId = '3';
+                    }
+                } else if(this.route.includes('overlimit')){
+                    this.overlimitInfo = this.Info;
+                    if(!this.overlimitInfo.id){
+                        this.overlimitInfo.severityId = '1';
+                    }
+                } else if(this.route.includes('waterlevel')){
+                    this.waterlevelInfo = this.Info;
+                    if(!this.waterlevelInfo.id){
+                        this.waterlevelInfo.severityId = '2';
+                    }
+                } else if(this.route.includes('condition')){
+                    this.conditionInfo = this.Info;
+                    if(!this.conditionInfo.id){
+                        this.conditionInfo.severityId = '3';
+                    }
+                    //来源为外部系统，关联设备不可用
+                    if(this.conditionInfo.envDataSource == "0"){
+                        this.deviceReadOnly = true;
+                    }
+                    // this.getEnvType();
+                }
             }
-
-
         },
         async created () {
-            this.init();
-            this.route = this.$route.path
-            console.log(this.Info,'  Info')
-            if (this.route.includes('alarmcolumn')) {
-                this.alarmcolumnInfo = this.Info;
-                if(!this.alarmcolumnInfo.id){   //如果为新增，严重等级默认为高
-                    this.alarmcolumnInfo.severityId = '1';
-                }
-            } else if(this.route.includes('firefighting')) {
-                // this.getAllBroadcast()
-                this.firefightingInfo = this.Info;
-                if(!this.firefightingInfo.id){
-                    this.firefightingInfo.severityId = '1';
-                }
-            } else if(this.route.includes('crossborder')) {
-                // this.getAllLight()
-                this.crossborderInfo = this.Info;
-                if(!this.crossborderInfo.id){
-                    this.crossborderInfo.severityId = '1'
-                }
-
-            } else if(this.route.includes('speeding')) {
-                // this.getAllPurifierPerson()
-                // this.getAllRegion()
-                this.speedingInfo = this.Info;
-
-            } else if(this.route.includes('offtrack')) {
-                this.offtrackInfo = this.Info;
-                if(!this.offtrackInfo.id){
-                    this.offtrackInfo.severityId = '3';
-                }
-            } else if(this.route.includes('overlimit')){
-                this.overlimitInfo = this.Info;
-                if(!this.overlimitInfo.id){
-                    this.overlimitInfo.severityId = '1';
-                }
-            } else if(this.route.includes('waterlevel')){
-                this.waterlevelInfo = this.Info;
-                if(!this.waterlevelInfo.id){
-                    this.waterlevelInfo.severityId = '2';
-                }
-            } else if(this.route.includes('condition')){
-                this.conditionInfo = this.Info;
-                if(!this.conditionInfo.id){
-                    this.conditionInfo.severityId = '3';
-                }
-                //来源为外部系统，关联设备不可用
-                if(this.conditionInfo.envDataSource == "0"){
-                    this.deviceReadOnly = true;
-                }
-                // this.getEnvType();
+            this.initData();
+            if(this.alarmRuleId){
+                this.initEventDialog();
+            }else{
+                this.initRuleDialog();
             }
         },
         watch:{

@@ -69,7 +69,7 @@
                                 <span @click="fixedInfo(scope.row,'修改照明计划')" class="edit">编辑</span> |
                                 <span @click="stop(scope.row)" v-if="scope.row.lightSchedule.enabled">停止 |</span>
                                 <span @click="stop(scope.row)" v-else="!scope.row.lightSchedule.enabled">开始 |</span>
-                                <span @click="showCheckDetail(scope.row,'路灯信息')">查看</span> |
+                                <span @click="showPersonDetail(scope.row,'路灯信息',true)">查看</span> |
                                 <span @click="deletInfo(scope.row.id)">删除</span>
                             </template>
                         </el-table-column>

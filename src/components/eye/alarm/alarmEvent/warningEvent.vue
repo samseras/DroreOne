@@ -56,12 +56,12 @@
                             label="严重等级">
                         </el-table-column>
                         <el-table-column
-                            prop="owner.name"
+                            prop="ownerName"
                             label="负责人">
                         </el-table-column>
                         <el-table-column
                             sortable
-                            prop="owner.tel"
+                            prop="ownerTel"
                             label="负责人电话">
                         </el-table-column>
                         <el-table-column label="操作" width="200">
@@ -112,12 +112,9 @@
                         occurenceTime:'2018-05-11 12:20:39',
                         severityId:'1',
                         severityName:'高',
-                        owner:{
-                            id:"1",
-                            name:'aaa',
-                            tel:'18672019008'
-                        },
-
+                        ownerId:"c79d9e71-8e84-44c3-9b28-049fe79deb18",
+                        ownerName:'赵子龙',
+                        ownerTel:'13511111111'
 
                     },
                     {
@@ -133,11 +130,9 @@
                         occurenceTime:'2017-01-09 19:33:01',
                         severityId:'2',
                         severityName:'中',
-                        owner:{
-                            id:"2",
-                            name:'bbb',
-                            tel:'13000100190'
-                        },
+                        ownerId:"a7a9ef0f-7475-4015-9317-c880d3c38db0",
+                        ownerName:'关羽',
+                        ownerTel:'13712111111'
 
                     }
                     ],
@@ -155,12 +150,9 @@
                         occurenceTime:'2018-05-11 12:20:39',
                         severityId:'1',
                         severityName:'高',
-                        owner:{
-                            id:"1",
-                            name:'aaa',
-                            tel:'18672019008'
-                        },
-
+                        ownerId:"c79d9e71-8e84-44c3-9b28-049fe79deb18",
+                        ownerName:'赵子龙',
+                        ownerTel:'13511111111'
 
                     },
                     {
@@ -176,11 +168,9 @@
                         occurenceTime:'2017-01-09 19:33:01',
                         severityId:'2',
                         severityName:'中',
-                        owner:{
-                            id:"2",
-                            name:'bbb',
-                            tel:'13000100190'
-                        },
+                        ownerId:"a7a9ef0f-7475-4015-9317-c880d3c38db0",
+                        ownerName:'关羽',
+                        ownerTel:'13712111111'
 
                     }
                 ],
@@ -193,7 +183,6 @@
                 selection:[],
                 isShowloading: false,
                 isBatchEdit:false
-
             }
         },
         methods: {
@@ -368,10 +357,11 @@
                             console.log(err, '请求失败')
                             this.isShowLoading = false
                         })
-            },
+            }
         },
         created () {
             this.getAllAlarmEvent();
+            console.log(this.personInfo)
         },
         components: {
             ScrollContainer,

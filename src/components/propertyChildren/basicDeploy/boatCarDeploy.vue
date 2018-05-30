@@ -93,15 +93,13 @@
                             <el-checkbox v-model="item.checked" @change="getChecked(item.id)" class="checkBtn"></el-checkbox>
                         </div>
                         <div class="personType" :class="item.type === '车辆'? 'carInfo':''" @click.stop="showPersonDetail(item ,'车船信息',true)">
-                            <!--<img src="../../../../static/img/boatCartCard.png" alt="">-->
                             <img :src="getUrl(item.picturePath)" alt="" @error="imgError">
                             <span class="type">
-                                  {{item.vehicle.type | boatFilter}}信息
+                                  {{item.vehicle.serialNum}}
                             </span>
                         </div>
                         <div class="specificInfo">
-                            <!--<p class="name">驾驶人员：<span>{{item.driverName}}</span></p>-->
-                            <p class="name">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称：<span>{{item.vehicle.serialNum}}</span></p>
+                            <p class="name">类&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;型：<span>{{item.vehicle.type | boatFilter}}</span></p>
                             <p class="sex">状&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;态：<span>{{item.vehicle.maintenanceStatus | statusFilter}}</span></p>
                             <p class="idNum">核载人数：<span>{{item.vehicle.capacity}}</span></p>
                             <!--<p class="phoneNum">电&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;话：<span>{{item.driverPhone}}</span></p>-->
