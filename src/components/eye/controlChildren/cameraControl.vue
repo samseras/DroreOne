@@ -158,10 +158,12 @@
                     this.lightList.forEach(item => {
                         item.label = item.name
                         item.type = 'camera'
-                        if (item.status ==="ONLINE")  {
-                            item.icon = '../../../static/img/camera_open.svg'
-                        } else {
+                        if (item.status =="FAULT")  {
+                            item.icon = '../../../static/img/camera_damage.svg'
+                        } else  if (item.status =="OFFLINE") {
                             item.icon = '../../../static/img/camera.svg'
+                        }else {
+                            item.icon = '../../../static/img/camera_open.svg'
                         }
                         if (item.regionId) {
                             if (!regionIdList.includes(item.regionId)) {

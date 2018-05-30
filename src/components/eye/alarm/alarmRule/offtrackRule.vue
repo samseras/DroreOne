@@ -341,6 +341,7 @@
                     console.log('batchEdit')
                     this.isBatchEdit = true;
                     this.visible = true;
+                    this.isReadonly = false;
                     this.title="编辑偏离轨迹告警规则"
                 } else {
                     this.$message.error('请选择要编辑的数据')

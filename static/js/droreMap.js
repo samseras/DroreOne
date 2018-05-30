@@ -3310,7 +3310,23 @@ define(function(require, exports, module) {
                         mapData._baseMap.removeLayer(t.lineLayer);
                         mapData._baseMap.removeLayer(t.pointLayer);
                     });
-                }
+                },
+                removeStyleById: function(id,visibility) { //*******
+
+                    if(visibility){
+                        roadNet.LineStyle = new ol.style.Style({
+                            stroke: new ol.style.Stroke({ //区域线条
+                                visible:true,
+                            })
+                        });
+                    }else {
+                        roadNet.LineStyle = new ol.style.Style({
+                            stroke: new ol.style.Stroke({ //区域线条
+                                visible:false,
+                            })
+                        });
+                    }
+                },
             },
             geom: {
                 LineBoard: geom.LineBoard

@@ -12,7 +12,7 @@
                 <i class="el-icon-d-arrow-right" v-if="exhibition" @click="packUpHidden(1)"></i>
                 <i class="el-icon-d-arrow-left" v-if="!exhibition" @click="packUpHidden(0)"></i>
                 <ul>
-                    <li v-for="(item, index) in title" :class="activeIndex === index? 'active':''" @click="goControlModule(index)">
+                    <li v-for="(item, index) in title" v-if="item.controlShow" :class="activeIndex === index? 'active':''" @click="goControlModule(index)">
                         <router-link :to="item.route"><img :src="item.img" :alt="item.desc" :title="item.desc">
                         </router-link>
                     </li>
@@ -25,27 +25,39 @@
 <script>
     import Map from '@/components/map'
     import {mapGetters,mapMutations} from 'vuex'
+    import api from '@/api'
 
 
     export default {
         data() {
             return {
                 title: [
-                    {route: '/controler/camera', img: '../../../static/img/camera.svg', desc: "摄像头"},
-                    {route: '/controler/broad', img: '../../../static/img/broadcast.svg', desc: "广播"},
-                    {route: '/controler/wifi', img: '../../../static/img/wifi.svg', desc: "WiFi"},
-                    {route: '/controler/environment', img: '../../../static/img/detection.svg', desc: "环境检测"},
-                    {route: '/controler/warn', img: '../../../static/img/warn.svg', desc: "警告"},
-                    {route: '/controler/screen', img: '../../../static/img/led.svg', desc: "大屏"},
-                    {route: '/controler/person', img: '../../../static/img/dmis.svg', desc: "个人定位"},
-                    {route: '/controler/car', img: '../../../static/img/boatCar.svg', desc: "车船调度"},
-                    {route: '/controler/light', img: '../../../static/img/light.svg', desc: "路灯"},
+                    {name:'CAMERA',route: '/controler/camera', img: '../../../static/img/camera.svg', desc: "摄像头",controlShow:false},
+                    {name:'BROADCAST',route: '/controler/broad', img: '../../../static/img/broadcast.svg', desc: "广播",controlShow:false},
+                    {name:'WIFI',route: '/controler/wifi', img: '../../../static/img/wifi.svg', desc: "WiFi",controlShow:false},
+                    {name:'MONITORS',route: '/controler/environment', img: '../../../static/img/detection.svg', desc: "环境检测",controlShow:false},
+                    {name:'WARN',route: '/controler/warn', img: '../../../static/img/warn.svg', desc: "警告",controlShow:true},
+                    {name:'LED',route: '/controler/screen', img: '../../../static/img/led.svg', desc: "大屏",controlShow:false},
+                    {name:'PERSON',route: '/controler/person', img: '../../../static/img/dmis.svg', desc: "个人定位",controlShow:true},
+                    {name:'CAR',route: '/controler/car', img: '../../../static/img/boatCar.svg', desc: "车船调度",controlShow:true},
+                    {name:'LIGHT',route: '/controler/light', img: '../../../static/img/light.svg', desc: "路灯",controlShow:false},
                     // {route: '/controler/other', img: '../../../static/img/else.png', desc: "其他"}
                 ],
                 isShowControler: false,
                 exhibition: true,
                 activeIndex: 1,
-                isSearch: false
+                isSearch: false,
+                controler:[],
+                controlShow:true,
+                CAMERA:false,
+                BROADCAST:false,
+                WIFI:false,
+                MONITORS:false,
+                WARN:false,
+                LED:false,
+                PERSON:false,
+                CAR:false,
+                LIGHT:false,
             }
         },
         components: {
@@ -55,6 +67,7 @@
             if (this.getSearchInfo.id) {
                 this.isShowControler = true
             }
+            this.getAllControler()
         },
         methods: {
             ...mapMutations(['SHOW_SEARCH']),
@@ -73,6 +86,27 @@
                 }
                 this.$store.commit('SHOW_SEARCH', this.isShowControler)
                 this.activeIndex = index
+            },
+            async getAllControler(){
+                await api.controler.getAllControler().then((res)=>{
+                    // console.log(res,'这是请求回来的数据')
+                    this.controler=res
+                    for(let i=0;i< this.controler.length;i++){
+                        for(let j=0;j< this.title.length;j++){
+                            if(this.title[j].name===this.controler[i].name){
+                                if(this.controler[i].value==="ON"){
+                                    this.title[j].controlShow= true
+                                }else if(this.controler[i].value==="OFF"){
+                                    this.title[j].controlShow= false
+                                }
+                            }
+                        }
+                    }
+                    console.log(this.title)
+                }).catch((err)=>{
+                    console.log(err)
+                })
+
             }
         },
         watch: {

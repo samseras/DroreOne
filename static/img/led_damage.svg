@@ -2,6 +2,6 @@
     "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
 <svg class="icon" width="32px" height="32.00px" viewBox="0 0 1024 1024" version="1.1"
      xmlns="http://www.w3.org/2000/svg">
-    <path fill="#848484" d="M409.536 690.624H33.408V144.768h674.304v231.488H409.536v314.368z"/>
-    <path fill="#848484" d="M434.048 851.328V405.056h556.608v446.272H434.048z"/>
+    <path fill="#F36A5A" d="M409.536 690.624H33.408V144.768h674.304v231.488H409.536v314.368z"/>
+    <path fill="#F36A5A" d="M434.048 851.328V405.056h556.608v446.272H434.048z"/>
 </svg>
