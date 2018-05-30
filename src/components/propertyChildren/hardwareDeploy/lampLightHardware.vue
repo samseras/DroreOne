@@ -52,7 +52,7 @@
                             </template>
 
                         </el-table-column>
-                        
+
                         <el-table-column
                             prop="serialNum"
                             label="路灯型号">

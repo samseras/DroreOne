@@ -154,7 +154,7 @@
 
 <style lang="scss" type="text/scss">
     .hardwareMenu .el-submenu .el-menu-item:hover{
-        background-color:#808080;
+        background-color:#283446;
     }
     .hardwareMenu .el-submenu .el-menu-item {
         width: 100%;
