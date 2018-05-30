@@ -69,6 +69,7 @@
 				});
 			},
             async loginOn(){
+                localStorage.clear();
 				if($('#checkCode').val() !== "") {
                     var obj = {
                         username: this.username,
@@ -77,7 +78,7 @@
                     console.log(obj)
                     await api.login.userLogin(obj).then(res => {
                         console.log(res, "@@@@@@@@@")
-                          location.href = "/droreone";
+                          // location.href = "/droreone";
                     }).catch(err => {
                         this.$message.info('登录失败')
                         console.log(err, '登录失败')

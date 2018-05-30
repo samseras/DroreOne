@@ -11,7 +11,13 @@ const analyze = {
             method: 'GET',
             url: '/analysis/service/v1/dashboard/all'
         })
-
+    },
+    updateDashborad(params,id){
+        return axios ({
+            method: 'PUT',
+            url: `/analysis/service/v1/dashboard/${id}`,
+            data: params
+        })
     },
     getStreamDataById (id) {
         return axios ({
