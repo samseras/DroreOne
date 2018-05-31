@@ -475,6 +475,7 @@
                     margin-right: rem(5.5);
                     margin-bottom: rem(5);
                     border-radius: rem(5);
+                    overflow: hidden;
                     .checkBox{
                         width: 100%;
                         height: rem(20);

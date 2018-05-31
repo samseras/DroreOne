@@ -21,32 +21,32 @@
         </div>
         <div class="titleCheck" v-if="route.includes('camera')" >
             <el-checkbox-group v-model="filterList" @change="choseType">
-                <el-checkbox v-for="item in cameraList" :label="item.type"></el-checkbox>
+                <el-checkbox v-for="item in cameraList" :label="item.type" :key="item.type"></el-checkbox>
             </el-checkbox-group>
         </div>
         <div class="titleCheck" v-if="route.includes('broadcast')" >
             <el-checkbox-group v-model="filterList" @change="choseType">
-                <el-checkbox v-for="item in cameraList" :label="item.type"></el-checkbox>
+                <el-checkbox v-for="item in cameraList" :label="item.type" :key="item.type"></el-checkbox>
             </el-checkbox-group>
         </div>
          <div class="titleCheck" v-if="route.includes('led')" >
                 <el-checkbox-group v-model="filterList" @change="choseType">
-                    <el-checkbox v-for="item in cameraList" :label="item.type"></el-checkbox>
+                    <el-checkbox v-for="item in cameraList" :label="item.type" :key="item.type"></el-checkbox>
                 </el-checkbox-group>
         </div>
         <div class="titleCheck" v-if="route.includes('wifi')" >
             <el-checkbox-group v-model="filterList" @change="choseType">
-                <el-checkbox v-for="item in cameraList" :label="item.type"></el-checkbox>
+                <el-checkbox v-for="item in cameraList" :label="item.type" :key="item.type"></el-checkbox>
             </el-checkbox-group>
         </div>
         <div class="titleCheck" v-if="route.includes('gate')" >
             <el-checkbox-group v-model="filterList" @change="choseType">
-                <el-checkbox v-for="item in gateList" :label="item.type"></el-checkbox>
+                <el-checkbox v-for="item in gateList" :label="item.type" :key="item.type"></el-checkbox>
             </el-checkbox-group>
         </div>
         <div class="titleCheck" v-if="route.includes('police')" >
             <el-checkbox-group v-model="filterList" @change="choseType">
-                <el-checkbox v-for="item in policeList" :label="item.type"></el-checkbox>
+                <el-checkbox v-for="item in policeList" :label="item.type" :key="item.type"></el-checkbox>
             </el-checkbox-group>
         </div>
 
