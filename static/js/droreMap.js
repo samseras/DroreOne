@@ -1296,7 +1296,8 @@ define(function(require, exports, module) {
                     var feature = new ol.Feature({
                         geometry: points,
                         name: data.name,
-                        data: data
+                        data: data,
+                        id:data.id
                     });
                     var mb = self.lineLayer.getSource();
                     feature.setId(data.id);
@@ -2387,7 +2388,29 @@ define(function(require, exports, module) {
             },
             setDefaultStyle: function(id, style) {
                 this.styleList[id] = style;
-            }
+            },
+            areaEvtList: {}, //Marker片区对象数组
+            setSeedArea: function(id, marker) {
+                this.areaEvtList[id] = marker;
+            },
+            getAreaById: function(id) {
+                for(var p in this.areaEvtList) {
+                    if(p == id) {
+                        return this.areaEvtList[p];
+                    }
+                }
+            },
+            roadEvtList: {}, //Marker路网对象数组
+            setSeedRoad: function(id, marker) {
+                this.roadEvtList[id] = marker;
+            },
+            getRoadById: function(id) {
+                for(var p in this.roadEvtList) {
+                    if(p == id) {
+                        return this.roadEvtList[p];
+                    }
+                }
+            },
         };
         /**
          * 自定义事件对象
@@ -3004,7 +3027,6 @@ define(function(require, exports, module) {
                 IconStyleById: function(id,visibility) { //*******
                     var feature = pool.getIconById(id);
                     var url =feature.data.url
-                    // console.log(feature.data.url);
                     if(feature) {
                         if(visibility){
                             feature.setStyle(new ol.style.Style({
@@ -3268,10 +3290,11 @@ define(function(require, exports, module) {
             },
             area: {
                 DrawLayer: drawClass.DrawLayer,
-                 addChild: function(drawLayer) {
+                 addChild: function(drawLayer,id) {
                     if(drawLayer.constructor === drawClass.DrawLayer) {
                         drawClass.drawList.push(drawLayer);
                         mapData._baseMap.addLayer(drawLayer.Layer);
+                        pool.setSeedArea(id, drawLayer);
                     }
                 },
                 removeChild: function(drawLayer) {
@@ -3291,11 +3314,17 @@ define(function(require, exports, module) {
                         t.clear();
                     });
                     drawClass.drawList.splice(0, drawClass.drawList.length);
-                }
+                },
+                removeStyleById: function(id,visibility) { //*******
+                    var areaShow = pool.getAreaById(id)
+                    if(areaShow) {
+                        areaShow.setVisible(visibility);
+                    }
+                },
             },
             road: {
                 RoadLayer: roadNet.Road,
-                addRoadLayer: function(roadLayer) {
+                addRoadLayer: function(roadLayer,id) {
                     // if(roadLayer.constructor === roadNet.Road) {
                     //     roadNet.roadList.push(roadLayer);
                     //     mapData._baseMap.addLayer(roadLayer.lineLayer);
@@ -3303,6 +3332,7 @@ define(function(require, exports, module) {
                     // }
                     roadNet.roadList.push(roadLayer);
                     mapData._baseMap.addLayer(roadLayer.lineLayer);
+                    pool.setSeedRoad(id, roadLayer);
                     // mapData._baseMap.addLayer(roadLayer.pointLayer);
                 },
                 removeAll: function() {
@@ -3312,19 +3342,9 @@ define(function(require, exports, module) {
                     });
                 },
                 removeStyleById: function(id,visibility) { //*******
-
-                    if(visibility){
-                        roadNet.LineStyle = new ol.style.Style({
-                            stroke: new ol.style.Stroke({ //区域线条
-                                visible:true,
-                            })
-                        });
-                    }else {
-                        roadNet.LineStyle = new ol.style.Style({
-                            stroke: new ol.style.Stroke({ //区域线条
-                                visible:false,
-                            })
-                        });
+                    var roadShow = pool.getRoadById(id)
+                    if(roadShow) {
+                        roadShow.setVisible(visibility);
                     }
                 },
             },
