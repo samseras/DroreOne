@@ -8,7 +8,7 @@ import axios from 'axios'
 axios.interceptors.request.use(
     config => {
         // 此处做请求拦截，如果有需要
-        config.headers = {}
+        // config.headers = {}
         return config
     },
     err => {
@@ -20,7 +20,7 @@ axios.interceptors.request.use(
 axios.interceptors.response.use(
     response => {
         if ((response.status === 200 && response.request.status === 200) || (response.status === 201 && response.request.status === 201)) {//成功判断
-            // console.log(response, 'opoppopopopop')
+              console.log(response, 'opoppopopopop')
             // if (response.data) {
                 return response.data
             // } else {
@@ -29,14 +29,14 @@ axios.interceptors.response.use(
 
         }
         if (response.status === 400 && response.request.status === 400){
-            window.location.href = '/err'
+             window.location.href = '/err'
             console.log(response, ',.,.,.,.,.,.,.,,..klkl')
         }
         return response
     },
     error => {//失败判断
         if (error.response.data.code === 401 ) {
-            store.dispatch('logout').then(() => location.reload())
+             store.dispatch('logout').then(() => location.reload())
         }
         return Promise.reject(error.response.data)
     }

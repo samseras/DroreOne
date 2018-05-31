@@ -30,6 +30,7 @@
 <script>
 	// import tableDatas from "../../../API/entrance.js"
 	// import users from "../../../API/user.json"
+    let Base64 = require('js-base64').Base64;
     import api from "@/api"
 	export default {
 		data() {
@@ -71,17 +72,22 @@
             async loginOn(){
                 localStorage.clear();
 				if($('#checkCode').val() !== "") {
-                    var obj = {
-                        username: this.username,
-                        password: this.password
-                    };
+                    // opts.headers["Authorization"] = encodeURIComponent("BASIC " + this.utils.base64Encode(opts.user + ":" + opts.password));
+                    let obj = `${Base64.encode(this.username +  ":"+ this.password)}`
+                    // var obj = {
+                    //     username: this.username,
+                    //     password: this.password
+                    // };
                     console.log(obj)
                     await api.login.userLogin(obj).then(res => {
                         console.log(res, "@@@@@@@@@")
-                          // location.href = "/droreone";
+                        if(res != []){
+                             location.href = "/droreone";
+                        }
                     }).catch(err => {
-                        this.$message.info('登录失败')
                         console.log(err, '登录失败')
+                        this.$message.info('登录失败')
+
                     })
                 }else{
                     this.$message.info('验证码不能为空')

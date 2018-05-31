@@ -27,7 +27,7 @@
                         </el-col>
                         <el-col :xs="2" :sm="2" :md="2" :lg="2" :xl="2" class="control">
                             <!--<button class="publish" ><router-link :to="'/screen/'+currenId">发布</router-link></button>-->
-                            <button class="publish" ><router-link :to="{ path:'/screen/'+currenId, params: {'n': type} }">发布</router-link></button>
+                            <button class="publish" @click="requestFullScreen"><router-link :to="{ path:'/screen/'+currenId, params: {'n': type} }" >发布</router-link></button>
 
                         </el-col>
                     </el-row>
@@ -94,6 +94,22 @@
                this.hideList = !data.list;
                this.isshowHead = !data.head;
               // this.$emit('hideHead',hideData);
+        },
+        requestFullScreen() {
+            let docElm = document.documentElement;
+            if (docElm.requestFullscreen) {
+                docElm.requestFullscreen();
+            }
+            else if (docElm.msRequestFullscreen) {
+                docElm = document.body; //overwrite the element (for IE)
+                docElm.msRequestFullscreen();
+            }
+            else if (docElm.mozRequestFullScreen) {
+                docElm.mozRequestFullScreen();
+            }
+            else if (docElm.webkitRequestFullScreen) {
+                docElm.webkitRequestFullScreen();
+            }
         },
         isShowAnalyze (id,index,refresh,type) {
             // console.log(this.$router,"this.$router.path")

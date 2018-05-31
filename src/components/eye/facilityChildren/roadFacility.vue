@@ -75,9 +75,9 @@
         },
         methods: {
             treeShow(){
-                console.log(this.getcontroleLight)
-                if(this.getcontroleLight){
-                    this.lightCheckout=this.getcontroleLight
+                console.log(this.getfacilityRoad)
+                if(this.getfacilityRoad){
+                    this.lightCheckout=this.getfacilityRoad
                 }
             },
             showBroadCard() {
@@ -161,7 +161,7 @@
             this.getAllLight();
         },
         computed: {
-            ...mapGetters(['getcontroleLight'])
+            ...mapGetters(['getfacilityRoad'])
         }
     }
 </script>
