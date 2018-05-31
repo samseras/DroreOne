@@ -43,14 +43,14 @@
                             </template>
                         </el-table-column>
                         <el-table-column
-                            width="130"
+                            width="200"
                             label="所属片区">
                             <template slot-scope="scope">
                                 <span class="overflow">{{scope.row.regionName}}</span>
                             </template>
                         </el-table-column>
                         <el-table-column
-                            width="100"
+                            width="150"
                             prop="state"
                             label="状态">
                         </el-table-column>
