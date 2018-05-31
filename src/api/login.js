@@ -7,10 +7,13 @@ import {getUrl} from "./path";
 
 const login={
     userLogin(params){
+        console.log(params, '这是传过来的')
         return axios({
             method:'GET',
-            url:getUrl('/security/login'),
-            data: params
+            url:'/security/login',
+            headers:{
+                "Authorization":"BASIC " + params
+            }
         })
     }
 }

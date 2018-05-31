@@ -5,18 +5,28 @@
         </div>
         <div id="contextmenu_container" class="contextmenu">
             <i @click="menuDelete"></i>
-            <el-switch
-                class="mapSwitch"
-                v-model="open"
-                :width="26"
-                active-color="#53b6a7"
-                inactive-color="#808080"
-                @change="mapSwitch">
-            </el-switch>
-            <button @click="menuShow" class="menuShow"></button>
-            <button @click="menuOperation" class="menuOperation"></button>
-            <button @click="menuPhone" class="menuPhone"></button>
-            <button @click="menuBroadcast" class="menuBroadcast"></button>
+            <el-tooltip class="item" effect="dark" content="状态" placement="top">
+                <el-switch
+                    class="mapSwitch"
+                    v-model="open"
+                    :width="26"
+                    active-color="#53b6a7"
+                    inactive-color="#808080"
+                    @change="mapSwitch">
+                </el-switch>
+            </el-tooltip>
+            <el-tooltip class="item" effect="dark" content="查看" placement="top">
+                <button @click="menuShow" class="menuShow"></button>
+            </el-tooltip>
+            <el-tooltip class="item" effect="dark" content="操作" placement="top">
+                 <button @click="menuOperation" class="menuOperation"></button>
+            </el-tooltip>
+            <el-tooltip class="item" effect="dark" content="待定" placement="top">
+                <button @click="menuPhone" class="menuPhone"></button>
+            </el-tooltip>
+            <el-tooltip class="item" effect="dark" content="待定" placement="top">
+                <button @click="menuBroadcast" class="menuBroadcast"></button>
+            </el-tooltip>
         </div>
         <PersonDetail v-if="visible"
                       :Info="buildInfo"
@@ -56,6 +66,7 @@
                 facilityTrash:[],
                 facilityPlant:[],
                 facilityIndicator:[],
+                facilityRoad:[],
                 buildInfo:[],
                 visible:false,
                 title:'',
@@ -82,7 +93,8 @@
                 this.getAllTree();//植物现有标注
                 this.getAllBuild();//建筑现有标注
                 this.overView();//鹰眼
-                // this.getAllRoat();// 路线输出
+                this.getAllRoat();// 路线输出
+                this.getAllArea();// 片区输出
             }else if (route.includes('controler')) {
                 droreMap.interaction.enableMapClick = true
                 droreMap.interaction.showMove()
@@ -1401,7 +1413,11 @@
                         area.push(arrayObj);
                         var data = {"id": this.areaList[i].id, "name": this.areaList[i].name,"constructor":'areaList'}
                         areaEvets.addArea(area,data)
-                        droreMap.area.addChild(areaEvets)
+                        droreMap.area.addChild(areaEvets, this.areaList[i].id)
+                        let route = this.$route.path
+                        if(route.includes('facility')){
+                            droreMap.area.removeStyleById(this.areaList[i].id, false)
+                        }
                         areaEvets.ifDraw = false;
                         areaEvets.ifModify = false;
                         areaEvets.ifSelect = false;
@@ -1435,7 +1451,7 @@
                     arrayObjList.push(arrayObj);
                     console.log(arrayObjList)
                     areaEvet.setVisible(true)
-                    droreMap.area.addChild(areaEvet)
+                    droreMap.area.addChild(areaEvet, '10000')
                     that.$store.commit('MAP_REGION_LOCATION',arrayObjList)
                     that.$store.commit('REGION_LOCATION_STATE',true)
                 })
@@ -1477,7 +1493,7 @@
                             var data = {"id": this.areaList[i].id, "name": this.areaList[i].name, "constructor": ''}
                             areaEvets1.addArea(area, data)
                             areaEvets1.setVisible(true)
-                            droreMap.area.addChild(areaEvets1)
+                            droreMap.area.addChild(areaEvets1, this.areaList[i].id)
                         }else {
                             var areaEvets = new droreMap.area.DrawLayer("areaList", 'rgba(255, 255, 255, 0.1)', "#26bbf0")
                             let geo = JSON.parse(this.areaList[i].geo);
@@ -1492,7 +1508,7 @@
                             var data = {"id": this.areaList[i].id, "name": this.areaList[i].name, "constructor": ''}
                             areaEvets.addArea(area, data)
                             areaEvets.setVisible(true)
-                            droreMap.area.addChild(areaEvets)
+                            droreMap.area.addChild(areaEvets, this.areaList[i].id)
                         }
                     }
                     areaEvets1.ifModify = true;
@@ -1534,8 +1550,19 @@
                         }
                         var data = {"id": res[i].id, "name": res[i].name,"constructor":''}
                         areaEvtList.addRoad(area, data)
-                        console.log(areaEvtList)
-                        droreMap.road.addRoadLayer(areaEvtList)
+                        droreMap.road.addRoadLayer(areaEvtList,res[i].id)
+                        let route = this.$route.path
+                        if(route.includes('facility')){
+                            droreMap.road.removeStyleById(res[i].id,false)
+                        }
+                    }
+                    let route = this.$route.path
+                    if(route.includes('facility')) {
+                        if (this.getfacilityRoad.length > 0) {
+                            for (let i = 0; i < this.getfacilityRoad.length; i++) {
+                                this.roadShowID(this.getfacilityRoad[i]);
+                            }
+                        }
                     }
                 }).catch(err => {
                     console.log(err, '请求失败')
@@ -1565,7 +1592,7 @@
                         console.log(arrayObj);
                         that.$store.commit('MAP_ROAT_LOCATION', arrayObj)
                         that.$store.commit('ROAT_LOCATION_STATE', true)
-                        droreMap.road.addRoadLayer(areaEvt)
+                        droreMap.road.addRoadLayer(areaEvt,'10010')
                     }
                 })
                 areaEvt.addEventListener(Event.SELECT_EVENT, "select", function(e) {
@@ -1599,9 +1626,9 @@
                             }
                             var data = {"id": res[i].id, "name": res[i].name,"constructor":''}
                             areaEvts.addRoad(area, data)
-                            droreMap.road.addRoadLayer(areaEvts)
+                            droreMap.road.addRoadLayer(areaEvts,res[i].id)
                         }else{
-                            var areaEvtList =new droreMap.road.RoadLayer('ROUTE_list', 'blue', 'blue')
+                            var areaEvtList =new droreMap.road.RoadLayer('ROUTE_list', '#fb9000', 'blue')
                             let geo =JSON.parse(res[i].geo);
                             let area = [];
                             for(var j = 0; j < geo.length; j++) {
@@ -1610,7 +1637,7 @@
                             }
                             var data = {"id": res[i].id, "name": res[i].name,"constructor":''}
                             areaEvtList.addRoad(area, data)
-                            droreMap.road.addRoadLayer(areaEvtList)
+                            droreMap.road.addRoadLayer(areaEvtList,res[i].id)
                         }
                     }
                     let that =this
@@ -1642,7 +1669,7 @@
             async getAllRoute () {
                 await api.roat.getAllRoat().then(res => {
                     for (var i = 0; i < res.length; i++) {
-                        var areaEvtList =new droreMap.road.RoadLayer('ROUTE_list', 'blue', 'blue')
+                        var areaEvtList =new droreMap.road.RoadLayer('ROUTE_list', '#fb9000', 'blue')
                         let geo =JSON.parse(res[i].geo);
                         let area = [];
                         for(var j = 0; j < geo.length; j++) {
@@ -1651,7 +1678,7 @@
                         }
                         var data = {"id": res[i].id, "name": res[i].name,"constructor":''}
                         areaEvtList.addRoad(area, data)
-                        droreMap.road.addRoadLayer(areaEvtList)
+                        droreMap.road.addRoadLayer(areaEvtList, res[i].id)
                     }
                 }).catch(err => {
                     console.log(err, '请求失败')
@@ -1670,9 +1697,9 @@
                             }
                             var data = {"id": res[i].id, "name": res[i].name,"constructor":''}
                             areaEvts.addRoad(area, data)
-                            droreMap.road.addRoadLayer(areaEvts)
+                            droreMap.road.addRoadLayer(areaEvts,res[i].id)
                         }else{
-                            var areaEvtList =new droreMap.road.RoadLayer('ROUTE_list', 'blue', 'blue')
+                            var areaEvtList =new droreMap.road.RoadLayer('ROUTE_list', '#fb9000', 'blue')
                             let geo =JSON.parse(res[i].geo);
                             let area = [];
                             for(var j = 0; j < geo.length; j++) {
@@ -1681,7 +1708,7 @@
                             }
                             var data = {"id": res[i].id, "name": res[i].name,"constructor":''}
                             areaEvtList.addRoad(area, data)
-                            droreMap.road.addRoadLayer(areaEvtList)
+                            droreMap.road.addRoadLayer(areaEvtList,res[i].id)
                         }
                     }
                     let that =this
@@ -1766,40 +1793,16 @@
             },
             searchShow() {//搜索
                 console.log(this.getSearchInfo,'123123');
-                this.getSearchInfo.location = [this.getSearchInfo.longitude,this.getSearchInfo.latitude]
-                droreMap.map.panToCoord(droreMap.trans.transFromWgsToLayer(this.getSearchInfo.location));
-                droreMap.icon.IconStyleById(this.getSearchInfo.id,true);
+                if(this.getSearchInfo.entityType =="12"){
+                    this.roadShow(this.getSearchInfo)
+                }else if(this.getSearchInfo.entityType=="14"){
+                    this.areaShow(this.getSearchInfo)
+                }else {
+                    this.getSearchInfo.location = [this.getSearchInfo.longitude,this.getSearchInfo.latitude]
+                    droreMap.map.panToCoord(droreMap.trans.transFromWgsToLayer(this.getSearchInfo.location));
+                    droreMap.icon.IconStyleById(this.getSearchInfo.id,true);
+                }
             },
-            // searchShowLine(iconType){
-            //     var areaEvtList =new droreMap.road.RoadLayer(iconType, 'blue', 'blue')
-            //     let geo =JSON.parse(this.getSearchInfo.geoText);
-            //     let area = [];
-            //     for(var j = 0; j < geo.length; j++) {
-            //         let wgs=droreMap.trans.transFromWgsToLayer(geo[j])
-            //         area.push(wgs);
-            //     }
-            //     var data = {"id": this.getSearchInfo.id, "name": this.getSearchInfo.name,"constructor":''}
-            //     areaEvtList.addRoad(area, data)
-            //     droreMap.road.addRoadLayer(areaEvtList)
-            //     droreMap.map.panToCoord(droreMap.trans.transFromWgsToLayer(geo[0]));
-            // },
-            // searchShowArea(iconType){
-            //     var areaEvets =new droreMap.area.DrawLayer(iconType,'rgba(255, 255, 255, 0.3)',"blue")
-            //     let geo =JSON.parse(this.getSearchInfo.geoText);
-            //     let ol=geo[0];
-            //     let arrayObj = new Array();
-            //     for(var j = 0; j < ol.length; j++) {
-            //         let wgs=droreMap.trans.transFromWgsToLayer(ol[j])
-            //         arrayObj.push(wgs);
-            //     }
-            //     let area= new Array();
-            //     area.push(arrayObj);
-            //     var data = {"id": this.getSearchInfo.id, "name": this.getSearchInfo.name,"constructor":''}
-            //     areaEvets.addArea(area,data)
-            //     areaEvets.setVisible(true)
-            //     droreMap.area.addChild(areaEvets)
-            //     droreMap.map.panToCoord(droreMap.trans.transFromWgsToLayer(ol[0]));
-            // },
             droreMappopup(e){
                 console.log(e);
                 var div = document.getElementById('contextmenu_container')
@@ -1850,20 +1853,16 @@
                 this.menuDelete();
             },
             roadShow(data){
-                let areaEvtList=data.id
-                areaEvtList =new droreMap.road.RoadLayer('ROUTE_list', '#26bbf0', 'blue')
-                let geo =JSON.parse(data.geo);
-                let area = [];
-                for(var j = 0; j < geo.length; j++) {
-                    let wgs=droreMap.trans.transFromWgsToLayer(geo[j])
-                    area.push(wgs);
-                }
-                var data = {"id": data.id, "name": data.name,"constructor":''}
-                areaEvtList.addRoad(area, data)
-                droreMap.road.addRoadLayer(areaEvtList)
+                droreMap.road.removeStyleById(data.id,true)
+            },
+            roadShowID(data){
+                droreMap.road.removeStyleById(data,true)
             },
             roadHide(data){
-                droreMap.road.removeAll()
+                droreMap.road.removeStyleById(data.id,false)
+            },
+            areaShow(data){
+                droreMap.area.removeStyleById(data.id,true)
             },
             controler(){
                 if(this.getcontroleLight.length > 0){
@@ -1961,7 +1960,6 @@
                                 }else {
                                     this.treeShow(item1);
                                 }
-                                console.log(item1.type,5645646545645641)
                                 if(item1.type=='light'){
                                     this.controleLightList.push(item1.id);
                                     this.$store.commit('CONTROLER_LIGHT', this.controleLightList)
@@ -2004,6 +2002,10 @@
                                 } else if(item1.type =='indicator'){
                                     this.facilityIndicator.push(item1.id);
                                     this.$store.commit('FACILITY_INDICATOR', this.facilityIndicator)
+                                }
+                                if(item1.typeroad=='road'){
+                                    this.facilityRoad.push(item1.id);
+                                    this.$store.commit('FACILITY_ROAD', this.facilityRoad)
                                 }
                             })
                         })
@@ -2057,6 +2059,10 @@
                                 this.facilityIndicator=[];
                                 this.$store.commit('FACILITY_INDICATOR', this.facilityIndicator)
                             }
+                            if(item.typeroad=='road'){
+                                this.facilityRoad=[];
+                                this.$store.commit('FACILITY_ROAD', this.facilityRoad)
+                            }
                         })
                     }
                 }else {
@@ -2064,7 +2070,9 @@
                         let data = this.getTreeState[0].children
                         if (this.getTreeState[0].checked.checkedKeys.includes(this.getTreeState[0].id)) {
                             for (let i = 0; i < data.length; i++) {
-                                if(!data[i].typeroad){
+                                if(data[i].typeroad=='road'){
+                                    this.roadShow(data[i]);
+                                }else {
                                     this.treeShow(data[i]);
                                 }
                                 // console.log(this.getTreeState[0]);
@@ -2125,11 +2133,18 @@
                                     this.facilityIndicator=[...new Set(this.facilityIndicator)];
                                     this.$store.commit('FACILITY_INDICATOR', this.facilityIndicator)
                                 }
+                                if(data[i].typeroad=='road'){
+                                    this.facilityRoad.push(data[i].id);
+                                    this.facilityRoad=[...new Set(this.facilityRoad)];
+                                    this.$store.commit('FACILITY_ROAD', this.facilityRoad)
+                                }
                             }
                         }else {
                             for (let i = 0; i < this.getTreeState[0].children.length; i++) {
                                 // console.log(this.getTreeState[0].children)
-                                if(!this.getTreeState[0].children[i].typeroad){
+                                if(this.getTreeState[0].children[i].typeroad=='road'){
+                                    this.roadHide(this.getTreeState[0].children[i]);
+                                }else {
                                     this.treeHide(this.getTreeState[0].children[i]);
                                 }
                                 if(this.getTreeState[0].children[i].type=='light'){
@@ -2217,11 +2232,20 @@
                                     }
                                     this.$store.commit('FACILITY_INDICATOR', this.facilityIndicator)
                                 }
+                                if(this.getTreeState[0].children[i].typeroad=='road'){
+                                    let index = this.facilityRoad.indexOf(this.getTreeState[0].children[i].id);
+                                    if (index > -1) {
+                                        this.facilityRoad.splice(index, 1);
+                                    }
+                                    this.$store.commit('FACILITY_ROAD', this.facilityRoad)
+                                }
                             }
                         }
                     }else {
                         if (this.getTreeState[0].checked.checkedKeys.includes(this.getTreeState[0].id)) {
-                            if(!this.getTreeState[0].typeroad){
+                            if(this.getTreeState[0].typeroad=='road'){
+                                this.roadShow(this.getTreeState[0]);
+                            }else {
                                 this.treeShow(this.getTreeState[0]);
                             }
                             if(this.getTreeState[0].type=='light'){
@@ -2281,8 +2305,15 @@
                                 this.facilityIndicator=[...new Set(this.facilityIndicator)];
                                 this.$store.commit('FACILITY_INDICATOR', this.facilityIndicator)
                             }
+                            if(this.getTreeState[0].typeroad=='road'){
+                                this.facilityRoad.push(this.getTreeState[0].id);
+                                this.facilityRoad=[...new Set(this.facilityRoad)];
+                                this.$store.commit('FACILITY_ROAD', this.facilityRoad)
+                            }
                         } else {
-                            if(!this.getTreeState[0].typeroad){
+                            if(this.getTreeState[0].typeroad=='road'){
+                                this.roadHide(this.getTreeState[0]);
+                            }else {
                                 this.treeHide(this.getTreeState[0]);
                             }
                             if(this.getTreeState[0].type=='light'){
@@ -2370,6 +2401,13 @@
                                 }
                                 this.$store.commit('FACILITY_INDICATOR', this.facilityIndicator)
                             }
+                            if(this.getTreeState[0].typeroad=='road'){
+                                let index = this.facilityRoad.indexOf(this.getTreeState[0].id);
+                                if (index > -1) {
+                                    this.facilityRoad.splice(index, 1);
+                                }
+                                this.$store.commit('FACILITY_ROAD', this.facilityRoad)
+                            }
                         }
                     }
                 }
@@ -2393,7 +2431,8 @@
                 'getfacilityScenic',
                 'getfacilityTrash',
                 'getfacilityPlant',
-                'getfacilityIndicator'
+                'getfacilityIndicator',
+                'getfacilityRoad'
             ])
         }
     }
