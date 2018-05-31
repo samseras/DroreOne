@@ -59,9 +59,9 @@
     import {mapGetters,mapMutations} from 'vuex'
     export default {
         name: "fun-header",
-        props:['choseId','listsLength','personListFlag'],
+        props: ['choseId', 'listsLength', 'personListFlag'],
 
-        data () {
+        data() {
             return {
                 filterList: [],
                 personTypeList: [],
@@ -90,20 +90,20 @@
         },
         methods: {
             ...mapMutations(['SHOWBASICICON']),
-            startSearch () {
+            startSearch() {
                 // if (this.searchContent !== '') {
-                    this.$emit('searchAnything', this.searchContent)
+                this.$emit('searchAnything', this.searchContent)
                 // }
             },
-            addNewInfo () {
+            addNewInfo() {
                 // console.log(this.$route.path, 'opop')
                 this.$emit('addNewInfo')
             },
-            selected () {
+            selected() {
                 this.isSelected = !this.isSelected
                 this.$emit('selectedAll', this.isSelected)
             },
-            selectFile(e){
+            selectFile(e) {
                 var route = this.$route.path;
                 console.log(e.target.files[0], 'opopopopopops')
                 let file = e.target.files[0]
@@ -112,10 +112,10 @@
                     return
                 } else {
                     var form = new FormData();
-                    form.append('f1',file);
+                    form.append('f1', file);
                     console.log(form, 'opopopopoppopop')
 
-                    switch (true){
+                    switch (true) {
                         case route.includes("boat"):
                             console.log("boat");
                             api.importfile.importBoat(form).then(res => {
@@ -210,75 +210,75 @@
                     }
                 }
             },
-            exportTemplate(){
+            exportTemplate() {
                 var route = this.$route.path;
-                    switch (true){
-                        case route.includes("boat"):
-                            window.location.href="/static/template/vehicle.csv";
-                            break;
-                        case route.includes("toilet"):
-                            window.location.href="/static/template/toilet.csv";
-                            break;
-                        case route.includes("park"):
-                            window.location.href="/static/template/parking.csv";
-                            break;
-                        case route.includes("shop"):
-                            window.location.href="/static/template/business.csv";
-                            break;
-                        case route.includes("scenic"):
-                            window.location.href="/static/template/scenicspot.csv";
-                            break;
-                        case route.includes("trash"):
-                            window.location.href="/static/template/dustbin.csv";
-                            break;
-                        case route.includes("indicator"):
-                            window.location.href="/static/template/signboard.csv";
-                            break;
-                        case route.includes("plant"):
-                            window.location.href="/static/template/plant.csv";
-                            break;
-                        case route.includes("construction"):
-                            window.location.href="/static/template/building.csv";
-                            break;
-                        case route.includes("person"):
-                            window.location.href="/static/template/person.csv";
-                            break;
+                switch (true) {
+                    case route.includes("boat"):
+                        window.location.href = "/static/template/vehicle.csv";
+                        break;
+                    case route.includes("toilet"):
+                        window.location.href = "/static/template/toilet.csv";
+                        break;
+                    case route.includes("park"):
+                        window.location.href = "/static/template/parking.csv";
+                        break;
+                    case route.includes("shop"):
+                        window.location.href = "/static/template/business.csv";
+                        break;
+                    case route.includes("scenic"):
+                        window.location.href = "/static/template/scenicspot.csv";
+                        break;
+                    case route.includes("trash"):
+                        window.location.href = "/static/template/dustbin.csv";
+                        break;
+                    case route.includes("indicator"):
+                        window.location.href = "/static/template/signboard.csv";
+                        break;
+                    case route.includes("plant"):
+                        window.location.href = "/static/template/plant.csv";
+                        break;
+                    case route.includes("construction"):
+                        window.location.href = "/static/template/building.csv";
+                        break;
+                    case route.includes("person"):
+                        window.location.href = "/static/template/person.csv";
+                        break;
                 }
             },
-            expotInfo(){
-                if (this.listsLength < 1){
+            expotInfo() {
+                if (this.listsLength < 1) {
                     this.$message.error('当前无数据可导出，请添加数据后在导出')
                     return
                 }
                 let route = this.$route.path
-                if(route.includes('basic')){
+                if (route.includes('basic')) {
                     let type
                     if (route.includes('park')) {
                         type = 'parking'  //停车场
-                    }else if(route.includes('trash')){
+                    } else if (route.includes('trash')) {
                         type = 'dustbin'  //垃圾桶
-                    }else if(route.includes('construction')){
+                    } else if (route.includes('construction')) {
                         type = 'building' //建筑
-                    }else if(route.includes('plant')){
+                    } else if (route.includes('plant')) {
                         type = 'plant' //植物
-                    }else if(route.includes('indicator')){
+                    } else if (route.includes('indicator')) {
                         type = 'signboard'  //指示牌
-                    }else if(route.includes('shop')){
+                    } else if (route.includes('shop')) {
                         type = 'business'  //景点
-                    }else if(route.includes('toilet')){
+                    } else if (route.includes('toilet')) {
                         type = 'toilet'  //厕所
-                    }else if(route.includes('scenic')){
+                    } else if (route.includes('scenic')) {
                         type = 'scenicspot'  //景点
-                    }else if(route.includes('boat')){
+                    } else if (route.includes('boat')) {
                         type = 'vehicle'  //车船
                     }
 
                     if (this.choseId.length > 0) {
-                        api.exportFile.exportSingleBasic(this.choseId,type).then((res) =>{
+                        api.exportFile.exportSingleBasic(this.choseId, type).then((res) => {
                             const content = res
                             const blob = new Blob([content])
                             const fileName = '设施.csv'
-                            if('download' in document.createElement('a')){
+                            if ('download' in document.createElement('a')) {
                                 const elink = document.createElement('a')
                                 elink.download = fileName
                                 elink.style.display = 'none'
@@ -287,21 +287,21 @@
                                 elink.click()
                                 URL.revokeObjectURL(elink.href) // 释放URL 对象
                                 document.body.removeChild(elink)
-                            }else{
+                            } else {
                                 navigator.msSaveBlob(blob, fileName)
                             }
                             this.$message.success('导出成功')
 //                        this.choseId=[]
-                        }).catch(err =>{
+                        }).catch(err => {
                             this.$message.error('导出失败，请稍后再试')
                         })
                     } else {
                         api.exportFile.exportAllBasic(type).then((res) => {
-                            console.log(res,'niaho')
+                            console.log(res, 'niaho')
                             const content = res
                             const blob = new Blob([content])
                             const fileName = '设施.csv'
-                            if('download' in document.createElement('a')){
+                            if ('download' in document.createElement('a')) {
                                 const elink = document.createElement('a')
                                 elink.download = fileName
                                 elink.style.display = 'none'
@@ -310,7 +310,7 @@
                                 elink.click()
                                 URL.revokeObjectURL(elink.href) // 释放URL 对象
                                 document.body.removeChild(elink)
-                            }else{
+                            } else {
                                 navigator.msSaveBlob(blob, fileName)
                             }
                             this.$message.success('导出成功')
@@ -318,32 +318,32 @@
                             this.$message.error('导出失败，请稍后再试')
                         })
                     }
-                }else {
+                } else {
                     let type
-                    if(route.includes('1')){
+                    if (route.includes('1')) {
                         type = 1
-                    }else if (route.includes('2')){
+                    } else if (route.includes('2')) {
                         type = 2
-                    }else if (route.includes('3')){
+                    } else if (route.includes('3')) {
                         type = 3
-                    }else if (route.includes('4')){
+                    } else if (route.includes('4')) {
                         type = 4
-                    }else if (route.includes('5')){
+                    } else if (route.includes('5')) {
                         type = 5
-                    }else if (route.includes('6')){
+                    } else if (route.includes('6')) {
                         type = 6
-                    }else if (route.includes('7')){
+                    } else if (route.includes('7')) {
                         type = 7
-                    }else if (route.includes('8')){
+                    } else if (route.includes('8')) {
                         type = 8
                     }
 
                     if (this.choseId.length > 0) {
-                        api.exportFile.exportSinglePerson(this.choseId).then((res) =>{
+                        api.exportFile.exportSinglePerson(this.choseId).then((res) => {
                             const content = res
                             const blob = new Blob([content])
                             const fileName = '人员.csv'
-                            if('download' in document.createElement('a')){
+                            if ('download' in document.createElement('a')) {
                                 const elink = document.createElement('a')
                                 elink.download = fileName
                                 elink.style.display = 'none'
@@ -352,21 +352,21 @@
                                 elink.click()
                                 URL.revokeObjectURL(elink.href) // 释放URL 对象
                                 document.body.removeChild(elink)
-                            }else{
+                            } else {
                                 navigator.msSaveBlob(blob, fileName)
                             }
                             this.$message.success('导出成功')
 //                        this.choseId=[]
-                        }).catch(err =>{
+                        }).catch(err => {
                             this.$message.error('导出失败，请稍后再试')
                         })
                     } else {
                         api.exportFile.exportAllPerson(type).then((res) => {
-                            console.log(res,'niaho')
+                            console.log(res, 'niaho')
                             const content = res
                             const blob = new Blob([content])
                             const fileName = '人员.csv'
-                            if('download' in document.createElement('a')){
+                            if ('download' in document.createElement('a')) {
                                 const elink = document.createElement('a')
                                 elink.download = fileName
                                 elink.style.display = 'none'
@@ -375,7 +375,7 @@
                                 elink.click()
                                 URL.revokeObjectURL(elink.href) // 释放URL 对象
                                 document.body.removeChild(elink)
-                            }else{
+                            } else {
                                 navigator.msSaveBlob(blob, fileName)
                             }
                             this.$message.success('导出成功')
@@ -386,29 +386,29 @@
                 }
 
             },
-            deleteCard () {
+            deleteCard() {
                 this.$emit('deletInfo')
             },
-            toggleList (type) {
+            toggleList(type) {
                 if (type === 'list') {
                     this.isShowIcon = false
                 } else {
                     this.isShowIcon = true
                 }
-                this.$emit('toggleList',type)
-                this.$store.commit('SHOWBASICICON',type)
+                this.$emit('toggleList', type)
+                this.$store.commit('SHOWBASICICON', type)
             },
-            choseType () {
+            choseType() {
                 console.log(this.filterList, 'opopopopopo')
-                this.$emit('choseType',this.filterList)
+                this.$emit('choseType', this.filterList)
             },
-            selectedAll () {
+            selectedAll() {
                 this.$emit('selectedAll', this.isSelected)
             },
-            fixCard () {
+            fixCard() {
                 this.$emit('fixedInfo')
             },
-            async showType () {
+            async showType() {
                 this.route = this.$route.path
                 if (this.route.includes('shop')) {
                     await api.shop.getBusinesstype().then(res => {
@@ -424,7 +424,7 @@
                     console.log('这是指示牌')
                 }
             },
-            showHeader () {
+            showHeader() {
                 let route = this.$route.path
                 if (route.includes('roat')) {
                     this.isShowHeader = false
@@ -434,62 +434,61 @@
                     this.isShowHeader = true
                 }
             },
-            previousPage () {//上一页
+            previousPage() {//上一页
                 this.currentPageNum--
-                if(this.currentPageNum < 1) {
+                if (this.currentPageNum < 1) {
                     this.currentPageNum = 1
                     return
                 }
-                this.$emit('previousPage',this.currentPageNum)
+                this.$emit('previousPage', this.currentPageNum)
             },
-            nextPage () {//下一页
+            nextPage() {//下一页
                 this.currentPageNum++
                 if (this.currentPageNum > this.pageAllNum) {
                     this.currentPageNum = this.pageAllNum
                     return
                 }
-                this.$emit('nextPage',this.currentPageNum)
+                this.$emit('nextPage', this.currentPageNum)
             }
         },
         filters: {
-            packFilter (item) {
+            packFilter(item) {
                 if (item === '0') {
                     return '室外'
-                } else{
+                } else {
                     return '室内'
                 }
             }
         },
         watch: {
-            '$route' () {
+            '$route'() {
                 this.currentPageNum = 1
                 this.showType()
                 this.showHeader()
             },
-            personListFlag(n,o){
+            personListFlag(n, o) {
                 console.log(n);
-                if(n===true){
-                    this.isSelected=true
-                }else{
-                    this.isSelected=false
+                if (n === true) {
+                    this.isSelected = true
+                } else {
+                    this.isSelected = false
                 }
             },
-            listsLength () {
+            listsLength() {
                 if (this.listsLength > 0) {
                     this.pageAllNum = Math.ceil(this.listsLength / 35)
                 }
             },
-            getBasicIcon () {
-                console.log(this.getBasicIcon, 'ioioiooiooi')
+            getBasicIcon() {
                 this.toggleList(this.getBasicIcon)
             }
         },
-        created () {
+        created() {
             this.showType()
             this.showHeader()
             this.toggleList(this.getBasicIcon)
         },
-        computed:{
+        computed: {
             ...mapGetters(['getBasicIcon'])
         }
     }

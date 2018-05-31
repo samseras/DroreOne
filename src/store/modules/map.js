@@ -27,6 +27,7 @@ const map = {
         facilitytrash:[],
         facilityplant:[],
         facilityindicator:[],
+        facilityroad:[],
     },
     getters: {
         getLocation (state) {
@@ -97,6 +98,9 @@ const map = {
         },
         getfacilityIndicator(state) {
             return state.facilityindicator
+        },
+        getfacilityRoad(state) {
+            return state.facilityroad
         }
     },
     setters: {},
@@ -193,6 +197,10 @@ const map = {
         [types.FACILITY_INDICATOR] (state, data) {
             state.facilityindicator= data
             // console.log(state.controwifi,'commit')
+        },
+        [types.FACILITY_ROAD] (state, data) {
+            state.facilityroad= data
+            // console.log(state.facilityroad,'commit')
         }
     },
     actions: {

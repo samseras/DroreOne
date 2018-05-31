@@ -85,7 +85,7 @@ const importfile={
         console.log(params, 'formdata')
         return axios({
             method:'POST',
-            url:getUrl('/toliet/import'),
+            url:getUrl('/toilet/import'),
             processData : false,
             contentType : false,
             data:params

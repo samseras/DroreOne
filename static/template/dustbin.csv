@@ -1,3 +1,2 @@
-name,dustbinCount,type,pictureId,regionName,longitude,latitude
-测试垃圾桶,10,0, ,大雁塔南广场,120.0689993628469100,30.2829095902052400
-测试,1,1, ,大雁塔南广场,120.0674234392112700,30.2819757977998300
+name,dustbinCount,type,pictureId,regionName,longitude,latitude,description
+Dustbin-wsy012,2,1, ,222,120.0699120253050900,30.2838786420982120, 
