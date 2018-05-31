@@ -664,12 +664,14 @@
             saveDialog(){
                 let objArray = [];
                 let newInfo = {};
+                let integerreg = /^(0|[1-9][0-9]*)$/; //大于等于0正整数
                 if (this.route.includes('alarmcolumn')){
                     if(this.isBatchEdit){   //批量编辑
                         console.log(this.choseInfos);
 
                         objArray = this.choseInfos;
                         if(!this.batchEdit.level){
+                            this.$message.error('请选择严重性等级')
                             return;
                         }
                         objArray.forEach((item)=>{
@@ -684,6 +686,21 @@
                     }else{  //单个编辑或查看或新增
                         console.log(this.alarmcolumnInfo);
                         newInfo = this.alarmcolumnInfo;
+                        if(newInfo.severityId){
+                            this.$message.error('请选择严重性等级')
+                            return;
+                        }
+                        if(!newInfo.deviceScope ||newInfo.deviceScope == ""){
+                            newInfo.deviceScope = '0';
+                        }
+                        if(!newInfo.securityScope ||newInfo.securityScope == ""){
+                            newInfo.securityScope = '0';
+                        }
+                        if(!integerreg.test(newInfo.deviceScope) || !integerreg.test(newInfo.securityScope)){
+                            this.$message.error('调度范围必须为数字！')
+                            return;
+                        }
+
                         newInfo.severityName = this.severityId2Name(newInfo.severityId)
                         newInfo.relatedDevices = newInfo.relatedDevices.join(",")
                         newInfo.relatedManagerIds = newInfo.relatedManagerIds.join(",")
@@ -705,6 +722,7 @@
 
                         objArray = this.choseInfos;
                         if(!this.batchEdit.level){
+                            this.$message.error('请选择严重性等级')
                             return;
                         }
                         objArray.forEach((item,index)=>{
@@ -738,6 +756,7 @@
 
                         objArray = this.choseInfos;
                         if(!this.batchEdit.level){
+                            this.$message.error('请选择严重性等级')
                             return;
                         }
                         objArray.forEach((item,index)=>{
@@ -770,6 +789,7 @@
 
                         objArray = this.choseInfos;
                         if(!this.batchEdit.level){
+                            this.$message.error('请选择严重性等级')
                             return;
                         }
                         objArray.forEach((item,index)=>{
@@ -803,6 +823,7 @@
 
                         objArray = this.choseInfos;
                         if(!this.batchEdit.level){
+                            this.$message.error('请选择严重性等级')
                             return;
                         }
                         objArray.forEach((item,index)=>{
@@ -837,6 +858,7 @@
 
                         objArray = this.choseInfos;
                         if(!this.batchEdit.level){
+                            this.$message.error('请选择严重性等级')
                             return;
                         }
                         objArray.forEach((item,index)=>{
@@ -870,6 +892,7 @@
 
                         objArray = this.choseInfos;
                         if(!this.batchEdit.level){
+                            this.$message.error('请选择严重性等级')
                             return;
                         }
                         objArray.forEach((item,index)=>{
