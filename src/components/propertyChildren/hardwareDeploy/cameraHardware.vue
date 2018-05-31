@@ -65,13 +65,17 @@
                                 </div>
                             </template>
                         </el-table-column>
-                        <el-table-column>
+                        <el-table-column
+                            width="150"
+                            label="操作">
                             <template slot-scope="scope">
-                                <span @click="showPersonDetail(scope.row, '摄像头信息',true)">查看</span>
-                                <span class="line">|</span>
-                                <span @click="fixedInfo(scope.row.id )">编辑</span>
-                                <span class="line">|</span>
-                                <span @click="deletInfo(scope.row.id)">删除</span>
+                                <div class="handle">
+                                    <span @click="showPersonDetail(scope.row, '摄像头信息',true)">查看</span>
+                                    <span class="line">|</span>
+                                    <span @click="fixedInfo(scope.row.id )">编辑</span>
+                                    <span class="line">|</span>
+                                    <span @click="deletInfo(scope.row.id)">删除</span>
+                                </div>
                             </template>
                         </el-table-column>
                     </el-table>
@@ -233,7 +237,7 @@
             },
             fixedInfo(id){
                 if (id) {
-                    //this.choseInfoId.push(id)
+                    this.choseInfoId = [id]
                 }
                 if(this.choseInfoId.length > 1) {
                     this.$message.warning('至多选择一条数据')
@@ -253,7 +257,7 @@
             },
             deletInfo(id){
                 if (id) {
-                    //this.choseInfoId.push(id)
+                    this.choseInfoId = [id]
                 }
                 if (this.choseInfoId.length > 0) {
                     this.$confirm('此操作将永久删除该数据, 是否继续?', '提示', {
@@ -274,7 +278,6 @@
                             this.getAllCamera()
                             this.$message.success('删除成功')
                             this.choseInfoId=[]
-                            this.getAllCamera()
                         }).catch(err=>{
                             console.log(err)
                             this.$message.error('删除失败，请稍后重试')
@@ -361,12 +364,12 @@
             choseType(type){
                 console.log(type)
                 if(type.length===0){
-                    this.cameraList=this.cameraList.filter((item)=>{
+                    this.cameraList=this.checkList.filter((item)=>{
                         item.status=true
                         return item
                     })
                 }else{
-                    this.cameraList=this.cameraList.filter((item,index)=>{
+                    this.cameraList=this.checkList.filter((item,index)=>{
                         if(item.positionType == 0){
                             item.type = '室内'
                         }else {
@@ -374,11 +377,11 @@
                         }
                         if(type.includes(item.type)){
                             item.status=true
-                        }else if(!type.includes(item.type)){
+                        }else{
                             item.status=false
                             console.log(item.type)
                         }
-                        return item
+                        return item.status === true
                     })
                 }
             },
@@ -466,6 +469,9 @@
         }
         .cameraList .el-button{
             border:1px solid transparent;
+            background: transparent;
+            text-align: left;
+            padding: 0;
         }
         .cameraList .box .el-button span{
             display:inline-block;
@@ -548,10 +554,17 @@
                             top:rem(-10);
                         }
                         span{
-                            float:right;
-                            margin-right:rem(20);
-                            line-height: rem(25);
-                            color:#fff;
+                            display: inline-block;
+                            width: rem(100);
+                            float: right;
+                            text-align: right;
+                            line-height: rem(20);
+                            color: #fff;
+                            padding-right: rem(5);
+                            overflow: hidden;
+                            text-overflow: ellipsis;
+                            white-space: nowrap;
+                            box-sizing: border-box;
                         }
                     }
                     .specificInfo{
@@ -582,6 +595,11 @@
                             -webkit-box-orient:vertical;
                             -webkit-line-clamp:2;
                         }
+                    }
+                }
+                .handle{
+                    span{
+                        cursor: pointer;
                     }
                 }
             }

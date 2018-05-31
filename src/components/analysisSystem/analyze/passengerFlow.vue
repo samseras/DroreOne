@@ -201,10 +201,13 @@
                 };
             },
             async getEchats () {
-                // console.log(this.getRefresh)
+                console.log(this.$route.params,"{}}}}}}}}}}}}}}")
+                // let that = this;
+                // setTimeout(function(){
+                //     console.log(that.typeTemp,"@@@@@@@@")
+                // },1000)
                 this.isShowLoading = true
                 let id = this.$route.params.id;
-
 
                 await api.analyze.getStreamDataById(id).then(res=> {
                     // console.log(res,'nimeide ')
@@ -968,6 +971,7 @@
         watch: {
           '$route' () {
               if (this.$route.path.includes('analyze')) {
+
                   this.echatList = []  //清空dom 内容
                    this.getDom();
                   this.getEchats()
@@ -978,6 +982,7 @@
 
         },
         created () {
+            console.log(this.typeTemp,"this.typeTemp")
             this.echatList = []
             this.getEchats();
         },

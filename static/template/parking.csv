@@ -1,2 +1,2 @@
-name,capacity,type,pictureId,regionName,longitude,latitude
-南广场停车场,123123,0, ,大雁塔南广场,120.0671906247197300,30.2819790081337200
+name,capacity,type,pictureId,regionName,longitude,latitude,description
+parking-wsy001,0,1, ,222,120.0691799557259300,30.2830553809959800, 

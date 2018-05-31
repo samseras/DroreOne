@@ -2,14 +2,22 @@
 import * as types from '../mutations-type'
 import api from '@/api'
 
-const map = {
+const job = {
     state: {
-      jobType: []
+      jobType: [],
+        basicIcon: 'card',
+        hardWareIcon: 'card'
     },
     getters: {
         getJobTypeList (state) {
             console.log(state.jobType, '这是从vuex里边拿到的')
             return state.jobType
+        },
+        getBasicIcon (state) {
+            return state.basicIcon
+        },
+        getHardWareIcon (state) {
+            return state.hardWareIcon
         }
     },
     setters: {},
@@ -23,18 +31,15 @@ const map = {
               return item.id !== data
           })
         },
+        [types.SHOWBASICICON] (state, data) {
+            state.basicIcon = data
+        },
+        [types.SHOWHARDWAREICON] (state, data) {
+            state.hardWareIcon = data
+        },
     },
     actions: {
-        async getJobType ({commit}) {
-            try {
-                let res = await api.person.getJob()
-                commit(types.JOB_TYPE, res)
-                return res
-            } catch (err) {
-                console.log('errrrrrrrrrrrrrrrrrrrrrrrrrr', err)
-            }
-        },
     }
 }
 
-export default map
+export default job

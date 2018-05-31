@@ -74,13 +74,17 @@
                                 </div>
                             </template>
                         </el-table-column>
-                        <el-table-column>
+                        <el-table-column
+                            label="操作"
+                            width="150">
                             <template slot-scope="scope">
-                                <span @click="showLightDetail(scope.row, '路灯信息',true)">查看</span>
-                                <span class="line">|</span>
-                                <span @click="fixedInfo(scope.row.id )">编辑</span>
-                                <span class="line">|</span>
-                                <span @click="deletInfo(scope.row.id)">删除</span>
+                                <div class="handle">
+                                    <span @click="showLightDetail(scope.row, '路灯信息',true)">查看</span>
+                                    <span class="line">|</span>
+                                    <span @click="fixedInfo(scope.row.id )">编辑</span>
+                                    <span class="line">|</span>
+                                    <span @click="deletInfo(scope.row.id)">删除</span>
+                                </div>
                             </template>
                         </el-table-column>
                     </el-table>
@@ -237,7 +241,7 @@
             },
             fixedInfo(id){
                 if (id) {
-                    this.choseInfoId.push(id)
+                    this.choseInfoId = [id]
                 }
                 if(this.choseInfoId.length > 1) {
                     this.$message.warning('至多选择一条数据')
@@ -257,7 +261,7 @@
             },
             deletInfo(id){
                 if (id) {
-                    this.choseInfoId.push(id)
+                    this.choseInfoId = [id]
                 }
                 if (this.choseInfoId.length > 0) {
                     this.$confirm('此操作将永久删除该数据, 是否继续?', '提示', {
@@ -277,7 +281,6 @@
                             this.getAllLight()
                             this.$message.success('删除成功')
                             this.choseInfoId=[]
-                            this.getAllLight()
                         }).catch(err =>{
                             this.$message.error('删除失败')
                         })
@@ -362,15 +365,15 @@
             choseType(type){
                 console.log(type)
                 if(type.length===0){
-                    this.choseList=this.lightList.filter((item)=>{
+                    this.choseList=this.checkList.filter((item)=>{
                         item.status=true
                         return item.status === true
                     })
                 }else{
-                    this.choseList=this.lightList.filter((item,index)=>{
+                    this.choseList=this.checkList.filter((item,index)=>{
                         if(type.includes(item.type)){
                             item.status=true
-                        }else if(!type.includes(item.type)){
+                        }else {
                             item.status=false
                             console.log(item.type)
                         }
@@ -473,6 +476,8 @@
         .cameraList .el-button{
             border:1px solid transparent;
             text-align: left;
+            background: transparent;
+            padding: 0;
         }
         .cameraList .box .el-button span{
             display:inline-block;
@@ -589,6 +594,11 @@
                             -webkit-box-orient:vertical;
                             -webkit-line-clamp:2;
                         }
+                    }
+                }
+                .handle{
+                    span{
+                        cursor: pointer;
                     }
                 }
             }

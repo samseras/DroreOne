@@ -37,6 +37,9 @@
                             prop="name"
                             label="路线名称"
                             width="120">
+                            <template slot-scope="scope">
+                                <span class="overflow">{{scope.row.name}}</span>
+                            </template>
                         </el-table-column>
                         <el-table-column
                             label="路线类型"
@@ -60,11 +63,13 @@
                         <el-table-column
                             label="操作">
                             <template slot-scope="scope">
-                                <span @click="showPersonDetail(scope.row,'路网信息',true)">查看</span>
-                                <span class="line">|</span>
-                                <span @click="fixedInfo(scope.row.id )">编辑</span>
-                                <span class="line">|</span>
-                                <span @click="deletInfo(scope.row.id)">删除</span>
+                                <div class="handle">
+                                    <span @click="showPersonDetail(scope.row,'路网信息',true)">查看</span>
+                                    <span class="line">|</span>
+                                    <span @click="fixedInfo(scope.row.id )">编辑</span>
+                                    <span class="line">|</span>
+                                    <span @click="deletInfo(scope.row.id)">删除</span>
+                                </div>
                             </template>
                         </el-table-column>
                     </el-table>
@@ -314,7 +319,7 @@
             },
             fixedInfo (id) {
                 if (id) {
-                    //this.choseInfoId.push(id)
+                    this.choseInfoId = [id]
                 }
                 if (this.choseInfoId.length > 1) {
                     this.$message.warning('至多选择一个数据修改')
@@ -415,7 +420,10 @@
 </script>
 <style>
     .roatDeploy .box .el-button{
-        border:1px solid transparent
+        border:1px solid transparent;
+        background: transparent;
+        text-align: left;
+        padding: 0;
     }
     .roatDeploy .box .el-button span{
         display:inline-block;
@@ -470,6 +478,7 @@
                     margin-right: rem(5.5);
                     margin-bottom: rem(5);
                     border-radius: rem(5);
+                    overflow: hidden;
                     .checkBox{
                         width: 100%;
                         height: rem(20);
@@ -541,7 +550,18 @@
                         }
                     }
                 }
+                .handle {
+                    span{
+                        cursor: pointer;
+                    }
+                }
             }
+        }
+        .overflow {
+            display: inline-block;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            display:inline-block;
         }
     }
 

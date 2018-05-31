@@ -458,13 +458,13 @@
                 if (route.includes('lamppost')) {
                     this.lamppost.lightSchedule.customizedDays = false
                 } else if (route.includes('broadcast')) {
-                    this.lamppost.broadcastSchedule.customizedDays = false
+                    this.broadList.broadcastSchedule.customizedDays = false
                 } else if (route.includes('screen')) {
-                    this.lamppost.ledSchedule.customizedDays = false
+                    this.screen.ledSchedule.customizedDays = false
                 } else  if (route.includes('purifier')) {
-                    this.lamppost.cleanSchedule.customizedDays = false
+                    this.purifier.cleanSchedule.customizedDays = false
                 } else if (route.includes('security')) {
-                    this.lamppost.inspectionSchedule.customizedDays = false
+                    this.security.inspectionSchedule.customizedDays = false
                 }
             },
             handleCheckChange (data,checked) {//此处形参data不能删除，必须使用第二个形参

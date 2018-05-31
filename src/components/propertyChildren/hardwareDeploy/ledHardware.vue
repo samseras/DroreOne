@@ -71,13 +71,17 @@
                             </template>
 
                         </el-table-column>
-                        <el-table-column>
+                        <el-table-column
+                            label="操作"
+                            width="150">
                             <template slot-scope="scope">
-                                <span @click="showLedDetail(scope.row, 'LED大屏信息',true)">查看</span>
-                                <span class="line">|</span>
-                                <span @click="fixedInfo(scope.row.id )">编辑</span>
-                                <span class="line">|</span>
-                                <span @click="deletInfo(scope.row.id)">删除</span>
+                                <div class="handle">
+                                    <span @click="showLedDetail(scope.row, 'LED大屏信息',true)">查看</span>
+                                    <span class="line">|</span>
+                                    <span @click="fixedInfo(scope.row.id )">编辑</span>
+                                    <span class="line">|</span>
+                                    <span @click="deletInfo(scope.row.id)">删除</span>
+                                </div>
                             </template>
                         </el-table-column>
                     </el-table>
@@ -246,7 +250,7 @@
             },
             fixedInfo(id){
                 if (id) {
-                    this.choseInfoId.push(id)
+                    this.choseInfoId = [id]
                 }
                 if(this.choseInfoId.length > 1) {
                     this.$message.warning('至多选择一条数据')
@@ -266,7 +270,7 @@
             },
             deletInfo(id){
                 if (id) {
-                    this.choseInfoId.push(id)
+                    this.choseInfoId = [id]
                 }
                 if (this.choseInfoId.length > 0) {
                     this.$confirm('此操作将永久删除该数据, 是否继续?', '提示', {
@@ -286,7 +290,6 @@
                             this.getAllLed()
                             this.$message.success('删除成功')
                             this.choseInfoId=[]
-                            this.getAllLed()
                         }).catch(err=>{
                             this.$message.error('删除失败，请稍后再试')
                         })
@@ -375,12 +378,13 @@
             choseType(type){
                 console.log(type)
                 if(type.length===0){
-                    this.ledList=this.ledList.filter((item)=>{
+                    this.ledList=this.checkList.filter((item)=>{
                         item.status=true
                         return item
                     })
                 }else{
-                    this.ledList=this.ledList.filter((item,index)=>{
+                    this.ledList=this.checkList.filter((item,index)=>{
+                        console.log(item, 'ioioojjkjjjjkjkjk')
                         if (item.positionType == 0) {
                             item.type = '室内'
                         } else{
@@ -388,11 +392,11 @@
                         }
                         if(type.includes(item.type)){
                             item.status=true
-                        }else if(!type.includes(item.type)){
+                        }else {
                             item.status=false
                             console.log(item.type)
                         }
-                        return item
+                        return item.status === true
                     })
                 }
             },
@@ -481,6 +485,8 @@
         .cameraList .el-button{
             border:1px solid transparent;
             text-align: left;
+            background: transparent;
+            padding: 0;
         }
         .cameraList .box .el-button span{
             display:inline-block;
@@ -597,6 +603,11 @@
                             -webkit-box-orient:vertical;
                             -webkit-line-clamp:2;
                         }
+                    }
+                }
+                .handle{
+                    span{
+                        cursor: pointer;
                     }
                 }
             }

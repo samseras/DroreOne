@@ -68,19 +68,24 @@
                             label="位置">
                         </el-table-column>
                         <el-table-column
-                            width="150"
+                            width="200"
                             prop="regionName"
                             label="所属片区">
+                            <template slot-scope="scope">
+                                <span class="overflow">{{scope.row.regionName}}</span>
+                            </template>
                         </el-table-column>
                         <el-table-column
                             width="150"
                             label="操作">
                             <template slot-scope="scope">
-                                <span @click="showPersonDetail(scope.row, '商圈信息',true )">查看</span>
-                                <span class="line">|</span>
-                                <span @click="fixedInfo(scope.row.id )">编辑</span>
-                                <span class="line">|</span>
-                                <span @click="deletInfo(scope.row.id)">删除</span>
+                                <div class="handle">
+                                    <span @click="showPersonDetail(scope.row, '商圈信息',true )">查看</span>
+                                    <span class="line">|</span>
+                                    <span @click="fixedInfo(scope.row.id )">编辑</span>
+                                    <span class="line">|</span>
+                                    <span @click="deletInfo(scope.row.id)">删除</span>
+                                </div>
                             </template>
                         </el-table-column>
                     </el-table>
@@ -401,7 +406,7 @@
             },
             fixedInfo (id) {
                 if (id) {
-                    //this.choseInfoId.push(id)
+                    this.choseInfoId = [id]
                 }
                 if (this.choseInfoId.length > 1) {
                     this.$message.warning('至多选择一个数据修改')
@@ -606,7 +611,18 @@
                         }
                     }
                 }
+                .handle{
+                    span{
+                        cursor: pointer;
+                    }
+                }
             }
+        }
+        .overflow {
+            display: inline-block;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            display:inline-block;
         }
     }
 

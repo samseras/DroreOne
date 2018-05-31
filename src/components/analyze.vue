@@ -26,7 +26,9 @@
                             </div>
                         </el-col>
                         <el-col :xs="2" :sm="2" :md="2" :lg="2" :xl="2" class="control">
-                            <button class="publish" ><router-link :to="'/screen/'+currenId">发布</router-link></button>
+                            <!--<button class="publish" ><router-link :to="'/screen/'+currenId">发布</router-link></button>-->
+                            <button class="publish" ><router-link :to="{ path:'/screen/'+currenId, params: {'n': type} }">发布</router-link></button>
+
                         </el-col>
                     </el-row>
                 </el-header>
@@ -36,13 +38,13 @@
             <div class="analyzeConfirm" v-if="confirmErr">
                 <div class="analyzeMenu" v-if="hideList">
                     <ul>
-                        <li v-for="(item,index) in sidebarList" @click="isShowAnalyze(item.dashboard_id,index,item.refresh_interval)"  :class="activeIndex === index?'active':''" :id="item.id" :listName = "item.name" >
+                        <li v-for="(item,index) in sidebarList" @click="isShowAnalyze(item.dashboard_id,index,item.refresh_interval,item.template_type)"  :class="activeIndex === index?'active':''" :id="item.id" :listName = "item.name" >
                             {{item.name}}`
                         </li>
                     </ul>
                 </div>
                 <div class="analyzeContent" >
-                    <router-view @hideList = "hideLists" ></router-view>
+                    <router-view @hideList = "hideLists" :typeTemp = "type"></router-view>
                 </div>
             </div>
             <err-list v-else :echatListErrs = "echatListErr"></err-list>
@@ -70,6 +72,7 @@
             isshowHead:true,
             confirmErr:true,
             currenId:null,
+            type:null,
             echatListErr:{
                 pullData:false,
                 errInform:false,
@@ -92,9 +95,10 @@
                this.isshowHead = !data.head;
               // this.$emit('hideHead',hideData);
         },
-        isShowAnalyze (id,index,refresh) {
+        isShowAnalyze (id,index,refresh,type) {
             // console.log(this.$router,"this.$router.path")
-            // debugger
+              this.type = type;
+              console.log(this.type,"this.type")
               this.currenId = id;
 	          this.$router.push({path: `/analyze/${id}`});
 	          this.activeIndex = index;
@@ -102,14 +106,16 @@
         },
         async getDashboradList(){
            await api.analyze.getDashboradList().then(res => {
-                this.sidebarList = res.result
+                this.sidebarList = res.result;
+                console.log(this.sidebarList,"!!!!!!@@@@@@@")
+               this.type = this.sidebarList[0].template_type;
+                console.log(this.type,"_____")
                this.currenId = this.sidebarList[0].dashboard_id;
                if(this.sidebarList.length == 0){
                    this.confirmErr = false;
                    this.echatListErr.errInform = false;
                    this.echatListErr.pullData = true;
                    return
-                   console.log(echatListErr.pullData,"echatListErr.pullData")
                }else{
                    this.confirmErr = true;
                    this.echatListErr.errInform = false;
@@ -127,7 +133,6 @@
                 console.log(err)
            })
         }
-
       },
       watch: {
   	    '$route' () {
