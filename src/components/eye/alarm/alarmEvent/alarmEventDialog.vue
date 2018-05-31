@@ -293,14 +293,19 @@
                 if(this.isBatchEdit){    //批量编辑
                     console.log(this.choseInfoId);
 
+                    if(!this.batchEdit.level && !this.batchEdit.status){
+                        return;
+                    }
+
+
                     objArray = this.choseInfos;
 
                     objArray.forEach((item)=>{
-                        if(!this.batchEdit.level){
+                        if(this.batchEdit.level){
                             item.severityId = this.batchEdit.level;
                             item.severityName = this.severityId2Name(item.severityId);
                         }
-                        if(!this.batchEdit.status){
+                        if(this.batchEdit.status){
                             item.statusId = this.batchEdit.status;
 
                             this.statusInfo.forEach((item)=>{
@@ -315,6 +320,16 @@
                 }else{  //单个编辑或查看
 
                     newInfo = this.eventInfo;
+
+                    if(!newInfo.severityId){
+                        this.$message.error('请选择严重性等级')
+                        return;
+                    }
+
+                    // if(!newInfo.statusId){
+                    //     newInfo.statusId == "1"
+                    // }
+
                     this.statusInfo.forEach((item)=>{
                         if(newInfo.statusId == item.id){
                             newInfo.statusName = item.name;

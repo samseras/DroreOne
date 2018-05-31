@@ -439,11 +439,38 @@
                             </el-option>
                         </el-select>
                     </p>
-                    <p class="upperThreshold">阈值上限：
+
+                    <p class="upperThreshold" v-if = "!conditionInfo.envTypeId || conditionInfo.envTypeId == '1'">阈值上限：
                         <el-input type="text" v-model='conditionInfo.upperThreshold' class="inputText" :maxlength="15" :disabled='isReadonly'></el-input>
+                        (微克/立方米)
                     </p>
-                    <p class="lowerThreshold">阈值下限：
+                    <p class="lowerThreshold" v-if = "!conditionInfo.envTypeId || conditionInfo.envTypeId == '1'">阈值下限：
                         <el-input type="text" v-model='conditionInfo.lowerThreshold' class="inputText" :maxlength="15" :disabled='isReadonly'></el-input>
+                        (微克/立方米)
+                    </p>
+                    <p class="upperThreshold" v-if = "conditionInfo.envTypeId == '2'">阈值上限：
+                        <el-input type="text" v-model='conditionInfo.upperThreshold' class="inputText" :maxlength="15" :disabled='isReadonly'></el-input>
+                        (℃)
+                    </p>
+                    <p class="lowerThreshold" v-if = "conditionInfo.envTypeId == '2'">阈值下限：
+                        <el-input type="text" v-model='conditionInfo.lowerThreshold' class="inputText" :maxlength="15" :disabled='isReadonly'></el-input>
+                        (℃)
+                    </p>
+                    <p class="upperThreshold" v-if = "conditionInfo.envTypeId == '3'">阈值上限：
+                        <el-input type="text" v-model='conditionInfo.upperThreshold' class="inputText" :maxlength="15" :disabled='isReadonly'></el-input>
+                        (%)
+                    </p>
+                    <p class="lowerThreshold" v-if = "conditionInfo.envTypeId == '3'">阈值下限：
+                        <el-input type="text" v-model='conditionInfo.lowerThreshold' class="inputText" :maxlength="15" :disabled='isReadonly'></el-input>
+                        (%)
+                    </p>
+                    <p class="upperThreshold" v-if = "conditionInfo.envTypeId == '4'">阈值上限：
+                        <el-input type="text" v-model='conditionInfo.upperThreshold' class="inputText" :maxlength="15" :disabled='isReadonly'></el-input>
+                        (级)
+                    </p>
+                    <p class="lowerThreshold" v-if = "conditionInfo.envTypeId == '4'">阈值下限：
+                        <el-input type="text" v-model='conditionInfo.lowerThreshold' class="inputText" :maxlength="15" :disabled='isReadonly'></el-input>
+                        (级)
                     </p>
                     <p class="relatedManager">管&nbsp;理&nbsp;&nbsp;者：
                         <el-select v-model="conditionInfo.relatedManagerIds" size="mini" multiple placeholder="请选择" :disabled='isReadonly'>
@@ -665,6 +692,7 @@
                 let objArray = [];
                 let newInfo = {};
                 let integerreg = /^(0|[1-9][0-9]*)$/; //大于等于0正整数
+                let floatReg = /^\s*$|\d+(\.\d+)?$/;  // 非负浮点数
                 if (this.route.includes('alarmcolumn')){
                     if(this.isBatchEdit){   //批量编辑
                         console.log(this.choseInfos);
@@ -686,17 +714,21 @@
                     }else{  //单个编辑或查看或新增
                         console.log(this.alarmcolumnInfo);
                         newInfo = this.alarmcolumnInfo;
-                        if(newInfo.severityId){
-                            this.$message.error('请选择严重性等级')
+                        if(!newInfo.severityId){
+                            this.$message.error('请选择严重性等级！')
                             return;
                         }
-                        if(!newInfo.deviceScope ||newInfo.deviceScope == ""){
-                            newInfo.deviceScope = '0';
+                        if(!newInfo.name ||newInfo.name == ""){
+                            this.$message.error('请输入名称！')
+                            return;
                         }
-                        if(!newInfo.securityScope ||newInfo.securityScope == ""){
-                            newInfo.securityScope = '0';
-                        }
-                        if(!integerreg.test(newInfo.deviceScope) || !integerreg.test(newInfo.securityScope)){
+                        // if(!newInfo.deviceScope ||newInfo.deviceScope == ""){
+                        //     newInfo.deviceScope = '0';
+                        // }
+                        // if(!newInfo.securityScope ||newInfo.securityScope == ""){
+                        //     newInfo.securityScope = '0';
+                        // }
+                        if( (newInfo.deviceScope && !floatReg.test(newInfo.deviceScope)) || (newInfo.securityScope && !floatReg.test(newInfo.securityScope))){
                             this.$message.error('调度范围必须为数字！')
                             return;
                         }
@@ -737,6 +769,25 @@
                     }else{  //单个编辑或查看
                         console.log(this.firefightingInfo);
                         newInfo = this.firefightingInfo;
+
+                        if(!newInfo.severityId){
+                            this.$message.error('请选择严重性等级！')
+                            return;
+                        }
+                        if(!newInfo.name ||newInfo.name == ""){
+                            this.$message.error('请输入名称！')
+                            return;
+                        }
+                        // if(!newInfo.deviceScope ||newInfo.deviceScope == ""){
+                        //     newInfo.deviceScope = '0';
+                        // }
+                        // if(!newInfo.securityScope ||newInfo.securityScope == ""){
+                        //     newInfo.securityScope = '0';
+                        // }
+                        if( (newInfo.deviceScope && !floatReg.test(newInfo.deviceScope)) || (newInfo.securityScope && !floatReg.test(newInfo.securityScope))){
+                            this.$message.error('调度范围必须为数字！')
+                            return;
+                        }
                         newInfo.severityName = this.severityId2Name(newInfo.severityId)
                         newInfo.relatedManagerIds = newInfo.relatedManagerIds.join(",")
                         newInfo.isEnabled =true;//默认启用
@@ -770,6 +821,26 @@
                     }else{  //单个编辑或查看
                         console.log(this.crossborderInfo);
                         newInfo = this.crossborderInfo;
+
+                        if(!newInfo.severityId){
+                            this.$message.error('请选择严重性等级！')
+                            return;
+                        }
+                        if(!newInfo.name ||newInfo.name == ""){
+                            this.$message.error('请输入名称！')
+                            return;
+                        }
+                        // if(!newInfo.deviceScope ||newInfo.deviceScope == ""){
+                        //     newInfo.deviceScope = '0';
+                        // }
+                        // if(!newInfo.securityScope ||newInfo.securityScope == ""){
+                        //     newInfo.securityScope = '0';
+                        // }
+                        if((newInfo.deviceScope && !floatReg.test(newInfo.deviceScope)) || (newInfo.securityScope && !floatReg.test(newInfo.securityScope))){
+                            this.$message.error('调度范围必须为数字！')
+                            return;
+                        }
+
                         newInfo.severityName = this.severityId2Name(newInfo.severityId)
                         newInfo.relatedManagerIds = newInfo.relatedManagerIds.join(",")
                         newInfo.isEnabled =true;//默认启用
@@ -804,6 +875,31 @@
                     }else{  //单个编辑或查看
                         console.log(this.offtrackInfo);
                         newInfo = this.offtrackInfo;
+
+                        if(!newInfo.severityId){
+                            this.$message.error('请选择严重性等级！')
+                            return;
+                        }
+                        if(!newInfo.name ||newInfo.name == ""){
+                            this.$message.error('请输入名称！')
+                            return;
+                        }
+                        // if(!newInfo.deviceScope ||newInfo.deviceScope == ""){
+                        //     newInfo.deviceScope = '0';
+                        // }
+                        // if(!newInfo.securityScope ||newInfo.securityScope == ""){
+                        //     newInfo.securityScope = '0';
+                        // }
+                        if(newInfo.extendThreshold && !floatReg.test(newInfo.extendThreshold)){
+                            this.$message.error('偏离时长必须为数字！')
+                            return;
+                        }
+
+                        if(newInfo.upperThreshold && !floatReg.test(newInfo.upperThreshold)){
+                            this.$message.error('偏离阈值必须为数字！')
+                            return;
+                        }
+
                         newInfo.severityName = this.severityId2Name(newInfo.severityId)
                         newInfo.relatedManagerIds = newInfo.relatedManagerIds.join(",")
                         newInfo.isEnabled =true;//默认启用
@@ -838,6 +934,26 @@
                     }else{  //单个编辑或查看
                         console.log(this.overlimitInfo);
                         newInfo = this.overlimitInfo;
+
+                        if(!newInfo.severityId){
+                            this.$message.error('请选择严重性等级！')
+                            return;
+                        }
+                        if(!newInfo.name ||newInfo.name == ""){
+                            this.$message.error('请输入名称！')
+                            return;
+                        }
+                        // if(!newInfo.deviceScope ||newInfo.deviceScope == ""){
+                        //     newInfo.deviceScope = '0';
+                        // }
+                        // if(!newInfo.securityScope ||newInfo.securityScope == ""){
+                        //     newInfo.securityScope = '0';
+                        // }
+                        if(newInfo.upperThreshold && !floatReg.test(newInfo.upperThreshold)){
+                            this.$message.error('客流阈值必须为数字！')
+                            return;
+                        }
+
                         newInfo.severityName = this.severityId2Name(newInfo.severityId)
                         newInfo.relatedManagerIdsIds = newInfo.relatedManagerIds.join(",")
                         newInfo.relatedDeviceIds = newInfo.relatedDevices.join(",")
@@ -873,6 +989,26 @@
                     }else{  //单个编辑或查看
                         console.log(this.waterlevelInfo);
                         newInfo = this.waterlevelInfo;
+
+                        if(!newInfo.severityId){
+                            this.$message.error('请选择严重性等级！')
+                            return;
+                        }
+                        if(!newInfo.name ||newInfo.name == ""){
+                            this.$message.error('请输入名称！')
+                            return;
+                        }
+
+                        if(newInfo.lowerThreshold && !floatReg.test(newInfo.lowerThreshold)){
+                            this.$message.error('水位下限必须为数字！')
+                            return;
+                        }
+
+                        if(newInfo.upperThreshold && !floatReg.test(newInfo.upperThreshold)){
+                            this.$message.error('水位上限必须为数字！')
+                            return;
+                        }
+
                         newInfo.severityName = this.severityId2Name(newInfo.severityId)
                         newInfo.relatedManagerIds = newInfo.relatedManagerIds.join(",")
                         newInfo.isEnabled =true;//默认启用
@@ -907,6 +1043,27 @@
                     }else{  //单个编辑或查看
                         console.log(this.conditionInfo);
                         newInfo = this.conditionInfo;
+
+                        if(!newInfo.severityId){
+                            this.$message.error('请选择严重性等级！')
+                            return;
+                        }
+                        if(!newInfo.name ||newInfo.name == ""){
+                            this.$message.error('请输入名称！')
+                            return;
+                        }
+
+                        if(newInfo.lowerThreshold && !floatReg.test(newInfo.lowerThreshold)){
+                            this.$message.error('阈值下限必须为数字！')
+                            return;
+                        }
+
+                        if(newInfo.upperThreshold && !floatReg.test(newInfo.upperThreshold)){
+                            this.$message.error('阈值上限必须为数字！')
+                            return;
+                        }
+
+
                         newInfo.severityName = this.severityId2Name(newInfo.severityId)
                         newInfo.relatedManagerIds = newInfo.relatedManagerIds.join(",")
                         newInfo.isEnabled =true;//默认启用
