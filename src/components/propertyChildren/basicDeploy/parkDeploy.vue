@@ -40,17 +40,17 @@
                         <el-table-column
                             prop="parkingBean.name"
                             label="名称"
-                            width="140">
+                            width="150">
                         </el-table-column>
                         <el-table-column
-                            width="120"
+                            width="140"
                             label="类型">
                             <template slot-scope="scope">
                                 <span>{{scope.row.parkingBean.type | typeFilter}}</span>
                             </template>
                         </el-table-column>
                         <el-table-column
-                            width="100"
+                            width="140"
                             prop="state"
                             label="状态">
                         </el-table-column>
@@ -68,22 +68,24 @@
 
                         <el-table-column
                             prop="location"
+                            width="700"
                             label="位置">
                         </el-table-column>
                         <el-table-column
-                            width="140"
+                            width="200"
                             prop="regionName"
                             label="所属片区">
                         </el-table-column>
                         <el-table-column
-                            width="140"
                             label="操作">
                             <template slot-scope="scope">
-                                <span @click="showParkDetail(scope.row, '停车场信息',true)">查看</span>
-                                <span class="line">|</span>
-                                <span @click="fixedInfo(scope.row.id )">编辑</span>
-                                <span class="line">|</span>
-                                <span @click="deletInfo(scope.row.id)">删除</span>
+                                <div class="handle">
+                                    <span @click="showParkDetail(scope.row, '停车场信息',true)">查看</span>
+                                    <span class="line">|</span>
+                                    <span @click="fixedInfo(scope.row.id )">编辑</span>
+                                    <span class="line">|</span>
+                                    <span @click="deletInfo(scope.row.id)">删除</span>
+                                </div>
                             </template>
                         </el-table-column>
                     </el-table>
@@ -376,7 +378,7 @@
             },
             fixedInfo (id) {
                 if (id){
-                    //this.choseInfoId.push(id)
+                    this.choseInfoId = [id]
                 }
                 if (this.choseInfoId.length > 1) {
                     this.$message.warning('至多选择一个数据修改')
@@ -574,6 +576,12 @@
                             white-space: nowrap;
                         }
                     }
+                }
+                .handle {
+                    span{
+                        cursor: pointer;
+                    }
+
                 }
             }
         }

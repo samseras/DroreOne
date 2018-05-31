@@ -29,10 +29,17 @@
                 </div>
                 <div class="broadcastBottom" v-loading="isShowLoading">
                     <ul>
+                        <li>
+                            <div class="funcHeader">
+                                <input type="text" v-model="musicName" placeholder="请输入音频名称" @keyup="searchMusic">
+                                <el-checkbox v-model="ischecked" @change="selectAllMusic">全选</el-checkbox>
+                                <el-button size="mini"plain  @click="deleteInfo()"><i class="el-icon-delete"></i>删除</el-button>
+                            </div>
+                        </li>
                         <li v-for="(item,idx) in songList" :id="item.id" :musicSrc="item.src" :key="item.id">
-                            <el-checkbox v-model="item.checked" @change="checked(item.id)" class="checkBoxBtn"></el-checkbox>
+                            <el-checkbox small v-model="item.checked" @change="checked(item.id)" class="checkBoxBtn"></el-checkbox>
                             <p @click="selectPlayMusic(item)">{{item.title}}</p>
-                            <i class="el-icon-close" @click="deleteMuisc(item.id)"></i>
+                            <i class="el-icon-close" @click="deleteInfo(item.id)"></i>
                         </li>
                     </ul>
                 </div>
@@ -66,7 +73,7 @@
             return{
                 songList:[],//播放列表
                 songNameList:[],
-                selectNameList:[],
+                choseInfoId:[],
                 flag:false,
                 autoPlay:false,
                 playMusicList:[
@@ -82,10 +89,38 @@
                 playing:false, //是否播放
                 mode:"order",
                 num:0,
-                isShowLoading: false
+                isShowLoading: false,
+                musicName: '',
+                ischecked: false,
+                checkList : []
             }
         },
         methods: {
+            searchMusic () {
+                if (this.musicName.trim() === '') {
+                    this.songList = this.checkList
+                } else {
+                    this.songList = this.checkList.filter(item => {
+                        if (item.title.includes(this.musicName)) {
+                            return item
+                        }
+                    })
+                }
+            },
+            selectAllMusic () {
+                console.log(this.ischecked, 'opoppopopo')
+                if (this.ischecked) {
+                    this.choseInfoId = this.songList.map(item => {
+                        item.checked = true
+                        return item.id
+                    })
+                } else {
+                    this.choseInfoId = []
+                    this.songList.forEach(item => {
+                        item.checked = false
+                    })
+                }
+            },
             selectMusic (e) {
                 console.log(e.target.files[0], 'opopopopopops')
                 let file = e.target.files[0]
@@ -123,36 +158,21 @@
                     }
                     return item
                 })
-                if (this.selectNameList.includes(id)) {
-                    this.selectNameList = this.selectNameList.filter((item) =>{
+                if (this.choseInfoId.includes(id)) {
+                    this.choseInfoId = this.choseInfoId.filter((item) =>{
                         return item !== id
                     })
                 } else {
-                    this.selectNameList.push(id)
+                    this.choseInfoId.push(id)
                 }
-               console.log(this.selectNameList)
+                if (this.choseInfoId.length > 0 && this.choseInfoId.length === this.songList.length) {
+                    this.ischecked = true
+                } else {
+                    this.ischecked = false
+                }
+               console.log(this.choseInfoId, 'lskdjcasdfckasdfcahsdfhasdlfakjhsdljkfh')
 
             },
-             init () {
-                let that = this;
-                 that.songList.forEach(function(item){
-                    if(item.checked){
-                        if(that.selectNameList.indexOf(item.title) === -1 ){
-                            // console.log(that.selectNameList.indexOf(item.title))
-                            that.selectNameList.push(item.title)
-                            that.playMusicList.push(item);
-                        }
-                    }
-                })
-                 that.songList.forEach(function(item){
-                    that.songNameList.push(item.title);
-                })
-                    // //因为是异步请求，所以一开始播放器中是没有歌曲的，所有给了个v-if不然会插件默认会先生成播放器，导致报错(这个很重要)
-                    //  //this.flag = true;
-                     console.log(that.selectNameList)
-                     console.log(that.playMusicList)
-                     console.log(that.songNameList)
-                },
             selectPlayMusic(item){
                 this.num++
                 if(this.num === 1){
@@ -169,21 +189,23 @@
             closeBroadcastDialog () {
                 this.$emit('closeBroadcastDialog')
             },
-            deleteMuisc(id){
+            deleteInfo(id){
                 if (id) {
                     this.choseInfoId = [id]
                 }
+                console.log(this.choseInfoId, 'asdxasxasxa')
+                debugger
+                if (this.choseInfoId.length > 0) {
                     this.$confirm('此操作将永久删除该数据, 是否继续?', '提示', {
                         confirmButtonText: '确定',
                         cancelButtonText: '取消',
                         type: 'warning'
                     }).then(() => {
-                        api.schedulebroadcast.deletMusic([id]).then(res => {
+                        api.schedulebroadcast.deletMusic(this.choseInfoId).then(res => {
                             console.log(res, '删除成功')
                             this.$message.success('删除成功')
-                           this.songList = this.songList.filter(item => {
-                               return item.id !== id
-                           })
+                            this.choseInfoId = []
+                            this.getAllMusic()
                         }).catch(err => {
                             this.$message.error('删除失败，请稍后重试')
                             console.log(err)
@@ -192,12 +214,15 @@
                     }).catch(() => {
                         this.$message.info('取消删除')
                     })
+                } else {
+                    this.$message.error('请选择删除的音频数据')
+                }
             },
             saveBroadMusicList(){
                 let musicList
-                for (let i = 0; i < this.selectNameList.length; i++) {
+                for (let i = 0; i < this.choseInfoId.length; i++) {
                     musicList = this.songList.filter((item, index) => {
-                        if (item.id === this.selectNameList[i]){
+                        if (item.id === this.choseInfoId[i]){
                             this.songList[index].status = true
                         }
                         return item.status === true
@@ -232,6 +257,7 @@
                         }
 
                     })
+                    this.checkList = this.songList
                 }).catch(err => {
                     this.isShowLoading = false
                     console.log(err, '请求失败')
@@ -243,21 +269,11 @@
         },
         async created () {
             this.getAllMusic()
+            console.log(this.choseInfoId, 'jkasdhcdscs')
         },
         components : {
              'a-player': VueAplayer
         },
-        mounted () {
-            //异步加载，先加载出player再使用
-             this.init();
-            // this.init();
-            // console.log(this.$refs.aplayer, '这是啥')
-            // let aplayer = this.$refs.aplayer;
-            // // aplayer.play();
-            // console.log(aplayer.musicList, '这是当前的music')
-            //  this.playMusicList.push(this.currentMusic);
-            // console.log(this.playMusicList)
-        }
     }
 </script>
 
@@ -360,8 +376,10 @@
                 top: rem(80);
                 right: rem(40);
                 img{
+                    display: inline-block;
+                    width:  rem(17);
                     vertical-align: middle;
-                    margin-top: rem(-3);
+                    margin-top: rem(3);
                 }
                 .musicFile{
                     width: 0;
@@ -369,6 +387,32 @@
                     display: none;
                 }
             }
+        }
+        .funcHeader{
+            width: 100%;
+            input{
+                display: inline-block;
+                width: 70%;
+                margin-right: rem(40);
+                height: rem(28);
+                font-size: rem(12);
+                border-radius: rem(3);
+                padding: rem(3) rem(5);
+                box-sizing: border-box;
+                border: 1px solid #3a8ee6;
+            }
+            .el-button{
+                background: transparent;
+                border: none;
+                .el-icon-delete{
+                    margin-right: rem(5);
+                }
+            }
+            .el-checkbox__label{
+                padding-left: rem(3);
+                font-size: rem(13);
+            }
+
         }
     }
 </style>
@@ -433,7 +477,7 @@
                         width: 97%;
                         height: 90%;
                         box-sizing: border-box;
-                        margin: 4% auto 2%;
+                        margin: 2% auto 2%;
                         border-radius: rem(5);
                         background: #efefef;
                         overflow-y: auto;

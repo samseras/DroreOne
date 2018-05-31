@@ -102,7 +102,7 @@
                     {type: 305,route: '/controler/light'},//路灯
                     {type: 306,route: '/controler/environment'},//传感器
                     {type: 307,route: '/controler/wifi'},//wifi
-                    {type: 308,route: '/controler/warn'},//告警
+                    {type: 308,route: '/controler/broad'},//告警
                     {type: 309,route: '/controler/broad'},//gps
                     {type: 7,route: '/controler/person'},//人
                     {type: 11,route: '/controler/car'},//车船

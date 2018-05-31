@@ -12,13 +12,14 @@
             :data="Info"
             show-checkbox
             node-key="id"
-            :expand-on-click-node="true"
-            :default-expanded-keys="regionId"
             :default-checked-keys="lightCheckout"
             :filter-node-method="filterNode"
+            default-expand-all
+            :expand-on-click-node="false"
+            :check-on-click-node="true"
             ref="tree"
             @check="handleCheckChange">
-            <span class="custom-tree-node" slot-scope="{ node, Info }" @click="getChecked(node,Info)">
+            <span class="custom-tree-node" slot-scope="{ node, Info }">
                 <img class="icon" :src="node.icon"/>
                 <span>{{ node.label }}</span>
             </span>
@@ -43,18 +44,15 @@
                 return data.label.indexOf(value) !== -1;
             },
             getChecked (node,info) {
-                console.log(node.data,'123123')
+                console.log(node);
                 if (this.regionId.includes(node.data.id)) {
                     return
                 }
                 let checkedKeysId = this.$refs.tree.getCheckedKeys()
-                console.log(checkedKeysId, 'opopopopopopopopopopopop')
-                console.log(node.key, 'xsaccsdcsdcbsdcahjcbjhsdcnmbcjsg')
                 if (checkedKeysId.length < 1) {
                     checkedKeysId.push(node.key)
                 } else {
                     if (checkedKeysId.includes(node.key)) {//去掉选中点
-                        console.log(888888888888888)
                         checkedKeysId = checkedKeysId.filter(item => {
                             // return item !== node.key
                             if (item !== node.key) {
@@ -65,13 +63,20 @@
                         checkedKeysId.push(node.key)//选中点
                     }
                 }
-                console.log(checkedKeysId, '这是选择后的ID')
                this.regionId.forEach(item => {
                    checkedKeysId = checkedKeysId.filter(item1 => {
                        return item !== item1
                    })
                })
                 this.$refs.tree.setCheckedKeys(checkedKeysId)
+
+                console.log(this.Info);
+                // this.$store.commit('SHOW_TREE', this.Info)
+                if (checkedKeysId.length == this.lightList.length) {
+                    this.selectAllCheckBox = true
+                } else {
+                    this.selectAllCheckBox = false
+                }
             },
             selectAllCheck(){
                 let arr
@@ -100,7 +105,7 @@
                     arr = this.lightList
 
                 }
-                // console.log(arr, '这是最后提交的')
+                console.log(arr, '这是最后提交的')
                 this.$store.commit('SHOW_TREE', arr)
             },
             handleCheckChange(data,checked) {
@@ -117,6 +122,7 @@
                     this.selectAllCheckBox = false
                 }
                 data.checked = checked
+                console.log(data, '这是最后提交的')
                 this.$store.commit('SHOW_TREE', data)
             },
             treeALL(){

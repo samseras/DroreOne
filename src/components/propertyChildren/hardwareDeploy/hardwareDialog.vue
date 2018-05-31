@@ -96,6 +96,7 @@
                             <el-option
                                 v-for="item in regions"
                                 :value="item.id"
+                                :key="item.id"
                                 :label="item.name">
                             </el-option>
                         </el-select>
@@ -155,6 +156,7 @@
                             <el-option
                                 v-for="item in regions"
                                 :value="item.id"
+                                :key="item.id"
                                 :label="item.name">
                             </el-option>
                         </el-select>
@@ -192,7 +194,7 @@
                             </el-option>
                         </el-select>
                     </p>
-                    <p class="model" v-if="modelExtend" v-for="item in extend">
+                    <p class="model" v-if="modelExtend" v-for="item in extend" :key="item.name">
                         {{item.label}}:
                         <input type="text" v-bind:class="item.name" v-model="item.value" v-if="item.type === 'STRING'">
                         <el-select name="" v-model="item.value" v-if="item.type === 'BOOLEAN'" v-bind:class="item.name">
@@ -223,6 +225,7 @@
                             <el-option
                                 v-for="item in regions"
                                 :value="item.id"
+                                :key="item.id"
                                 :label="item.name"></el-option>
                         </el-select>
                     </p>
@@ -280,6 +283,7 @@
                             <el-option
                                 v-for="item in regions"
                                 :value="item.id"
+                                :key="item.id"
                                 :label="item.name"></el-option>
                         </el-select>
                     </p>
@@ -326,7 +330,10 @@
                     </p>
                     <p class="area wrapstyle selectstyle">所属片区:
                         <el-select name="" v-model="Light.regionId" :disabled="isDisabled">
-                            <el-option  v-for="item in regions" :value="item.id"
+                            <el-option
+                                v-for="item in regions"
+                                :value="item.id"
+                                :key="item.id"
                                 :label="item.name">
 
                             </el-option>
@@ -384,7 +391,10 @@
                     </p>
                     <p class="area wrapstyle selectstyle">所属片区:
                         <el-select name="" v-model="gate.regionId" :disabled="isDisabled">
-                            <el-option  v-for="item in regions" :value="item.id"
+                            <el-option
+                                v-for="item in regions"
+                                :value="item.id"
+                                :key="item.id"
                                 :label="item.name"></el-option>
                         </el-select>
                     </p>
@@ -439,7 +449,10 @@
                     </p>
                     <p class="area wrapstyle selectstyle">所属片区:
                         <el-select name="" v-model="police.regionId" :disabled="isDisabled">
-                            <el-option  v-for="item in regions" :value="item.id"
+                            <el-option
+                                v-for="item in regions"
+                                :value="item.id"
+                                :key="item.id"
                                 :label="item.name"></el-option>
                         </el-select>
                     </p>

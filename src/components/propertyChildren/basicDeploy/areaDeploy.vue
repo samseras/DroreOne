@@ -37,6 +37,9 @@
                             prop="name"
                             label="片区名称"
                             width="120">
+                             <template slot-scope="scope">
+                                 <span class="overflow">{{scope.row.name}}</span>
+                             </template>
                         </el-table-column>
 
                         <!--<el-table-column
@@ -71,11 +74,13 @@
                         <el-table-column
                             label="操作">
                             <template slot-scope="scope">
-                                <span @click="showPersonDetail(scope.row,'片区信息', true)">查看</span>
-                                <span class="line">|</span>
-                                <span @click="fixedInfo(scope.row.id )">编辑</span>
-                                <span class="line">|</span>
-                                <span @click="deletInfo(scope.row.id)">删除</span>
+                                <div class="handle">
+                                    <span @click="showPersonDetail(scope.row,'片区信息', true)">查看</span>
+                                    <span class="line">|</span>
+                                    <span @click="fixedInfo(scope.row.id )">编辑</span>
+                                    <span class="line">|</span>
+                                    <span @click="deletInfo(scope.row.id)">删除</span>
+                                </div>
                             </template>
                         </el-table-column>
                     </el-table>
@@ -93,7 +98,7 @@
                         </div>
                         <div class="specificInfo">
                             <p class="name" v-if="false">所在景区：<span>{{item.placeScenic}}</span></p>
-                            <p class="sex text describe">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：<span>{{item.description}}</span></p>
+                            <p class="sex text">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：<span>{{item.description}}</span></p>
                         </div>
                     </div>
                 </ScrollContainer>
@@ -339,8 +344,7 @@
             },
             fixedInfo (id) {
                 if (id) {
-
-                    //this.choseInfoId.push(id)   //列表页修改
+                    this.choseInfoId = [id]
                 }
                 if (this.choseInfoId.length > 1) {
                     this.$message.warning('至多选择一个数据修改')
@@ -413,7 +417,10 @@
 </script>
 <style>
     .areaDeploy .box .el-button{
-        border:1px solid transparent
+        border:1px solid transparent;
+        background: transparent;
+        text-align: left;
+        padding: 0;
     }
     .areaDeploy .box .el-button span{
         display:inline-block;
@@ -468,6 +475,7 @@
                     margin-right: rem(5.5);
                     margin-bottom: rem(5);
                     border-radius: rem(5);
+                    overflow: hidden;
                     .checkBox{
                         width: 100%;
                         height: rem(20);
@@ -537,15 +545,22 @@
                             -webkit-box-orient:vertical;
                             -webkit-line-clamp:4;
                         }
-                        .describe{
-                            overflow: hidden;
-                            text-overflow: ellipsis;
-                            white-space: nowrap;
-                            display:inline-block;
-                        }
+
                     }
                 }
+                .handle {
+                    span{
+                        cursor: pointer;
+                    }
+
+                }
             }
+        }
+        .overflow {
+            display: inline-block;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            display:inline-block;
         }
     }
 
