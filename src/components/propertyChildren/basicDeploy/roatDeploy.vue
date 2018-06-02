@@ -36,14 +36,14 @@
                         <el-table-column
                             prop="name"
                             label="路线名称"
-                            width="120">
+                            width="200">
                             <template slot-scope="scope">
                                 <span class="overflow">{{scope.row.name}}</span>
                             </template>
                         </el-table-column>
                         <el-table-column
                             label="路线类型"
-                            width="120">
+                            width="200">
                             <template slot-scope="scope">
                                 <span>{{scope.row.routeType}}</span>
                             </template>
@@ -61,6 +61,7 @@
                             </template>
                         </el-table-column>
                         <el-table-column
+                            width="150"
                             label="操作">
                             <template slot-scope="scope">
                                 <div class="handle">

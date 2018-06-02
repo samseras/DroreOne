@@ -8,7 +8,7 @@
                         <div :style="{color:fontColor,lineHeight:headLineH+'px'}">卓锐科技股份有限公司</div>
                     </el-col>
                     <el-col :xs="9" :sm="7" :md="6" :lg="9" :xl="9">
-                        <div class="screenTile">
+                        <div class="screenTile" @click="requestFullScreen" ref="screenTile">
                             <img :src="headImg" alt="" v-if="isShowHead">
                             <p :style="{color:fontColor,lineHeight:headLineH+'px'}">都江堰景区智慧旅游数据</p>
                         </div>
@@ -18,7 +18,7 @@
                         <div :style="{color:fontColor,lineHeight:headLineH+'px'}">{{currTime | dayFiler}}({{currTime | weekFiler}})  {{currTime | timeFiler}}</div>
                     </el-col>
                     <el-col :xs="4" :sm="7" :md="6" :lg="4" :xl="4" :style="{marginTop: homeMarginT+'px'}">
-                            <p class="getBack" onclick='javascript:history.back(-1)'><img :src="homeImg" alt=""></p>
+                            <p class="getBack" onclick='javascript:history.back(-1)'><img :src="homeImg" alt="" ></p>
                             <div class="skinPeeler " >
                                 <el-menu  class="el-menu-demo" mode="horizontal" router>
                                     <el-submenu index="">
@@ -176,17 +176,28 @@
                          echartColor: {
                              legentColor:"#fff",
                              contentColor:[
-                                 ["#d3a254","#b065d7"],
-                                 ["#559782","#326ba0"],
-                                 ["#2984d1", "#0a67c0","#0f99c6","#3dbcd1","#07aed4"],
-                                 ["#428bca", "#bc895f","#6060d7","#71c6a3"],
-                                 ["#56bbc4", "#b065d7","#1a85c5","#bc895f"],
-                                 ["#30a6fb", "#047ae3", "#0abdea", "#4beefd", "#02daff", "#2a517d", "#11447c"],
-                                 ["#189ddd", "#fbf396", "#ffccf8", "#2984d1"],
-                                 ["#fbf396", "#189ddd"],
-                                 ["#4bf9ff", "#ffccf8"],
-                                 ["#189ddd", "#fbf396", "#ffccf8", "#2984d1"],
-                                 ["#fbf396", "#189ddd"]
+                                 ["#326a9f","#71c6a3","#bc895f","#6060d7","#06c8d2","#b065d7","#afbc92","#d3a254","#56bbc4","#f3565d"],
+                                 ["#f3565d","#b065d7","#afbc92","#06c8d2","#d3a254","#56bbc4","#326a9f","#71c6a3","#6060d7","#bc895f"],
+                                 ["#56bbc4","#06c8d2","#d3a254","#b065d7","#f3565d","#f3565d","#71c6a3","#bc895f","#71c6a3","#326a9f"],
+                                 ["#d3a254","#6060d7","#56bbc4","#afbc92","#56bbc4","#06c8d2","#bc895f","#326a9f","#bc895f","#6060d7"],
+                                 ["#afbc92","#bc895f","#f3565d","#d3a254","#b065d7","#d3a254","#6060d7","#06c8d2","#d3a254","#06c8d2"],
+                                 ["#b065d7","#326a9f","#06c8d2","#f3565d","#71c6a3","#afbc92","#06c8d2","#6060d7","#f3565d","#afbc92"],
+                                 ["#06c8d2","#afbc92","#6060d7","#71c6a3","#bc895f","#326a9f","#b065d7","#f3565d","#bc895f","#56bbc4"],
+                                 ["#6060d7","#d3a254","#71c6a3","#bc895f","#326a9f","#6060d7","#56bbc4","#afbc92","#06c8d2","#bc895f"],
+                                 ["#bc895f","#56bbc4","#326a9f","#326a9f","#06c8d2","#afbc92","#d3a254","#d3a254","#71c6a3","#06c8d2"],
+                                 ["#71c6a3","#f3565d","#b065d7","#56bbc4","#afbc92","#71c6a3","#f3565d","#56bbc4","#326a9f","#f3565d"],
+
+                                 // ["#d3a254","#b065d7"],
+                                 // ["#559782","#326ba0"],
+                                 // ["#2984d1", "#0a67c0","#0f99c6","#3dbcd1","#07aed4"],
+                                 // ["#428bca", "#bc895f","#6060d7","#71c6a3"],
+                                 // ["#56bbc4", "#b065d7","#1a85c5","#bc895f"],
+                                 // ["#30a6fb", "#047ae3", "#0abdea", "#4beefd", "#02daff", "#2a517d", "#11447c"],
+                                 // ["#189ddd", "#fbf396", "#ffccf8", "#2984d1"],
+                                 // ["#fbf396", "#189ddd"],
+                                 // ["#4bf9ff", "#ffccf8"],
+                                 // ["#189ddd", "#fbf396", "#ffccf8", "#2984d1"],
+                                 // ["#fbf396", "#189ddd"]
                              ]
                         }
                      },
@@ -245,7 +256,6 @@
             },
             async initScreen(){
                 let id = this.$route.params.id;
-                this.requestFullScreen();
                 await api.analyze.getDashboradList().then(res=>{
                     console.log(res.result,"dashboardList")
                     for(let i=0;i<res.result.length;i++){
@@ -1056,7 +1066,13 @@
                     console.log(err)
                 })
             },
+            checkFull(){
+                var isFull =  document.fullscreenEnabled || window.fullScreen || document.webkitIsFullScreen || document.msFullscreenEnabled;
+                if(isFull === undefined) isFull = false;
+                return isFull;
+            },
             requestFullScreen() {
+                console.log('这个方法执行了没有')
                 let docElm = document.documentElement;
                 if (docElm.requestFullscreen) {
                     docElm.requestFullscreen();
@@ -1101,15 +1117,18 @@
 
         },
          created () {
-             // this.requestFullScreen();
-             this.getContent();
+
+
              // console.log(this.$route,"OOOOOOOOOOOO")
              // console.log(this.$route.params.n,"PPPPPP")
              // console.log(this.$route.params.id,"@@@@@@@@@@@")
         },
         mounted () {
-
+            console.log('mounted执行')
+            this.getContent();
             this.getDom();
+            // setTimeout(this.requestFullScreen,100)
+            // this.$refs.screenTile.click()
         }
     }
 </script>

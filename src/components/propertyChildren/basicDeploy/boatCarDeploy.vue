@@ -78,6 +78,7 @@
                             label="维护时间">
                         </el-table-column>
                         <el-table-column
+                            width="150"
                             label="操作">
                             <template slot-scope="scope">
                                 <span class="formBtn" @click="showPersonDetail(scope.row, '车船信息',true)">查看</span>
