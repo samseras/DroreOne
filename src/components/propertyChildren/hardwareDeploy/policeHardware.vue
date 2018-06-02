@@ -478,10 +478,9 @@
             margin-top:rem(5);
         }
         .cameraList .el-button{
-            border:1px solid transparent;
             text-align: left;
             background: transparent;
-            padding: 0;
+
         }
         .cameraList .box .el-button span{
             display:inline-block;
