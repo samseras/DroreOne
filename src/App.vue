@@ -15,7 +15,6 @@ export default {
   },
     methods: {
       getTitle() {
-          console.log(this.$route,'klklklklklklklkl')
           let route = this.$route.matched[0].path || ''
           if (route) {
               if (route.includes('eye')) {

@@ -15,12 +15,12 @@
                                 <el-menu  class="el-menu-demo" mode="horizontal" router>
                                     <el-submenu index="">
                                         <template slot="title">
-                                            <span class="Admin">Admin</span>
+                                            <span class="Admin">{{getUserInfo}}</span>
                                             <img src="./../../static/img/peopleInfo.svg" alt="">
                                         </template>
                                         <el-menu-item index="">个人中心</el-menu-item>
                                         <el-menu-item index="/droreone">返回主页</el-menu-item>
-                                        <el-menu-item index="/login">退出</el-menu-item>
+                                        <el-menu-item @click="logout" index="">退出</el-menu-item>
                                     </el-submenu>
                                 </el-menu>
                             </div>
@@ -59,7 +59,7 @@
   import passengerFlow from "./analysisSystem/analyze/passengerFlow.vue"
   import api from "@/api"
   import errList from "./pages/err.vue"
-  import { mapMutations } from 'vuex'
+  import { mapMutations,mapGetters,mapActions } from 'vuex'
   export default {
   	data(){
   		return{
@@ -90,6 +90,7 @@
   	},
     methods:{
         ...mapMutations(['REFRESH_DATA_TYPE']),
+        ...mapActions(['logout']),
         hideLists(data){
                this.hideList = !data.list;
                this.isshowHead = !data.head;
@@ -148,6 +149,13 @@
                this.echatListErr.pullData = false;
                 console.log(err)
            })
+        },
+        logout() {
+            let data = JSON.parse(localStorage.getItem('token'))
+            this.$store.dispatch('logout',data).then(() => {
+                this.$message.success('登出成功')
+                location.reload()
+            })
         }
       },
       watch: {
@@ -155,8 +163,8 @@
   	        clearInterval(window.SETTIMER)
         }
       },
-    mounted(){
-
+      computed: {
+          ...mapGetters(['getUserInfo'])
       }
     }
 
