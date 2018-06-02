@@ -3,7 +3,6 @@
 * */
 
 import axios from '@/http'
-import {getUrl} from "./path";
 
 const login={
     userLogin(params){
@@ -12,8 +11,16 @@ const login={
             method:'GET',
             url:'/security/login',
             headers:{
-                "Authorization":"BASIC " + params
+                "Authorization":"BASIC " + params,
+                "x-ajax":true,
+                "Cache-Control":"no-cache"
             }
+        })
+    },
+    userLogout () {
+        return axios( {
+            methods: 'GET',
+            url: '/security/logout',
         })
     }
 }

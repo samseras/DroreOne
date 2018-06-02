@@ -74,20 +74,20 @@
 				if($('#checkCode').val() !== "") {
                     // opts.headers["Authorization"] = encodeURIComponent("BASIC " + this.utils.base64Encode(opts.user + ":" + opts.password));
                     let obj = `${Base64.encode(this.username +  ":"+ this.password)}`
+
                     // var obj = {
                     //     username: this.username,
                     //     password: this.password
                     // };
                     console.log(obj)
                     await api.login.userLogin(obj).then(res => {
-                        console.log(res, "@@@@@@@@@")
+                        localStorage.setItem('token', JSON.stringify(`Basic ${obj}`))
                         if(res != []){
-                             location.href = "/droreone";
+                             this.$router.push('droreone')
                         }
                     }).catch(err => {
                         console.log(err, '登录失败')
                         this.$message.info('登录失败')
-
                     })
                 }else{
                     this.$message.info('验证码不能为空')
