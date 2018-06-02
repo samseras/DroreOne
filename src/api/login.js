@@ -11,7 +11,9 @@ const login={
             method:'GET',
             url:'/security/login',
             headers:{
-                "Authorization":"BASIC " + params
+                "Authorization":"BASIC " + params,
+                "x-ajax":true,
+                "Cache-Control":"no-cache"
             }
         })
     },
