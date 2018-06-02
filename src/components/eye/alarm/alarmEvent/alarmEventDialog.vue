@@ -483,9 +483,10 @@
             this.init();
             console.log(this.Info);
             this.eventInfo = this.Info;
-            if(this.eventInfo.ownerId){
-                this.getNameById(this.eventInfo.ownerId);
-            }
+            // if(this.eventInfo.ownerId){
+            //     this.getNameById(this.eventInfo.ownerId);
+            // }
+
         },
         components : {
             AlarmDetail,
