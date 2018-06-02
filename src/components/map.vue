@@ -2690,6 +2690,7 @@
         width:rem(120);
         height: rem(76);
         position: relative;
+        display: none;
         i{
             cursor: pointer;
             display: inline-block;
