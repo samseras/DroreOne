@@ -39,6 +39,15 @@ const job = {
         },
     },
     actions: {
+        async getJobType ({commit}) {
+            try {
+                let res = await api.person.getJob()
+                commit(types.JOB_TYPE, res)
+                return res
+            } catch (err) {
+                console.log('errrrrrrrrrrrrrrrrrrrrrrrrrr', err)
+            }
+        },
     }
 }
 

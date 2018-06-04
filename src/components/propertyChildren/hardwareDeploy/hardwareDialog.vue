@@ -1542,6 +1542,7 @@
                 }
                 .ms{
                     border-bottom:1px solid transparent;
+                    padding-top: rem(5);
                     .des{
                         float:left;
                         display:inline-block;
