@@ -1464,6 +1464,12 @@
             width: rem(160);
             padding-left: rem(5);
         }
+        .el-table__header-wrapper .has-gutter {
+            background-color: #f3f3f3;
+        }
+        .el-table th, .el-table tr{
+            background-color: transparent !important;
+        }
     }
 </style>
 
@@ -1594,15 +1600,14 @@
     }
 
 </style>
-<style>
-
+<style lang="scss" type="text/scss">
     .hardwareDialog .el-input.is-disabled .el-input__inner,.el-textarea.is-disabled .el-textarea__inner{
             background-color:transparent;
             color:#c0c4cc;
         }
     .hardwareDialog .ms .el-textarea__inner{
-            font-size:.75rem;
-            font-family: Arial;
+            font-size: rem(12);
+            font-family: '微软雅黑';
     }
     .hardwareDialog .popCard .selectstyle .el-input,.hardwareDialog .popCard .selectstyle .el-input__suffix{
         right:-5px;
