@@ -107,6 +107,7 @@
                 this.getAllBroadcast();//广播现有标注
                 this.getAllCamera();//摄像头现有标注
                 this.overView();//鹰眼
+                this.rangeSearch();// 范围查找
             } else if (route.includes('area-deploy')) {
                 if(!this.getLocationId){
                     this.getAllArea();// 片区输出
@@ -1937,6 +1938,24 @@
                         this.treeShowID(this.getfacilityIndicator[i]);
                     }
                 }
+            },
+            rangeSearch(){
+                droreMap.event.addMouseEvent(Event.DOUBLECLICK_EVENT, "single", function(evt){
+                    // this.requestGisMain(); //加载地图
+                    // this.interaction();
+                    console.log(evt.coordinate,droreMap.trans.transLayerToWgs(evt.coordinate))
+                    var Circle = new droreMap.geom.Circle()
+                    var data = {
+                        "id": '14654564',
+                        "name":'3123123',
+                        "color": "#00bcff",
+                        "width": "1",
+                        "bgColor":"rgba(0,188,255,0.3)",
+                        "coordinate":evt.coordinate,
+                        "radius":100,
+                    }
+                    Circle.addCircle(data);
+                })
             }
         },
         components: {
@@ -2669,6 +2688,7 @@
             line-height: rem(16);
             .el-switch__core{
                 height: rem(16);
+                outline: none
             }
             .el-switch__core:after{
                 width: rem(12);
