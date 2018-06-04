@@ -65,9 +65,9 @@
             }
         },
         methods: {
-            // ...mapActions([
-            //     'getJobType'
-            // ]),
+            ...mapActions([
+                'getJobType'
+            ]),
             imgUrl (id) {
                 switch (id) {
                     case '1': {
@@ -104,7 +104,7 @@
             }
         },
         async created () {
-            // this.getJobType()
+            this.getJobType()
         },
         components: {
             ScrollContainer

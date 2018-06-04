@@ -35,7 +35,8 @@
                     <p class="port">端&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;口：
                         <el-input type="text" v-model="camera.port" :disabled="isDisabled"></el-input>
                     </p>
-                    <p class="place ps wrapstyle selectstyle" >位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置：
+                    <p class="place ps wrapstyle selectstyle" >
+                        <s>位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置：</s>
                         <span>{{camera.location}}</span>
                         <i class="el-icon-location-outline" @click="showMapDialog"></i>
                     </p>
@@ -87,7 +88,8 @@
                     <p class="host">端&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;口:
                         <el-input type="text" v-model="broadCast.port" :disabled="isDisabled"></el-input>
                     </p>
-                    <p class="place ps">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置:
+                    <p class="place ps">
+                        <s>位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置:</s>
                         <span>{{broadCast.location}}</span>
                         <i class="el-icon-location-outline" @click="showMapDialog"></i>
                     </p>
@@ -147,7 +149,7 @@
                     <p class="mac">M&nbsp;&nbsp;&nbsp;a&nbsp;&nbsp;&nbsp;&nbsp;c:
                         <el-input type="text" v-model="led.mac" :disabled="isDisabled"></el-input>
                     </p>
-                    <p class="place ps">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置:<span>{{led.location}}</span>
+                    <p class="place ps"><s>位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置:</s><span>{{led.location}}</span>
                         <i class="el-icon-location-outline" @click="showMapDialog"></i>
                     </p>
                     <p class="area wrapstyle selectstyle">所属片区:
@@ -215,7 +217,8 @@
                     <p class="host">设备编号:
                         <el-input type="text" v-model="wifi.serialNum" :disabled="isDisabled"></el-input>
                     </p>
-                    <p class="place ps">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置:
+                    <p class="place ps">
+                        <s>位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置:</s>
                         <span>{{wifi.location}}</span>
                         <i class="el-icon-location-outline" @click="showMapDialog"></i>
                     </p>
@@ -273,7 +276,8 @@
                     <p class="host">设备端口:
                         <el-input type="text" v-model="monitors.port" :disabled="isDisabled"></el-input>
                     </p>
-                    <p class="place ps">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置:
+                    <p class="place ps">
+                        <s>位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置:</s>
                         <span>{{monitors.location}}</span>
                         <i class="el-icon-location-outline" @click="showMapDialog"></i>
                     </p>
@@ -325,7 +329,7 @@
                             </el-option>
                         </el-select>
                     </p >
-                    <p class="place ps">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置:<span>{{Light.location}}</span>
+                    <p class="place ps"><s>位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置:</s><span>{{Light.location}}</span>
                         <i class="el-icon-location-outline" @click="showMapDialog"></i>
                     </p>
                     <p class="area wrapstyle selectstyle">所属片区:
@@ -385,7 +389,8 @@
                     <p class="name">端&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;口:
                         <el-input type="text" v-model="gate.port" :disabled="isDisabled"></el-input>
                     </p>
-                    <p class="place ps">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置:
+                    <p class="place ps">
+                        <s>位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置:</s>
                         <span>{{gate.location}}</span>
                         <i class="el-icon-location-outline" @click="showMapDialog"></i>
                     </p>
@@ -443,7 +448,8 @@
                         <el-input type="text" v-model="police.ip" :disabled="isDisabled"></el-input>
                     </p>-->
 
-                    <p class="place ps">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置:
+                    <p class="place ps">
+                        <s>位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置:</s>
                         <span>{{police.location}}</span>
                         <i class="el-icon-location-outline" @click="showMapDialog"></i>
                     </p>
@@ -1536,6 +1542,21 @@
                         outline: none;
                         padding: rem(3);
                         box-sizing: border-box;
+                    }
+                }
+                .place{
+                    height: rem(30);
+                    s{
+                        float: left;
+                        line-height: rem(26);
+                        text-decoration: none;
+                    }
+                    span{
+                        line-height: rem(26);
+                        margin-left: rem(16);
+                    }
+                    i{
+                        margin-top: rem(3);
                     }
                 }
                 .ps{
