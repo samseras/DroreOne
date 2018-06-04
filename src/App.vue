@@ -16,7 +16,7 @@ export default {
     methods: {
       getTitle() {
           let route = this.$route.matched[0].path
-          console.log(route, this.$route,'klklklklklklklkl')
+          // console.log(route, this.$route,'klklklklklklklkl')
           if (route) {
               if (route.includes('eye')) {
                   window.document.getElementsByTagName('title')[0].innerHTML = '全视之眼'

@@ -20,7 +20,7 @@ axios.interceptors.request.use(
 axios.interceptors.response.use(
     response => {
         if ((response.status === 200 && response.request.status === 200) || (response.status === 201 && response.request.status === 201)) {//成功判断
-              console.log(response, 'opoppopopopop')
+              // console.log(response, 'opoppopopopop')
             // if (response.data) {
                 return response.data
             // } else {

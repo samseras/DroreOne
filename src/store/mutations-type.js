@@ -3,6 +3,8 @@ export const BUSINESS_TYPE = 'BUSINESS_TYPE'
 
 //分析
 export const REFRESH_DATA_TYPE = 'REFRESH_DATA_TYPE'
+export const COMPANY_DATA_NAME = 'COMPANY_DATA_NAME'
+
 
 //地图
  export const MAP_LOCATION = 'MAP_LOCATION'
