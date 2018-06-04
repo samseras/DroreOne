@@ -398,7 +398,7 @@
                 border:none;
                 outline:medium;
                 border-bottom:1px solid #ccc;
-                font-size:rem(13);
+                font-size:rem(12);
                 padding:rem(3) rem(4);
             }
             i{
