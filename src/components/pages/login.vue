@@ -11,7 +11,6 @@
  	    		<aside class="login-left">
  	    			 <img src="../../../static/img/20180125143202.png"/>
  	    		</aside>
-
  	    		<aside class="login-right">
  	    			<p>登录Cloud账号</p>
  	    			<form>

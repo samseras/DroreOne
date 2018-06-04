@@ -494,7 +494,7 @@
             </div>
             <div slot="footer" class="dialog-footer cardFooter">
                 <el-button size="mini" @click="addNewInfo" :disabled="isDisabled">保存</el-button>
-                <el-button size="mini" type="primary" @click="closeDialog" :disabled="isDisabled">取消</el-button>
+                <el-button size="mini" @click="closeDialog" :disabled="isDisabled">取消</el-button>
             </div>
         </el-dialog>
         <MapDialog v-if="mapVisible" :visible="mapVisible" class="map" @closeMapDialog="closeMapDialog"@saveLocation = "saveLocation"></MapDialog>
@@ -1627,9 +1627,9 @@
     .hardwareDialog .popCard .equipmentStyle .el-select,.hardwareDialog .popCard .equipmentStyle .el-select .el-input{
         width:12rem;
     }
-    .hardwareDialog .cardFooter .el-button{
-        color:#c0c4cc;
-        border:1px solid #dcdfe6;
-    }
+    /*.hardwareDialog .cardFooter .el-button{*/
+        /*color:#c0c4cc;*/
+        /*border:1px solid #dcdfe6;*/
+    /*}*/
 </style>
 

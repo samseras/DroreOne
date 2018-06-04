@@ -197,7 +197,7 @@
             },
             addNewInfo(){
                 this.showBroadDetail({},'添加广播信息',false)
-                this.isDisabled=false
+                this.isDisabled= false
             },
             showBroadDetail(info,title, state){
                 this.broadInfo=info
@@ -299,6 +299,7 @@
 
             },
             async addBroad (info){
+
                 let index = info.location.includes(',')?info.location.indexOf(','):info.location.indexOf('，')
                 let longitude = info.location.substring(0, index)
                 let latitude = info.location.substring(index + 1)
@@ -492,6 +493,7 @@
             background: transparent;
             border: none;
             padding: 0;
+            /*background: transparent;*/
         }
         .cameraList .box .el-button span{
             display:inline-block;
