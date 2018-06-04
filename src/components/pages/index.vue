@@ -35,8 +35,8 @@
                             <li class="one">
                                 <div class="change estate"><a href="/MicServiceManagementSystem">物业管理>><img src="../../../static/img/estate.png"/></a></div>
                                 <div class="list">
-                                    <div  class="listO change"><a href="">第三方应用>><img src="../../../static/img/threeSoft.png"/></a></div>
-                                    <div  class="listT change"><a href="">系统配置>><img src="../../../static/img/settion.png"/></a></div>
+                                    <div  class="listO change"><a>第三方应用>><img src="../../../static/img/threeSoft.png"/></a></div>
+                                    <div  class="listT change"><a>系统配置>><img src="../../../static/img/settion.png"/></a></div>
                                 </div>
                             </li>
                             <li class="two">
@@ -62,10 +62,10 @@
                                 </div>
                                 </router-link>
                             </li>
-                            <li class="change"><a href="/login">官网门户>><img src="../../../static/img/home.png"/></a></li>
-                            <li class="change"><a href="/login">电子票务>><img src="../../../static/img/elecTicket.png"/></a></li>
-                            <li class="change"><a href="/login">电子商圈>><img src="../../../static/img/elecBusiness.png"/></a></li>
-                            <li class="change"><a href="/login">微信公众号>><img src="../../../static/img/weixin.png"/></a></li>
+                            <li class="change"><a>官网门户>><img src="../../../static/img/home.png"/></a></li>
+                            <li class="change"><a>电子票务>><img src="../../../static/img/elecTicket.png"/></a></li>
+                            <li class="change"><a>电子商圈>><img src="../../../static/img/elecBusiness.png"/></a></li>
+                            <li class="change"><a>微信公众号>><img src="../../../static/img/weixin.png"/></a></li>
                         </ul>
                     </div>
                 </el-carousel-item>

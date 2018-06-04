@@ -43,7 +43,7 @@
                         </el-table-column>
                         <el-table-column>
                             <template slot-scope="scope">
-                                <span @click="showPersonDetail(scope.row, '摄像头信息')">编辑</span>
+                                <span @click="showPersonDetail(scope.row, '摄像头信息')">修改</span>
                             </template>
                         </el-table-column>
                     </el-table>

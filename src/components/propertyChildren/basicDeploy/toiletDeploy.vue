@@ -65,7 +65,7 @@
                                 <div class="handle">
                                     <span @click="showPersonDetail(scope.row, '卫生间信息',true)">查看</span>
                                     <span class="line">|</span>
-                                    <span @click="fixedInfo(scope.row.id )">编辑</span>
+                                    <span @click="fixedInfo(scope.row.id )">修改</span>
                                     <span class="line">|</span>
                                     <span @click="deletInfo(scope.row.id)">删除</span>
                                 </div>
