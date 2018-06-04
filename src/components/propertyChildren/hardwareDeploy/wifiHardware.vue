@@ -489,7 +489,7 @@
         }
         .cameraList .el-button{
             text-align: left;
-            background: transparent;
+            /*background: transparent;*/
         }
         .cameraList .box .el-button span{
             display:inline-block;
