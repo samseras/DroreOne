@@ -13,9 +13,9 @@ export default {
   	return {
   	}
   },
-    watch: {
-      '$route'() {
-          let route = this.$route.redirectedFrom
+    methods: {
+      getTitle() {
+          let route = this.$route.matched[0].path || ''
           if (route) {
               if (route.includes('eye')) {
                   window.document.getElementsByTagName('title')[0].innerHTML = '全视之眼'
@@ -31,6 +31,14 @@ export default {
           } else {
               window.document.getElementsByTagName('title')[0].innerHTML = 'drore'
           }
+      }
+    },
+    created () {
+        this.getTitle()
+    },
+    watch: {
+      '$route'() {
+          this.getTitle()
       }
     }
 }

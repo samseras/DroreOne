@@ -12,8 +12,10 @@
                         @selectedAll = 'selectedAll'
                         @fixedInfo = 'fixedInfo'
                         :choseId="choseInfoId"
-                        :listsLength="trashList.length"
+                        :listsLength="listLength"
                         :personListFlag="selectFlag"
+                        @nextPage="nextPage"
+                        @previousPage="previousPage"
                         @searchAnything="searchAnything"
                         @getAllTrash="getAllTrash">
 
@@ -38,7 +40,7 @@
                         <el-table-column
                             prop="dustbinBean.name"
                             label="垃圾桶名称"
-                            width="120">
+                            width="200">
                         </el-table-column>
                         <el-table-column
                             width="150"
@@ -57,18 +59,21 @@
                             label="位置">
                         </el-table-column>
                         <el-table-column
-                            width="150"
+                            width="200"
                             prop="regionName"
                             label="所属片区">
                         </el-table-column>
                         <el-table-column
+                            width="150"
                             label="操作">
                             <template slot-scope="scope">
-                                <span @click="showTrashDetail(scope.row, '垃圾桶信息',true)">查看</span>
-                                <span class="line">|</span>
-                                <span @click="fixedInfo(scope.row.id )">编辑</span>
-                                <span class="line">|</span>
-                                <span @click="deletInfo(scope.row.id)">删除</span>
+                                <div class="handle">
+                                    <span @click="showTrashDetail(scope.row, '垃圾桶信息',true)">查看</span>
+                                    <span class="line">|</span>
+                                    <span @click="fixedInfo(scope.row.id )">编辑</span>
+                                    <span class="line">|</span>
+                                    <span @click="deletInfo(scope.row.id)">删除</span>
+                                </div>
                             </template>
                         </el-table-column>
                     </el-table>
@@ -80,11 +85,12 @@
                             <!--<img src="../../../../static/img/wasteCard.png" alt="">-->
                             <img :src="getUrl(item.picturePath)" alt="" @error="imgError">
                             <span class="type">
-                                  {{item.dustbinBean.type | typeFilter}}垃圾桶
+                                {{item.dustbinBean.name}}
                                 </span>
                         </div>
                         <div class="specificInfo">
-                            <p class="name">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称：<span>{{item.dustbinBean.name}}</span></p>
+                            <!--<p class="name">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称：<span>{{item.dustbinBean.name}}</span></p>-->
+                            <p class="sex">状&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;态：<span>{{item.dustbinBean.type | typeFilter}}垃圾桶</span></p>
                             <p class="name">所属区域：<span>{{item.regionName}}</span></p>
                             <p class="sex" v-if="false">状&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;态：<span>{{item.dustbinBean.status}}</span></p>
                             <p class="phoneNum">垃圾筒数：<span>{{item.dustbinBean.dustbinCount}}</span></p>
@@ -128,7 +134,10 @@
                 isDisabled: true,
                 title: '',
                 choseId:[],
-                isShowLoading: false
+                isShowLoading: false,
+                currentNum: 50,
+                listLength: '',
+                pageNum: 1
             }
         },
         methods : {
@@ -176,7 +185,7 @@
             },
             deletInfo (id) {
                 if (id) {
-                    //this.choseInfoId.push(id)
+                    this.choseInfoId = [id]
                 }
                 if (this.choseInfoId.length > 0) {
                     this.$confirm('此操作将永久删除该数据, 是否继续?', '提示', {
@@ -247,12 +256,12 @@
             choseType (type) {
                 console.log(type)
                 if (type.length === 0){
-                    this.trashList = this.trashList.filter((item) => {
+                    this.trashList = this.checkList.filter((item) => {
                         item.status = true
                         return item
                     })
                 } else {
-                    this.trashList = this.trashList.filter((item,index) => {
+                    this.trashList = this.checkList.filter((item,index) => {
                         if (item.dustbinBean.type){
                             item.dustbinBean.typeName = '临时'
                         } else {
@@ -264,7 +273,7 @@
                             item.status = false
                             console.log(item.type, 'p[p[p[');
                         }
-                        return item
+                        return item.status === true
                     })
                 }
             },
@@ -358,7 +367,7 @@
             },
             fixedInfo (id) {
                 if (id) {
-                    //this.choseInfoId.push(id)
+                    this.choseInfoId = [id]
                 }
                 if (this.choseInfoId.length > 1) {
                     this.$message.warning('至多选择一个数据修改')
@@ -376,13 +385,31 @@
                     this.$message.error('请选择一条数据')
                 }
             },
+            previousPage (page) {
+                console.log(page, '这是传过来的pageNum')
+                this.pageNum = page
+                this.getAllTrash ()
+            },
+            nextPage (page) {
+                console.log(page, '这个是下一页的pageNUM')
+                this.pageNum = page
+                this.getAllTrash ()
+            },
+
             async getAllTrash () {
                 console.log('垃圾桶')
                 this.isShowLoading = true
                 await api.dustbin.getAllDustbin().then(res => {
                     console.log(res, '这是请求回来的数据')
+                    this.listLength = res.length
                     this.isShowLoading = false
                     this.trashList = res
+                    this.trashList = this.trashList.filter((item,index) =>{
+                        if(index < (this.pageNum*35)&& index>(this.pageNum-1)*35 -1){
+                            return item
+                        }
+                    })
+
                     for (let i = 0; i < this.trashList.length; i++) {
                         this.trashList[i].location = `${this.trashList[i].longitude},${this.trashList[i].latitude}`
                         this.trashList[i].checked = false
@@ -522,6 +549,11 @@
                             text-overflow: ellipsis;
                             white-space: nowrap;
                         }
+                    }
+                }
+                .handle{
+                    span{
+                        cursor: pointer;
                     }
                 }
             }

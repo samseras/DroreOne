@@ -10,8 +10,10 @@
                         @toggleList = "toggleList"
                         @choseType = 'choseType'
                         :choseId="choseInfoId"
-                        :listsLength="shopList.length"
+                        :listsLength="listLength"
                         :personListFlag="selectFlag"
+                        @nextPage="nextPage"
+                        @previousPage="previousPage"
                         @selectedAll = 'selectedAll'
                         @fixedInfo = 'fixedInfo'
                         @searchAnything="searchAnything"
@@ -66,19 +68,24 @@
                             label="位置">
                         </el-table-column>
                         <el-table-column
-                            width="150"
+                            width="200"
                             prop="regionName"
                             label="所属片区">
+                            <template slot-scope="scope">
+                                <span class="overflow">{{scope.row.regionName}}</span>
+                            </template>
                         </el-table-column>
                         <el-table-column
                             width="150"
                             label="操作">
                             <template slot-scope="scope">
-                                <span @click="showPersonDetail(scope.row, '商圈信息',true )">查看</span>
-                                <span class="line">|</span>
-                                <span @click="fixedInfo(scope.row.id )">编辑</span>
-                                <span class="line">|</span>
-                                <span @click="deletInfo(scope.row.id)">删除</span>
+                                <div class="handle">
+                                    <span @click="showPersonDetail(scope.row, '商圈信息',true )">查看</span>
+                                    <span class="line">|</span>
+                                    <span @click="fixedInfo(scope.row.id )">编辑</span>
+                                    <span class="line">|</span>
+                                    <span @click="deletInfo(scope.row.id)">删除</span>
+                                </div>
                             </template>
                         </el-table-column>
                     </el-table>
@@ -139,7 +146,9 @@
                 isDisabled: true,
                 title: '',
                 isShowLoading: false,
-                currentNum: 50
+                currentNum: 50,
+                listLength: '',
+                pageNum: 1
             }
         },
         methods: {
@@ -220,7 +229,7 @@
             deletInfo (id) {
                 console.log(this.choseInfoId)
                 if (id) {
-                    //this.choseInfoId.push(id)
+                    this.choseInfoId = [id]
                 }
                 if (this.choseInfoId.length > 0) {
                     this.$confirm('此操作将永久删除该数据, 是否继续?', '提示', {
@@ -290,18 +299,18 @@
             choseType (type) {
                 console.log(type)
                 if (type.length === 0){
-                    this.shopList = this.shopList.filter((item) => {
+                    this.shopList = this.checkList.filter((item) => {
                         item.status = true
                         return item
                     })
                 } else {
-                    this.shopList = this.shopList.filter((item,index) => {
+                    this.shopList = this.checkList.filter((item,index) => {
                         if (type.includes(item.businessTypeName)){
                             item.status = true
                         } else if(!type.includes(item.businessTypeName)){
                             item.status = false
                         }
-                        return item
+                        return item.status === true
                     })
                 }
             },
@@ -397,7 +406,7 @@
             },
             fixedInfo (id) {
                 if (id) {
-                    //this.choseInfoId.push(id)
+                    this.choseInfoId = [id]
                 }
                 if (this.choseInfoId.length > 1) {
                     this.$message.warning('至多选择一个数据修改')
@@ -416,12 +425,29 @@
                     this.$message.error('请选择一条数据')
                 }
             },
+            previousPage (page) {
+                console.log(page, '这是传过来的pageNum')
+                this.pageNum = page
+                this.getAllShop ()
+            },
+            nextPage (page) {
+                console.log(page, '这个是下一页的pageNUM')
+                this.pageNum = page
+                this.getAllShop ()
+            },
             async getAllShop () {
                 this.isShowLoading = true
                 await api.shop.getAllShop().then(res => {
                     console.log(res, '这是所有商铺')
+                    this.listLength =res.length
                     this.isShowLoading = false
                     this.shopList = res
+                    this.shopList = this.shopList.filter((item,index) =>{
+                        if(index <(this.pageNum*35)&& index>(this.pageNum-1)*35-1){
+                            return item
+                        }
+                    })
+
                     for (let i = 0; i < this.shopList.length; i++) {
                         this.shopList[i].checked = false
                         this.shopList[i].status = true
@@ -585,7 +611,18 @@
                         }
                     }
                 }
+                .handle{
+                    span{
+                        cursor: pointer;
+                    }
+                }
             }
+        }
+        .overflow {
+            display: inline-block;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            display:inline-block;
         }
     }
 

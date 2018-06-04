@@ -25,7 +25,7 @@
                     <p class="name" v-if="wifiShow">下行速率：
                         {{this.Info.downRate}}
                     </p>
-                    <p class="name">厂&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;家：
+                    <p class="name" v-if="facility">厂&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;家：
                         {{this.Info.modelName}}
                     </p>
                     <p class="name">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：
@@ -45,6 +45,7 @@
             return {
                 route:'',
                 wifiShow:false,
+                facility:true,
             }
         },
         methods: {
@@ -58,6 +59,38 @@
         created () {
             if(this.Info.type==="wifi"){
                 this.wifiShow=true
+            }
+            if(this.Info.type==="卫生间"){
+                this.Info.description=this.Info.toiletBean.description
+                this.facility=false
+            }
+            if(this.Info.type==="停车场"){
+                this.Info.description=this.Info.parkingBean.description
+                this.facility=false
+            }
+            if(this.Info.type==="建筑"){
+                this.Info.description=this.Info.building.description
+                this.facility=false
+            }
+            if(this.Info.type==="商圈"){
+                this.Info.description=this.Info.businessBean.description
+                this.facility=false
+            }
+            if(this.Info.type==="景点"){
+                this.Info.description=this.Info.scenicspotBean.description
+                this.facility=false
+            }
+            if(this.Info.type==="垃圾桶"){
+                this.Info.description=this.Info.dustbinBean.description
+                this.facility=false
+            }
+            if(this.Info.type==="植物"){
+                this.Info.description=this.Info.plant.description
+                this.facility=false
+            }
+            if(this.Info.type==="指示牌"){
+                this.Info.description=this.Info.signboardBean.description
+                this.facility=false
             }
             if(this.Info.regionName==null){
                 this.Info.regionName="未知片区设备"

@@ -1,32 +1,34 @@
 <template>
-    <div class="screenShow" style="background: url('../../../static/img/screenBg.png')">
+    <div class="screenShow" :style="{background: 'url('+backgroundImg+')'}">
         <el-container>
-            <el-header>
-                <el-row :gutter="10">
+            <el-header :style="{marginTop: headTop+'px'}" >
+                <el-row :gutter="10" :style="{background:headBgColor}">
                     <el-col :xs="7" :sm="7" :md="6" :lg="7" :xl="7">
-                        <div>卓锐科技股份有限公司</div>
+                        <img :src="headLeft" alt="" class="screenLeft" v-if="isShowOtherImg">
+                        <div :style="{color:fontColor,lineHeight:headLineH+'px'}">卓锐科技股份有限公司</div>
                     </el-col>
                     <el-col :xs="9" :sm="7" :md="6" :lg="9" :xl="9">
-                        <div class="scrrenTile">
-                            <img src="../../../static/img/screenHead.svg" alt="">
-                            <p>都江堰景区智慧旅游数据</p>
+                        <div class="screenTile" @click="requestFullScreen" ref="screenTile">
+                            <img :src="headImg" alt="" v-if="isShowHead">
+                            <p :style="{color:fontColor,lineHeight:headLineH+'px'}">都江堰景区智慧旅游数据</p>
                         </div>
                     </el-col>
                     <el-col :xs="4" :sm="7" :md="6" :lg="4" :xl="4">
-                       <div>{{currTime | dayFiler}}({{currTime | weekFiler}})  {{currTime | timeFiler}}</div>
+                        <img :src="headRight" alt="" class="screenRight" v-if="isShowOtherImg">
+                        <div :style="{color:fontColor,lineHeight:headLineH+'px'}">{{currTime | dayFiler}}({{currTime | weekFiler}})  {{currTime | timeFiler}}</div>
                     </el-col>
-                    <el-col :xs="4" :sm="7" :md="6" :lg="4" :xl="4">
-                            <a class="getBack" href=""><img src="../../../static/img/screenHome.svg" alt=""></a>
-                            <div class="skinPeeler ">
+                    <el-col :xs="4" :sm="7" :md="6" :lg="4" :xl="4" :style="{marginTop: homeMarginT+'px'}">
+                            <p class="getBack" onclick='javascript:history.back(-1)'><img :src="homeImg" alt="" ></p>
+                            <div class="skinPeeler " >
                                 <el-menu  class="el-menu-demo" mode="horizontal" router>
                                     <el-submenu index="">
                                         <template slot="title">
-                                            <span class="Admin">换肤</span>
-                                            <img src="../../../static/img/screenSetting.svg" alt="">
+                                            <!--<span class="Admin"  :style="{color:fontColor}"></span>-->
+                                            <img :src="settingImg" alt="">
                                         </template>
-                                        <el-menu-item index="">皮肤一</el-menu-item>
-                                        <el-menu-item index="/droreone">皮肤二</el-menu-item>
-                                        <el-menu-item index="/login">皮肤三</el-menu-item>
+                                        <el-menu-item index="" @click="changeType(0)">皮肤一</el-menu-item>
+                                        <el-menu-item index="" @click="changeType(1)">皮肤二</el-menu-item>
+                                        <el-menu-item index="" @click="changeType(2)">皮肤三</el-menu-item>
                                     </el-submenu>
                                 </el-menu>
                             </div>
@@ -35,16 +37,25 @@
             </el-header>
             <el-main>
                 <div class = "contentForm" ref="content" >
-                    <div class = "echatsForm" v-for = "(item,index) in echartsContent" :style = "{width:item.pos_width+'%',height:item.pos_height+'%',left:item.pos_left+'%',top:item.pos_top+'%'}"
+                    <div class = "echatsForm" v-for = "(item,index) in echartsContent" :style = "{width:item.pos_width+'%',height:item.pos_height+'%',left:item.pos_left+'%',top:item.pos_top+'%',border:borderColor,backgroundColor:bgCorol}"
                          v-dragging = "{ item: item, list: echartsContent, group: 'item' }"
                          :key="item.title"
                          :id="item.id"
                          :scenario_id = "item.scenario_id" >
-                        <div class = "echatsTitle">
-                            <p class = "title"></p>
+                        <img :src="leftT" class="leftT">
+                        <img :src="rightT" class="rightT">
+                        <img :src="leftB" class="leftB">
+                        <img :src="rightB" class="rightB">
+                        <img :src="twobgImg" alt="" class="echartsBg">
+                        <div class="decorate"  v-if="isShowOtherImg">
+                            <img :src="decorateImg" alt="">
+                            <span class="bootmBorder"></span>
+                            <span></span>
                         </div>
-                        <div class="echatsContent" :id="item.scenario_id" ref="chartHeight" >
-
+                        <div class = "echatsTitle">
+                            <p class = "title" :style="{color:fontColor,textIndent:textIndents+'px',borderBottom:borderLine}"></p>
+                        </div>
+                        <div class="echatsContent" :id="item.scenario_id" ref="chartHeight">
 
                         </div>
                     </div>
@@ -77,48 +88,162 @@
                  chartH:null,
                  chartW:null,
                  backgroundImg:null,
-                 echartColor:null,
+                 allEchartColor:null,
+                 leftT:null,
+                 rightT:null,
+                 leftB:null,
+                 rightB:null,
+                 headImg:null,
+                 headLeft:null,
+                 headRight:null,
+                 decorateImg:null,
+                 twobgImg:null,
+                 borderColor:null,
+                 fontColor:null,
+                 bgCorol:null,
                  idx:0,
+                 isShowOtherImg:false,
+                 isShowHead:true,
+                 legentColor:null,
+                 homeImg:null,
+                 settingImg:null,
+                 textIndents:0,
+                 borderLine:null,
+                 headBgColor:null,
+                 headTop:null,
+                 homeMarginT:null,
+                 headLineH:null,
+                 constent:{
+                     "name":null,
+                     "description":null,
+                     "refresh_interval":null,
+                     "template_type":0
+                 },
                  attr:[
                      {
                          index:0,
-                         backgroundImg:"../../../static/img/screenHead.svg",
-                         echartColor:[
-                             ["#189ddd"],
-                             ["#f8cf59","#d94539"],
-                             ["#10ccf5","#fbf396"],
-                             ["#4bf9ff","#ffccf8"],
-                             ["#30a6fb","#047ae3","#0abdea","#4beefd","#02daff","#2a517d","#11447c"],
-                             ["#189ddd","#fbf396","#ffccf8","#ffccf8"],["#fbf396","#189ddd"]
-                         ]
+                         borderColor:"1px solid #29517c",
+                         backgroundImg:"../../../static/img/screenBg.png",
+                         leftT:"../../../static/img/lt.svg",
+                         rightT:"../../../static/img/rt.svg",
+                         leftB:"../../../static/img/lb.svg",
+                         rightB:"../../../static/img/rb.svg",
+                         headImg:"../../../static/img/screenHead.svg",
+                         bgColor:"rgba(0,0,0,0.2)",
+                         fontColor:"#fff",
+                         homeImg:"../../../static/img/screenHome.svg",
+                         settingImg:"../../../static/img/screenSetting.svg",
+                         textIndent:0,
+                         headLineH:85,
+                         homeMarginT:12,
+                         echartColor:{
+                             legentColor:"#fff",
+                             contentColor:[
+                                 ["#189ddd","#f8cf59","#d94539","#86ca94","#fbf396","#00fdff","#fa86ea","#047ae3","#d0d415"],
+                                 ["#d0d415","#00fdff","#86ca94","#f8cf59","#189ddd","#d94539","#fbf396","#fa86ea","#047ae3"],
+                                 ["#047ae3","#fbf396","#00fdff","#d94539","#86ca94","#d0d415","#189ddd","#f8cf59","#d94539"],
+                                 ["#fa86ea","#86ca94","#047ae3","#fbf396","#d0d415","#189ddd","#f8cf59","#d94539","#00fdff"],
+                                 ["#00fdff","#d94539","#d0d415","#fa86ea","#86ca94","#047ae3","#fbf396","#189ddd","#f8cf59"],
+                                 ["#fbf396","#189ddd","#f8cf59","#047ae3","#00fdff","#86ca94","#d94539","#fa86ea","#189ddd"],
+                                 ["#86ca94","#fa86ea","#189ddd","#00fdff","#047ae3","#fbf396","#d0d415","#d94539","#fa86ea"],
+                                 ["#d94539","#047ae3","#fbf396","#d0d415","#d0d415","#f8cf59","#86ca94","#00fdff","#189ddd"],
+                                 ["#f8cf59","#d0d415","#fa86ea","#86ca94","#fbf396","#d94539","#00fdff","#047ae3","#189ddd"],
+                                 ["#189ddd","#fbf396","#d0d415","#00fdff","#f8cf59","#047ae3","#fa86ea","#86ca94","#d94539"]
+
+
+                             ]
+                         }
                      },{
                          index:1,
-                         backgroundImg:"../../../static/img/screenHead.svg",
-                         echartColor:[
-                             ["#189ddd"],
-                             ["#f8cf59","#d94539"],
-                             ["#10ccf5","#fbf396"],
-                             ["#4bf9ff","#ffccf8"],
-                             ["#30a6fb","#047ae3","#0abdea","#4beefd","#02daff","#2a517d","#11447c"],
-                             ["#189ddd","#fbf396","#ffccf8","#ffccf8"],["#fbf396","#189ddd"]
-                         ]
+                         borderColor:"1px solid #29517c",
+                         backgroundImg:"../../../static/img/screenBg1.png",
+                         headLeft:"../../../static/img/screenLeft.png",
+                         headRight:"../../../static/img/screenRight.png",
+                         decorate:"../../../static/img/decorate.png",
+                         twobg:"../../../static/img/twobg1.png",
+                         leftT:"../../../static/img/twolt.png",
+                         rightT:"../../../static/img/twort.png",
+                         leftB:"../../../static/img/twolb.png",
+                         rightB:"../../../static/img/tworb.png",
+                         headImg:"../../../static/img/twoHead.png",
+                         bgColor:"rgba(0,0,0,0.2)",
+                         fontColor:"#fff",
+                         homeImg:"../../../static/img/screenHome.svg",
+                         settingImg:"../../../static/img/screenSetting.svg",
+                         textIndent:60,
+                         headLineH:85,
+                         homeMarginT:12,
+                         echartColor: {
+                             legentColor:"#fff",
+                             contentColor:[
+                                 ["#326a9f","#71c6a3","#bc895f","#6060d7","#06c8d2","#b065d7","#afbc92","#d3a254","#56bbc4","#f3565d"],
+                                 ["#f3565d","#b065d7","#afbc92","#06c8d2","#d3a254","#56bbc4","#326a9f","#71c6a3","#6060d7","#bc895f"],
+                                 ["#56bbc4","#06c8d2","#d3a254","#b065d7","#f3565d","#f3565d","#71c6a3","#bc895f","#71c6a3","#326a9f"],
+                                 ["#d3a254","#6060d7","#56bbc4","#afbc92","#56bbc4","#06c8d2","#bc895f","#326a9f","#bc895f","#6060d7"],
+                                 ["#afbc92","#bc895f","#f3565d","#d3a254","#b065d7","#d3a254","#6060d7","#06c8d2","#d3a254","#06c8d2"],
+                                 ["#b065d7","#326a9f","#06c8d2","#f3565d","#71c6a3","#afbc92","#06c8d2","#6060d7","#f3565d","#afbc92"],
+                                 ["#06c8d2","#afbc92","#6060d7","#71c6a3","#bc895f","#326a9f","#b065d7","#f3565d","#bc895f","#56bbc4"],
+                                 ["#6060d7","#d3a254","#71c6a3","#bc895f","#326a9f","#6060d7","#56bbc4","#afbc92","#06c8d2","#bc895f"],
+                                 ["#bc895f","#56bbc4","#326a9f","#326a9f","#06c8d2","#afbc92","#d3a254","#d3a254","#71c6a3","#06c8d2"],
+                                 ["#71c6a3","#f3565d","#b065d7","#56bbc4","#afbc92","#71c6a3","#f3565d","#56bbc4","#326a9f","#f3565d"],
+
+                                 // ["#d3a254","#b065d7"],
+                                 // ["#559782","#326ba0"],
+                                 // ["#2984d1", "#0a67c0","#0f99c6","#3dbcd1","#07aed4"],
+                                 // ["#428bca", "#bc895f","#6060d7","#71c6a3"],
+                                 // ["#56bbc4", "#b065d7","#1a85c5","#bc895f"],
+                                 // ["#30a6fb", "#047ae3", "#0abdea", "#4beefd", "#02daff", "#2a517d", "#11447c"],
+                                 // ["#189ddd", "#fbf396", "#ffccf8", "#2984d1"],
+                                 // ["#fbf396", "#189ddd"],
+                                 // ["#4bf9ff", "#ffccf8"],
+                                 // ["#189ddd", "#fbf396", "#ffccf8", "#2984d1"],
+                                 // ["#fbf396", "#189ddd"]
+                             ]
+                        }
                      },
                      {
-                         index:2,
-                         backgroundImg:"../../../static/img/screenHead.svg",
-                         echartColor:[
-                             ["#189ddd"],
-                             ["#f8cf59","#d94539"],
-                             ["#10ccf5","#fbf396"],
-                             ["#4bf9ff","#ffccf8"],
-                             ["#30a6fb","#047ae3","#0abdea","#4beefd","#02daff","#2a517d","#11447c"],
-                             ["#189ddd","#fbf396","#ffccf8","#ffccf8"],["#fbf396","#189ddd"]
-                         ]
+                         index: 2,
+                         backgroundImg: "../../../static/img/screenBg2.png",
+                         headBgColor:"#fff",
+                         // headImg:"../../../static/img/screenHead.svg",
+                         headTop:20,
+                         headLineH:63,
+                         homeMarginT:0,
+                         bgCorol: "#fff",
+                         fontColor: "#8271a0",
+                         homeImg:"../../../static/img/homeLast.png",
+                         settingImg:"../../../static/img/settingLast.png",
+                         textIndent:0,
+                         borderLine:"1px solid #ededed",
+                         echartColor: {
+                             legentColor: "#8271a0",
+                             contentColor: [
+                                 ["#76bcc2","#d0d415","#69c5be","#f5787d","#3695e9","#b065d7","#f1d149","#3ccaef","#9ed5a9"],
+                                 ["#9ed5a9","#f5787d","#3695e9","#b065d7","#f1d149","#3ccaef","#76bcc2","#d0d415","#69c5be"],
+                                 ["#3ccaef","#b065d7","#3695e9","#f5787d","#9ed5a9","#76bcc2","#d0d415","#69c5be","#f1d149"],
+                                 ["#f1d149","#d0d415","#b065d7","#3ccaef","#f1d149","#69c5be","#f5787d","#3695e9","#9ed5a9"],
+                                 ["#b065d7","#d0d415","#69c5be","#f5787d","#b065d7","#3ccaef","#9ed5a9","#f1d149","#3695e9"],
+                                 ["#3695e9","#f1d149","#76bcc2","#69c5be","#f5787d","#d0d415","#b065d7","#3ccaef","#9ed5a9"],
+                                 ["#f5787d","#d0d415","#69c5be","#3695e9","#b065d7","#f1d149","#3ccaef","#9ed5a9","#76bcc2"],
+                                 ["#69c5be","#f1d149","#3ccaef","#69c5be","#f5787d","#3695e9","#b065d7","#9ed5a9","#d0d415"],
+                                 ["#d0d415","#fbf396","#69c5be","#f1d149","#3ccaef","#9ed5a9","#f5787d","#3695e9","#b065d7"],
+                                 ["#189ddd","#4bf9ff","#b065d7","#f1d149","#69c5be","#f5787d","#3695e9","#3ccaef","#9ed5a9"]
+                             ]
+                         }
                      }
                  ]
              }
         },
         methods:{
+            async changeType(type){
+                let id = this.$route.params.id;
+                this.constent.template_type = type;
+                await api.analyze.updateDashborad(this.constent,id).then(res=>{
+                       this.idx = res.result.template_type;
+                       this.afreshType();
+                       this.getContent()
+                })
+            },
             getDom(){
                 this.chartT = this.$refs.content.getBoundingClientRect().top;
                 this.chartB = this.$refs.content.getBoundingClientRect().bottom;
@@ -126,91 +251,157 @@
                 this.chartR = this.$refs.content.getBoundingClientRect().right;
                 this.chartH = this.chartB - this.chartT;
                 this.chartW = this.chartR - this.chartL;
-                console.log(this.chartH,"this.chartH")
-                console.log(this.chartW,"this.chartW")
+                // console.log(this.chartH,"this.chartH")
+                // console.log(this.chartW,"this.chartW")
             },
-            async init(){
-               for(let i=0;i<this.attr.length;i++){
-                  if(this.attr[i].index == this.idx){
-                     this.backgroundImg = this.attr[i].backgroundImg;
-                  }
-               }
-                // await api.analyze.getTemplate().then(res=>{
-                //
-                //
-                //
-                //
-                //}).catch(err=>{
-                //
-                // })
+            async initScreen(){
+                let id = this.$route.params.id;
+                await api.analyze.getDashboradList().then(res=>{
+                    console.log(res.result,"dashboardList")
+                    for(let i=0;i<res.result.length;i++){
+                        if(res.result[i].dashboard_id == id){
+                            this.idx = res.result[i].template_type;
+                            this.constent.name = res.result[i].name;
+                            this.constent.description = res.result[i].description;
+                            this.constent.refresh_interval = res.result[i].refresh_interval;
+                            this.constent.template_type = res.result[i].template_type;
+                        }
+                    }
+                }).catch(err=>{
+                    console.log(err)
+                })
+                  this.afreshType();
+            },
+            afreshType(){
+                for(let i=0;i<this.attr.length;i++){
+                    if(this.attr[i].index == this.idx){
+                        console.log(this.idx,"~~~~~~~~~")
+                        this.isShowHead = true;
+                        this.backgroundImg = this.attr[i].backgroundImg;
+                        this.allEchartColor = this.attr[i].echartColor.contentColor;
+                        this.legentColor = this.attr[i].echartColor.legentColor;
+                        this.homeImg =  this.attr[i].homeImg;
+                        this.settingImg = this.attr[i].settingImg;
+                        this.textIndents = this.attr[i].textIndent;
+                        this.headLineH = this.attr[i].headLineH;
+                        this.homeMarginT = this.attr[i].homeMarginT;
+                        if(this.attr[i].leftT){
+                            this.borderLine =null;
+                            this.headBgColor = null;
+                            this.borderColor = this.attr[i].borderColor;
+                            this.leftT = this.attr[i].leftT;
+                            this.headTop = 0;
+                            this.rightT = this.attr[i].rightT;
+                            this.leftB = this.attr[i].leftB;
+                            this.rightB = this.attr[i].rightB;
+                            this.headImg = this.attr[i].headImg;
+                            this.fontColor = this.attr[i].fontColor;
+                            this.bgCorol = this.attr[i].bgCorol;
+                            if(this.attr[i].headLeft){
+                                this.isShowOtherImg = true;
+                                this.headLeft = this.attr[i].headLeft;
+                                this.headRight = this.attr[i].headRight;
+                                this.decorateImg = this.attr[i].decorate;
+                                this.twobgImg = this.attr[i].twobg;
+                            }else{
+                                this.isShowOtherImg = false;
+                                this.headLeft = null;
+                                this.headRight = null;
+                                this.decorateImg = null;
+                                this.twobgImg = null;
+                            }
+                        }else{
+                            this.isShowHead = false;
+                            this.headBgColor = this.attr[i].headBgColor;
+                            this.leftT =null;
+                            this.headTop = this.attr[i].headTop;
+                            this.rightT = null;
+                            this.leftB = null;
+                            this.rightB = null;
+                            this.twobgImg = null;
+                            this.isShowOtherImg = false;
+                            this.borderColor = null;
+                            this.fontColor = this.attr[i].fontColor;
+                            this.bgCorol = this.attr[i].bgCorol;
+                            this.borderLine = this.attr[i].borderLine;
+                        }
+                        console.log(this.headLeft,"this.backgroundImg")
+                        console.log(this.headRight,"this.allEchartColor")
+                        console.log(this.rightB,"this.rightB")
+                    }
+                }
             },
             async getContent(){
                 let id = this.$route.params.id;
+                this.initScreen();
                 await api.analyze.getStreamDataById(id).then(res=> {
                     this.echartsContent = res.result;
-                     console.log(res.result,"结果")
-                    let scenarioId,chartId,chartDomH;
+                      console.log(res.result,"结果")
+                    // console.log(this.allEchartColor,"this.allEchartColor")
+                    let scenarioId,chartId,chartDomH,echartsColor;
                     for(let i=0;i<this.echartsContent.length;i++){
                         scenarioId = this.echartsContent[i].scenario_id;
                         chartId = this.echartsContent[i].id;
                         chartDomH = this.echartsContent[i].pos_height/100;
-                        this.getchartKind(scenarioId,chartDomH);
-                        console.log(scenarioId,"scenarioId")
-                        console.log(chartDomH,"chartDomH")
-                    };
+                         echartsColor = this.allEchartColor[i];
+                        this.getchartKind(scenarioId,chartDomH,echartsColor);
+                        // console.log(scenarioId,"scenarioId")
+                        // console.log(chartDomH,"chartDomH")
 
+                    };
                 }).catch(err => {
                     console.log(err)
                 })
              },
-            async getchartKind(scenarioId,chartDomH){
+            async getchartKind(scenarioId,chartDomH,echartsColor){
                 await api.analyze.getChartDashboardName(scenarioId).then(res=>{
                     let chartDomHpx;
                     this.kind = res.result;
                     let kindName = res.result;
+                    // console.log(echartsColor,"echartsColor")
                         chartDomHpx = this.chartH*chartDomH-34+"px";
-                    console.log(chartDomHpx,"chartDomHpx")
+                    // console.log(chartDomHpx,"chartDomHpx")
                     $("#"+scenarioId).css("height",chartDomHpx);
                     switch(kindName) {
                         case "component_sink_bar":
-                            this.getBarData(scenarioId);
+                            this.getBarData(scenarioId,echartsColor);
                             break;
                         case "component_sink_pie":
-                            this.getPieData(scenarioId);
+                            this.getPieData(scenarioId,echartsColor);
                             break;
                         case "component_sink_rose":
-                            this.getRoseData(scenarioId);
+                            this.getRoseData(scenarioId,echartsColor);
                             break;
                         case "component_sink_funnel":
-                            this.getFunnelData(scenarioId);
+                            this.getFunnelData(scenarioId,echartsColor);
                             break;
                         case "component_sink_line":
-                            this.getLineData(scenarioId);
+                            this.getLineData(scenarioId,echartsColor);
                             break;
                         case "component_sink_scatter":
-                            this.getScatterData(scenarioId);
+                            this.getScatterData(scenarioId,echartsColor);
                             break;
                         case "component_sink_ring":
-                            this.getRingData(scenarioId);
+                            this.getRingData(scenarioId,echartsColor);
                             break;
                         case "component_sink_relativebar":
-                            this.getRelativebarData(scenarioId);
+                            this.getRelativebarData(scenarioId,echartsColor);
                             break;
                         case "component_sink_gauge":
-                            this.getGaugeData(scenarioId);
+                            this.getGaugeData(scenarioId,echartsColor);
                             break;
                         case "component_sink_radar":
-                            this.getRadarData(scenarioId);
+                            this.getRadarData(scenarioId,echartsColor);
                             break;
                         case "component_sink_candlestick":
-                            this.getCandlestickData(scenarioId);
+                            this.getCandlestickData(scenarioId,echartsColor);
                             break;
                     }
                 }).catch(err => {
                     console.log(err)
                 })
             },
-            async getBarData(scenarioId){
+            async getBarData(scenarioId,echartsColor){
                 let bar0ption,barResult,bigDom;
                 await api.analyze.getScenarioMapData(scenarioId).then(res=>{
                     this.echatData = res.result;
@@ -221,30 +412,31 @@
                     var legendData = barResult.legendData;
                     var seriesData = barResult.seriesData;
                     var valueNames = barResult.valueNames;
-                    if(barResult.subtitle==''){
-                        var colors = ['#C1232B', '#B5C334', '#FCCE10', '#ff6600'];
-                    }else {
-                        var color = barResult.subtitle;
-                        var colors = color.split(",");
-                    }
+                    // if(barResult.subtitle==''){
+                    //     var colors = ['#C1232B', '#B5C334', '#FCCE10', '#ff6600'];
+                    // }else {
+                    //     var color = barResult.subtitle;
+                    //     var colors = color.split(",");
+                    // }
                     $("#"+scenarioId).prev().find(".title").text(barResult.title);
                     this.barDom = this.$echarts.init(document.getElementById(scenarioId));
                     bar0ption={
                         title: {
                             text: '',
                         },
-                        color: colors,
+
                         grid: {
+                            top:'14%',
                             left: '3%',
                             right: '4%',
-                            bottom: '3%',
+                            bottom: '10%',
                             containLabel: true
                         },
                         legend: {
                             data: valueNames,
                             align: 'left',
                             textStyle:{
-                                color:"#fff"
+                                color:this.legentColor
                             }
                         },
                         tooltip: {},
@@ -252,14 +444,14 @@
                             data: legendData,
                             axisLine:{
                                 lineStyle:{
-                                    color:"#fff"
+                                    color:this.legentColor
                                 }
                             }
                         },
                         yAxis: {
                             axisLine:{
                                 lineStyle:{
-                                    color:"#fff"
+                                    color:this.legentColor
                                 }
                             },
                             splitLine:{
@@ -269,14 +461,15 @@
                                 }
                             }
                         },
-                        series: seriesData
+                        series: seriesData,
+                        color:echartsColor,
                     };
                     this.barDom.setOption(bar0ption);
                 }).catch(err => {
                     console.log(err)
                 })
             },
-            async getPieData(scenarioId){
+            async getPieData(scenarioId,echartsColor){
                 let pie0ption,pieResult;
                 await api.analyze.getScenarioMapData(scenarioId).then(res=>{
                     this.echatData = res.result;
@@ -294,7 +487,7 @@
                         title:{
                             text:'',
                             textStyle : {
-                                color: '#fff',
+                                color: this.legentColor,
                                 fontSize:18
                             }
                         },
@@ -302,22 +495,21 @@
                             trigger: 'item',
                             formatter: "{a} <br/>{b} : {c} ({d}%)"
                         },
-
-                        legend: {
-                            icon: 'circle',
-                            orient: 'vertical',
-                            right: '7%',
-                            top:'10%',
-                            // bottom:'30px',
-                            data:legendData,
-                            textStyle:{color:"#949494"}
-                        },
+                        // legend: {
+                        //     icon: 'circle',
+                        //     orient: 'vertical',
+                        //     right: '7%',
+                        //     top:'10%',
+                        //     // bottom:'30px',
+                        //     data:legendData,
+                        //     textStyle:{color:this.legentColor}
+                        // },
                         series : [
                             {
                                 name: title,
                                 type: 'pie',
                                 radius : '55%',
-                                center: ['38%','45%'],
+                                center: ['47%','44%'],
                                 data:seriesData,
                                 itemStyle: {
                                     emphasis: {
@@ -325,17 +517,25 @@
                                         shadowOffsetX: 0,
                                         shadowColor: 'rgba(0, 0, 0, 0.5)'
                                     }
-                                }
+                                },
+                                label: {
+                                    normal: {
+                                        textStyle: {
+                                            color: this.legentColor
+                                        }
+                                    }
+                                },
                             }
                         ],
-                        color:['#68c6e0','#9acc5d','#f98860','#ffcc79','#f8bfdf']
+                        color:echartsColor
+                        // color:['#68c6e0','#9acc5d','#f98860','#ffcc79','#f8bfdf']
                     };
                     this.pieDom.setOption(pie0ption);
                 }).catch(err => {
                     console.log(err)
                 })
             },
-            async getRoseData(scenarioId){
+            async getRoseData(scenarioId,echartsColor){
                 let rose0ption,roseResult;
                 await api.analyze.getScenarioMapData(scenarioId).then(res=>{
                     this.echatData = res.result;
@@ -363,7 +563,7 @@
                             x : 'center',
                             data:legendData,
                             textStyle:{
-                                color:"#fff"
+                                color:this.legentColor
                             }
                             // orient: 'vertical'
                         },
@@ -372,12 +572,15 @@
                             {
                                 name:title,
                                 type:'pie',
-                                radius : [30, 70],
-                                center : ['55%', '45%'],
+                                radius : [40, 80],
+                                center : ['50%', '50%'],
                                 roseType : 'area',
                                 label: {
                                     normal: {
-                                        show: true
+                                        show: true,
+                                        textStyle: {
+                                            color: this.legentColor
+                                        }
                                     },
                                     emphasis: {
                                         show: true
@@ -393,15 +596,15 @@
                                 },
                                 data:seriesData
                             }
-
-                        ]
+                        ],
+                        color:echartsColor
                     };
                     this.roseDom.setOption(rose0ption);
                 }).catch(err => {
                     console.log(err)
                 })
             },
-            async getFunnelData(scenarioId){
+            async getFunnelData(scenarioId,echartsColor){
                 let funnel0ption,funnelResult;
                 await api.analyze.getScenarioMapData(scenarioId).then(res=>{
                     this.echatData = res.result;
@@ -424,7 +627,7 @@
                         legend: {
                             data: legendData,
                             textStyle:{
-                                color:"#fff"
+                                color:this.legentColor
                             }
                         },
                         calculable: true,
@@ -466,21 +669,22 @@
                                 },
                                 itemStyle: {
                                     normal: {
-                                        borderColor: '#fff',
+                                        borderColor: this.legentColor,
                                         borderWidth: 1
                                     }
                                 },
                                 data: seriesData
                             }
                         ],
-                        color:['#68c6e0','#9acc5d','#f98860','#ffcc79','#f8bfdf']
+                        color:echartsColor
+                        // color:['#68c6e0','#9acc5d','#f98860','#ffcc79','#f8bfdf']
                     };
                     this.funnelDom.setOption(funnel0ption);
                 }).catch(err => {
                     console.log(err)
                 })
             },
-            async getLineData(scenarioId){
+            async getLineData(scenarioId,echartsColor){
                 let line0ption,lineResult;
                 await api.analyze.getScenarioMapData(scenarioId).then(res=>{
                     this.echatData = res.result;
@@ -500,13 +704,14 @@
                             data:valueColumns,
                             x:"83%",
                             textStyle:{
-                                color:"#fff"
+                                color:this.legentColor
                             }
                         },
                         grid: {
+                            top:'14%',
                             left: '3%',
                             right: '4%',
-                            bottom: '3%',
+                            bottom: '8%',
                             containLabel: true
                         },
                         xAxis: {
@@ -515,7 +720,7 @@
                             data:legendData,
                             axisLine:{
                                 lineStyle:{
-                                    color:"#fff"
+                                    color:this.legentColor
                                 }
                             },
                             splitLine:{
@@ -529,7 +734,7 @@
                             type: 'value',
                             axisLine:{
                                 lineStyle:{
-                                    color:"#fff"
+                                    color:this.legentColor
                                 }
                             },
                             splitLine:{
@@ -540,14 +745,15 @@
                             }
                         },
                         series: seriesData,
-                        color:["#189cdc","#fbf396"]
+                        color:echartsColor
+                        // color:["#189cdc","#fbf396"]
                     };
                     this.lineDom.setOption(line0ption);
                 }).catch(err => {
                     console.log(err)
                 })
             },
-            async getScatterData(scenarioId){
+            async getScatterData(scenarioId,echartsColor){
                 let scatter0ption,scatterResult;
                 await api.analyze.getScenarioMapData(scenarioId).then(res=>{
                     this.echatData = res.result;
@@ -574,14 +780,15 @@
                             type: 'scatter',
                             symbolSize: 20,
                             data:seriesData
-                        }]
+                        }],
+                        color:echartsColor
                     };
                     this.scatterDom.setOption(scatter0ption);
                 }).catch(err => {
                     console.log(err)
                 })
             },
-            async getRingData(scenarioId){
+            async getRingData(scenarioId,echartsColor){
                 let ring0ption,ringResult;
                 await api.analyze.getScenarioMapData(scenarioId).then(res=>{
                     this.echatData = res.result;
@@ -604,7 +811,7 @@
                             left:'3%',
                             data:legendData,
                             textStyle:{
-                                color:"#fff"
+                                color:this.legentColor
                             }
                         },
                         series: [
@@ -634,14 +841,15 @@
                                 data:seriesData
                             }
                         ],
-                        color:['yellowgreen','cornflowerblue','darkgoldenrod','blueviolet','hotpink']
+                        color:echartsColor
+                        // color:['yellowgreen','cornflowerblue','darkgoldenrod','blueviolet','hotpink']
                     };
                     this.ringDom.setOption(ring0ption);
                 }).catch(err => {
                     console.log(err)
                 })
             },
-            async getRelativebarData(scenarioId){
+            async getRelativebarData(scenarioId,echartsColor){
                 let relativebar0ption,relativebarResult;
                 await api.analyze.getScenarioMapData(scenarioId).then(res=>{
                     this.echatData = res.result;
@@ -720,7 +928,7 @@
                     console.log(err)
                 })
             },
-            async getGaugeData(scenarioId){
+            async getGaugeData(scenarioId,echartsColor){
                 let gauge0ption,gaugeResult;
                 await api.analyze.getScenarioMapData(scenarioId).then(res=>{
                     this.echatData = res.result;
@@ -750,7 +958,8 @@
                                 },
                                 data: seriesData
                             }
-                        ]
+                        ],
+                        color:echartsColor
                     };
                     // setInterval(function () {
                     //     gaugeResult.series[0].data[0].value = (Math.random() * 100).toFixed(2) - 0;
@@ -761,7 +970,7 @@
                     console.log(err)
                 })
             },
-            async getCandlestickData(scenarioId){
+            async getCandlestickData(scenarioId,echartsColor){
                 let candlestick0ption,candlestickResult;
                 await api.analyze.getScenarioMapData(scenarioId).then(res=>{
                     this.echatData = res.result;
@@ -789,20 +998,20 @@
                                 data: legendData
                             },
                         yAxis: {},
-                        series:
-                            [
+                        series: [
                                 {
                                     type: 'k',
                                     data: seriesData
                                 }
-                            ]
+                            ],
+                        color:echartsColor
                     };
                     this.candlestickDom.setOption(candlestick0ption);
                 }).catch(err => {
                     console.log(err)
                 })
             },
-            async getRadarData(scenarioId){
+            async getRadarData(scenarioId,echartsColor){
                 let radar0ption,radarResult;
                 await api.analyze.getScenarioMapData(scenarioId).then(res=>{
                     this.echatData = res.result;
@@ -826,14 +1035,14 @@
                             x: '83%',
                             orient: 'vertical',
                             textStyle:{
-                                color:"#fff"
+                                color:this.legentColor
                             }
                         },
                         radar: {
                             name: {
                                 textStyle: {
-                                    color: "#fff",
-                                    backgroundColor: "#999",
+                                    color: this.legentColor,
+                                    // backgroundColor: "#999",
                                     borderRadius: 3,
                                     padding: [
                                         3,
@@ -849,14 +1058,21 @@
                                 type: "radar",
                                 data: seriesData
                             }
-                        ]
+                        ],
+                        color:echartsColor
                     };
                     this.radarDom.setOption(radar0ption);
                 }).catch(err => {
                     console.log(err)
                 })
             },
+            checkFull(){
+                var isFull =  document.fullscreenEnabled || window.fullScreen || document.webkitIsFullScreen || document.msFullscreenEnabled;
+                if(isFull === undefined) isFull = false;
+                return isFull;
+            },
             requestFullScreen() {
+                console.log('这个方法执行了没有')
                 let docElm = document.documentElement;
                 if (docElm.requestFullscreen) {
                     docElm.requestFullscreen();
@@ -887,18 +1103,32 @@
                 })
                 return `星期${week[0]}`
             },
+
             timeFiler(item) {
-                return moment(item).format('YY:MM:DD')
+                let time = item.toLocaleTimeString();
+                console.log(time,"时间")
+                return time
             },
         },
+        watch:{
+            '$route'(){
+                this.timeFiler(item)
+            }
+
+        },
          created () {
-             this.getContent();
-            console.log(this.$route.params.id,"@@@@@@@@@@@")
+
+
+             // console.log(this.$route,"OOOOOOOOOOOO")
+             // console.log(this.$route.params.n,"PPPPPP")
+             // console.log(this.$route.params.id,"@@@@@@@@@@@")
         },
         mounted () {
-            // this.init();
-            this.requestFullScreen();
+            console.log('mounted执行')
+            this.getContent();
             this.getDom();
+            // setTimeout(this.requestFullScreen,100)
+            // this.$refs.screenTile.click()
         }
     }
 </script>
@@ -914,35 +1144,63 @@
           flex-direction: column;
           .el-header{
               width: 100%;
-              height: rem(93)!important;
+              height: rem(63);
+              margin-top: rem(15);
+              margin-bottom: rem(15);
+
+              /*box-sizing: content-box;*/
               /*background: #5daf34;*/
               .el-row{
-                  height: rem(93);
-                  line-height: rem(93);
+                  height: rem(63);
+                  line-height: rem(63);
                   .el-col{
+                      position: relative;
                       div{
                           width: 100%;
                           text-align: center;
                           color: #fff;
                       }
-                      .scrrenTile{
+                      .screenTile{
                           position: relative;
+                          width: 100%;
+                          height: rem(63);
                            img{
                                width:100%;
+                               position: absolute;
+                               left: 0;
                            }
                           p{
-                            position: absolute;
-                              top: rem(-3);
-                              left: 32%;
+                              width: 100%;
                               font-size: rem(24);
+                              line-height: rem(55);
                           }
                       }
 
+                  }
+                  .el-col:first-child{
+                      div{
+                          z-index: 10;
+                      }
+                      .screenLeft{
+                          position: absolute;
+                          top: rem(23);
+                          left: rem(-15);
+                      }
+                  }
+                  .el-col:nth-child(3){
+                      position: relative;
+                      .screenRight{
+                          position: absolute;
+                          top: rem(23);
+                          left: rem(5);
+
+                      }
 
                   }
                   .el-col:last-child{
                       display: flex;
                       height: 100%;
+                      z-index: 3;
                       .getBack{
                           display: block;
                           padding-left: rem(40);
@@ -951,19 +1209,20 @@
                       img{
                           width: rem(25);
                           height: rem(25);
-                          margin-top: rem(30);
+                          margin-top: rem(20);
                       }
                       .skinPeeler{
                           width: rem(100);
                           height: 100%;
-                          .Admin{
-                              display: inline-block;
-                              height: rem(93);
-                              line-height: rem(93);
-                          }
+                          /*margin-top: rem(10);*/
+                          box-sizing: border-box;
+                          /*.Admin{*/
+                              /*display: inline-block;*/
+                              /*height: rem(93);*/
+                              /*line-height: rem(85);*/
+                          /*}*/
                           img{
-                              margin-top: 0;
-                              margin-left: rem(5);
+                              margin-top: rem(5);
                           }
                       }
                   }
@@ -982,15 +1241,74 @@
                       border-radius: rem(5);
                       /*padding: 0 rem(10) rem(10) 0;*/
                       box-sizing: border-box;
-                      border: 1px solid #29517c;
+                      /*border: 1px solid #29517c;*/
                       background-color: rgba(0,0,0,0.2);
+                      img{
+                          position: absolute;
+                      }
+                      .leftT{
+                          left: rem(-1);
+                          top: rem(-1);
+                      }
+                      .rightT{
+                          right: rem(-1);
+                          top: rem(-1);
+                      }
+                      .leftB{
+                          bottom: rem(-1);
+                          left: rem(-1);
+                      }
+                      .rightB{
+                          bottom: rem(-1);
+                          right: rem(-1);
+                      }
+                      .decorate{
+                          position: absolute;
+                          top: 0;
+                          width: 100%;
+                          height: rem(35);
+                          display: flex;
+                          img{
+                              width: rem(60);
+                          }
+                          .bootmBorder{
+                              display: block;
+                              height: rem(2);
+                              flex: 1;
+                              margin-top: rem(35);
+                              margin-left: rem(40);
+                              background: #428bca;
+                              box-sizing: border-box;
+                          }
+                         span:last-child{
+                             box-sizing: border-box;
+                             display: inline-block;
+                             width: rem(40);
+                             height: rem(2);
+                             margin-top: rem(20);
+                             margin-right: rem(25);
+                             margin-left: rem(-8);
+                             background: #428bca;
+                             transform:rotate(-50deg);
+                             -ms-transform:rotate(-50deg); 	/* IE 9 */
+                             -moz-transform:rotate(-50deg); 	/* Firefox */
+                             -webkit-transform:rotate(-50deg); /* Safari 和 Chrome */
+                             -o-transform:rotate(-50deg);
+                         }
+                      }
+                      .echartsBg{
+                          top: rem(7);
+                          left: rem(3);
+
+                      }
                       .echatsTitle {
                           position: relative;
                           width: 100%;
-                          padding: rem(5) rem(10);
+                          padding: rem(5) rem(20);
                           box-sizing: border-box;
                           text-align: left;
                           color: #666;
+                          height: rem(45);
                           /*background: #f6f6f6;*/
                           border-radius: rem(5);
                           border: none;
@@ -998,6 +1316,7 @@
                           border-bottom-left-radius: rem(0);
                           p {
                               width: 100%;
+                              height: rem(30);
                               padding-right: rem(100);
                               overflow: hidden;
                               text-overflow: ellipsis;
@@ -1005,7 +1324,9 @@
                               box-sizing: border-box;
                               display: inline-block;
                               font-size: rem(14);
-                              color: #17e4db;
+                              /*color: #17e4db;*/
+                              color:#fff;
+                              text-indent: rem(60);
                           }
                           .echatsBtn {
                               position: absolute;

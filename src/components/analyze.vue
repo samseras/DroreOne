@@ -15,18 +15,20 @@
                                 <el-menu  class="el-menu-demo" mode="horizontal" router>
                                     <el-submenu index="">
                                         <template slot="title">
-                                            <span class="Admin">Admin</span>
+                                            <span class="Admin">{{getUserInfo}}</span>
                                             <img src="./../../static/img/peopleInfo.svg" alt="">
                                         </template>
                                         <el-menu-item index="">个人中心</el-menu-item>
                                         <el-menu-item index="/droreone">返回主页</el-menu-item>
-                                        <el-menu-item index="/login">退出</el-menu-item>
+                                        <el-menu-item @click="logout" index="">退出</el-menu-item>
                                     </el-submenu>
                                 </el-menu>
                             </div>
                         </el-col>
                         <el-col :xs="2" :sm="2" :md="2" :lg="2" :xl="2" class="control">
-                            <button class="publish" ><router-link :to="'/screen/'+currenId">发布</router-link></button>
+                            <!--<button class="publish" ><router-link :to="'/screen/'+currenId">发布</router-link></button>-->
+                            <button class="publish" @click="requestFullScreen"><router-link :to="{ path:'/screen/'+currenId, params: {'n': type} }" >发布</router-link></button>
+
                         </el-col>
                     </el-row>
                 </el-header>
@@ -36,13 +38,13 @@
             <div class="analyzeConfirm" v-if="confirmErr">
                 <div class="analyzeMenu" v-if="hideList">
                     <ul>
-                        <li v-for="(item,index) in sidebarList" @click="isShowAnalyze(item.dashboard_id,index,item.refresh_interval)"  :class="activeIndex === index?'active':''" :id="item.id" :listName = "item.name" >
+                        <li v-for="(item,index) in sidebarList" @click="isShowAnalyze(item.dashboard_id,index,item.refresh_interval,item.template_type)"  :class="activeIndex === index?'active':''" :id="item.id" :listName = "item.name" >
                             {{item.name}}`
                         </li>
                     </ul>
                 </div>
                 <div class="analyzeContent" >
-                    <router-view @hideList = "hideLists" ></router-view>
+                    <router-view @hideList = "hideLists" :typeTemp = "type"></router-view>
                 </div>
             </div>
             <err-list v-else :echatListErrs = "echatListErr"></err-list>
@@ -57,7 +59,7 @@
   import passengerFlow from "./analysisSystem/analyze/passengerFlow.vue"
   import api from "@/api"
   import errList from "./pages/err.vue"
-  import { mapMutations } from 'vuex'
+  import { mapMutations,mapGetters,mapActions } from 'vuex'
   export default {
   	data(){
   		return{
@@ -70,6 +72,7 @@
             isshowHead:true,
             confirmErr:true,
             currenId:null,
+            type:null,
             echatListErr:{
                 pullData:false,
                 errInform:false,
@@ -87,14 +90,32 @@
   	},
     methods:{
         ...mapMutations(['REFRESH_DATA_TYPE']),
+        ...mapActions(['logout']),
         hideLists(data){
                this.hideList = !data.list;
                this.isshowHead = !data.head;
               // this.$emit('hideHead',hideData);
         },
-        isShowAnalyze (id,index,refresh) {
+        requestFullScreen() {
+            let docElm = document.documentElement;
+            if (docElm.requestFullscreen) {
+                docElm.requestFullscreen();
+            }
+            else if (docElm.msRequestFullscreen) {
+                docElm = document.body; //overwrite the element (for IE)
+                docElm.msRequestFullscreen();
+            }
+            else if (docElm.mozRequestFullScreen) {
+                docElm.mozRequestFullScreen();
+            }
+            else if (docElm.webkitRequestFullScreen) {
+                docElm.webkitRequestFullScreen();
+            }
+        },
+        isShowAnalyze (id,index,refresh,type) {
             // console.log(this.$router,"this.$router.path")
-            // debugger
+              this.type = type;
+              console.log(this.type,"this.type")
               this.currenId = id;
 	          this.$router.push({path: `/analyze/${id}`});
 	          this.activeIndex = index;
@@ -102,14 +123,16 @@
         },
         async getDashboradList(){
            await api.analyze.getDashboradList().then(res => {
-                this.sidebarList = res.result
+                this.sidebarList = res.result;
+                console.log(this.sidebarList,"!!!!!!@@@@@@@")
+               this.type = this.sidebarList[0].template_type;
+                console.log(this.type,"_____")
                this.currenId = this.sidebarList[0].dashboard_id;
                if(this.sidebarList.length == 0){
                    this.confirmErr = false;
                    this.echatListErr.errInform = false;
                    this.echatListErr.pullData = true;
                    return
-                   console.log(echatListErr.pullData,"echatListErr.pullData")
                }else{
                    this.confirmErr = true;
                    this.echatListErr.errInform = false;
@@ -126,16 +149,22 @@
                this.echatListErr.pullData = false;
                 console.log(err)
            })
+        },
+        logout() {
+            let data = JSON.parse(localStorage.getItem('token'))
+            this.$store.dispatch('logout',data).then(() => {
+                this.$message.success('登出成功')
+                location.reload()
+            })
         }
-
       },
       watch: {
   	    '$route' () {
   	        clearInterval(window.SETTIMER)
         }
       },
-    mounted(){
-
+      computed: {
+          ...mapGetters(['getUserInfo'])
       }
     }
 

@@ -1,2 +1,2 @@
-serialNum,capacity,type,model,driverName,driverPhone,gpsDeviceName,picId,maintenanceStatus,maintenanceDate,purchaseDate
-123,,1, , , , , , , , ,
+serialNum,capacity,type,model,gpsDeviceName,picId,maintenanceStatus,maintenanceDate,purchaseDate,description
+

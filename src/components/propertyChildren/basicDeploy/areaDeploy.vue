@@ -10,6 +10,9 @@
                         @toggleList = "toggleList"
                         @choseType = 'choseType'
                         @selectedAll = 'selectedAll'
+                        :listsLength = 'listLength'
+                        @nextPage="nextPage"
+                        @previousPage="previousPage"
                         @fixedInfo = 'fixedInfo'
                         :personListFlag="selectFlag"
                         @searchAnything="searchAnything">
@@ -33,7 +36,10 @@
                         <el-table-column
                             prop="name"
                             label="片区名称"
-                            width="120">
+                            width="200">
+                             <template slot-scope="scope">
+                                 <span class="overflow">{{scope.row.name}}</span>
+                             </template>
                         </el-table-column>
 
                         <!--<el-table-column
@@ -66,13 +72,16 @@
                             </template>
                         </el-table-column>
                         <el-table-column
+                            width="150"
                             label="操作">
                             <template slot-scope="scope">
-                                <span @click="showPersonDetail(scope.row,'片区信息', true)">查看</span>
-                                <span class="line">|</span>
-                                <span @click="fixedInfo(scope.row.id )">编辑</span>
-                                <span class="line">|</span>
-                                <span @click="deletInfo(scope.row.id)">删除</span>
+                                <div class="handle">
+                                    <span @click="showPersonDetail(scope.row,'片区信息', true)">查看</span>
+                                    <span class="line">|</span>
+                                    <span @click="fixedInfo(scope.row.id )">编辑</span>
+                                    <span class="line">|</span>
+                                    <span @click="deletInfo(scope.row.id)">删除</span>
+                                </div>
                             </template>
                         </el-table-column>
                     </el-table>
@@ -90,7 +99,7 @@
                         </div>
                         <div class="specificInfo">
                             <p class="name" v-if="false">所在景区：<span>{{item.placeScenic}}</span></p>
-                            <p class="sex text describe">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：<span>{{item.description}}</span></p>
+                            <p class="sex text">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：<span>{{item.description}}</span></p>
                         </div>
                     </div>
                 </ScrollContainer>
@@ -131,7 +140,10 @@
                 isDisabled: true,
                 title: '',
                 isShowLoading : false,
-                allSelFlag:-1
+                allSelFlag:-1,
+                currentNum: 50,
+                listLength: '',
+                pageNum: 1
             }
         },
         methods: {
@@ -166,7 +178,7 @@
             },
             deletInfo (id) {
                 if (id) {
-                    //this.choseInfoId.push(id)   //列表页删除
+                    this.choseInfoId = [id]
                 }
                 if (this.choseInfoId.length > 0) {
                     this.$confirm('此操作将永久删除该数据, 是否继续?', '提示', {
@@ -333,8 +345,7 @@
             },
             fixedInfo (id) {
                 if (id) {
-
-                    //this.choseInfoId.push(id)   //列表页修改
+                    this.choseInfoId = [id]
                 }
                 if (this.choseInfoId.length > 1) {
                     this.$message.warning('至多选择一个数据修改')
@@ -352,12 +363,29 @@
                     this.$message.error('请选择一条数据')
                 }
             },
+            previousPage (page) {
+                console.log(page, '这是传过来的pageNum')
+                this.pageNum = page
+                this.getAllArea()
+            },
+            nextPage (page) {
+                console.log(page, '这个是下一页的pageNUM')
+                this.pageNum = page
+                this.getAllArea()
+            },
             async getAllArea () {
                 this.isShowLoading = true
                 await api.area.getAllRegion().then(res => {
                     console.log(res, '这是请求回来的片区')
+                    this.listLength = res.length
                     this.isShowLoading = false
                     this.areaList = res
+                    this.areaList = this.areaList.filter((item,index) => {
+                        if (index < (this.pageNum * 35 ) && index > ((this.pageNum -1) * 35 ) - 1 ) {
+                            return item
+                        }
+                    })
+
                     for (let i = 0; i < this.areaList.length; i++) {
                         this.areaList[i].checked = false
                         this.areaList[i].status = true
@@ -390,7 +418,10 @@
 </script>
 <style>
     .areaDeploy .box .el-button{
-        border:1px solid transparent
+        border:1px solid transparent;
+        background: transparent;
+        text-align: left;
+        padding: 0;
     }
     .areaDeploy .box .el-button span{
         display:inline-block;
@@ -445,6 +476,7 @@
                     margin-right: rem(5.5);
                     margin-bottom: rem(5);
                     border-radius: rem(5);
+                    overflow: hidden;
                     .checkBox{
                         width: 100%;
                         height: rem(20);
@@ -514,15 +546,22 @@
                             -webkit-box-orient:vertical;
                             -webkit-line-clamp:4;
                         }
-                        .describe{
-                            overflow: hidden;
-                            text-overflow: ellipsis;
-                            white-space: nowrap;
-                            display:inline-block;
-                        }
+
                     }
                 }
+                .handle {
+                    span{
+                        cursor: pointer;
+                    }
+
+                }
             }
+        }
+        .overflow {
+            display: inline-block;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            display:inline-block;
         }
     }
 

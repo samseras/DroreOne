@@ -1296,7 +1296,8 @@ define(function(require, exports, module) {
                     var feature = new ol.Feature({
                         geometry: points,
                         name: data.name,
-                        data: data
+                        data: data,
+                        id:data.id
                     });
                     var mb = self.lineLayer.getSource();
                     feature.setId(data.id);
@@ -2306,6 +2307,42 @@ define(function(require, exports, module) {
                     self.lineLayer.getSource().clear();
                     mapData._baseMap.removeLayer(self.lineLayer);
                 }
+            },
+            Circle: function(obj) {
+                var self = this;
+                this.lineFeatures = new ol.Collection();
+                this.glow = new ol.Collection();
+                this.lineLayer = new ol.layer.Vector({
+                    selectable: false,
+                    source: new ol.source.Vector({
+                        features: self.lineFeatures
+                    })
+                });
+                mapData._baseMap.addLayer(this.lineLayer);
+                this.addCircle = function(obj) {
+
+                    var feature = new ol.Feature(
+                        new ol.geom.Circle(obj.coordinate, obj.radius)
+                    );
+                    var circleStyle = new ol.style.Style({
+                        stroke: new ol.style.Stroke({
+                            color: obj.color,
+                            width: obj.width,
+                            lineDash: [5, 5],
+                        }),
+                        fill: new ol.style.Fill({
+                            color:obj.bgColor
+                        })
+                    });
+                    feature.setStyle(circleStyle);
+                    var mb = self.lineLayer.getSource();
+                    mb.addFeature(feature);
+                };
+
+                this.clear = function() {
+                    self.lineLayer.getSource().clear();
+                    mapData._baseMap.removeLayer(self.lineLayer);
+                }
             }
         }
         //////////////*********************************************////////////////
@@ -2387,7 +2424,29 @@ define(function(require, exports, module) {
             },
             setDefaultStyle: function(id, style) {
                 this.styleList[id] = style;
-            }
+            },
+            areaEvtList: {}, //Marker片区对象数组
+            setSeedArea: function(id, marker) {
+                this.areaEvtList[id] = marker;
+            },
+            getAreaById: function(id) {
+                for(var p in this.areaEvtList) {
+                    if(p == id) {
+                        return this.areaEvtList[p];
+                    }
+                }
+            },
+            roadEvtList: {}, //Marker路网对象数组
+            setSeedRoad: function(id, marker) {
+                this.roadEvtList[id] = marker;
+            },
+            getRoadById: function(id) {
+                for(var p in this.roadEvtList) {
+                    if(p == id) {
+                        return this.roadEvtList[p];
+                    }
+                }
+            },
         };
         /**
          * 自定义事件对象
@@ -3004,7 +3063,6 @@ define(function(require, exports, module) {
                 IconStyleById: function(id,visibility) { //*******
                     var feature = pool.getIconById(id);
                     var url =feature.data.url
-                    // console.log(feature.data.url);
                     if(feature) {
                         if(visibility){
                             feature.setStyle(new ol.style.Style({
@@ -3268,10 +3326,11 @@ define(function(require, exports, module) {
             },
             area: {
                 DrawLayer: drawClass.DrawLayer,
-                 addChild: function(drawLayer) {
+                 addChild: function(drawLayer,id) {
                     if(drawLayer.constructor === drawClass.DrawLayer) {
                         drawClass.drawList.push(drawLayer);
                         mapData._baseMap.addLayer(drawLayer.Layer);
+                        pool.setSeedArea(id, drawLayer);
                     }
                 },
                 removeChild: function(drawLayer) {
@@ -3291,11 +3350,17 @@ define(function(require, exports, module) {
                         t.clear();
                     });
                     drawClass.drawList.splice(0, drawClass.drawList.length);
-                }
+                },
+                removeStyleById: function(id,visibility) { //*******
+                    var areaShow = pool.getAreaById(id)
+                    if(areaShow) {
+                        areaShow.setVisible(visibility);
+                    }
+                },
             },
             road: {
                 RoadLayer: roadNet.Road,
-                addRoadLayer: function(roadLayer) {
+                addRoadLayer: function(roadLayer,id) {
                     // if(roadLayer.constructor === roadNet.Road) {
                     //     roadNet.roadList.push(roadLayer);
                     //     mapData._baseMap.addLayer(roadLayer.lineLayer);
@@ -3303,6 +3368,7 @@ define(function(require, exports, module) {
                     // }
                     roadNet.roadList.push(roadLayer);
                     mapData._baseMap.addLayer(roadLayer.lineLayer);
+                    pool.setSeedRoad(id, roadLayer);
                     // mapData._baseMap.addLayer(roadLayer.pointLayer);
                 },
                 removeAll: function() {
@@ -3310,10 +3376,17 @@ define(function(require, exports, module) {
                         mapData._baseMap.removeLayer(t.lineLayer);
                         mapData._baseMap.removeLayer(t.pointLayer);
                     });
-                }
+                },
+                removeStyleById: function(id,visibility) { //*******
+                    var roadShow = pool.getRoadById(id)
+                    if(roadShow) {
+                        roadShow.setVisible(visibility);
+                    }
+                },
             },
             geom: {
-                LineBoard: geom.LineBoard
+                LineBoard: geom.LineBoard,
+                Circle: geom.Circle
             },
             object: {
                 getMap: function() {

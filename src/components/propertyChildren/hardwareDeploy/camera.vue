@@ -21,32 +21,32 @@
         </div>
         <div class="titleCheck" v-if="route.includes('camera')" >
             <el-checkbox-group v-model="filterList" @change="choseType">
-                <el-checkbox v-for="item in cameraList" :label="item.type"></el-checkbox>
+                <el-checkbox v-for="item in cameraList" :label="item.type" :key="item.type"></el-checkbox>
             </el-checkbox-group>
         </div>
         <div class="titleCheck" v-if="route.includes('broadcast')" >
             <el-checkbox-group v-model="filterList" @change="choseType">
-                <el-checkbox v-for="item in cameraList" :label="item.type"></el-checkbox>
+                <el-checkbox v-for="item in cameraList" :label="item.type" :key="item.type"></el-checkbox>
             </el-checkbox-group>
         </div>
          <div class="titleCheck" v-if="route.includes('led')" >
                 <el-checkbox-group v-model="filterList" @change="choseType">
-                    <el-checkbox v-for="item in cameraList" :label="item.type"></el-checkbox>
+                    <el-checkbox v-for="item in cameraList" :label="item.type" :key="item.type"></el-checkbox>
                 </el-checkbox-group>
         </div>
         <div class="titleCheck" v-if="route.includes('wifi')" >
             <el-checkbox-group v-model="filterList" @change="choseType">
-                <el-checkbox v-for="item in cameraList" :label="item.type"></el-checkbox>
+                <el-checkbox v-for="item in cameraList" :label="item.type" :key="item.type"></el-checkbox>
             </el-checkbox-group>
         </div>
         <div class="titleCheck" v-if="route.includes('gate')" >
             <el-checkbox-group v-model="filterList" @change="choseType">
-                <el-checkbox v-for="item in gateList" :label="item.type"></el-checkbox>
+                <el-checkbox v-for="item in gateList" :label="item.type" :key="item.type"></el-checkbox>
             </el-checkbox-group>
         </div>
         <div class="titleCheck" v-if="route.includes('police')" >
             <el-checkbox-group v-model="filterList" @change="choseType">
-                <el-checkbox v-for="item in policeList" :label="item.type"></el-checkbox>
+                <el-checkbox v-for="item in policeList" :label="item.type" :key="item.type"></el-checkbox>
             </el-checkbox-group>
         </div>
 
@@ -62,6 +62,7 @@
 
 <script>
     import api from '@/api'
+    import {mapGetters,mapMutations} from 'vuex'
 
     export default{
         props: ['choseId','listsLength','personListFlag'],
@@ -93,6 +94,7 @@
             }
         },
         methods:{
+            ...mapMutations(['SHOWHARDWAREICON']),
             startSearch () {
                 // if (this.searchContent !== '') {
                 this.$emit('searchAnything', this.searchContent)
@@ -111,14 +113,29 @@
                     this.$message.error('请上传CSV格式文件，谢谢！');
                     return
                 } else {
-                    var form = new FormData();
+                    let form = new FormData();
                     form.append('f1',file);
                     if(this.$route.path.includes("broadcast")){
                         params.fileParam = form;
                         params.type = '1';
                         console.log(form, 'opopopopoppopop')
                         api.importfile.importFileData(params).then(res => {
-                            this.$message.success('导入成功');
+                            if(res){
+                                let messages = '';
+                                for(let i in res){
+                                    messages += "第"+i+"行错误: "+data[i]+"<br>";
+                                }
+                                this.$alert(messages, '导入提示', {
+                                    confirmButtonText: '确定',
+                                    dangerouslyUseHTMLString:true,
+                                    callback: action => {
+                                        this.$message.success('导入成功');
+                                    }
+                                });
+
+                            }else{
+                                this.$message.success('导入成功');
+                            }
                             this.$emit("getAllBroadcast");
                         }).catch(err => {
                             this.$message.error('导入失败，请稍后重试')
@@ -285,6 +302,7 @@
                     this.isShowIcon = true
                 }
                 this.$emit('toggleList',type)
+                this.$store.commit('SHOWHARDWAREICON',type)
             },
             downloadTemplate(){
                 window.location.href="/static/template/devices_import.csv";
@@ -335,10 +353,17 @@
                 if (this.listsLength > 0) {
                     this.pageAllNum = Math.ceil(this.listsLength / 35)
                 }
+            },
+            getHardWareIcon () {
+                this.toggleList(this.getHardWareIcon)
             }
         },
         created(){
             this.showPersonJob()
+            this.toggleList(this.getHardWareIcon)
+        },
+        computed: {
+            ...mapGetters(['getHardWareIcon'])
         }
     }
 </script>

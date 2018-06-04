@@ -8,6 +8,10 @@
                         @deletInfo = "deletInfo"
                         @selectedAll = 'selectedAll'
                         @startEndPlan="startEndPlan"
+                        @searchAnything="searchAnything"
+                        @choseType="choseType"
+                        :selectLength="choseInfoId.length"
+                        :listLength="patrolList.length"
                         @fixedInfo = 'fixedInfo'>
                 </Header>
             </div>
@@ -31,11 +35,18 @@
                             label="名称">
                         </el-table-column>
                         <el-table-column
+                            label="状态">
+                            <template slot-scope="scope">
+                                <span v-if="scope.row.inspectionSchedule.enabled">已开启</span>
+                                <span v-else>已停止</span>
+                            </template>
+                        </el-table-column>
+                        <el-table-column
                             prop="securityIds.length"
                             label="人员数量">
                         </el-table-column>
                         <el-table-column
-                            label="时间">
+                            label="执行日期">
                             <template slot-scope="scope">
                                 <span v-if="scope.row.inspectionSchedule.customizedDays">{{scope.row.inspectionSchedule.startDate}}~{{scope.row.inspectionSchedule.endDate}}</span>
                                 <span v-if="!scope.row.inspectionSchedule.customizedDays">{{scope.row.inspectionSchedule.days | weekFilter}}</span>
@@ -52,9 +63,16 @@
                             prop="routeName"
                             label="线路">
                         </el-table-column>
+                        <el-table-column
+                            label="描述">
+                            <template slot-scope="scope">
+                                <span class="description">{{scope.row.inspectionSchedule.description}}</span>
+                            </template>
+                        </el-table-column>
+
                         <el-table-column label="操作" width="200">
                             <template slot-scope="scope">
-                                <span @click="fixedInfo(scope.row,'巡更路线编辑')">编辑</span> |
+                                <span @click="fixedInfo(scope.row,'修改巡更计划')">编辑</span> |
                                 <span @click="stop(scope.row)" v-if="scope.row.inspectionSchedule.enabled">停止 |</span>
                                 <span @click="stop(scope.row)" v-else="!scope.row.inspectionSchedule.enabled">开始 |</span>
                                 <span @click="showPersonDetail(scope.row,'巡更路线信息',true)">查看</span> |
@@ -121,8 +139,31 @@
             }
         },
         methods: {
+            searchAnything (info) {
+                console.log(info, '这是要过滤的')
+                if (info.trim() !== '') {
+                    this.patrolList = this.checkList.filter(item => {
+                        if (item.inspectionSchedule.name.includes(info)) {
+                            return item
+                        }
+                        if (item.inspectionSchedule.description.includes(info)) {
+                            return item
+                        }
+                    })
+                } else {
+                    this.getAllpatrol()
+                }
+            },
             startEndPlan (state) {
                 console.log(this.choseInfoId, 'opopopop')
+                if(this.choseInfoId.length < 1) {
+                    if(state === 'start') {
+                        this.$message.error('请选择要开启的数据信息')
+                    } else {
+                        this.$message.error('请选择要关闭的数据信息')
+                    }
+                    return
+                }
                 let choseId = []
                 choseId = this.patrolList.filter(item => {
                     if (this.choseInfoId.includes(item.id)) {
@@ -148,6 +189,22 @@
                     }
                     return
                 }
+                if (state === 'end') {
+                    this.$confirm('确定要停止所选的计划吗, 是否继续?', '提示', {
+                        confirmButtonText: '确定',
+                        cancelButtonText: '取消',
+                        type: 'warning'
+                    }).then(() => {
+                        this.startEndPlanApi(choseId, state)
+                    }).catch(() => {
+                        this.$message.info('计划停止取消')
+                        return
+                    })
+                } else {
+                    this.startEndPlanApi(choseId, state)
+                }
+            },
+            startEndPlanApi (choseId, state) {
                 api.patrol.stareEndPlan(choseId).then(res => {
                     console.log(res, '更改状态成功')
                     if (state === 'start') {
@@ -186,7 +243,7 @@
                 this.isDisabled = state;
             },
             addNewInfo () {
-                this.showPersonDetail({inspectionSchedule: {}}, '添加人员调度', false)
+                this.showPersonDetail({inspectionSchedule: {}}, '添加巡更计划', false)
             },
             deletInfo (id) {
                 if (id) {
@@ -350,6 +407,32 @@
                     console.log(err, '失败')
                 })
             },
+            choseType (type) {
+                console.log(type, '这是传过来的')
+                type = type.map(item => {
+                    if (item === '开启') {
+                        return true
+                    } else{
+                        return false
+                    }
+                })
+                console.log(type, '这是过滤后的')
+                if (type.length === 0){
+                    this.patrolList = this.checkList.filter((item) => {
+                        item.status = true
+                        return item
+                    })
+                } else {
+                    this.patrolList = this.checkList.filter((item,index) => {
+                        if (type.includes(item.inspectionSchedule.enabled)) {
+                            item.status = true
+                        } else {
+                            item.status = false
+                        }
+                        return item.status === true
+                    })
+                }
+            },
             async getAllpatrol () {
                 this.isShowLoading = true
                 await api.patrol.getAllPatrol().then(res => {
@@ -371,6 +454,8 @@
                             item.inspectionSchedule.shifts = item.inspectionSchedule.shifts.split(',')
                         }
                     })
+                    this.choseInfoId = []
+                    this.checkList = this.patrolList
                 }).catch(err => {
                     console.log(err, '请求失败')
                     this.isShowLoading = false
@@ -497,7 +582,16 @@
                             line-height: rem(22);
                         }
                     }
-
+                }
+                .description {
+                    display: inline-block;
+                    width: rem(150);
+                    text-align: left;
+                    padding-right: rem(5);
+                    line-height: rem(20);
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    white-space: nowrap;
                 }
             }
         }

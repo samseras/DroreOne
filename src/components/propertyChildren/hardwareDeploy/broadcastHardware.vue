@@ -38,37 +38,52 @@
                         </el-table-column>
 
                         <el-table-column
-                            prop="name"
                             label="名称"
-                            width="120">
+                            width="230">
+                            <template slot-scope="scope">
+                                <span class="overflow">{{scope.row.name}}</span>
+                            </template>
                         </el-table-column>
                         <el-table-column
                             prop="positionType"
+                            width="150"
                             label="类型">
                             <template slot-scope="scope">
                                 <span>{{scope.row.positionType | changeFilter}}</span>
                             </template>
                         </el-table-column>
 
-
                         <el-table-column
                             prop="regionName"
+                            width="200"
                             label="所属片区">
                         </el-table-column>
 
                         <el-table-column
-                            prop="description"
                             label="描述">
+                            <template slot-scope="scope">
+                                <div class="box" v-if="scope.row.description">
+                                    <div class="bottom">
+                                        <el-tooltip class="item" effect="light" :content=scope.row.description placement="bottom">
+                                            <el-button>{{scope.row.description}}</el-button>
+                                        </el-tooltip>
+                                    </div>
+                                </div>
+                            </template>
+
                         </el-table-column>
 
                         <el-table-column
+                            width="150"
                             label="操作">
                             <template slot-scope="scope">
-                                <span @click="showBroadDetail(scope.row, '广播信息', true)">查看</span>
-                                <span class="line">|</span>
-                                <span @click="fixedInfo(scope.row.id )">编辑</span>
-                                <span class="line">|</span>
-                                <span @click="deletInfo(scope.row.id)">删除</span>
+                                <div class="handle">
+                                    <span @click="showBroadDetail(scope.row, '广播信息', true)">查看</span>
+                                    <span class="line">|</span>
+                                    <span @click="fixedInfo(scope.row.id )">编辑</span>
+                                    <span class="line">|</span>
+                                    <span @click="deletInfo(scope.row.id)">删除</span>
+                                </div>
                             </template>
                         </el-table-column>
                     </el-table>
@@ -231,25 +246,8 @@
                 })
             },
             fixedInfo(id){
-//                if(this.choseInfoId.includes(id)){
-//
-//                    if(this.choseInfoId.length>1){
-//                        this.$message.warning('只能选择一条数据')
-//                    }else{
-//                        this.broadList.map((item)=>{
-//                            if(item.id===this.choseInfoId[0]){
-//                                this.broadInfo=item
-//                            }
-//                        })
-//                        this.showBroadDetail(this.broadInfo,'修改广播信息')
-//                        this.isDisabled = false
-//                    }
-//                }else {
-//                    this.$message.warning('请选择要修改的摄像头')
-//                }
-
                 if (id) {
-                    this.choseInfoId.push(id)
+                    this.choseInfoId = [id]
                 }
                 if(this.choseInfoId.length > 1) {
                     this.$message.warning('至多选择一条数据')
@@ -269,7 +267,7 @@
             },
             deletInfo(id){
                 if (id) {
-                    this.choseInfoId.push(id)
+                    this.choseInfoId = [id]
                 }
                 if (this.choseInfoId.length > 0) {
                     this.$confirm('此操作将永久删除该数据, 是否继续?', '提示', {
@@ -289,7 +287,6 @@
                             this.getAllBroadcast()
                             this.$message.success('删除成功')
                             this.choseInfoId=[]
-                            this.getAllBroadcast()
                         }).catch(err =>{
                             this.$message.error('删除失败,请稍后重试')
                         })
@@ -372,13 +369,13 @@
             choseType(type){
                 console.log(type)
                 if(type.length===0){
-                    this.broadList=this.broadList.filter((item)=>{
+                    this.broadList=this.checkList.filter((item)=>{
 
                         item.status=true
                         return item
                     })
                 }else{
-                    this.broadList=this.broadList.filter((item,index)=>{
+                    this.broadList=this.checkList.filter((item,index)=>{
                             console.log(item.positionType)
                         if (item.positionType == 0) {
                             item.type = '室内'
@@ -387,12 +384,12 @@
                         }
                         if(type.includes(item.type)){
                             item.status=true
-                        }else if(!type.includes(item.type)){
+                        }else{
                             item.status=false
                             console.log(item.type)
                             console.log(item.positionType)
                         }
-                        return item
+                        return item.status === true
                     })
                 }
             },
@@ -482,12 +479,24 @@
 
 <style lang="scss" type="text/scss">
     .broadHard{
-        .el-checkbox__label{
-            padding-left:rem(5);
-            font-size:rem(13);
+        /*.el-checkbox__label{*/
+            /*padding-left:rem(5);*/
+            /*font-size:rem(13);*/
+        /*}*/
+        /*.el-checkbox__inner{*/
+            /*margin-top:rem(5);*/
+        /*}*/
+        .cameraList .el-button{
+            /*border:1px solid transparent;*/
+            text-align: left;
+            background: transparent;
         }
-        .el-checkbox__inner{
-            margin-top:rem(5);
+        .cameraList .box .el-button span{
+            display:inline-block;
+            width: 200px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
     }
 
@@ -564,10 +573,17 @@
                             top:rem(-10);
                         }
                         span{
-                            float:right;
-                            margin-right:rem(20);
-                            line-height: rem(25);
-                            color:#fff;
+                            display: inline-block;
+                            width: rem(100);
+                            float: right;
+                            text-align: right;
+                            line-height: rem(20);
+                            color: #fff;
+                            padding-right: rem(5);
+                            overflow: hidden;
+                            text-overflow: ellipsis;
+                            white-space: nowrap;
+                            box-sizing: border-box;
                         }
                     }
                     .specificInfo{
@@ -600,7 +616,18 @@
                         }
                     }
                 }
+                .handle {
+                    span{
+                        cursor: pointer;
+                    }
+                }
             }
+        }
+        .overflow {
+            display: inline-block;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            display:inline-block;
         }
     }
 </style>

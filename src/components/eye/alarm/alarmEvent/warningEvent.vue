@@ -56,12 +56,12 @@
                             label="严重等级">
                         </el-table-column>
                         <el-table-column
-                            prop="owner.name"
+                            prop="ownerName"
                             label="负责人">
                         </el-table-column>
                         <el-table-column
                             sortable
-                            prop="owner.tel"
+                            prop="ownerTel"
                             label="负责人电话">
                         </el-table-column>
                         <el-table-column label="操作" width="200">
@@ -80,7 +80,6 @@
                               @closeDialog ="closeDialog"
                               :title = "title"
                               @saveEditInfo="saveEditInfo"
-                              @saveInfo="saveInfo"
                               :isBatchEdit="isBatchEdit"
                               :choseInfos = 'choseInfos'>
                 </AlarmDetail>
@@ -112,12 +111,9 @@
                         occurenceTime:'2018-05-11 12:20:39',
                         severityId:'1',
                         severityName:'高',
-                        owner:{
-                            id:"1",
-                            name:'aaa',
-                            tel:'18672019008'
-                        },
-
+                        ownerId:"c79d9e71-8e84-44c3-9b28-049fe79deb18",
+                        ownerName:'赵子龙',
+                        ownerTel:'13511111111'
 
                     },
                     {
@@ -133,14 +129,50 @@
                         occurenceTime:'2017-01-09 19:33:01',
                         severityId:'2',
                         severityName:'中',
-                        owner:{
-                            id:"2",
-                            name:'bbb',
-                            tel:'13000100190'
-                        },
+                        ownerId:"a7a9ef0f-7475-4015-9317-c880d3c38db0",
+                        ownerName:'关羽',
+                        ownerTel:'13712111111'
 
                     }
                     ],
+                warningEventListTemp:[
+                    {
+                        serialNum:'sos001',
+                        alarmRuleId:'2',
+                        alarmRuleName:'消防',
+                        envTypeId:'1',
+                        envTypeName:'温度',
+                        sourceDeviceId:'1',
+                        sourceDeviceName:'报警柱001',
+                        statusId:'1',
+                        statusName :'新告警',
+                        occurenceTime:'2018-05-11 12:20:39',
+                        severityId:'1',
+                        severityName:'高',
+                        ownerId:"c79d9e71-8e84-44c3-9b28-049fe79deb18",
+                        ownerName:'赵子龙',
+                        ownerTel:'13511111111'
+
+                    },
+                    {
+                        serialNum:'sos002',
+                        alarmRuleId:'1',
+                        alarmRuleName:'报警柱',
+                        envTypeId:'2',
+                        envTypeName:'PM2.5',
+                        sourceDeviceId:'2',
+                        sourceDeviceName:'报警柱002',
+                        statusId:'2',
+                        statusName :'处理中',
+                        occurenceTime:'2017-01-09 19:33:01',
+                        severityId:'2',
+                        severityName:'中',
+                        ownerId:"a7a9ef0f-7475-4015-9317-c880d3c38db0",
+                        ownerName:'关羽',
+                        ownerTel:'13712111111'
+
+                    }
+                ],
                 visible: false,
                 warningEventInfo: {},
                 choseInfos: [],
@@ -150,7 +182,6 @@
                 selection:[],
                 isShowloading: false,
                 isBatchEdit:false
-
             }
         },
         methods: {
@@ -184,16 +215,15 @@
             },
             choseType(type){
                 console.log(type)
-                let dataList = this.warningEventList;
+                let dataList = this.warningEventListTemp;
                 let tempList = [];
-                this.warningEventList = this.warningEventList.filter((item,index)=>{
-                    if(type.includes(item.status.id)){
-                        tempList.push(item);
-                    }
-                })
+                if(type.length > 0){
+                    tempList = dataList.filter((item)=>type.includes(item.statusId))
+                }else{
+                    tempList = dataList;
+                }
 
                return this.warningEventList = tempList;
-
             },
             closeDialog () {
                 this.visible = false
@@ -307,15 +337,13 @@
 
                 }
             },
-            saveInfo(){  //新增保存
-
-            },
             async getAllAlarmEvent () {
                 this.isShowLoading = true
                 await   api.alarm.getAllAlarmEvent().then(res => {
                                 console.log(res, '请求成功')
                                 this.isShowLoading = false
                                 this.warningEventList = res
+                                this.warningEventListTemp = res
                                 this.warningEventList.forEach(item => {
                                     item.checked = false;
                                 })
@@ -323,10 +351,11 @@
                             console.log(err, '请求失败')
                             this.isShowLoading = false
                         })
-            },
+            }
         },
         created () {
             this.getAllAlarmEvent();
+            console.log(this.personInfo)
         },
         components: {
             ScrollContainer,

@@ -39,10 +39,10 @@
                         <el-table-column
                             prop="scenicspotBean.name"
                             label="景点名称"
-                            width="150">
+                            width="200">
                         </el-table-column>
                         <el-table-column
-                            width="150"
+                            width="200"
                             prop="regionName"
                             label="所属片区">
                         </el-table-column>
@@ -71,9 +71,13 @@
                             width="150"
                             label="操作">
                             <template slot-scope="scope">
-                                <span @click="showPersonDetail(scope.row, '人员信息',true)">查看</span>
-                                <span @click="fixedInfo(scope.row.id )">编辑</span>
-                                <span @click="deletInfo(scope.row.id)">删除</span>
+                                <div class="handle">
+                                    <span @click="showPersonDetail(scope.row, '人员信息',true)">查看</span>
+                                    <span class="line">|</span>
+                                    <span @click="fixedInfo(scope.row.id )">编辑</span>
+                                    <span class="line">|</span>
+                                    <span @click="deletInfo(scope.row.id)">删除</span>
+                                </div>
                             </template>
                         </el-table-column>
                     </el-table>
@@ -93,6 +97,7 @@
                             <p class="sex">状&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;态：<span>{{item.scenicspotBean.status}}</span></p>
                             <!--<p class="idNum">当前人数：<span>{{item.scenicspotBean.currentNum}}</span></p>-->
                             <p class="phoneNum">最大容量：<span>{{item.scenicspotBean.capacity}}</span></p>
+                            <p class="sex text">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：<span>{{item.description}}</span></p>
                         </div>
                     </div>
                 </ScrollContainer>
@@ -184,7 +189,7 @@
             },
             deletInfo (id) {
                 if (id) {
-                    //this.choseInfoId.push(id)
+                    this.choseInfoId = [id]
                 }
                 if (this.choseInfoId.length > 0) {
                     this.$confirm('此操作将永久删除该数据, 是否继续?', '提示', {
@@ -355,7 +360,7 @@
             },
             fixedInfo (id) {
                 if (id) {
-                    //this.choseInfoId.push(id)
+                    this.choseInfoId = [id]
                 }
                 if (this.choseInfoId.length > 1) {
                     this.$message.warning('至多选择一个数据修改')
@@ -538,6 +543,11 @@
                             text-overflow: ellipsis;
                             white-space: nowrap;
                         }
+                    }
+                }
+                .handle{
+                    span{
+                        cursor: pointer;
                     }
                 }
             }

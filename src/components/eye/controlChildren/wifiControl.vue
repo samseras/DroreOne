@@ -156,10 +156,12 @@
                     this.lightList.forEach(item => {
                         item.label = item.name
                         item.type = 'wifi'
-                        if (item.status ==="ONLINE")  {
-                            item.icon = '../../../static/img/wifi_open.svg'
-                        } else {
+                        if (item.status =="FAULT")  {
+                            item.icon = '../../../static/img/wifi_damage.svg'
+                        } else  if (item.status =="OFFLINE") {
                             item.icon = '../../../static/img/wifi.svg'
+                        }else {
+                            item.icon = '../../../static/img/wifi_open.svg'
                         }
                         if (item.regionId) {
                             if (!regionIdList.includes(item.regionId)) {

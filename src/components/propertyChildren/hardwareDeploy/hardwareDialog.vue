@@ -51,7 +51,7 @@
                     </p>
                     <p class="description ms">
                         <span class="des">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：</span>
-                        <el-input type="textarea" v-model="camera.description" :disabled="isDisabled"></el-input>
+                        <el-input type="textarea" v-model="camera.description" :disabled="isDisabled" :maxlength="140"></el-input>
                     </p>
                     <div class="img">
                         <img :src="getUrl(camera.picturePath)" alt="" v-if="isDisabled" @error="imgError">
@@ -96,13 +96,14 @@
                             <el-option
                                 v-for="item in regions"
                                 :value="item.id"
+                                :key="item.id"
                                 :label="item.name">
                             </el-option>
                         </el-select>
                     </p>
                     <p class="describe ms">
                         <span class="des">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述:</span>
-                        <el-input type="textarea" v-model="broadCast.description" :disabled="isDisabled" ></el-input>
+                        <el-input type="textarea" v-model="broadCast.description" :disabled="isDisabled" :maxlength="140"></el-input>
                     </p>
                     <div class="img">
                         <img :src="getUrl(broadCast.picturePath)" alt="" v-if="isDisabled" @error="imgError">
@@ -155,6 +156,7 @@
                             <el-option
                                 v-for="item in regions"
                                 :value="item.id"
+                                :key="item.id"
                                 :label="item.name">
                             </el-option>
                         </el-select>
@@ -163,7 +165,7 @@
                     <p class="describe textarea ms">
                         <span class="des">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：</span>
 
-                        <el-input type="textarea" v-model="led.description" :disabled="isDisabled"></el-input>
+                        <el-input type="textarea" v-model="led.description" :disabled="isDisabled" :maxlength="140"></el-input>
                     </p>
                     <div class="img">
                         <img :src="getUrl(led.picturePath)" alt="" v-if="isDisabled" @error="imgError">
@@ -192,7 +194,7 @@
                             </el-option>
                         </el-select>
                     </p>
-                    <p class="model" v-if="modelExtend" v-for="item in extend">
+                    <p class="model" v-if="modelExtend" v-for="item in extend" :key="item.name">
                         {{item.label}}:
                         <input type="text" v-bind:class="item.name" v-model="item.value" v-if="item.type === 'STRING'">
                         <el-select name="" v-model="item.value" v-if="item.type === 'BOOLEAN'" v-bind:class="item.name">
@@ -223,13 +225,14 @@
                             <el-option
                                 v-for="item in regions"
                                 :value="item.id"
+                                :key="item.id"
                                 :label="item.name"></el-option>
                         </el-select>
                     </p>
                    <p class="describe ms">
                        <span class="des">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：</span>
 
-                        <el-input type="textarea" v-model="wifi.description" :disabled="isDisabled" ></el-input>
+                        <el-input type="textarea" v-model="wifi.description" :disabled="isDisabled" :maxlength="140"></el-input>
                     </p>
                     <div class="img">
                         <img :src="getUrl(wifi.picturePath)" alt="" v-if="isDisabled" @error="imgError">
@@ -280,13 +283,14 @@
                             <el-option
                                 v-for="item in regions"
                                 :value="item.id"
+                                :key="item.id"
                                 :label="item.name"></el-option>
                         </el-select>
                     </p>
                     <p class="describe ms">
                         <span class="des">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述:</span>
 
-                        <el-input type="textarea" v-model="monitors.description" :disabled="isDisabled"></el-input>
+                        <el-input type="textarea" v-model="monitors.description" :disabled="isDisabled" :maxlength="140"></el-input>
                     </p>
                     <div class="img">
                         <img :src="getUrl(monitors.picturePath)" alt="" v-if="isDisabled" @error="imgError">
@@ -326,7 +330,10 @@
                     </p>
                     <p class="area wrapstyle selectstyle">所属片区:
                         <el-select name="" v-model="Light.regionId" :disabled="isDisabled">
-                            <el-option  v-for="item in regions" :value="item.id"
+                            <el-option
+                                v-for="item in regions"
+                                :value="item.id"
+                                :key="item.id"
                                 :label="item.name">
 
                             </el-option>
@@ -335,7 +342,7 @@
                     <p class="describe ms">
                         <span class="des">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述:</span>
 
-                        <el-input type="textarea" v-model="Light.description" :disabled="isDisabled"></el-input>
+                        <el-input type="textarea" v-model="Light.description" :disabled="isDisabled" :maxlength="140"></el-input>
                     </p>
                     <div class="img">
                         <img :src="getUrl(Light.picturePath)" alt="" v-if="isDisabled" @error="imgError">
@@ -384,13 +391,16 @@
                     </p>
                     <p class="area wrapstyle selectstyle">所属片区:
                         <el-select name="" v-model="gate.regionId" :disabled="isDisabled">
-                            <el-option  v-for="item in regions" :value="item.id"
+                            <el-option
+                                v-for="item in regions"
+                                :value="item.id"
+                                :key="item.id"
                                 :label="item.name"></el-option>
                         </el-select>
                     </p>
                     <p class="describe ms">
                         <span class="des">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述:</span>
-                        <el-input type="textarea"  v-model="gate.description" :disabled="isDisabled"></el-input>
+                        <el-input type="textarea"  v-model="gate.description" :disabled="isDisabled" :maxlength="140"></el-input>
                     </p>
                     <div class="img">
                         <img :src="getUrl(gate.picturePath)" alt="" v-if="isDisabled" @error="imgError">
@@ -439,14 +449,17 @@
                     </p>
                     <p class="area wrapstyle selectstyle">所属片区:
                         <el-select name="" v-model="police.regionId" :disabled="isDisabled">
-                            <el-option  v-for="item in regions" :value="item.id"
+                            <el-option
+                                v-for="item in regions"
+                                :value="item.id"
+                                :key="item.id"
                                 :label="item.name"></el-option>
                         </el-select>
                     </p>
                     <p class="describe ms">
                         <span class="des">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述:</span>
 
-                        <el-input type="textarea" v-model="police.description" :disabled="isDisabled" ></el-input>
+                        <el-input type="textarea" v-model="police.description" :disabled="isDisabled" :maxlength="140"></el-input>
                     </p>
                     <div class="img">
                         <img :src="getUrl(police.picturePath)" alt="" v-if="isDisabled" @error="imgError">
@@ -1581,10 +1594,12 @@
 
 </style>
 <style>
-    .el-input.is-disabled .el-input__inner,.el-textarea.is-disabled .el-textarea__inner{
+
+    .hardwareDialog .el-input.is-disabled .el-input__inner,.el-textarea.is-disabled .el-textarea__inner{
             background-color:transparent;
+            color:#c0c4cc;
         }
-    .ms .el-textarea__inner{
+    .hardwareDialog .ms .el-textarea__inner{
             font-size:.75rem;
             font-family: Arial;
     }
@@ -1605,6 +1620,10 @@
     }
     .hardwareDialog .popCard .equipmentStyle .el-select,.hardwareDialog .popCard .equipmentStyle .el-select .el-input{
         width:12rem;
+    }
+    .hardwareDialog .cardFooter .el-button{
+        color:#c0c4cc;
+        border:1px solid #dcdfe6;
     }
 </style>
 

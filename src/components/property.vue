@@ -16,12 +16,12 @@
                     <el-menu  class="el-menu-demo" mode="horizontal" router>
                         <el-submenu index="">
                             <template slot="title">
-                                <span class="Admin">Admin</span>
+                                <span class="Admin">{{getUserInfo}}</span>
                                 <img src="./../../static/img/peopleInfo.svg" alt="">
                             </template>
                             <el-menu-item index="">个人中心</el-menu-item>
                             <el-menu-item index="/droreone">返回主页</el-menu-item>
-                            <el-menu-item @click="logout"index="/login">退出</el-menu-item>
+                            <el-menu-item @click="logout"index="">退出</el-menu-item>
                         </el-submenu>
                     </el-menu>
                 </div>
@@ -35,6 +35,7 @@
 
 <script>
     import ScrollContainer from '@/components/ScrollContainer'
+    import { mapGetters,mapActions } from 'vuex'
 
     export default {
         name: "property",
@@ -55,9 +56,17 @@
             ScrollContainer
         },
         methods:{
+            ...mapActions(['logout']),
             logout() {
-                this.$router.push('/login')
+                let data = JSON.parse(localStorage.getItem('token'))
+                this.$store.dispatch('logout',data).then(() => {
+                    this.$message.success('登出成功')
+                    location.reload()
+                })
             }
+        },
+        computed: {
+            ...mapGetters(['getUserInfo'])
         }
     }
 </script>
@@ -148,6 +157,7 @@
             display: flex;
             .el-menu {
                 width: 15%;
+
             }
             .content {
                 flex: 1;

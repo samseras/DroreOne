@@ -43,7 +43,7 @@ import Build from "@/components/eye/facilityChildren/buildFacility"//建筑
 import ScenicName from "@/components/eye/facilityChildren/scenicNameFacility"//景点
 import Plant from "@/components/eye/facilityChildren/plantFacility"//植物
 import Indicator from "@/components/eye/facilityChildren/indicatorFacility"//指示牌
-
+import Trash from "@/components/eye/facilityChildren/trashFacility"//垃圾桶
 
 
 
@@ -152,11 +152,6 @@ const routes = [
       path: '/MicServiceManagementSystem',
       component: MicServiceManagementSystem
     },
-    // //404页面
-    // {
-    //     path: '/err',
-    //     component: Error
-    // },
       // 主页面
     {
       path: '/droreone',
@@ -225,7 +220,9 @@ const routes = [
                     {path: '/facility/scenic',name: 'ScenicName', component:ScenicName},
                     {path: '/facility/build',name: 'Build', component:Build},
                     {path: '/facility/plant',name: 'Plant', component:Plant},
-                    {path: '/facility/indicator',name: 'Indicator', component:Indicator}
+                    {path: '/facility/indicator',name: 'Indicator', component:Indicator},
+                    {path: '/facility/trash',name: 'Trash', component:Trash}
+
                 ]
             },
             //调度
@@ -413,6 +410,19 @@ const routes = [
 const router = new Router({
     mode: 'history',
     routes
+})
+
+// 路由拦截
+router.beforeEach((to, from, next) => {
+    next(true)
+    let token = localStorage.getItem('token')
+    if (token) {
+        if (to.path === '/login') {
+            next()
+        }
+    } else {
+        next('/login')
+    }
 })
 export default router
 // })

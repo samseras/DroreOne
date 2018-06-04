@@ -9,6 +9,10 @@
                         @deletInfo = "deletInfo"
                         @selectedAll = 'selectedAll'
                         @startEndPlan="startEndPlan"
+                        @searchAnything="searchAnything"
+                        @choseType="choseType"
+                        :selectLength="choseInfoId.length"
+                        :listLength="lamppostList.length"
                         @fixedInfo = 'fixedInfo'>
                 </Header>
             </div>
@@ -34,15 +38,18 @@
                             width="120">
                         </el-table-column>
                         <el-table-column
-                            prop="lightSchedule.description"
-                            label="描述">
+                            label="状态">
+                            <template slot-scope="scope">
+                                <span v-if="scope.row.lightSchedule.enabled">已开启</span>
+                                <span v-else>已停止</span>
+                            </template>
                         </el-table-column>
                         <el-table-column
                             prop="lightIds.length"
                             label="硬件总数">
                         </el-table-column>
                         <el-table-column
-                            label="时间">
+                            label="执行日期">
                             <template slot-scope="scope">
                                 <span v-if="scope.row.lightSchedule.customizedDays">{{scope.row.lightSchedule.startDate}}~{{scope.row.lightSchedule.endDate}}</span>
                                 <span v-if="!scope.row.lightSchedule.customizedDays">{{scope.row.lightSchedule.days | weekFilter}}</span>
@@ -54,12 +61,18 @@
                                 <span>{{scope.row.lightSchedule.startTime}}~{{scope.row.lightSchedule.endTime}}</span>
                             </template>
                         </el-table-column>
+                        <el-table-column
+                            label="描述">
+                            <template slot-scope="scope">
+                                <span class="description">{{scope.row.lightSchedule.description}}</span>
+                            </template>
+                        </el-table-column>
                         <el-table-column label="操作" width="200">
                             <template slot-scope="scope">
-                                <span @click="fixedInfo(scope.row,'路灯编辑')" class="edit">编辑</span> |
+                                <span @click="fixedInfo(scope.row,'修改照明计划')" class="edit">编辑</span> |
                                 <span @click="stop(scope.row)" v-if="scope.row.lightSchedule.enabled">停止 |</span>
                                 <span @click="stop(scope.row)" v-else="!scope.row.lightSchedule.enabled">开始 |</span>
-                                <span @click="showCheckDetail(scope.row,'路灯信息')">查看</span> |
+                                <span @click="showPersonDetail(scope.row,'路灯信息',true)">查看</span> |
                                 <span @click="deletInfo(scope.row.id)">删除</span>
                             </template>
                         </el-table-column>
@@ -116,8 +129,31 @@
             }
         },
         methods: {
+            searchAnything (info) {
+                console.log(info, '这是要过滤的')
+                if (info.trim() !== '') {
+                    this.lamppostList = this.checkList.filter(item => {
+                        if (item.lightSchedule.name.includes(info)) {
+                            return item
+                        }
+                        if (item.lightSchedule.description.includes(info)) {
+                            return item
+                        }
+                    })
+                } else {
+                    this.getLamppostList()
+                }
+            },
             startEndPlan (state) {
                 console.log(this.choseInfoId, 'opopopop')
+                if(this.choseInfoId.length < 1) {
+                    if(state === 'start') {
+                        this.$message.error('请选择要开启的数据信息')
+                    } else {
+                        this.$message.error('请选择要关闭的数据信息')
+                    }
+                    return
+                }
                 let choseId = []
                 choseId = this.lamppostList.filter(item => {
                     if (this.choseInfoId.includes(item.id)) {
@@ -135,7 +171,6 @@
                 choseId = choseId.map(item => {
                     return item.id
                 })
-                console.log(choseId, 'opopop')
                 if(choseId.length < 1) {
                     if (state === 'start') {
                         this.$message.info('当前选中的计划已开启')
@@ -144,6 +179,22 @@
                     }
                     return
                 }
+                if (state === 'end') {
+                    this.$confirm('确定要停止所选的计划吗, 是否继续?', '提示', {
+                        confirmButtonText: '确定',
+                        cancelButtonText: '取消',
+                        type: 'warning'
+                    }).then(() => {
+                        this.startEndPlanApi(choseId, state)
+                    }).catch(() => {
+                        this.$message.info('计划停止取消')
+                        return
+                    })
+                } else {
+                    this.startEndPlanApi(choseId, state)
+                }
+            },
+            startEndPlanApi (choseId, state) {
                 api.lamppost.stareEndPlan(choseId).then(res => {
                     console.log(res, '更改状态成功')
                     if (state === 'start') {
@@ -161,7 +212,6 @@
 
                 }).catch(err => {
                     console.log(err, '计划开启失败')
-
                     if (state === 'start') {
                         this.$message.error('计划开启失败，请稍后重试')
                     } else {
@@ -176,6 +226,32 @@
                 this.choseInfoId = selection.map(item => {
                     return item.id
                 })
+            },
+            choseType (type) {
+                console.log(type, '这是传过来的')
+                type = type.map(item => {
+                    if (item === '开启') {
+                        return true
+                    } else{
+                        return false
+                    }
+                })
+                console.log(type, '这是过滤后的')
+                if (type.length === 0){
+                    this.lamppostList = this.checkList.filter((item) => {
+                        item.status = true
+                        return item
+                    })
+                } else {
+                    this.lamppostList = this.checkList.filter((item,index) => {
+                        if (type.includes(item.lightSchedule.enabled)) {
+                            item.status = true
+                        } else {
+                            item.status = false
+                        }
+                        return item.status === true
+                    })
+                }
             },
             async getLamppostList (){
                 this.isShowLoading = true
@@ -194,6 +270,8 @@
                             item.lightSchedule.days = item.lightSchedule.days.split(',')
                         }
                     })
+                    this.choseInfoId = []
+                    this.checkList = this.lamppostList
                 }).catch(err => {
                     console.log(err, '请求失败')
                     this.isShowLoading = false
@@ -212,7 +290,7 @@
                 this.isDisabled = true;
             },
             addNewInfo () {
-                this.showPersonDetail({lightSchedule:{}}, '添加灯光照明',false)
+                this.showPersonDetail({lightSchedule:{}}, '添加照明计划',false)
                 this.isDisabled = false
             },
             deletInfo (id) {
@@ -476,6 +554,16 @@
                             line-height: rem(22);
                         }
                     }
+                }
+                .description {
+                    display: inline-block;
+                    width: rem(150);
+                    text-align: left;
+                    padding-right: rem(5);
+                    line-height: rem(20);
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    white-space: nowrap;
                 }
             }
         }

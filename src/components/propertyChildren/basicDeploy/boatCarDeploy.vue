@@ -9,8 +9,10 @@
                         @deletInfo = "deletInfo"
                         @toggleList = "toggleList"
                         :choseId="choseInfoId"
-                        :listsLength="boatCarList.length"
+                        :listsLength="listLength"
                         :personListFlag="selectFlag"
+                        @nextPage="nextPage"
+                        @previousPage="previousPage"
                         @choseType = 'choseType'
                         @selectedAll = 'selectedAll'
                         @fixedInfo = 'fixedInfo'
@@ -76,6 +78,7 @@
                             label="维护时间">
                         </el-table-column>
                         <el-table-column
+                            width="150"
                             label="操作">
                             <template slot-scope="scope">
                                 <span class="formBtn" @click="showPersonDetail(scope.row, '车船信息',true)">查看</span>
@@ -91,18 +94,17 @@
                             <el-checkbox v-model="item.checked" @change="getChecked(item.id)" class="checkBtn"></el-checkbox>
                         </div>
                         <div class="personType" :class="item.type === '车辆'? 'carInfo':''" @click.stop="showPersonDetail(item ,'车船信息',true)">
-                            <!--<img src="../../../../static/img/boatCartCard.png" alt="">-->
                             <img :src="getUrl(item.picturePath)" alt="" @error="imgError">
                             <span class="type">
-                                  {{item.vehicle.type | boatFilter}}信息
+                                  {{item.vehicle.serialNum}}
                             </span>
                         </div>
                         <div class="specificInfo">
-                            <!--<p class="name">驾驶人员：<span>{{item.driverName}}</span></p>-->
-                            <p class="name">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称：<span>{{item.vehicle.serialNum}}</span></p>
+                            <p class="name">类&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;型：<span>{{item.vehicle.type | boatFilter}}</span></p>
                             <p class="sex">状&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;态：<span>{{item.vehicle.maintenanceStatus | statusFilter}}</span></p>
                             <p class="idNum">核载人数：<span>{{item.vehicle.capacity}}</span></p>
                             <!--<p class="phoneNum">电&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;话：<span>{{item.driverPhone}}</span></p>-->
+                            <p class="sex text">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：<span>{{item.description}}</span></p>
                         </div>
                     </div>
                 </ScrollContainer>
@@ -143,7 +145,10 @@
                 isDisabled: true,
                 title: '',
                 isShowLoading: false,
-                selection: []
+                selection: [],
+                currentNum: 50,
+                listLength: '',
+                pageNum: 1
             }
         },
         methods: {
@@ -198,7 +203,9 @@
                 this.isDisabled = false
             },
             deletInfo (id) {
-                console.log(this.choseInfoId);
+                if (id) {
+                    this.choseInfoId = [id]
+                }
                 if (this.choseInfoId.length > 0) {
                     this.$confirm('此操作将永久删除该数据, 是否继续?', '提示', {
                         confirmButtonText: '确定',
@@ -375,7 +382,7 @@
             },
             fixedInfo (id) {
                 if (id) {
-                    //this.choseInfoId.push(id)
+                    this.choseInfoId = [id]
                 }
                 if (this.choseInfoId.length > 1) {
                     this.$message.warning('至多选择一个数据修改')
@@ -394,12 +401,30 @@
                      this.$message.error('请选择一条数据')
                  }
             },
+            previousPage (page) {
+                console.log(page, '这是传过来的pageNum')
+                this.pageNum = page
+                this.getAllBoat ()
+            },
+            nextPage (page) {
+                console.log(page, '这个是下一页的pageNUM')
+                this.pageNum = page
+                this.getAllBoat ()
+            },
             async getAllBoat (){
                 this.isShowLoading = true
                 await api.boat.getAllBoat().then(res => {
                     this.isShowLoading = false
+                    this.listLength = res.length;
                     this.boatCarList = res
+                    this.boatCarList = this.boatCarList.filter((item,index) => {
+                        if (index < (this.pageNum * 35 ) && index > ((this.pageNum -1) * 35 ) - 1 ) {
+                            return item
+                        }
+                    })
+
                     console.log(res, '这是请求回来的')
+
                     for (let i = 0; i < this.boatCarList.length; i++) {
                         this.boatCarList[i].checked = false
                         this.boatCarList[i].status = true

@@ -21,7 +21,7 @@
                             </div>
                             <div class="searchContent" v-if="searchList.length>0" v-loading="isShowloading">
                                 <ul ref="dev">
-                                    <li>
+                                    <li
                                         v-for="(item,index) in searchList"
                                         :class="searchIndex === index? 'active': ''"
                                         :ref="isCur(index) && 'searchContent'"
@@ -31,10 +31,9 @@
                             </div>
                         </div>
                     </el-col>
-
                     <el-col :xs="7" :sm="6" :md="5" :lg="4" :xl="3">
                         <button @click="showSearch" class="hitSearch" ref="hitSearch">
-                            <i class="el-icon-search"></i>
+                            <i class="el-icon-search showSearch"></i>
                         </button>
                         <div v-for="item in title">
                             <a href="#">
@@ -47,12 +46,12 @@
                             <el-menu  class="el-menu-demo" mode="horizontal" router>
                                 <el-submenu index="">
                                     <template slot="title">
-                                        <span class="Admin">Admin</span>
+                                        <span class="Admin">{{getUserInfo}}</span>
                                         <img src="./../../../static/img/peopleInfo.svg" alt="">
                                     </template>
                                     <el-menu-item index="">个人中心</el-menu-item>
                                     <el-menu-item index="/droreone">返回主页</el-menu-item>
-                                    <el-menu-item index="/login">退出</el-menu-item>
+                                    <el-menu-item @click="logout" index="">退出</el-menu-item>
                                 </el-submenu>
                             </el-menu>
                         </div>
@@ -70,7 +69,7 @@
 <script>
     import moment from 'moment'
     import api from '@/api'
-    import {mapMutations} from 'vuex'
+    import { mapMutations, mapGetters, mapActions} from 'vuex'
 
     export default {
         data() {
@@ -86,16 +85,16 @@
                 searchIndex: 0,
                 isShowloading: false,
                 facilityType: [
-                    {type: 1,route: '/facility/build'},
-                    {type: 2,route: '/facility/shop'},
-                    {type: 4,route: '/facility/dustbin'},
-                    {type: 5,route: '/facility/park'},
-                    {type: 6,route: '/facility/scenicName'},
-                    {type: 8,route: '/facility/build'},//植物
-                    {type: 9,route: '/facility/build'},//指示牌
-                    {type: 10,route: '/facility/build'},//卫生间
-                    {type: 12,route: '/facility/road'},
-                    {type: 14,route: '/facility/build'},//片区
+                    {type: 1,route: '/facility/build'},//建筑
+                    {type: 2,route: '/facility/shop'},//商圈
+                    {type: 4,route: '/facility/trash'},//垃圾桶
+                    {type: 5,route: '/facility/park'},//停车场
+                    {type: 6,route: '/facility/scenic'},//景点
+                    {type: 8,route: '/facility/plant'},//植物
+                    {type: 9,route: '/facility/indicator'},//指示牌
+                    {type: 10,route: '/facility/toilet'},//卫生间
+                    {type: 12,route: '/facility/road'},//路网
+                    {type: 14,route: '/facility/road'},//片区
                     {type: 301,route: '/controler/broad'},//广播
                     {type: 302,route: '/controler/camera'},//摄像头
                     {type: 303,route: '/controler/broad'},//闸机
@@ -103,7 +102,7 @@
                     {type: 305,route: '/controler/light'},//路灯
                     {type: 306,route: '/controler/environment'},//传感器
                     {type: 307,route: '/controler/wifi'},//wifi
-                    {type: 308,route: '/controler/warn'},//告警
+                    {type: 308,route: '/controler/broad'},//告警
                     {type: 309,route: '/controler/broad'},//gps
                     {type: 7,route: '/controler/person'},//人
                     {type: 11,route: '/controler/car'},//车船
@@ -209,6 +208,7 @@
         },
         methods: {
             ...mapMutations(['SEARCH_INFO','SHOW_SEARCH']),
+            ...mapActions(['logout']),
             changeLanguage () {// 语言切换
                 if (this.$i18n.locale === 'CN'){
                     this.$i18n.locale = 'EN'
@@ -256,8 +256,9 @@
                 return index === this.activeIndex
             },
             closeSearch (e) {
+                //showSearch
                 this.searchList = []
-                if (e.target.className === 'el-icon-search' || e.target.className === 'searchBox') {
+                if (e.target.className.includes('showSearch') || e.target.className === 'searchBox') {
                     this.showSearch()
                 } else {
                     this.hideSearch()
@@ -343,12 +344,22 @@
                 this.searchContent = item.name
                 this.$store.commit('SEARCH_INFO', item)
                 this.searchList = []
+            },
+            logout() {
+                let data = JSON.parse(localStorage.getItem('token'))
+                this.$store.dispatch('logout',data).then(() => {
+                    this.$message.success('登出成功')
+                    location.reload()
+                })
             }
         },
         mounted(){
 
         },
-        components: {}
+        components: {},
+        computed: {
+            ...mapGetters(['getUserInfo'])
+        }
     }
 </script>
 
@@ -517,7 +528,7 @@
         .search{
             width: 100%;
             height: 100%;
-            /*position: relative;*/
+            position: relative;
             .searchInput{
                 width: 100%;
                 height: rem(60);
@@ -580,7 +591,7 @@
             }
             .searchContent{
                 position: absolute;
-                width: 80%;
+                width: 62%;
                 background: rgba(161, 187, 79, 0.6);
                 border-bottom-left-radius: rem(5);
                 border-bottom-right-radius: rem(5);

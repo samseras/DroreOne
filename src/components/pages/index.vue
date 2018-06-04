@@ -6,7 +6,7 @@
             <div id="getTime">
                 {{currTime | timeFiler}} ({{currTime | weekFiler}})
             </div>
-            <div class="user">王显涛</div>
+            <div class="user">{{getUserInfo}}</div>
             <a class="indexExit" href="login" ></a>
         </header>
 		<div class="main">
@@ -88,6 +88,7 @@
 <script>
     import moment from 'moment'
     import ScrollContainer from '@/components/ScrollContainer'
+    import { mapGetters } from 'vuex'
 	export default {
 		data() {
 	        return {
@@ -204,6 +205,9 @@
         },
         components: {
             ScrollContainer
+        },
+        computed: {
+            ...mapGetters(['getUserInfo'])
         }
 
 	}
