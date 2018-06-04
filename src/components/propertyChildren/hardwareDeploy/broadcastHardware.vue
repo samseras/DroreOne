@@ -487,13 +487,12 @@
         /*.el-checkbox__inner{*/
             /*margin-top:rem(5);*/
         /*}*/
-        .cameraList .el-button{
+        .cameraList .box .el-tooltip{
             /*border:1px solid transparent;*/
             text-align: left;
             background: transparent;
             border: none;
             padding: 0;
-            /*background: transparent;*/
         }
         .cameraList .box .el-button span{
             display:inline-block;

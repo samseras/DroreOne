@@ -466,12 +466,11 @@
         .el-checkbox__inner{
             margin-top:rem(5);
         }
-        .cameraList .el-button{
-
-            text-align: left;
+        .cameraList .box .el-tooltip{
             background: transparent;
-            padding: 0;
+            text-align: left;
             border: none;
+            padding: 0;
         }
         .cameraList .box .el-button span{
             display:inline-block;
