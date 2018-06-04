@@ -2307,6 +2307,42 @@ define(function(require, exports, module) {
                     self.lineLayer.getSource().clear();
                     mapData._baseMap.removeLayer(self.lineLayer);
                 }
+            },
+            Circle: function(obj) {
+                var self = this;
+                this.lineFeatures = new ol.Collection();
+                this.glow = new ol.Collection();
+                this.lineLayer = new ol.layer.Vector({
+                    selectable: false,
+                    source: new ol.source.Vector({
+                        features: self.lineFeatures
+                    })
+                });
+                mapData._baseMap.addLayer(this.lineLayer);
+                this.addCircle = function(obj) {
+
+                    var feature = new ol.Feature(
+                        new ol.geom.Circle(obj.coordinate, obj.radius)
+                    );
+                    var circleStyle = new ol.style.Style({
+                        stroke: new ol.style.Stroke({
+                            color: obj.color,
+                            width: obj.width,
+                            lineDash: [5, 5],
+                        }),
+                        fill: new ol.style.Fill({
+                            color:obj.bgColor
+                        })
+                    });
+                    feature.setStyle(circleStyle);
+                    var mb = self.lineLayer.getSource();
+                    mb.addFeature(feature);
+                };
+
+                this.clear = function() {
+                    self.lineLayer.getSource().clear();
+                    mapData._baseMap.removeLayer(self.lineLayer);
+                }
             }
         }
         //////////////*********************************************////////////////
@@ -3349,7 +3385,8 @@ define(function(require, exports, module) {
                 },
             },
             geom: {
-                LineBoard: geom.LineBoard
+                LineBoard: geom.LineBoard,
+                Circle: geom.Circle
             },
             object: {
                 getMap: function() {
