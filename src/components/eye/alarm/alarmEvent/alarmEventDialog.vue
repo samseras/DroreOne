@@ -5,127 +5,130 @@
             :close-on-click-modal = false
             title="告警事件处理"
             :before-close="closeEventDialog"
-            width="40%"
+            width="500px"
             class="dialog edit_Dialog"
             center>
-            <div class="alarmEventContent">
-                <!--批量编辑-->
-                <div class="alarmContent" v-if="isBatchEdit">
-                    <p class="level">严重等级：
-                    <el-select  v-model="batchEdit.level" size="mini" class="" placeholder="请选择">
-                        <el-option
-                            v-for="item in levelInfo"
-                            :key="item.id"
-                            :label="item.name"
-                            :value="item.id">
-                        </el-option>
-                    </el-select>
-                </p>
-                    <p class="status">状&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 态：
-                        <el-select  v-model="batchEdit.status" size="mini" class="" placeholder="请选择">
-                            <el-option
-                                v-for="item in statusInfo"
-                                :key="item.id"
-                                :label="item.name"
-                                :value="item.id">
-                            </el-option>
-                        </el-select>
-                    </p>
-                </div>
 
-                <div v-else  class="alarmContent">
-                    <p class="serialNum">编&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 号：
-                        <el-input type="text" v-model='eventInfo.serialNum' class="inputText" :maxlength="15" :readonly="true"></el-input>
-                    </p>
-                    <p class="type">指标类型：
-                        <el-input type="text" v-model='eventInfo.envTypeName' class="inputText" :maxlength="15" :readonly='true'></el-input>
-                    </p>
-                    <p class="sourceDevice">来&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 源：
-                        <el-input type="text"  v-model='eventInfo.sourceDeviceName' class="inputText" :maxlength="15" :readonly='true'></el-input>
-                    </p>
-                    <p class="occurenceTime">发生时间：
-                        <el-input type="text"  v-model='eventInfo.occurenceTime' class="inputText" :maxlength="15" :readonly='true'></el-input>
-                    </p>
-                    <p class="alarmRule">关联规则：
-                        <!--<el-input type="text" v-model='eventInfo.alarmRuleName' class="inputText" :maxlength="15" :readonly='true'></el-input>-->
-                        <span class="inputText el-input showRuleDetail" @click="showRuleDetail">{{eventInfo.alarmRuleName}}</span>
-                        <!--<div class="inputText el-input"></div>-->
-                    </p>
-                    <p class="level">严重等级：
-                        <el-select  v-model="eventInfo.severityId" size="mini" class="" placeholder="请选择" :disabled="isReadonly">
-                            <el-option
-                                v-for="item in levelInfo"
-                                :key="item.id"
-                                :label="item.name"
-                                :value="item.id">
-                            </el-option>
-                        </el-select>
-                    </p>
-                    <p class="owner">负责人员：
-                        <el-select  v-model="eventInfo.ownerId" @change="ownerChange" size="mini" class="" placeholder="请选择" :disabled="isReadonly">
-                            <el-option-group
-                                v-for="group in personInfo"
-                                :key="group.label"
-                                :label="group.label">
+                <div class="alarmEventContent">
+                    <!--批量编辑-->
+                    <ScrollContainer>
+                        <div class="alarmContent" v-if="isBatchEdit">
+                            <p class="level">严重等级：
+                            <el-select  v-model="batchEdit.level" size="mini" class="" placeholder="请选择">
                                 <el-option
-                                    v-for="item in group.options"
+                                    v-for="item in levelInfo"
                                     :key="item.id"
                                     :label="item.name"
                                     :value="item.id">
                                 </el-option>
-                            </el-option-group>
-                        </el-select>
-                    </p>
-                    <p class="tel">电话号码：
-                        <el-input type="text" v-model="eventInfo.ownerTel" class="inputText" :maxlength="15" :disabled="true"></el-input>
-                    </p>
-                    <p class="status">状&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 态:
-                        <el-select  v-model="eventInfo.statusId" size="mini" class="" placeholder="请选择" :disabled="isReadonly">
-                            <el-option
-                                v-for="item in statusInfo"
-                                :key="item.id"
-                                :label="item.name"
-                                :value="item.id">
-                            </el-option>
-                        </el-select>
-                    </p>
-                    <p class="description">处理备注：<br>
-                        <textarea name="" v-model='eventInfo.description' cols="30"
-                                  rows="5" placeholder="请输入描述信息" :disabled="isReadonly"></textarea >
-                    </p>
-                    <div class="attachment">附&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;件：
-                        <div v-loading="isShowLoading" class="showFilelist" >
-                            <div class="uploadlist" v-for="(item,idx) in fileList" :id="item.id" :key="item.id">
-                                <el-checkbox v-model="item.checked" class="checkBoxBtn"></el-checkbox>
-                                <span class="downloadThis" @click="downloadFile(item.title)">{{item.title}}</span>
-                            </div>
+                            </el-select>
+                        </p>
+                            <p class="status">状&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 态：
+                                <el-select  v-model="batchEdit.status" size="mini" class="" placeholder="请选择">
+                                    <el-option
+                                        v-for="item in statusInfo"
+                                        :key="item.id"
+                                        :label="item.name"
+                                        :value="item.id">
+                                    </el-option>
+                                </el-select>
+                            </p>
                         </div>
-                        <div class="uploadContent">
-                            <el-button size="mini" class="hold" @click="$refs.uploadFile.click()" :disabled="isReadonly">上传附件</el-button>
-                             <el-button size="mini" class="hold" @click="deleteFile" :disabled="isReadonly || emptyFile">删除文件</el-button>
-                            <input type="file" ref="uploadFile" class="multiFile"  multiple="multiple" @change="selectFile">
-                        </div>
-                    </div>
 
-                    <div class="processLog">
-                        <p>处理记录：</p>
-                        <div class="processDiv">
-                            <div class="processTime">2018-05-09 14:34:09</div>
-                            <div class="processContent">
-                                编辑人：溜冰<br>
-                                flex-basis属性定义了在分配多余空间之前，项目占据的主轴空间（main size）。
-                                浏览器根据这个属性，计算主轴是否有多余空间。它的默认值为auto，即项目的本来大小。
+                        <div  v-if="!isBatchEdit"  class="alarmContent">
+                            <p class="serialNum">编&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 号：
+                                <el-input type="text" v-model='eventInfo.serialNum' class="inputText" :maxlength="15" :readonly="true"></el-input>
+                            </p>
+                            <p class="type">指标类型：
+                                <el-input type="text" v-model='eventInfo.envTypeName' class="inputText" :maxlength="15" :readonly='true'></el-input>
+                            </p>
+                            <p class="sourceDevice">来&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 源：
+                                <el-input type="text"  v-model='eventInfo.sourceDeviceName' class="inputText" :maxlength="15" :readonly='true'></el-input>
+                            </p>
+                            <p class="occurenceTime">发生时间：
+                                <el-input type="text"  v-model='eventInfo.occurenceTime' class="inputText" :maxlength="15" :readonly='true'></el-input>
+                            </p>
+                            <p class="alarmRule">关联规则：
+                                <!--<el-input type="text" v-model='eventInfo.alarmRuleName' class="inputText" :maxlength="15" :readonly='true'></el-input>-->
+                                <span class="inputText el-input showRuleDetail" @click="showRuleDetail">{{eventInfo.alarmRuleName}}</span>
+                                <!--<div class="inputText el-input"></div>-->
+                            </p>
+                            <p class="level">严重等级：
+                                <el-select  v-model="eventInfo.severityId" size="mini" class="" placeholder="请选择" :disabled="isReadonly">
+                                    <el-option
+                                        v-for="item in levelInfo"
+                                        :key="item.id"
+                                        :label="item.name"
+                                        :value="item.id">
+                                    </el-option>
+                                </el-select>
+                            </p>
+                            <p class="owner">负责人员：
+                                <el-select  v-model="eventInfo.ownerId" @change="ownerChange" size="mini" class="" placeholder="请选择" :disabled="isReadonly">
+                                    <el-option-group
+                                        v-for="group in personInfo"
+                                        :key="group.label"
+                                        :label="group.label">
+                                        <el-option
+                                            v-for="item in group.options"
+                                            :key="item.id"
+                                            :label="item.name"
+                                            :value="item.id">
+                                        </el-option>
+                                    </el-option-group>
+                                </el-select>
+                            </p>
+                            <p class="tel">电话号码：
+                                <el-input type="text" v-model="eventInfo.ownerTel" class="inputText" :maxlength="15" :disabled="true"></el-input>
+                            </p>
+                            <p class="status">状&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 态:
+                                <el-select  v-model="eventInfo.statusId" size="mini" class="" placeholder="请选择" :disabled="isReadonly">
+                                    <el-option
+                                        v-for="item in statusInfo"
+                                        :key="item.id"
+                                        :label="item.name"
+                                        :value="item.id">
+                                    </el-option>
+                                </el-select>
+                            </p>
+                            <p class="description">处理备注：<br>
+                                <textarea name="" v-model='eventInfo.description' cols="30"
+                                          rows="5" placeholder="请输入描述信息" :disabled="isReadonly"></textarea >
+                            </p>
+                            <div class="attachment">附&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;件：
+                                <div v-loading="isShowLoading" class="showFilelist" >
+                                    <div class="uploadlist" v-for="(item,idx) in fileList" :id="item.id" :key="item.id">
+                                        <el-checkbox v-model="item.checked" class="checkBoxBtn"></el-checkbox>
+                                        <span class="downloadThis" @click="downloadFile(item.title)">{{item.title}}</span>
+                                    </div>
+                                </div>
+                                <div class="uploadContent">
+                                    <el-button size="mini" class="hold" @click="$refs.uploadFile.click()" :disabled="isReadonly">上传附件</el-button>
+                                     <el-button size="mini" class="hold" @click="deleteFile" :disabled="isReadonly || emptyFile">删除文件</el-button>
+                                    <input type="file" ref="uploadFile" class="multiFile"  multiple="multiple" @change="selectFile">
+                                </div>
+                            </div>
+
+                            <div class="processLog">
+                                <p>处理记录：</p>
+                                <div class="processDiv">
+                                    <div class="processTime">2018-05-09 14:34:09</div>
+                                    <div class="processContent">
+                                        编辑人：溜冰<br>
+                                        flex-basis属性定义了在分配多余空间之前，项目占据的主轴空间（main size）。
+                                        浏览器根据这个属性，计算主轴是否有多余空间。它的默认值为auto，即项目的本来大小。
+                                    </div>
+                                </div>
                             </div>
                         </div>
+                    </ScrollContainer>
+
+                    <div slot="footer" class="dialog-footer cardFooter">
+                        <el-button size="mini" class="hold" @click='saveDialog'>提交</el-button>
+                        <el-button size="mini" @click = 'closeEventDialog'>取消</el-button>
                     </div>
                 </div>
 
-
-                <div slot="footer" class="dialog-footer cardFooter">
-                    <el-button size="mini" class="hold" @click='saveDialog'>提交</el-button>
-                    <el-button size="mini" @click = 'closeDialog'>取消</el-button>
-                </div>
-            </div>
         </el-dialog>
         <AlarmDetail  v-if="ruleVisible"
                       :ruleVisible="ruleVisible"
@@ -139,6 +142,7 @@
 
 <script>
      import VueAplayer from 'vue-aplayer'
+     import ScrollContainer from '@/components/ScrollContainer'
      import api from '@/api'
      import AlarmDetail from '../alarmRule/alarmRuleDialog'
     export default {
@@ -293,14 +297,19 @@
                 if(this.isBatchEdit){    //批量编辑
                     console.log(this.choseInfoId);
 
+                    if(!this.batchEdit.level && !this.batchEdit.status){
+                        return;
+                    }
+
+
                     objArray = this.choseInfos;
 
                     objArray.forEach((item)=>{
-                        if(!this.batchEdit.level){
+                        if(this.batchEdit.level){
                             item.severityId = this.batchEdit.level;
                             item.severityName = this.severityId2Name(item.severityId);
                         }
-                        if(!this.batchEdit.status){
+                        if(this.batchEdit.status){
                             item.statusId = this.batchEdit.status;
 
                             this.statusInfo.forEach((item)=>{
@@ -315,6 +324,16 @@
                 }else{  //单个编辑或查看
 
                     newInfo = this.eventInfo;
+
+                    if(!newInfo.severityId){
+                        this.$message.error('请选择严重性等级')
+                        return;
+                    }
+
+                    // if(!newInfo.statusId){
+                    //     newInfo.statusId == "1"
+                    // }
+
                     this.statusInfo.forEach((item)=>{
                         if(newInfo.statusId == item.id){
                             newInfo.statusName = item.name;
@@ -464,12 +483,14 @@
             this.init();
             console.log(this.Info);
             this.eventInfo = this.Info;
-            if(this.eventInfo.ownerId){
-                this.getNameById(this.eventInfo.ownerId);
-            }
+            // if(this.eventInfo.ownerId){
+            //     this.getNameById(this.eventInfo.ownerId);
+            // }
+
         },
         components : {
-            AlarmDetail
+            AlarmDetail,
+            ScrollContainer
         },
          mounted () {
         }
@@ -485,7 +506,7 @@
         }
         .el-dialog--center{
             padding: 0;
-            /*height: rem(300);*/
+            height: rem(530);
         }
         .el-dialog__header{
             padding: rem(10) 0 rem(5) rem(20);
@@ -500,11 +521,12 @@
         }
         .el-dialog__body{
             padding: rem(10) rem(20) 0 rem(20);
+            height: rem(450);
             box-sizing: border-box;
             font-size: rem(12);
             min-height: rem(150);
             .el-select{
-                width:rem(475);
+                width:rem(390);
                 .el-input--suffix .el-input__inner{
                     border: none;
                 }
@@ -562,7 +584,7 @@
 
             }
             .inputText{
-                width: rem(400);
+                width: rem(380);
             }
             .upload-demo{
                 display: inline-block;

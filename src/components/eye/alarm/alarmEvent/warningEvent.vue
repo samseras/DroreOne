@@ -223,9 +223,7 @@
                     tempList = dataList;
                 }
 
-
                return this.warningEventList = tempList;
-
             },
             closeDialog () {
                 this.visible = false

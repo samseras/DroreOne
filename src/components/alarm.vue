@@ -33,47 +33,47 @@
             return {
                 items: [
                     {
-                        icon: './../../static/img/dmis.svg',
+                        icon: './../../static/img/alarm/alarmRule.svg',
                         index: '1',
                         title: '告警规则',
                         subs: [
                             {
-                                icon: './../../static/img/broadcast.svg',
+                                icon: './../../static/img/alarm/alarmcolumnRule.svg',
                                 index: '/alarm/alarmcolumn-Rule',
                                 title: '报警柱'
                             },
                             {
-                                icon: './../../static/img/light.svg',
+                                icon: './../../static/img/alarm/firefightingRule.svg',
                                 index: '/alarm/firefighting-Rule',
                                 title: '消防'
                             },
                             {
-                                icon: './../../static/img/led.svg',
+                                icon: './../../static/img/alarm/crossborderRule.svg',
                                 index: '/alarm/crossborder-Rule',
                                 title: '越界'
                             },
+                            // {
+                            //     icon: './../../static/img/clearer.svg',
+                            //     index: '/alarm/speeding-Rule',
+                            //     title: '超速'
+                            // },
                             {
-                                icon: './../../static/img/clearer.svg',
-                                index: '/alarm/speeding-Rule',
-                                title: '超速'
-                            },
-                            {
-                                icon: './../../static/img/roat.svg',
+                                icon: './../../static/img/alarm/offtrackRule.svg',
                                 index: '/alarm/offtrack-Rule',
                                 title: '偏离轨迹'
                             },
                             {
-                                icon: './../../static/img/roat.svg',
+                                icon: './../../static/img/alarm/overlimitRule.svg',
                                 index: '/alarm/overlimit-Rule',
                                 title: '客流量超限'
                             },
                             {
-                                icon: './../../static/img/roat.svg',
+                                icon: './../../static/img/alarm/waterlevelRule.svg',
                                 index: '/alarm/waterlevel-Rule',
                                 title: '水位'
                             },
                             {
-                                icon: './../../static/img/roat.svg',
+                                icon: './../../static/img/alarm/conditionRule.svg',
                                 index: '/alarm/condition-Rule',
                                 title: '环境'
                             }
@@ -82,7 +82,7 @@
                         ]
                     },
                     {
-                        icon: './../../static/img/record.svg',
+                        icon: './../../static/img/alarm/alarmEvent.svg',
                         index: '/alarm/warning-Event',
                         title: '告警事件'
                     },

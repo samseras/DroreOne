@@ -10,9 +10,20 @@ const login={
         console.log(params, '这是传过来的')
         return axios({
             method:'GET',
-            url:'/security/login',
+            url: getUrl('/security/login'),
             headers:{
-                "Authorization":"BASIC " + params
+                "Authorization": params,
+                "x-ajax": true
+            }
+        })
+    },
+    userLogout (params) {
+        return axios({
+            methods: 'GET',
+            url: getUrl('/security/logout'),
+            headers:{
+                "Authorization": params,
+                "x-ajax": true
             }
         })
     }

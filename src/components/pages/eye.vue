@@ -46,12 +46,12 @@
                             <el-menu  class="el-menu-demo" mode="horizontal" router>
                                 <el-submenu index="">
                                     <template slot="title">
-                                        <span class="Admin">Admin</span>
+                                        <span class="Admin">{{getUserInfo}}</span>
                                         <img src="./../../../static/img/peopleInfo.svg" alt="">
                                     </template>
                                     <el-menu-item index="">个人中心</el-menu-item>
                                     <el-menu-item index="/droreone">返回主页</el-menu-item>
-                                    <el-menu-item index="/login">退出</el-menu-item>
+                                    <el-menu-item @click="logout" index="">退出</el-menu-item>
                                 </el-submenu>
                             </el-menu>
                         </div>
@@ -69,7 +69,7 @@
 <script>
     import moment from 'moment'
     import api from '@/api'
-    import {mapMutations} from 'vuex'
+    import { mapMutations, mapGetters, mapActions} from 'vuex'
 
     export default {
         data() {
@@ -208,6 +208,7 @@
         },
         methods: {
             ...mapMutations(['SEARCH_INFO','SHOW_SEARCH']),
+            ...mapActions(['logout']),
             changeLanguage () {// 语言切换
                 if (this.$i18n.locale === 'CN'){
                     this.$i18n.locale = 'EN'
@@ -343,12 +344,22 @@
                 this.searchContent = item.name
                 this.$store.commit('SEARCH_INFO', item)
                 this.searchList = []
+            },
+            logout() {
+                let data = JSON.parse(localStorage.getItem('token'))
+                this.$store.dispatch('logout',data).then(() => {
+                    this.$message.success('登出成功')
+                    location.reload()
+                })
             }
         },
         mounted(){
 
         },
-        components: {}
+        components: {},
+        computed: {
+            ...mapGetters(['getUserInfo'])
+        }
     }
 </script>
 

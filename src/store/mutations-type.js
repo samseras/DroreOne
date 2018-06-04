@@ -38,5 +38,9 @@ export const COMPANY_DATA_NAME = 'COMPANY_DATA_NAME'
  export const FACILITY_INDICATOR = 'FACILITY_INDICATOR'
  export const FACILITY_ROAD = 'FACILITY_ROAD'
 
+/*卡片列表显示*/
  export const SHOWBASICICON = 'SHOWBASICICON'
  export const SHOWHARDWAREICON = 'SHOWHARDWAREICON'
+
+// 用户
+  export const SET_USER = 'SET_USER'

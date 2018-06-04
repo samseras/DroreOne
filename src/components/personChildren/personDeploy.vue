@@ -483,14 +483,10 @@
                         this.personList[i].description = this.personList[i].personBean.description
                         this.personList[i].personBean.modifyTime=this.personList[i].personBean.modifyTime.replace("-","/")
                         this.personList[i].byTime = -(new Date(this.personList[i].personBean.modifyTime)).getTime()
-                        console.log(new Date(this.personList[i].personBean.modifyTime).getTime())
                     }
                     this.personList = _.sortBy(this.personList,'byTime')
-                    console.log(this.personList, 'p[p[p[p[p[p[p[p[p[p[p[p[p[[pp')
                     this.checkList = this.personList
-
                     this.selectFlag=false
-
                 }).catch(err => {
                     console.log(err)
                     this.isShowLoading = false
@@ -499,7 +495,7 @@
         },
         filters: {
             sexFilter(item) {
-                if (item == 1) {
+                if (item == 0) {
                     return '男'
                 } else {
                     return '女'
@@ -534,7 +530,7 @@
 <style lang="scss" type="text/scss">
     .personDeploy .box .el-button{
         border:1px solid transparent;
-        padding-left:0px;
+        padding: 0;
         text-align:left;
         background: transparent;
     }
@@ -549,6 +545,15 @@
         width:200px;
         word-break:break-all;
         text-align: left;
+    }
+    .personDeploy {
+        .el-table__header-wrapper .has-gutter .el-table th, .el-table tr{
+        }
+    }
+    .personDeploy{
+        .el-checkbox__input{
+            vertical-align: top;
+        }
     }
 
 </style>
@@ -599,15 +604,18 @@
                         background: #fff;
                         border-top-left-radius: rem(5);
                         border-top-right-radius: rem(5);
-                        position: relative;
+                        /*position: relative;*/
                         .checkBtn {
-                            /*width: rem(15);*/
-                            /*height: rem(15);*/
+                            float: right;
+                            margin-right: rem(5);
+                            margin-top: rem(3);
+                            width: rem(15);
+                            height: rem(15);
                             /*outline: none;*/
                             /*background: #fff;*/
                             /*background: none;*/
-                            position: absolute;
-                            right: rem(5);
+                            /*position: absolute;*/
+                            /*right: rem(5);*/
                             /*top: rem(0);*/
                             cursor: pointer;
                         }
