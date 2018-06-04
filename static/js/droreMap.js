@@ -2310,17 +2310,17 @@ define(function(require, exports, module) {
             },
             Circle: function(obj) {
                 var self = this;
-                this.lineFeatures = new ol.Collection();
-                this.glow = new ol.Collection();
+                this.lineFeatures = new ol.geom.Circle();
+                this.glow = new ol.geom.Circle();
                 this.lineLayer = new ol.layer.Vector({
                     selectable: false,
                     source: new ol.source.Vector({
                         features: self.lineFeatures
                     })
                 });
+                // mapData._baseMap.removeLayer(this.lineLayer);
                 mapData._baseMap.addLayer(this.lineLayer);
                 this.addCircle = function(obj) {
-
                     var feature = new ol.Feature(
                         new ol.geom.Circle(obj.coordinate, obj.radius)
                     );
@@ -2338,7 +2338,12 @@ define(function(require, exports, module) {
                     var mb = self.lineLayer.getSource();
                     mb.addFeature(feature);
                 };
-
+                this.setCenter = function(center,radius) {
+                    // self.setCenterAndRadius
+                    console.log(this.glow)
+                    self.lineLayer.prototype.setCenterAndRadius(center,radius);
+                    // ol.geom.Circle.prototype.setCenterAndRadius(center,radius);
+                };
                 this.clear = function() {
                     self.lineLayer.getSource().clear();
                     mapData._baseMap.removeLayer(self.lineLayer);

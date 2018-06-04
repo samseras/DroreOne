@@ -244,7 +244,6 @@
                 })
             },
             getDom(){
-                console.log("getDom~~~~~~~~~~~~~~~~~")
                 this.chartT = this.$refs.content.getBoundingClientRect().top;
                 this.chartB = this.$refs.content.getBoundingClientRect().bottom;
                 this.chartL = this.$refs.content.getBoundingClientRect().left;
