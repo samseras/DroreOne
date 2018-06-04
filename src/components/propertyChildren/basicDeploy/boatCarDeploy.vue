@@ -473,7 +473,7 @@
     }
 </script>
 
-<style lang="scss">
+<style lang="scss" type="text/scss">
     .boatCars .el-table__header-wrapper{
         font-size: rem(14);
         font-weight: normal;
@@ -481,6 +481,12 @@
     .boatCars .el-table__body-wrapper,.boatCars .is-scrolling-none{
         font-size: rem(14);
     }
+    .boatCars{
+        .el-checkbox__input{
+            vertical-align: top;
+        }
+    }
+
 </style>
 <style lang="scss" scoped type="text/scss">
     .boatCars{
@@ -531,14 +537,11 @@
                         border-top-right-radius: rem(5);
                         position: relative;
                         .checkBtn{
-                            /*width: rem(15);*/
-                            /*height: rem(15);*/
-                            /*outline: none;*/
-                            /*background: #fff;*/
-                            /*background: none;*/
-                            position: absolute;
-                            right: rem(5);
-                            top: rem(0);
+                            float: right;
+                            margin-right: rem(5);
+                            margin-top: rem(3);
+                            width: rem(15);
+                            height: rem(15);
                             cursor: pointer;
                         }
                     }
