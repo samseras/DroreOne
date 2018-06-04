@@ -85,6 +85,7 @@
 				if(this.checkCode !== "") {
                     let obj = `BASIC ${Base64.encode(this.username +  ":"+ this.password)}`
                     await api.login.userLogin(obj).then(res => {
+                        localStorage.setItem('userName',this.username)
                         localStorage.setItem('token', JSON.stringify(obj))
                         this.$store.commit('SET_USER', this.username)
                         if(res != []){
