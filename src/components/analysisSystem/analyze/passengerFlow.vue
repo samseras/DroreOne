@@ -83,6 +83,10 @@
         props:['listName'],
         methods: {
             getDom(){
+                // this.chartT = this.$refs.content.documentElement.clientTop;
+                // this.chartB = this.$refs.content.documentElement.clientBottom;
+                // this.chartL = this.$refs.content.documentElement.clientLeft;
+                // this.chartR = this.$refs.content.documentElement.clientRight;
                 this.chartT = this.$refs.content.getBoundingClientRect().top;
                 this.chartB = this.$refs.content.getBoundingClientRect().bottom;
                 this.chartL = this.$refs.content.getBoundingClientRect().left;
@@ -213,6 +217,7 @@
                     // console.log(res,'nimeide ')
                     this.isShowloading = false;
                     this.echatList = res.result;
+                    console.log(this.echatList.length,"this.echatList.length")
                     if(this.echatList.length == 0){
                         this.isErr = false;
                         this.echatListErr.errInform = false;
@@ -971,7 +976,6 @@
         watch: {
           '$route' () {
               if (this.$route.path.includes('analyze')) {
-
                   this.echatList = []  //清空dom 内容
                    this.getDom();
                   this.getEchats()
@@ -982,9 +986,9 @@
 
         },
         created () {
-            console.log(this.typeTemp,"this.typeTemp")
             this.echatList = []
             this.getEchats();
+
         },
         computed: {
             ...mapGetters(['getRefresh'])
@@ -996,6 +1000,7 @@
             window.onresize = function(){
                 that.showList();
             };
+            console.log(this.getDashboradName,"@@@@@@@@")
         },
         components: {
             ScrollContainer,
@@ -1047,14 +1052,14 @@
             /*flex-direction: column;*/
             .rankBtn{
                 position: fixed;
-                top:rem(70);
-                right: rem(5);
+                top:rem(80);
+                right: rem(70);
                 width: rem(25);
                 height: rem(25);
                 padding: 0;
                 font-weight: 600;
-                color: #999;
                 font-size: rem(22);
+                /*z-index: 10;*/
             }
             .contentTitle{
                 width: 100%;

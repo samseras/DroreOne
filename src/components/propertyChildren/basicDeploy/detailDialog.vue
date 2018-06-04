@@ -1783,6 +1783,19 @@
                         width:15.3rem
                     }
                 }
+                .phoneNum{
+                    height: rem(30);
+                    s{
+                        line-height: rem(26);
+                    }
+                    span{
+                        line-height: rem(26);
+                        margin-left: rem(16);
+                    }
+                    i{
+                        margin-top: rem(3);
+                    }
+                }
                 .ms-person{
                     div{
                         width:15.3rem;

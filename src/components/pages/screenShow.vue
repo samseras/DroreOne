@@ -1,21 +1,21 @@
 <template>
-    <div class="screenShow" :style="{background: 'url('+backgroundImg+')'}">
+    <div class="screenShow" :style="{background: 'url('+backgroundImg+')'}" v-loading="isShowloading">
         <el-container>
             <el-header :style="{marginTop: headTop+'px'}" >
                 <el-row :gutter="10" :style="{background:headBgColor}">
                     <el-col :xs="7" :sm="7" :md="6" :lg="7" :xl="7">
                         <img :src="headLeft" alt="" class="screenLeft" v-if="isShowOtherImg">
-                        <div :style="{color:fontColor,lineHeight:headLineH+'px'}">卓锐科技股份有限公司</div>
+                        <div :style="{color:fontColor,lineHeight:headLineH+'px'}">{{companyName}}</div>
                     </el-col>
                     <el-col :xs="9" :sm="7" :md="6" :lg="9" :xl="9">
                         <div class="screenTile" @click="requestFullScreen" ref="screenTile">
                             <img :src="headImg" alt="" v-if="isShowHead">
-                            <p :style="{color:fontColor,lineHeight:headLineH+'px'}">都江堰景区智慧旅游数据</p>
+                            <p :style="{color:fontColor,lineHeight:headLineH+'px'}">{{dashboradName}}</p>
                         </div>
                     </el-col>
                     <el-col :xs="4" :sm="7" :md="6" :lg="4" :xl="4">
                         <img :src="headRight" alt="" class="screenRight" v-if="isShowOtherImg">
-                        <div :style="{color:fontColor,lineHeight:headLineH+'px'}">{{currTime | dayFiler}}({{currTime | weekFiler}})  {{currTime | timeFiler}}</div>
+                        <div :style="{color:fontColor,lineHeight:headLineH+'px'}">{{currentTime | dayFiler}}({{currentTime | weekFiler}})  {{currentTime | timeFiler}}</div>
                     </el-col>
                     <el-col :xs="4" :sm="7" :md="6" :lg="4" :xl="4" :style="{marginTop: homeMarginT+'px'}">
                             <p class="getBack" onclick='javascript:history.back(-1)'><img :src="homeImg" alt="" ></p>
@@ -68,11 +68,15 @@
 <script>
     import api from "@/api"
     import moment from 'moment'
+    import {mapGetters} from 'vuex'
     export default {
         props: [],
         data () {
              return{
                  echartsContent:[],
+                 isShowloading:false,
+                 dashboradName:null,
+                 companyName:null,
                  currTime: new Date(),  //当前时间
                  barDom:null,
                  pieDom:null,
@@ -185,19 +189,7 @@
                                  ["#06c8d2","#afbc92","#6060d7","#71c6a3","#bc895f","#326a9f","#b065d7","#f3565d","#bc895f","#56bbc4"],
                                  ["#6060d7","#d3a254","#71c6a3","#bc895f","#326a9f","#6060d7","#56bbc4","#afbc92","#06c8d2","#bc895f"],
                                  ["#bc895f","#56bbc4","#326a9f","#326a9f","#06c8d2","#afbc92","#d3a254","#d3a254","#71c6a3","#06c8d2"],
-                                 ["#71c6a3","#f3565d","#b065d7","#56bbc4","#afbc92","#71c6a3","#f3565d","#56bbc4","#326a9f","#f3565d"],
-
-                                 // ["#d3a254","#b065d7"],
-                                 // ["#559782","#326ba0"],
-                                 // ["#2984d1", "#0a67c0","#0f99c6","#3dbcd1","#07aed4"],
-                                 // ["#428bca", "#bc895f","#6060d7","#71c6a3"],
-                                 // ["#56bbc4", "#b065d7","#1a85c5","#bc895f"],
-                                 // ["#30a6fb", "#047ae3", "#0abdea", "#4beefd", "#02daff", "#2a517d", "#11447c"],
-                                 // ["#189ddd", "#fbf396", "#ffccf8", "#2984d1"],
-                                 // ["#fbf396", "#189ddd"],
-                                 // ["#4bf9ff", "#ffccf8"],
-                                 // ["#189ddd", "#fbf396", "#ffccf8", "#2984d1"],
-                                 // ["#fbf396", "#189ddd"]
+                                 ["#71c6a3","#f3565d","#b065d7","#56bbc4","#afbc92","#71c6a3","#f3565d","#56bbc4","#326a9f","#f3565d"]
                              ]
                         }
                      },
@@ -207,7 +199,7 @@
                          headBgColor:"#fff",
                          // headImg:"../../../static/img/screenHead.svg",
                          headTop:20,
-                         headLineH:63,
+                         headLineH:65,
                          homeMarginT:0,
                          bgCorol: "#fff",
                          fontColor: "#8271a0",
@@ -231,10 +223,17 @@
                              ]
                          }
                      }
-                 ]
+                 ],
+                 currentTime: new Date()
              }
         },
         methods:{
+            getCurrentTime () {
+                let that = this
+                setInterval(function () {
+                    that.currentTime = new Date().getTime()
+                },1000)
+            },
             async changeType(type){
                 let id = this.$route.params.id;
                 this.constent.template_type = type;
@@ -260,6 +259,7 @@
                     console.log(res.result,"dashboardList")
                     for(let i=0;i<res.result.length;i++){
                         if(res.result[i].dashboard_id == id){
+                            this.dashboradName = res.result[i].name;
                             this.idx = res.result[i].template_type;
                             this.constent.name = res.result[i].name;
                             this.constent.description = res.result[i].description;
@@ -336,6 +336,7 @@
                 this.initScreen();
                 await api.analyze.getStreamDataById(id).then(res=> {
                     this.echartsContent = res.result;
+                    this.isShowLoading = true;
                       console.log(res.result,"结果")
                     // console.log(this.allEchartColor,"this.allEchartColor")
                     let scenarioId,chartId,chartDomH,echartsColor;
@@ -1088,7 +1089,22 @@
                     docElm.webkitRequestFullScreen();
                 }
             },
-
+            getRefreshTime () {
+                console.log('禁止刷新')
+                if (this.getRefresh == 0) {
+                    return
+                }
+                if (localStorage.getItem('REFRESHTIME')){
+                    let time = localStorage.getItem('REFRESHTIME')
+                    if (new Date().getTime() - time > this.getRefresh){
+                        this.getEchats()
+                        localStorage.setItem('REFRESHTIME',new Date().getTime())
+                    }
+                } else {
+                    localStorage.setItem('REFRESHTIME',new Date().getTime())
+                    this.getEchats()
+                }
+            },
         },
         filters: {
             dayFiler(item) {
@@ -1096,39 +1112,45 @@
                 return moment(item).format('YYYY年MM月DD日')
             },
             weekFiler(item) {
+                let time = new Date(item);
                 let arr = ['天', '一', '二', '三', '四', '五', '六']
-                let day = item.getDay()
-                let week = arr.filter((item, index) => {
+                let day = time.getDay()
+                let week = arr.filter((time, index) => {
                     return index === day
                 })
                 return `星期${week[0]}`
             },
 
             timeFiler(item) {
-                let time = item.toLocaleTimeString();
-                console.log(time,"时间")
-                return time
+                return moment(item).format('hh:mm:ss')
             },
         },
         watch:{
             '$route'(){
-                this.timeFiler(item)
+                 window.SETTIMER = setInterval(this.getRefreshTime,this.getRefresh)
             }
-
         },
          created () {
-
-
+            this.getCurrentTime();
+             this.companyName = localStorage.getItem("title");
+             this.getDom();
+             console.log(this.companyName,'this.companyName')
              // console.log(this.$route,"OOOOOOOOOOOO")
              // console.log(this.$route.params.n,"PPPPPP")
              // console.log(this.$route.params.id,"@@@@@@@@@@@")
         },
+        computed: {
+            ...mapGetters(['getRefresh','getCompanyName'])
+        },
         mounted () {
-            console.log('mounted执行')
-            this.getContent();
+            window.SETTIMER = setInterval(this.getRefreshTime,this.getRefresh)
+            console.log(this.getRefresh,'this.getRefresh')
             this.getDom();
-            // setTimeout(this.requestFullScreen,100)
-            // this.$refs.screenTile.click()
+            this.getContent();
+            let that = this;
+        },
+        destroyed  () {
+            clearInterval(window.SETTIMER)
         }
     }
 </script>
@@ -1230,6 +1252,8 @@
           }
           .el-main{
               flex: 1;
+              padding-top: rem(20);
+              box-sizing: border-box;
               .contentForm {
                   width: 100%;
                   height: 100%;

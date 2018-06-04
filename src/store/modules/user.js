@@ -12,7 +12,11 @@ const user = {
     },
     getters: {
         getUserInfo (state) {
-            return state.user
+            if (state.user === '') {
+                return localStorage.getItem('userName')
+            } else{
+                return state.user
+            }
         }
     },
     setters: {},

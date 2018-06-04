@@ -37,6 +37,13 @@ module.exports = {
         '/analysis': {
             target: 'http://192.168.0.150:9527/',
             changeOrigin: true
+        },
+        '/iot':{
+            //target:'http://drorexa-lixing:8050/',
+            //target:'drorexa-lixing:8050/',
+            //target:'http://192.168.123.231:8050/',
+            target:'http://192.168.0.150:8050/',
+            changeOrigin:true
         }
     },
 

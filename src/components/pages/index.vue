@@ -41,7 +41,7 @@
                             </li>
                             <li class="two">
                                 <div class="bigData">
-                                    <div class="change"><a target="_blank" href="http://192.168.0.150:9527/analysis/public/main.html">大数据分析>><img src="../../../static/img/bagData.png"/></a></div>
+                                    <div class="change"><a target="_blank" href="http://121.199.5.95:9527/analysis/public/main.html">大数据分析>><img src="../../../static/img/bagData.png"/></a></div>
                                     <div class="dataCenter change" id="dataCenter"><router-link to="/property">数据中心>><img src="../../../static/img/dataCenter.png"/></router-link></div>
                                 </div>
                                 <div class="eye">
@@ -50,7 +50,7 @@
                                     <div class="change"><router-link to="/analyze" class="change">数据可视化>><img src="../../../static/img/sentiment.png"/></router-link></div>
                                 </div>
                             </li>
-                            <li class="change" id="bee"><a href="">物联网>><img src="../../../static/img/ZigBee.png"/></a></li>
+                            <li class="change" id="bee"><router-link to="/iot">物联网>><img src="../../../static/img/ZigBee.png"/></router-link></li>
                         </ul>
                     </div>
                     <div id="bottom" class="entrence-cont">
@@ -105,7 +105,7 @@
                     {title: '第三方应用', route: ''},
                     {title: '系统配置', route: ''},
                     {title: '数据可视化', route: ''},
-                    {title: '物联网', route: ''},
+                    {title: '物联网', route: '/iot/iotPages'},
                     {title: '官网门户', route: ''},
                     {title: '电子票务', route: ''},
                     {title: '微信公众号', route: ''},
