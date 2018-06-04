@@ -35,6 +35,7 @@ import importfile from './importfile'
 import exportFile from './exportFile'
 import alarm from './alarm'
 import login from './login'
+import iotHome from './iotHome'
 
 
 export default {
@@ -71,5 +72,6 @@ export default {
     importfile,
     exportFile,
     alarm,
-    login
+    login,
+    iotHome
 }

@@ -130,6 +130,17 @@ import conditionRule from '@/components/eye/alarm/alarmRule/conditionRule'
 import Analyze from '@/components/analyze'
 import Passenger from '@/components/analysisSystem/analyze/passengerFlow'
 
+//iot
+import Iot from '@/components/iot/iot'                           //结构
+import IotHome from '@/components/iot/iotHome'                   //首页信息
+import IotDeviceType from '@/components/iot/deviceType'          //设备型号
+import IotDeviceList from '@/components/iot/deviceList'          //设备列表
+import IotDeviceTree from '@/components/iot/deviceTree'          //设备树形结构
+//import IotPoliceInfo from '@/components/iot/iotPolice/policeInfo'                   //报警信息
+import IotSystemLog from '@/components/iot/iotLog/systemLog'     //系统日志
+import NowStatus from '@/components/iot/iotLog/nowStatus'        //实时数据
+
+
 Vue.use(Router)
 const routes = [
     {
@@ -371,6 +382,32 @@ const routes = [
             {path: '/analyze/:id',name: 'Passenger', component:Passenger}
         ]
     },
+    //iot
+    {
+        path: '/iot',
+        name: 'iot',
+        redirect: '/iotHome',
+        component:Iot,
+        children: [
+            {path: '/iotHome', name: 'IotHome', component: IotHome},
+            {path: '/deviceModel/:category', name: 'IotDeviceType', component:IotDeviceType},
+            {path: '/deviceList/:category', name: 'IotDeviceList', component:IotDeviceList},
+            {path: '/deviceTree/:category', name: 'IotDeviceTree', component:IotDeviceTree},
+            //{path:'/iotPolice',name:'IotPoliceInfo',component:IotPoliceInfo},
+            {
+                path:'/iotLog',
+                component:IotSystemLog,
+                redirect: '/iotLog/systemLog',
+                childred:[
+                    {path:'/iotLog/systemLog',name:'IotSystemLog',component:IotSystemLog},
+                    {path:'/iotLog/nowStatus',name:'NowStatus',component:NowStatus},
+                ]
+            },
+
+        ]
+    }
+
+
 
   ]
 const router = new Router({

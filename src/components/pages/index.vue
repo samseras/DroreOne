@@ -50,7 +50,7 @@
                                     <div class="change"><router-link to="/analyze" class="change">数据可视化>><img src="../../../static/img/sentiment.png"/></router-link></div>
                                 </div>
                             </li>
-                            <li class="change" id="bee"><a href="">物联网>><img src="../../../static/img/ZigBee.png"/></a></li>
+                            <li class="change" id="bee"><router-link to="/iot">物联网>><img src="../../../static/img/ZigBee.png"/></router-link></li>
                         </ul>
                     </div>
                     <div id="bottom" class="entrence-cont">
@@ -104,7 +104,7 @@
                     {title: '第三方应用', route: ''},
                     {title: '系统配置', route: ''},
                     {title: '数据可视化', route: ''},
-                    {title: '物联网', route: ''},
+                    {title: '物联网', route: '/iot/iotPages'},
                     {title: '官网门户', route: ''},
                     {title: '电子票务', route: ''},
                     {title: '微信公众号', route: ''},
