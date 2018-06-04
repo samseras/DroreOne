@@ -14,9 +14,9 @@
  	    		<aside class="login-right">
  	    			<p>登录Cloud账号</p>
  	    			<form>
- 	    				<input type="text" v-model="username" id="userid" placeholder="请输入用户名"/>
- 	    				<input type="password" v-model="password" id="userpass" placeholder="请输入密码"/>
- 	    				<input type="text" name="checkname" id="checkCode" placeholder="请输入验证码" v-model="checkCode" @keyup="enter" @blur="regForm()"/>
+ 	    				<input type="text" v-model="username" id="userid" placeholder="请输入用户名" ref="userid"/>
+ 	    				<input type="password" v-model="password" id="userpass" placeholder="请输入密码" ref="userpass"/>
+ 	    				<input type="text" name="checkname" id="checkCode" placeholder="请输入验证码" v-model="checkCode" @keyup="enter" @blur="regForm()" ref="checkCode"/>
  	    				<input type="text" name="codename" id="Code" @click="changeCheckCode"/>
  	    				<input type="button" @click="loginOn" value="登录" id="submit">
  	    			</form>
@@ -75,14 +75,25 @@
             },
             async loginOn(){
                 if (this.username.trim() === '') {
+                    this.$refs.checkCode.style.border="none";
+                    this.$refs.userpass.style.border="none";
+                    this.$refs.userid.style.border="1px solid red";
+                    // $("#userpass").css("border","none")
+                    // $("#checkCode").css("border","none")
+                    // $("#userid").css("border","1px solid red")
                     this.$message.error('请输入用户名')
                     return
                 }
                 if (this.password.trim() === '') {
+                    this.$refs.checkCode.style.border="none";
+                    this.$refs.userpass.style.border="1px solid red";
+                    this.$refs.userid.style.border="none";
+                    // $("#userid").css("border","none")
+                    // $("#userpass").css("border","1px solid red")
                     this.$message.error('请输入密码')
                     return
                 }
-				if(this.checkCode !== "") {
+				if(this.checkCode !== "" && this.checkCode == $("#Code").val().toLowerCase()){
                     let obj = `BASIC ${Base64.encode(this.username +  ":"+ this.password)}`
                     await api.login.userLogin(obj).then(res => {
                         localStorage.setItem('token', JSON.stringify(obj))
@@ -96,7 +107,12 @@
                         this.checkCode = ''
                     })
                 }else{
-                    this.$message.info('验证码不能为空')
+                    this.changeCheckCode();
+                    this.$refs.checkCode.style.border="1px solid red";
+                    this.$refs.userpass.style.border="none";
+                    this.$refs.userid.style.border="none";
+                    this.changeCheckCode();
+                    this.$message.info('验证码不能为空或错误')
                 }
 			}
 		},

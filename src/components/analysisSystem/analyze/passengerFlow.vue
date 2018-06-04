@@ -83,6 +83,10 @@
         props:['listName'],
         methods: {
             getDom(){
+                // this.chartT = this.$refs.content.documentElement.clientTop;
+                // this.chartB = this.$refs.content.documentElement.clientBottom;
+                // this.chartL = this.$refs.content.documentElement.clientLeft;
+                // this.chartR = this.$refs.content.documentElement.clientRight;
                 this.chartT = this.$refs.content.getBoundingClientRect().top;
                 this.chartB = this.$refs.content.getBoundingClientRect().bottom;
                 this.chartL = this.$refs.content.getBoundingClientRect().left;
