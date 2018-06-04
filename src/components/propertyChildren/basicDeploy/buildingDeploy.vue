@@ -570,4 +570,12 @@
             vertical-align: top;
         }
     }
+    .buildingDeploy {
+        .el-table__header-wrapper .has-gutter {
+            background-color: #f3f3f3;
+        }
+        .el-table th, .el-table tr{
+            background-color: transparent !important;
+        }
+    }
 </style>

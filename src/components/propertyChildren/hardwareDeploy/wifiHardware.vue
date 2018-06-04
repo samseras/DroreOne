@@ -490,6 +490,8 @@
         .cameraList .el-button{
             text-align: left;
             background: transparent;
+            border: none;
+            padding: 0;
         }
         .cameraList .box .el-button span{
             display:inline-block;
@@ -497,6 +499,12 @@
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
+        }
+        .el-table__header-wrapper .has-gutter {
+            background-color: #f3f3f3;
+        }
+        .el-table th, .el-table tr{
+            background-color: transparent !important;
         }
     }
 
