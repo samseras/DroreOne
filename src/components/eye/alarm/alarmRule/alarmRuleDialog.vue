@@ -440,35 +440,35 @@
                         </el-select>
                     </p>
 
-                    <p class="upperThreshold" v-if = "!conditionInfo.envTypeId || conditionInfo.envTypeId == '1'">阈值上限：
+                    <p class="upperThreshold" v-if = "!conditionInfo.envTypeId || conditionInfo.envTypeId == '1'">上限阈值：
                         <el-input type="text" v-model='conditionInfo.upperThreshold' class="inputText" :maxlength="15" :disabled='isReadonly'></el-input>
                         (微克/立方米)
                     </p>
-                    <p class="lowerThreshold" v-if = "!conditionInfo.envTypeId || conditionInfo.envTypeId == '1'">阈值下限：
-                        <el-input type="text" v-model='conditionInfo.lowerThreshold' class="inputText" :maxlength="15" :disabled='isReadonly'></el-input>
+                    <p class="lowerThreshold" v-if = "!conditionInfo.envTypeId || conditionInfo.envTypeId == '1'">下限阈值：
+                        <el-input type="text" v-model='conditionInfo.lowerThreshold' class="inputText" :maxlength="15" :readonly = 'true' :disabled='true'></el-input>
                         (微克/立方米)
                     </p>
-                    <p class="upperThreshold" v-if = "conditionInfo.envTypeId == '2'">阈值上限：
+                    <p class="upperThreshold" v-if = "conditionInfo.envTypeId == '2'">上限阈值：
                         <el-input type="text" v-model='conditionInfo.upperThreshold' class="inputText" :maxlength="15" :disabled='isReadonly'></el-input>
                         (℃)
                     </p>
-                    <p class="lowerThreshold" v-if = "conditionInfo.envTypeId == '2'">阈值下限：
+                    <p class="lowerThreshold" v-if = "conditionInfo.envTypeId == '2'">下限阈值：
                         <el-input type="text" v-model='conditionInfo.lowerThreshold' class="inputText" :maxlength="15" :disabled='isReadonly'></el-input>
                         (℃)
                     </p>
-                    <p class="upperThreshold" v-if = "conditionInfo.envTypeId == '3'">阈值上限：
+                    <p class="upperThreshold" v-if = "conditionInfo.envTypeId == '3'">上限阈值：
                         <el-input type="text" v-model='conditionInfo.upperThreshold' class="inputText" :maxlength="15" :disabled='isReadonly'></el-input>
                         (%)
                     </p>
-                    <p class="lowerThreshold" v-if = "conditionInfo.envTypeId == '3'">阈值下限：
+                    <p class="lowerThreshold" v-if = "conditionInfo.envTypeId == '3'">下限阈值：
                         <el-input type="text" v-model='conditionInfo.lowerThreshold' class="inputText" :maxlength="15" :disabled='isReadonly'></el-input>
                         (%)
                     </p>
-                    <p class="upperThreshold" v-if = "conditionInfo.envTypeId == '4'">阈值上限：
+                    <p class="upperThreshold" v-if = "conditionInfo.envTypeId == '4'">上限阈值：
                         <el-input type="text" v-model='conditionInfo.upperThreshold' class="inputText" :maxlength="15" :disabled='isReadonly'></el-input>
                         (级)
                     </p>
-                    <p class="lowerThreshold" v-if = "conditionInfo.envTypeId == '4'">阈值下限：
+                    <p class="lowerThreshold" v-if = "conditionInfo.envTypeId == '4'">下限阈值：
                         <el-input type="text" v-model='conditionInfo.lowerThreshold' class="inputText" :maxlength="15" :disabled='isReadonly'></el-input>
                         (级)
                     </p>

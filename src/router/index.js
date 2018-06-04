@@ -141,11 +141,6 @@ const routes = [
       path: '/MicServiceManagementSystem',
       component: MicServiceManagementSystem
     },
-    // //404页面
-    // {
-    //     path: '/err',
-    //     component: Error
-    // },
       // 主页面
     {
       path: '/droreone',
@@ -378,6 +373,19 @@ const routes = [
 const router = new Router({
     mode: 'history',
     routes
+})
+
+// 路由拦截
+router.beforeEach((to, from, next) => {
+    next(true)
+    let token = localStorage.getItem('token')
+    if (token) {
+        if (to.path === '/login') {
+            next()
+        }
+    } else {
+        next('/login')
+    }
 })
 export default router
 // })

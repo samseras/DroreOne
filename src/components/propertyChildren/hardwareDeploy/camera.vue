@@ -113,14 +113,29 @@
                     this.$message.error('请上传CSV格式文件，谢谢！');
                     return
                 } else {
-                    var form = new FormData();
+                    let form = new FormData();
                     form.append('f1',file);
                     if(this.$route.path.includes("broadcast")){
                         params.fileParam = form;
                         params.type = '1';
                         console.log(form, 'opopopopoppopop')
                         api.importfile.importFileData(params).then(res => {
-                            this.$message.success('导入成功');
+                            if(res){
+                                let messages = '';
+                                for(let i in res){
+                                    messages += "第"+i+"行错误: "+data[i]+"<br>";
+                                }
+                                this.$alert(messages, '导入提示', {
+                                    confirmButtonText: '确定',
+                                    dangerouslyUseHTMLString:true,
+                                    callback: action => {
+                                        this.$message.success('导入成功');
+                                    }
+                                });
+
+                            }else{
+                                this.$message.success('导入成功');
+                            }
                             this.$emit("getAllBroadcast");
                         }).catch(err => {
                             this.$message.error('导入失败，请稍后重试')

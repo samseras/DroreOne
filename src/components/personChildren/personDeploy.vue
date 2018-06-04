@@ -488,9 +488,7 @@
                     this.personList = _.sortBy(this.personList,'byTime')
                     console.log(this.personList, 'p[p[p[p[p[p[p[p[p[p[p[p[p[[pp')
                     this.checkList = this.personList
-
                     this.selectFlag=false
-
                 }).catch(err => {
                     console.log(err)
                     this.isShowLoading = false
@@ -499,7 +497,7 @@
         },
         filters: {
             sexFilter(item) {
-                if (item == 1) {
+                if (item == 0) {
                     return '男'
                 } else {
                     return '女'
@@ -534,7 +532,7 @@
 <style lang="scss" type="text/scss">
     .personDeploy .box .el-button{
         border:1px solid transparent;
-        padding-left:0px;
+        padding: 0;
         text-align:left;
         background: transparent;
     }

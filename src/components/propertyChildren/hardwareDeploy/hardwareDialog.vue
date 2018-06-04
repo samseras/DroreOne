@@ -1594,10 +1594,12 @@
 
 </style>
 <style>
-    .el-input.is-disabled .el-input__inner,.el-textarea.is-disabled .el-textarea__inner{
+
+    .hardwareDialog .el-input.is-disabled .el-input__inner,.el-textarea.is-disabled .el-textarea__inner{
             background-color:transparent;
+            color:#c0c4cc;
         }
-    .ms .el-textarea__inner{
+    .hardwareDialog .ms .el-textarea__inner{
             font-size:.75rem;
             font-family: Arial;
     }
@@ -1618,6 +1620,10 @@
     }
     .hardwareDialog .popCard .equipmentStyle .el-select,.hardwareDialog .popCard .equipmentStyle .el-select .el-input{
         width:12rem;
+    }
+    .hardwareDialog .cardFooter .el-button{
+        color:#c0c4cc;
+        border:1px solid #dcdfe6;
     }
 </style>
 

@@ -46,11 +46,11 @@
                         </el-table-column>
                         <el-table-column
                             prop="upperThreshold"
-                            label="阈值上限">
+                            label="上限阈值">
                         </el-table-column>
                         <el-table-column
                             prop="lowerThreshold"
-                            label="阈值下限">
+                            label="下限阈值">
                         </el-table-column>
                         <el-table-column
                             sortable
