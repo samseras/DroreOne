@@ -1940,22 +1940,23 @@
                 }
             },
             rangeSearch(){
-                droreMap.event.addMouseEvent(Event.DOUBLECLICK_EVENT, "single", function(evt){
-                    // this.requestGisMain(); //加载地图
-                    // this.interaction();
-                    console.log(evt.coordinate,droreMap.trans.transLayerToWgs(evt.coordinate))
-                    var Circle = new droreMap.geom.Circle()
-                    var data = {
-                        "id": '14654564',
-                        "name":'3123123',
-                        "color": "#00bcff",
-                        "width": "1",
-                        "bgColor":"rgba(0,188,255,0.3)",
-                        "coordinate":evt.coordinate,
-                        "radius":100,
-                    }
-                    Circle.addCircle(data);
-                })
+                // var Circle = new droreMap.geom.Circle()
+                // var data = {
+                //     "id": '14654564',
+                //     "name":'3123123',
+                //     "color": "#00bcff",
+                //     "width": "1",
+                //     "bgColor":"rgba(0,188,255,0.3)",
+                //     "coordinate":[13367095.553556845, 3537993.9688054775],
+                //     "radius":10,
+                // }
+                // Circle.addCircle(data);
+                // droreMap.event.addMouseEvent(Event.DOUBLECLICK_EVENT, "single", function(evt){
+                //     console.log(evt.coordinate);
+                //     let radius=100
+                //     var Circle = new droreMap.geom.Circle()
+                //     Circle.setCenter(evt.coordinate,radius);
+                // })
             }
         },
         components: {
