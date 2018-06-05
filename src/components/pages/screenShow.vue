@@ -175,7 +175,7 @@
                          homeImg:"../../../static/img/screenHome.svg",
                          settingImg:"../../../static/img/screenSetting.svg",
                          textIndent:60,
-                         headLineH:70,
+                         headLineH:80,
                          homeMarginT:12,
                          echartColor: {
                              legentColor:"#fff",
