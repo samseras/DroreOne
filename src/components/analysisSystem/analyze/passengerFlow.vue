@@ -83,16 +83,18 @@
         props:['listName'],
         methods: {
             getDom(){
+                 this.chartH = window.innerHeight-140;
+                    this.chartW = window.innerWidth-220;
                 // this.chartT = this.$refs.content.documentElement.clientTop;
                 // this.chartB = this.$refs.content.documentElement.clientBottom;
                 // this.chartL = this.$refs.content.documentElement.clientLeft;
                 // this.chartR = this.$refs.content.documentElement.clientRight;
-                this.chartT = this.$refs.content.getBoundingClientRect().top;
-                this.chartB = this.$refs.content.getBoundingClientRect().bottom;
-                this.chartL = this.$refs.content.getBoundingClientRect().left;
-                this.chartR = this.$refs.content.getBoundingClientRect().right;
-                this.chartH = this.chartB - this.chartT;
-                this.chartW = this.chartR - this.chartL;
+                // this.chartT = this.$refs.content.getBoundingClientRect().top;
+                // this.chartB = this.$refs.content.getBoundingClientRect().bottom;
+                // this.chartL = this.$refs.content.getBoundingClientRect().left;
+                // this.chartR = this.$refs.content.getBoundingClientRect().right;
+                // this.chartH = this.chartB - this.chartT;
+                // this.chartW = this.chartR - this.chartL;
                 console.log(this.chartH,"this.chartH")
                 console.log(this.chartW,"this.chartW")
              },
@@ -130,12 +132,14 @@
                     this.isPackUp = false;
                     let data = false;
                     let changeH,changeW;
-                    this.chartT = this.$refs.content.getBoundingClientRect().top;
-                    this.chartB = this.$refs.content.getBoundingClientRect().bottom;
-                    this.chartL = this.$refs.content.getBoundingClientRect().left;
-                    this.chartR = this.$refs.content.getBoundingClientRect().right;
-                    this.chartH = this.chartB-this.chartT-42;
-                    this.chartW = this.chartR - 220;
+                    // this.chartT = this.$refs.content.getBoundingClientRect().top;
+                    // this.chartB = this.$refs.content.getBoundingClientRect().bottom;
+                    // this.chartL = this.$refs.content.getBoundingClientRect().left;
+                    // this.chartR = this.$refs.content.getBoundingClientRect().right;
+                    // this.chartH = this.chartB-this.chartT-42;
+                    // this.chartW = this.chartR - 220;
+                     this.chartH = window.innerHeight-140;
+                this.chartW = window.innerWidth-220;
                     console.log(this.chartT,"this.chartT")
                     console.log(this.chartB,"this.chartB")
                     that.$emit('hideList',data);//fullscreen事件触发后，自动触发hideList事件 var docElm = document.documentElement;

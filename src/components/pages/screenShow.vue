@@ -138,7 +138,7 @@
                          homeImg:"../../../static/img/screenHome.svg",
                          settingImg:"../../../static/img/screenSetting.svg",
                          textIndent:0,
-                         headLineH:85,
+                         headLineH:80,
                          homeMarginT:12,
                          echartColor:{
                              legentColor:"#fff",
@@ -244,12 +244,14 @@
                 })
             },
             getDom(){
-                this.chartT = this.$refs.content.getBoundingClientRect().top;
-                this.chartB = this.$refs.content.getBoundingClientRect().bottom;
-                this.chartL = this.$refs.content.getBoundingClientRect().left;
-                this.chartR = this.$refs.content.getBoundingClientRect().right;
-                this.chartH = this.chartB - this.chartT;
-                this.chartW = this.chartR - this.chartL;
+                this.chartH = window.innerHeight-120;
+                this.chartW = window.innerWidth;
+                // this.chartT = this.$refs.content.getBoundingClientRect().top;
+                // this.chartB = this.$refs.content.getBoundingClientRect().bottom;
+                // this.chartL = this.$refs.content.getBoundingClientRect().left;
+                // this.chartR = this.$refs.content.getBoundingClientRect().right;
+                // this.chartH = this.chartB - this.chartT;
+                // this.chartW = this.chartR - this.chartL;
                 // console.log(this.chartH,"this.chartH")
                 // console.log(this.chartW,"this.chartW")
             },
@@ -703,7 +705,7 @@
                         },
                         legend: {
                             data:valueColumns,
-                            x:"83%",
+                            x:"70%",
                             textStyle:{
                                 color:this.legentColor
                             }
@@ -1097,12 +1099,12 @@
                 if (localStorage.getItem('REFRESHTIME')){
                     let time = localStorage.getItem('REFRESHTIME')
                     if (new Date().getTime() - time > this.getRefresh){
-                        this.getEchats()
+                        this.getContent()
                         localStorage.setItem('REFRESHTIME',new Date().getTime())
                     }
                 } else {
                     localStorage.setItem('REFRESHTIME',new Date().getTime())
-                    this.getEchats()
+                    this.getContent()
                 }
             },
         },
