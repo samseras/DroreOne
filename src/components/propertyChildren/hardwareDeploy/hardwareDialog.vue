@@ -1569,10 +1569,11 @@
                 }
                 .ms{
                     border-bottom:1px solid transparent;
-                    padding-top: rem(5);
+                    padding-top: rem(7);
                     .des{
                         float:left;
                         display:inline-block;
+                        padding-top: rem(3);
                         width:4.3rem;
                         height:45px;
 
