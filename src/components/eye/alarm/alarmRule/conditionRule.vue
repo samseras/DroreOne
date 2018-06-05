@@ -41,7 +41,7 @@
                             label="来源">
                         </el-table-column>
                         <el-table-column
-                            prop="associatDevice"
+                            prop="relatedDevice"
                             label="关联设备">
                         </el-table-column>
                         <el-table-column
@@ -54,7 +54,7 @@
                         </el-table-column>
                         <el-table-column
                             sortable
-                            prop="severityName"
+                            prop="alarmSeverity.name"
                             label="严重等级">
                         </el-table-column>
                         <el-table-column
@@ -390,32 +390,51 @@
             saveEditInfo(){
 
             },
-            async getAllAlarmRule(){
+            async init(){
+                await this.getAllAlarmTypes();
+                await this.getAlarmRule();
+            },
+
+            async getAlarmRule(){
                 this.isShowLoading = true
-                let id = '';
-                await api.alarm.getAllAlarmRule(id).then(res => {
+                let typeId = this.getAlarmTypeId("环境")
+                console.log(typeId)
+                await api.alarm.getAlarmRulesByParameters(typeId).then(res => {
                     console.log(res, '请求成功')
                     this.isShowLoading = false
                     this.conditionList = res
                     this.conditionList.forEach(item => {
                         item.checked = false;
+                        if(item.relatedDevices.length > 0){
+                            item.relatedDeviceNames =  item.relatedDevices.map(device=>device.name)
+                            item.relatedDevice =  item.relatedDeviceNames.join(",")
+                        }else{
+                            item.relatedDeviceNames = []
+                            item.relatedDevice = ''
+                        }
+
+
                     })
                 }).catch(err => {
                     console.log(err, '请求失败')
                     this.isShowLoading = false
                 })
             },
-            async getAlarmType(){
-                await api.alarm.getAlarmType().then(res => {
-                    console.log(res, '请求成功')
-
+            getAlarmTypeId(typeName){
+                let typeInfo =  this.alarmType.filter(item=>item.name == typeName)
+                return typeInfo[0].id;
+            },
+            async getAllAlarmTypes(){
+                await api.alarm.getAllAlarmTypes().then(res => {
+                    console.log(res, '请求type成功')
+                    this.alarmType = res;
                 }).catch(err => {
                     console.log(err, '请求失败')
                 })
             }
         },
         created () {
-            this.getAllAlarmRule();
+            this.init();
         },
         components: {
             ScrollContainer,
