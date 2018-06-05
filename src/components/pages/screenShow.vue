@@ -705,7 +705,7 @@
                         },
                         legend: {
                             data:valueColumns,
-                            x:"83%",
+                            x:"70%",
                             textStyle:{
                                 color:this.legentColor
                             }
