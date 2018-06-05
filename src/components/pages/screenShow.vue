@@ -1097,12 +1097,12 @@
                 if (localStorage.getItem('REFRESHTIME')){
                     let time = localStorage.getItem('REFRESHTIME')
                     if (new Date().getTime() - time > this.getRefresh){
-                        this.getEchats()
+                        this.getContent()
                         localStorage.setItem('REFRESHTIME',new Date().getTime())
                     }
                 } else {
                     localStorage.setItem('REFRESHTIME',new Date().getTime())
-                    this.getEchats()
+                    this.getContent()
                 }
             },
         },
