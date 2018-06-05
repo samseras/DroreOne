@@ -1,4 +1,3 @@
-
 <template>
 	<div id="entrence">
         <header>
@@ -6,7 +5,7 @@
             <div id="getTime">
                 {{currTime | timeFiler}} ({{currTime | weekFiler}})
             </div>
-            <div class="user">王显涛</div>
+            <div class="user">{{getUserInfo}}</div>
             <a class="indexExit" href="login" ></a>
         </header>
 		<div class="main">
@@ -35,13 +34,13 @@
                             <li class="one">
                                 <div class="change estate"><a href="/MicServiceManagementSystem">物业管理>><img src="../../../static/img/estate.png"/></a></div>
                                 <div class="list">
-                                    <div  class="listO change"><a href="">第三方应用>><img src="../../../static/img/threeSoft.png"/></a></div>
-                                    <div  class="listT change"><a href="">系统配置>><img src="../../../static/img/settion.png"/></a></div>
+                                    <div  class="listO change"><a>第三方应用>><img src="../../../static/img/threeSoft.png"/></a></div>
+                                    <div  class="listT change"><a>系统配置>><img src="../../../static/img/settion.png"/></a></div>
                                 </div>
                             </li>
                             <li class="two">
                                 <div class="bigData">
-                                    <div class="change"><a target="_blank" href="http://192.168.0.150:9527/analysis/public/main.html">大数据分析>><img src="../../../static/img/bagData.png"/></a></div>
+                                    <div class="change"><a target="_blank" href="http://121.199.5.95:9527/analysis/public/main.html">大数据分析>><img src="../../../static/img/bagData.png"/></a></div>
                                     <div class="dataCenter change" id="dataCenter"><router-link to="/property">数据中心>><img src="../../../static/img/dataCenter.png"/></router-link></div>
                                 </div>
                                 <div class="eye">
@@ -50,7 +49,7 @@
                                     <div class="change"><router-link to="/analyze" class="change">数据可视化>><img src="../../../static/img/sentiment.png"/></router-link></div>
                                 </div>
                             </li>
-                            <li class="change" id="bee"><a href="">物联网>><img src="../../../static/img/ZigBee.png"/></a></li>
+                            <li class="change" id="bee"><router-link to="/iot">物联网>><img src="../../../static/img/ZigBee.png"/></router-link></li>
                         </ul>
                     </div>
                     <div id="bottom" class="entrence-cont">
@@ -62,10 +61,10 @@
                                 </div>
                                 </router-link>
                             </li>
-                            <li class="change"><a href="/login">官网门户>><img src="../../../static/img/home.png"/></a></li>
-                            <li class="change"><a href="/login">电子票务>><img src="../../../static/img/elecTicket.png"/></a></li>
-                            <li class="change"><a href="/login">电子商圈>><img src="../../../static/img/elecBusiness.png"/></a></li>
-                            <li class="change"><a href="/login">微信公众号>><img src="../../../static/img/weixin.png"/></a></li>
+                            <li class="change"><a>官网门户>><img src="../../../static/img/home.png"/></a></li>
+                            <li class="change"><a>电子票务>><img src="../../../static/img/elecTicket.png"/></a></li>
+                            <li class="change"><a>电子商圈>><img src="../../../static/img/elecBusiness.png"/></a></li>
+                            <li class="change"><a>微信公众号>><img src="../../../static/img/weixin.png"/></a></li>
                         </ul>
                     </div>
                 </el-carousel-item>
@@ -88,6 +87,7 @@
 <script>
     import moment from 'moment'
     import ScrollContainer from '@/components/ScrollContainer'
+    import { mapGetters } from 'vuex'
 	export default {
 		data() {
 	        return {
@@ -104,7 +104,7 @@
                     {title: '第三方应用', route: ''},
                     {title: '系统配置', route: ''},
                     {title: '数据可视化', route: ''},
-                    {title: '物联网', route: ''},
+                    {title: '物联网', route: '/iot/iotPages'},
                     {title: '官网门户', route: ''},
                     {title: '电子票务', route: ''},
                     {title: '微信公众号', route: ''},
@@ -204,6 +204,9 @@
         },
         components: {
             ScrollContainer
+        },
+        computed: {
+            ...mapGetters(['getUserInfo'])
         }
 
 	}

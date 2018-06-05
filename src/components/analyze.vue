@@ -4,32 +4,31 @@
             <el-container>
                 <el-header  v-show = "isshowHead">
                     <el-row :gutter="10" class="alleye">
-                        <el-col :xs="8" :sm="8" :md="6" :lg="6" :xl="6" >
-                            <img src="../../static/img/eye.png"/>数据可视化汇总
+                        <el-col :xs="19" :sm="19" :md="21" :lg="21" :xl="21" >
+                            <img src="../../static/img/eye.png"/>分析
                         </el-col>
-                        <el-col :xs="9" :sm="9" :md="13" :lg="13" :xl="13" class="control">
-                             <p>内容</p>
-                        </el-col>
+                        <!--<el-col :xs="9" :sm="9" :md="13" :lg="13" :xl="13" class="control">-->
+                             <!--<p>内容</p>-->
+                        <!--</el-col>-->
                         <el-col :xs="5" :sm="5" :md="3" :lg="3" :xl="3" class="control">
                             <div class="func">
                                 <el-menu  class="el-menu-demo" mode="horizontal" router>
                                     <el-submenu index="">
                                         <template slot="title">
-                                            <span class="Admin">Admin</span>
+                                            <span class="Admin">{{getUserInfo}}</span>
                                             <img src="./../../static/img/peopleInfo.svg" alt="">
                                         </template>
                                         <el-menu-item index="">个人中心</el-menu-item>
                                         <el-menu-item index="/droreone">返回主页</el-menu-item>
-                                        <el-menu-item index="/login">退出</el-menu-item>
+                                        <el-menu-item @click="logout" index="">退出</el-menu-item>
                                     </el-submenu>
                                 </el-menu>
                             </div>
                         </el-col>
-                        <el-col :xs="2" :sm="2" :md="2" :lg="2" :xl="2" class="control">
-                            <!--<button class="publish" ><router-link :to="'/screen/'+currenId">发布</router-link></button>-->
-                            <button class="publish" @click="requestFullScreen"><router-link :to="{ path:'/screen/'+currenId, params: {'n': type} }" >发布</router-link></button>
-
-                        </el-col>
+                        <!--<el-col :xs="2" :sm="2" :md="2" :lg="2" :xl="2" class="control">-->
+                            <!--&lt;!&ndash;<button class="publish" ><router-link :to="'/screen/'+currenId">发布</router-link></button>&ndash;&gt;-->
+                            <!--&lt;!&ndash;<button class="publish" @click="requestFullScreen"><router-link :to="{ path:'/screen/'+currenId, params: {'n': type} }" >发布</router-link></button>&ndash;&gt;-->
+                        <!--</el-col>-->
                     </el-row>
                 </el-header>
             </el-container>
@@ -38,13 +37,29 @@
             <div class="analyzeConfirm" v-if="confirmErr">
                 <div class="analyzeMenu" v-if="hideList">
                     <ul>
-                        <li v-for="(item,index) in sidebarList" @click="isShowAnalyze(item.dashboard_id,index,item.refresh_interval,item.template_type)"  :class="activeIndex === index?'active':''" :id="item.id" :listName = "item.name" >
-                            {{item.name}}`
+                        <li v-for="(item,index) in sidebarList" @click="isShowAnalyze(item.dashboard_id,index,item.refresh_interval,item.template_type,item.name)"  :class="activeIndex === index?'active':''" :id="item.id" :listName = "item.name" >
+                            {{item.name}}
                         </li>
                     </ul>
                 </div>
                 <div class="analyzeContent" >
-                    <router-view @hideList = "hideLists" :typeTemp = "type"></router-view>
+                    <div class="conTentHead">
+                        <p>{{dashboradName}}</p>
+                        <div>
+                            <!--<button class="publish" @click="requestFullScreen"><router-link :to="{ path:'/screen/'+currenId, params: {'n': type} }" >发布</router-link></button>-->
+                            <button class="publish" @click="showSubheading">发布</button>
+                            <!--<button class="publish">导出</button>-->
+                            <button class="publish" @click="sharedLinks">分享</button>
+                        </div>
+                        <div class="subheading" v-if="showTile">
+                            <div>
+                                <label for="">副标题 ：</label><input type="text" id="subheading">
+                                <button @click="requestFullScreen"><router-link :to="{ path:'/screen/'+currenId}">确定</router-link></button>
+                                <button @click="cancelRequest">取消</button>
+                            </div>
+                        </div>
+                    </div>
+                    <router-view @hideList = "hideLists" :typeTemp = "type" class="routerContent"></router-view>
                 </div>
             </div>
             <err-list v-else :echatListErrs = "echatListErr"></err-list>
@@ -59,7 +74,7 @@
   import passengerFlow from "./analysisSystem/analyze/passengerFlow.vue"
   import api from "@/api"
   import errList from "./pages/err.vue"
-  import { mapMutations } from 'vuex'
+  import { mapMutations,mapGetters,mapActions } from 'vuex'
   export default {
   	data(){
   		return{
@@ -73,6 +88,8 @@
             confirmErr:true,
             currenId:null,
             type:null,
+            dashboradName:null,
+            showTile:false,
             echatListErr:{
                 pullData:false,
                 errInform:false,
@@ -89,13 +106,36 @@
         errList
   	},
     methods:{
+        ...mapMutations(['REFRESH_DATA_TYPE','COMPANY_DATA_NAME']),
         ...mapMutations(['REFRESH_DATA_TYPE']),
+        ...mapActions(['logout']),
+        
         hideLists(data){
                this.hideList = !data.list;
                this.isshowHead = !data.head;
               // this.$emit('hideHead',hideData);
         },
+        cancelRequest(){
+            this.showTile = false;
+        },
+        showSubheading(){
+             this.showTile = true;
+        },
+        sharedLinks(){
+            let screenHref = window.location.href.replace("analyze","screen");
+            this.$message.info(screenHref)
+            console.log(window.location.href,"!!!!!!!!!!!!!!")
+        },
         requestFullScreen() {
+            this.showTile = false;
+            let title = $("#subheading").val();
+            if(title){
+                this.$store.commit('COMPANY_DATA_NAME', title);
+                localStorage.setItem("title",title);
+            }else{
+                this.$store.commit('COMPANY_DATA_NAME', '卓锐科技股份有限公司')
+                localStorage.setItem("title",'卓锐科技股份有限公司');
+            }
             let docElm = document.documentElement;
             if (docElm.requestFullscreen) {
                 docElm.requestFullscreen();
@@ -111,12 +151,13 @@
                 docElm.webkitRequestFullScreen();
             }
         },
-        isShowAnalyze (id,index,refresh,type) {
+        isShowAnalyze (id,index,refresh,type,name) {
             // console.log(this.$router,"this.$router.path")
               this.type = type;
               console.log(this.type,"this.type")
               this.currenId = id;
-	          this.$router.push({path: `/analyze/${id}`});
+              this.dashboradName = name;
+              this.$router.push({path: `/analyze/${id}`});
 	          this.activeIndex = index;
               this.$store.commit('REFRESH_DATA_TYPE', refresh)
         },
@@ -127,6 +168,7 @@
                this.type = this.sidebarList[0].template_type;
                 console.log(this.type,"_____")
                this.currenId = this.sidebarList[0].dashboard_id;
+                this.dashboradName = this.sidebarList[0].name;
                if(this.sidebarList.length == 0){
                    this.confirmErr = false;
                    this.echatListErr.errInform = false;
@@ -148,6 +190,13 @@
                this.echatListErr.pullData = false;
                 console.log(err)
            })
+        },
+        logout() {
+            let data = JSON.parse(localStorage.getItem('token'))
+            this.$store.dispatch('logout',data).then(() => {
+                this.$message.success('登出成功')
+                location.reload()
+            })
         }
       },
       watch: {
@@ -155,8 +204,8 @@
   	        clearInterval(window.SETTIMER)
         }
       },
-    mounted(){
-
+      computed: {
+          ...mapGetters(['getUserInfo'])
       }
     }
 
@@ -180,6 +229,7 @@
         }
         .el-row{
             width: 100%;
+            height: rem(60);
             margin: 0 !important;
             .el-col{
                 color: #fff;
@@ -240,28 +290,28 @@
                     width: rem(60);
                     height: rem(30);
                     padding-right: rem(10);
+                    padding-left: rem(50);
                     vertical-align: middle;
                 }
             }
-            .publish{
-                width: rem(60);
-                height: rem(60);
-                outline: none;
-                border: none;
-                background: none;
-                a{
-                    display: inline-block;
-                    width: rem(60);
-                    height: rem(60);
-                    color: #fff;
-                }
-            }
+            /*.publish{*/
+                /*width: rem(60);*/
+                /*height: rem(60);*/
+                /*outline: none;*/
+                /*border: none;*/
+                /*background: none;*/
+                /*a{*/
+                    /*display: inline-block;*/
+                    /*width: rem(60);*/
+                    /*height: rem(60);*/
+                    /*color: #fff;*/
+                /*}*/
+            /*}*/
         }
 
         .analyzeDetails{
             width: 100%;
             flex: 1;
-
             .analyzeConfirm{
                 width: 100%;
                 height: 100%;
@@ -278,7 +328,8 @@
                             white-space: nowrap;
                             overflow: hidden;
                             text-overflow: ellipsis;
-                            padding: rem(8) rem(10) rem(8) rem(40);
+                            height: rem(60);
+                            padding: rem(15) rem(10) rem(8) rem(40);
                             box-sizing: border-box;
                             text-align: left;
                             cursor: pointer;
@@ -300,6 +351,81 @@
                 .analyzeContent{
                     flex: 1;
                     background: #fff;
+                    display: flex;
+                    flex-direction: column;
+                    .routerContent{
+                        flex: 1;
+                    }
+                    .conTentHead{
+                        width: 100%;
+                        height: rem(60);
+                        line-height: rem(60);
+                        background: #e7e7e7;
+                        position: relative;
+                        p{
+                            width: 100%;
+                            text-align: left;
+                            font-size: rem(20);
+                            text-indent: rem(50);
+                        }
+                        div{
+                            position:absolute;
+                            right: 0;
+                            top: 0;
+                            width: rem(250);
+                            margin-left: rem(200);
+                            .publish{
+                                width: rem(40);
+                                height: rem(60);
+                                line-height: rem(60);
+                                outline: none;
+                                border: none;
+                                background: none;
+                                a{
+                                    display: inline-block;
+                                    width: rem(40);
+                                    height: rem(60);
+                                }
+                            }
+                        }
+                        .subheading{
+                            position: fixed;
+                            width: 100%;
+                            height: 100%;
+                            background: rgba(126,126,126,0.8);
+                            z-index: 1000;
+                            div{
+                                top: 50%;
+                                left: 50%;
+                                margin-left: rem(-250);
+                                margin-top: rem(-50);
+                                width: rem(500);
+                                height: rem(100);
+                                background: #fff;
+                                z-index: 100;position: relative;
+                                label{
+                                    margin-left: rem(40);
+                                }
+                                input{
+                                    width:rem(300);
+                                    height:rem(25);
+                                }
+                                button{
+                                    position: absolute;
+                                    top: rem(60);
+                                    width: rem(50);
+                                    height: rem(30);
+                                    right: rem(110);
+                                }
+                                button:last-child{
+                                    right: rem(40);
+                                }
+                            }
+
+
+                        }
+
+                    }
                 }
             }
 

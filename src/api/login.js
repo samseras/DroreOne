@@ -3,24 +3,28 @@
 * */
 
 import axios from '@/http'
+import {getUrl} from "./path";
 
 const login={
     userLogin(params){
         console.log(params, '这是传过来的')
         return axios({
             method:'GET',
-            url:'/security/login',
+            url: getUrl('/security/login'),
             headers:{
-                "Authorization":"BASIC " + params,
-                "x-ajax":true,
-                "Cache-Control":"no-cache"
+                "Authorization": params,
+                "x-ajax": true
             }
         })
     },
-    userLogout () {
-        return axios( {
+    userLogout (params) {
+        return axios({
             methods: 'GET',
-            url: '/security/logout',
+            url: getUrl('/security/logout'),
+            headers:{
+                "Authorization": params,
+                "x-ajax": true
+            }
         })
     }
 }

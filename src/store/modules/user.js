@@ -7,12 +7,16 @@ import * as types from '../mutations-type'
 
 const user = {
     state: {
-        user: ''
+        user: '',
 
     },
     getters: {
         getUserInfo (state) {
-            return state.user
+            if (state.user === '') {
+                return localStorage.getItem('userName')
+            } else{
+                return state.user
+            }
         }
     },
     setters: {},
@@ -25,10 +29,10 @@ const user = {
         async login ({commit}, userInfo) {
             let data = await api.login.userLogin(userInfo)
         },
-        async logout ({commit}) {
+        async logout ({commit},data) {
             commit(types.SET_USER, '')
             localStorage.removeItem('token')
-            return await api.login.userLogout()
+            return await api.login.userLogout(data)
         }
     }
 }

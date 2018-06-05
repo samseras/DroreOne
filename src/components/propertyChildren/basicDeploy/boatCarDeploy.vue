@@ -83,7 +83,7 @@
                             <template slot-scope="scope">
                                 <span class="formBtn" @click="showPersonDetail(scope.row, '车船信息',true)">查看</span>
                                 <span class="line">|</span>
-                                <span class="formBtn" @click="fixedInfo(scope.row.id)">编辑</span>
+                                <span class="formBtn" @click="fixedInfo(scope.row.id)">修改</span>
                                 <span class="line">|</span>
                                 <span class="formBtn" @click="deletInfo(scope.row.id)">删除</span>
                             </template>
@@ -473,7 +473,7 @@
     }
 </script>
 
-<style lang="scss">
+<style lang="scss" type="text/scss">
     .boatCars .el-table__header-wrapper{
         font-size: rem(14);
         font-weight: normal;
@@ -481,6 +481,20 @@
     .boatCars .el-table__body-wrapper,.boatCars .is-scrolling-none{
         font-size: rem(14);
     }
+    .boatCars{
+        .el-checkbox__input{
+            vertical-align: top;
+        }
+    }
+    .boatCars {
+        .el-table__header-wrapper .has-gutter {
+            background-color: #f3f3f3;
+        }
+        .el-table th, .el-table tr{
+            background-color: transparent !important;
+        }
+    }
+
 </style>
 <style lang="scss" scoped type="text/scss">
     .boatCars{
@@ -531,14 +545,11 @@
                         border-top-right-radius: rem(5);
                         position: relative;
                         .checkBtn{
-                            /*width: rem(15);*/
-                            /*height: rem(15);*/
-                            /*outline: none;*/
-                            /*background: #fff;*/
-                            /*background: none;*/
-                            position: absolute;
-                            right: rem(5);
-                            top: rem(0);
+                            float: right;
+                            margin-right: rem(5);
+                            margin-top: rem(3);
+                            width: rem(15);
+                            height: rem(15);
                             cursor: pointer;
                         }
                     }

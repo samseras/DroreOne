@@ -107,6 +107,7 @@
                 this.getAllBroadcast();//广播现有标注
                 this.getAllCamera();//摄像头现有标注
                 this.overView();//鹰眼
+                this.rangeSearch();// 范围查找
             } else if (route.includes('area-deploy')) {
                 if(!this.getLocationId){
                     this.getAllArea();// 片区输出
@@ -1937,7 +1938,45 @@
                         this.treeShowID(this.getfacilityIndicator[i]);
                     }
                 }
-            }
+            },
+            async rangeSearch(){
+                let that =this
+                droreMap.event.addMouseEvent(Event.DOUBLECLICK_EVENT, "single", function(evt){
+
+                    let Circle = new droreMap.geom.Circle()
+                    let radius=100
+                    let coordinate=droreMap.trans.transLayerToWgs(evt.coordinate)
+                    let longitude = parseFloat(coordinate[0])
+                    let latitude = parseFloat(coordinate[1])
+                    let types={
+                        "7":[1,2]
+                    }
+                    let SearchFacility = {
+                        radius: radius,
+                        latitude: latitude,
+                        longitude: longitude,
+                        epsg:'4326',
+                        types:types
+                    }
+                    // that.getAllBroadcast();//广播现有标注
+                    // that.getAllCamera();//摄像头现有标注
+                    console.log(SearchFacility);
+                    that.getSearchFacility(SearchFacility)
+                    Circle.setCenter(evt.coordinate,radius);
+                })
+            },
+            async getSearchFacility (SearchFacility) {//点击范围搜索
+                await api.controler.getSearchFacility(JSON.stringify(SearchFacility)).then(res => {
+                    console.log(res)
+                    this.searchFacilityList= res[7]
+                    console.log(this.searchFacilityList)
+                    for (let i=0;i< this.searchFacilityList.length;i++) {
+                        this.treeShowID(this.searchFacilityList[i].id);
+                    }
+                }).catch(err => {
+                    this.$message.error('查询失败')
+                })
+            },
         },
         components: {
             Scrollcontainer,
@@ -2669,6 +2708,7 @@
             line-height: rem(16);
             .el-switch__core{
                 height: rem(16);
+                outline: none
             }
             .el-switch__core:after{
                 width: rem(12);

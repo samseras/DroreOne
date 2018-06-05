@@ -5,10 +5,10 @@
             <i class="el-icon-search"></i>
         </div>
         <div class="funcBtn">
-            <el-button size="mini"plain @click="addNewInfo"><i class="el-icon-circle-plus"></i>添加</el-button>
-            <el-button size="mini"plain class='selectedAll' @click="selected">
-                <el-checkbox v-model="isSelected" @change="selectedAll"></el-checkbox>全选
-            </el-button>
+            <el-button size="mini" plain @click="addNewInfo"><i class="el-icon-circle-plus"></i>添加</el-button>
+
+                <el-checkbox v-model="isSelected" @change="selectedAll" class="selectedAll">全选</el-checkbox>
+
             <!--<el-button size="mini"plain v-if="isShowHeader">导入</el-button>-->
             <div class="el-upload" v-if="isShowHeader">
                 <el-button size="mini" plain @click="$refs.uploadFile.click()"><i class="el-icon-upload2"></i>导入</el-button>
@@ -494,10 +494,10 @@
     }
 </script>
 
-<style lang="scss">
+<style lang="scss" type="text/scss">
     .funHeader{
         .el-checkbox__label{
-            padding-left: rem(1);
+            padding-left: rem(5);
             font-size: rem(12);
         }
         .el-checkbox__inner{
@@ -522,13 +522,12 @@
             input{
                 border: none;
                 outline:medium;
-                list-style: none;
                 border-bottom: 1px solid #ccc;
                 font-size: rem(12);
                 padding: rem(3) rem(4);
             }
             i{
-                font-size: rem(12);
+                font-size: rem(13);
                 margin-left: rem(-15);
                 cursor: pointer;
             }
@@ -539,6 +538,7 @@
             button{
                 border: none;
                 margin-right: rem(-5);
+                font-weight: 500;
 
                 i{
                     margin-right: rem(3);
@@ -556,6 +556,7 @@
             margin-left: rem(50);
             .el-checkbox{
                 margin-left: rem(10);
+                margin-bottom: rem(2);
             }
         }
         .page{

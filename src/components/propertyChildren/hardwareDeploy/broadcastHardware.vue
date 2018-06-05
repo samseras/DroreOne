@@ -80,7 +80,7 @@
                                 <div class="handle">
                                     <span @click="showBroadDetail(scope.row, '广播信息', true)">查看</span>
                                     <span class="line">|</span>
-                                    <span @click="fixedInfo(scope.row.id )">编辑</span>
+                                    <span @click="fixedInfo(scope.row.id )">修改</span>
                                     <span class="line">|</span>
                                     <span @click="deletInfo(scope.row.id)">删除</span>
                                 </div>
@@ -197,7 +197,7 @@
             },
             addNewInfo(){
                 this.showBroadDetail({},'添加广播信息',false)
-                this.isDisabled=false
+                this.isDisabled= false
             },
             showBroadDetail(info,title, state){
                 this.broadInfo=info
@@ -299,6 +299,7 @@
 
             },
             async addBroad (info){
+
                 let index = info.location.includes(',')?info.location.indexOf(','):info.location.indexOf('，')
                 let longitude = info.location.substring(0, index)
                 let latitude = info.location.substring(index + 1)
@@ -486,10 +487,11 @@
         /*.el-checkbox__inner{*/
             /*margin-top:rem(5);*/
         /*}*/
-        .cameraList .el-button{
-            border:1px solid transparent;
+        .cameraList .box .el-tooltip{
+            /*border:1px solid transparent;*/
             text-align: left;
             background: transparent;
+            border: none;
             padding: 0;
         }
         .cameraList .box .el-button span{
@@ -499,11 +501,17 @@
             overflow: hidden;
             text-overflow: ellipsis;
         }
+        .el-table__header-wrapper .has-gutter {
+            background-color: #f3f3f3;
+        }
+        .el-table th, .el-table tr{
+            background-color: transparent !important;
+        }
     }
 
 </style>
 
-<style lang="scss" type="text/scss" scoped>
+<style lang="scss" type="text/scss" scoped  >
     .broadHard{
         width:100%;
         height:100%;
