@@ -138,7 +138,7 @@
                          homeImg:"../../../static/img/screenHome.svg",
                          settingImg:"../../../static/img/screenSetting.svg",
                          textIndent:0,
-                         headLineH:85,
+                         headLineH:80,
                          homeMarginT:12,
                          echartColor:{
                              legentColor:"#fff",
@@ -175,7 +175,7 @@
                          homeImg:"../../../static/img/screenHome.svg",
                          settingImg:"../../../static/img/screenSetting.svg",
                          textIndent:60,
-                         headLineH:85,
+                         headLineH:70,
                          homeMarginT:12,
                          echartColor: {
                              legentColor:"#fff",
@@ -244,12 +244,14 @@
                 })
             },
             getDom(){
-                this.chartT = this.$refs.content.getBoundingClientRect().top;
-                this.chartB = this.$refs.content.getBoundingClientRect().bottom;
-                this.chartL = this.$refs.content.getBoundingClientRect().left;
-                this.chartR = this.$refs.content.getBoundingClientRect().right;
-                this.chartH = this.chartB - this.chartT;
-                this.chartW = this.chartR - this.chartL;
+                this.chartH = window.innerHeight-120;
+                this.chartW = window.innerWidth;
+                // this.chartT = this.$refs.content.getBoundingClientRect().top;
+                // this.chartB = this.$refs.content.getBoundingClientRect().bottom;
+                // this.chartL = this.$refs.content.getBoundingClientRect().left;
+                // this.chartR = this.$refs.content.getBoundingClientRect().right;
+                // this.chartH = this.chartB - this.chartT;
+                // this.chartW = this.chartR - this.chartL;
                 // console.log(this.chartH,"this.chartH")
                 // console.log(this.chartW,"this.chartW")
             },
