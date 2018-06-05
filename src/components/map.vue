@@ -1939,25 +1939,44 @@
                     }
                 }
             },
-            rangeSearch(){
-                // var Circle = new droreMap.geom.Circle()
-                // var data = {
-                //     "id": '14654564',
-                //     "name":'3123123',
-                //     "color": "#00bcff",
-                //     "width": "1",
-                //     "bgColor":"rgba(0,188,255,0.3)",
-                //     "coordinate":[13367095.553556845, 3537993.9688054775],
-                //     "radius":10,
-                // }
-                // Circle.addCircle(data);
-                // droreMap.event.addMouseEvent(Event.DOUBLECLICK_EVENT, "single", function(evt){
-                //     console.log(evt.coordinate);
-                //     let radius=100
-                //     var Circle = new droreMap.geom.Circle()
-                //     Circle.setCenter(evt.coordinate,radius);
-                // })
-            }
+            async rangeSearch(){
+                let that =this
+                droreMap.event.addMouseEvent(Event.DOUBLECLICK_EVENT, "single", function(evt){
+
+                    let Circle = new droreMap.geom.Circle()
+                    let radius=100
+                    let coordinate=droreMap.trans.transLayerToWgs(evt.coordinate)
+                    let longitude = parseFloat(coordinate[0])
+                    let latitude = parseFloat(coordinate[1])
+                    let types={
+                        "7":[1,2]
+                    }
+                    let SearchFacility = {
+                        radius: radius,
+                        latitude: latitude,
+                        longitude: longitude,
+                        epsg:'4326',
+                        types:types
+                    }
+                    // that.getAllBroadcast();//广播现有标注
+                    // that.getAllCamera();//摄像头现有标注
+                    console.log(SearchFacility);
+                    that.getSearchFacility(SearchFacility)
+                    Circle.setCenter(evt.coordinate,radius);
+                })
+            },
+            async getSearchFacility (SearchFacility) {//点击范围搜索
+                await api.controler.getSearchFacility(JSON.stringify(SearchFacility)).then(res => {
+                    console.log(res)
+                    this.searchFacilityList= res[7]
+                    console.log(this.searchFacilityList)
+                    for (let i=0;i< this.searchFacilityList.length;i++) {
+                        this.treeShowID(this.searchFacilityList[i].id);
+                    }
+                }).catch(err => {
+                    this.$message.error('查询失败')
+                })
+            },
         },
         components: {
             Scrollcontainer,
