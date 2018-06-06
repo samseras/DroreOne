@@ -41,6 +41,19 @@ const alarm = {
         })
     },
 
+    exportAlarmRules(typeId){
+        return axios ({
+            method: 'GET',
+            url: getUrl('/alarm/rule/export?alarmTypeId='+typeId)
+        })
+    },
+    exportSelectedAlarmRules(ids,typeId){
+        return axios ({
+            method: 'PUT',
+            url: getUrl('/alarm/rule/export?alarmTypeId='+typeId),
+            data:JSON.stringify(ids)
+        })
+    },
     getAlarmRulesByParameters(id) {
         return axios ({
             method: 'GET',
@@ -97,6 +110,9 @@ const alarm = {
             url: getUrl('/alarm/event/status')
         })
     }
+
+
+
 
 }
 
