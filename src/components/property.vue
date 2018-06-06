@@ -19,7 +19,7 @@
                                 <span class="Admin">{{getUserInfo}}</span>
                                 <img src="./../../static/img/peopleInfo.svg" alt="">
                             </template>
-                            <el-menu-item index="">个人中心</el-menu-item>
+                            <el-menu-item index="" @click="showUserDialog">个人中心</el-menu-item>
                             <el-menu-item index="/droreone">返回主页</el-menu-item>
                             <el-menu-item @click="logout"index="">退出</el-menu-item>
                         </el-submenu>
@@ -30,22 +30,30 @@
         <div class="pro_content">
             <router-view></router-view>
         </div>
+        <UserInfoDialog
+            v-if="visible"
+            :visible="visible"
+            @closeInfoDialog="visible = false">
+        </UserInfoDialog>
     </div>
 </template>
 
 <script>
     import ScrollContainer from '@/components/ScrollContainer'
     import { mapGetters,mapActions } from 'vuex'
+    import UserInfoDialog from '@/components/userInfoDialog'
 
     export default {
         name: "property",
         data() {
             return {
-                route: ''
+                route: '',
+                visible: false
             }
         },
         created () {
             this.route = this.$route.path
+            this.getUserRoles(this.getUserInfo)
         },
         watch: {
           '$route'(){
@@ -53,16 +61,20 @@
           }
         },
         components: {
-            ScrollContainer
+            ScrollContainer,
+            UserInfoDialog
         },
         methods:{
-            ...mapActions(['logout']),
+            ...mapActions(['logout','getUserRoles']),
             logout() {
                 let data = JSON.parse(localStorage.getItem('token'))
                 this.$store.dispatch('logout',data).then(() => {
                     this.$message.success('登出成功')
                     location.reload()
                 })
+            },
+            showUserDialog () {
+                this.visible = true
             }
         },
         computed: {
