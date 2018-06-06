@@ -1,6 +1,6 @@
 <template>
     <div class="basicMenu">
-        <el-menu default-active="/basic-property/basictype" router
+        <el-menu default-active="/basic-property/park-deploy" router
                  text-color="#fff"
                  active-text-color="#ffd04b"
                  :default-openeds="openeds">
@@ -9,13 +9,13 @@
                     <template v-if="item.subs">
                         <el-submenu :index="item.index">
                             <template slot="title"><img :src="item.icon" alt="">{{ item.title }}</template>
-                            <el-menu-item v-for="(subItem,i) in item.subs" :key="i" :index="subItem.index">
+                            <el-menu-item v-for="(subItem,i) in facilityMenu" :key="i" :index="subItem.index" v-if="subItem.enable">
                                 <img :src="subItem.icon" alt="">
                                 {{ subItem.title }}
                             </el-menu-item>
                         </el-submenu>
                     </template>
-                    <template v-else>
+                    <template v-if="!item.subs && getUserRole === 'ADMIN'"><!--用户鉴权显示-->
                         <el-menu-item :index="item.index">
                             <img :src="item.icon" alt="">{{ item.title }}
                         </el-menu-item>
@@ -34,6 +34,7 @@
 
 <script>
     import ScrollContainer from '@/components/ScrollContainer'
+    import { mapGetters, mapActions} from 'vuex'
     export default {
         name: "basic-menu",
         data () {
@@ -49,117 +50,95 @@
                         icon: './../../../static/img/basicInfo.svg',
                         index: '2',
                         title: '设施信息',
-                        subs: [
-
-                            {
-                                icon: './../../../static/img/area.svg',
-                                index: '/basic-property/area-deploy',
-                                title: '片区'
-                            },
-                            {
-                                icon: './../../../static/img/roat.svg',
-                                index: '/basic-property/roat-deploy',
-                                title: '路网'
-                            },
-                            {
-                                icon: './../../../static/img/boatCar.svg',
-                                index: '/basic-property/boat-deploy',
-                                title: '车船'
-                            },
-
-                            {
-                                icon: './../../../static/img/toilet.svg',
-                                index: '/basic-property/toilet-deploy',
-                                title: '卫生间'
-                            },
-                            {
-                                icon: './../../../static/img/park.svg',
-                                index: '/basic-property/park-deploy',
-                                title: '停车场'
-                            },
-                            {
-                                icon: './../../../static/img/shop.svg',
-                                index: '/basic-property/shop-deploy',
-                                title: '商圈'
-                            },
-                            {
-                                icon: './../../../static/img/scenic.svg',
-                                index: '/basic-property/scenic-deploy',
-                                title: '景点'
-                            },
-
-                            {
-                                icon: './../../../static/img/trash.svg',
-                                index: '/basic-property/trash-deploy',
-                                title: '垃圾桶'
-                            },
-                            {
-                                icon: './../../../static/img/indicator.svg',
-                                index: '/basic-property/indicator-deploy',
-                                title: '指示牌'
-                            },
-                            {
-                                icon: './../../../static/img/plant.svg',
-                                index: '/basic-property/plant-deploy',
-                                title: '植物'
-                            },
-                            {
-                                icon: './../../../static/img/build.svg',
-                                index: '/basic-property/construction-deploy',
-                                title: '建筑'
-                            },
-
-                        ]
+                        subs: []
                     },
-                    // {
-                    //     icon: 'el-icon-date',
-                    //     index: '2',
-                    //     title: '硬件信息',
-                    //     subs: [
-                    //         {
-                    //             index: '/property/camera-Hware',
-                    //             title: '摄像头'
-                    //         },
-                    //         {
-                    //             index: '/property/broadcast-Hware',
-                    //             title: '广播'
-                    //         },
-                    //         {
-                    //             index: '/property/monitors-Hware',
-                    //             title: '环境监测传感器'
-                    //         },
-                    //         {
-                    //             index: '/property/police-Hware',
-                    //             title: '报警柱传感器'
-                    //         },
-                    //         {
-                    //             index: '/property/led-Hware',
-                    //             title: 'LED大屏'
-                    //         },
-                    //         {
-                    //             index: '/property/wifi-Hware',
-                    //             title: 'WIFI'
-                    //         },
-                    //         {
-                    //             index: '/property/voice-Hware',
-                    //             title: '音响'
-                    //         },
-                    //         {
-                    //             index: '/property/gate-Hware',
-                    //             title: '闸机'
-                    //         },
-                    //         {
-                    //             index: '/property/lampLight-Hware',
-                    //             title: '灯光'
-                    //         },
-                    //
-                    //     ]
-                    // }
-                ]
+                ],
+                subs: [
+                    {
+                        icon: './../../../static/img/area.svg',
+                        index: '/basic-property/area-deploy',
+                        title: '片区'
+                    },
+                    {
+                        icon: './../../../static/img/roat.svg',
+                        index: '/basic-property/roat-deploy',
+                        title: '路网'
+                    },
+                    {
+                        icon: './../../../static/img/boatCar.svg',
+                        index: '/basic-property/boat-deploy',
+                        title: '车船'
+                    },
+
+                    {
+                        icon: './../../../static/img/toilet.svg',
+                        index: '/basic-property/toilet-deploy',
+                        title: '卫生间'
+                    },
+                    {
+                        icon: './../../../static/img/park.svg',
+                        index: '/basic-property/park-deploy',
+                        title: '停车场'
+                    },
+                    {
+                        icon: './../../../static/img/shop.svg',
+                        index: '/basic-property/shop-deploy',
+                        title: '商圈'
+                    },
+                    {
+                        icon: './../../../static/img/scenic.svg',
+                        index: '/basic-property/scenic-deploy',
+                        title: '景点'
+                    },
+
+                    {
+                        icon: './../../../static/img/trash.svg',
+                        index: '/basic-property/trash-deploy',
+                        title: '垃圾桶'
+                    },
+                    {
+                        icon: './../../../static/img/indicator.svg',
+                        index: '/basic-property/indicator-deploy',
+                        title: '指示牌'
+                    },
+                    {
+                        icon: './../../../static/img/plant.svg',
+                        index: '/basic-property/plant-deploy',
+                        title: '植物'
+                    },
+                    {
+                        icon: './../../../static/img/build.svg',
+                        index: '/basic-property/construction-deploy',
+                        title: '建筑'
+                    },
+                ],
+                facilityMenu: []
+            }
+        },
+        methods: {
+            ...mapActions(['getFacilityType'])
+        },
+        created () {
+            this.getFacilityType()
+        },
+        watch: {
+            getFacilitTypeMenu () {
+                this.facilityMenu = []
+                this.getFacilitTypeMenu.forEach(item => {
+                    this.subs.forEach(item1 => {
+                        if (item.name === item1.title) {
+                            item = {...item,...item1}
+                            this.facilityMenu.push(item)
+                        }
+                    })
+                })
             }
         },
         components: {
             ScrollContainer
+        },
+        computed: {
+            ...mapGetters(['getUserRole', 'getFacilitTypeMenu'])
         }
     }
 </script>

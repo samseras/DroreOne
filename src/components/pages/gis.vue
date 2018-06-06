@@ -17,7 +17,7 @@
                                     <span class="Admin">{{getUserInfo}}</span>
                                     <img src="./../../../static/img/peopleInfo.svg" alt="">
                                 </template>
-                                <el-menu-item index="">个人中心</el-menu-item>
+                                <el-menu-item index="" @click="visible = true">个人中心</el-menu-item>
                                 <el-menu-item index="/droreone">返回主页</el-menu-item>
                                 <el-menu-item @click="logout" index="">退出</el-menu-item>
                             </el-submenu>
@@ -74,6 +74,11 @@
             </div>
 
         </el-container>
+        <UserInfoDialog
+            v-if="visible"
+            :visible="visible"
+            @closeInfoDialog="visible = false">
+        </UserInfoDialog>
     </div>
 </template>
 
@@ -82,6 +87,7 @@
 
     import ScrollContainer from '@/components/ScrollContainer'
     import { mapGetters,mapActions} from 'vuex'
+    import UserInfoDialog from '@/components/userInfoDialog'
 
 
     export default {
@@ -121,7 +127,8 @@
                             }
                         ]
                     },
-                ]
+                ],
+                visible: false
             }
         },
 
@@ -161,9 +168,10 @@
 
         },
         components: {
-                ScrollContainer
+                ScrollContainer,
+            UserInfoDialog
         },
-        compute: {
+        computed: {
             ...mapGetters(['getUserInfo'])
         }
     }

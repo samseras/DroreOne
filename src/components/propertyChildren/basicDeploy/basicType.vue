@@ -1,18 +1,9 @@
 <template>
     <div class="basicType">
         <div class="title">
-            类型
+            设施类型
         </div>
         <div class="personContent">
-            <!--<div class="funcTitle">-->
-                <!--<Header @addNewInfo = "addNewInfo"-->
-                        <!--@deletInfo = "deletInfo"-->
-                        <!--@toggleList = "toggleList"-->
-                        <!--@choseType = 'choseType'-->
-                        <!--@selectedAll = 'selectedAll'-->
-                        <!--@fixedInfo = 'fixedInfo'>-->
-                <!--</Header>-->
-            <!--</div>-->
             <div class="personList" v-loading="isShowLoading">
                 <ScrollContainer>
                     <el-table
@@ -21,55 +12,24 @@
                         tooltip-effect="dark"
                         style="width: 100%"
                         @selection-change="handleSelectionChange">
-
-                        <!--<el-table-column
-                            width="55">
-                            <template slot-scope="scope">
-                                <el-checkbox v-model="scope.row.checked" @change="checked(scope.row.id)" class="checkBoxBtn"></el-checkbox>
-                            </template>
-                        </el-table-column>-->
-
                         <el-table-column
                             prop="name"
-                            label="设施名称"
-                            width="960">
+                            label="设施类型名称">
                         </el-table-column>
-                        <el-table-column>
-                            <!--<template slot-scope="scope">-->
-                                <!--<span @click="showPersonDetail(scope.row,'设施类型')">查看</span>-->
-                                <!--<span class="line">|</span>-->
-                                <!--<span @click="fixedInfo(scope.row.id )">编辑</span>-->
-                                <!--<span class="line">|</span>-->
-                                <!--<span @click="deletInfo(scope.row.id)">删除</span>-->
-                            <!--</template>-->
+                        <el-table-column
+                            label="是否启用"
+                            width="200">
+                            <template slot-scope="scope">
+                                <el-switch
+                                    v-model="scope.row.enable"
+                                    active-text="启用"
+                                    inactive-text="停用"
+                                    @change="startStopState(scope.row.id, scope.row.enable)">
+                                </el-switch>
+                            </template>
                         </el-table-column>
                     </el-table>
-                    <!--<div class="personInfo" v-for="item in areaList" v-if="isShowAreaCard && item.status">-->
-                        <!--<div class="checkBox">-->
-                            <!--&lt;!&ndash;<input type="checkbox" :checked='item.checked' class="checkBtn" @change="checked(item.id)">&ndash;&gt;-->
-                            <!--<el-checkbox v-model="item.checked" @change="checked(item.id)" class="checkBtn"></el-checkbox>-->
-                        <!--</div>-->
-                        <!--<div class="personType" @click.stop="showPersonDetail(item, '设备类型')">-->
-                            <!--<img :src="item.picturePath" alt="">-->
-                            <!--<span class="type">-->
-                                  <!--{{item.name}}-->
-                                <!--</span>-->
-                        <!--</div>-->
-                        <!--<div class="specificInfo">-->
-                            <!--<p class="name" v-if="false">所在景区：<span>{{item.placeScenic}}</span></p>-->
-                            <!--<p class="sex text">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：<span>{{item.description}}</span></p>-->
-                        <!--</div>-->
-                    <!--</div>-->
                 </ScrollContainer>
-                <PersonDetail v-if="visible"
-                              :visible="visible"
-                              :Info="areaInfo"
-                              :isDisabled="isDisabled"
-                              :title="title"
-                              @closeInfoDialog ="visible = false"
-                              @fixInfo = "fixInfo"
-                              @addNewInfo="addNewPerson">
-                </PersonDetail>
             </div>
         </div>
     </div>
@@ -77,9 +37,8 @@
 
 <script>
     import ScrollContainer from '@/components/ScrollContainer'
-    import Header from './funHeader'
-    import PersonDetail from './detailDialog'
     import api from '@/api'
+    import {mapMutations} from 'vuex'
     export default {
         name: 'area-deploy',
         data(){
@@ -87,17 +46,7 @@
                 isShowAreaCard: true,
                 checkList: [],
                 filterList: [],
-                basicList: [
-                    {name: '车船'},
-                    {name: '路网'},
-                    {name: '片区'},
-                    {name: '卫生间'},
-                    {name: '停车场'},
-                    {name: '商圈'},
-                    {name: '景点'},
-                    {name: '垃圾桶'},
-                    {name: '指示牌'},
-                ],
+                basicList: [],
                 visible: false,
                 areaInfo: {},
                 choseInfoId: [],
@@ -108,177 +57,71 @@
             }
         },
         methods: {
+            ...mapMutations(['SET_FACILITY_TYPE']),
+            startStopState (id,state) {
+                console.log(state)
+                let message
+                if (state) {
+                    message = '此操作将开启使用该人员类型, 是否继续?'
+                } else {
+                    message = '此操作将停止使用该人员类型, 是否继续?'
+                }
+                this.$confirm(message, '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    this.basicList = this.basicList.filter(item => {
+                        if (item.id === id) {
+                            item.enable = item.enable
+                            let obj = {
+                                name: item.name,
+                                id: item.id,
+                                enable: item.enable
+                            }
+                            api.lib.updateFacilityType(JSON.stringify(obj)).then(res => {
+                                console.log(res, '请求成功')
+                                if(state) {
+                                    this.$message.success('开启使用成功')
+                                } else{
+                                    this.$message.success('停止使用成功')
+                                }
+                            }).catch(err => {
+                                console.log(err, '请求失败')
+                                if(state) {
+                                    this.$message.error('取消开启')
+                                } else{
+                                    this.$message.error('取消禁用')
+                                }
+                            })
+                        }
+                        return item
+                    })
+                    this.$store.commit('SET_FACILITY_TYPE', this.basicList)
+                }).catch(err => {
+                    this.basicList  = this.basicList.filter(item => {
+                        if (item.id === id) {
+                            item.enable = !item.enable
+                        }
+                        return item
+                    })
+                    this.$message.info('取消')
+                })
+            },
             handleSelectionChange(val) {
                 this.multipleSelection = val;
             },
-            showPersonDetail (info,title) {
-                this.areaInfo = info
-                this.visible = true
-                this.title = title
-            },
-            addNewInfo () {
-                this.showPersonDetail({}, '添加设施类型')
-                this.isDisabled = false
-            },
-            deletInfo (id) {
-                if (id) {
-                    this.choseInfoId.push(id)
-                }
-                if (this.choseInfoId.length > 0) {
-                    this.$confirm('此操作将永久删除该数据, 是否继续?', '提示', {
-                        confirmButtonText: '确定',
-                        cancelButtonText: '取消',
-                        type: 'warning'
-                    }).then(() => {
-                        api.area.deleteRegion(this.choseInfoId).then(res => {
-                            console.log(res, '删除成功')
-                            this.$message.success('删除成功')
-                            for (let i = 0; i < this.choseInfoId.length; i++) {
-                                this.areaList = this.areaList.filter((item, index) => {
-                                    if (item.id === this.choseInfoId[i]){
-                                        this.areaList[index].checked = false
-                                        this.areaList[index].status = false
-                                    }
-                                    return item
-                                })
-                            }
-                            this.choseInfoId = []
-                        }).catch(err => {
-                            this.$message.error('删除失败，请稍后重试')
-                            console.log(err)
-                            this.choseInfoId = []
-                        })
-                    }).catch(() => {
-                        this.$message.info('取消删除')
-                    })
-                } else {
-                    this.$message.error('请选择要删除的数据')
-                    return
-                }
-            },
-            toggleList (type) {
-                if (type === 'list') {
-                    this.isShowAreaCard = false
-                }else {
-                    this.isShowAreaCard = true
-                }
-            },
-            checked (id) {
-                this.basicList = this.basicList.filter(item => {
-                    if (item.id === id) {
-                        item.checked = item.checked
-                    }
-                    return item
-                })
-                if (this.choseInfoId.includes(id)) {
-                    this.choseInfoId = this.choseInfoId.filter((item) =>{
-                        return item !== id
-                    })
-                } else {
-                    this.choseInfoId.push(id)
-                }
-            },
-            choseType (type) {
-                console.log(type)
-                if (type.length === 0){
-                    this.areaList = this.areaList.filter((item) => {
-                        item.status = true
-                        return item.status === true
-                    })
-                } else {
-                    this.choseList = this.areaList.filter((item,index) => {
-                        if (type.includes(item.type)){
-                            item.status = true
-                        } else if(!type.includes(item.type)){
-                            item.status = false
-                            console.log(item.type, 'p[p[p[');
-                        }
-                        return item.status === true
-                    })
-                }
-            },
-            selectedAll (state) {
-                console.log(state, 'opopopopop')
-                this.areaList = this.areaList.filter((item) => {
-                    if (state === true) {
-                        item.checked = true
-                        this.choseInfoId.push(item.id)
-                        return item.checked === true
-                    } else {
-                        item.checked = false
-                        this.choseInfoId = []
-                        return item.checked === false
-                    }
-                })
-                console.log(this.choseInfoId, 'opopop')
-            },
-            fixInfo (info) {
-                let aresObj = {
-                    id: info.id,
-                    name: info.name,
-                    description: info.description
-                }
-                api.area.updateRegion(JSON.stringify(aresObj)).then(res => {
-                    console.log(res, '创建成功')
-                    this.$message.success('修改成功')
-                    this.choseInfoId = []
-                    this.getAllArea()
-                }).catch(err => {
-                    this.$message.error('修改失败，请稍后重试')
-                })
-            },
-            async addNewPerson (info) {
-                let aresObj = {
-                    name: info.name,
-                    description: info.description
-                }
-                if (info.imgUrl !== '') {
-                    await api.person.updataAva(info.imgUrl).then(res => {
-                        console.log(res, '上传成功')
-                        aresObj.pictureId = res.id
-                    }).catch(err => {
-                        console.log(err, '上传失败')
-                        this.$message.error('上传失败，请稍后重试')
-                        return
-                    })
-                }
-                api.area.createRegion(JSON.stringify(aresObj)).then(res => {
-                    console.log(res, '创建成功')
-                    this.$message.success('创建成功')
-                    this.getAllArea()
-                }).catch(err => {
-                    this.$message.error('创建失败，请稍后重试')
-                })
-            },
-            fixedInfo (id) {
-                if (id) {
-                    this.choseInfoId.push(id)
-                }
-                if (this.choseInfoId.length > 1) {
-                    this.$message.warning('至多选择一个数据修改')
-                }
-                if (this.choseInfoId.length > 0) {
-                    this.areaList.map((item) => {
-                        if (item.id === this.choseInfoId[0]){
-                            this.areaInfo = item
-                        }
-                    })
-                    this.showPersonDetail(this.areaInfo, '修改设备类型')
-                    this.isDisabled = false
-                } else {
-                    this.$message.error('请选择要修改的设备')
-                }
-            },
-            async getAllArea () {
+            async getMenuType () {
                 this.isShowLoading = true
-                await api.area.getAllRegion().then(res => {
+                await api.lib.getAllFacilityType().then(res => {
                     console.log(res, '这是请求回来的设备')
                     this.isShowLoading = false
-                    this.areaList = res
-                    for (let i = 0; i < this.areaList.length; i++) {
-                        this.areaList[i].checked = false
-                        this.areaList[i].status = true
+                    this.basicList = res
+                    for (let i = 0; i < this.basicList.length; i++) {
+                        this.basicList[i].checked = false
+                        this.basicList[i].status = true
                     }
+                    this.$store.commit('SET_FACILITY_TYPE', this.basicList)
                 }).catch(err => {
                     console.log(err, '失败')
                     this.isShowLoading = false
@@ -286,12 +129,21 @@
             }
         },
         created () {
-            // this.getAllArea()
+            this.getMenuType()
+            // console.log(this.getFacilitType, 'ioioioioioioioi')
+            // this.getFacilityType().then(res => {
+            //     this.basicList = res
+            // }).catch(err => {
+            //     console.log('获取失败',err)
+            // })
+        },
+        watch: {
         },
         components: {
             ScrollContainer,
-            Header,
-            PersonDetail
+        },
+        computed: {
+            // ...mapGetters(['getFacilitType'])
         }
     }
 
