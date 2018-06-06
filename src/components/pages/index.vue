@@ -1,4 +1,3 @@
-
 <template>
 	<div id="entrence">
         <header>

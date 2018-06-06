@@ -486,9 +486,9 @@ s't<template>
         .el-checkbox__inner{
             margin-top:rem(5);
         }
-        .cameraList .el-button{
-            text-align: left;
+        .cameraList .box .el-tooltip{
             background: transparent;
+            text-align: left;
             border: none;
             padding: 0;
         }

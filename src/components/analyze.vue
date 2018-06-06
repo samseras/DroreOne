@@ -38,7 +38,7 @@
                 <div class="analyzeMenu" v-if="hideList">
                     <ul>
                         <li v-for="(item,index) in sidebarList" @click="isShowAnalyze(item.dashboard_id,index,item.refresh_interval,item.template_type,item.name)"  :class="activeIndex === index?'active':''" :id="item.id" :listName = "item.name" >
-                            {{item.name}}`
+                            {{item.name}}
                         </li>
                     </ul>
                 </div>
@@ -55,7 +55,7 @@
                             <div>
                                 <label for="">副标题 ：</label><input type="text" id="subheading">
                                 <button @click="requestFullScreen"><router-link :to="{ path:'/screen/'+currenId}">确定</router-link></button>
-                                <button>取消</button>
+                                <button @click="cancelRequest">取消</button>
                             </div>
                         </div>
                     </div>
@@ -117,10 +117,14 @@
         ...mapMutations(['REFRESH_DATA_TYPE','COMPANY_DATA_NAME']),
         ...mapMutations(['REFRESH_DATA_TYPE']),
         ...mapActions(['logout']),
+        
         hideLists(data){
                this.hideList = !data.list;
                this.isshowHead = !data.head;
               // this.$emit('hideHead',hideData);
+        },
+        cancelRequest(){
+            this.showTile = false;
         },
         showSubheading(){
              this.showTile = true;

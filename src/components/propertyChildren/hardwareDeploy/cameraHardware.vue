@@ -467,8 +467,8 @@
         .el-checkbox__inner{
             margin-top:rem(5);
         }
-        .cameraList .el-button{
-            /*background: transparent;*/
+        .cameraList .box .el-tooltip{
+            background: transparent;
             text-align: left;
             border: none;
             padding: 0;

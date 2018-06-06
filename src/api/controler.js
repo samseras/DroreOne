@@ -12,6 +12,13 @@ const controler={
             url: getUrl('/menuswitch')
         })
     },
+    getSearchFacility(params){
+        return axios ({
+            method: 'POST',
+            url: getUrl('/searchfacility'),
+            data: params
+        })
+    },
 }
 
 export default controler

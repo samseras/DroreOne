@@ -24,6 +24,7 @@ define(function(require, exports, module) {
     })();
 
     var droreMap = (function($, ol) {
+        var circle = new ol.geom.Circle([0, 0], 0)
         var mapData = {
             _baseMap: {},
             _mapView: {},
@@ -34,6 +35,104 @@ define(function(require, exports, module) {
                 });
                 var modify = new ol.interaction.Modify({
                     features: select.getFeatures()
+                });
+                var styles = {
+                    'Circle': new ol.style.Style({
+                        stroke: new ol.style.Stroke({
+                            color: "#00bcff",
+                            width: "1",
+                            lineDash: [5, 5],
+                        }),
+                        fill: new ol.style.Fill({
+                            color: "rgba(0,188,255,0.3)",
+                        })
+                    })
+                };
+
+                var styleFunction = function(feature) {
+                    return styles[feature.getGeometry().getType()];
+                };
+
+                var geojsonObject = {
+                    'type': 'FeatureCollection',
+                    'crs': {
+                        'type': 'name',
+                        'properties': {
+                            'name': 'EPSG:3857'
+                        }
+                    },
+                    'features': [{
+                        'type': 'Feature',
+                        'geometry': {
+                            'type': 'Point',
+                            'coordinates': [0, 0]
+                        }
+                    }, {
+                        'type': 'Feature',
+                        'geometry': {
+                            'type': 'LineString',
+                            'coordinates': [[4e6, -2e6], [8e6, 2e6]]
+                        }
+                    }, {
+                        'type': 'Feature',
+                        'geometry': {
+                            'type': 'LineString',
+                            'coordinates': [[4e6, 2e6], [8e6, -2e6]]
+                        }
+                    }, {
+                        'type': 'Feature',
+                        'geometry': {
+                            'type': 'Polygon',
+                            'coordinates': [[[-5e6, -1e6], [-4e6, 1e6], [-3e6, -1e6]]]
+                        }
+                    }, {
+                        'type': 'Feature',
+                        'geometry': {
+                            'type': 'MultiLineString',
+                            'coordinates': [
+                                [[-1e6, -7.5e5], [-1e6, 7.5e5]],
+                                [[1e6, -7.5e5], [1e6, 7.5e5]],
+                                [[-7.5e5, -1e6], [7.5e5, -1e6]],
+                                [[-7.5e5, 1e6], [7.5e5, 1e6]]
+                            ]
+                        }
+                    }, {
+                        'type': 'Feature',
+                        'geometry': {
+                            'type': 'MultiPolygon',
+                            'coordinates': [
+                                [[[-5e6, 6e6], [-5e6, 8e6], [-3e6, 8e6], [-3e6, 6e6]]],
+                                [[[-2e6, 6e6], [-2e6, 8e6], [0, 8e6], [0, 6e6]]],
+                                [[[1e6, 6e6], [1e6, 8e6], [3e6, 8e6], [3e6, 6e6]]]
+                            ]
+                        }
+                    }, {
+                        'type': 'Feature',
+                        'geometry': {
+                            'type': 'GeometryCollection',
+                            'geometries': [{
+                                'type': 'LineString',
+                                'coordinates': [[-5e6, -5e6], [0, -5e6]]
+                            }, {
+                                'type': 'Point',
+                                'coordinates': [4e6, -5e6]
+                            }, {
+                                'type': 'Polygon',
+                                'coordinates': [[[1e6, -6e6], [2e6, -4e6], [3e6, -6e6]]]
+                            }]
+                        }
+                    }]
+                };
+
+                var vectorSource = new ol.source.Vector({
+                    features: (new ol.format.GeoJSON()).readFeatures(geojsonObject)
+                });
+
+                vectorSource.addFeature(new ol.Feature(circle));
+
+                var vectorLayer = new ol.layer.Vector({
+                    source: vectorSource,
+                    style: styleFunction
                 });
                 var map = new ol.Map({
                     interactions: ol.interaction.defaults({
@@ -56,7 +155,8 @@ define(function(require, exports, module) {
                                 projection: 'EPSG:3857',
                                 tileGrid: (new ol.source.OSM()).getTileGrid()
                             })
-                        })
+                        }),
+                        vectorLayer
                         /*new ol.layer.Tile({
 						title: "卫星图带文字",
 						source: new ol.source.XYZ({
@@ -87,6 +187,7 @@ define(function(require, exports, module) {
                     logo: false,
                     target: 'map'
                 });
+
                 return map;
             },
             setSource: function(baseZoom, leftTopX, leftTopY, projection, urlTemplate, attribution) {
@@ -2316,14 +2417,12 @@ define(function(require, exports, module) {
                     selectable: false,
                     source: new ol.source.Vector({
                         features: self.lineFeatures
-                    })
+                    }),
                 });
-                // mapData._baseMap.removeLayer(this.lineLayer);
-                mapData._baseMap.addLayer(this.lineLayer);
                 this.addCircle = function(obj) {
-                    var feature = new ol.Feature(
-                        new ol.geom.Circle(obj.coordinate, obj.radius)
-                    );
+                    mapData._baseMap.addLayer(this.lineLayer);
+                    var circle =  new ol.geom.Circle(obj.coordinate, obj.radius)
+                    var feature = new ol.Feature(circle);
                     var circleStyle = new ol.style.Style({
                         stroke: new ol.style.Stroke({
                             color: obj.color,
@@ -2339,10 +2438,7 @@ define(function(require, exports, module) {
                     mb.addFeature(feature);
                 };
                 this.setCenter = function(center,radius) {
-                    // self.setCenterAndRadius
-                    console.log(this.glow)
-                    self.lineLayer.prototype.setCenterAndRadius(center,radius);
-                    // ol.geom.Circle.prototype.setCenterAndRadius(center,radius);
+                   circle.setCenterAndRadius(center,radius);
                 };
                 this.clear = function() {
                     self.lineLayer.getSource().clear();

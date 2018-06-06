@@ -11,16 +11,19 @@
             <div class="card">
                 <!--摄像头-->
                 <div class="cameraCard popCard" v-if="route.includes('camera')">
-                    <p class="cameraType selectstyle equipmentStyle">类&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;型：
+                    <p class="cameraType selectstyle equipmentStyle wrapstyle">
+                        类&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;型：
                         <el-select name="" v-model="camera.positionType" :disabled="isDisabled">
                             <el-option label='室内' :value="0"></el-option>
                             <el-option label='室外' :value="1"></el-option>
                         </el-select>
                     </p>
-                    <p class="name">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称：
+                    <p class="sex">
+                        <s>名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称：</s>
                         <el-input type="text" v-model="camera.name" :disabled="isDisabled" :maxlength="15"></el-input>
                     </p>
-                    <p class="manufacturer wrapstyle selectstyle">型&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;号：
+                    <p class="manufacturer wrapstyle selectstyle">
+                        型&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;号：
                         <el-select name="" v-model="camera.model" @change="choseModel(camera.model)":disabled="isDisabled">
                             <el-option v-for="item in modelType"
                                        :key="item.id"
@@ -29,10 +32,12 @@
                             </el-option>
                         </el-select>
                     </p>
-                    <p class="IP">I P 地 址：
+                    <p class="IP">
+                        <s>I&nbsp;P&nbsp;地&nbsp;址：</s>
                         <el-input type="text" v-model="camera.ip" :disabled="isDisabled"></el-input>
                     </p>
-                    <p class="port">端&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;口：
+                    <p class="port">
+                        <s>端&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;口：</s>
                         <el-input type="text" v-model="camera.port" :disabled="isDisabled"></el-input>
                     </p>
                     <p class="place ps wrapstyle selectstyle" >
@@ -40,7 +45,8 @@
                         <span>{{camera.location}}</span>
                         <i class="el-icon-location-outline" @click="showMapDialog"></i>
                     </p>
-                    <p class="area wrapstyle selectstyle">所属片区：
+                    <p class="area wrapstyle selectstyle">
+                        所属片区：
                         <el-select name="" v-model="camera.regionId" :disabled="isDisabled">
                             <el-option
                                 v-for="item in regions"
@@ -1420,6 +1426,19 @@
 
 </style>
 
+<style>
+    .hardwareDialog .sex .el-input__suffix,.detailDialog .type .el-input__suffix,.detailDialog .selectstyle .el-input__suffix{
+        right:-5px;
+    }
+    .hardwareDialog .wrapstyle .el-select,.detailDialog .wrapstyle .el-select .el-input,.detailDialog .wrapstyle .el-date-editor{
+        width:15.2rem;
+    }
+    .hardwareDialog .wrapstyle .el-date-editor .el-input__prefix{
+        left:14.3rem
+    }
+
+</style>
+
 <style lang="scss" type="text/scss">
     .hardwareDialog{
         width: 100%;
@@ -1429,6 +1448,7 @@
         }
         .el-dialog--center{
             padding: 0;
+            text-align: left;
             /*height: rem(300);*/
         }
         .el-dialog__header{
@@ -1443,9 +1463,13 @@
             top: rem(7);
         }
         .el-dialog__body{
-            padding: rem(10) rem(15) 0 rem(15);
+            padding: rem(10) rem(20) 0 rem(20);
             box-sizing: border-box;
-
+            font-size: rem(12);
+            min-height:rem(150)
+        }
+        .el-input__prefix {
+            left: rem(135);
         }
         .el-dialog__footer{
             padding: 0;
@@ -1457,6 +1481,25 @@
             border-top: 1px solid #ccc;
             margin-top: rem(15);
         }
+        .el-date-editor,.el-input,.el-input--prefix,.el-input--suffix,.el-date-editor--date{
+            margin-top: rem(-2);
+            top: rem(-2);
+        }
+        .el-date-editor,.el-input,.el-input--prefix,.el-input--suffix,.el-date-editor--date .el-input__inner{
+            border: none;
+            height: rem(30);
+            line-height: rem(30);
+        }
+        .el-date-editor,.el-input,.el-input--prefix,.el-input--suffix,.el-date-editor--date .el-input__icon{
+            line-height: rem(30);
+        }
+        .el-select .el-input,.el-input--suffix{
+            margin-top: rem(-3);
+        }
+        .data .el-input__inner{
+            padding-left: rem(10);
+        }
+
         .el-input__inner{
             border: none;
             height: rem(30);
@@ -1470,12 +1513,28 @@
             width: rem(160);
             padding-left: rem(5);
         }
-        .el-table__header-wrapper .has-gutter {
-            background-color: #f3f3f3;
+        .ms-person .el-textarea__inner{
+            font-size:.75rem;
+            font-family: Arial;
         }
-        .el-table th, .el-table tr{
-            background-color: transparent !important;
+        .el-input.is-disabled .el-input__inner,.el-textarea.is-disabled .el-textarea__inner{
+            background-color:transparent;
         }
+        .person-jole{
+            display:none;
+        }
+        .detailDialog .card .boatCardContent .ms .des{
+            height:rem(53);
+            float:left
+        }
+
+
+        /*.el-table__header-wrapper .has-gutter {*/
+            /*background-color: #f3f3f3;*/
+        /*}*/
+        /*.el-table th, .el-table tr{*/
+            /*background-color: transparent !important;*/
+        /*}*/
     }
 </style>
 
@@ -1492,11 +1551,12 @@
                 p{
                     margin-top: rem(8);
                     border-bottom: 1px solid #ccc;
-                    font-size: rem(13);
-                    color:#606266;
-                    .el-select{
-                        width:rem(140);
-                    }
+                    font-size: rem(12);
+                    overflow: hidden;
+                    /*color:#606266;*/
+                    /*.el-select{*/
+                        /*width:rem(140);*/
+                    /*}*/
                     input{
                         border: none;
                         list-style: none;
@@ -1506,16 +1566,33 @@
                     }
                     span{
                         display: inline-block;
-                        width: rem(180);
+                        width: rem(200);
+                        /*overflow: hidden;*/
+                        /*text-overflow: ellipsis;*/
+                        /*white-space: nowrap;*/
+                        line-height: rem(15);
+                        overflow: hidden;
+                    }
+                    .ps{
+                        color:#c0c4cc;
+                        width: rem(203.2);
                         overflow: hidden;
                         text-overflow: ellipsis;
                         white-space: nowrap;
-                        line-height: rem(10);
+                    }
+                    .el-icon-location-outline{
+                        float:right
+                    }
+                    s{
+                        text-decoration: none;
+                        line-height: 0.9375rem;
+                        float: left;
                     }
                     select{
                         border: none;
                         outline: none;
                         width: rem(100);
+                        font-size: rem(12);
                         option{
                             appearance:none;
                             list-style: none;
@@ -1533,23 +1610,39 @@
                         display: inline-block;
                         /*width: rem(20);*/
                         /*height: rem(20);*/
-                        border-radius: 50%;
+                        /*border-radius: 50%;*/
                         font-size: rem(16);
                         vertical-align: middle;
+                        cursor: pointer;
+                        margin-left:1rem
                     }
                     textarea{
                         resize: none;
                         outline: none;
                         padding: rem(3);
                         box-sizing: border-box;
+                        border-radius: rem(5);
+                    }
+                }
+                .ms{
+                    margin-left: rem(-1);
+                    span{
+                        width:rem(66)
+                    }
+                    .des-person{
+                        float:left;
+                    }
+                    .des{
+                        float:left
+                    }
+                    div{
+                        width:15.3rem
                     }
                 }
                 .place{
                     height: rem(30);
                     s{
-                        float: left;
                         line-height: rem(26);
-                        text-decoration: none;
                     }
                     span{
                         line-height: rem(26);
@@ -1559,32 +1652,16 @@
                         margin-top: rem(3);
                     }
                 }
-                .ps{
-                    i{
-                        float:right
-                    }
-                    span{
-                        color:#c0c4cc;
-                    }
-                }
-                .ms{
-                    border-bottom:1px solid transparent;
-                    padding-top: rem(5);
-                    .des{
-                        float:left;
-                        display:inline-block;
-                        width:4.3rem;
-                        height:45px;
-
-                    }
-
+                .ms-person{
                     div{
-                        width:79%;
-
+                        width:15.3rem;
                     }
                 }
                 .textarea {
                     border-bottom: 1px solid transparent;
+                }
+                .basicType{
+                    text-align: center;
                 }
                 .img{
                     width: rem(100);
@@ -1621,36 +1698,36 @@
     }
 
 </style>
-<style lang="scss" type="text/scss">
-    .hardwareDialog .el-input.is-disabled .el-input__inner,.el-textarea.is-disabled .el-textarea__inner{
-            background-color:transparent;
-            color:#c0c4cc;
-        }
-    .hardwareDialog .ms .el-textarea__inner{
-            font-size: rem(12);
-            font-family: '微软雅黑';
-    }
-    .hardwareDialog .popCard .selectstyle .el-input,.hardwareDialog .popCard .selectstyle .el-input__suffix{
-        right:-5px;
-    }
-    .hardwareDialog .wrapstyle .el-select,.hardwareDialog .wrapstyle .el-select .el-input,.hardwareDialog .wrapstyle .el-date-editor{
-        width:17.8rem;
-    }
-    .hardwareDialog .popCard .wrapstyle .el-select,.hardwareDialog .popCard .wrapstyle .el-select .el-input,.hardwareDialog .popCard .wrapstyle .el-date-editor{
-        width:17.5rem;
-    }
-    .hardwareDialog .popCard .wrapstyle .el-date-editor .el-input__prefix{
-        left:14.3rem
-    }
-    .hardwareDialog .equipmentStyle .el-select,.hardwareDialog .equipmentStyle .el-select .el-input{
-        width:12.5rem;
-    }
-    .hardwareDialog .popCard .equipmentStyle .el-select,.hardwareDialog .popCard .equipmentStyle .el-select .el-input{
-        width:12rem;
-    }
-    /*.hardwareDialog .cardFooter .el-button{*/
-        /*color:#c0c4cc;*/
-        /*border:1px solid #dcdfe6;*/
-    /*}*/
-</style>
+<!--<style lang="scss" type="text/scss">-->
+    <!--.hardwareDialog .el-input.is-disabled .el-input__inner,.el-textarea.is-disabled .el-textarea__inner{-->
+            <!--background-color:transparent;-->
+            <!--color:#c0c4cc;-->
+        <!--}-->
+    <!--.hardwareDialog .ms .el-textarea__inner{-->
+            <!--font-size: rem(12);-->
+            <!--font-family: '微软雅黑';-->
+    <!--}-->
+    <!--.hardwareDialog .popCard .selectstyle .el-input,.hardwareDialog .popCard .selectstyle .el-input__suffix{-->
+        <!--right:-5px;-->
+    <!--}-->
+    <!--.hardwareDialog .wrapstyle .el-select,.hardwareDialog .wrapstyle .el-select .el-input,.hardwareDialog .wrapstyle .el-date-editor{-->
+        <!--width:17.8rem;-->
+    <!--}-->
+    <!--.hardwareDialog .popCard .wrapstyle .el-select,.hardwareDialog .popCard .wrapstyle .el-select .el-input,.hardwareDialog .popCard .wrapstyle .el-date-editor{-->
+        <!--width:17.5rem;-->
+    <!--}-->
+    <!--.hardwareDialog .popCard .wrapstyle .el-date-editor .el-input__prefix{-->
+        <!--left:14.3rem-->
+    <!--}-->
+    <!--.hardwareDialog .equipmentStyle .el-select,.hardwareDialog .equipmentStyle .el-select .el-input{-->
+        <!--width:12.5rem;-->
+    <!--}-->
+    <!--.hardwareDialog .popCard .equipmentStyle .el-select,.hardwareDialog .popCard .equipmentStyle .el-select .el-input{-->
+        <!--width:12rem;-->
+    <!--}-->
+    <!--/*.hardwareDialog .cardFooter .el-button{*/-->
+        <!--/*color:#c0c4cc;*/-->
+        <!--/*border:1px solid #dcdfe6;*/-->
+    <!--/*}*/-->
+<!--</style>-->
 
