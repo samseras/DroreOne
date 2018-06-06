@@ -102,13 +102,13 @@
 
         .el-badge__content {
             background-color: #F60000;
-            border-radius: 1rem;
+            border-radius: rem(16);
             color: #fff;
-            font-size: 10px;
-            height: 1rem;
-            width: 1.1rem;
-            line-height: 17px;
-            padding:0px;
+            font-size: rem(10);
+            height: rem(16);
+            width: rem(17.6);
+            line-height: rem(17);
+            padding:0;
         }
         .el-menu--horizontal>.el-submenu .el-submenu__icon-arrow{
             display:none;

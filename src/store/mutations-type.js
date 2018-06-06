@@ -42,3 +42,6 @@ export const REFRESH_DATA_TYPE = 'REFRESH_DATA_TYPE'
 
 // 用户
   export const SET_USER = 'SET_USER'
+
+//iot
+export const CURPAGE = 'CURPAGE'  //测试
