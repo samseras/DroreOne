@@ -11,8 +11,8 @@
             <div class="card">
                 <!--摄像头-->
                 <div class="cameraCard popCard" v-if="route.includes('camera')">
-                    <p class="cameraType selectstyle equipmentStyle wrapstyle">
-                        类&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;型：
+                    <p class="type selectstyle equipmentStyle">
+                        <s>类&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;型：</s>
                         <el-select name="" v-model="camera.positionType" :disabled="isDisabled">
                             <el-option label='室内' :value="0"></el-option>
                             <el-option label='室外' :value="1"></el-option>
@@ -40,7 +40,7 @@
                         <s>端&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;口：</s>
                         <el-input type="text" v-model="camera.port" :disabled="isDisabled"></el-input>
                     </p>
-                    <p class="place ps wrapstyle selectstyle" >
+                    <p class="area place ps wrapstyle selectstyle" >
                         <s>位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置：</s>
                         <span>{{camera.location}}</span>
                         <i class="el-icon-location-outline" @click="showMapDialog"></i>
@@ -78,7 +78,7 @@
                     <p class="name">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称:
                         <el-input type="text" v-model="broadCast.name" :disabled="isDisabled" :maxlength="15"></el-input>
                     </p>
-                    <p class="home wrapstyle selectstyle">型&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;号:
+                    <p class="manufacturer wrapstyle selectstyle">型&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;号：
 
                         <el-select name="" v-model="broadCast.model" :disabled="isDisabled">
                             <el-option v-for="item in modelType"
@@ -94,12 +94,13 @@
                     <p class="host">端&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;口:
                         <el-input type="text" v-model="broadCast.port" :disabled="isDisabled"></el-input>
                     </p>
-                    <p class="place ps">
+                    <p class="area place ps wrapstyle selectstyle">
                         <s>位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置:</s>
                         <span>{{broadCast.location}}</span>
                         <i class="el-icon-location-outline" @click="showMapDialog"></i>
                     </p>
-                    <p class="area wrapstyle selectstyle">所属区域:
+                    <p class="area wrapstyle selectstyle">
+                        所属区域：
                         <el-select name="" v-model="broadCast.regionId" :disabled="isDisabled">
                             <el-option
                                 v-for="item in regions"
@@ -109,7 +110,7 @@
                             </el-option>
                         </el-select>
                     </p>
-                    <p class="describe ms">
+                    <p class="description ms">
                         <span class="des">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述:</span>
                         <el-input type="textarea" v-model="broadCast.description" :disabled="isDisabled" :maxlength="140"></el-input>
                     </p>
@@ -131,7 +132,7 @@
                     <p class="name">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称:
                         <el-input type="text" v-model="led.name" :disabled="isDisabled" :maxlength="15"></el-input>
                     </p>
-                    <p class="home wrapstyle selectstyle">型&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;号:
+                    <p class="home wrapstyle selectstyle">型&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;号：
                         <el-select v-model="led.model" :disabled="isDisabled">
                             <el-option v-for="item in modelType"
                                        :key="item.id"
@@ -155,10 +156,10 @@
                     <p class="mac">M&nbsp;&nbsp;&nbsp;a&nbsp;&nbsp;&nbsp;&nbsp;c:
                         <el-input type="text" v-model="led.mac" :disabled="isDisabled"></el-input>
                     </p>
-                    <p class="place ps"><s>位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置:</s><span>{{led.location}}</span>
+                    <p class="place ps area"><s>位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置:</s><span>{{led.location}}</span>
                         <i class="el-icon-location-outline" @click="showMapDialog"></i>
                     </p>
-                    <p class="area wrapstyle selectstyle">所属片区:
+                    <p class="area wrapstyle selectstyle">所属片区：
 
                         <el-select name="" v-model="led.regionId" :disabled="isDisabled">
                             <el-option
@@ -193,7 +194,7 @@
                     <p class="name">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称:
                         <el-input type="text" v-model="wifi.name" :disabled="isDisabled" :maxlength="15"></el-input>
                     </p>
-                    <p class="version wrapstyle selectstyle">型&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;号:
+                    <p class="version wrapstyle selectstyle">型&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;号：
                         <el-select name="" v-model="wifi.model" @change="choseModel(wifi.model)" :disabled="isDisabled">
                             <el-option v-for="item in modelType"
                                        :key="item.id"
@@ -223,12 +224,12 @@
                     <p class="host">设备编号:
                         <el-input type="text" v-model="wifi.serialNum" :disabled="isDisabled"></el-input>
                     </p>
-                    <p class="place ps">
+                    <p class="place ps area">
                         <s>位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置:</s>
                         <span>{{wifi.location}}</span>
                         <i class="el-icon-location-outline" @click="showMapDialog"></i>
                     </p>
-                    <p class="area wrapstyle selectstyle">所属片区:
+                    <p class="area wrapstyle selectstyle">所属片区：
 
                         <el-select v-model="wifi.regionId" :disabled="isDisabled">
                             <el-option
@@ -261,7 +262,7 @@
                     <p class="name">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称:
                         <el-input type="text" v-model="monitors.name" :disabled="isDisabled" :maxlength="15"></el-input>
                     </p>
-                    <p class="version wrapstyle selectstyle">型&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;号:
+                    <p class="version wrapstyle selectstyle">型&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;号：
                         <el-select name="" v-model="monitors.model" :disabled="isDisabled">
                             <el-option v-for="item in modelType"
                                        :key="item.id"
@@ -282,12 +283,12 @@
                     <p class="host">设备端口:
                         <el-input type="text" v-model="monitors.port" :disabled="isDisabled"></el-input>
                     </p>
-                    <p class="place ps">
+                    <p class="place ps area">
                         <s>位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置:</s>
                         <span>{{monitors.location}}</span>
                         <i class="el-icon-location-outline" @click="showMapDialog"></i>
                     </p>
-                    <p class="area wrapstyle selectstyle">所属片区:
+                    <p class="area wrapstyle selectstyle">所属片区：
 
                         <el-select v-model="monitors.regionId" :disabled="isDisabled">
                             <el-option
@@ -326,7 +327,7 @@
                     <p class="num">路灯编号:
                         <el-input type="text" v-model="Light.serialNum" :disabled="isDisabled"></el-input>
                     </p>
-                    <p class="version wrapstyle selectstyle">型&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;号:
+                    <p class="version wrapstyle selectstyle">型&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;号：
                         <el-select  v-model="Light.model" :disabled="isDisabled">
                             <el-option v-for="item in modelType"
                                        :key="item.id"
@@ -335,10 +336,10 @@
                             </el-option>
                         </el-select>
                     </p >
-                    <p class="place ps"><s>位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置:</s><span>{{Light.location}}</span>
+                    <p class="place ps area"><s>位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置:</s><span>{{Light.location}}</span>
                         <i class="el-icon-location-outline" @click="showMapDialog"></i>
                     </p>
-                    <p class="area wrapstyle selectstyle">所属片区:
+                    <p class="area wrapstyle selectstyle">所属片区：
                         <el-select name="" v-model="Light.regionId" :disabled="isDisabled">
                             <el-option
                                 v-for="item in regions"
@@ -374,7 +375,7 @@
                     <p class="name">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称:
                         <el-input type="text" v-model="gate.name" :disabled="isDisabled" :maxlength="15"></el-input>
                     </p>
-                    <p class="version wrapstyle selectstyle">型&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;号:
+                    <p class="version wrapstyle selectstyle">型&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;号：
                         <el-select  v-model="gate.model" :disabled="isDisabled">
                             <el-option v-for="item in modelType"
                                        :key="item.id"
@@ -395,12 +396,12 @@
                     <p class="name">端&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;口:
                         <el-input type="text" v-model="gate.port" :disabled="isDisabled"></el-input>
                     </p>
-                    <p class="place ps">
+                    <p class="place ps area">
                         <s>位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置:</s>
                         <span>{{gate.location}}</span>
                         <i class="el-icon-location-outline" @click="showMapDialog"></i>
                     </p>
-                    <p class="area wrapstyle selectstyle">所属片区:
+                    <p class="area wrapstyle selectstyle">所属片区：
                         <el-select name="" v-model="gate.regionId" :disabled="isDisabled">
                             <el-option
                                 v-for="item in regions"
@@ -431,7 +432,7 @@
                     <p class="name">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称:
                         <el-input type="text" v-model="police.name" :disabled="isDisabled" :maxlength="15"></el-input>
                     </p>
-                    <p class="version wrapstyle selectstyle">型&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;号:
+                    <p class="version wrapstyle selectstyle">型&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;号：
                         <el-select name="" v-model="police.model" :disabled="isDisabled">
                             <el-option v-for="item in modelType"
                                        :key="item.id"
@@ -454,12 +455,12 @@
                         <el-input type="text" v-model="police.ip" :disabled="isDisabled"></el-input>
                     </p>-->
 
-                    <p class="place ps">
+                    <p class="place ps area">
                         <s>位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置:</s>
                         <span>{{police.location}}</span>
                         <i class="el-icon-location-outline" @click="showMapDialog"></i>
                     </p>
-                    <p class="area wrapstyle selectstyle">所属片区:
+                    <p class="area wrapstyle selectstyle">所属片区：
                         <el-select name="" v-model="police.regionId" :disabled="isDisabled">
                             <el-option
                                 v-for="item in regions"
@@ -1427,10 +1428,10 @@
 </style>
 
 <style>
-    .hardwareDialog .sex .el-input__suffix,.detailDialog .type .el-input__suffix,.detailDialog .selectstyle .el-input__suffix{
+    .hardwareDialog .sex .el-input__suffix,.hardwareDialog .type .el-input__suffix,.hardwareDialog .selectstyle .el-input__suffix{
         right:-5px;
     }
-    .hardwareDialog .wrapstyle .el-select,.detailDialog .wrapstyle .el-select .el-input,.detailDialog .wrapstyle .el-date-editor{
+    .hardwareDialog .wrapstyle .el-select,.hardwareDialog .wrapstyle .el-select .el-input,.hardwareDialog .wrapstyle .el-date-editor{
         width:15.2rem;
     }
     .hardwareDialog .wrapstyle .el-date-editor .el-input__prefix{
@@ -1506,7 +1507,7 @@
             line-height: rem(30);
             font-size: rem(12);
             padding: 0;
-            padding-left: rem(10);
+            padding-left: rem(15);
 
         }
         .el-input{
@@ -1581,7 +1582,9 @@
                         white-space: nowrap;
                     }
                     .el-icon-location-outline{
-                        float:right
+                        float:right;
+                        margin:0;
+                        padding-right:rem(30);
                     }
                     s{
                         text-decoration: none;
@@ -1639,7 +1642,7 @@
                         width:15.3rem
                     }
                 }
-                .place{
+                .area{
                     height: rem(30);
                     s{
                         line-height: rem(26);
