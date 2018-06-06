@@ -81,6 +81,7 @@
         mounted() {
             this.requestGisMain();//加载地图
             droreMap.object.getMap().getLayers().getArray()[1].setVisible(false)
+            droreMap.status.limitExtent = true
             let route = this.$route.path
             if (route.includes('facility')) {
                 droreMap.interaction.enableMapClick = true
@@ -1769,7 +1770,7 @@
                         }
                         this.controler();//之前打的点
                     }else if(route.includes('facility')){
-                        droreMap.icon.IconStyleById(icon.id,false);
+                        // droreMap.icon.IconStyleById(icon.id,false);
                         let that = this;
                         icon.onclick(function (e) {
                             that.menulist = e.data;
