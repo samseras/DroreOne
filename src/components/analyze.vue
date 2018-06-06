@@ -18,7 +18,7 @@
                                             <span class="Admin">{{getUserInfo}}</span>
                                             <img src="./../../static/img/peopleInfo.svg" alt="">
                                         </template>
-                                        <el-menu-item index="">个人中心</el-menu-item>
+                                        <el-menu-item @click="visible = true">个人中心</el-menu-item>
                                         <el-menu-item index="/droreone">返回主页</el-menu-item>
                                         <el-menu-item @click="logout" index="">退出</el-menu-item>
                                     </el-submenu>
@@ -64,6 +64,11 @@
             </div>
             <err-list v-else :echatListErrs = "echatListErr"></err-list>
         </div>
+        <UserInfoDialog
+            v-if="visible"
+            :visible="visible"
+            @closeInfoDialog="visible = false">
+        </UserInfoDialog>
 
     </div>
 
@@ -75,6 +80,7 @@
   import api from "@/api"
   import errList from "./pages/err.vue"
   import { mapMutations,mapGetters,mapActions } from 'vuex'
+  import UserInfoDialog from '@/components/userInfoDialog'
   export default {
   	data(){
   		return{
@@ -93,7 +99,8 @@
             echatListErr:{
                 pullData:false,
                 errInform:false,
-            }
+            },
+            visible: false
   		}
   	},
     async created () {
@@ -103,7 +110,8 @@
     },
   	components:{
   		passengerFlow,
-        errList
+        errList,
+        UserInfoDialog
   	},
     methods:{
         ...mapMutations(['REFRESH_DATA_TYPE','COMPANY_DATA_NAME']),

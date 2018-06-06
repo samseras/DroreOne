@@ -67,7 +67,7 @@ import Property from '@/components/property'
 import ProBasicMenu from '@/components/propertyChildren/basicMenu'
 import HardWareMenu from '@/components/propertyChildren/hardWareMenu'
 import BasicType from '@/components/propertyChildren/basicDeploy/basicType'
-import HardWareType from '@/components/propertyChildren/hardwareDeploy/hardWareType'
+import DeviceType from '@/components/propertyChildren/hardwareDeploy/deviceType'
 //建筑
 
 
@@ -272,7 +272,7 @@ const routes = [
             {
                 path: '/basic-property',
                 name: 'ProBasicMenu',
-                redirect: '/basic-property/basictype',
+                redirect: '/basic-property/park-deploy',
                 component: ProBasicMenu,
                 children: [
                     {path: '/basic-property/basictype', name: 'BasicType', component: BasicType},
@@ -298,6 +298,8 @@ const routes = [
                 redirect: '/hard-property/camera-Hware',
                 component: HardWareMenu,
                 children: [
+                    {path: '/hard-property/deviceType', name: 'DeviceType', component: DeviceType},
+
                     {path: '/hard-property/cameraType', name: 'cameraType', component: cameraType},
                     {path: '/hard-property/wifitype', name: 'wifiType', component: wifiType},
                     {path: '/hard-property/broadcastType', name: 'broadcastType', component:broadcastType},
@@ -325,7 +327,6 @@ const routes = [
                 path: '/person',
                 name: PersonPlat,
                 component: PersonPlat,
-                redirect: '/person/personType',
                 children: [
                     {path: '/person/personType', name: "PersonType", component: PersonType},
                     { path: '/person/:id',name: 'PersonDeploy', component:PersonDeploy }

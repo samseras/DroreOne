@@ -1,20 +1,20 @@
 <template>
     <div class="basicType">
         <div class="title">
-            设施类型
+            设备类型
         </div>
         <div class="personContent">
             <div class="personList" v-loading="isShowLoading">
                 <ScrollContainer>
                     <el-table
                         ref="multipleTable"
-                        :data="basicList"
+                        :data="deviceList"
                         tooltip-effect="dark"
                         style="width: 100%"
                         @selection-change="handleSelectionChange">
                         <el-table-column
                             prop="name"
-                            label="设施类型名称">
+                            label="设备类型名称">
                         </el-table-column>
                         <el-table-column
                             label="是否启用"
@@ -44,20 +44,12 @@
         data(){
             return{
                 isShowAreaCard: true,
-                checkList: [],
-                filterList: [],
-                basicList: [],
-                visible: false,
-                areaInfo: {},
-                choseInfoId: [],
-                choseList: [],
-                isDisabled: true,
-                title: '',
+                deviceList: [],
                 isShowLoading : false
             }
         },
         methods: {
-            ...mapMutations(['SET_FACILITY_TYPE']),
+            ...mapMutations(['SET_DEVICE_TYPE']),
             startStopState (id,state) {
                 console.log(state)
                 let message
@@ -71,7 +63,7 @@
                     cancelButtonText: '取消',
                     type: 'warning'
                 }).then(() => {
-                    this.basicList = this.basicList.filter(item => {
+                    this.deviceList = this.deviceList.filter(item => {
                         if (item.id === id) {
                             item.enable = item.enable
                             let obj = {
@@ -79,7 +71,7 @@
                                 id: item.id,
                                 enable: item.enable
                             }
-                            api.lib.updateFacilityType(JSON.stringify(obj)).then(res => {
+                            api.lib.updateDeviceType(JSON.stringify(obj)).then(res => {
                                 console.log(res, '请求成功')
                                 if(state) {
                                     this.$message.success('开启使用成功')
@@ -97,9 +89,9 @@
                         }
                         return item
                     })
-                    this.$store.commit('SET_FACILITY_TYPE', this.basicList)
+                    this.$store.commit('SET_DEVICE_TYPE', this.deviceList)
                 }).catch(err => {
-                    this.basicList  = this.basicList.filter(item => {
+                    this.deviceList  = this.deviceList.filter(item => {
                         if (item.id === id) {
                             item.enable = !item.enable
                         }
@@ -111,17 +103,17 @@
             handleSelectionChange(val) {
                 this.multipleSelection = val;
             },
-            async getMenuType () {
+            async getAllDeviceType () {
                 this.isShowLoading = true
-                await api.lib.getAllFacilityType().then(res => {
+                await api.lib.getAllDeviceType().then(res => {
                     console.log(res, '这是请求回来的设备')
                     this.isShowLoading = false
-                    this.basicList = res
-                    for (let i = 0; i < this.basicList.length; i++) {
-                        this.basicList[i].checked = false
-                        this.basicList[i].status = true
+                    this.deviceList = res
+                    for (let i = 0; i < this.deviceList.length; i++) {
+                        this.deviceList[i].checked = false
+                        this.deviceList[i].status = true
                     }
-                    this.$store.commit('SET_FACILITY_TYPE', this.basicList)
+                    this.$store.commit('SET_DEVICE_TYPE', this.deviceList)
                 }).catch(err => {
                     console.log(err, '失败')
                     this.isShowLoading = false
@@ -129,21 +121,10 @@
             }
         },
         created () {
-            this.getMenuType()
-            // console.log(this.getFacilitType, 'ioioioioioioioi')
-            // this.getFacilityType().then(res => {
-            //     this.basicList = res
-            // }).catch(err => {
-            //     console.log('获取失败',err)
-            // })
-        },
-        watch: {
+            this.getAllDeviceType()
         },
         components: {
-            ScrollContainer,
-        },
-        computed: {
-            // ...mapGetters(['getFacilitType'])
+            ScrollContainer
         }
     }
 

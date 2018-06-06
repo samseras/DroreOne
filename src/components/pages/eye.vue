@@ -49,7 +49,7 @@
                                         <span class="Admin">{{getUserInfo}}</span>
                                         <img src="./../../../static/img/peopleInfo.svg" alt="">
                                     </template>
-                                    <el-menu-item index="">个人中心</el-menu-item>
+                                    <el-menu-item @click='visible = true' index="">个人中心</el-menu-item>
                                     <el-menu-item index="/droreone">返回主页</el-menu-item>
                                     <el-menu-item @click="logout" index="">退出</el-menu-item>
                                 </el-submenu>
@@ -62,6 +62,11 @@
                 <router-view @hideHead = "hideData"/>
             </el-main>
         </el-container>
+        <UserInfoDialog
+            v-if="visible"
+            :visible="visible"
+            @closeInfoDialog="visible = false">
+        </UserInfoDialog>
     </div>
 </template>
 
@@ -70,6 +75,7 @@
     import moment from 'moment'
     import api from '@/api'
     import { mapMutations, mapGetters, mapActions} from 'vuex'
+    import UserInfoDialog from '@/components/userInfoDialog'
 
     export default {
         data() {
@@ -107,6 +113,7 @@
                     {type: 7,route: '/controler/person'},//人
                     {type: 11,route: '/controler/car'},//车船
                 ],
+                visible: false
             }
         },
         created () {
@@ -356,7 +363,9 @@
         mounted(){
 
         },
-        components: {},
+        components: {
+            UserInfoDialog
+        },
         computed: {
             ...mapGetters(['getUserInfo'])
         }
