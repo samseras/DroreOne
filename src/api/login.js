@@ -1,3 +1,4 @@
+
 /*
 * 登录认证模块api
 * */
@@ -25,6 +26,12 @@ const login={
                 "Authorization": params,
                 "x-ajax": true
             }
+        })
+    },
+    getUserRoles (params) {
+        return axios({
+            methods: 'GET',
+            url: getUrl(`/security/user/roles/${params}`)
         })
     }
 }

@@ -9,7 +9,9 @@
                         @selectedAll = 'selectedAll'
                         @batchEdit = 'batchEdit'
                         @addNewInfo="addNewInfo"
-                        @batchEnabled="batchEnabled">
+                        @batchEnabled="batchEnabled"
+                        :choseId="choseInfoId"
+                        :listsLength = "listLength">
                 </Header>
             </div>
             <div class="personList" v-loading="isShowloading">
@@ -33,7 +35,7 @@
                         </el-table-column>
                         <el-table-column
                             sortable
-                            prop="envTypeName"
+                            prop="alarmEnvType.name"
                             label="指标类型">
                         </el-table-column>
                         <el-table-column
@@ -41,7 +43,7 @@
                             label="来源">
                         </el-table-column>
                         <el-table-column
-                            prop="associatDevice"
+                            prop="relatedDeviceNames"
                             label="关联设备">
                         </el-table-column>
                         <el-table-column
@@ -54,7 +56,7 @@
                         </el-table-column>
                         <el-table-column
                             sortable
-                            prop="severityName"
+                            prop="alarmSeverity.name"
                             label="严重等级">
                         </el-table-column>
                         <el-table-column
@@ -98,40 +100,7 @@
     export default {
         data(){
             return{
-                conditionList: [
-                    {
-                        id:'1',
-                        name:'环境告警规则1',
-                        envTypeId:'1',
-                        envTypeName:'温度',
-                        envDataSource:'0',
-                        envDataSourceName:'外部系统',
-                        associatDevice:'温度传感器',
-                        upperThreshold:'40℃',
-                        lowerThreshold:'-40℃',
-                        severityId:'1',
-                        severityName:'高',
-                        relatedManagerIds:'1',
-                        relatedManagerNames:'程杰',
-                        isEnabled:false
-                    },
-                    {
-                        id:'2',
-                        name:'环境告警规则2',
-                        envTypeId:'2',
-                        envTypeName:'PM2.5',
-                        envDataSource:'1',
-                        envDataSourceName:'内部设备',
-                        associatDevice:'水温传感器',
-                        upperThreshold:'40℃',
-                        lowerThreshold:'-40℃',
-                        severityId:'3',
-                        severityName:'低',
-                        relatedManagerIds:'2',
-                        relatedManagerNames:'程杰',
-                        isEnabled:false
-                    },
-                ],
+                conditionList: [],
                 conditionInfo:{},
                 visible: false,
                 choseInfos: [],
@@ -140,8 +109,8 @@
                 title:'',
                 selection:[],
                 isShowloading: false,
-                isBatchEdit:false
-
+                isBatchEdit:false,
+                listLength:''
             }
         },
         methods: {
@@ -149,20 +118,7 @@
                 this.showDetail({},false,'添加环境告警规则',)
             },
             enabledClick(obj,flag){
-                console.log(obj)
-                let param = obj;
-                param.isEnabled = flag;
-
-                api.alarm.updateAlarmRule([param]).then(res => {
-                obj.isEnabled = flag
-                    if (obj.isEnabled) {
-                        this.$message.success('调度计划已开启')
-                    }else {
-                        this.$message.success('调度计划已关闭')
-                    }
-                }).then(err => {
-                    console.log(err, '失败')
-                })
+                this.startEndPlan([obj],flag)
             },
             batchEnabled(flag){
                 if(this.choseInfoId.length == 0){
@@ -214,6 +170,37 @@
                 }
             },
             startEndPlan(choseId, flag) {
+                choseId = choseId.map((item)=>{
+                    var obj = {
+                        id: item.id,
+                        name: item.name,
+                        alarmTypeId: item.alarmTypeId,
+                        severityId: item.severityId,
+                        isEnabled: flag,
+                        isDeleted: item.isDeleted,
+                        deviceScope:item.deviceScope,
+                        securityScope:item.securityScope,
+                        upperThreshold:item.upperThreshold,
+                        lowerThreshold:item.lowerThreshold,
+                        extendThreshold:item.extendThreshold,
+                        envTypeId:item.envTypeId,
+                        envDataSource:item.envDataSource,
+                        description:item.description
+                    }
+                    if(item.relatedDeviceIds && item.relatedDeviceIds.length > 0){
+                        obj.relatedDeviceIds = item.relatedDeviceIds
+                    }
+                    if(item.relatedManagerIds && item.relatedManagerIds.length > 0){
+                        obj.relatedManagerIds = item.relatedManagerIds
+                    }
+                    if(item.relatedVehicleIds && item.relatedVehicleIds.length > 0){
+                        obj.relatedVehicleIds =item.relatedVehicleIds
+                    }
+                    if(item.relatedScheduleIds && item.relatedScheduleIds.length > 0){
+                        obj.relatedScheduleIds = item.relatedScheduleIds
+                    }
+                    return obj
+                });
                 api.alarm.updateAlarmRule(choseId).then(res => {
                     console.log(res, '更改状态成功')
                     if (flag) {
@@ -224,10 +211,13 @@
                     choseId.forEach(item => {
                         this.conditionList.forEach(item1 => {
                             if (item.id === item1.id) {
-                                item1.isEnabled = !item1.isEnabled
+                                item1.isEnabled = item.isEnabled
+                                item1.checked = false
                             }
                         })
                     })
+                    this.choseInfos = []
+                    this.choseInfoId = []
                 }).catch(err => {
                     console.log(err, '计划开启失败')
                     if (flag) {
@@ -235,6 +225,8 @@
                     } else {
                         this.$message.error('计划关闭失败，请稍后重试')
                     }
+                    this.choseInfos = []
+                    this.choseInfoId = []
                 })
             },
             closeDialog () {
@@ -246,6 +238,9 @@
                 })
             },
             showDetail (info,state,title) {
+                if(info.alarmSeverity && info.alarmSeverity.id){
+                    info.severityId = info.alarmSeverity.id
+                }
                 this.conditionInfo = info;
                 this.visible = true;
                 this.isBatchEdit = false;
@@ -292,9 +287,9 @@
                         api.alarm.deleteAlarmRule(this.choseInfoId).then(res => {
                             console.log(res, '删除成功')
                             this.$message.success('删除成功')
-                            for (let i = 0; i < this.choseInfos.length; i++) {
+                            for (let i = 0; i < this.choseInfoId.length; i++) {
                                 this.conditionList = this.conditionList.filter((item, index) => {
-                                    if (item.id === this.choseInfos[i].id){
+                                    if (item.id === this.choseInfoId[i]){
                                         this.conditionList[index].checked = false
                                         this.conditionList[index].status = false
                                     }
@@ -318,11 +313,13 @@
                 }
             },
             checked (row) {
-                this.conditionList.forEach(item => {
+                this.conditionList = this.conditionList.filter(item => {
                     if (item.id === row.id) {
-                        item.checked = row.checked
+                        item.checked = item.checked
                     }
+                    return item
                 })
+
                 if (this.choseInfos.includes(row)) {
                     this.choseInfos = this.choseInfos.filter((item) =>{
                         return item !== row
@@ -366,56 +363,96 @@
                     return
                 }
             },
-            saveInfo(){
+            saveInfo(info){
                 //TODO 1 获取并设置info.alarmTypeId
-
+                console.log(this.alarmTypeId);
+                info.alarmTypeId = this.alarmTypeId;
+                console.log(info,'obj')
                 // TODO 2 保存请求
                 api.alarm.createAlarmRule(info).then(res => {
                     console.log(res, '保存成功')
                     this.$message.success('保存成功')
-                    this.conditionList = this.conditionList.filter((item, index) => {
-                        if (item.id === this.choseInfos[i]){
-                            this.conditionList[index].checked = false
-                            this.conditionList[index].status = false
-                        }
-                        return item.status !== false
-                    })
+                    this.getAlarmRule();
                     this.choseInfos = []
+                    this.visible = false
                 }).catch(err => {
                     this.$message.error('保存失败，请稍后重试')
                     console.log(err)
                     this.choseInfos = []
                 })
             },
-            saveEditInfo(){
-
+            saveEditInfo(objArray){
+                api.alarm.updateAlarmRule(objArray).then(res => {
+                    console.log(res, '修改成功')
+                    this.$message.success('修改成功')
+                    this.getAlarmRule();
+                    this.choseInfos = []
+                    this.visible = false
+                }).catch(err => {
+                    this.$message.error('修改失败，请稍后重试')
+                    console.log(err)
+                    this.choseInfos = []
+                })
             },
-            async getAllAlarmRule(){
+            async init(){
+                await this.getAllAlarmTypes();
+                await this.getAlarmRule();
+            },
+
+            async getAlarmRule(){
                 this.isShowLoading = true
-                let id = '';
-                await api.alarm.getAllAlarmRule(id).then(res => {
+                this.alarmTypeId = this.getAlarmTypeId("环境")
+                await api.alarm.getAlarmRulesByParameters(this.alarmTypeId).then(res => {
                     console.log(res, '请求成功')
                     this.isShowLoading = false
                     this.conditionList = res
+                    this.listLength = this.conditionList.length
                     this.conditionList.forEach(item => {
                         item.checked = false;
+                        if(item.relatedDevices.length > 0){
+                            item.relatedDeviceNames =  item.relatedDevices.map(device=>device.name)
+                            item.relatedDeviceIds =  item.relatedDevices.map(device=>device.id)
+                            item.relatedDeviceNames =  item.relatedDeviceNames.join(",")
+                        }else{
+                            item.relatedDevice = ''
+                            item.relatedDeviceIds = []
+                        }
+                        if(item.relatedManagers.length > 0) {
+                            item.relatedManagerNames = item.relatedManagers.map(manager => manager.name)
+                            item.relatedManagerIds = item.relatedManagers.map(manager => manager.id)
+                            item.relatedManagerNames = item.relatedManagerNames.join(",")
+                        }else{
+                            item.relatedManagerNames = ''
+                            item.relatedManagerIds = []
+                        }
+
+                        if(item.envDataSource == '0'){
+                            item.envDataSourceName = '外部系统'
+                        }else{
+                            item.envDataSourceName = '内部设备'
+                        }
+
                     })
                 }).catch(err => {
                     console.log(err, '请求失败')
                     this.isShowLoading = false
                 })
             },
-            async getAlarmType(){
-                await api.alarm.getAlarmType().then(res => {
-                    console.log(res, '请求成功')
-
+            getAlarmTypeId(typeName){
+                let typeInfo =  this.alarmType.filter(item=>item.name == typeName)
+                return typeInfo[0].id;
+            },
+            async getAllAlarmTypes(){
+                await api.alarm.getAllAlarmTypes().then(res => {
+                    console.log(res, '请求type成功')
+                    this.alarmType = res;
                 }).catch(err => {
                     console.log(err, '请求失败')
                 })
             }
         },
         created () {
-            this.getAllAlarmRule();
+            this.init();
         },
         components: {
             ScrollContainer,

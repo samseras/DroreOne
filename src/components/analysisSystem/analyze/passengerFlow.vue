@@ -83,12 +83,18 @@
         props:['listName'],
         methods: {
             getDom(){
-                this.chartT = this.$refs.content.getBoundingClientRect().top;
-                this.chartB = this.$refs.content.getBoundingClientRect().bottom;
-                this.chartL = this.$refs.content.getBoundingClientRect().left;
-                this.chartR = this.$refs.content.getBoundingClientRect().right;
-                this.chartH = this.chartB - this.chartT;
-                this.chartW = this.chartR - this.chartL;
+                 this.chartH = window.innerHeight-140;
+                    this.chartW = window.innerWidth-220;
+                // this.chartT = this.$refs.content.documentElement.clientTop;
+                // this.chartB = this.$refs.content.documentElement.clientBottom;
+                // this.chartL = this.$refs.content.documentElement.clientLeft;
+                // this.chartR = this.$refs.content.documentElement.clientRight;
+                // this.chartT = this.$refs.content.getBoundingClientRect().top;
+                // this.chartB = this.$refs.content.getBoundingClientRect().bottom;
+                // this.chartL = this.$refs.content.getBoundingClientRect().left;
+                // this.chartR = this.$refs.content.getBoundingClientRect().right;
+                // this.chartH = this.chartB - this.chartT;
+                // this.chartW = this.chartR - this.chartL;
                 console.log(this.chartH,"this.chartH")
                 console.log(this.chartW,"this.chartW")
              },
@@ -126,12 +132,14 @@
                     this.isPackUp = false;
                     let data = false;
                     let changeH,changeW;
-                    this.chartT = this.$refs.content.getBoundingClientRect().top;
-                    this.chartB = this.$refs.content.getBoundingClientRect().bottom;
-                    this.chartL = this.$refs.content.getBoundingClientRect().left;
-                    this.chartR = this.$refs.content.getBoundingClientRect().right;
-                    this.chartH = this.chartB-this.chartT-42;
-                    this.chartW = this.chartR - 220;
+                    // this.chartT = this.$refs.content.getBoundingClientRect().top;
+                    // this.chartB = this.$refs.content.getBoundingClientRect().bottom;
+                    // this.chartL = this.$refs.content.getBoundingClientRect().left;
+                    // this.chartR = this.$refs.content.getBoundingClientRect().right;
+                    // this.chartH = this.chartB-this.chartT-42;
+                    // this.chartW = this.chartR - 220;
+                     this.chartH = window.innerHeight-140;
+                this.chartW = window.innerWidth-220;
                     console.log(this.chartT,"this.chartT")
                     console.log(this.chartB,"this.chartB")
                     that.$emit('hideList',data);//fullscreen事件触发后，自动触发hideList事件 var docElm = document.documentElement;
@@ -213,6 +221,7 @@
                     // console.log(res,'nimeide ')
                     this.isShowloading = false;
                     this.echatList = res.result;
+                    console.log(this.echatList.length,"this.echatList.length")
                     if(this.echatList.length == 0){
                         this.isErr = false;
                         this.echatListErr.errInform = false;
@@ -971,7 +980,6 @@
         watch: {
           '$route' () {
               if (this.$route.path.includes('analyze')) {
-
                   this.echatList = []  //清空dom 内容
                    this.getDom();
                   this.getEchats()
@@ -982,9 +990,9 @@
 
         },
         created () {
-            console.log(this.typeTemp,"this.typeTemp")
             this.echatList = []
             this.getEchats();
+
         },
         computed: {
             ...mapGetters(['getRefresh'])
@@ -996,6 +1004,7 @@
             window.onresize = function(){
                 that.showList();
             };
+            console.log(this.getDashboradName,"@@@@@@@@")
         },
         components: {
             ScrollContainer,
@@ -1047,14 +1056,14 @@
             /*flex-direction: column;*/
             .rankBtn{
                 position: fixed;
-                top:rem(70);
-                right: rem(5);
+                top:rem(80);
+                right: rem(70);
                 width: rem(25);
                 height: rem(25);
                 padding: 0;
                 font-weight: 600;
-                color: #999;
                 font-size: rem(22);
+                /*z-index: 10;*/
             }
             .contentTitle{
                 width: 100%;

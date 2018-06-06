@@ -3,6 +3,8 @@ export const BUSINESS_TYPE = 'BUSINESS_TYPE'
 
 //分析
 export const REFRESH_DATA_TYPE = 'REFRESH_DATA_TYPE'
+export const COMPANY_DATA_NAME = 'COMPANY_DATA_NAME'
+
 
 //地图
  export const MAP_LOCATION = 'MAP_LOCATION'
@@ -42,6 +44,11 @@ export const REFRESH_DATA_TYPE = 'REFRESH_DATA_TYPE'
 
 // 用户
   export const SET_USER = 'SET_USER'
+  export const SET_USER_ROLES = 'SET_USER_ROLES'
+
+//  数据基础信息列表
+ export const SET_FACILITY_TYPE = 'SET_FACILITY_TYPE'
+ export const SET_DEVICE_TYPE = 'SET_DEVICE_TYPE'
 
 //iot
 export const CURPAGE = 'CURPAGE'  //测试

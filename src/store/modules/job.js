@@ -42,13 +42,14 @@ const job = {
         async getJobType ({commit}) {
             try {
                 let res = await api.person.getJob()
+                console.log(res, '8888888888888888888888888888888888888')
                 commit(types.JOB_TYPE, res)
                 return res
             } catch (err) {
-                console.log('errrrrrrrrrrrrrrrrrrrrrrrrrr', err)
             }
         },
     }
 }
 
 export default job
+

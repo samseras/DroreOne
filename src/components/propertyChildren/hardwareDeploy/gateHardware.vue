@@ -1,4 +1,4 @@
-<template>
+s't<template>
     <div class="gateList">
         <div class="title">
             闸机信息
@@ -79,7 +79,7 @@
                                 <div class="handle">
                                     <span @click="showGateDetail(scope.row, '闸机信息',true)">查看</span>
                                     <span class="line">|</span>
-                                    <span @click="fixedInfo(scope.row.id )">编辑</span>
+                                    <span @click="fixedInfo(scope.row.id )">修改</span>
                                     <span class="line">|</span>
                                     <span @click="deletInfo(scope.row.id)">删除</span>
                                 </div>
@@ -486,9 +486,11 @@
         .el-checkbox__inner{
             margin-top:rem(5);
         }
-        .cameraList .el-button{
-            text-align: left;
+        .cameraList .box .el-tooltip{
             background: transparent;
+            text-align: left;
+            border: none;
+            padding: 0;
         }
         .cameraList .box .el-button span{
             display:inline-block;
@@ -496,6 +498,12 @@
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
+        }
+        .el-table__header-wrapper .has-gutter {
+            background-color: #f3f3f3;
+        }
+        .el-table th, .el-table tr{
+            background-color: transparent !important;
         }
     }
 

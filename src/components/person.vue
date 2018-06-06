@@ -1,7 +1,8 @@
 <template>
     <div class="person">
         <div class="pro_content">
-            <el-menu default-active="/person/personType" router
+            <!--<el-menu :default-active="'/person/'+ getJobTypeList[0].id"router-->
+            <el-menu default-active='/person/1'router
                      text-color="#fff"
                      active-text-color="#ffd04b"
                      :default-openeds="openeds">
@@ -10,13 +11,13 @@
                         <template v-if="item.subs">
                             <el-submenu :index="item.index">
                                 <template slot="title"><img :src="item.icon" alt="">{{ item.title }}</template>
-                                <el-menu-item v-for="(subItem,i) in getJobTypeList" :key="i" :index="'/person/' + subItem.id">
+                                <el-menu-item v-for="(subItem,i) in getJobTypeList" :key="i" :index="'/person/' + subItem.id" v-if="subItem.enable">
                                     <img :src="imgUrl(subItem.id)" alt="">
                                     {{ subItem.name }}
                                 </el-menu-item>
                             </el-submenu>
                         </template>
-                        <template v-else>
+                        <template v-if="!item.subs && getUserRole === 'ADMIN'">
                             <el-menu-item :index="item.index">
                                 <img :src="item.icon" alt="">{{ item.title }}
                             </el-menu-item>
@@ -49,12 +50,12 @@
                 {
                     icon: './../../static/img/peopleType.svg',
                     index: '/person/personType',
-                    title: '职业',
+                    title: '人员类型',
                 },
                 {
                     icon: './../../static/img/peopleInfo.svg',
                     index: '2',
-                    title: '人员',
+                    title: '人员信息',
                     subs: []
                 },
             ]
@@ -62,12 +63,12 @@
         },
         watch: {
             '$route'(){
-            }
+            },
         },
         methods: {
-            // ...mapActions([
-            //     'getJobType'
-            // ]),
+            ...mapActions([
+                'getJobType',
+            ]),
             imgUrl (id) {
                 switch (id) {
                     case '1': {
@@ -104,14 +105,20 @@
             }
         },
         async created () {
-            // this.getJobType()
+            await this.getJobType()
+            if (this.getJobTypeList.length > 0) {
+                await this.$router.push(`/person/${this.getJobTypeList[0].id}`)
+            }
+        },
+        mounted () {
         },
         components: {
             ScrollContainer
         },
         computed:{
             ...mapGetters([
-                'getJobTypeList'
+                'getJobTypeList',
+                'getUserRole'
             ])
         }
     }

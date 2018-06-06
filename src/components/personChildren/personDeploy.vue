@@ -81,7 +81,7 @@
                             label="操作">
                             <template slot-scope="scope">
                                 <div class="handle">
-                                    <span @click="fixedInfo(scope.row.id )">编辑</span>
+                                    <span @click="fixedInfo(scope.row.id )">修改</span>
                                     <span class="line">|</span>
                                     <span @click="showPersonDetail(scope.row, '人员信息',true)">查看</span>
                                     <span class="line">|</span>
@@ -547,8 +547,12 @@
         text-align: left;
     }
     .personDeploy {
-        .el-table__header-wrapper .has-gutter .el-table th, .el-table tr{
+        .el-table__header-wrapper .has-gutter {
+            background-color: #f3f3f3;
         }
+            .el-table th, .el-table tr{
+                background-color: transparent !important;
+            }
     }
     .personDeploy{
         .el-checkbox__input{

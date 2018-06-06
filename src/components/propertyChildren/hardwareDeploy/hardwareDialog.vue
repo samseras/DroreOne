@@ -11,16 +11,19 @@
             <div class="card">
                 <!--摄像头-->
                 <div class="cameraCard popCard" v-if="route.includes('camera')">
-                    <p class="cameraType selectstyle equipmentStyle">类&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;型：
+                    <p class="type selectstyle equipmentStyle">
+                        <s>类&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;型：</s>
                         <el-select name="" v-model="camera.positionType" :disabled="isDisabled">
                             <el-option label='室内' :value="0"></el-option>
                             <el-option label='室外' :value="1"></el-option>
                         </el-select>
                     </p>
-                    <p class="name">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称：
+                    <p class="sex">
+                        <s>名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称：</s>
                         <el-input type="text" v-model="camera.name" :disabled="isDisabled" :maxlength="15"></el-input>
                     </p>
-                    <p class="manufacturer wrapstyle selectstyle">型&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;号：
+                    <p class="manufacturer wrapstyle selectstyle">
+                        型&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;号：
                         <el-select name="" v-model="camera.model" @change="choseModel(camera.model)":disabled="isDisabled">
                             <el-option v-for="item in modelType"
                                        :key="item.id"
@@ -29,17 +32,21 @@
                             </el-option>
                         </el-select>
                     </p>
-                    <p class="IP">I P 地 址：
+                    <p class="IP">
+                        <s>I&nbsp;P&nbsp;地&nbsp;址：</s>
                         <el-input type="text" v-model="camera.ip" :disabled="isDisabled"></el-input>
                     </p>
-                    <p class="port">端&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;口：
+                    <p class="port">
+                        <s>端&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;口：</s>
                         <el-input type="text" v-model="camera.port" :disabled="isDisabled"></el-input>
                     </p>
-                    <p class="place ps wrapstyle selectstyle" >位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置：
+                    <p class="area place ps wrapstyle selectstyle" >
+                        <s>位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置：</s>
                         <span>{{camera.location}}</span>
                         <i class="el-icon-location-outline" @click="showMapDialog"></i>
                     </p>
-                    <p class="area wrapstyle selectstyle">所属片区：
+                    <p class="area wrapstyle selectstyle">
+                        所属片区：
                         <el-select name="" v-model="camera.regionId" :disabled="isDisabled">
                             <el-option
                                 v-for="item in regions"
@@ -71,7 +78,7 @@
                     <p class="name">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称:
                         <el-input type="text" v-model="broadCast.name" :disabled="isDisabled" :maxlength="15"></el-input>
                     </p>
-                    <p class="home wrapstyle selectstyle">型&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;号:
+                    <p class="manufacturer wrapstyle selectstyle">型&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;号：
 
                         <el-select name="" v-model="broadCast.model" :disabled="isDisabled">
                             <el-option v-for="item in modelType"
@@ -87,11 +94,13 @@
                     <p class="host">端&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;口:
                         <el-input type="text" v-model="broadCast.port" :disabled="isDisabled"></el-input>
                     </p>
-                    <p class="place ps">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置:
+                    <p class="area place ps wrapstyle selectstyle">
+                        <s>位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置:</s>
                         <span>{{broadCast.location}}</span>
                         <i class="el-icon-location-outline" @click="showMapDialog"></i>
                     </p>
-                    <p class="area wrapstyle selectstyle">所属区域:
+                    <p class="area wrapstyle selectstyle">
+                        所属区域：
                         <el-select name="" v-model="broadCast.regionId" :disabled="isDisabled">
                             <el-option
                                 v-for="item in regions"
@@ -101,7 +110,7 @@
                             </el-option>
                         </el-select>
                     </p>
-                    <p class="describe ms">
+                    <p class="description ms">
                         <span class="des">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述:</span>
                         <el-input type="textarea" v-model="broadCast.description" :disabled="isDisabled" :maxlength="140"></el-input>
                     </p>
@@ -123,7 +132,7 @@
                     <p class="name">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称:
                         <el-input type="text" v-model="led.name" :disabled="isDisabled" :maxlength="15"></el-input>
                     </p>
-                    <p class="home wrapstyle selectstyle">型&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;号:
+                    <p class="home wrapstyle selectstyle">型&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;号：
                         <el-select v-model="led.model" :disabled="isDisabled">
                             <el-option v-for="item in modelType"
                                        :key="item.id"
@@ -147,10 +156,10 @@
                     <p class="mac">M&nbsp;&nbsp;&nbsp;a&nbsp;&nbsp;&nbsp;&nbsp;c:
                         <el-input type="text" v-model="led.mac" :disabled="isDisabled"></el-input>
                     </p>
-                    <p class="place ps">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置:<span>{{led.location}}</span>
+                    <p class="place ps area"><s>位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置:</s><span>{{led.location}}</span>
                         <i class="el-icon-location-outline" @click="showMapDialog"></i>
                     </p>
-                    <p class="area wrapstyle selectstyle">所属片区:
+                    <p class="area wrapstyle selectstyle">所属片区：
 
                         <el-select name="" v-model="led.regionId" :disabled="isDisabled">
                             <el-option
@@ -185,7 +194,7 @@
                     <p class="name">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称:
                         <el-input type="text" v-model="wifi.name" :disabled="isDisabled" :maxlength="15"></el-input>
                     </p>
-                    <p class="version wrapstyle selectstyle">型&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;号:
+                    <p class="version wrapstyle selectstyle">型&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;号：
                         <el-select name="" v-model="wifi.model" @change="choseModel(wifi.model)" :disabled="isDisabled">
                             <el-option v-for="item in modelType"
                                        :key="item.id"
@@ -215,11 +224,12 @@
                     <p class="host">设备编号:
                         <el-input type="text" v-model="wifi.serialNum" :disabled="isDisabled"></el-input>
                     </p>
-                    <p class="place ps">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置:
+                    <p class="place ps area">
+                        <s>位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置:</s>
                         <span>{{wifi.location}}</span>
                         <i class="el-icon-location-outline" @click="showMapDialog"></i>
                     </p>
-                    <p class="area wrapstyle selectstyle">所属片区:
+                    <p class="area wrapstyle selectstyle">所属片区：
 
                         <el-select v-model="wifi.regionId" :disabled="isDisabled">
                             <el-option
@@ -252,7 +262,7 @@
                     <p class="name">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称:
                         <el-input type="text" v-model="monitors.name" :disabled="isDisabled" :maxlength="15"></el-input>
                     </p>
-                    <p class="version wrapstyle selectstyle">型&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;号:
+                    <p class="version wrapstyle selectstyle">型&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;号：
                         <el-select name="" v-model="monitors.model" :disabled="isDisabled">
                             <el-option v-for="item in modelType"
                                        :key="item.id"
@@ -273,11 +283,12 @@
                     <p class="host">设备端口:
                         <el-input type="text" v-model="monitors.port" :disabled="isDisabled"></el-input>
                     </p>
-                    <p class="place ps">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置:
+                    <p class="place ps area">
+                        <s>位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置:</s>
                         <span>{{monitors.location}}</span>
                         <i class="el-icon-location-outline" @click="showMapDialog"></i>
                     </p>
-                    <p class="area wrapstyle selectstyle">所属片区:
+                    <p class="area wrapstyle selectstyle">所属片区：
 
                         <el-select v-model="monitors.regionId" :disabled="isDisabled">
                             <el-option
@@ -316,7 +327,7 @@
                     <p class="num">路灯编号:
                         <el-input type="text" v-model="Light.serialNum" :disabled="isDisabled"></el-input>
                     </p>
-                    <p class="version wrapstyle selectstyle">型&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;号:
+                    <p class="version wrapstyle selectstyle">型&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;号：
                         <el-select  v-model="Light.model" :disabled="isDisabled">
                             <el-option v-for="item in modelType"
                                        :key="item.id"
@@ -325,10 +336,10 @@
                             </el-option>
                         </el-select>
                     </p >
-                    <p class="place ps">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置:<span>{{Light.location}}</span>
+                    <p class="place ps area"><s>位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置:</s><span>{{Light.location}}</span>
                         <i class="el-icon-location-outline" @click="showMapDialog"></i>
                     </p>
-                    <p class="area wrapstyle selectstyle">所属片区:
+                    <p class="area wrapstyle selectstyle">所属片区：
                         <el-select name="" v-model="Light.regionId" :disabled="isDisabled">
                             <el-option
                                 v-for="item in regions"
@@ -364,7 +375,7 @@
                     <p class="name">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称:
                         <el-input type="text" v-model="gate.name" :disabled="isDisabled" :maxlength="15"></el-input>
                     </p>
-                    <p class="version wrapstyle selectstyle">型&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;号:
+                    <p class="version wrapstyle selectstyle">型&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;号：
                         <el-select  v-model="gate.model" :disabled="isDisabled">
                             <el-option v-for="item in modelType"
                                        :key="item.id"
@@ -385,11 +396,12 @@
                     <p class="name">端&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;口:
                         <el-input type="text" v-model="gate.port" :disabled="isDisabled"></el-input>
                     </p>
-                    <p class="place ps">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置:
+                    <p class="place ps area">
+                        <s>位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置:</s>
                         <span>{{gate.location}}</span>
                         <i class="el-icon-location-outline" @click="showMapDialog"></i>
                     </p>
-                    <p class="area wrapstyle selectstyle">所属片区:
+                    <p class="area wrapstyle selectstyle">所属片区：
                         <el-select name="" v-model="gate.regionId" :disabled="isDisabled">
                             <el-option
                                 v-for="item in regions"
@@ -420,7 +432,7 @@
                     <p class="name">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称:
                         <el-input type="text" v-model="police.name" :disabled="isDisabled" :maxlength="15"></el-input>
                     </p>
-                    <p class="version wrapstyle selectstyle">型&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;号:
+                    <p class="version wrapstyle selectstyle">型&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;号：
                         <el-select name="" v-model="police.model" :disabled="isDisabled">
                             <el-option v-for="item in modelType"
                                        :key="item.id"
@@ -443,11 +455,12 @@
                         <el-input type="text" v-model="police.ip" :disabled="isDisabled"></el-input>
                     </p>-->
 
-                    <p class="place ps">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置:
+                    <p class="place ps area">
+                        <s>位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置:</s>
                         <span>{{police.location}}</span>
                         <i class="el-icon-location-outline" @click="showMapDialog"></i>
                     </p>
-                    <p class="area wrapstyle selectstyle">所属片区:
+                    <p class="area wrapstyle selectstyle">所属片区：
                         <el-select name="" v-model="police.regionId" :disabled="isDisabled">
                             <el-option
                                 v-for="item in regions"
@@ -494,7 +507,7 @@
             </div>
             <div slot="footer" class="dialog-footer cardFooter">
                 <el-button size="mini" @click="addNewInfo" :disabled="isDisabled">保存</el-button>
-                <el-button size="mini" type="primary" @click="closeDialog" :disabled="isDisabled">取消</el-button>
+                <el-button size="mini" @click="closeDialog" :disabled="isDisabled">取消</el-button>
             </div>
         </el-dialog>
         <MapDialog v-if="mapVisible" :visible="mapVisible" class="map" @closeMapDialog="closeMapDialog"@saveLocation = "saveLocation"></MapDialog>
@@ -1414,6 +1427,19 @@
 
 </style>
 
+<style>
+    .hardwareDialog .sex .el-input__suffix,.hardwareDialog .type .el-input__suffix,.hardwareDialog .selectstyle .el-input__suffix{
+        right:-5px;
+    }
+    .hardwareDialog .wrapstyle .el-select,.hardwareDialog .wrapstyle .el-select .el-input,.hardwareDialog .wrapstyle .el-date-editor{
+        width:15.2rem;
+    }
+    .hardwareDialog .wrapstyle .el-date-editor .el-input__prefix{
+        left:14.3rem
+    }
+
+</style>
+
 <style lang="scss" type="text/scss">
     .hardwareDialog{
         width: 100%;
@@ -1423,6 +1449,7 @@
         }
         .el-dialog--center{
             padding: 0;
+            text-align: left;
             /*height: rem(300);*/
         }
         .el-dialog__header{
@@ -1437,9 +1464,13 @@
             top: rem(7);
         }
         .el-dialog__body{
-            padding: rem(10) rem(15) 0 rem(15);
+            padding: rem(10) rem(20) 0 rem(20);
             box-sizing: border-box;
-
+            font-size: rem(12);
+            min-height:rem(150)
+        }
+        .el-input__prefix {
+            left: rem(135);
         }
         .el-dialog__footer{
             padding: 0;
@@ -1451,19 +1482,60 @@
             border-top: 1px solid #ccc;
             margin-top: rem(15);
         }
+        .el-date-editor,.el-input,.el-input--prefix,.el-input--suffix,.el-date-editor--date{
+            margin-top: rem(-2);
+            top: rem(-2);
+        }
+        .el-date-editor,.el-input,.el-input--prefix,.el-input--suffix,.el-date-editor--date .el-input__inner{
+            border: none;
+            height: rem(30);
+            line-height: rem(30);
+        }
+        .el-date-editor,.el-input,.el-input--prefix,.el-input--suffix,.el-date-editor--date .el-input__icon{
+            line-height: rem(30);
+        }
+        .el-select .el-input,.el-input--suffix{
+            margin-top: rem(-3);
+        }
+        .data .el-input__inner{
+            padding-left: rem(10);
+        }
+
         .el-input__inner{
             border: none;
             height: rem(30);
             line-height: rem(30);
             font-size: rem(12);
             padding: 0;
-            padding-left: rem(10);
+            padding-left: rem(15);
 
         }
         .el-input{
             width: rem(160);
             padding-left: rem(5);
         }
+        .ms-person .el-textarea__inner{
+            font-size:.75rem;
+            font-family: Arial;
+        }
+        .el-input.is-disabled .el-input__inner,.el-textarea.is-disabled .el-textarea__inner{
+            background-color:transparent;
+        }
+        .person-jole{
+            display:none;
+        }
+        .detailDialog .card .boatCardContent .ms .des{
+            height:rem(53);
+            float:left
+        }
+
+
+        /*.el-table__header-wrapper .has-gutter {*/
+            /*background-color: #f3f3f3;*/
+        /*}*/
+        /*.el-table th, .el-table tr{*/
+            /*background-color: transparent !important;*/
+        /*}*/
     }
 </style>
 
@@ -1480,11 +1552,12 @@
                 p{
                     margin-top: rem(8);
                     border-bottom: 1px solid #ccc;
-                    font-size: rem(13);
-                    color:#606266;
-                    .el-select{
-                        width:rem(140);
-                    }
+                    font-size: rem(12);
+                    overflow: hidden;
+                    /*color:#606266;*/
+                    /*.el-select{*/
+                        /*width:rem(140);*/
+                    /*}*/
                     input{
                         border: none;
                         list-style: none;
@@ -1494,16 +1567,35 @@
                     }
                     span{
                         display: inline-block;
-                        width: rem(180);
+                        width: rem(200);
+                        /*overflow: hidden;*/
+                        /*text-overflow: ellipsis;*/
+                        /*white-space: nowrap;*/
+                        line-height: rem(15);
+                        overflow: hidden;
+                    }
+                    .ps{
+                        color:#c0c4cc;
+                        width: rem(203.2);
                         overflow: hidden;
                         text-overflow: ellipsis;
                         white-space: nowrap;
-                        line-height: rem(10);
+                    }
+                    .el-icon-location-outline{
+                        float:right;
+                        margin:0;
+                        padding-right:rem(30);
+                    }
+                    s{
+                        text-decoration: none;
+                        line-height: 0.9375rem;
+                        float: left;
                     }
                     select{
                         border: none;
                         outline: none;
                         width: rem(100);
+                        font-size: rem(12);
                         option{
                             appearance:none;
                             list-style: none;
@@ -1521,43 +1613,58 @@
                         display: inline-block;
                         /*width: rem(20);*/
                         /*height: rem(20);*/
-                        border-radius: 50%;
+                        /*border-radius: 50%;*/
                         font-size: rem(16);
                         vertical-align: middle;
+                        cursor: pointer;
+                        margin-left:1rem
                     }
                     textarea{
                         resize: none;
                         outline: none;
                         padding: rem(3);
                         box-sizing: border-box;
-                    }
-                }
-                .ps{
-                    i{
-                        float:right
-                    }
-                    span{
-                        color:#c0c4cc;
+                        border-radius: rem(5);
                     }
                 }
                 .ms{
-                    border-bottom:1px solid transparent;
-                    padding-top: rem(5);
-                    .des{
-                        float:left;
-                        display:inline-block;
-                        width:4.3rem;
-                        height:45px;
-
+                    margin-left: rem(-1);
+                    span{
+                        width:rem(66)
                     }
-
+                    .des-person{
+                        float:left;
+                    }
+                    .des{
+                        float:left
+                    }
                     div{
-                        width:79%;
-
+                        width:15.3rem
+                    }
+                }
+                .area{
+                    height: rem(30);
+                    s{
+                        line-height: rem(26);
+                    }
+                    span{
+                        line-height: rem(26);
+                        margin-left: rem(16);
+                    }
+                    i{
+                        margin-top: rem(3);
+                    }
+                }
+                .ms-person{
+                    div{
+                        width:15.3rem;
                     }
                 }
                 .textarea {
                     border-bottom: 1px solid transparent;
+                }
+                .basicType{
+                    text-align: center;
                 }
                 .img{
                     width: rem(100);
@@ -1594,37 +1701,36 @@
     }
 
 </style>
-<style>
-
-    .hardwareDialog .el-input.is-disabled .el-input__inner,.el-textarea.is-disabled .el-textarea__inner{
-            background-color:transparent;
-            color:#c0c4cc;
-        }
-    .hardwareDialog .ms .el-textarea__inner{
-            font-size:.75rem;
-            font-family: Arial;
-    }
-    .hardwareDialog .popCard .selectstyle .el-input,.hardwareDialog .popCard .selectstyle .el-input__suffix{
-        right:-5px;
-    }
-    .hardwareDialog .wrapstyle .el-select,.hardwareDialog .wrapstyle .el-select .el-input,.hardwareDialog .wrapstyle .el-date-editor{
-        width:17.8rem;
-    }
-    .hardwareDialog .popCard .wrapstyle .el-select,.hardwareDialog .popCard .wrapstyle .el-select .el-input,.hardwareDialog .popCard .wrapstyle .el-date-editor{
-        width:17.5rem;
-    }
-    .hardwareDialog .popCard .wrapstyle .el-date-editor .el-input__prefix{
-        left:14.3rem
-    }
-    .hardwareDialog .equipmentStyle .el-select,.hardwareDialog .equipmentStyle .el-select .el-input{
-        width:12.5rem;
-    }
-    .hardwareDialog .popCard .equipmentStyle .el-select,.hardwareDialog .popCard .equipmentStyle .el-select .el-input{
-        width:12rem;
-    }
-    .hardwareDialog .cardFooter .el-button{
-        color:#c0c4cc;
-        border:1px solid #dcdfe6;
-    }
-</style>
+<!--<style lang="scss" type="text/scss">-->
+    <!--.hardwareDialog .el-input.is-disabled .el-input__inner,.el-textarea.is-disabled .el-textarea__inner{-->
+            <!--background-color:transparent;-->
+            <!--color:#c0c4cc;-->
+        <!--}-->
+    <!--.hardwareDialog .ms .el-textarea__inner{-->
+            <!--font-size: rem(12);-->
+            <!--font-family: '微软雅黑';-->
+    <!--}-->
+    <!--.hardwareDialog .popCard .selectstyle .el-input,.hardwareDialog .popCard .selectstyle .el-input__suffix{-->
+        <!--right:-5px;-->
+    <!--}-->
+    <!--.hardwareDialog .wrapstyle .el-select,.hardwareDialog .wrapstyle .el-select .el-input,.hardwareDialog .wrapstyle .el-date-editor{-->
+        <!--width:17.8rem;-->
+    <!--}-->
+    <!--.hardwareDialog .popCard .wrapstyle .el-select,.hardwareDialog .popCard .wrapstyle .el-select .el-input,.hardwareDialog .popCard .wrapstyle .el-date-editor{-->
+        <!--width:17.5rem;-->
+    <!--}-->
+    <!--.hardwareDialog .popCard .wrapstyle .el-date-editor .el-input__prefix{-->
+        <!--left:14.3rem-->
+    <!--}-->
+    <!--.hardwareDialog .equipmentStyle .el-select,.hardwareDialog .equipmentStyle .el-select .el-input{-->
+        <!--width:12.5rem;-->
+    <!--}-->
+    <!--.hardwareDialog .popCard .equipmentStyle .el-select,.hardwareDialog .popCard .equipmentStyle .el-select .el-input{-->
+        <!--width:12rem;-->
+    <!--}-->
+    <!--/*.hardwareDialog .cardFooter .el-button{*/-->
+        <!--/*color:#c0c4cc;*/-->
+        <!--/*border:1px solid #dcdfe6;*/-->
+    <!--/*}*/-->
+<!--</style>-->
 

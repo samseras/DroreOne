@@ -72,6 +72,7 @@
                 title:'',
                 isDisabled: true,
                 lightCheckout:[],
+                searchFacilityList:[],
             }
         },
         created () {
@@ -80,6 +81,7 @@
         mounted() {
             this.requestGisMain();//加载地图
             droreMap.object.getMap().getLayers().getArray()[1].setVisible(false)
+            droreMap.status.limitExtent = true
             let route = this.$route.path
             if (route.includes('facility')) {
                 droreMap.interaction.enableMapClick = true
@@ -1768,7 +1770,7 @@
                         }
                         this.controler();//之前打的点
                     }else if(route.includes('facility')){
-                        droreMap.icon.IconStyleById(icon.id,false);
+                        // droreMap.icon.IconStyleById(icon.id,false);
                         let that = this;
                         icon.onclick(function (e) {
                             that.menulist = e.data;
@@ -1852,6 +1854,9 @@
             treeHide(data){
                 droreMap.icon.IconStyleById(data.id,false);
                 this.menuDelete();
+            },
+            treeHideID(data){
+                droreMap.icon.IconStyleById(data,false);
             },
             roadShow(data){
                 droreMap.road.removeStyleById(data.id,true)
@@ -1939,24 +1944,46 @@
                     }
                 }
             },
-            rangeSearch(){
+            async rangeSearch(){
+                let that =this
                 droreMap.event.addMouseEvent(Event.DOUBLECLICK_EVENT, "single", function(evt){
-                    // this.requestGisMain(); //加载地图
-                    // this.interaction();
-                    console.log(evt.coordinate,droreMap.trans.transLayerToWgs(evt.coordinate))
-                    var Circle = new droreMap.geom.Circle()
-                    var data = {
-                        "id": '14654564',
-                        "name":'3123123',
-                        "color": "#00bcff",
-                        "width": "1",
-                        "bgColor":"rgba(0,188,255,0.3)",
-                        "coordinate":evt.coordinate,
-                        "radius":100,
+                    $("#contextmenu_container").hide();
+                    droreMap.map.panToCoord(evt.coordinate);
+                    droreMap.map.setZoom(16)
+                    let Circle = new droreMap.geom.Circle()
+                    let radius=100
+                    let coordinate=droreMap.trans.transLayerToWgs(evt.coordinate)
+                    let longitude = parseFloat(coordinate[0])
+                    let latitude = parseFloat(coordinate[1])
+                    let types={
+                        "7":[1,2]
                     }
-                    Circle.addCircle(data);
+                    let SearchFacility = {
+                        radius: radius,
+                        latitude: latitude,
+                        longitude: longitude,
+                        epsg:'4326',
+                        types:types
+                    }
+                    that.getSearchFacility(SearchFacility)
+                    Circle.setCenter(evt.coordinate,radius);
                 })
-            }
+            },
+            async getSearchFacility (SearchFacility) {//点击范围搜索
+                await api.controler.getSearchFacility(JSON.stringify(SearchFacility)).then(res => {
+                    if(this.searchFacilityList.length>0){
+                        for (let i=0;i< this.searchFacilityList.length;i++) {
+                            this.treeHideID(this.searchFacilityList[i].id);
+                        }
+                    }
+                    this.searchFacilityList= res[7]
+                    for (let i=0;i< this.searchFacilityList.length;i++) {
+                        this.treeShowID(this.searchFacilityList[i].id);
+                    }
+                }).catch(err => {
+                    this.$message.error('查询失败')
+                })
+            },
         },
         components: {
             Scrollcontainer,

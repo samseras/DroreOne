@@ -3,19 +3,28 @@ import * as types from '../mutations-type'
 
 const analyze = {
     state: {
-        refresh: ''
+        refresh: '',
+        companyname:'卓锐科技股份有限公司',
+        dashboradname:'',
     },
+
     getters: {
         getRefresh (state) {
             return state.refresh
         },
+        getCompanyName(state){
+            return state.companyname
+        }
     },
     setters: {},
     mutations: {
         [types.REFRESH_DATA_TYPE] (state, data) {
             state.refresh = data*1000
-            console.log(state.refresh, '909090909090909090909')
+            console.log(state.refresh, '刷新频率')
         },
+        [types.COMPANY_DATA_NAME](state,data){
+            state.companyname = data
+        }
     },
     actions: {
     }

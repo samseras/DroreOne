@@ -83,7 +83,7 @@
                             <template slot-scope="scope">
                                 <span class="formBtn" @click="showPersonDetail(scope.row, '车船信息',true)">查看</span>
                                 <span class="line">|</span>
-                                <span class="formBtn" @click="fixedInfo(scope.row.id)">编辑</span>
+                                <span class="formBtn" @click="fixedInfo(scope.row.id)">修改</span>
                                 <span class="line">|</span>
                                 <span class="formBtn" @click="deletInfo(scope.row.id)">删除</span>
                             </template>
@@ -484,6 +484,14 @@
     .boatCars{
         .el-checkbox__input{
             vertical-align: top;
+        }
+    }
+    .boatCars {
+        .el-table__header-wrapper .has-gutter {
+            background-color: #f3f3f3;
+        }
+        .el-table th, .el-table tr{
+            background-color: transparent !important;
         }
     }
 

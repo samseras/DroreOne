@@ -8,11 +8,11 @@ import {getUrl} from "./path";
 
 const alarm = {
     createAlarmRule(param){
-        console.log(param, 'newdata')
+        console.log(JSON.stringify(param), 'newdata')
         return axios({
             method: 'POST',
             url: getUrl('/alarm/rule'),
-            data:param,
+            data:JSON.stringify(param),
         })
     },
     deleteAlarmRule(params){
@@ -30,7 +30,7 @@ const alarm = {
         return axios({
             method: 'PUT',
             url: getUrl('/alarm/rule'),
-            data:param,
+            data:JSON.stringify(param),
         })
     },
 
@@ -41,37 +41,50 @@ const alarm = {
         })
     },
 
-    getAllAlarmRule (id) {
+    exportAlarmRules(typeId){
         return axios ({
             method: 'GET',
-            url: getUrl('/alarm/rule?id='+id)
+            url: getUrl('/alarm/rule/export?alarmTypeId='+typeId)
         })
     },
-    getAlarmType(){
+    exportSelectedAlarmRules(ids,typeId){
+        return axios ({
+            method: 'PUT',
+            url: getUrl('/alarm/rule/export?alarmTypeId='+typeId),
+            data:JSON.stringify(ids)
+        })
+    },
+    getAlarmRulesByParameters(id) {
         return axios ({
             method: 'GET',
-            url: getUrl('alarm/type')
+            url: getUrl('/alarm/rule?alarmTypeId='+id)
+        })
+    },
+    getAllAlarmTypes(){
+        return axios ({
+            method: 'GET',
+            url: getUrl('/alarm/type')
         })
     },
     getSeverityType(){
         return axios ({
             method: 'GET',
-            url: getUrl('alarm/severity')
+            url: getUrl('/alarm/severity')
         })
     },
 
     getEnvType(){
         return axios ({
             method: 'GET',
-            url: getUrl('alarm/environment/type')
+            url: getUrl('/alarm/environment/type')
         })
     },
 
     createAlarmEvent(param){
         return axios ({
             method: 'GET',
-            url: getUrl('alarm/event'),
-            data:param
+            url: getUrl('/alarm/event'),
+            data:JSON.stringify(param)
         })
     },
 
@@ -80,7 +93,7 @@ const alarm = {
         return axios({
             method: 'PUT',
             url: getUrl('/alarm/event'),
-            data:params,
+            data:JSON.stringify(params),
         })
     },
 
@@ -94,9 +107,12 @@ const alarm = {
     getAlarmEventStatus(){
         return axios ({
             method: 'GET',
-            url: getUrl('alarm/event/status')
+            url: getUrl('/alarm/event/status')
         })
     }
+
+
+
 
 }
 

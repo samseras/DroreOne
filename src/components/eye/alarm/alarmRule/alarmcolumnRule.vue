@@ -9,7 +9,9 @@
                         @selectedAll = 'selectedAll'
                         @batchEdit = 'batchEdit'
                         @addNewInfo="addNewInfo"
-                        @batchEnabled="batchEnabled">
+                        @batchEnabled="batchEnabled"
+                        :choseId="choseInfoId"
+                        :listsLength = "listLength">
                 </Header>
             </div>
             <div class="personList" v-loading="isShowloading">
@@ -20,7 +22,7 @@
                         tooltip-effect="dark"
                         style="width: 100%"
                         @selection-change="handleSelectionChange"
-                        :default-sort = "{prop: 'relatedManager', order: 'descending'}">
+                        :default-sort = "{prop: 'relatedManagerNames', order: 'descending'}">
                         <el-table-column
                             width="50">
                             <template slot-scope="scope">
@@ -32,7 +34,7 @@
                             label="名称">
                         </el-table-column>
                         <el-table-column
-                            prop="relatedDevices"
+                            prop="relatedDeviceNames"
                             label="关联报警柱">
                         </el-table-column>
                         <el-table-column
@@ -45,7 +47,7 @@
                         </el-table-column>
                         <el-table-column
                             sortable
-                            prop="severityName"
+                            prop="alarmSeverity.name"
                             label="严重等级">
                         </el-table-column>
                         <el-table-column
@@ -88,34 +90,7 @@
     export default {
         data(){
             return{
-                alarmcolumnList: [
-                    {
-                        id:'1',
-                        name:'sos报警规则01',
-                        relatedDevices:[],
-                        severityId:'1',
-                        severityName:'高',
-                        deviceScope:'100米',
-                        securityScope:'200米',
-                        relatedManagerIds:'0',
-                        relatedManagerNames:'aaa',
-                        isEnabled:true
-
-                    },
-                    {
-                        id:'2',
-                        name:'sos报警规则02',
-                        relatedDevices:[],
-                        severityId:'2',
-                        severityName:'中',
-                        deviceScope:'400米',
-                        securityScope:'700米',
-                        relatedManagerIds:'1',
-                        relatedManagerNames:'bbb',
-                        isEnabled:true
-
-                    },
-                ],
+                alarmcolumnList: [],
                 alarmcolumnInfo:{},
                 visible: false,
                 warningEventInfo: {},
@@ -126,7 +101,8 @@
                 selection:[],
                 isShowloading: false,
                 isBatchEdit:false,
-                alarmType:[]
+                alarmTypeId:'',
+                listLength:''
 
             }
         },
@@ -135,20 +111,7 @@
                 this.showDetail({},false,'添加报警柱告警规则',)
             },
             enabledClick(obj,flag){
-                console.log(obj)
-                let param = obj;
-                param.isEnabled = flag;
-
-                api.alarm.updateAlarmRule([param]).then(res => {
-                    obj.isEnabled = flag
-                    if (obj.isEnabled) {
-                        this.$message.success('调度计划已开启')
-                    }else {
-                        this.$message.success('调度计划已关闭')
-                    }
-                }).then(err => {
-                    console.log(err, '失败')
-                })
+                this.startEndPlan([obj],flag)
             },
             batchEnabled(flag){
                 if(this.choseInfoId.length == 0){
@@ -182,6 +145,7 @@
                     }
                     return
                 }
+
                 if(flag){
                     //批量启用
                     this.startEndPlan(choseId, flag)
@@ -195,11 +159,44 @@
                         this.startEndPlan(choseId, flag)
                     }).catch(() => {
                         this.$message.info('计划停止取消')
+                        this.choseInfoId = []
+                        this.choseInfos = []
                         return
                     })
                 }
             },
             startEndPlan(choseId, flag) {
+                choseId = choseId.map((item)=>{
+                    var obj = {
+                        id: item.id,
+                        name: item.name,
+                        alarmTypeId: item.alarmTypeId,
+                        severityId: item.severityId,
+                        isEnabled: flag,
+                        isDeleted: item.isDeleted,
+                        deviceScope:item.deviceScope,
+                        securityScope:item.securityScope,
+                        upperThreshold:item.upperThreshold,
+                        lowerThreshold:item.lowerThreshold,
+                        extendThreshold:item.extendThreshold,
+                        envTypeId:item.envTypeId,
+                        envDataSource:item.envDataSource,
+                        description:item.description
+                    }
+                    if(item.relatedDeviceIds && item.relatedDeviceIds.length > 0){
+                        obj.relatedDeviceIds = item.relatedDeviceIds
+                    }
+                    if(item.relatedManagerIds && item.relatedManagerIds.length > 0){
+                        obj.relatedManagerIds = item.relatedManagerIds
+                    }
+                    if(item.relatedVehicleIds && item.relatedVehicleIds.length > 0){
+                        obj.relatedVehicleIds =item.relatedVehicleIds
+                    }
+                    if(item.relatedScheduleIds && item.relatedScheduleIds.length > 0){
+                        obj.relatedScheduleIds = item.relatedScheduleIds
+                    }
+                    return obj
+                });
                 api.alarm.updateAlarmRule(choseId).then(res => {
                     console.log(res, '更改状态成功')
                     if (flag) {
@@ -210,12 +207,16 @@
                     choseId.forEach(item => {
                         this.alarmcolumnList.forEach(item1 => {
                             if (item.id === item1.id) {
-                                item1.isEnabled = !item1.isEnabled
+                                item1.isEnabled = item.isEnabled
+                                item1.checked = false
                             }
                         })
                     })
+                    this.choseInfos = []
+                    this.choseInfoId = []
                 }).catch(err => {
-                    console.log(err, '计划开启失败')
+                    this.choseInfoId = []
+                    this.choseInfos = []
                     if (flag) {
                         this.$message.error('计划开启失败，请稍后重试')
                     } else {
@@ -233,7 +234,11 @@
             },
             showDetail (info,state,title) {
                 console.log(info)
+                if(info.alarmSeverity && info.alarmSeverity.id){
+                    info.severityId = info.alarmSeverity.id
+                }
                 this.alarmcolumnInfo = info;
+
                 this.visible = true;
                 this.isBatchEdit = false;
                 this.isReadonly = state;
@@ -279,9 +284,9 @@
                         api.alarm.deleteAlarmRule(this.choseInfoId).then(res => {
                             console.log(res, '删除成功')
                             this.$message.success('删除成功')
-                            for (let i = 0; i < this.choseInfos.length; i++) {
+                            for (let i = 0; i < this.choseInfoId.length; i++) {
                                 this.alarmcolumnList = this.alarmcolumnList.filter((item, index) => {
-                                    if (item.id === this.choseInfos[i].id){
+                                    if (item.id === this.choseInfoId[i]){
                                         this.alarmcolumnList[index].checked = false
                                         this.alarmcolumnList[index].status = false
                                     }
@@ -305,11 +310,11 @@
                 }
             },
             checked (row) {
-                console.log(row)
-                this.alarmcolumnList.forEach(item => {
+                this.alarmcolumnList = this.alarmcolumnList.filter(item => {
                     if (item.id === row.id) {
-                        item.checked = row.checked
+                        item.checked = item.checked
                     }
+                    return item
                 })
                 if (this.choseInfos.includes(row)) {
                     this.choseInfos = this.choseInfos.filter((item) =>{
@@ -322,7 +327,6 @@
                     this.choseInfos.push(row)
                     this.choseInfoId.push(row.id)
                 }
-
             },
             selectedAll (state) {
                 this.alarmcolumnList = this.alarmcolumnList.filter((item) => {
@@ -340,14 +344,20 @@
                 })
             },
             saveEditInfo(objArray){ //编辑保存
-                if(this.isBatchEdit){  //批量编辑保存
-
-                }else{  //单个编辑保存
-
-                }
+                api.alarm.updateAlarmRule(objArray).then(res => {
+                    console.log(res, '修改成功')
+                    this.$message.success('修改成功')
+                    this.getAlarmRule();
+                    this.choseInfos = []
+                    this.visible = false
+                }).catch(err => {
+                    this.$message.error('修改失败，请稍后重试')
+                    console.log(err)
+                    this.choseInfos = []
+                })
             },
             editInfo (info,state,title) {
-                console.log(info);
+                console.log(info,'Info');
                 this.showDetail(info,state,title);
             },
             batchEdit(){
@@ -364,40 +374,53 @@
             },
             saveInfo(info){
                 //TODO 1 获取并设置info.alarmTypeId
-
-                console.log(info)
+                console.log(this.alarmTypeId);
+                info.alarmTypeId = this.alarmTypeId;
+                console.log(info,'obj')
                 // TODO 2 保存请求
-                // api.alarm.createAlarmRule(info).then(res => {
-                //         console.log(res, '保存成功')
-                //         this.$message.success('保存成功')
-                //         this.alarmcolumnList = this.alarmcolumnList.filter((item, index) => {
-                //             if (item.id === this.choseInfos[i]){
-                //                 this.alarmcolumnList[index].checked = false
-                //                 this.alarmcolumnList[index].status = false
-                //             }
-                //             return item.status !== false
-                //         })
-                //         this.choseInfos = []
-                // }).catch(err => {
-                //     this.$message.error('保存失败，请稍后重试')
-                //     console.log(err)
-                //     this.choseInfos = []
-                // })
+                api.alarm.createAlarmRule(info).then(res => {
+                        console.log(res, '保存成功')
+                        this.$message.success('保存成功')
+                        this.getAlarmRule();
+                        this.choseInfos = []
+                        this.visible = false
+                }).catch(err => {
+                    this.$message.error('保存失败，请稍后重试')
+                    console.log(err)
+                    this.choseInfos = []
+                })
             },
-            init(){
-                // this.getAllAlarmRule();
+            async init(){
+              await this.getAllAlarmTypes();
+              await this.getAlarmRule();
             },
 
-            async getAllAlarmRule(){
+            async getAlarmRule(){
                 this.isShowLoading = true
-                let id = this.getAlarmTypeId("报警柱")
-                await api.alarm.getAllAlarmRule(id).then(res => {
+                this.alarmTypeId = this.getAlarmTypeId("报警柱")
+                await api.alarm.getAlarmRulesByParameters(this.alarmTypeId).then(res => {
                     console.log(res, '请求成功')
                     this.isShowLoading = false
                     this.alarmcolumnList = res
+                    this.listLength = this.alarmcolumnList.length
                     this.alarmcolumnList.forEach(item => {
                         item.checked = false;
-
+                        if(item.relatedDevices.length > 0){
+                            item.relatedDeviceNames =  item.relatedDevices.map(device=>device.name)
+                            item.relatedDeviceIds =  item.relatedDevices.map(device=>device.id)
+                            item.relatedDeviceNames =  item.relatedDeviceNames.join(",")
+                        }else{
+                            item.relatedDevice = ''
+                            item.relatedDeviceIds = []
+                        }
+                        if(item.relatedManagers.length > 0) {
+                            item.relatedManagerNames = item.relatedManagers.map(manager => manager.name)
+                            item.relatedManagerIds = item.relatedManagers.map(manager => manager.id)
+                            item.relatedManagerNames = item.relatedManagerNames.join(",")
+                        }else{
+                            item.relatedManagerNames = ''
+                            item.relatedManagerIds = []
+                        }
                     })
                 }).catch(err => {
                     console.log(err, '请求失败')
@@ -405,13 +428,12 @@
                 })
             },
             getAlarmTypeId(typeName){
-                let typeInfo =  this.alarmType.filter(item=> item.name == typeName)
-
-                return typeInfo.id
+                let typeInfo =  this.alarmType.filter(item=>item.name == typeName)
+                return typeInfo[0].id;
             },
-            async getAlarmType(){
-                await api.alarm.getAlarmType().then(res => {
-                    console.log(res, '请求成功')
+            async getAllAlarmTypes(){
+                await api.alarm.getAllAlarmTypes().then(res => {
+                    console.log(res, '请求type成功')
                     this.alarmType = res;
                 }).catch(err => {
                     console.log(err, '请求失败')

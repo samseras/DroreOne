@@ -27,7 +27,7 @@
                         <el-input type="text" v-model='alarmcolumnInfo.name' class="inputText" :maxlength="15" :disabled='isReadonly'></el-input>
                     </p>
                     <p class="status">报&nbsp;&nbsp;警&nbsp;&nbsp;柱：
-                        <el-select  v-model="alarmcolumnInfo.relatedDevices" size="mini" class="" :disabled='isReadonly' multiple placeholder="请选择">
+                        <el-select  v-model="alarmcolumnInfo.relatedDeviceIds" size="mini" class="" :disabled='isReadonly' multiple placeholder="请选择">
                             <el-option
                                 v-for="item in policeInfo"
                                 :key="item.id"
@@ -204,7 +204,7 @@
                         <el-input type="text" v-model='offtrackInfo.name' class="inputText" :maxlength="15" :disabled='isReadonly'></el-input>
                     </p>
                     <p class="relatedSchedule">关联计划：
-                        <el-select  v-model="offtrackInfo.relatedSchedule" size="mini" multiple class="" placeholder="请选择" :disabled='isReadonly'>
+                        <el-select  v-model="offtrackInfo.relatedScheduleIds" size="mini" multiple class="" placeholder="请选择" :disabled='isReadonly'>
                             <el-option
                                 v-for="item in patrolInfo"
                                 :key="item.id"
@@ -269,7 +269,7 @@
                         <el-input type="text" v-model='overlimitInfo.name' class="inputText" :maxlength="15" :disabled='isReadonly'></el-input>
                     </p>
                     <p class="relatedDevice">关联设备：
-                        <el-select  v-model="overlimitInfo.relatedDevice" size="mini" multiple class="" placeholder="请选择" :disabled='isReadonly'>
+                        <el-select  v-model="overlimitInfo.relatedDeviceIds" size="mini" multiple class="" placeholder="请选择" :disabled='isReadonly'>
                             <el-option-group
                                 v-for="group in overlimitDeviceInfo"
                                 :key="group.label"
@@ -335,13 +335,18 @@
                         <el-input type="text" v-model='waterlevelInfo.name' class="inputText" :maxlength="15" :disabled='isReadonly'></el-input>
                     </p>
                     <p class="relatedDevice">关联设备：
-                        <el-select  v-model="waterlevelInfo.relatedDevice" size="mini" multiple class="" placeholder="请选择" :disabled='isReadonly'>
-                            <el-option
-                                v-for="item in levelInfo"
-                                :key="item.value"
-                                :label="item.label"
-                                :value="item.value">
-                            </el-option>
+                        <el-select  v-model="waterlevelInfo.relatedDeviceIds" size="mini" multiple class="" placeholder="请选择" :disabled='isReadonly'>
+                            <el-option-group
+                                v-for="group in waterlevelDeviceInfo"
+                                :key="group.label"
+                                :label="group.label">
+                                <el-option
+                                    v-for="item in group.options"
+                                    :key="item.id"
+                                    :label="item.name"
+                                    :value="item.id">
+                                </el-option>
+                            </el-option-group>
                         </el-select>
                     </p>
                     <p class="severityName">严重等级：
@@ -412,7 +417,7 @@
                     <p class="envDataSource">来&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;源：
                         <el-select  v-model="conditionInfo.envDataSource" @change = "sourceChange" size="mini" class="" placeholder="请选择" :disabled='isReadonly'>
                             <el-option
-                                v-for="item in source"
+                                v-for="item in sourceInfo"
                                 :key="item.id"
                                 :label="item.name"
                                 :value="item.id">
@@ -420,13 +425,18 @@
                         </el-select>
                     </p>
                     <p class="relatedDevice">关联设备：
-                        <el-select  v-model="conditionInfo.relatedDevice" size="mini" multiple class="" placeholder="请选择" :disabled='isReadonly || deviceReadOnly'>
-                            <el-option
-                                v-for="item in levelInfo"
-                                :key="item.value"
-                                :label="item.label"
-                                :value="item.value">
-                            </el-option>
+                        <el-select  v-model="conditionInfo.relatedDeviceIds" size="mini" multiple class="" placeholder="请选择" :disabled='isReadonly || deviceReadOnly'>
+                            <el-option-group
+                                v-for="group in conditionDeviceInfo"
+                                :key="group.label"
+                                :label="group.label">
+                                <el-option
+                                    v-for="item in group.options"
+                                    :key="item.id"
+                                    :label="item.name"
+                                    :value="item.id">
+                                </el-option>
+                            </el-option-group>
                         </el-select>
                     </p>
                     <p class="severityName">严重等级：
@@ -440,29 +450,30 @@
                         </el-select>
                     </p>
 
+
                     <p class="upperThreshold" v-if = "!conditionInfo.envTypeId || conditionInfo.envTypeId == '1'">上限阈值：
                         <el-input type="text" v-model='conditionInfo.upperThreshold' class="inputText" :maxlength="15" :disabled='isReadonly'></el-input>
-                        (微克/立方米)
+                        (℃)
                     </p>
                     <p class="lowerThreshold" v-if = "!conditionInfo.envTypeId || conditionInfo.envTypeId == '1'">下限阈值：
-                        <el-input type="text" v-model='conditionInfo.lowerThreshold' class="inputText" :maxlength="15" :readonly = 'true' :disabled='true'></el-input>
-                        (微克/立方米)
+                        <el-input type="text" v-model='conditionInfo.lowerThreshold' class="inputText" :maxlength="15" :disabled='isReadonly'></el-input>
+                        (℃)
                     </p>
                     <p class="upperThreshold" v-if = "conditionInfo.envTypeId == '2'">上限阈值：
                         <el-input type="text" v-model='conditionInfo.upperThreshold' class="inputText" :maxlength="15" :disabled='isReadonly'></el-input>
-                        (℃)
+                        (%)
                     </p>
                     <p class="lowerThreshold" v-if = "conditionInfo.envTypeId == '2'">下限阈值：
                         <el-input type="text" v-model='conditionInfo.lowerThreshold' class="inputText" :maxlength="15" :disabled='isReadonly'></el-input>
-                        (℃)
+                        (%)
                     </p>
                     <p class="upperThreshold" v-if = "conditionInfo.envTypeId == '3'">上限阈值：
                         <el-input type="text" v-model='conditionInfo.upperThreshold' class="inputText" :maxlength="15" :disabled='isReadonly'></el-input>
-                        (%)
+                        (微克/立方米)
                     </p>
                     <p class="lowerThreshold" v-if = "conditionInfo.envTypeId == '3'">下限阈值：
-                        <el-input type="text" v-model='conditionInfo.lowerThreshold' class="inputText" :maxlength="15" :disabled='isReadonly'></el-input>
-                        (%)
+                        <el-input type="text" v-model='conditionInfo.lowerThreshold' class="inputText" :maxlength="15" :readonly = 'true' :disabled='true'></el-input>
+                        (微克/立方米)
                     </p>
                     <p class="upperThreshold" v-if = "conditionInfo.envTypeId == '4'">上限阈值：
                         <el-input type="text" v-model='conditionInfo.upperThreshold' class="inputText" :maxlength="15" :disabled='isReadonly'></el-input>
@@ -519,8 +530,10 @@
                     },
                     name:'',
                     relatedDevices:[],
-                    severityId:'',
-                    severityName:'',
+                    alarmSeverity:{
+                        id:'2',
+                        name:'中'
+                    },
                     deviceScope:'',
                     securityScope:'',
                     relatedManagerIds:[],
@@ -530,8 +543,6 @@
                 firefightingInfo:{
                     id:'',
                     name:'',
-                    severityId:'',
-                    severityName:'',
                     deviceScope:'',
                     securityScope:'',
                     relatedManagerIds:[],
@@ -541,8 +552,6 @@
                 crossborderInfo:{
                     id:'',
                     name:'',
-                    severityId:'',
-                    severityName:'',
                     deviceScope:'',
                     securityScope:'',
                     relatedManagerIds:[],
@@ -555,8 +564,6 @@
                 offtrackInfo:{
                     id:'',
                     name:'',
-                    severityId:'',
-                    severityName:'',
                     relatedSchedule:'',
                     extendThreshold:'',
                     upperThreshold:'',
@@ -568,8 +575,6 @@
                     id:'',
                     name:'',
                     relatedDevice:[],
-                    severityId:'',
-                    severityName:'',
                     upperThreshold:'',
                     relatedManagerIds:[],
                     description:'',
@@ -579,8 +584,6 @@
                     id:'',
                     name:'',
                     relatedDevice:[],
-                    severityId:'',
-                    severityName:'',
                     upperThreshold:'',
                     lowerThreshold:'',
                     relatedManagerIds:[],
@@ -594,8 +597,6 @@
                     envTypeName:'',
                     envDataSource:'',
                     relatedDevice:[],
-                    severityId:'',
-                    severityName:'',
                     upperThreshold:'',
                     lowerThreshold:'',
                     relatedManagerIds:[],
@@ -604,89 +605,40 @@
                 },
                 policeInfo:[],
                 overlimitDeviceInfo:[],
+                waterlevelDeviceInfo:[],
+                conditionDeviceInfo:[],
                 patrolInfo:[],
-                levelInfo:[
+                levelInfo:[],
+                envType:[],
+                sourceInfo:[
                     {
-                        id:'1',
-                        name:'高'
-                    },
-                    {
-                        id:'2',
-                        name:'中'
-                    },{
-                        id:'3',
-                        name:'低'
-                    }
-                ],
-                envType:[
-                    {
-                        id:'1',
-                        name:'PM2.5'
-                    },
-                    {
-                        id:'2',
-                        name:'温度'
-                    },
-                    {
-                        id:'3',
-                        name:'湿度'
-                    },
-                    {
-                        id:'4',
-                        name:'风力'
-                    }
-                ],
-                source:[
-                    {
-                        id:'0',
+                        id:0,
                         name:'外部系统'
                     },
                     {
-                        id:'1',
+                        id:1,
                         name:'内部设备'
                     }
 
-                ],
-                ownerInfo:[
-                    {
-                        id:'0',
-                        name:'aaa'
-                    },
-                    {
-                        id:'1',
-                        name:'bbb'
-                    },{
-                        id:'2',
-                        name:'ccc'
-                    }
                 ],
                 personInfo:[],
                 alarmType:[],
                 isShowLoading: false,
                 deviceReadOnly:false,
-                ruleInfo:{}
+                ruleInfo:{},
             }
         },
         methods: {
             sourceChange(val){
-                val == '0' ? this.deviceReadOnly  = true : this.deviceReadOnly  = false
+                if(val == 0){
+                    this.deviceReadOnly  = true
+                    this.conditionInfo.relatedDeviceIds = []
+                }else{
+                    this.deviceReadOnly  = false
+                }
             },
             closeDialog () {
                 this.$emit('closeDialog')
-            },
-            severityId2Name(severityId){
-                let name = '';
-                this.levelInfo.forEach((item)=>{
-                    if(severityId  == item.id){
-                        name = item.name;
-                    }
-                })
-                return name;
-            },
-            getAlarmTypeId(typeName){
-                 let typeInfo =  this.alarmType.filter(item=> item.name == typeName)
-
-                  return typeInfo.id
             },
             saveDialog(){
                 let objArray = [];
@@ -696,70 +648,147 @@
                 if (this.route.includes('alarmcolumn')){
                     if(this.isBatchEdit){   //批量编辑
                         console.log(this.choseInfos);
+                        objArray = this.choseInfos.map((item)=>{
+                            var obj = {
+                                id: item.id,
+                                name: item.name,
+                                alarmTypeId: item.alarmTypeId,
+                                severityId: item.severityId,
+                                isEnabled: item.isEnabled,
+                                isDeleted: item.isDeleted,
+                                deviceScope:item.deviceScope,
+                                securityScope:item.securityScope,
+                                upperThreshold:item.upperThreshold,
+                                lowerThreshold:item.lowerThreshold,
+                                extendThreshold:item.extendThreshold,
+                                envTypeId:item.envTypeId,
+                                envDataSource:item.envDataSource,
+                                description:item.description
+                            }
+                            if(item.relatedDeviceIds && item.relatedDeviceIds.length > 0){
+                                obj.relatedDeviceIds = item.relatedDeviceIds
+                            }
+                            if(item.relatedManagerIds && item.relatedManagerIds.length > 0){
+                                obj.relatedManagerIds = item.relatedManagerIds
+                            }
+                            if(item.relatedVehicleIds && item.relatedVehicleIds.length > 0){
+                                obj.relatedVehicleIds =item.relatedVehicleIds
+                            }
+                            if(item.relatedScheduleIds && item.relatedScheduleIds.length > 0){
+                                obj.relatedScheduleIds = item.relatedScheduleIds
+                            }
 
-                        objArray = this.choseInfos;
+                            return obj
+                        });
                         if(!this.batchEdit.level){
                             this.$message.error('请选择严重性等级')
                             return;
                         }
                         objArray.forEach((item)=>{
-                            item.severityId = this.batchEdit.level;
-                            item.severityName = this.severityId2Name(item.severityId)
+                            item.severityId= this.batchEdit.level;
                         })
 
                         console.log(objArray)
-
                         this.$emit('saveEditInfo',objArray);
 
                     }else{  //单个编辑或查看或新增
                         console.log(this.alarmcolumnInfo);
-                        newInfo = this.alarmcolumnInfo;
-                        if(!newInfo.severityId){
+                        if(!this.alarmcolumnInfo.severityId){
                             this.$message.error('请选择严重性等级！')
                             return;
                         }
-                        if(!newInfo.name ||newInfo.name == ""){
+                        if(!this.alarmcolumnInfo.name ||this.alarmcolumnInfo.name == ""){
                             this.$message.error('请输入名称！')
                             return;
                         }
-                        // if(!newInfo.deviceScope ||newInfo.deviceScope == ""){
-                        //     newInfo.deviceScope = '0';
-                        // }
-                        // if(!newInfo.securityScope ||newInfo.securityScope == ""){
-                        //     newInfo.securityScope = '0';
-                        // }
-                        if( (newInfo.deviceScope && !floatReg.test(newInfo.deviceScope)) || (newInfo.securityScope && !floatReg.test(newInfo.securityScope))){
+
+                        if( (this.alarmcolumnInfo.deviceScope && !floatReg.test(this.alarmcolumnInfo.deviceScope)) || (this.alarmcolumnInfo.securityScope && !floatReg.test(this.alarmcolumnInfo.securityScope))){
                             this.$message.error('调度范围必须为数字！')
                             return;
                         }
 
-                        newInfo.severityName = this.severityId2Name(newInfo.severityId)
-                        newInfo.relatedDevices = newInfo.relatedDevices.join(",")
-                        newInfo.relatedManagerIds = newInfo.relatedManagerIds.join(",")
-                        newInfo.isEnabled =true;//默认启用
-                        //获取规则类型
-                        console.log(this.alarmType)
-                        newInfo.alarmTypeId = this.getAlarmTypeId("报警柱")
-                        console.log(newInfo,"返回的数据")
-                        if (newInfo.id) {  //编辑或查看
+                        if (this.alarmcolumnInfo.id) {  //编辑或查看
+                            newInfo = {
+                                id: this.alarmcolumnInfo.id,
+                                name: this.alarmcolumnInfo.name,
+                                alarmTypeId: this.alarmcolumnInfo.alarmTypeId,
+                                severityId: this.alarmcolumnInfo.severityId,
+                                isEnabled: this.alarmcolumnInfo.isEnabled,
+                                isDeleted: this.alarmcolumnInfo.isDeleted,
+                                deviceScope:this.alarmcolumnInfo.deviceScope,
+                                securityScope:this.alarmcolumnInfo.securityScope,
+                                upperThreshold:this.alarmcolumnInfo.upperThreshold,
+                                lowerThreshold:this.alarmcolumnInfo.lowerThreshold,
+                                extendThreshold:this.alarmcolumnInfo.extendThreshold,
+                                envTypeId:this.alarmcolumnInfo.envTypeId,
+                                envDataSource:this.alarmcolumnInfo.envDataSource,
+                                description:this.alarmcolumnInfo.description
+                            }
+
+                            if(this.alarmcolumnInfo.relatedDeviceIds && this.alarmcolumnInfo.relatedDeviceIds.length > 0){
+                                newInfo.relatedDeviceIds = this.alarmcolumnInfo.relatedDeviceIds
+                            }
+                            if(this.alarmcolumnInfo.relatedManagerIds && this.alarmcolumnInfo.relatedManagerIds.length > 0){
+                                 newInfo.relatedManagerIds = this.alarmcolumnInfo.relatedManagerIds
+                            }
+                            if(this.alarmcolumnInfo.relatedVehicleIds && this.alarmcolumnInfo.relatedVehicleIds.length > 0){
+                                newInfo.relatedVehicleIds =this.alarmcolumnInfo.relatedVehicleIds
+                            }
+                            if(this.alarmcolumnInfo.relatedScheduleIds && this.alarmcolumnInfo.relatedScheduleIds.length > 0){
+                                newInfo.relatedScheduleIds = this.alarmcolumnInfo.relatedScheduleIds
+                            }
+
                             objArray.push(newInfo)
                             this.$emit('saveEditInfo',objArray)
                         } else { //新增
+                            newInfo = this.alarmcolumnInfo;
+                            newInfo.isEnabled =true;//默认启用
                             this.$emit('saveInfo',newInfo)
                         }
                     }
-                }else if(this.route.includes('firefighting')){
+                }
+                else if(this.route.includes('firefighting')){
                     if(this.isBatchEdit){   //批量编辑
                         console.log(this.choseInfos);
+                        objArray = this.choseInfos.map((item)=>{
+                            var obj = {
+                                id: item.id,
+                                name: item.name,
+                                alarmTypeId: item.alarmTypeId,
+                                severityId: item.severityId,
+                                isEnabled: item.isEnabled,
+                                isDeleted: item.isDeleted,
+                                deviceScope:item.deviceScope,
+                                securityScope:item.securityScope,
+                                upperThreshold:item.upperThreshold,
+                                lowerThreshold:item.lowerThreshold,
+                                extendThreshold:item.extendThreshold,
+                                envTypeId:item.envTypeId,
+                                envDataSource:item.envDataSource,
+                                description:item.description
+                            }
+                            if(item.relatedDeviceIds && item.relatedDeviceIds.length > 0){
+                                obj.relatedDeviceIds = item.relatedDeviceIds
+                            }
+                            if(item.relatedManagerIds && item.relatedManagerIds.length > 0){
+                                obj.relatedManagerIds = item.relatedManagerIds
+                            }
+                            if(item.relatedVehicleIds && item.relatedVehicleIds.length > 0){
+                                obj.relatedVehicleIds =item.relatedVehicleIds
+                            }
+                            if(item.relatedScheduleIds && item.relatedScheduleIds.length > 0){
+                                obj.relatedScheduleIds = item.relatedScheduleIds
+                            }
 
-                        objArray = this.choseInfos;
+                            return obj
+                        });
+
                         if(!this.batchEdit.level){
                             this.$message.error('请选择严重性等级')
                             return;
                         }
                         objArray.forEach((item,index)=>{
                             item.severityId = this.batchEdit.level;
-                            item.severityName = this.severityId2Name(item.severityId)
                         })
 
                         console.log(objArray)
@@ -768,51 +797,99 @@
 
                     }else{  //单个编辑或查看
                         console.log(this.firefightingInfo);
-                        newInfo = this.firefightingInfo;
-
-                        if(!newInfo.severityId){
+                        if(!this.firefightingInfo.severityId){
                             this.$message.error('请选择严重性等级！')
                             return;
                         }
-                        if(!newInfo.name ||newInfo.name == ""){
+                        if(!this.firefightingInfo.name ||this.firefightingInfo.name == ""){
                             this.$message.error('请输入名称！')
                             return;
                         }
-                        // if(!newInfo.deviceScope ||newInfo.deviceScope == ""){
-                        //     newInfo.deviceScope = '0';
-                        // }
-                        // if(!newInfo.securityScope ||newInfo.securityScope == ""){
-                        //     newInfo.securityScope = '0';
-                        // }
-                        if( (newInfo.deviceScope && !floatReg.test(newInfo.deviceScope)) || (newInfo.securityScope && !floatReg.test(newInfo.securityScope))){
+
+                        if( (this.firefightingInfo.deviceScope && !floatReg.test(this.firefightingInfo.deviceScope)) || (this.firefightingInfo.securityScope && !floatReg.test(this.firefightingInfo.securityScope))){
                             this.$message.error('调度范围必须为数字！')
                             return;
                         }
-                        newInfo.severityName = this.severityId2Name(newInfo.severityId)
-                        newInfo.relatedManagerIds = newInfo.relatedManagerIds.join(",")
-                        newInfo.isEnabled =true;//默认启用
-                        //获取规则类型
-                        console.log(this.alarmType)
-                        newInfo.alarmTypeId = this.getAlarmTypeId("消防")
-                        if (newInfo.id) {
+
+                        if (this.firefightingInfo.id) {  //编辑或查看
+                                newInfo = {
+                                    id: this.firefightingInfo.id,
+                                    name: this.firefightingInfo.name,
+                                    alarmTypeId: this.firefightingInfo.alarmTypeId,
+                                    severityId: this.firefightingInfo.severityId,
+                                    isEnabled: this.firefightingInfo.isEnabled,
+                                    isDeleted: this.firefightingInfo.isDeleted,
+                                    deviceScope:this.firefightingInfo.deviceScope,
+                                    securityScope:this.firefightingInfo.securityScope,
+                                    upperThreshold:this.firefightingInfo.upperThreshold,
+                                    lowerThreshold:this.firefightingInfo.lowerThreshold,
+                                    extendThreshold:this.firefightingInfo.extendThreshold,
+                                    envTypeId:this.firefightingInfo.envTypeId,
+                                    envDataSource:this.firefightingInfo.envDataSource,
+                                    description:this.firefightingInfo.description
+                                }
+
+                                if(this.firefightingInfo.relatedDeviceIds && this.firefightingInfo.relatedDeviceIds.length > 0){
+                                    newInfo.relatedDeviceIds = this.firefightingInfo.relatedDeviceIds
+                                }
+                                if(this.firefightingInfo.relatedManagerIds && this.firefightingInfo.relatedManagerIds.length > 0){
+                                    newInfo.relatedManagerIds = this.firefightingInfo.relatedManagerIds
+                                }
+                                if(this.firefightingInfo.relatedVehicleIds && this.firefightingInfo.relatedVehicleIds.length > 0){
+                                    newInfo.relatedVehicleIds =this.firefightingInfo.relatedVehicleIds
+                                }
+                                if(this.firefightingInfo.relatedScheduleIds && this.firefightingInfo.relatedScheduleIds.length > 0){
+                                    newInfo.relatedScheduleIds = this.firefightingInfo.relatedScheduleIds
+                                }
                             objArray.push(newInfo)
                             this.$emit('saveEditInfo',objArray)
                         } else {
+                            newInfo = this.firefightingInfo;
+                            newInfo.isEnabled =true;//默认启用
                             this.$emit('saveInfo',newInfo)
                         }
                     }
-                }else if(this.route.includes('crossborder')){
+                } else if(this.route.includes('crossborder')){
                     if(this.isBatchEdit){   //批量编辑
                         console.log(this.choseInfos);
+                        objArray = this.choseInfos.map((item)=>{
+                            var obj = {
+                                id: item.id,
+                                name: item.name,
+                                alarmTypeId: item.alarmTypeId,
+                                severityId: item.severityId,
+                                isEnabled: item.isEnabled,
+                                isDeleted: item.isDeleted,
+                                deviceScope:item.deviceScope,
+                                securityScope:item.securityScope,
+                                upperThreshold:item.upperThreshold,
+                                lowerThreshold:item.lowerThreshold,
+                                extendThreshold:item.extendThreshold,
+                                envTypeId:item.envTypeId,
+                                envDataSource:item.envDataSource,
+                                description:item.description
+                            }
+                            if(item.relatedDeviceIds && item.relatedDeviceIds.length > 0){
+                                obj.relatedDeviceIds = item.relatedDeviceIds
+                            }
+                            if(item.relatedManagerIds && item.relatedManagerIds.length > 0){
+                                obj.relatedManagerIds = item.relatedManagerIds
+                            }
+                            if(item.relatedVehicleIds && item.relatedVehicleIds.length > 0){
+                                obj.relatedVehicleIds =item.relatedVehicleIds
+                            }
+                            if(item.relatedScheduleIds && item.relatedScheduleIds.length > 0){
+                                obj.relatedScheduleIds = item.relatedScheduleIds
+                            }
 
-                        objArray = this.choseInfos;
+                            return obj
+                        });
                         if(!this.batchEdit.level){
                             this.$message.error('请选择严重性等级')
                             return;
                         }
                         objArray.forEach((item,index)=>{
                             item.severityId = this.batchEdit.level;
-                            item.severityName = this.severityId2Name(item.severityId)
                         })
 
                         console.log(objArray)
@@ -820,52 +897,99 @@
 
                     }else{  //单个编辑或查看
                         console.log(this.crossborderInfo);
-                        newInfo = this.crossborderInfo;
-
-                        if(!newInfo.severityId){
+                        if(!this.crossborderInfo.severityId){
                             this.$message.error('请选择严重性等级！')
                             return;
                         }
-                        if(!newInfo.name ||newInfo.name == ""){
+                        if(!this.crossborderInfo.name ||this.crossborderInfo.name == ""){
                             this.$message.error('请输入名称！')
                             return;
                         }
-                        // if(!newInfo.deviceScope ||newInfo.deviceScope == ""){
-                        //     newInfo.deviceScope = '0';
-                        // }
-                        // if(!newInfo.securityScope ||newInfo.securityScope == ""){
-                        //     newInfo.securityScope = '0';
-                        // }
-                        if((newInfo.deviceScope && !floatReg.test(newInfo.deviceScope)) || (newInfo.securityScope && !floatReg.test(newInfo.securityScope))){
+                        if((this.crossborderInfo.deviceScope && !floatReg.test(this.crossborderInfo.deviceScope)) || (this.crossborderInfo.securityScope && !floatReg.test(this.crossborderInfo.securityScope))){
                             this.$message.error('调度范围必须为数字！')
                             return;
                         }
 
-                        newInfo.severityName = this.severityId2Name(newInfo.severityId)
-                        newInfo.relatedManagerIds = newInfo.relatedManagerIds.join(",")
-                        newInfo.isEnabled =true;//默认启用
-                        //获取规则类型
-                        console.log(this.alarmType)
-                        newInfo.alarmTypeId = this.getAlarmTypeId("越界")
-                        if (newInfo.id) {
+                        if (this.crossborderInfo.id) {
+                            newInfo = {
+                                id: this.crossborderInfo.id,
+                                name: this.crossborderInfo.name,
+                                alarmTypeId: this.crossborderInfo.alarmTypeId,
+                                severityId: this.crossborderInfo.severityId,
+                                isEnabled: this.crossborderInfo.isEnabled,
+                                isDeleted: this.crossborderInfo.isDeleted,
+                                deviceScope:this.crossborderInfo.deviceScope,
+                                securityScope:this.crossborderInfo.securityScope,
+                                upperThreshold:this.crossborderInfo.upperThreshold,
+                                lowerThreshold:this.crossborderInfo.lowerThreshold,
+                                extendThreshold:this.crossborderInfo.extendThreshold,
+                                envTypeId:this.crossborderInfo.envTypeId,
+                                envDataSource:this.crossborderInfo.envDataSource,
+                                description:this.crossborderInfo.description
+                            }
+
+                            if(this.crossborderInfo.relatedDeviceIds && this.crossborderInfo.relatedDeviceIds.length > 0){
+                                newInfo.relatedDeviceIds = this.crossborderInfo.relatedDeviceIds
+                            }
+                            if(this.crossborderInfo.relatedManagerIds && this.crossborderInfo.relatedManagerIds.length > 0){
+                                newInfo.relatedManagerIds = this.crossborderInfo.relatedManagerIds
+                            }
+                            if(this.crossborderInfo.relatedVehicleIds && this.crossborderInfo.relatedVehicleIds.length > 0){
+                                newInfo.relatedVehicleIds =this.crossborderInfo.relatedVehicleIds
+                            }
+                            if(this.crossborderInfo.relatedScheduleIds && this.crossborderInfo.relatedScheduleIds.length > 0){
+                                newInfo.relatedScheduleIds = this.crossborderInfo.relatedScheduleIds
+                            }
                             objArray.push(newInfo)
                             this.$emit('saveEditInfo',objArray)
                         } else {
+                            newInfo = this.crossborderInfo;
+                            newInfo.isEnabled =true;//默认启用
                             this.$emit('saveInfo',newInfo)
                         }
                     }
-                }else if(this.route.includes('offtrack')){
+                }
+                else if(this.route.includes('offtrack')){
                     if(this.isBatchEdit){   //批量编辑
                         console.log(this.choseInfos);
+                        objArray = this.choseInfos.map((item)=>{
+                            var obj = {
+                                id: item.id,
+                                name: item.name,
+                                alarmTypeId: item.alarmTypeId,
+                                severityId: item.severityId,
+                                isEnabled: item.isEnabled,
+                                isDeleted: item.isDeleted,
+                                deviceScope:item.deviceScope,
+                                securityScope:item.securityScope,
+                                upperThreshold:item.upperThreshold,
+                                lowerThreshold:item.lowerThreshold,
+                                extendThreshold:item.extendThreshold,
+                                envTypeId:item.envTypeId,
+                                envDataSource:item.envDataSource,
+                                description:item.description
+                            }
+                            if(item.relatedDeviceIds && item.relatedDeviceIds.length > 0){
+                                obj.relatedDeviceIds = item.relatedDeviceIds
+                            }
+                            if(item.relatedManagerIds && item.relatedManagerIds.length > 0){
+                                obj.relatedManagerIds = item.relatedManagerIds
+                            }
+                            if(item.relatedVehicleIds && item.relatedVehicleIds.length > 0){
+                                obj.relatedVehicleIds =item.relatedVehicleIds
+                            }
+                            if(item.relatedScheduleIds && item.relatedScheduleIds.length > 0){
+                                obj.relatedScheduleIds = item.relatedScheduleIds
+                            }
 
-                        objArray = this.choseInfos;
+                            return obj
+                        });
                         if(!this.batchEdit.level){
                             this.$message.error('请选择严重性等级')
                             return;
                         }
                         objArray.forEach((item,index)=>{
                             item.severityId = this.batchEdit.level;
-                            item.severityName = this.severityId2Name(item.severityId)
                         })
 
                         console.log(objArray)
@@ -874,166 +998,303 @@
 
                     }else{  //单个编辑或查看
                         console.log(this.offtrackInfo);
-                        newInfo = this.offtrackInfo;
-
-                        if(!newInfo.severityId){
+                        if(!this.offtrackInfo.severityId){
                             this.$message.error('请选择严重性等级！')
                             return;
                         }
-                        if(!newInfo.name ||newInfo.name == ""){
+                        if(!this.offtrackInfo.name ||this.offtrackInfo.name == ""){
                             this.$message.error('请输入名称！')
                             return;
                         }
-                        // if(!newInfo.deviceScope ||newInfo.deviceScope == ""){
-                        //     newInfo.deviceScope = '0';
-                        // }
-                        // if(!newInfo.securityScope ||newInfo.securityScope == ""){
-                        //     newInfo.securityScope = '0';
-                        // }
-                        if(newInfo.extendThreshold && !floatReg.test(newInfo.extendThreshold)){
+                        if(this.offtrackInfo.extendThreshold && !floatReg.test(this.offtrackInfo.extendThreshold)){
                             this.$message.error('偏离时长必须为数字！')
                             return;
                         }
 
-                        if(newInfo.upperThreshold && !floatReg.test(newInfo.upperThreshold)){
+                        if(this.offtrackInfo.upperThreshold && !floatReg.test(this.offtrackInfo.upperThreshold)){
                             this.$message.error('偏离阈值必须为数字！')
                             return;
                         }
 
-                        newInfo.severityName = this.severityId2Name(newInfo.severityId)
-                        newInfo.relatedManagerIds = newInfo.relatedManagerIds.join(",")
-                        newInfo.isEnabled =true;//默认启用
-                        //获取规则类型
-                        console.log(this.alarmType)
-                        newInfo.alarmTypeId = this.getAlarmTypeId("偏离轨迹")
-                        if (newInfo.id) {
+                        if (this.offtrackInfo.id) {
+                            newInfo = {
+                                id: this.offtrackInfo.id,
+                                name: this.offtrackInfo.name,
+                                alarmTypeId: this.offtrackInfo.alarmTypeId,
+                                severityId: this.offtrackInfo.severityId,
+                                isEnabled: this.offtrackInfo.isEnabled,
+                                isDeleted: this.offtrackInfo.isDeleted,
+                                deviceScope:this.offtrackInfo.deviceScope,
+                                securityScope:this.offtrackInfo.securityScope,
+                                upperThreshold:this.offtrackInfo.upperThreshold,
+                                lowerThreshold:this.offtrackInfo.lowerThreshold,
+                                extendThreshold:this.offtrackInfo.extendThreshold,
+                                envTypeId:this.offtrackInfo.envTypeId,
+                                envDataSource:this.offtrackInfo.envDataSource,
+                                description:this.offtrackInfo.description
+                            }
+
+                            if(this.offtrackInfo.relatedDeviceIds && this.offtrackInfo.relatedDeviceIds.length > 0){
+                                newInfo.relatedDeviceIds = this.offtrackInfo.relatedDeviceIds
+                            }
+                            if(this.offtrackInfo.relatedManagerIds && this.offtrackInfo.relatedManagerIds.length > 0){
+                                newInfo.relatedManagerIds = this.offtrackInfo.relatedManagerIds
+                            }
+                            if(this.offtrackInfo.relatedVehicleIds && this.offtrackInfo.relatedVehicleIds.length > 0){
+                                newInfo.relatedVehicleIds =this.offtrackInfo.relatedVehicleIds
+                            }
+                            if(this.offtrackInfo.relatedScheduleIds && this.offtrackInfo.relatedScheduleIds.length > 0){
+                                newInfo.relatedScheduleIds = this.offtrackInfo.relatedScheduleIds
+                            }
                             objArray.push(newInfo)
                             this.$emit('saveEditInfo',objArray)
                         } else {
+                            newInfo = this.offtrackInfo;
+                            newInfo.isEnabled =true;//默认启用
                             this.$emit('saveInfo',newInfo)
                         }
                     }
-                }else if(this.route.includes('overlimit')){
+                }
+                else if(this.route.includes('overlimit')){
                     if(this.isBatchEdit){   //批量编辑
                         console.log(this.choseInfos);
+                        objArray = this.choseInfos.map((item)=>{
+                            var obj = {
+                                id: item.id,
+                                name: item.name,
+                                alarmTypeId: item.alarmTypeId,
+                                severityId: item.severityId,
+                                isEnabled: item.isEnabled,
+                                isDeleted: item.isDeleted,
+                                deviceScope:item.deviceScope,
+                                securityScope:item.securityScope,
+                                upperThreshold:item.upperThreshold,
+                                lowerThreshold:item.lowerThreshold,
+                                extendThreshold:item.extendThreshold,
+                                envTypeId:item.envTypeId,
+                                envDataSource:item.envDataSource,
+                                description:item.description
+                            }
+                            if(item.relatedDeviceIds && item.relatedDeviceIds.length > 0){
+                                obj.relatedDeviceIds = item.relatedDeviceIds
+                            }
+                            if(item.relatedManagerIds && item.relatedManagerIds.length > 0){
+                                obj.relatedManagerIds = item.relatedManagerIds
+                            }
+                            if(item.relatedVehicleIds && item.relatedVehicleIds.length > 0){
+                                obj.relatedVehicleIds =item.relatedVehicleIds
+                            }
+                            if(item.relatedScheduleIds && item.relatedScheduleIds.length > 0){
+                                obj.relatedScheduleIds = item.relatedScheduleIds
+                            }
+                            return obj
+                        });
 
-                        objArray = this.choseInfos;
                         if(!this.batchEdit.level){
                             this.$message.error('请选择严重性等级')
                             return;
                         }
+
                         objArray.forEach((item,index)=>{
                             item.severityId = this.batchEdit.level;
-                            item.severityName = this.severityId2Name(item.severityId)
                         })
-
-                        console.log(objArray)
-
                         this.$emit('saveEditInfo',objArray);
 
                     }else{  //单个编辑或查看
                         console.log(this.overlimitInfo);
-                        newInfo = this.overlimitInfo;
-
-                        if(!newInfo.severityId){
+                        if(!this.overlimitInfo.severityId){
                             this.$message.error('请选择严重性等级！')
                             return;
                         }
-                        if(!newInfo.name ||newInfo.name == ""){
+                        if(!this.overlimitInfo.name ||newInfo.name == ""){
                             this.$message.error('请输入名称！')
                             return;
                         }
-                        // if(!newInfo.deviceScope ||newInfo.deviceScope == ""){
-                        //     newInfo.deviceScope = '0';
-                        // }
-                        // if(!newInfo.securityScope ||newInfo.securityScope == ""){
-                        //     newInfo.securityScope = '0';
-                        // }
-                        if(newInfo.upperThreshold && !floatReg.test(newInfo.upperThreshold)){
+                        if(this.overlimitInfo.upperThreshold && !floatReg.test(this.overlimitInfo.upperThreshold)){
                             this.$message.error('客流阈值必须为数字！')
                             return;
                         }
 
-                        newInfo.severityName = this.severityId2Name(newInfo.severityId)
-                        newInfo.relatedManagerIdsIds = newInfo.relatedManagerIds.join(",")
-                        newInfo.relatedDeviceIds = newInfo.relatedDevices.join(",")
-                        newInfo.isEnabled =true;//默认启用
-                        //获取规则类型
-                        console.log(this.alarmType)
-                        newInfo.alarmTypeId = this.getAlarmTypeId("客流量超限")
-                        if (newInfo.id) {
+                        if (this.overlimitInfo.id) {
+                            newInfo = {
+                                id: this.overlimitInfo.id,
+                                name: this.overlimitInfo.name,
+                                alarmTypeId: this.overlimitInfo.alarmTypeId,
+                                severityId: this.overlimitInfo.severityId,
+                                isEnabled: this.overlimitInfo.isEnabled,
+                                isDeleted: this.overlimitInfo.isDeleted,
+                                deviceScope:this.overlimitInfo.deviceScope,
+                                securityScope:this.overlimitInfo.securityScope,
+                                upperThreshold:this.overlimitInfo.upperThreshold,
+                                lowerThreshold:this.overlimitInfo.lowerThreshold,
+                                extendThreshold:this.overlimitInfo.extendThreshold,
+                                envTypeId:this.overlimitInfo.envTypeId,
+                                envDataSource:this.overlimitInfo.envDataSource,
+                                description:this.overlimitInfo.description
+                            }
+
+                            if(this.overlimitInfo.relatedDeviceIds && this.overlimitInfo.relatedDeviceIds.length > 0){
+                                newInfo.relatedDeviceIds = this.overlimitInfo.relatedDeviceIds
+                            }
+                            if(this.overlimitInfo.relatedManagerIds && this.overlimitInfo.relatedManagerIds.length > 0){
+                                newInfo.relatedManagerIds = this.overlimitInfo.relatedManagerIds
+                            }
+                            if(this.overlimitInfo.relatedVehicleIds && this.overlimitInfo.relatedVehicleIds.length > 0){
+                                newInfo.relatedVehicleIds =this.overlimitInfo.relatedVehicleIds
+                            }
+                            if(this.overlimitInfo.relatedScheduleIds && this.overlimitInfo.relatedScheduleIds.length > 0){
+                                newInfo.relatedScheduleIds = this.overlimitInfo.relatedScheduleIds
+                            }
                             objArray.push(newInfo)
                             this.$emit('saveEditInfo',objArray)
                         } else {
+                            newInfo = this.overlimitInfo;
+                            newInfo.isEnabled =true;//默认启用
                             this.$emit('saveInfo',newInfo)
                         }
                     }
-                }else if(this.route.includes('waterlevel')){
+                }
+                else if(this.route.includes('waterlevel')){
                     if(this.isBatchEdit){   //批量编辑
-                        console.log(this.choseInfos);
-
-                        objArray = this.choseInfos;
+                        objArray = this.choseInfos.map((item)=>{
+                            var obj = {
+                                id: item.id,
+                                name: item.name,
+                                alarmTypeId: item.alarmTypeId,
+                                severityId: item.severityId,
+                                isEnabled: item.isEnabled,
+                                isDeleted: item.isDeleted,
+                                deviceScope:item.deviceScope,
+                                securityScope:item.securityScope,
+                                upperThreshold:item.upperThreshold,
+                                lowerThreshold:item.lowerThreshold,
+                                extendThreshold:item.extendThreshold,
+                                envTypeId:item.envTypeId,
+                                envDataSource:item.envDataSource,
+                                description:item.description
+                            }
+                            if(item.relatedDeviceIds && item.relatedDeviceIds.length > 0){
+                                obj.relatedDeviceIds = item.relatedDeviceIds
+                            }
+                            if(item.relatedManagerIds && item.relatedManagerIds.length > 0){
+                                obj.relatedManagerIds = item.relatedManagerIds
+                            }
+                            if(item.relatedVehicleIds && item.relatedVehicleIds.length > 0){
+                                obj.relatedVehicleIds =item.relatedVehicleIds
+                            }
+                            if(item.relatedScheduleIds && item.relatedScheduleIds.length > 0){
+                                obj.relatedScheduleIds = item.relatedScheduleIds
+                            }
+                            return obj
+                        });
                         if(!this.batchEdit.level){
                             this.$message.error('请选择严重性等级')
                             return;
                         }
                         objArray.forEach((item,index)=>{
                             item.severityId = this.batchEdit.level;
-                            item.severityName = this.severityId2Name(item.severityId)
                         })
-
-                        console.log(objArray)
 
                         this.$emit('saveEditInfo',objArray);
 
                     }else{  //单个编辑或查看
-                        console.log(this.waterlevelInfo);
-                        newInfo = this.waterlevelInfo;
-
-                        if(!newInfo.severityId){
+                        if(!this.waterlevelInfo.severityId){
                             this.$message.error('请选择严重性等级！')
                             return;
                         }
-                        if(!newInfo.name ||newInfo.name == ""){
+                        if(!this.waterlevelInfo.name ||newInfo.name == ""){
                             this.$message.error('请输入名称！')
                             return;
                         }
-
-                        if(newInfo.lowerThreshold && !floatReg.test(newInfo.lowerThreshold)){
+                        if(this.waterlevelInfo.lowerThreshold && !floatReg.test(this.waterlevelInfo.lowerThreshold)){
                             this.$message.error('水位下限必须为数字！')
                             return;
                         }
-
-                        if(newInfo.upperThreshold && !floatReg.test(newInfo.upperThreshold)){
+                        if(this.waterlevelInfo.upperThreshold && !floatReg.test(this.waterlevelInfo.upperThreshold)){
                             this.$message.error('水位上限必须为数字！')
                             return;
                         }
 
-                        newInfo.severityName = this.severityId2Name(newInfo.severityId)
-                        newInfo.relatedManagerIds = newInfo.relatedManagerIds.join(",")
-                        newInfo.isEnabled =true;//默认启用
-                        //获取规则类型
-                        console.log(this.alarmType)
-                        newInfo.alarmTypeId = this.getAlarmTypeId("水位")
-                        if (newInfo.id) {
+                        if (this.waterlevelInfo.id) {
+                            newInfo = {
+                                id: this.waterlevelInfo.id,
+                                name: this.waterlevelInfo.name,
+                                alarmTypeId: this.waterlevelInfo.alarmTypeId,
+                                severityId: this.waterlevelInfo.severityId,
+                                isEnabled: this.waterlevelInfo.isEnabled,
+                                isDeleted: this.waterlevelInfo.isDeleted,
+                                deviceScope:this.waterlevelInfo.deviceScope,
+                                securityScope:this.waterlevelInfo.securityScope,
+                                upperThreshold:this.waterlevelInfo.upperThreshold,
+                                lowerThreshold:this.waterlevelInfo.lowerThreshold,
+                                extendThreshold:this.waterlevelInfo.extendThreshold,
+                                envTypeId:this.waterlevelInfo.envTypeId,
+                                envDataSource:this.waterlevelInfo.envDataSource,
+                                description:this.waterlevelInfo.description
+                            }
+
+                            if(this.waterlevelInfo.relatedDeviceIds && this.waterlevelInfo.relatedDeviceIds.length > 0){
+                                newInfo.relatedDeviceIds = this.waterlevelInfo.relatedDeviceIds
+                            }
+                            if(this.waterlevelInfo.relatedManagerIds && this.waterlevelInfo.relatedManagerIds.length > 0){
+                                newInfo.relatedManagerIds = this.waterlevelInfo.relatedManagerIds
+                            }
+                            if(this.waterlevelInfo.relatedVehicleIds && this.waterlevelInfo.relatedVehicleIds.length > 0){
+                                newInfo.relatedVehicleIds =this.waterlevelInfo.relatedVehicleIds
+                            }
+                            if(this.waterlevelInfo.relatedScheduleIds && this.waterlevelInfo.relatedScheduleIds.length > 0){
+                                newInfo.relatedScheduleIds = this.waterlevelInfo.relatedScheduleIds
+                            }
                             objArray.push(newInfo)
                             this.$emit('saveEditInfo',objArray)
                         } else {
+                            newInfo = this.waterlevelInfo;
+                            newInfo.isEnabled =true;//默认启用
                             this.$emit('saveInfo',newInfo)
                         }
                     }
-                }else if(this.route.includes('condition')){
+                }
+                else if(this.route.includes('condition')){
                     if(this.isBatchEdit){   //批量编辑
                         console.log(this.choseInfos);
 
-                        objArray = this.choseInfos;
+                        objArray = this.choseInfos.map((item)=>{
+                            var obj = {
+                                id: item.id,
+                                name: item.name,
+                                alarmTypeId: item.alarmTypeId,
+                                severityId: item.severityId,
+                                isEnabled: item.isEnabled,
+                                isDeleted: item.isDeleted,
+                                deviceScope:item.deviceScope,
+                                securityScope:item.securityScope,
+                                upperThreshold:item.upperThreshold,
+                                lowerThreshold:item.lowerThreshold,
+                                extendThreshold:item.extendThreshold,
+                                envTypeId:item.envTypeId,
+                                envDataSource:item.envDataSource,
+                                description:item.description
+                            }
+                            if(item.relatedDeviceIds && item.relatedDeviceIds.length > 0){
+                                obj.relatedDeviceIds = item.relatedDeviceIds
+                            }
+                            if(item.relatedManagerIds && item.relatedManagerIds.length > 0){
+                                obj.relatedManagerIds = item.relatedManagerIds
+                            }
+                            if(item.relatedVehicleIds && item.relatedVehicleIds.length > 0){
+                                obj.relatedVehicleIds =item.relatedVehicleIds
+                            }
+                            if(item.relatedScheduleIds && item.relatedScheduleIds.length > 0){
+                                obj.relatedScheduleIds = item.relatedScheduleIds
+                            }
+                            return obj
+                        });
                         if(!this.batchEdit.level){
                             this.$message.error('请选择严重性等级')
                             return;
                         }
                         objArray.forEach((item,index)=>{
                             item.severityId = this.batchEdit.level;
-                            item.severityName = this.severityId2Name(item.severityId)
                         })
 
                         console.log(objArray)
@@ -1042,50 +1303,60 @@
 
                     }else{  //单个编辑或查看
                         console.log(this.conditionInfo);
-                        newInfo = this.conditionInfo;
-
-                        if(!newInfo.severityId){
+                        if(!this.conditionInfo.severityId){
                             this.$message.error('请选择严重性等级！')
                             return;
                         }
-                        if(!newInfo.name ||newInfo.name == ""){
+                        if(!this.conditionInfo.name ||this.conditionInfo.name == ""){
                             this.$message.error('请输入名称！')
                             return;
                         }
 
-                        if(newInfo.lowerThreshold && !floatReg.test(newInfo.lowerThreshold)){
+                        if(this.conditionInfo.lowerThreshold && !floatReg.test(this.conditionInfo.lowerThreshold)){
                             this.$message.error('阈值下限必须为数字！')
                             return;
                         }
 
-                        if(newInfo.upperThreshold && !floatReg.test(newInfo.upperThreshold)){
+                        if(this.conditionInfo.upperThreshold && !floatReg.test(this.conditionInfo.upperThreshold)){
                             this.$message.error('阈值上限必须为数字！')
                             return;
                         }
 
-
-                        newInfo.severityName = this.severityId2Name(newInfo.severityId)
-                        newInfo.relatedManagerIds = newInfo.relatedManagerIds.join(",")
-                        newInfo.isEnabled =true;//默认启用
-                        //获取规则类型
-                        console.log(this.alarmType)
-                        newInfo.alarmTypeId = this.getAlarmTypeId("环境")
-                        this.envType.forEach((item)=>{
-                            if(newInfo.envTypeId == item.id){
-                                newInfo.envTypeName = item.name;
+                        if (this.conditionInfo.id) {
+                            newInfo = {
+                                id: this.conditionInfo.id,
+                                name: this.conditionInfo.name,
+                                alarmTypeId: this.conditionInfo.alarmTypeId,
+                                severityId: this.conditionInfo.severityId,
+                                isEnabled: this.conditionInfo.isEnabled,
+                                isDeleted: this.conditionInfo.isDeleted,
+                                deviceScope:this.conditionInfo.deviceScope,
+                                securityScope:this.conditionInfo.securityScope,
+                                upperThreshold:this.conditionInfo.upperThreshold,
+                                lowerThreshold:this.conditionInfo.lowerThreshold,
+                                extendThreshold:this.conditionInfo.extendThreshold,
+                                envTypeId:this.conditionInfo.envTypeId,
+                                envDataSource:this.conditionInfo.envDataSource,
+                                description:this.conditionInfo.description
                             }
-                        })
 
-                        this.source.forEach((item)=>{
-                            if(newInfo.envDataSource == item.id){
-                                newInfo.envDataSourceName = item.name;
+                            if(this.conditionInfo.relatedDeviceIds && this.conditionInfo.relatedDeviceIds.length > 0 && this.conditionInfo.envDataSource == 1){
+                                newInfo.relatedDeviceIds = this.conditionInfo.relatedDeviceIds
                             }
-                        })
-
-                        if (newInfo.id) {
+                            if(this.conditionInfo.relatedManagerIds && this.conditionInfo.relatedManagerIds.length > 0){
+                                newInfo.relatedManagerIds = this.conditionInfo.relatedManagerIds
+                            }
+                            if(this.conditionInfo.relatedVehicleIds && this.conditionInfo.relatedVehicleIds.length > 0){
+                                newInfo.relatedVehicleIds =this.conditionInfo.relatedVehicleIds
+                            }
+                            if(this.conditionInfo.relatedScheduleIds && this.conditionInfo.relatedScheduleIds.length > 0){
+                                newInfo.relatedScheduleIds = this.conditionInfo.relatedScheduleIds
+                            }
                             objArray.push(newInfo)
                             this.$emit('saveEditInfo',objArray)
                         } else {
+                            newInfo = this.conditionInfo;
+                            newInfo.isEnabled =true;//默认启用
                             this.$emit('saveInfo',newInfo)
                         }
                     }
@@ -1186,6 +1457,18 @@
                 })
                 return cameraInfo;
             },
+
+            async getMonitorDevice(){
+                let conditionInfo = {};
+                await api.monitor.getAllMonitor().then(res => {
+                    console.log(res, '请求成功')
+                    conditionInfo.label = "环境";
+                    conditionInfo.options = res.devices;
+                }).catch(err => {
+                    console.log(err, '请求失败')
+                })
+                return conditionInfo;
+            },
             async getOverlimitDevice(){
                 let r1 = await this.getCameraDevice();
                 let r2 = await this.getGateDevice();
@@ -1194,25 +1477,33 @@
                 this.overlimitDeviceInfo.push(r2)
 
             },
+            async getWaterlevelDevice(){
+                let r1 = await this.getMonitorDevice();
+                this.waterlevelDeviceInfo.push(r1);
+            },
+            async getConditionDevice(){
+                let r1 = await this.getMonitorDevice();
+                this.conditionDeviceInfo.push(r1);
+            },
             async getAlarmType(){
-                await api.alarm.getAlarmType().then(res => {
+                await api.alarm.getAllAlarmTypes().then(res => {
                     console.log(res, '请求成功')
                     this.alarmType = res;
                 }).catch(err => {
                     console.log(err, '请求失败')
                 })
             },
-            async getAlarmRuleById(id){
-                let result = {}
-                await api.alarm.getAllAlarmRule(id).then(res => {
-                    console.log(res, '请求成功')
-                    result = res;
-                }).catch(err => {
-                    console.log(err, '请求失败')
-                })
-                console.log(result)
-                return result;
-            },
+            // async getAlarmRuleById(id){
+            //     let result = {}
+            //     await api.alarm.getAllAlarmRule(id).then(res => {
+            //         console.log(res, '请求成功')
+            //         result = res;
+            //     }).catch(err => {
+            //         console.log(err, '请求失败')
+            //     })
+            //     console.log(result)
+            //     return result;
+            // },
             initData(){
                 //人员
                 this.getPersonInfo();
@@ -1223,8 +1514,16 @@
                 this.getSchedules();
                 // 关联设备（闸机，摄像头）  --客流量
                 this.getOverlimitDevice();
-
+                // 关联设备（环境传感器）  --水位
+                this.getWaterlevelDevice();
+                // 关联设备（环境传感器）  --环境
+                this.getConditionDevice();
+                //获取严重性等级
+                this.getSeverityType();
+                //获取告警规则类型
                 this.getAlarmType();
+                //获取指标类型  --环境
+                this.getEnvType();
             },
             initEventDialog(){
                 this.isReadonly = true;
@@ -1234,8 +1533,10 @@
                     id:'1',
                     name:'sos报警规则01',
                     relatedDevices:[],
-                    severityId:'1',
-                    severityName:'高',
+                    alarmSeverity:{
+                        id:"1",
+                        name:'高'
+                    },
                     deviceScope:'100米',
                     securityScope:'200米',
                     relatedManagerIds:'0',

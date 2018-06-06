@@ -1,7 +1,7 @@
 <template>
     <div class="personType">
         <div class="title">
-            职业
+            人员类型
         </div>
         <div class="personContent">
             <div class="funcTitle" v-if="false">
@@ -31,19 +31,20 @@
 
                         <el-table-column
                             prop="name"
-                            label="职业"
-                            width="960">
+                            label="人员类型名称">
                         </el-table-column>
 
-                        <el-table-column>
-                            <!--label="操作">-->
-                            <!--<template slot-scope="scope">-->
-                                <!--<span @click="fixedInfo(scope.row.id )">编辑</span>-->
-                                <!--<span class="line">|</span>-->
-                                <!--<span @click="showPersonDetail(scope.row, '人员信息')">查看</span>-->
-                                <!--<span class="line">|</span>-->
-                                <!--<span @click="deletInfo(scope.row.id)">删除</span>-->
-                            <!--</template>-->
+                        <el-table-column
+                            label="是否启用"
+                            width="200">
+                            <template slot-scope="scope">
+                                <el-switch
+                                    v-model="scope.row.enable"
+                                    active-text="启用"
+                                    inactive-text="停用"
+                                    @change="startStopState(scope.row.id,scope.row.enable)">
+                                </el-switch>
+                            </template>
                         </el-table-column>
                     </el-table>
                 </ScrollContainer>
@@ -86,6 +87,56 @@
         },
         methods: {
             ...mapMutations(['JOB_TYPE','DEL_JOB_TYPR']),
+            startStopState (id,state) {
+                console.log(state)
+                let message
+                if (state) {
+                    message = '此操作将开启使用该人员类型, 是否继续?'
+                } else {
+                    message = '此操作将停止使用该人员类型, 是否继续?'
+                }
+                this.$confirm(message, '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    this.jobList = this.jobList.filter(item => {
+                        if (item.id === id) {
+                            item.enable = item.enable
+                            let obj = {
+                                name: item.name,
+                                id: item.id,
+                                enable: item.enable
+                            }
+                            api.lib.updateJobType(JSON.stringify(obj)).then(res => {
+                                console.log(res, '请求成功')
+                                if(state) {
+                                    this.$message.success('开启使用成功')
+                                } else{
+                                    this.$message.success('停止使用成功')
+                                }
+                            }).catch(err => {
+                                console.log(err, '请求失败')
+                                if(state) {
+                                    this.$message.error('取消开启')
+                                } else{
+                                    this.$message.error('取消禁用')
+                                }
+                            })
+                        }
+                        return item
+                    })
+                }).catch(err => {
+                    this.jobList  = this.jobList.filter(item => {
+                        if (item.id === id) {
+                            item.enable = !item.enable
+                        }
+                        return item
+                    })
+                    this.$message.info('取消')
+                })
+
+            },
             handleSelectionChange(val) {
                 this.multipleSelection = val;
             },
