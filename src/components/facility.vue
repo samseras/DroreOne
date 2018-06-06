@@ -33,7 +33,7 @@
                   {names:'ROAD',route:'/facility/road',img:'../../../static/img/roat.svg',desc:"路网",controlShow:true},
                   {names:'PARKING',route:'/facility/park',img:'../../../static/img/park.svg',desc:"停车场",controlShow:false},
                   {names:'TOILET',route:'/facility/toilet',img:'../../../static/img/toilet.svg',desc:"卫生间",controlShow:false},
-                  {names:'BUSINESS',route:'/facility/shop',img:'../../../static/img/shop.svg',desc:"商铺",controlShow:false},
+                  {names:'BUSINESS',route:'/facility/shop',img:'../../../static/img/shop.svg',desc:"商圈",controlShow:false},
                   {names:'BUILDING',route:'/facility/build',img:'../../../static/img/build.svg',desc:"建筑",controlShow:false},
                   {names:'SCENICSPOT',route:'/facility/scenic',img:'../../../static/img/scenic.svg',desc:"景点",controlShow:false},
                   {names:'DUSTBIN',route:'/facility/trash',img:'../../../static/img/trash.svg',desc:"垃圾桶",controlShow:false},
