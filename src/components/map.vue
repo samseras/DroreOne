@@ -1770,7 +1770,7 @@
                         }
                         this.controler();//之前打的点
                     }else if(route.includes('facility')){
-                        // droreMap.icon.IconStyleById(icon.id,false);
+                        droreMap.icon.IconStyleById(icon.id,false);
                         let that = this;
                         icon.onclick(function (e) {
                             that.menulist = e.data;
