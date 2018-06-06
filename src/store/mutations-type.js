@@ -49,3 +49,6 @@ export const COMPANY_DATA_NAME = 'COMPANY_DATA_NAME'
 //  数据基础信息列表
  export const SET_FACILITY_TYPE = 'SET_FACILITY_TYPE'
  export const SET_DEVICE_TYPE = 'SET_DEVICE_TYPE'
+
+//iot
+export const CURPAGE = 'CURPAGE'  //测试

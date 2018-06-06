@@ -130,10 +130,6 @@ define(function(require, exports, module) {
 
                 vectorSource.addFeature(new ol.Feature(circle));
 
-                var vectorLayer = new ol.layer.Vector({
-                    source: vectorSource,
-                    style: styleFunction
-                });
                 var map = new ol.Map({
                     interactions: ol.interaction.defaults({
                         doubleClickZoom: false,
@@ -156,7 +152,10 @@ define(function(require, exports, module) {
                                 tileGrid: (new ol.source.OSM()).getTileGrid()
                             })
                         }),
-                        vectorLayer
+                        new ol.layer.Vector({
+                            source: vectorSource,
+                            style: styleFunction
+                        })
                         /*new ol.layer.Tile({
 						title: "卫星图带文字",
 						source: new ol.source.XYZ({

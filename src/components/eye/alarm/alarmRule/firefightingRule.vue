@@ -9,7 +9,9 @@
                         @selectedAll = 'selectedAll'
                         @batchEdit = 'batchEdit'
                         @addNewInfo="addNewInfo"
-                        @batchEnabled="batchEnabled">
+                        @batchEnabled="batchEnabled"
+                        :choseId="choseInfoId"
+                        :listsLength = "listLength">
                 </Header>
             </div>
             <div class="personList" v-loading="isShowloading">
@@ -98,7 +100,8 @@
                 title:'',
                 selection:[],
                 isShowloading: false,
-                isBatchEdit:false
+                isBatchEdit:false,
+                listLength:''
 
             }
         },
@@ -393,6 +396,7 @@
                     console.log(res, '请求成功')
                     this.isShowLoading = false
                     this.firefightingList = res
+                    this.listLength = this.firefightingList.length
                     this.firefightingList.forEach(item => {
                         item.checked = false;
                         if(item.relatedDevices.length > 0){
