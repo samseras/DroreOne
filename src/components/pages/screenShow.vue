@@ -1,68 +1,69 @@
 <template>
-    <div class="screenShow" :style="{background: 'url('+backgroundImg+')'}" v-loading="isShowloading">
-        <el-container>
-            <el-header :style="{marginTop: headTop+'px'}" >
-                <el-row :gutter="10" :style="{background:headBgColor}">
-                    <el-col :xs="7" :sm="7" :md="6" :lg="7" :xl="7">
-                        <img :src="headLeft" alt="" class="screenLeft" v-if="isShowOtherImg">
-                        <div :style="{color:fontColor,lineHeight:headLineH+'px'}">{{companyName}}</div>
-                    </el-col>
-                    <el-col :xs="9" :sm="7" :md="6" :lg="9" :xl="9">
-                        <div class="screenTile" @click="requestFullScreen" ref="screenTile">
-                            <img :src="headImg" alt="" v-if="isShowHead">
-                            <p :style="{color:fontColor,lineHeight:headLineH+'px'}">{{dashboradName}}</p>
-                        </div>
-                    </el-col>
-                    <el-col :xs="4" :sm="7" :md="6" :lg="4" :xl="4">
-                        <img :src="headRight" alt="" class="screenRight" v-if="isShowOtherImg">
-                        <div :style="{color:fontColor,lineHeight:headLineH+'px'}">{{currentTime | dayFiler}}({{currentTime | weekFiler}})  {{currentTime | timeFiler}}</div>
-                    </el-col>
-                    <el-col :xs="4" :sm="7" :md="6" :lg="4" :xl="4" :style="{marginTop: homeMarginT+'px'}">
-                            <p class="getBack" onclick='javascript:history.back(-1)'><img :src="homeImg" alt="" ></p>
-                            <div class="skinPeeler " >
-                                <el-menu  class="el-menu-demo" mode="horizontal" router>
-                                    <el-submenu index="">
-                                        <template slot="title">
-                                            <!--<span class="Admin"  :style="{color:fontColor}"></span>-->
-                                            <img :src="settingImg" alt="">
-                                        </template>
-                                        <el-menu-item index="" @click="changeType(0)">皮肤一</el-menu-item>
-                                        <el-menu-item index="" @click="changeType(1)">皮肤二</el-menu-item>
-                                        <el-menu-item index="" @click="changeType(2)">皮肤三</el-menu-item>
-                                    </el-submenu>
-                                </el-menu>
-                            </div>
-                    </el-col>
-                </el-row>
-            </el-header>
-            <el-main>
-                <div class = "contentForm" ref="content" >
-                    <div class = "echatsForm" v-for = "(item,index) in echartsContent" :style = "{width:item.pos_width+'%',height:item.pos_height+'%',left:item.pos_left+'%',top:item.pos_top+'%',border:borderColor,backgroundColor:bgCorol}"
-                         v-dragging = "{ item: item, list: echartsContent, group: 'item' }"
-                         :key="item.title"
-                         :id="item.id"
-                         :scenario_id = "item.scenario_id" >
-                        <img :src="leftT" class="leftT">
-                        <img :src="rightT" class="rightT">
-                        <img :src="leftB" class="leftB">
-                        <img :src="rightB" class="rightB">
-                        <img :src="twobgImg" alt="" class="echartsBg">
-                        <div class="decorate"  v-if="isShowOtherImg">
-                            <img :src="decorateImg" alt="">
-                            <span class="bootmBorder"></span>
-                            <span></span>
-                        </div>
-                        <div class = "echatsTitle">
-                            <p class = "title" :style="{color:fontColor,textIndent:textIndents+'px',borderBottom:borderLine}"></p>
-                        </div>
-                        <div class="echatsContent" :id="item.scenario_id" ref="chartHeight">
+        <div class="screenShow" v-bind:style="{background: 'url('+backgroundImg+')'}" v-loading="isShowloading">
+            <el-container>
+                <el-header v-bind:style="{marginTop: headTop+'px'}" >
+                    <el-row :gutter="10" v-bind:style="{background:headBgColor}">
+                        <el-col :xs="7" :sm="7" :md="6" :lg="7" :xl="7">
+                            <img v-bind:src="headLeft" alt="" class="screenLeft" v-if="isShowOtherImg">
+                            <div v-bind:style="{color:fontColor,lineHeight:headLineH+'px',position:'relative'}">{{companyName}}</div>
+                        </el-col>
+                        <el-col :xs="9" :sm="7" :md="6" :lg="9" :xl="9">
+                            <div class="screenTile" @click="requestFullScreen" ref="screenTile">
+                                <img v-bind:src="headImg" alt="" v-if="isShowHead">
+                                <p v-bind:style="{color:fontColor,lineHeight:headLineH+'px',position:'relative'}">{{dashboradName}}</p>
 
+                            </div>
+                        </el-col>
+                        <el-col :xs="4" :sm="7" :md="6" :lg="4" :xl="4">
+                            <img v-bind:src="headRight" alt="" class="screenRight" v-if="isShowOtherImg">
+                            <div v-bind:style="{color:fontColor,lineHeight:headLineH+'px',position:'relative'}">{{currentTime | dayFiler}}({{currentTime | weekFiler}})  {{currentTime | timeFiler}}</div>
+                        </el-col>
+                        <el-col :xs="4" :sm="7" :md="6" :lg="4" :xl="4" :style="{marginTop: homeMarginT+'px'}">
+                                <p class="getBack" onclick='javascript:history.back(-1)'><img v-bind:src="homeImg" alt="" ></p>
+                                <div class="skinPeeler " >
+                                    <el-menu  class="el-menu-demo" mode="horizontal" router>
+                                        <el-submenu index="">
+                                            <template slot="title">
+                                                <!--<span class="Admin"  :style="{color:fontColor}"></span>-->
+                                                <img v-bind:src="settingImg" alt="">
+                                            </template>
+                                            <el-menu-item index="" @click="changeType(0)">皮肤一</el-menu-item>
+                                            <el-menu-item index="" @click="changeType(1)">皮肤二</el-menu-item>
+                                            <el-menu-item index="" @click="changeType(2)">皮肤三</el-menu-item>
+                                        </el-submenu>
+                                    </el-menu>
+                                </div>
+                        </el-col>
+                    </el-row>
+                </el-header>
+                <el-main>
+                    <div class = "contentForm" ref="content" >
+                        <div class = "echatsForm" v-for = "(item,index) in echartsContent" :style = "{width:item.pos_width+'%',height:item.pos_height+'%',left:item.pos_left+'%',top:item.pos_top+'%',border:borderColor,backgroundColor:bgCorol}"
+                             v-dragging = "{ item: item, list: echartsContent, group: 'item' }"
+                             :key="item.title"
+                             :id="item.id"
+                             :scenario_id = "item.scenario_id" >
+                            <img v-bind:src="leftT" class="leftT">
+                            <img v-bind:src="rightT" class="rightT">
+                            <img v-bind:src="leftB" class="leftB">
+                            <img v-bind:src="rightB" class="rightB">
+                            <img v-bind:src="twobgImg" alt="" class="echartsBg">
+                            <div class="decorate"  v-if="isShowOtherImg">
+                                <img v-bind:src="decorateImg" alt="">
+                                <span class="bootmBorder"></span>
+                                <span></span>
+                            </div>
+                            <div class = "echatsTitle">
+                                <p class = "title" v-bind:style="{color:fontColor,textIndent:textIndents+'px',borderBottom:borderLine}"></p>
+                            </div>
+                            <div class="echatsContent" :id="item.scenario_id" ref="chartHeight">
+
+                            </div>
                         </div>
                     </div>
-                </div>
-            </el-main>
-        </el-container>
-    </div>
+                </el-main>
+            </el-container>
+        </div>
 </template>
 
 <script>
