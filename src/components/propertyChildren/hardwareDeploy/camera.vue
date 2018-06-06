@@ -120,10 +120,10 @@
                         params.type = '1';
                         console.log(form, 'opopopopoppopop')
                         api.importfile.importFileData(params).then(res => {
-                            if(res){
+                            if(Object.keys(res).length > 0){
                                 let messages = '';
                                 for(let i in res){
-                                    messages += "第"+i+"行错误: "+data[i]+"<br>";
+                                    messages += "第"+i+"行错误: "+res[i]+"<br>";
                                 }
                                 this.$alert(messages, '导入提示', {
                                     confirmButtonText: '确定',
@@ -132,7 +132,6 @@
                                         this.$message.success('导入成功');
                                     }
                                 });
-
                             }else{
                                 this.$message.success('导入成功');
                             }
@@ -147,28 +146,74 @@
                         params.type = '2';
                         api.importfile.importFileData(params).then(res => {
                             this.$message.success('导入成功');
+                            if(Object.keys(res).length > 0){
+                                let messages = '';
+                                for(let i in res){
+                                    messages += "第"+i+"行错误: "+res[i]+"<br>";
+                                }
+                                this.$alert(messages, '导入提示', {
+                                    confirmButtonText: '确定',
+                                    dangerouslyUseHTMLString:true,
+                                    callback: action => {
+                                        this.$message.success('导入成功');
+                                    }
+                                });
+
+                            }else{
+                                this.$message.success('导入成功');
+                            }
                             this.$emit("getAllCamera");
                         }).catch(err => {
                             this.$message.error('导入失败，请稍后重试')
                             console.log(err, '导入失败')
                         })
-
                     }else if(this.$route.path.includes("monitors")){
                         params.fileParam = form;
                         params.type = '6';
                         api.importfile.importFileData(params).then(res => {
                             this.$message.success('导入成功');
+                            if(Object.keys(res).length > 0){
+                                let messages = '';
+                                for(let i in res){
+                                    messages += "第"+i+"行错误: "+res[i]+"<br>";
+                                }
+                                this.$alert(messages, '导入提示', {
+                                    confirmButtonText: '确定',
+                                    dangerouslyUseHTMLString:true,
+                                    callback: action => {
+                                        this.$message.success('导入成功');
+                                    }
+                                });
+
+                            }else{
+                                this.$message.success('导入成功');
+                            }
                             this.$emit("getAllMonitor");
                         }).catch(err => {
                             this.$message.error('导入失败，请稍后重试')
                             console.log(err, '导入失败')
                         })
-
                     }else if(this.$route.path.includes("police")){
                         params.fileParam = form;
                         params.type = '8';
                         api.importfile.importFileData(params).then(res => {
                             this.$message.success('导入成功');
+                            if(Object.keys(res).length > 0){
+                                let messages = '';
+                                for(let i in res){
+                                    messages += "第"+i+"行错误: "+res[i]+"<br>";
+                                }
+                                this.$alert(messages, '导入提示', {
+                                    confirmButtonText: '确定',
+                                    dangerouslyUseHTMLString:true,
+                                    callback: action => {
+                                        this.$message.success('导入成功');
+                                    }
+                                });
+
+                            }else{
+                                this.$message.success('导入成功');
+                            }
                             this.$emit("getAllPolice");
                         }).catch(err => {
                             this.$message.error('导入失败，请稍后重试')
@@ -180,6 +225,22 @@
                         params.type = '4';
                         api.importfile.importFileData(params).then(res => {
                             this.$message.success('导入成功');
+                            if(Object.keys(res).length > 0){
+                                let messages = '';
+                                for(let i in res){
+                                    messages += "第"+i+"行错误: "+res[i]+"<br>";
+                                }
+                                this.$alert(messages, '导入提示', {
+                                    confirmButtonText: '确定',
+                                    dangerouslyUseHTMLString:true,
+                                    callback: action => {
+                                        this.$message.success('导入成功');
+                                    }
+                                });
+
+                            }else{
+                                this.$message.success('导入成功');
+                            }
                             this.$emit("getAllLed");
                         }).catch(err => {
                             this.$message.error('导入失败，请稍后重试')
@@ -192,6 +253,22 @@
                         console.log(form, 'opopopopoppopop')
                         api.importfile.importFileData(params).then(res => {
                             this.$message.success('导入成功');
+                            if(Object.keys(res).length > 0){
+                                let messages = '';
+                                for(let i in res){
+                                    messages += "第"+i+"行错误: "+res[i]+"<br>";
+                                }
+                                this.$alert(messages, '导入提示', {
+                                    confirmButtonText: '确定',
+                                    dangerouslyUseHTMLString:true,
+                                    callback: action => {
+                                        this.$message.success('导入成功');
+                                    }
+                                });
+
+                            }else{
+                                this.$message.success('导入成功');
+                            }
                             this.$emit("getAllWifi");
                         }).catch(err => {
                             this.$message.error('导入失败，请稍后重试')
@@ -203,6 +280,22 @@
                         params.type = '3';
                         api.importfile.importFileData(params).then(res => {
                             this.$message.success('导入成功');
+                            if(Object.keys(res).length > 0){
+                                let messages = '';
+                                for(let i in res){
+                                    messages += "第"+i+"行错误: "+res[i]+"<br>";
+                                }
+                                this.$alert(messages, '导入提示', {
+                                    confirmButtonText: '确定',
+                                    dangerouslyUseHTMLString:true,
+                                    callback: action => {
+                                        this.$message.success('导入成功');
+                                    }
+                                });
+
+                            }else{
+                                this.$message.success('导入成功');
+                            }
                             this.$emit("getAllGate");
                         }).catch(err => {
                             this.$message.error('导入失败，请稍后重试')
@@ -214,6 +307,22 @@
                         params.type = '5';
                         api.importfile.importFileData(params).then(res => {
                             this.$message.success('导入成功');
+                            if(Object.keys(res).length > 0){
+                                let messages = '';
+                                for(let i in res){
+                                    messages += "第"+i+"行错误: "+res[i]+"<br>";
+                                }
+                                this.$alert(messages, '导入提示', {
+                                    confirmButtonText: '确定',
+                                    dangerouslyUseHTMLString:true,
+                                    callback: action => {
+                                        this.$message.success('导入成功');
+                                    }
+                                });
+
+                            }else{
+                                this.$message.success('导入成功');
+                            }
                             this.$emit("getAllLight");
                         }).catch(err => {
                             this.$message.error('导入失败，请稍后重试')

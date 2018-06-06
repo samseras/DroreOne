@@ -72,6 +72,7 @@
                 title:'',
                 isDisabled: true,
                 lightCheckout:[],
+                searchFacilityList:[],
             }
         },
         created () {
@@ -80,6 +81,7 @@
         mounted() {
             this.requestGisMain();//加载地图
             droreMap.object.getMap().getLayers().getArray()[1].setVisible(false)
+            droreMap.status.limitExtent = true
             let route = this.$route.path
             if (route.includes('facility')) {
                 droreMap.interaction.enableMapClick = true
@@ -1768,7 +1770,7 @@
                         }
                         this.controler();//之前打的点
                     }else if(route.includes('facility')){
-                        droreMap.icon.IconStyleById(icon.id,false);
+                        // droreMap.icon.IconStyleById(icon.id,false);
                         let that = this;
                         icon.onclick(function (e) {
                             that.menulist = e.data;
@@ -1852,6 +1854,9 @@
             treeHide(data){
                 droreMap.icon.IconStyleById(data.id,false);
                 this.menuDelete();
+            },
+            treeHideID(data){
+                droreMap.icon.IconStyleById(data,false);
             },
             roadShow(data){
                 droreMap.road.removeStyleById(data.id,true)
@@ -1942,7 +1947,9 @@
             async rangeSearch(){
                 let that =this
                 droreMap.event.addMouseEvent(Event.DOUBLECLICK_EVENT, "single", function(evt){
-
+                    $("#contextmenu_container").hide();
+                    droreMap.map.panToCoord(evt.coordinate);
+                    droreMap.map.setZoom(16)
                     let Circle = new droreMap.geom.Circle()
                     let radius=100
                     let coordinate=droreMap.trans.transLayerToWgs(evt.coordinate)
@@ -1958,18 +1965,18 @@
                         epsg:'4326',
                         types:types
                     }
-                    // that.getAllBroadcast();//广播现有标注
-                    // that.getAllCamera();//摄像头现有标注
-                    console.log(SearchFacility);
                     that.getSearchFacility(SearchFacility)
                     Circle.setCenter(evt.coordinate,radius);
                 })
             },
             async getSearchFacility (SearchFacility) {//点击范围搜索
                 await api.controler.getSearchFacility(JSON.stringify(SearchFacility)).then(res => {
-                    console.log(res)
+                    if(this.searchFacilityList.length>0){
+                        for (let i=0;i< this.searchFacilityList.length;i++) {
+                            this.treeHideID(this.searchFacilityList[i].id);
+                        }
+                    }
                     this.searchFacilityList= res[7]
-                    console.log(this.searchFacilityList)
                     for (let i=0;i< this.searchFacilityList.length;i++) {
                         this.treeShowID(this.searchFacilityList[i].id);
                     }

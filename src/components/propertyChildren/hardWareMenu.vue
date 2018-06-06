@@ -11,13 +11,13 @@
                             <template slot="title">
                                 <img :src="item.icon" alt="">{{ item.title }}
                             </template>
-                            <el-menu-item v-for="(subItem,i) in item.subs" :key="i" :index="subItem.index">
+                            <el-menu-item v-for="(subItem,i) in item.subs" :key="i" :index="subItem.index" v-if="subItem.enable">
                                 <img :src="subItem.icon" alt="">
                                 {{ subItem.title }}
                             </el-menu-item>
                         </el-submenu>
                     </template>
-                    <template v-else>
+                    <template v-if="!item.subs && getUserRole === 'ADMIN'">
                         <el-menu-item :index="item.index">
                             <img :src="item.icon" alt="">{{ item.title }}
                         </el-menu-item>
@@ -36,6 +36,8 @@
 
 <script>
     import ScrollContainer from '@/components/ScrollContainer'
+    import { mapGetters, mapActions} from 'vuex'
+    import _ from 'lodash'
     export default {
         name: "hard-ware-menu",
         data () {
@@ -43,110 +45,148 @@
                 items: [
                     {
                         icon: './../../../static/img/hardwareType.svg',
+                        index: '/hard-property/deviceType' ,
+                        title: '设备类型',
+                    },
+                    {
+                        icon: './../../../static/img/hardwareType.svg',
                         index:'1' ,
                         title: '设备型号',
-                         subs: [
-                             {
-                                 icon:'./../../../static/img/camera.svg',
-                                index: '/hard-property/cameraType',
-                                 title: '摄像头'
-                             },
-                             {
-                                 icon:'./../../../static/img/wifi.svg',
-                                 index: '/hard-property/wifitype',
-                                 title: 'WIFI'
-                             },
-                             {
-                                 icon:'./../../../static/img/broadcast.svg',
-                                 index:  '/hard-property/broadcastType',
-                                 title: '广 播'
-                             },
-                             {
-                                 icon:'./../../../static/img/led.svg',
-                                 index: '/hard-property/ledType',
-                                 title: 'LED'
-                             },
-                             {
-                                 icon:'./../../../static/img/detection.svg',
-                                index:'/hard-property/monitorType',
-                                title:'传感器'
-                             },
-                             {
-                                 icon:'./../../../static/img/machine.svg',
-                                 index:'/hard-property/gateType',
-                                 title:'闸 机'
-                             },
-                             {
-                                 icon:'./../../../static/img/light.svg',
-                                 index:'/hard-property/lightType',
-                                 title:'路 灯'
-                             },
-                             {
-                                 icon:'./../../../static/img/wring.svg',
-                                 index:'/hard-property/policeType',
-                                 title:'报警柱'
-                             },
-                             {
-                                 icon:'./../../../static/img/船夫.svg',
-                                 index:'/hard-property/gpsType',
-                                 title:'GPS'
-                             },
-
-                         ]
+                         subs: []
                     },
                     {
                         icon: './../../../static/img/hardwareInfo.svg',
                         index: '2',
                         title: '设备信息',
-                        subs: [
-                            {
-                                icon:'./../../../static/img/camera.svg',
-                                index: '/hard-property/camera-Hware',
-                                title: '摄像头'
-                            },
-                            {
-                                icon:'./../../../static/img/broadcast.svg',
-                                index: '/hard-property/broadcast-Hware',
-                                title: '广播'
-                            },
-                            {
-                                icon:'./../../../static/img/detection.svg',
-                                index: '/hard-property/monitors-Hware',
-                                title: '环境监测传感器'
-                            },
-                            {
-                                icon:'./../../../static/img/wring.svg',
-                                index: '/hard-property/police-Hware',
-                                title: '报警柱传感器'
-                            },
-                            {
-                                icon:'./../../../static/img/led.svg',
-                                index: '/hard-property/led-Hware',
-                                title: 'LED大屏'
-                            },
-                            {
-                                icon:'./../../../static/img/wifi.svg',
-                                index: '/hard-property/wifi-Hware',
-                                title: 'WIFI'
-                            },
-                            {
-                                icon:'./../../../static/img/machine.svg',
-                                index: '/hard-property/gate-Hware',
-                                title: '闸机'
-                            },
-                            {
-                                icon:'./../../../static/img/light.svg',
-                                index: '/hard-property/lampLight-Hware',
-                                title: '灯光'
-                            },
-
-                        ]
+                        subs: []
                     }
-                ]
+                ],
+                deviceType: [
+                    {
+                        icon:'./../../../static/img/camera.svg',
+                        index: '/hard-property/cameraType',
+                        title: '摄像头'
+                    },
+                    {
+                        icon:'./../../../static/img/wifi.svg',
+                        index: '/hard-property/wifitype',
+                        title: 'WIFI'
+                    },
+                    {
+                        icon:'./../../../static/img/broadcast.svg',
+                        index:  '/hard-property/broadcastType',
+                        title: '广播'
+                    },
+                    {
+                        icon:'./../../../static/img/led.svg',
+                        index: '/hard-property/ledType',
+                        title: 'LED大屏'
+                    },
+                    {
+                        icon:'./../../../static/img/detection.svg',
+                        index:'/hard-property/monitorType',
+                        title:'传感器'
+                    },
+                    {
+                        icon:'./../../../static/img/machine.svg',
+                        index:'/hard-property/gateType',
+                        title:'闸机'
+                    },
+                    {
+                        icon:'./../../../static/img/light.svg',
+                        index:'/hard-property/lightType',
+                        title:'路灯'
+                    },
+                    {
+                        icon:'./../../../static/img/wring.svg',
+                        index:'/hard-property/policeType',
+                        title:'报警柱'
+                    },
+                    {
+                        icon:'./../../../static/img/船夫.svg',
+                        index:'/hard-property/gpsType',
+                        title:'GPS'
+                    },
+
+                ],
+                deviceInfo: [
+                    {
+                        icon:'./../../../static/img/camera.svg',
+                        index: '/hard-property/camera-Hware',
+                        title: '摄像头'
+                    },
+                    {
+                        icon:'./../../../static/img/broadcast.svg',
+                        index: '/hard-property/broadcast-Hware',
+                        title: '广播'
+                    },
+                    {
+                        icon:'./../../../static/img/detection.svg',
+                        index: '/hard-property/monitors-Hware',
+                        title: '环境监测传感器'
+                    },
+                    {
+                        icon:'./../../../static/img/wring.svg',
+                        index: '/hard-property/police-Hware',
+                        title: '报警柱传感器'
+                    },
+                    {
+                        icon:'./../../../static/img/led.svg',
+                        index: '/hard-property/led-Hware',
+                        title: 'LED大屏'
+                    },
+                    {
+                        icon:'./../../../static/img/wifi.svg',
+                        index: '/hard-property/wifi-Hware',
+                        title: 'WIFI'
+                    },
+                    {
+                        icon:'./../../../static/img/machine.svg',
+                        index: '/hard-property/gate-Hware',
+                        title: '闸机'
+                    },
+                    {
+                        icon:'./../../../static/img/light.svg',
+                        index: '/hard-property/lampLight-Hware',
+                        title: '路灯'
+                    },
+                ],
             }
+        },
+        methods: {
+            ...mapActions(['getDeviceType'])
+        },
+        created() {
+          this.getDeviceType()
         },
         components: {
             ScrollContainer
+        },
+        watch: {
+            getDeviceTypeMenu (){
+                this.items[1].subs = []
+                this.items[2].subs = []
+                this.getDeviceTypeMenu.forEach(item => {
+                    this.deviceInfo.forEach(item1 => {
+                        if (item1.title.includes(item.name)) {
+                            item = {...item,...item1}
+                            this.items[2].subs.push(item)
+                        }
+                    })
+                })
+                this.getDeviceTypeMenu.forEach(item => {
+                    this.deviceType.forEach(item2 => {
+                        if (item2.title.includes(item.name)) {
+                            item = {...item,...item2}
+                            this.items[1].subs.push(item)
+                        }
+                    })
+                })
+                this.items[2].subs = _.uniqBy(this.items[2].subs, 'id')
+            }
+        },
+        computed: {
+            ...mapGetters(['getUserRole', 'getDeviceTypeMenu'])
         }
 
     }
