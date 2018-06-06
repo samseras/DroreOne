@@ -8,6 +8,7 @@
             <el-button size="mini"plain @click="addNewInfo"><i class="el-icon-circle-plus"></i>添加</el-button>
             <el-checkbox v-model="isSelected" @change="selectedAll">全选</el-checkbox>
             <el-button size="mini"plain @click="deleteCard"><i class="el-icon-delete"></i>删除</el-button>
+            <el-button size="mini" plain @click="batchDownload"><i class="el-icon-download"></i>导出</el-button>
             <el-button v-if="!route.includes('firefighting') && !route.includes('crossborder')" size="mini"plain @click="batchEdit"><i class="el-icon-edit"></i>批量修改</el-button>
             <el-button size="mini"plain @click="batchEnabled(true)"><i class="el-icon-circle-check"></i>批量启用</el-button>
             <el-button size="mini"plain @click="batchEnabled(false)"><i class="el-icon-circle-close"></i>批量停用</el-button>
@@ -22,15 +23,17 @@
 </template>
 
 <script>
+    import api from '@/api'
     export default {
-        name: "fun-header",
+        props: ['choseId','listsLength'],
         data () {
             return {
                 route: '',
                 isSelected: false,
                 isShowJobType: true,
                 isShowIndicatorType: true,
-                isShowTrashType: true
+                isShowTrashType: true,
+                alarmType:[]
             }
         },
         methods: {
@@ -55,7 +58,90 @@
             },
             showPersonJob () {
                 this.route = this.$route.path
-            }
+            },
+            batchDownload(){
+                if(this.listsLength == 0){
+                    this.$message.error('没有数据导出,添加后再试')
+                    return
+                }
+                let alarmTypeId
+                let route = this.$route.path
+                if (route.includes('alarmcolumn')) {
+                    alarmTypeId = this.getAlarmTypeId('报警柱')
+                }else if(route.includes('firefighting')){
+                    alarmTypeId = this.getAlarmTypeId('消防')
+                }else if(route.includes('crossborder')){
+                    alarmTypeId = this.getAlarmTypeId('越界')
+                } else if(route.includes('offtrack')){
+                    alarmTypeId = this.getAlarmTypeId('偏离轨迹')
+                }else if(route.includes('overlimit')){
+                    alarmTypeId = this.getAlarmTypeId('客流量')
+                }else if(route.includes('waterlevel')){
+                    alarmTypeId = this.getAlarmTypeId('水位')
+                }else if(route.includes('condition')){
+                    alarmTypeId = this.getAlarmTypeId('环境')
+                }
+
+                if (this.choseId.length > 0) {
+
+                    api.alarm.exportSelectedAlarmRules({ids : this.choseId},alarmTypeId).then((res) =>{
+                        console.log(res,'niaho')
+                        const content = res
+                        const blob = new Blob([content])
+                        const fileName = 'data.csv'
+                        if('download' in document.createElement('a')){
+                            const elink = document.createElement('a')
+                            elink.download = fileName
+                            elink.style.display = 'none'
+                            elink.href = URL.createObjectURL(blob)
+                            document.body.appendChild(elink)
+                            elink.click()
+                            URL.revokeObjectURL(elink.href) // 释放URL 对象
+                            document.body.removeChild(elink)
+                        }else{
+                            navigator.msSaveBlob(blob, fileName)
+                        }
+                        this.$message.success('导出成功')
+                    }).catch(err =>{
+                        this.$message.error('导出失败，请稍后再试')
+                    })
+                } else {
+                    api.alarm.exportAlarmRules(alarmTypeId).then((res) => {
+                        console.log(res,'ni')
+                        const content = res
+                        const blob = new Blob([content])
+                        const fileName = 'data.csv'
+                        if('download' in document.createElement('a')){
+                            const elink = document.createElement('a')
+                            elink.download = fileName
+                            elink.style.display = 'none'
+                            elink.href = URL.createObjectURL(blob)
+                            document.body.appendChild(elink)
+                            elink.click()
+                            URL.revokeObjectURL(elink.href) // 释放URL 对象
+                            document.body.removeChild(elink)
+                        }else{
+                            navigator.msSaveBlob(blob, fileName)
+                        }
+                        this.$message.success('导出成功')
+                    }).catch(err => {
+                        this.$message.error('导出失败，请稍后再试')
+                    })
+                }
+
+            },
+            getAlarmTypeId(typeName){
+                let typeInfo =  this.alarmType.filter(item=>item.name == typeName)
+                return typeInfo[0].id;
+            },
+            async getAllAlarmTypes(){
+                await api.alarm.getAllAlarmTypes().then(res => {
+                    console.log(res, '请求type成功')
+                    this.alarmType = res;
+                }).catch(err => {
+                    console.log(err, '请求失败')
+                })
+            },
         },
         watch: {
             '$route' () {
@@ -63,6 +149,7 @@
             }
         },
         created () {
+            this.getAllAlarmTypes()
             this.showPersonJob()
         }
     }

@@ -145,12 +145,12 @@
 <style  lang="scss" type="text/scss">
     .device-tree{
         border:1px solid red;
-        margin:1rem;
+        margin:rem(16);
         #my-chart{
-            width:400px;
-            height:300px;
+            width:rem(400);
+            height:rem(300);
             border:1px solid red;
-            margin:5rem auto;
+            margin:rem(80) auto;
         }
     }
 </style>

@@ -392,15 +392,10 @@ const routes = [
             {path: '/deviceList/:category', name: 'IotDeviceList', component:IotDeviceList},
             {path: '/deviceTree/:category', name: 'IotDeviceTree', component:IotDeviceTree},
             //{path:'/iotPolice',name:'IotPoliceInfo',component:IotPoliceInfo},
-            {
-                path:'/iotLog',
-                component:IotSystemLog,
-                redirect: '/iotLog/systemLog',
-                childred:[
-                    {path:'/iotLog/systemLog',name:'IotSystemLog',component:IotSystemLog},
-                    {path:'/iotLog/nowStatus',name:'NowStatus',component:NowStatus},
-                ]
-            },
+
+            {path:'/iotLog/systemLog',name:'IotSystemLog',component:IotSystemLog},
+            {path:'/iotLog/nowStatus',name:'NowStatus',component:NowStatus},
+
 
         ]
     }

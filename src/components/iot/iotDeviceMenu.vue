@@ -67,172 +67,6 @@
                         index:'1',
                         title: 'IoT设备',
                         subs:[]
-                        /*subs: [
-                            {
-                                isShow:true,
-                                index: '1',
-                                mark:'1',
-                                title: 'WIFI',
-                                sonSubs: [
-                                    {
-                                        index: '/deviceType/1',
-                                        mark:'1-1',
-                                        title:'设备型号'
-                                    },
-                                    {
-                                        index: '/deviceList/1',
-                                        mark:'1-2',
-                                        title:'设备列表'
-                                    },
-                                    {
-                                        index: '/deviceTree/1',
-                                        mark:'1-3',
-                                        title:'树形结构'
-                                    }
-                                ]
-
-                            },
-                            {
-                                isShow:false,
-                                index: '2',
-                                title: '环境传感器',
-                                mark:2,
-                                sonSubs: [
-                                    {
-                                        index: '/deviceType/2',
-                                        mark:'1-1',
-                                        title:'设备型号'
-                                    },
-                                    {
-                                        index: '/deviceList/2',
-                                        mark:'1-2',
-                                        title:'设备列表'
-                                    },
-                                    {
-                                        index: '/deviceTree/2',
-                                        mark:'1-3',
-                                        title:'树形结构'
-                                    }
-                                ]
-                            },
-                            {
-                                isShow:false,
-                                index:  '3',
-                                title: '水位监测',
-                                mark:3,
-                                sonSubs: [
-                                    {
-                                        index: '/deviceType/3',
-                                        mark:'1-1',
-                                        title:'设备型号'
-                                    },
-                                    {
-                                        index: '/deviceList/3',
-                                        mark:'1-2',
-                                        title:'设备列表'
-                                    },
-                                    {
-                                        index: '/deviceTree/3',
-                                        mark:'1-3',
-                                        title:'树形结构'
-                                    }
-                                ]
-                            },
-                            {
-                                isShow:false,
-                                index: '4',
-                                title: 'GPS',
-                                mark:4,
-                                sonSubs: [
-                                    {
-                                        index: '/deviceType/4',
-                                        mark:'1-1',
-                                        title:'设备型号'
-                                    },
-                                    {
-                                        index: '/deviceList/4',
-                                        mark:'1-2',
-                                        title:'设备列表'
-                                    },
-                                    {
-                                        index: '/deviceTree/4',
-                                        mark:'1-3',
-                                        title:'树形结构'
-                                    }
-                                ]
-                            },
-                            {
-                                isShow:false,
-                                index:'5',
-                                title:'报警柱',
-                                mark:5,
-                                sonSubs: [
-                                    {
-                                        index: '/deviceType/5',
-                                        mark:'1-1',
-                                        title:'设备型号'
-                                    },
-                                    {
-                                        index: '/deviceList/5',
-                                        mark:'1-2',
-                                        title:'设备列表'
-                                    },
-                                    {
-                                        index: '/deviceTree/5',
-                                        mark:'1-3',
-                                        title:'树形结构'
-                                    }
-                                ]
-                            },
-                            {
-                                isShow:true,
-                                index:'6',
-                                title:'摄像头',
-                                mark:6,
-                                sonSubs: [
-                                    {
-                                        index: '/deviceType/6',
-                                        mark:'1-1',
-                                        title:'设备型号'
-                                    },
-                                    {
-                                        index: '/deviceList/6',
-                                        mark:'1-2',
-                                        title:'设备列表'
-                                    },
-                                    {
-                                        index: '/deviceTree/6',
-                                        mark:'1-3',
-                                        title:'树形结构'
-                                    }
-                                ]
-
-                            },
-                            {
-                                isShow:false,
-                                index:'7',
-                                title:'广播',
-                                mark:7,
-                                sonSubs: [
-                                    {
-                                        index: '/deviceType/7',
-                                        mark:'1-1',
-                                        title:'设备型号'
-                                    },
-                                    {
-                                        index: '/deviceList/7',
-                                        mark:'1-2',
-                                        title:'设备列表'
-                                    },
-                                    {
-                                        index: '/deviceTree/7',
-                                        mark:'1-3',
-                                        title:'树形结构'
-                                    }
-                                ]
-                            }
-
-                        ]*/
                     },
                     {
                         icon: '../../../static/img/iot/iot-system-manage.svg',
@@ -240,11 +74,13 @@
                         title: '系统管理',
                         subs: [
                             {
+                                isShow:true,
                                 icon:'../../../static/img/camera.svg',
                                 index: '/iotLog/systemLog',
                                 title: '系统日志'
                             },
                             {
+                                isShow:true,
                                 icon:'../../../static/img/broadcast.svg',
                                 index: '/iotLog/nowStatus',
                                 title: '实时状态'
@@ -260,7 +96,7 @@
         methods:{
             getIotMenu(){
                 api.iotHome.getIotMenu().then(res=>{
-                    console.log(res,'这是传回来的Iotmenu菜单')
+                    //console.log(res,'这是传回来的Iotmenu菜单')
                     this.items[1].subs=res;
                 }).catch(err=>{
                     console.log(err,'失败')
