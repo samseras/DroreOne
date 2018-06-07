@@ -295,6 +295,8 @@
                             "maxZoom": obj.scefit + obj.zoom - 1
                         }
                         droreMap.init(mapdata, data.data);
+                        let Circle = new droreMap.geom.Circle()
+                        Circle.setCenter([0,0],0);
                     },
                     error: function(e) {
                         console.log(e);
@@ -1859,6 +1861,9 @@
                 droreMap.icon.IconStyleById(data,false);
             },
             roadShow(data){
+                let geo =JSON.parse(data.geo);
+                data.location=geo[1];
+                droreMap.map.panToCoord(droreMap.trans.transFromWgsToLayer(data.location));
                 droreMap.road.removeStyleById(data.id,true)
             },
             roadShowID(data){
@@ -1944,7 +1949,7 @@
                     }
                 }
             },
-            async rangeSearch(){
+            rangeSearch(){
                 let that =this
                 droreMap.event.addMouseEvent(Event.DOUBLECLICK_EVENT, "single", function(evt){
                     $("#contextmenu_container").hide();
