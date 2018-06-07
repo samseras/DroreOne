@@ -33,6 +33,7 @@
         <div v-if="" class="card-list">
             <DeviceCard :curPage="curPage" :searchInfo="searchInfo" :allData="allData"></DeviceCard>
         </div>
+
     </div>
 </template>
 
@@ -66,7 +67,7 @@
             getDeviceListInfo(route){
                 api.iotHome.getDeviceListInfo(route).then(res=>{
                     console.log(res,'这是传回来的设备列表信息');
-                    this.allData=res;
+                    this.allData=res.tableDatas;
 
                 }).catch(err=>{
                     console.log(err,'失败')
