@@ -2,6 +2,7 @@
     <div class="iot-home">
         <div class="basic-show">
             hello,首页
+
         </div>
         <div class="echarts-show"></div>
         <div class="data-flow"></div>
@@ -37,11 +38,11 @@
 
 <style lang="scss" type="text/scss" >
     .iot-home{
-        margin:1rem;
+        margin:rem(16);
         .basic-show{
             border:1px solid red;
             width:100%;
-            height:100px;
+            height:rem(100);
         }
     }
 </style>

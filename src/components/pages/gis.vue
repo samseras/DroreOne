@@ -14,8 +14,9 @@
                         <el-menu  class="el-menu-demo" mode="horizontal" router>
                             <el-submenu index="">
                                 <template slot="title">
-                                    <span class="Admin">{{getUserInfo}}</span>
-                                    <img src="./../../../static/img/peopleInfo.svg" alt="">
+                                    <span class="Admin"v-if="getUserDetailMsg.nickname">{{getUserDetailMsg.nickname}}</span>
+                                    <span class="Admin"v-if="!getUserDetailMsg.nickname">{{getUserDetailMsg.username}}</span>
+                                    <img class="userAvatar" :src="getUrl(getUserDetailMsg.picturePath)" alt="" @error="imgError">
                                 </template>
                                 <el-menu-item index="" @click="visible = true">个人中心</el-menu-item>
                                 <el-menu-item index="/droreone">返回主页</el-menu-item>
@@ -136,7 +137,18 @@
 
         },
         methods: {
-            ...mapActions(['logout']),
+            ...mapActions(['logout','getUserDetailInfo']),
+            imgError (e) {
+                e.target.src = this.getUrl(null);
+            },
+            getUrl (url) {
+                if (url === null || url === undefined) {
+                    return './../../static/img/peopleInfo.svg'
+                } else {
+                    return url
+                }
+                return './../../static/img/peopleInfo.svg'
+            },
             goModule(item, index) {
                 console.log(item,'opo')
                 this.activeIndex = index;
@@ -171,8 +183,11 @@
                 ScrollContainer,
             UserInfoDialog
         },
+        created () {
+            this.getUserDetailInfo(this.getUserInfo)
+        },
         computed: {
-            ...mapGetters(['getUserInfo'])
+            ...mapGetters(['getUserInfo','getUserDetailMsg'])
         }
     }
 </script>
@@ -195,10 +210,11 @@
         }
         .func .el-submenu__title img{
             display: inline-block;
-            width: rem(20);
-            height: rem(20);
+            width: rem(30);
+            height: rem(30);
             vertical-align: middle;
-            margin-top: rem(-4);
+            border-radius: 50%;
+            margin-top: rem(0);
             margin-left: rem(5);
         }
         .el-menu--horizontal{
@@ -227,6 +243,16 @@
         .el-main {
             padding: 0 !important;
         }
+        .userAvatar{
+            display: inline-block;
+            width: rem(30);
+            height: rem(30);
+            vertical-align: middle;
+            border-radius: 50%;
+            margin-top: rem(0);
+            margin-left: rem(5);
+        }
+
     }
 
 </style>

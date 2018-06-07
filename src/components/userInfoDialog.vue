@@ -8,30 +8,49 @@
             width="23%"
             class="dialog echatDialog"
             center>
-            <div class="userInfoCard">
+            <div class="userInfoCard" v-loading="isShowLoading">
                 <div class="userInfo">
                     <p class="userName">
                         <span class="titleText">
                             用&nbsp;&nbsp;户&nbsp;&nbsp;名：
                         </span>
-                        <el-input v-model="userName" disabled></el-input>
+                        <el-input v-model="info.username" disabled></el-input>
                     </p>
                     <p class="nickName">
                         <span class="titleText">
                             昵&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称：
                         </span>
-                        <el-input v-model="userNickName" placeholder="请输入昵称"></el-input>
+                        <el-input v-model="info.nickname" placeholder="请输入昵称"></el-input>
                     </p>
                     <p class="userPhone">
                         <span class="titleText">
                             手&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;机：
                         </span>
-                        <el-input v-model="userPhone" placeholder="请输入手机号码"></el-input>
+                        <el-input v-model="info.phoneNumber" placeholder="请输入手机号码"></el-input>
                     </p>
+                    <p class="oldPassword" v-if="showFixPsd">
+                        <span class="titleText">
+                            旧&nbsp;&nbsp;密&nbsp;&nbsp;码：
+                        </span>
+                        <el-input type="password" v-model="oldPassword" placeholder="请输入旧密码"></el-input>
+                    </p>
+                    <p class="oldPassword" v-if="showFixPsd">
+                        <span class="titleText">
+                            新&nbsp;&nbsp;密&nbsp;&nbsp;码：
+                        </span>
+                        <el-input type="password" v-model="newPassword" placeholder="请输入新密码"></el-input>
+                    </p>
+                    <p class="oldPassword" v-if="showFixPsd">
+                        <span class="titleText">
+                            确认密码：
+                        </span>
+                        <el-input type="password" v-model="surePassword" placeholder="请确认新密码"></el-input>
+                    </p>
+                    <el-button class='showPsdBtn'type="primary" round v-if="!showFixPsd" @click="fixPsd">修改密码</el-button>
                     <div class="img">
-                        <img :src="getUrl" alt="" v-if="isDisabled" @error="imgError">
-                        <label for="avatar" v-if="!isDisabled">
-                            <img :src="files.length ? files[0].url : getUrl"  @error="imgError" class="rounded-circle" />
+                        <!--<img :src="getUrl(info.picturePath)" alt="" @error="imgError">-->
+                        <label for="avatar">
+                            <img :src="files.length ? files[0].url : getUrl(info.picturePath)"  @error="imgError" class="rounded-circle" />
                         </label>
                     </div>
                 </div>
@@ -60,7 +79,7 @@
             </div>
             <div class=""slot="footer" class="dialog-footer cardFooter">
                 <el-button size="mini" @click = 'closeDialog'>取消</el-button>
-                <el-button size="mini" class="hold" @click="">保存</el-button>
+                <el-button size="mini" class="hold" @click="updataUserInfo">保存</el-button>
             </div>
         </el-dialog>
     </div>
@@ -69,23 +88,40 @@
 <script>
     import Cropper from 'cropperjs'
     import FileUpload from 'vue-upload-component'
+    import api from '@/api'
+    import {mapGetters, mapMutations} from 'vuex'
+    let Base64 = require('js-base64').Base64;
     export default {
         name: "user-info-dialog",
         props:['visible'],
         data(){
             return{
-                userName: 'admin',
-                userNickName: '张三',
-                userPhone: '13588886666',
+                info:{
+                    id: '',
+                    username: this.getUserInfo,
+                    nickname: '',
+                    phoneNumber: '',
+                    picturePath: '',
+                    pictureId: ''
+                },
                 file: {},
                 src:'',
                 edit: false,
                 cropper: false,
                 files: [],
-                isDisabled: false
+                isDisabled: false,
+                isShowLoading : false,
+                showFixPsd: false,
+                oldPassword: '',
+                newPassword: '',
+                surePassword: ''
             }
         },
         methods: {
+            ...mapMutations(['SET_USER_DETAIL_INFO']),
+            fixPsd () {
+              this.showFixPsd = true
+            },
             closeDialog () {
                 console.log(this.src)
                 this.$emit('closeInfoDialog')
@@ -94,11 +130,11 @@
                 e.target.src = this.getUrl(null);
             },
             getUrl (url) {
-                // if (url === null || url === undefined) {
-                //     return './../../static/img/driveCard.png'
-                // } else {
-                //     return url
-                // }
+                if (url === null || url === undefined) {
+                    return './../../static/img/driveCard.png'
+                } else {
+                    return url
+                }
                 return './../../static/img/driveCard.png'
             },
             editSave() {
@@ -150,10 +186,74 @@
                     }
                 }
             },
+            async updataUserInfo () {
+                let obj = {
+                    id: this.info.id,
+                    username: this.info.username,
+                    nickname: this.info.nickname,
+                    phoneNumber: this.info.phoneNumber,
+                }
+                if (this.showFixPsd) {
+                    if (!(this.oldPassword.trim()=== '' && this.newPassword.trim()==='' && this.surePassword.trim()==='')) {
+                        if (this.oldPassword.trim() === '') {
+                            this.$message.error('请填写原始密码')
+                            return
+                        }
+                        if (this.newPassword.trim() === '') {
+                            this.$message.error('请填写新密码')
+                            return
+                        }
+                        if (this.surePassword.trim() === '') {
+                            this.$message.error('请确认新密码')
+                            return
+                        }
+                        if(this.newPassword !== this.surePassword) {
+                            this.$message.error('确认密码不相等,请重新输入')
+                            return
+                        }
+                        obj.oldPassword = Base64.encode(this.oldPassword)
+                        obj.newPassword = Base64.encode(this.surePassword)
+                    }
+                }
+                if (this.src !== '') {
+                    await api.person.updataAva(this.src).then(res => {
+                        console.log(res, '上传成功')
+                        obj.pictureId = res.id
+                    }).catch(err => {
+                        console.log(err, '上传失败')
+                        this.$message.error('上传失败，其请稍后重试')
+                        return
+                    })
+                }
+                console.log(obj, 'opopoppoppopopopop')
+                await api.lib.updatauserInfo(JSON.stringify(obj)).then(res => {
+                    console.log(res, '更新成功')
+                    this.$message.success('修改用户信息成功')
+                    this.getUserDetailInfo()
+                }).catch(err => {
+                    console.log(err, '请求失败')
+                    this.$message.error(err.message)
+                })
+            },
+            async getUserDetailInfo () {
+                this.isShowLoading = true
+                await api.lib.getUserInfo(this.getUserInfo).then(res => {
+                    this.isShowLoading = false
+                    console.log(res, '这是请求回来的用户信息')
+                    this.$store.commit('SET_USER_DETAIL_INFO', res)
+                    this.showFixPsd = false
+                    this.oldPassword = ''
+                    this.newPassword = ''
+                    this.surePassword = ''
+                    this.info = res
+                }).catch(err => {
+                    console.log(err, '请求失败')
+                })
+            }
 
         },
         created() {
-
+            this.getUserDetailInfo()
         },
         watch: {
             edit(value) {
@@ -175,6 +275,9 @@
                     }
                 }
             }
+        },
+        computed: {
+            ...mapGetters(['getUserInfo'])
         },
         components:{
             FileUpload,
@@ -551,6 +654,11 @@
                         display: inline-block;
                         line-height: rem(26);
                     }
+                }
+                .showPsdBtn{
+                    float: right;
+                    margin-right: rem(10);
+                    margin-top: rem(10);
                 }
                 .img{
                     width: rem(100);

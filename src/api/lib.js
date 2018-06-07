@@ -38,6 +38,20 @@ const lib = {
             url: getUrl('/device/types'),
         })
     },
+    updatauserInfo  (params) {
+        return axios ({
+            method: 'PUT',
+            url: getUrl('/security/userinfo'),
+            data:params
+        })
+    },
+    getUserInfo  (params) {
+        return axios ({
+            method: 'GET',
+            url: getUrl(`/security/userinfo/${params}`),
+        })
+    },
+
 }
 
 export default lib

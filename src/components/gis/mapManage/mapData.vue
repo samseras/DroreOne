@@ -129,7 +129,6 @@
             },
 
             deletInfo (id) {
-                debugger
                 console.log(id)
                 console.log(this.choseInfoId)
                 if (id) {

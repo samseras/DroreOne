@@ -1584,7 +1584,7 @@
                     .el-icon-location-outline{
                         float:right;
                         margin:0;
-                        padding-right:rem(30);
+                        padding-right:rem(20);
                     }
                     s{
                         text-decoration: none;

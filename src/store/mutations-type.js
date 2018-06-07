@@ -45,7 +45,11 @@ export const COMPANY_DATA_NAME = 'COMPANY_DATA_NAME'
 // 用户
   export const SET_USER = 'SET_USER'
   export const SET_USER_ROLES = 'SET_USER_ROLES'
+  export const SET_USER_DETAIL_INFO = 'SET_USER_DETAIL_INFO'
 
 //  数据基础信息列表
  export const SET_FACILITY_TYPE = 'SET_FACILITY_TYPE'
  export const SET_DEVICE_TYPE = 'SET_DEVICE_TYPE'
+
+//iot
+export const CURPAGE = 'CURPAGE'  //测试

@@ -2,8 +2,8 @@
     <div class="home">
         <div class="pro_menu">
             <div class="pro_title">
-                <img src="../../../static/img/logo.svg" alt="">
-                <span>卓锐IoT平台</span>
+                <!--<img src="../../../static/img/logo.svg" alt="">-->
+                <span>卓锐IOT平台</span>
             </div>
             <div class="func">
                 <el-menu  class="el-menu-demo" mode="horizontal" default-active="sss" >
@@ -23,13 +23,23 @@
             <div class="pro_router">
                 <div class="func">
                     <el-menu  class="el-menu-demo" mode="horizontal" router>
-                        <el-submenu index="1">
+                        <!--<el-submenu index="1">
                             <template slot="title">
-                                <span class="Admin">IoT管理员</span>
                                 <img src="../../../static/img/peopleInfo.svg" alt="">
+                                <span class="Admin">IoT管理员</span>
+
                             </template>
                             <el-menu-item index="/droreone">返回主页</el-menu-item>
                             <el-menu-item @click="logout"index="/login">退出</el-menu-item>
+                        </el-submenu>-->
+                        <el-submenu index="2">
+                            <template slot="title">
+                                <img src="../../../static/img/peopleInfo.svg" alt="">
+                                <span class="Admin">Drore</span>
+                            </template>
+                            <el-menu-item index="/droreone">返回主页</el-menu-item>
+                            <el-menu-item @click="logout"index="/login">退出</el-menu-item>
+
                         </el-submenu>
                     </el-menu>
                 </div>
@@ -101,18 +111,14 @@
     .home{
 
         .el-badge__content {
-            background-color: #F60000;
-            border-radius: 1rem;
+            background-color: #14B9D6;
+            border-radius: rem(16);
             color: #fff;
-            font-size: 10px;
-            height: 1rem;
-            width: 1.1rem;
-            line-height: 17px;
-            padding:0px;
-        }
-        .el-menu--horizontal>.el-submenu .el-submenu__icon-arrow{
-            display:none;
-            /*F60000*/
+            font-size: rem(10);
+            height: rem(16);
+            width: rem(17.6);
+            line-height: rem(17);
+            padding:0;
         }
         .el-menu--horizontal>.el-submenu .el-submenu__title{
             line-height:3.6rem;
@@ -121,12 +127,6 @@
             top: 1rem;
             right: 0.6rem;
         };
-        .el-menu-demo,.el-menu--horizontal,.el-menu{
-            background-color: transparent;
-        }
-        .el-menu--horizontal>.el-submenu .el-submenu__title{
-            color: #fff;
-        }
         .el-menu--horizontal>.el-submenu .el-submenu__title:hover{
             background-color: transparent;
         }
@@ -166,12 +166,12 @@
             }*/
             div {
                 display: inline-block;
-                background-color:#2D3E50;
+               /* background-color:#2D3E50;*/
             }
             .pro_title {
                 width: 15%;
                 text-align: center;
-                background: #34495E;
+                background: #14B9D6;
                 font-family: '微软雅黑';
                 img{
                     display: inline-block;
@@ -184,7 +184,7 @@
             }
             .pro_router{
                 flex: 1;
-                background: #2D3E50;
+                /*background: #2D3E50;*/
                 padding: 0 rem(35);
                 box-sizing: border-box;
                 a{

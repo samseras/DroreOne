@@ -1,6 +1,5 @@
 <template>
     <div class="device-type" >
-
         <template>
             <el-table
                 :data="tableData"
@@ -9,136 +8,107 @@
                     v-for="col in cols"
                     :prop="col.prop" :label="col.label" >
                 </el-table-column>
+                <el-table-column label="操作">
+                    <template slot-scope="scope">
+                        <el-button
+                            size="mini"
+                            type="primary"
+                            @click="handleTableEdit(scope.row)">编辑</el-button>
+                    </template>
+                </el-table-column>
             </el-table>
         </template>
+        <IotDialog
+            v-if="showDialog"
+            :showDialog="showDialog"
+            :cols="cols"
+            :editData="editData"
+            @saveEvent="saveDialog"
+            @cancelEvent="cancelDialog">
+        </IotDialog>
     </div>
 </template>
 
 <script>
+    import api from '@/api'
+    import IotDialog from './iotDialog'
     export default {
+
         name: "devicetype",
         data(){
             return{
+                showDialog:false,
+                editData:{},
                 route:1,
                 tableData:[],
                 cols:[],
-                tableData1: [{
-                    date: '2016-05-02',
-                    name: '王小虎',
-                    address: '上海市普陀区金沙江路 1518 弄'
-                }, {
-                    date: '2016-05-04',
-                    name: '王小虎',
-                    address: '上海市普陀区金沙江路 1517 弄'
-                }, {
-                    date: '2016-05-01',
-                    name: '王小虎',
-                    address: '上海市普陀区金沙江路 1519 弄'
-                }, {
-                    date: '2016-05-03',
-                    name: '王小虎',
-                    address: '上海市普陀区金沙江路 1516 弄'
-                }],
-                tableData2: [{
-                    name: '王小虎',
-                    address: '上海市普陀区金沙江路 1518 弄'
-                }, {
-                    name: '王小虎',
-                    address: '上海市普陀区金沙江路 1517 弄'
-                }, {
-                    name: '王小虎',
-                    address: '上海市普陀区金沙江路 1519 弄'
-                }, {
-                    name: '王小虎',
-                    address: '上海市普陀区金沙江路 1516 弄'
-                }],
-                cols1: [
-                    {prop: 'date', label: '日期'},
-                    {prop: 'name', label: '姓名'},
-                    {prop: 'address', label: '住址'}
-                ],
-                cols2: [
-                    {prop: 'name', label: '姓名'},
-                    {prop: 'address', label: '住址'}
-                ]
+                tableData1: [],
+                cols1: []
             }
         },
         methods:{
+            saveDialog(val){
+                console.log(val);
+                this.showDialog=false;
+                //再刷新一次数据列表
+                /*api.iotHome.editDeviceTypeInfo(val).then(res=>{
+                    console.log(res,'这是编辑后传回来的设备类型信息')
+                    this.cols=res.cols;
+                    this.tableData=res.tableDatas;
+                }).catch(err=>{
+                    console.log(err,'失败')
+                })*/
+            },
+            cancelDialog(val){
+                console.log(val);
+                this.showDialog=false;
+            },
+            handleTableEdit(row){
 
+              this.editData=row;
+              console.log(this.editData);
+              this.showDialog=true;
+            },
+            getDeviceTypeInfo(route){
+                api.iotHome.getDeviceTypeInfo(route).then(res=>{
+                    console.log(res,'这是传回来的设备类型信息')
+                    this.cols=res.cols;
+                    this.tableData=res.tableDatas;
+                }).catch(err=>{
+                    console.log(err,'失败')
+                })
+            }
         },
         components:{
-
+            IotDialog
         },
         watch:{
             '$route'(){
                 //this.route = this.$route.path
                 this.route=parseInt(this.$route.params.category);
                 console.log(this.route);
-                switch (this.route) {   //7,10,3
-                    case '1': {
-                        this.tableData=this.tableData1;
-                        this.cols=this.cols1;
-                        break
-                    }
-                    case '2': {
-                        this.tableData=this.tableData1;
-                        this.cols=this.cols1;
-                        break
-                    }
-                    case '3': {
-                        this.tableData=this.tableData1;
-                        this.cols=this.cols1;
-                        break
-                    }
-                    case '4': {
-                        this.tableData=this.tableData1;
-                        this.cols=this.cols1;
-                        break
-                    }
-                    case '5': {
-                        this.tableData=this.tableData1;
-                        this.cols=this.cols1;
-                        break
-                    }
-                    case '6': {
-                        this.tableData=this.tableData1;
-                        this.cols=this.cols1;
-                        break
-                    }
-                    case '7': {
-                        this.tableData=this.tableData2;
-                        this.cols=this.cols2;
-                        break
-                    }
-                    case '8': {
-                        this.tableData=this.tableData1;
-                        this.cols=this.cols1;
-                        break
-                    }
-                    case '9': {
-                        this.tableData=this.tableData1;
-                        this.cols=this.cols1;
-                        break
-                    }
-                    case '10': {
-                        this.tableData=this.tableData1;
-                        this.cols=this.cols1;
-                        break
-                    }
-                }
-
+                this.getDeviceTypeInfo(this.route);
             }
+        },
+        beforeRouterEnter:(to,from,next)=>{
+            console.log(to);
+            console.log(from);
+            next();
         },
         created(){
             this.tableData=this.tableData1;
             this.cols=this.cols1;
+            this.route=this.$route.params.category;
+            this.getDeviceTypeInfo(this.route);
+
+
         }
     }
 </script>
 
 <style  lang="scss" type="text/scss">
     .device-type{
-        margin:1rem;
+        margin:rem(16);
         border:1px solid red;
     }
 </style>

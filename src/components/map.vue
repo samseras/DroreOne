@@ -295,6 +295,8 @@
                             "maxZoom": obj.scefit + obj.zoom - 1
                         }
                         droreMap.init(mapdata, data.data);
+                        let Circle = new droreMap.geom.Circle()
+                        Circle.setCenter([0,0],0);
                     },
                     error: function(e) {
                         console.log(e);
@@ -1770,7 +1772,7 @@
                         }
                         this.controler();//之前打的点
                     }else if(route.includes('facility')){
-                        // droreMap.icon.IconStyleById(icon.id,false);
+                        droreMap.icon.IconStyleById(icon.id,false);
                         let that = this;
                         icon.onclick(function (e) {
                             that.menulist = e.data;
@@ -1807,7 +1809,6 @@
                 }
             },
             droreMappopup(e){
-                console.log(e);
                 var div = document.getElementById('contextmenu_container')
                 var popup = new  droreMap.pop.Popup(div,e.coordinate,"contextmenu_container")
                 droreMap.pop.addChild(popup);
@@ -1859,6 +1860,9 @@
                 droreMap.icon.IconStyleById(data,false);
             },
             roadShow(data){
+                let geo =JSON.parse(data.geo);
+                data.location=geo[1];
+                droreMap.map.panToCoord(droreMap.trans.transFromWgsToLayer(data.location));
                 droreMap.road.removeStyleById(data.id,true)
             },
             roadShowID(data){
@@ -1944,12 +1948,12 @@
                     }
                 }
             },
-            async rangeSearch(){
+            rangeSearch(){
                 let that =this
                 droreMap.event.addMouseEvent(Event.DOUBLECLICK_EVENT, "single", function(evt){
                     $("#contextmenu_container").hide();
                     droreMap.map.panToCoord(evt.coordinate);
-                    droreMap.map.setZoom(16)
+                    droreMap.map.setZoom(3)
                     let Circle = new droreMap.geom.Circle()
                     let radius=100
                     let coordinate=droreMap.trans.transLayerToWgs(evt.coordinate)
@@ -1966,8 +1970,31 @@
                         types:types
                     }
                     that.getSearchFacility(SearchFacility)
-                    Circle.setCenter(evt.coordinate,radius);
+                    Circle.setCenter(evt.coordinate,radius+35);
                 })
+
+                $(document).keyup(function(event){
+                    switch(event.keyCode) {
+                        case 27:
+                            that.escFun();
+                    }
+                });
+            },
+            escFun(){
+                $("#contextmenu_container").hide();
+                let Circle = new droreMap.geom.Circle()
+                let types={
+                    "7":[]
+                }
+                let SearchFacility = {
+                    radius: 0,
+                    latitude: 0,
+                    longitude: 0,
+                    epsg:'4326',
+                    types:types
+                }
+                this.getSearchFacility(SearchFacility)
+                Circle.setCenter([0,0],0);
             },
             async getSearchFacility (SearchFacility) {//点击范围搜索
                 await api.controler.getSearchFacility(JSON.stringify(SearchFacility)).then(res => {
@@ -1977,9 +2004,18 @@
                         }
                     }
                     this.searchFacilityList= res[7]
+                    let broadListId=[];
+                    let cameraListId=[];
                     for (let i=0;i< this.searchFacilityList.length;i++) {
                         this.treeShowID(this.searchFacilityList[i].id);
+                        if(this.searchFacilityList[i].typeId=="1"){
+                            broadListId.push(this.searchFacilityList[i].id)
+                        }else if(this.searchFacilityList[i].typeId=="2"){
+                            cameraListId.push(this.searchFacilityList[i].id)
+                        }
                     }
+                    console.log(broadListId)
+                    console.log(cameraListId)
                 }).catch(err => {
                     this.$message.error('查询失败')
                 })
