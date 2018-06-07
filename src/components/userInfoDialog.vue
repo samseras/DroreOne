@@ -70,7 +70,7 @@
     import Cropper from 'cropperjs'
     import FileUpload from 'vue-upload-component'
     import api from '@/api'
-    import {mapGetters} from 'vuex'
+    import {mapGetters, mapMutations} from 'vuex'
     export default {
         name: "user-info-dialog",
         props:['visible'],
@@ -94,6 +94,7 @@
             }
         },
         methods: {
+            ...mapMutations(['SET_USER_DETAIL_INFO']),
             closeDialog () {
                 console.log(this.src)
                 this.$emit('closeInfoDialog')
@@ -189,6 +190,7 @@
                 await api.lib.getUserInfo(this.getUserInfo).then(res => {
                     this.isShowLoading = false
                     console.log(res, '这是请求回来的用户信息')
+                    this.$store.commit('SET_USER_DETAIL_INFO', res)
                     this.info = res
                 }).catch(err => {
                     console.log(err, '请求失败')
@@ -198,7 +200,6 @@
         },
         created() {
             this.getUserDetailInfo()
-
         },
         watch: {
             edit(value) {
