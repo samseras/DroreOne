@@ -4,13 +4,17 @@
             <el-col :span="8" v-for="(o, index) in selectDatas" :key="o.name"   class="mycol">
                 <el-card   class="mycard">
                     <img src="../../../static/img/iot/东区.png" class="image">
-                   <!-- <img :src="'../../../static/img/iot/'+o.areaName+'.png'" class="image">-->
+                    <!-- <img :src="'../../../static/img/iot/'+o.areaName+'.png'" class="image">-->
                     <!--<img :src="'../../../static/img/iot/'+o.type+'.svg'" class="icons">-->
                     <div style="padding: 14px;" class="card-bottoms">
                         <span v-if="o.attributes.label">名称：{{o.attributes.label}}</span>
-                        <div class="bottom ">
+                        <div class="bottom">
                             <p>mac：{{o.mac}}</p>
                             <p>状态：{{o.status}}</p>
+                            <p><el-button
+                                type="primary"
+                                @click.stop="editCard(o,index)"
+                                size="mini">编辑</el-button></p>
                             <el-switch
                                 v-model="o.switchValue"
                                 @change="changeStatus($event,index,o.id)"
@@ -27,7 +31,7 @@
                         <div class="more">
                             <template>
                                 <el-button type="text" @click="showOuterMore(o,index)">详情>></el-button>
-                                <transition name="fades">
+                                <transition name="dialog">
                                     <el-dialog title="" :visible.sync="outerVisible">
                                         <!--详情页打开时再读取数据-->
                                         <div class="top-part clearfix" v-if="outerVisible">
@@ -158,23 +162,35 @@
                 </el-card>
             </el-col>
         </el-row>
+        <IotDialog
+            v-if="showDialog"
+            :showDialog="showDialog"
+            @cancelEvent="cancel"
+            @saveEvent="saveEdit"
+            :editData="editData">
 
+        </IotDialog>
     </div>
 </template>
 
 <script>
     import { mapGetters} from 'vuex'
+    import IotDialog from './iotDialog'
     import api from '@/api'
     export default {
         name: "deviceCard",
         props:['curPage','searchInfo','allData'],
         data() {
             return {
-                tableData3: [{
+                editData:{},
+                showDialog:false,
+                tableData3: [
+                    {
                     date: '2016-05-03',
                     name: '王小虎',
                     address: '上海市普陀区金沙江路 1518 弄'
-                }, {
+                },
+                    {
                     date: '2016-05-02',
                     name: '王小虎',
                     address: '上海市普陀区金沙江路 1518 弄啊啊啊啊啊啊海市普陀区金沙江路 1518 弄啊啊啊啊海市普陀区金沙江路 1518 弄啊啊啊啊海市普陀区金沙江路 1518 弄啊啊啊啊海市普陀区金沙江路 1518 弄啊啊啊啊海市普陀区金沙江路 1518 弄啊啊啊啊海市普陀区金沙江路 1518 弄啊啊啊啊'
@@ -351,8 +367,11 @@
                 this.curPageMy=news;
                 this.selectDatas=this.arrDatas.slice((this.curPageMy-1)*this.pageSizesMy,this.curPageMy*this.pageSizesMy);
                 let len=this.selectDatas.length;
+
                 for(let i=0;i<len;i++){
-                    (this.selectDatas)[i].attributes=JSON.parse(this.selectDatas[i].attributes);
+                    if(typeof (this.selectDatas[i].attributes)==='string'){  //当此属性为json字符串时解析为对象
+                        (this.selectDatas)[i].attributes=JSON.parse(this.selectDatas[i].attributes);
+                    }
                 }
 
             },
@@ -366,12 +385,31 @@
 
             }
 
-
         },
         components: {
-
+            IotDialog
         },
         methods:{
+            saveEdit(val){
+                console.log(val);
+                this.showDialog=false;
+                /*api.iotHome.editDeviceListInfo(val).then(res=>{
+                    console.log(res,'这是编辑后传回来的设备卡片信息')
+                    this.cols=res.cols;
+                    this.tableData=res.tableDatas;
+                }).catch(err=>{
+                    console.log(err,'失败')
+                })*/
+            },
+            editCard(o,i){
+                this.showDialog=true;
+                console.log(i,o);
+                this.editData=o;
+                console.log(this.editData);
+            },
+            cancel(){
+                this.showDialog=false;
+            },
             handleTableEdit(index, row) {
                 console.log(index, row);
             },
@@ -470,16 +508,26 @@
             top:rem(39);
         }
         .more{
-            .fades-enter-active {
-                transition: all 1.3s ease;
-            };
-            .fades-leave-active {
-                transition: all .8s cubic-bezier(1.0, 0.5, 0.8, 1.0);
-            };
-            .fades-enter, .fades-leave-to{
-                transform: translateX(rem(16));
-                opacity: 0;
-            };
+            @keyframes dialog-fade-in {
+                0% {
+                    transform: translate3d(0, 100%, 0);
+                    opacity: 0;
+                }
+                100% {
+                    transform: translate3d(0, 0, 0);
+                    opacity: 1;
+                }
+            }
+            @keyframes dialog-fade-out {
+                0% {
+                    transform: translate3d(0, 0, 0);
+                    opacity: 1;
+                }
+                100% {
+                    transform: translate3d(0, -100%, 0);
+                    opacity: 0;
+                }
+            }
             padding-top:rem(16);
             padding-bottom:rem(16);
             .el-dialog{
@@ -545,6 +593,7 @@
                                 display:inline-block;
                                 width:25%;
                                 text-align:right;
+                                overflow:hidden;
                                 &:last-child{
                                     color:#ccc;
                                     width:72%;
