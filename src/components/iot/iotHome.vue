@@ -2,6 +2,7 @@
     <div class="iot-home">
         <div class="basic-show">
             hello,首页
+
         </div>
         <div class="echarts-show"></div>
         <div class="data-flow"></div>

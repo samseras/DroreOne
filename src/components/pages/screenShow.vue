@@ -11,7 +11,6 @@
                             <div class="screenTile" @click="requestFullScreen" ref="screenTile">
                                 <img v-bind:src="headImg" alt="" v-if="isShowHead">
                                 <p v-bind:style="{color:fontColor,lineHeight:headLineH+'px',position:'relative'}">{{dashboradName}}</p>
-
                             </div>
                         </el-col>
                         <el-col :xs="4" :sm="7" :md="6" :lg="4" :xl="4">
@@ -53,6 +52,7 @@
                                 <span class="bootmBorder"></span>
                                 <span></span>
                             </div>
+
                             <div class = "echatsTitle">
                                 <p class = "title" v-bind:style="{color:fontColor,textIndent:textIndents+'px',borderBottom:borderLine}"></p>
                             </div>
@@ -139,7 +139,7 @@
                          homeImg:"../../../static/img/screenHome.svg",
                          settingImg:"../../../static/img/screenSetting.svg",
                          textIndent:0,
-                         headLineH:80,
+                         headLineH:84,
                          homeMarginT:12,
                          echartColor:{
                              legentColor:"#fff",
@@ -176,7 +176,7 @@
                          homeImg:"../../../static/img/screenHome.svg",
                          settingImg:"../../../static/img/screenSetting.svg",
                          textIndent:60,
-                         headLineH:85,
+                         headLineH:88,
                          homeMarginT:12,
                          echartColor: {
                              legentColor:"#fff",
