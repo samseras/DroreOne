@@ -232,7 +232,8 @@ define(function(require, exports, module) {
          * 地图图层操作
          */
         var mapLayer = {
-            creatLayer: function(url, id) {
+            creatLayer: function(url, id,coordinate) {
+                console.log(url, id,coordinate)
                 var vectorSource = new ol.source.Vector({
                     //创建一个空矢量
                 });
@@ -3071,7 +3072,7 @@ define(function(require, exports, module) {
                     //     pool.setSeedLayer(icon.subtype, layer);
                     //     layer.getSource().addFeature(icon.feature);
                     // }
-                    layer = mapLayer.creatLayer(icon.data.url, icon.subtype);
+                    layer = mapLayer.creatLayer(icon.data.url, icon.subtype,icon.coordinate);
                     mapData._baseMap.addLayer(layer);
                     pool.setSeedLayer(icon.subtype, layer);
                     layer.getSource().addFeature(icon.feature);

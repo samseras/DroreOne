@@ -13,7 +13,7 @@
                         <el-button
                             size="mini"
                             type="primary"
-                            @click="handleTableEdit(scope.$index, scope.row)">编辑</el-button>
+                            @click="handleTableEdit(scope.row)">编辑</el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -63,10 +63,9 @@
                 console.log(val);
                 this.showDialog=false;
             },
-            handleTableEdit(row, data){
+            handleTableEdit(row){
 
-              console.log(row,data);
-              this.editData=data;
+              this.editData=row;
               console.log(this.editData);
               this.showDialog=true;
             },

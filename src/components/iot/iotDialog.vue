@@ -12,6 +12,14 @@
                         <span>制造商</span>
                         <el-input type="text" v-model="typeInfo.manufacturer"  :maxlength="15"></el-input>
                     </p>-->
+                    <p class="name" v-for="item in deviceObj" v-if="item.shown">
+                        <span>{{item.label}}</span>
+                        <!--<span>{{item.prop}}</span>-->
+                        <!--<span>{{item.isDisabled}}</span>-->
+                        <!--<span>{{item.shown}}</span>-->
+                        <el-input v-model="item.prop"></el-input>
+                        <!--<el-input v-model="item.prop":disabled="!item.isDisabled"></el-input>-->
+                    </p>
 
                 </div>
                 <div v-if="this.route.includes('deviceList')">
@@ -46,11 +54,32 @@
                 listInfo:{
                     ip:'haha'
                 },
-                visible:false
+                visible:false,
+                deviceObj: []
             };
         },
-        created(){
+        async created(){
+            console.log(this.cols, '这个是列表')
+            console.log(this.editData, '这个是列表')
+            let obj = this.editData
+            await this.cols.forEach(item => {
+                Object.keys(obj).forEach( (key, i) => {
+                    console.log(key, '这个是拿过来的对象的键')
+                    if (item.prop === key) {
+                        // this.deviceObj[item.prop] = i
+                        // this.deviceObj.label = item.label
+                        let device = {}
+                        device.prop = obj[key]
+                        device.label = item.label
+                        device.isDisabled = item.editable
+                        device.shown = item.shown
+                        device.key = item.prop
+                        this.deviceObj.push(device)
+                    }
+                });
+            })
             this.route = this.$route.path;
+
 
             /*api.iotHome.getEditInfo().then(res => {
                 console.log(res, '要编辑的信息')
@@ -83,10 +112,15 @@
 
             },
             save(){
+                console.log(this.deviceObj, '这个是编辑后的')
+                let obj = {}
+                this.deviceObj.forEach(item => {
+                    obj[item.key] = item.prop
+                })
+                console.log(obj, '这个是最终编辑的')
                 let fixContent={};
                 if (this.route.includes('deviceModel')){
                     fixContent=this.typeInfo;
-
                 }else if(this.route.includes('deviceList')){
                     fixContent=this.listInfo;
                 }
