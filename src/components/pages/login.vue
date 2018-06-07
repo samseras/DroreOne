@@ -29,7 +29,7 @@
 <script>
     let Base64 = require('js-base64').Base64;
     import api from "@/api"
-    import { mapMutations } from 'vuex'
+    import { mapMutations,mapActions } from 'vuex'
 	export default {
 		data() {
 	        return {
@@ -43,6 +43,7 @@
 		},
 		methods:{
             ...mapMutations(['SET_USER',]),
+            ...mapActions(['getUserDetailInfo']),
 			regForm () {
 				let s = $('#checkCode').val().toLowerCase();
 				let x= $('#Code').val().toLowerCase();
@@ -78,9 +79,6 @@
                     this.$refs.checkCode.style.border="none";
                     this.$refs.userpass.style.border="none";
                     this.$refs.userid.style.border="1px solid red";
-                    // $("#userpass").css("border","none")
-                    // $("#checkCode").css("border","none")
-                    // $("#userid").css("border","1px solid red")
                     this.$message.error('请输入用户名')
                     return
                 }
@@ -88,8 +86,6 @@
                     this.$refs.checkCode.style.border="none";
                     this.$refs.userpass.style.border="1px solid red";
                     this.$refs.userid.style.border="none";
-                    // $("#userid").css("border","none")
-                    // $("#userpass").css("border","1px solid red")
                     this.$message.error('请输入密码')
                     return
                 }
@@ -99,6 +95,7 @@
                         localStorage.setItem('userName',this.username)
                         localStorage.setItem('token', JSON.stringify(obj))
                         this.$store.commit('SET_USER', this.username)
+                        this.getUserDetailInfo(this.username)
                         if(res != []){
                              this.$router.push('droreone')
                         }
@@ -123,7 +120,6 @@
 	}
 </script>
 <style scoped lang="scss" type="text/scss">
-	*{margin: 0;padding:0;}
 	.login{
         min-width: rem(1380);
         width: 100%;
@@ -132,6 +128,10 @@
         background: url('../../../static/img/1.png') no-repeat;
         background-size:cover;
         .login-content{
+            height: 100%;
+            display: -webkit-box;
+            display: -webkit-flex;
+            display: -ms-flexbox;
             display: flex;
             flex-direction:column;
             box-sizing:border-box;
@@ -205,21 +205,22 @@
                             border: none;
                             border-bottom: 1px solid #e9eef2;
                             width: rem(280);
-                            height: rem(60);
-                            text-indent:rem(50);
+                            padding: rem(20) rem(40);
+                            padding-left: rem(40);
+                            box-sizing: border-box;
                             background: none;
-                            font-size: rem(20);
+                            font-size: 16px;
                             color: #999;
                         }
                         #userid{
                             background: url(../../../static/img/person.png) no-repeat;
                             background-size:rem(14);
-                            background-position: rem(15) rem(26);
+                            background-position: rem(15) rem(23);
                         }
                         #userpass{
                             background: url(../../../static/img/lock.png) no-repeat;
                             background-size:rem(14);
-                            background-position: rem(15) rem(25);
+                            background-position: rem(15) rem(23);
                         }
                         input::-webkit-input-placeholder { /* WebKit browsers */ color: #cad4d6;font-size: rem(12); }
                         input:-moz-placeholder { /* Mozilla Firefox 4 to 18 */ color: #cad4d6;font-size: rem(12);}
@@ -229,27 +230,18 @@
                         #Code{
                             position:absolute;
                             border: 1px solid #e9eef2;
+                            border-radius: rem(3);
                             height: rem(35);
-                            width: rem(100);
-                            left:rem(158);
-                            top: rem(130);
+                            width: rem(60);
+                            right:rem(20);
+                            bottom: 87px;
                             text-indent: 0;
-                            text-align: center;
                             font-size: rem(18);
+                            text-align: center;
                             outline:none;
+                            padding: 0;
                         }
                         #Code:focus{outline: none;}
-
-                        /*#Code{*/
-                            /*position:absolute;*/
-                            /*border: 1px solid #e9eef2;*/
-                            /*height: 40px;*/
-                            /*width: 120px;*/
-                            /*right: 0;*/
-                            /*top: 130px;*/
-                            /*text-indent: 0;*/
-                            /*text-align: center;}*/
-
                         #submit{
                             margin-top: rem(35);
                             width: rem(200);
@@ -261,6 +253,7 @@
                             margin-left: rem(40);
                             font-size: rem(16);
                             text-indent: 0;
+                            padding: 0;
                         }
 
                     }

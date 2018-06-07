@@ -8,8 +8,8 @@ import * as types from '../mutations-type'
 const user = {
     state: {
         user: '',
-        userRoles: ''
-
+        userRoles: '',
+        userDetailInfo: {}
     },
     getters: {
         getUserInfo (state) {
@@ -21,6 +21,9 @@ const user = {
         },
         getUserRole (state) {
             return state.userRoles
+        },
+        getUserDetailMsg (state) {
+            return state.userDetailInfo
         }
     },
     setters: {},
@@ -30,6 +33,9 @@ const user = {
         },
         [types.SET_USER_ROLES] (state, data) {
             state.userRoles = data
+        },
+        [types.SET_USER_DETAIL_INFO] (state, data) {
+            state.userDetailInfo = data
         },
     },
     actions: {
@@ -42,12 +48,18 @@ const user = {
             return await api.login.userLogout(data)
         },
         async getUserRoles ({commit},userName) {
-             console.log(900000000000000000000000)
             try {
                 let data = await api.login.getUserRoles(userName)
-                console.log(data[0], '这个是vuexAction')
                 commit(types.SET_USER_ROLES, data[0])
                 return data[0]
+            } catch (err) {
+                console.log(err)
+            }
+        },
+        async getUserDetailInfo ({commit},username) {
+            try {
+                let data = await api.lib.getUserInfo(username)
+                commit(types.SET_USER_DETAIL_INFO,data)
             } catch (err) {
                 console.log(err)
             }

@@ -565,7 +565,7 @@
                     width: rem(150);
                     text-align: left;
                     padding-right: rem(5);
-                    line-height: rem(20);
+                    padding-top: rem(5);
                     overflow: hidden;
                     text-overflow: ellipsis;
                     white-space: nowrap;

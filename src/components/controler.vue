@@ -12,7 +12,7 @@
                 <i class="el-icon-d-arrow-right" v-if="exhibition" @click="packUpHidden(1)"></i>
                 <i class="el-icon-d-arrow-left" v-if="!exhibition" @click="packUpHidden(0)"></i>
                 <ul>
-                    <li v-for="(item, index) in title" v-if="item.controlShow" :class="activeIndex === index? 'active':''" @click="goControlModule(index)">
+                    <li v-for="(item, index) in controler" v-if="item.enable" :class="activeIndex === index? 'active':''" @click="goControlModule(index)">
                         <router-link :to="item.route"><img :src="item.img" :alt="item.desc" :title="item.desc">
                         </router-link>
                     </li>
@@ -26,28 +26,33 @@
     import Map from '@/components/map'
     import {mapGetters,mapMutations} from 'vuex'
     import api from '@/api'
+    import _ from 'lodash'
 
 
     export default {
         data() {
             return {
                 title: [
-                    {name:'CAMERA',route: '/controler/camera', img: '../../../static/img/camera.svg', desc: "摄像头",controlShow:false},
-                    {name:'BROADCAST',route: '/controler/broad', img: '../../../static/img/broadcast.svg', desc: "广播",controlShow:false},
-                    {name:'WIFI',route: '/controler/wifi', img: '../../../static/img/wifi.svg', desc: "WiFi",controlShow:false},
-                    {name:'MONITORS',route: '/controler/environment', img: '../../../static/img/detection.svg', desc: "环境检测",controlShow:false},
-                    {name:'WARN',route: '/controler/warn', img: '../../../static/img/warn.svg', desc: "警告",controlShow:true},
-                    {name:'LED',route: '/controler/screen', img: '../../../static/img/led.svg', desc: "大屏",controlShow:false},
-                    {name:'PERSON',route: '/controler/person', img: '../../../static/img/dmis.svg', desc: "个人定位",controlShow:true},
-                    {name:'CAR',route: '/controler/car', img: '../../../static/img/boatCar.svg', desc: "车船调度",controlShow:true},
-                    {name:'LIGHT',route: '/controler/light', img: '../../../static/img/light.svg', desc: "路灯",controlShow:false},
+                    {names:'CAMERA',route: '/controler/camera', img: '../../../static/img/camera.svg', desc: "摄像头",controlShow:false},
+                    {names:'BROADCAST',route: '/controler/broad', img: '../../../static/img/broadcast.svg', desc: "广播",controlShow:false},
+                    {names:'WIFI',route: '/controler/wifi', img: '../../../static/img/wifi.svg', desc: "WIFI",controlShow:false},
+                    {names:'MONITORS',route: '/controler/environment', img: '../../../static/img/detection.svg', desc: "环境检测传感器",controlShow:false},
+                    {enable: true,names:'WARN',route: '/controler/warn', img: '../../../static/img/warn.svg', desc: "告警",controlShow:true},
+                    {names:'LED',route: '/controler/screen', img: '../../../static/img/led.svg', desc: "LED大屏",controlShow:false},
+                    {enable: true,names:'PERSON',route: '/controler/person', img: '../../../static/img/dmis.svg', desc: "个人定位",controlShow:true},
+                    {enable: true,names:'CAR',route: '/controler/car', img: '../../../static/img/boatCar.svg', desc: "车船调度",controlShow:true},
+                    {names:'LIGHT',route: '/controler/light', img: '../../../static/img/light.svg', desc: "路灯",controlShow:false},
                     // {route: '/controler/other', img: '../../../static/img/else.png', desc: "其他"}
                 ],
                 isShowControler: false,
                 exhibition: true,
                 activeIndex: 1,
                 isSearch: false,
-                controler:[],
+                controler:[
+                    {enable: true,names:'WARN',route: '/controler/warn', img: '../../../static/img/warn.svg', desc: "告警",controlShow:true},
+                    {enable: true,names:'CAR',route: '/controler/car', img: '../../../static/img/boatCar.svg', desc: "车船调度",controlShow:true},
+                    {enable: true,names:'PERSON',route: '/controler/person', img: '../../../static/img/dmis.svg', desc: "个人定位",controlShow:true},
+                ],
                 controlShow:true,
                 CAMERA:false,
                 BROADCAST:false,
@@ -88,21 +93,29 @@
                 this.activeIndex = index
             },
             async getAllControler(){
-                await api.controler.getAllControler().then((res)=>{
-                    // console.log(res,'这是请求回来的数据')
-                    this.controler=res
-                    for(let i=0;i< this.controler.length;i++){
-                        for(let j=0;j< this.title.length;j++){
-                            if(this.title[j].name===this.controler[i].name){
-                                if(this.controler[i].value==="ON"){
-                                    this.title[j].controlShow= true
-                                }else if(this.controler[i].value==="OFF"){
-                                    this.title[j].controlShow= false
-                                }
+                await api.lib.getAllDeviceType().then((res)=>{
+                    console.log(res,'这是请求回来的数据')
+                    // for(let i=0;i< this.controler.length;i++){
+                    //     for(let j=0;j< this.title.length;j++){
+                    //         if(this.title[j].name===this.controler[i].name){
+                    //             if(this.controler[i].value==="ON"){
+                    //                 this.title[j].controlShow= true
+                    //             }else if(this.controler[i].value==="OFF"){
+                    //                 this.title[j].controlShow= false
+                    //             }
+                    //         }
+                    //     }
+                    // }
+                    res.forEach(item => {
+                        this.title.forEach(item1 => {
+                            if (item1.desc.includes(item.name)) {
+                                item = {...item,...item1}
+                                this.controler.unshift(item)
                             }
-                        }
-                    }
-                    console.log(this.title)
+                        })
+                    })
+                    console.log(this.controler, '这个是终极合并')
+                    // this.controler = _.uniqBy(this.controler, 'name')
                 }).catch((err)=>{
                     console.log(err)
                 })
