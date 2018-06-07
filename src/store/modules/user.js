@@ -9,7 +9,6 @@ const user = {
     state: {
         user: '',
         userRoles: ''
-
     },
     getters: {
         getUserInfo (state) {
@@ -42,7 +41,6 @@ const user = {
             return await api.login.userLogout(data)
         },
         async getUserRoles ({commit},userName) {
-             console.log(900000000000000000000000)
             try {
                 let data = await api.login.getUserRoles(userName)
                 console.log(data[0], '这个是vuexAction')
@@ -51,7 +49,7 @@ const user = {
             } catch (err) {
                 console.log(err)
             }
-        }
+        },
     }
 }
 
