@@ -9,14 +9,14 @@
                 <div v-if="this.route.includes('deviceModel')">
                     <!--动态？-->
                     <!--<p class="">
-                        <span>名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称：</span>
+                        <span>制造商</span>
                         <el-input type="text" v-model="typeInfo.manufacturer"  :maxlength="15"></el-input>
                     </p>-->
 
                 </div>
                 <div v-if="this.route.includes('deviceList')">
                     <!--<p class="">
-                        <span>I&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;P：</span>
+                        <span>IP:</span>
                         <el-input type="text" v-model="listInfo.ip"  :maxlength="15"></el-input>
                     </p>-->
 
@@ -31,11 +31,13 @@
 </template>
 
 <script>
+    import api from '@/api'
     export default {
         name: "iotDialog",
         props:['cols','editData','showDialog'],
         data() {
             return {
+                editInfo:[],
                 route:'',
                 typeInfo:{
                     description:'sss',
@@ -50,9 +52,16 @@
         created(){
             this.route = this.$route.path;
 
+            /*api.iotHome.getEditInfo().then(res => {
+                console.log(res, '要编辑的信息')
+                this.editInfo = res
+            });*/
+
+
             console.log(this.route);
             if (this.route.includes('deviceModel')){
-                this.typeInfo=this.editData;
+                //this.typeInfo=this.editData;
+
             }else if(this.route.includes('deviceList')){
                 console.log('list数据');
                 this.listInfo=this.editData;
