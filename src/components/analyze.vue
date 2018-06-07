@@ -19,7 +19,7 @@
                                             <span class="Admin"v-if="!getUserDetailMsg.nickname">{{getUserDetailMsg.username}}</span>
                                             <img :src="getUrl(getUserDetailMsg.picturePath)" alt="" @error="imgError">
                                         </template>
-                                        <el-menu-item index="">个人中心</el-menu-item>
+                                        <el-menu-item index=""  @click="visible = true">个人中心</el-menu-item>
                                         <el-menu-item index="/droreone">返回主页</el-menu-item>
                                         <el-menu-item @click="logout" index="">退出</el-menu-item>
                                     </el-submenu>
@@ -72,6 +72,11 @@
             </div>
             <err-list v-else :echatListErrs = "echatListErr"></err-list>
         </div>
+        <UserInfoDialog
+            v-if="visible"
+            :visible="visible"
+            @closeInfoDialog="visible = false">
+        </UserInfoDialog>
 
     </div>
 
@@ -101,6 +106,7 @@
             type:null,
             dashboradName:null,
             showTile:false,
+            showLink: false,
             echatListErr:{
                 pullData:false,
                 errInform:false,
@@ -257,63 +263,65 @@
 
 </script>
 <style lang="scss">
-    .analyzeHeader{
-        width: 100%;
-        height: rem(60);
-        .el-container{
+    .analyze {
+        .analyzeHeader{
             width: 100%;
             height: rem(60);
-            min-width: rem(1120);
-        }
-        .el-header {
-            width: 100%;
-            height: rem(60) !important;
-            padding-right: 0;
-            position: relative;
-            z-index: 9;
-        }
-        .el-row{
-            width: 100%;
-            height: rem(60);
-            margin: 0 !important;
-            .el-col{
+            .el-container{
+                width: 100%;
+                height: rem(60);
+                min-width: rem(1120);
+            }
+            .el-header {
+                width: 100%;
+                height: rem(60) !important;
+                padding-right: 0;
+                position: relative;
+                z-index: 9;
+            }
+            .el-row{
+                width: 100%;
+                height: rem(60);
+                margin: 0 !important;
+                .el-col{
+                    color: #fff;
+                }
+            }
+
+            .el-main{
+                padding: 0 !important;
+            }
+            .el-menu-demo,.el-menu--horizontal,.el-menu{
+                background-color: transparent;
+                /*border: none;*/
+            }
+            .func .el-menu{
+                border: none;
+            }
+            /*.el-menu-demo,.el-menu--horizontal,.el-menu:hover{*/
+            /*background-color: transparent;*/
+            /*}*/
+            .el-menu--horizontal>.el-submenu .el-submenu__title{
                 color: #fff;
             }
-        }
-
-        .el-main{
-            padding: 0 !important;
-        }
-        .el-menu-demo,.el-menu--horizontal,.el-menu{
-            background-color: transparent;
-            /*border: none;*/
-        }
-        .func .el-menu{
-            border: none;
-        }
-        /*.el-menu-demo,.el-menu--horizontal,.el-menu:hover{*/
-        /*background-color: transparent;*/
-        /*}*/
-        .el-menu--horizontal>.el-submenu .el-submenu__title{
-            color: #fff;
-        }
-        .el-menu--horizontal>.el-submenu .el-submenu__title:hover{
-            background-color: transparent;
-        }
-        .func .el-submenu__title img{
-            display: inline-block;
-            width: rem(30);
-            height: rem(30);
-            vertical-align: middle;
-            border-radius: 50%;
-            margin-top: rem(0);
-            margin-left: rem(5);
-        }
-        .el-menu--horizontal>.el-submenu.is-active .el-submenu__title{
-            border-bottom-color: transparent;
-        }
-        .el-submenu.is-active .el-submenu__title{
-            border-bottom-color: transparent;
+            .el-menu--horizontal>.el-submenu .el-submenu__title:hover{
+                background-color: transparent;
+            }
+            .func .el-submenu__title img{
+                display: inline-block;
+                width: rem(30);
+                height: rem(30);
+                vertical-align: middle;
+                border-radius: 50%;
+                margin-top: rem(0);
+                margin-left: rem(5);
+            }
+            .el-menu--horizontal>.el-submenu.is-active .el-submenu__title{
+                border-bottom-color: transparent;
+            }
+            .el-submenu.is-active .el-submenu__title{
+                border-bottom-color: transparent;
+            }
         }
     }
 </style>
