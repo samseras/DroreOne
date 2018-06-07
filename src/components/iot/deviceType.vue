@@ -13,7 +13,7 @@
                         <el-button
                             size="mini"
                             type="primary"
-                            @click="handleTableEdit(scope.$index, scope.row)">编辑</el-button>
+                            @click="handleTableEdit(scope.row)">编辑</el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -50,6 +50,7 @@
             saveDialog(val){
                 console.log(val);
                 this.showDialog=false;
+                //再刷新一次数据列表
                 /*api.iotHome.editDeviceTypeInfo(val).then(res=>{
                     console.log(res,'这是编辑后传回来的设备类型信息')
                     this.cols=res.cols;
@@ -62,10 +63,9 @@
                 console.log(val);
                 this.showDialog=false;
             },
-            handleTableEdit(row, data){
+            handleTableEdit(row){
 
-              console.log(row,data);
-              this.editData=data;
+              this.editData=row;
               console.log(this.editData);
               this.showDialog=true;
             },
