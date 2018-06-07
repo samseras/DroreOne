@@ -5,8 +5,11 @@
             <div id="getTime">
                 {{currTime | timeFiler}} ({{currTime | weekFiler}})
             </div>
-            <div class="user">{{getUserInfo}}</div>
-            <a class="indexExit" href="login" ></a>
+            <!--<img class="userAvatar" :src="../../../static/img/user.png" alt="">-->
+            <img class="userAvatar" :src="getUrl(getUserDetailMsg.picturePath)" alt="" @error="imgError">
+            <div class="user"v-if="!getUserDetailMsg.nickname">{{getUserDetailMsg.username}}</div>
+            <div class="user"v-if="getUserDetailMsg.nickname">{{getUserDetailMsg.nickname}}</div>
+            <router-link class="indexExit" to="/login" ></router-link>
         </header>
 		<div class="main">
             <div class="search">
@@ -87,7 +90,7 @@
 <script>
     import moment from 'moment'
     import ScrollContainer from '@/components/ScrollContainer'
-    import { mapGetters } from 'vuex'
+    import { mapGetters,mapActions} from 'vuex'
 	export default {
 		data() {
 	        return {
@@ -128,6 +131,18 @@
             }
         },
         methods: {
+            ...mapActions(['getUserDetailInfo']),
+            imgError (e) {
+                e.target.src = this.getUrl(null);
+            },
+            getUrl (url) {
+                if (url === null || url === undefined) {
+                    return '../../../static/img/user.png'
+                } else {
+                    return url
+                }
+                return '../../../static/img/user.png'
+            },
             isCur(index) {
                 return index === this.activeIndex
             },
@@ -205,8 +220,11 @@
         components: {
             ScrollContainer
         },
+        created () {
+		    this.getUserDetailInfo(this.getUserInfo)
+        },
         computed: {
-            ...mapGetters(['getUserInfo'])
+            ...mapGetters(['getUserInfo','getUserDetailMsg'])
         }
 
 	}
@@ -241,16 +259,21 @@
                 float: left;
                 margin-left: rem(740);
             }
+            .userAvatar {
+                width: rem(30);
+                height: rem(30);
+                border-radius: 50%;
+                float: left;
+                margin-top: rem(10);
+                margin-left: rem(200);
+            }
             .user{
                 float: left;
                 width: rem(100);
                 line-height: rem(50);
-                background: url(../../../static/img/user.png) no-repeat;
-                background-size:rem(14);
-                background-position: 0 rem(15);
-                margin-left: rem(30);
                 text-indent: rem(20);
                 font-size: rem(14);
+                margin-left: rem(-15);
             }
             .indexExit{
                 width: rem(20);
@@ -349,7 +372,6 @@
                  margin:rem(15);
                  margin-top: rem(30);
                  img{
-
                      position: absolute;
                      left: 40%;
                      top: 40%;

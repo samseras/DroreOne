@@ -40,9 +40,9 @@
                   {names:'PLANT',route:'/facility/plant',img:'../../../static/img/plant.svg',desc:"植物",controlShow:false},
                   {names:'SIGNBOARD',route:'/facility/indicator',img:'../../../static/img/indicator.svg',desc:"指示牌",controlShow:false}
                  ],
-          isShowControler: false,
-          exhibition: true,
-          activeIndex: 4,
+                isShowControler: false,
+                exhibition: true,
+                activeIndex: 4,
                 facility: []
       }
     },

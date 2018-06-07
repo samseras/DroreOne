@@ -29,7 +29,7 @@
 <script>
     let Base64 = require('js-base64').Base64;
     import api from "@/api"
-    import { mapMutations } from 'vuex'
+    import { mapMutations,mapActions } from 'vuex'
 	export default {
 		data() {
 	        return {
@@ -43,6 +43,7 @@
 		},
 		methods:{
             ...mapMutations(['SET_USER',]),
+            ...mapActions(['getUserDetailInfo']),
 			regForm () {
 				let s = $('#checkCode').val().toLowerCase();
 				let x= $('#Code').val().toLowerCase();
@@ -94,6 +95,7 @@
                         localStorage.setItem('userName',this.username)
                         localStorage.setItem('token', JSON.stringify(obj))
                         this.$store.commit('SET_USER', this.username)
+                        this.getUserDetailInfo(this.username)
                         if(res != []){
                              this.$router.push('droreone')
                         }

@@ -16,8 +16,9 @@
                     <el-menu  class="el-menu-demo" mode="horizontal" router>
                         <el-submenu index="">
                             <template slot="title">
-                                <span class="Admin">{{getUserInfo}}</span>
-                                <img src="./../../static/img/peopleInfo.svg" alt="">
+                                <span class="Admin"v-if="getUserDetailMsg.nickname">{{getUserDetailMsg.nickname}}</span>
+                                <span class="Admin"v-if="!getUserDetailMsg.nickname">{{getUserDetailMsg.username}}</span>
+                                <img :src="getUrl(getUserDetailMsg.picturePath)" alt="" @error="imgError">
                             </template>
                             <el-menu-item index="" @click="showUserDialog">个人中心</el-menu-item>
                             <el-menu-item index="/droreone">返回主页</el-menu-item>
@@ -54,6 +55,7 @@
         created () {
             this.route = this.$route.path
             this.getUserRoles(this.getUserInfo)
+            this.getUserDetailInfo(this.getUserInfo)
         },
         watch: {
           '$route'(){
@@ -65,7 +67,7 @@
             UserInfoDialog
         },
         methods:{
-            ...mapActions(['logout','getUserRoles']),
+            ...mapActions(['logout','getUserRoles','getUserDetailInfo']),
             logout() {
                 let data = JSON.parse(localStorage.getItem('token'))
                 this.$store.dispatch('logout',data).then(() => {
@@ -75,10 +77,21 @@
             },
             showUserDialog () {
                 this.visible = true
-            }
+            },
+            imgError (e) {
+                e.target.src = this.getUrl(null);
+            },
+            getUrl (url) {
+                if (url === null || url === undefined) {
+                    return './../../static/img/peopleInfo.svg'
+                } else {
+                    return url
+                }
+                return './../../static/img/peopleInfo.svg'
+            },
         },
         computed: {
-            ...mapGetters(['getUserInfo'])
+            ...mapGetters(['getUserInfo','getUserDetailMsg'])
         }
     }
 </script>
@@ -99,10 +112,11 @@
         }
         .func .el-submenu__title img{
             display: inline-block;
-            width: rem(20);
-            height: rem(20);
+            width: rem(30);
+            height: rem(30);
+            border-radius: 50%;
             vertical-align: middle;
-            margin-top: rem(-4);
+            margin-top: rem(0);
             margin-left: rem(5);
         }
         .el-menu--horizontal>.el-submenu.is-active .el-submenu__title{

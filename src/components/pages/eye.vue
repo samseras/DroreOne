@@ -46,8 +46,9 @@
                             <el-menu  class="el-menu-demo" mode="horizontal" router>
                                 <el-submenu index="">
                                     <template slot="title">
-                                        <span class="Admin">{{getUserInfo}}</span>
-                                        <img src="./../../../static/img/peopleInfo.svg" alt="">
+                                        <span class="Admin"v-if="getUserDetailMsg.nickname">{{getUserDetailMsg.nickname}}</span>
+                                        <span class="Admin"v-if="!getUserDetailMsg.nickname">{{getUserDetailMsg.username}}</span>
+                                        <img :src="getUrl(getUserDetailMsg.picturePath)" alt="" @error="imgError">
                                     </template>
                                     <el-menu-item @click='visible = true' index="">个人中心</el-menu-item>
                                     <el-menu-item index="/droreone">返回主页</el-menu-item>
@@ -127,9 +128,7 @@
             if (route.includes('facility/')){
                 this.activeIndex = 1
             }
-            // if (route.includes('analyze/')){
-            //     this.activeIndex = 2
-            // }
+            this.getUserDetailInfo(this.getUserInfo)
         },
         filters: {
             timeFiler(item) {
@@ -215,7 +214,18 @@
         },
         methods: {
             ...mapMutations(['SEARCH_INFO','SHOW_SEARCH']),
-            ...mapActions(['logout']),
+            ...mapActions(['logout','getUserDetailInfo']),
+            imgError (e) {
+                e.target.src = this.getUrl(null);
+            },
+            getUrl (url) {
+                if (url === null || url === undefined) {
+                    return './../../static/img/peopleInfo.svg'
+                } else {
+                    return url
+                }
+                return './../../static/img/peopleInfo.svg'
+            },
             changeLanguage () {// 语言切换
                 if (this.$i18n.locale === 'CN'){
                     this.$i18n.locale = 'EN'
@@ -367,7 +377,7 @@
             UserInfoDialog
         },
         computed: {
-            ...mapGetters(['getUserInfo'])
+            ...mapGetters(['getUserInfo', 'getUserDetailMsg'])
         }
     }
 </script>
@@ -414,10 +424,11 @@
         }
         .func .el-submenu__title img{
             display: inline-block;
-            width: rem(20);
-            height: rem(20);
+            width: rem(30);
+            height: rem(30);
             vertical-align: middle;
-            margin-top: rem(-4);
+            margin-top: rem(0);
+            border-radius: 50%;
             margin-left: rem(5);
         }
         .el-menu--horizontal>.el-submenu.is-active .el-submenu__title{

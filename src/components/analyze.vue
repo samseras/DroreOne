@@ -15,8 +15,9 @@
                                 <el-menu  class="el-menu-demo" mode="horizontal" router>
                                     <el-submenu index="">
                                         <template slot="title">
-                                            <span class="Admin">{{getUserInfo}}</span>
-                                            <img src="./../../static/img/peopleInfo.svg" alt="">
+                                            <span class="Admin"v-if="getUserDetailMsg.nickname">{{getUserDetailMsg.nickname}}</span>
+                                            <span class="Admin"v-if="!getUserDetailMsg.nickname">{{getUserDetailMsg.username}}</span>
+                                            <img :src="getUrl(getUserDetailMsg.picturePath)" alt="" @error="imgError">
                                         </template>
                                         <el-menu-item @click="visible = true">个人中心</el-menu-item>
                                         <el-menu-item index="/droreone">返回主页</el-menu-item>
@@ -107,6 +108,7 @@
   	  await this.getDashboradList()
       this.$router.push({path:`/analyze/${this.sidebarList[0].dashboard_id}`});
       this.$store.commit('REFRESH_DATA_TYPE', this.sidebarList[0].refresh_interval)
+        this.getUserDetailInfo(this.getUserInfo)
     },
   	components:{
   		passengerFlow,
@@ -115,9 +117,8 @@
   	},
     methods:{
         ...mapMutations(['REFRESH_DATA_TYPE','COMPANY_DATA_NAME']),
-        ...mapMutations(['REFRESH_DATA_TYPE']),
-        ...mapActions(['logout']),
-        
+        ...mapActions(['logout','getUserDetailInfo']),
+
         hideLists(data){
                this.hideList = !data.list;
                this.isshowHead = !data.head;
@@ -205,7 +206,18 @@
                 this.$message.success('登出成功')
                 location.reload()
             })
-        }
+        },
+        imgError (e) {
+            e.target.src = this.getUrl(null);
+        },
+        getUrl (url) {
+            if (url === null || url === undefined) {
+                return './../../static/img/peopleInfo.svg'
+            } else {
+                return url
+            }
+            return './../../static/img/peopleInfo.svg'
+        },
       },
       watch: {
   	    '$route' () {
@@ -213,7 +225,7 @@
         }
       },
       computed: {
-          ...mapGetters(['getUserInfo'])
+          ...mapGetters(['getUserInfo', 'getUserDetailMsg'])
       }
     }
 
@@ -265,10 +277,11 @@
         }
         .func .el-submenu__title img{
             display: inline-block;
-            width: rem(20);
-            height: rem(20);
+            width: rem(30);
+            height: rem(30);
             vertical-align: middle;
-            margin-top: rem(-4);
+            border-radius: 50%;
+            margin-top: rem(0);
             margin-left: rem(5);
         }
         .el-menu--horizontal>.el-submenu.is-active .el-submenu__title{
