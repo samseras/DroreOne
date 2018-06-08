@@ -34,10 +34,10 @@ const alarm = {
         })
     },
 
-    getAllAlarmRule () {
+    getAlarmRuleById (id) {
         return axios ({
             method: 'GET',
-            url: getUrl('/alarm/rule')
+            url: getUrl('/alarm/rule?id='+id)
         })
     },
 
@@ -133,7 +133,7 @@ const alarm = {
     },
     deleteUploadAttachments(param){
         return axios ({
-            method: 'GET',
+            method: 'DELETE',
             url: getUrl('/resource'),
             data:JSON.stringify(param)
         })
