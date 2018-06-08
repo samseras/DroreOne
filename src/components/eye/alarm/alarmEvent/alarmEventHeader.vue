@@ -21,8 +21,8 @@
 
         <div class="page">
             <span>当前第1页/共8页</span>
-            <span class="upPage"><</span>
-            <span class="downPage">></span>
+            <span class="upPage"></span>
+            <span class="downPage"></span>
         </div>
     </div>
 </template>
