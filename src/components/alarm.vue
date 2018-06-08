@@ -52,11 +52,11 @@
                                 index: '/alarm/crossborder-Rule',
                                 title: '越界'
                             },
-                            // {
-                            //     icon: './../../static/img/clearer.svg',
-                            //     index: '/alarm/speeding-Rule',
-                            //     title: '超速'
-                            // },
+                            {
+                                icon: './../../static/img/clearer.svg',
+                                index: '/alarm/speeding-Rule',
+                                title: '超速'
+                            },
                             {
                                 icon: './../../static/img/alarm/offtrackRule.svg',
                                 index: '/alarm/offtrack-Rule',

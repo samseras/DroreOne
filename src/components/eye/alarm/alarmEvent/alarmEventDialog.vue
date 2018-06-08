@@ -134,7 +134,7 @@
         <AlarmDetail  v-if="ruleVisible"
                       :ruleVisible="ruleVisible"
                       @closeDialog ="closeDialog"
-                      :alarmRuleId="eventInfo.alarmRuleId">
+                      :alarmRuleId="eventInfo.rule.id">
 
         </AlarmDetail>
     </div>
@@ -175,8 +175,7 @@
                 this.ruleVisible = false
             },
             showRuleDetail(){
-                console.log(this.eventInfo.alarmRuleId)
-                console.log(this.eventInfo.alarmRuleName)
+                console.log(this.eventInfo.rule.id)
                 this.ruleVisible = true;
             },
             ownerChange(val){
@@ -350,9 +349,10 @@
             async addUpload(){
                 if(this.fileAddList.length >0){
                     var data = new FormData();
-                    this.fileAddList.forEach((item)=>{
-                        data.append('f1',item);
+                    this.fileAddList.forEach((item,index)=>{
+                        data.append('f'+index,item);
                     })
+                    console.log('data0',data.get('f0'))
                     await api.alarm.uploadAttachments(data).then(res => {
                         console.log(res, '上传成功')
                         this.fileAddIds = res
@@ -363,16 +363,20 @@
             },
             async deleteUpload(){
                 if(this.initFileList.length > 0){
-                    let removeFile = this.initFileList.filter(item=>!this.fileList.includes(item))
+                    let fileIDs = this.fileList.map(item=>item.id)
+                    let removeFile = this.initFileList.filter((item)=>!fileIDs.includes(item.id))
+                    console.log(removeFile,'removeFile')
+                    if(removeFile.length >0){
+                        let removeIds = removeFile.map(item=>item.id)
 
-                    let removeIds = removeFile.map(item=>item.id)
+                        //调删除接口
+                        await api.alarm.deleteUploadAttachments({ids:removeIds}).then(res => {
+                            console.log(res, '删除成功')
+                        }).catch(err => {
+                            console.log(err, '删除失败')
+                        })
+                    }
 
-                    //调删除接口
-                    await api.alarm.deleteUploadAttachments({ids:removeIds}).then(res => {
-                        console.log(res, '删除成功')
-                    }).catch(err => {
-                        console.log(err, '删除失败')
-                    })
                 }
             },
             getServityNameById(id){
