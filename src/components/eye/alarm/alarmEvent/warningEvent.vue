@@ -37,6 +37,7 @@
                             label="指标类型">
                         </el-table-column>
                         <el-table-column
+                            show-overflow-tooltip
                             prop="device.name"
                             label="来源">
                         </el-table-column>
@@ -290,7 +291,6 @@
                 })
             },
             async getAllAlarmEvent () {
-                this.isShowLoading = true
                 await   api.alarm.getAllAlarmEvent().then(res => {
                                 console.log(res, '请求成功')
                                 this.isShowLoading = false
@@ -331,6 +331,7 @@
                     this.alarmType = res;
                 }).catch(err => {
                     console.log(err, '请求失败')
+                    console.log(err, '请求失败')
                 })
             },
             initData(){
@@ -338,6 +339,7 @@
             }
         },
         created () {
+            this.isShowLoading = true
             this.initData();
             this.getAllAlarmEvent();
             console.log(this.personInfo)

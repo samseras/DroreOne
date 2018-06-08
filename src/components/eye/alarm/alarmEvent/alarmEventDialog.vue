@@ -456,11 +456,6 @@
             this.initFileList = JSON.parse(JSON.stringify(this.Info.fileList))
             this.fileList = JSON.parse(JSON.stringify(this.Info.fileList));
             this.eventInfo = JSON.parse(JSON.stringify(this.Info));
-            // this.fileDelList = this.eventInfo.fileList
-            // if(this.eventInfo.ownerId && this.eventInfo.ownerId != ""){
-            //     this.getNameById(this.eventInfo.ownerId);
-            // }
-
         },
         components : {
             AlarmDetail,
