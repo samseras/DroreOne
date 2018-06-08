@@ -37,20 +37,7 @@
                 isShowJobType: true,
                 isShowIndicatorType: true,
                 isShowTrashType: true,
-                statusInfo:[
-                    {
-                        id:'1',
-                        name: '新告警',
-                    },
-                    {
-                        id:'2',
-                        name: '处理中'
-                    },
-                    {
-                        id:'3',
-                        name: '已处理'
-                    }
-                ],
+                statusInfo:[],
                 filterList:[]
             }
         },
@@ -94,7 +81,7 @@
             }
         },
         created () {
-            // this.getStatusType();
+            this.getStatusType();
             this.showPersonJob()
         }
     }

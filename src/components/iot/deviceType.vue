@@ -50,6 +50,7 @@
             saveDialog(val){
                 console.log(val);
                 this.showDialog=false;
+                //再刷新一次数据列表
                 /*api.iotHome.editDeviceTypeInfo(val).then(res=>{
                     console.log(res,'这是编辑后传回来的设备类型信息')
                     this.cols=res.cols;

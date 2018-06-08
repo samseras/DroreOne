@@ -60,53 +60,16 @@
                                                 </div>
                                             </div>
                                             <div class="data-flow">
-                                                <h2>运行中的数据流</h2>
-                                                <el-tabs v-model="activeTabName" type="card" @tab-click="tabClick">
-                                                    <template v-for="(item,i) in tabArr">
-                                                        <el-tab-pane :label="item.label" :name="item.name" class="tabPane">
-                                                            <ul>
-                                                                <li v-for="(liItem,r) in allTab" class="liItem">
-                                                                    <el-row>
-                                                                        <el-col :span="1"><div class="">{{r+1}}</div></el-col>
-                                                                        <el-col :span="5"><div class="">{{liItem.title}}</div></el-col>
-                                                                        <el-col :span="7">
-                                                                            <div class="badges" >
-                                                                                <span v-for="(badgeItem) in liItem.badge">{{badgeItem}}</span>
-                                                                            </div>
-                                                                        </el-col>
-                                                                        <el-col :span="2"><div class=""></div></el-col>
-                                                                        <el-col :span="9"><div class="">
-                                                                            <el-progress :text-inside="true" :stroke-width="18" :percentage="liItem.data"></el-progress>
-                                                                        </div></el-col>
-                                                                    </el-row>
-                                                                </li>
-                                                            </ul>
-                                                        </el-tab-pane>
-                                                    </template>
-                                                </el-tabs>
-
-                                            </div>
-                                        </div>
-                                        <div class="progressSHow">
-                                            <h3>最新事件</h3>
-                                            <div class="stepBar">
-                                                <div style="height: 300px;">
-                                                    <el-steps direction="vertical" :active="1" >
-                                                        <el-step v-for="(item,i) in eventStep"  icon="el-icon-time" :title="item.eventTitle" :description="item.eventDescription"></el-step>
-                                                    </el-steps>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="machineLog">
-                                            <h3>日志列表</h3>
-                                            <div>头部信息</div>
-                                            <div class="body">
+                                                <h3>日志列表</h3>
+                                               <!-- <div>头部信息</div>-->
+                                                <div class="body">
                                                 <template>
                                                     <el-table
                                                         ref="multipleTable"
                                                         :data="tableData3"
                                                         tooltip-effect="dark"
                                                         style="width: 100%"
+                                                        height="271"
                                                         @selection-change="handleSelectionChange">
                                                         <el-table-column
                                                             type="selection"
@@ -141,6 +104,45 @@
                                                         </el-table-column>
                                                     </el-table>
                                                 </template>
+                                            </div>
+                                            </div>
+                                        </div>
+                                        <div class="machineLog">
+
+                                            <h2>运行中的数据流</h2>
+                                            <el-tabs v-model="activeTabName" type="card" @tab-click="tabClick">
+                                                <template v-for="(item,i) in tabArr">
+                                                    <el-tab-pane :label="item.label" :name="item.name" class="tabPane">
+                                                        <ul>
+                                                            <li v-for="(liItem,r) in allTab" class="liItem">
+                                                                <el-row>
+                                                                    <el-col :span="1"><div class="">{{r+1}}</div></el-col>
+                                                                    <el-col :span="5"><div class="">{{liItem.title}}</div></el-col>
+                                                                    <el-col :span="7">
+                                                                        <div class="badges" >
+                                                                            <span v-for="(badgeItem) in liItem.badge">{{badgeItem}}</span>
+                                                                        </div>
+                                                                    </el-col>
+                                                                    <el-col :span="2"><div class=""></div></el-col>
+                                                                    <el-col :span="9"><div class="">
+                                                                        <el-progress :text-inside="true" :stroke-width="18" :percentage="liItem.data"></el-progress>
+                                                                    </div></el-col>
+                                                                </el-row>
+                                                            </li>
+                                                        </ul>
+                                                    </el-tab-pane>
+                                                </template>
+                                            </el-tabs>
+
+                                        </div>
+                                        <div class="progressSHow">
+                                            <h3>最新事件</h3>
+                                            <div class="stepBar">
+                                                <div style="height: 300px;">
+                                                    <el-steps direction="vertical" :active="1" >
+                                                        <el-step v-for="(item,i) in eventStep"  icon="el-icon-time" :title="item.eventTitle" :description="item.eventDescription"></el-step>
+                                                    </el-steps>
+                                                </div>
                                             </div>
                                         </div>
                                         <el-dialog
@@ -541,6 +543,12 @@
                 border:1px solid red;
                 margin-top:rem(32);
                 background-color:#fff;
+                h2{
+                    margin:rem(16)
+                }
+                .liItem{
+                    margin:rem(16)
+                }
                 h3{
                     padding:rem(8) 0;
                     font-size: 1rem;
@@ -641,6 +649,7 @@
                     height:rem(300);
                     background-color:#fff;
                     padding-left:rem(16);
+                    /*overflow:auto;*/
                     h2{
                         font-size: rem(16);
                         color: #606266;

@@ -14,6 +14,13 @@ const iotHome = {
             url:'/iot/devicemodels?type='+model
         })
     },
+    getEditInfo(){
+
+        /*return axios ({
+            method: 'GET',
+            url:''
+        })*/
+    },
     editDeviceTypeInfo(val){
         console.log('2222222222222');
         console.log(val);
