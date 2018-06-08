@@ -168,7 +168,6 @@
     .offtrack,
     .overlimit,
     .waterlevel,
-    .warningEvent,
     .alarmcolumn{
         .personList{
             .el-table{
