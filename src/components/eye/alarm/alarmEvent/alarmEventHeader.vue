@@ -21,8 +21,8 @@
 
         <div class="page">
             <span>当前第1页/共8页</span>
-            <span class="upPage"><</span>
-            <span class="downPage">></span>
+            <span class="upPage"></span>
+            <span class="downPage"></span>
         </div>
     </div>
 </template>
@@ -37,20 +37,7 @@
                 isShowJobType: true,
                 isShowIndicatorType: true,
                 isShowTrashType: true,
-                statusInfo:[
-                    {
-                        id:'1',
-                        name: '新告警',
-                    },
-                    {
-                        id:'2',
-                        name: '处理中'
-                    },
-                    {
-                        id:'3',
-                        name: '已处理'
-                    }
-                ],
+                statusInfo:[],
                 filterList:[]
             }
         },
@@ -94,7 +81,7 @@
             }
         },
         created () {
-            // this.getStatusType();
+            this.getStatusType();
             this.showPersonJob()
         }
     }
@@ -111,6 +98,7 @@
             margin-right: rem(2);
         }
     }
+    .warningEvent{
     .personList{
         .el-table{
             font-size: rem(14);
@@ -125,7 +113,6 @@
                 }
             }
             td,th{
-                padding: 5px 0;
             }
             .cell{
                 font-size: rem(14);
@@ -135,6 +122,7 @@
                 }
             }
         }
+    }
     }
 </style>
 

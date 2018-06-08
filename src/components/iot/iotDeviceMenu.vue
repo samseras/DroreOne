@@ -3,8 +3,8 @@
     <div class="iotDeviceMenu">
         <el-menu default-active=""
                  text-color="#fff"
+                 :collapse="isCollapse"
                  active-text-color="#ffd04b" router>
-
             <ScrollContainer>
                 <template v-for="item in items">
                     <template v-if="item.subs">
@@ -56,6 +56,7 @@
         name: "iot-device-menu",
         data () {
             return{
+                isCollapse: false,
                 items: [
                     {
                         icon: '../../../static/img/iot/iot-index.svg',

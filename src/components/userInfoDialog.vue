@@ -1,5 +1,5 @@
 <template>
-    <div class="userInfoDialog" v-loading="isShowLoading">
+    <div class="userInfoDialog">
         <el-dialog
             title="个人信息"
             :close-on-click-modal = false
@@ -8,7 +8,7 @@
             width="23%"
             class="dialog echatDialog"
             center>
-            <div class="userInfoCard">
+            <div class="userInfoCard" v-loading="isShowLoading">
                 <div class="userInfo">
                     <p class="userName">
                         <span class="titleText">
@@ -28,6 +28,25 @@
                         </span>
                         <el-input v-model="info.phoneNumber" placeholder="请输入手机号码"></el-input>
                     </p>
+                    <p class="oldPassword" v-if="showFixPsd">
+                        <span class="titleText">
+                            旧&nbsp;&nbsp;密&nbsp;&nbsp;码：
+                        </span>
+                        <el-input type="password" v-model="oldPassword" placeholder="请输入旧密码"></el-input>
+                    </p>
+                    <p class="oldPassword" v-if="showFixPsd">
+                        <span class="titleText">
+                            新&nbsp;&nbsp;密&nbsp;&nbsp;码：
+                        </span>
+                        <el-input type="password" v-model="newPassword" placeholder="请输入新密码"></el-input>
+                    </p>
+                    <p class="oldPassword" v-if="showFixPsd">
+                        <span class="titleText">
+                            确认密码：
+                        </span>
+                        <el-input type="password" v-model="surePassword" placeholder="请确认新密码"></el-input>
+                    </p>
+                    <el-button class='showPsdBtn'type="primary" round v-if="!showFixPsd" @click="fixPsd">修改密码</el-button>
                     <div class="img">
                         <!--<img :src="getUrl(info.picturePath)" alt="" @error="imgError">-->
                         <label for="avatar">
@@ -71,6 +90,7 @@
     import FileUpload from 'vue-upload-component'
     import api from '@/api'
     import {mapGetters, mapMutations} from 'vuex'
+    let Base64 = require('js-base64').Base64;
     export default {
         name: "user-info-dialog",
         props:['visible'],
@@ -90,11 +110,18 @@
                 cropper: false,
                 files: [],
                 isDisabled: false,
-                isShowLoading : false
+                isShowLoading : false,
+                showFixPsd: false,
+                oldPassword: '',
+                newPassword: '',
+                surePassword: ''
             }
         },
         methods: {
             ...mapMutations(['SET_USER_DETAIL_INFO']),
+            fixPsd () {
+              this.showFixPsd = true
+            },
             closeDialog () {
                 console.log(this.src)
                 this.$emit('closeInfoDialog')
@@ -166,6 +193,28 @@
                     nickname: this.info.nickname,
                     phoneNumber: this.info.phoneNumber,
                 }
+                if (this.showFixPsd) {
+                    if (!(this.oldPassword.trim()=== '' && this.newPassword.trim()==='' && this.surePassword.trim()==='')) {
+                        if (this.oldPassword.trim() === '') {
+                            this.$message.error('请填写原始密码')
+                            return
+                        }
+                        if (this.newPassword.trim() === '') {
+                            this.$message.error('请填写新密码')
+                            return
+                        }
+                        if (this.surePassword.trim() === '') {
+                            this.$message.error('请确认新密码')
+                            return
+                        }
+                        if(this.newPassword !== this.surePassword) {
+                            this.$message.error('确认密码不相等,请重新输入')
+                            return
+                        }
+                        obj.oldPassword = Base64.encode(this.oldPassword)
+                        obj.password = Base64.encode(this.surePassword)
+                    }
+                }
                 if (this.src !== '') {
                     await api.person.updataAva(this.src).then(res => {
                         console.log(res, '上传成功')
@@ -176,14 +225,21 @@
                         return
                     })
                 }
+                console.log(obj, 'opopoppoppopopopop')
+                if (this.info.pictureId) {
+                    obj.pictureId = this.info.pictureId
+                }
                 await api.lib.updatauserInfo(JSON.stringify(obj)).then(res => {
                     console.log(res, '更新成功')
                     this.$message.success('修改用户信息成功')
+                    if(this.showFixPsd && obj.password) {
+                        localStorage.setItem('token',JSON.stringify(`BASIC ${Base64.encode(obj.username +  ":"+ this.surePassword)}`))
+                    }
                     this.getUserDetailInfo()
                 }).catch(err => {
                     console.log(err, '请求失败')
+                    this.$message.error(err.message)
                 })
-
             },
             async getUserDetailInfo () {
                 this.isShowLoading = true
@@ -191,6 +247,10 @@
                     this.isShowLoading = false
                     console.log(res, '这是请求回来的用户信息')
                     this.$store.commit('SET_USER_DETAIL_INFO', res)
+                    this.showFixPsd = false
+                    this.oldPassword = ''
+                    this.newPassword = ''
+                    this.surePassword = ''
                     this.info = res
                 }).catch(err => {
                     console.log(err, '请求失败')
@@ -600,6 +660,11 @@
                         display: inline-block;
                         line-height: rem(26);
                     }
+                }
+                .showPsdBtn{
+                    float: right;
+                    margin-right: rem(10);
+                    margin-top: rem(10);
                 }
                 .img{
                     width: rem(100);

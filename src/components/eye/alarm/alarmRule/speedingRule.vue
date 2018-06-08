@@ -1,5 +1,5 @@
 <template>
-    <div class="alarmcolumn">
+    <div class="speeding">
         <div class="title">
             告警事件
         </div>
@@ -18,7 +18,7 @@
                 <ScrollContainer>
                     <el-table
                         ref="multipleTable"
-                        :data="alarmcolumnList"
+                        :data="speedingList"
                         tooltip-effect="dark"
                         style="width: 100%"
                         @selection-change="handleSelectionChange"
@@ -34,16 +34,16 @@
                             label="名称">
                         </el-table-column>
                         <el-table-column
-                            prop="relatedDeviceNames"
-                            label="关联报警柱">
+                            prop="relatedVehicleNames"
+                            label="交通工具">
                         </el-table-column>
                         <el-table-column
-                            prop="deviceScope"
-                            label="设备调度范围(m)">
+                            prop="speedTime"
+                            label="超速时长(min)">
                         </el-table-column>
                         <el-table-column
-                            prop="securityScope"
-                            label="安保调度范围(m)">
+                            prop="upperThreshold"
+                            label="限速(km/h)">
                         </el-table-column>
                         <el-table-column
                             sortable
@@ -57,8 +57,8 @@
                         </el-table-column>
                         <el-table-column label="操作" width="200">
                             <template slot-scope="scope">
-                                <span @click="editInfo(scope.row,false,'编辑报警柱告警规则')" class="edit">编辑</span> |
-                                <span @click="showDetail(scope.row,true,'查看报警柱告警规则')">查看</span> |
+                                <span @click="editInfo(scope.row,false,'编辑超速告警规则')" class="edit">编辑</span> |
+                                <span @click="showDetail(scope.row,true,'查看超速告警规则')">查看</span> |
                                 <span v-if="scope.row.isEnabled" @click="enabledClick(scope.row,false)">停用</span>
                                 <span v-else @click="enabledClick(scope.row,true)">启用</span>
                                | <span @click="deletInfo(scope.row.id)">删除</span>
@@ -68,7 +68,7 @@
                 </ScrollContainer>
                 <AlarmDetail v-if="visible"
                              :visible="visible"
-                             :Info="alarmcolumnInfo"
+                             :Info="speedingInfo"
                              :isReadonly="isReadonly"
                              @closeDialog ="closeDialog"
                              :title = "title"
@@ -90,8 +90,8 @@
     export default {
         data(){
             return{
-                alarmcolumnList: [],
-                alarmcolumnInfo:{},
+                speedingList: [],
+                speedingInfo:{},
                 visible: false,
                 choseInfos: [],
                 choseInfoId:[],
@@ -107,7 +107,7 @@
         },
         methods: {
             addNewInfo () {
-                this.showDetail({},false,'添加报警柱告警规则',)
+                this.showDetail({},false,'添加超速告警规则',)
             },
             enabledClick(obj,flag){
                 this.startEndPlan([obj],flag)
@@ -122,7 +122,7 @@
                     return;
                 }
                 let choseId = []
-                choseId = this.alarmcolumnList.filter(item => {
+                choseId = this.speedingList.filter(item => {
                     if (this.choseInfoId.includes(item.id)) {
                         if (flag) {
                             if (!item.isEnabled) {
@@ -197,13 +197,14 @@
                     return obj
                 });
                 api.alarm.updateAlarmRule(choseId).then(res => {
+                    console.log(res, '更改状态成功')
                     if (flag) {
                         this.$message.success('计划开启成功')
                     } else {
                         this.$message.success('计划关闭成功')
                     }
                     choseId.forEach(item => {
-                        this.alarmcolumnList.forEach(item1 => {
+                        this.speedingList.forEach(item1 => {
                             if (item.id === item1.id) {
                                 item1.isEnabled = item.isEnabled
                                 item1.checked = false
@@ -231,10 +232,11 @@
                 })
             },
             showDetail (info,state,title) {
+                console.log(info)
                 if(info.alarmSeverity && info.alarmSeverity.id){
                     info.severityId = info.alarmSeverity.id
                 }
-                this.alarmcolumnInfo = info;
+                this.speedingInfo = info;
 
                 this.visible = true;
                 this.isBatchEdit = false;
@@ -244,6 +246,8 @@
                 }
             },
             deletInfo (id) {
+                console.log(id)
+                console.log(this.choseInfos)
                 if (id) {
                     this.choseInfoId = [id]
                 }else{
@@ -256,7 +260,7 @@
 
                 let isDelete = false
                 this.choseInfoId.forEach(item => {
-                    this.alarmcolumnList.forEach(item1 => {
+                    this.speedingList.forEach(item1 => {
                         if (item === item1.id) {
                             if (item1.isEnabled) {
                                 isDelete = true
@@ -277,12 +281,13 @@
                         type: 'warning'
                     }).then(() => {
                         api.alarm.deleteAlarmRule(this.choseInfoId).then(res => {
+                            console.log(res, '删除成功')
                             this.$message.success('删除成功')
                             for (let i = 0; i < this.choseInfoId.length; i++) {
-                                this.alarmcolumnList = this.alarmcolumnList.filter((item, index) => {
+                                this.speedingList = this.speedingList.filter((item, index) => {
                                     if (item.id === this.choseInfoId[i]){
-                                        this.alarmcolumnList[index].checked = false
-                                        this.alarmcolumnList[index].status = false
+                                        this.speedingList[index].checked = false
+                                        this.speedingList[index].status = false
                                     }
                                     return item.status !== false
                                 })
@@ -291,6 +296,7 @@
                             this.choseInfoId = []
                         }).catch(err => {
                             this.$message.error('删除失败，请稍后重试')
+                            console.log(err)
                             this.choseInfos = []
                             this.choseInfoId = []
                         })
@@ -303,7 +309,7 @@
                 }
             },
             checked (row) {
-                this.alarmcolumnList = this.alarmcolumnList.filter(item => {
+                this.speedingList = this.speedingList.filter(item => {
                     if (item.id === row.id) {
                         item.checked = item.checked
                     }
@@ -322,7 +328,7 @@
                 }
             },
             selectedAll (state) {
-                this.alarmcolumnList = this.alarmcolumnList.filter((item) => {
+                this.speedingList = this.speedingList.filter((item) => {
                     if (state === true) {
                         item.checked = true
                         this.choseInfos.push(item)
@@ -338,20 +344,24 @@
             },
             saveEditInfo(objArray){ //编辑保存
                 api.alarm.updateAlarmRule(objArray).then(res => {
+                    console.log(res, '修改成功')
                     this.$message.success('修改成功')
                     this.getAlarmRule();
                     this.choseInfos = []
                     this.visible = false
                 }).catch(err => {
                     this.$message.error('修改失败，请稍后重试')
+                    console.log(err)
                     this.choseInfos = []
                 })
             },
             editInfo (info,state,title) {
+                console.log(info,'Info');
                 this.showDetail(info,state,title);
             },
             batchEdit(){
                 if (this.choseInfos.length > 0) {
+                    console.log('batchEdit')
                     this.isBatchEdit = true;
                     this.visible = true;
                     this.isReadonly = false;
@@ -363,15 +373,19 @@
             },
             saveInfo(info){
                 //TODO 1 获取并设置info.alarmTypeId
+                console.log(this.alarmTypeId);
                 info.alarmTypeId = this.alarmTypeId;
+                console.log(info,'obj')
                 // TODO 2 保存请求
                 api.alarm.createAlarmRule(info).then(res => {
+                        console.log(res, '保存成功')
                         this.$message.success('保存成功')
                         this.getAlarmRule();
                         this.choseInfos = []
                         this.visible = false
                 }).catch(err => {
                     this.$message.error('保存失败，请稍后重试')
+                    console.log(err)
                     this.choseInfos = []
                 })
             },
@@ -382,12 +396,13 @@
 
             async getAlarmRule(){
                 this.isShowLoading = true
-                this.alarmTypeId = this.getAlarmTypeId("报警柱")
+                this.alarmTypeId = this.getAlarmTypeId("超速")
                 await api.alarm.getAlarmRulesByParameters(this.alarmTypeId).then(res => {
+                    console.log(res, '请求成功')
                     this.isShowLoading = false
-                    this.alarmcolumnList = res
-                    this.listLength = this.alarmcolumnList.length
-                    this.alarmcolumnList.forEach(item => {
+                    this.speedingList = res
+                    this.listLength = this.speedingList.length
+                    this.speedingList.forEach(item => {
                         item.checked = false;
                         if(item.relatedDevices.length > 0){
                             item.relatedDeviceNames =  item.relatedDevices.map(device=>device.name)
@@ -407,6 +422,7 @@
                         }
                     })
                 }).catch(err => {
+                    console.log(err, '请求失败')
                     this.isShowLoading = false
                 })
             },
@@ -416,8 +432,10 @@
             },
             async getAllAlarmTypes(){
                 await api.alarm.getAllAlarmTypes().then(res => {
+                    console.log(res, '请求type成功')
                     this.alarmType = res;
                 }).catch(err => {
+                    console.log(err, '请求失败')
                 })
             },
 
@@ -436,7 +454,7 @@
 </script>
 
 <style lang="scss" scoped type="text/scss">
-    .alarmcolumn{
+    .speeding{
         width: 100%;
         height: 100%;
         display: flex;
