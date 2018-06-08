@@ -16,8 +16,8 @@
                     <el-menu  class="el-menu-demo" mode="horizontal" router>
                         <el-submenu index="">
                             <template slot="title">
-                                <span class="Admin"v-if="getUserDetailMsg.nickname">{{getUserDetailMsg.nickname}}</span>
-                                <span class="Admin"v-if="!getUserDetailMsg.nickname">{{getUserDetailMsg.username}}</span>
+                                <span class="Admin" v-if="getUserDetailMsg.nickname">{{getUserDetailMsg.nickname}}</span>
+                                <span class="Admin" v-if="!getUserDetailMsg.nickname">{{getUserDetailMsg.username}}</span>
                                 <img :src="getUrl(getUserDetailMsg.picturePath)" alt="" @error="imgError">
                             </template>
                             <el-menu-item index="" @click="showUserDialog">个人中心</el-menu-item>
