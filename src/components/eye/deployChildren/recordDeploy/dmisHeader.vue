@@ -116,31 +116,31 @@
             margin-right: rem(2);
         }
     }
-    .personList{
-        .el-table{
-            font-size: rem(14);
-            table{
-                th{
-                    background: #f3f3f3;
-                    .cell{
-                        font-size: rem(14);
-                        font-weight: 500;
-                        color: #333;
-                    }
-                }
-            }
-            td,th{
-                padding: 5px 0;
-            }
-            .cell{
-                font-size: rem(12);
-                span:hover{
-                    color: #54c5f2;
-                    cursor:pointer;
-                }
-            }
-        }
-    }
+    /*.personList{*/
+        /*.el-table{*/
+            /*font-size: rem(14);*/
+            /*table{*/
+                /*th{*/
+                    /*background: #f3f3f3;*/
+                    /*.cell{*/
+                        /*font-size: rem(14);*/
+                        /*font-weight: 500;*/
+                        /*color: #333;*/
+                    /*}*/
+                /*}*/
+            /*}*/
+            /*td,th{*/
+                /*padding: 5px 0;*/
+            /*}*/
+            /*.cell{*/
+                /*font-size: rem(12);*/
+                /*span:hover{*/
+                    /*color: #54c5f2;*/
+                    /*cursor:pointer;*/
+                /*}*/
+            /*}*/
+        /*}*/
+    /*}*/
 </style>
 
 <style lang="scss" scoped type="text/scss">
