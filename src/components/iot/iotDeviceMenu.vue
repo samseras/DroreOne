@@ -72,7 +72,7 @@
                     {
                         icon: '../../../static/img/iot/iot-system-manage.svg',
                         index: '2',
-                        title: '系统管理',
+                        title: '系统监控',
                         subs: [
                             {
                                 isShow:true,
