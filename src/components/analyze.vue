@@ -446,7 +446,7 @@
                             position: fixed;
                             width: 100%;
                             height: 100%;
-                            background: rgba(126,126,126,0.8);
+                            background: rgba(0,0,0,0.5);
                             z-index: 1000;
                             div{
                                 top: 50%;
@@ -458,6 +458,7 @@
                                 background: #fff;
                                 z-index: 100;
                                 position: relative;
+                                border-radius: rem(3);
                                 label{
                                     margin-left: rem(40);
                                 }
@@ -492,6 +493,7 @@
                                 height: rem(120);
                                 input{
                                     width: rem(330);
+                                    text-indent: rem(5);
                                 }
                                 .screenLink{
                                     position: absolute;

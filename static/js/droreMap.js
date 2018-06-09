@@ -233,7 +233,6 @@ define(function(require, exports, module) {
          */
         var mapLayer = {
             creatLayer: function(url, id,coordinate) {
-                console.log(url, id,coordinate)
                 var vectorSource = new ol.source.Vector({
                     //创建一个空矢量
                 });

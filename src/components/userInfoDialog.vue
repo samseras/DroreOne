@@ -212,7 +212,7 @@
                             return
                         }
                         obj.oldPassword = Base64.encode(this.oldPassword)
-                        obj.newPassword = Base64.encode(this.surePassword)
+                        obj.password = Base64.encode(this.surePassword)
                     }
                 }
                 if (this.src !== '') {
@@ -226,9 +226,15 @@
                     })
                 }
                 console.log(obj, 'opopoppoppopopopop')
+                if (this.info.pictureId) {
+                    obj.pictureId = this.info.pictureId
+                }
                 await api.lib.updatauserInfo(JSON.stringify(obj)).then(res => {
                     console.log(res, '更新成功')
                     this.$message.success('修改用户信息成功')
+                    if(this.showFixPsd && obj.password) {
+                        localStorage.setItem('token',JSON.stringify(`BASIC ${Base64.encode(obj.username +  ":"+ this.surePassword)}`))
+                    }
                     this.getUserDetailInfo()
                 }).catch(err => {
                     console.log(err, '请求失败')

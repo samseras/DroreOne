@@ -34,10 +34,10 @@ const alarm = {
         })
     },
 
-    getAllAlarmRule () {
+    getAlarmRuleById (id) {
         return axios ({
             method: 'GET',
-            url: getUrl('/alarm/rule')
+            url: getUrl('/alarm/rule?id='+id)
         })
     },
 
@@ -88,6 +88,16 @@ const alarm = {
         })
     },
 
+    deleteAlarmEvent(params){
+        console.log(params, 'ids')
+        return axios({
+            method: 'DELETE',
+            url: getUrl('/alarm/event'),
+            data:{
+                ids: params
+            }
+        })
+    },
     updateAlarmEvent(params){
         console.log(params, 'newdata')
         return axios({
@@ -107,7 +117,25 @@ const alarm = {
     getAlarmEventStatus(){
         return axios ({
             method: 'GET',
-            url: getUrl('/alarm/event/status')
+            url: getUrl('/alarm/status')
+        })
+    },
+
+    uploadAttachments(params){
+        console.log(params, 'formdata')
+        return axios ({
+            method: 'POST',
+            url: getUrl('/resource/other'),
+            processData : false,
+            contentType : false,
+            data:params
+        })
+    },
+    deleteUploadAttachments(param){
+        return axios ({
+            method: 'DELETE',
+            url: getUrl('/resource'),
+            data:JSON.stringify(param)
         })
     }
 

@@ -54,9 +54,9 @@
                 console.log(state)
                 let message
                 if (state) {
-                    message = '此操作将开启使用该人员类型, 是否继续?'
+                    message = '此操作将开启使用该设备类型, 是否继续?'
                 } else {
-                    message = '此操作将停止使用该人员类型, 是否继续?'
+                    message = '此操作将停止使用该设备类型, 是否继续?'
                 }
                 this.$confirm(message, '提示', {
                     confirmButtonText: '确定',

@@ -33,16 +33,17 @@
                         </el-table-column>
                         <el-table-column
                             sortable
-                            prop="envTypeName"
+                            prop="rule.alarmTypeName"
                             label="指标类型">
                         </el-table-column>
                         <el-table-column
-                            prop="sourceDeviceName"
+                            show-overflow-tooltip
+                            prop="device.name"
                             label="来源">
                         </el-table-column>
                         <el-table-column
                             sortable
-                            prop="statusName"
+                            prop="status.name"
                             label="状态">
                         </el-table-column>
                         <el-table-column
@@ -52,16 +53,16 @@
                         </el-table-column>
                         <el-table-column
                             sortable
-                            prop="severityName"
+                            prop="severity.name"
                             label="严重等级">
                         </el-table-column>
                         <el-table-column
-                            prop="ownerName"
+                            prop="owner.name"
                             label="负责人">
                         </el-table-column>
                         <el-table-column
                             sortable
-                            prop="ownerTel"
+                            prop="owner.phone"
                             label="负责人电话">
                         </el-table-column>
                         <el-table-column label="操作" width="200">
@@ -97,82 +98,8 @@
     export default {
         data(){
             return{
-                warningEventList: [
-                    {
-                        serialNum:'sos001',
-                        alarmRuleId:'2',
-                        alarmRuleName:'消防',
-                        envTypeId:'1',
-                        envTypeName:'温度',
-                        sourceDeviceId:'1',
-                        sourceDeviceName:'报警柱001',
-                        statusId:'1',
-                        statusName :'新告警',
-                        occurenceTime:'2018-05-11 12:20:39',
-                        severityId:'1',
-                        severityName:'高',
-                        ownerId:"c79d9e71-8e84-44c3-9b28-049fe79deb18",
-                        ownerName:'赵子龙',
-                        ownerTel:'13511111111'
-
-                    },
-                    {
-                        serialNum:'sos002',
-                        alarmRuleId:'1',
-                        alarmRuleName:'报警柱',
-                        envTypeId:'2',
-                        envTypeName:'PM2.5',
-                        sourceDeviceId:'2',
-                        sourceDeviceName:'报警柱002',
-                        statusId:'2',
-                        statusName :'处理中',
-                        occurenceTime:'2017-01-09 19:33:01',
-                        severityId:'2',
-                        severityName:'中',
-                        ownerId:"a7a9ef0f-7475-4015-9317-c880d3c38db0",
-                        ownerName:'关羽',
-                        ownerTel:'13712111111'
-
-                    }
-                    ],
-                warningEventListTemp:[
-                    {
-                        serialNum:'sos001',
-                        alarmRuleId:'2',
-                        alarmRuleName:'消防',
-                        envTypeId:'1',
-                        envTypeName:'温度',
-                        sourceDeviceId:'1',
-                        sourceDeviceName:'报警柱001',
-                        statusId:'1',
-                        statusName :'新告警',
-                        occurenceTime:'2018-05-11 12:20:39',
-                        severityId:'1',
-                        severityName:'高',
-                        ownerId:"c79d9e71-8e84-44c3-9b28-049fe79deb18",
-                        ownerName:'赵子龙',
-                        ownerTel:'13511111111'
-
-                    },
-                    {
-                        serialNum:'sos002',
-                        alarmRuleId:'1',
-                        alarmRuleName:'报警柱',
-                        envTypeId:'2',
-                        envTypeName:'PM2.5',
-                        sourceDeviceId:'2',
-                        sourceDeviceName:'报警柱002',
-                        statusId:'2',
-                        statusName :'处理中',
-                        occurenceTime:'2017-01-09 19:33:01',
-                        severityId:'2',
-                        severityName:'中',
-                        ownerId:"a7a9ef0f-7475-4015-9317-c880d3c38db0",
-                        ownerName:'关羽',
-                        ownerTel:'13712111111'
-
-                    }
-                ],
+                warningEventList: [],
+                warningEventListTemp:[],
                 visible: false,
                 warningEventInfo: {},
                 choseInfos: [],
@@ -181,7 +108,8 @@
                 title:'',
                 selection:[],
                 isShowloading: false,
-                isBatchEdit:false
+                isBatchEdit:false,
+                alarmType:''
             }
         },
         methods: {
@@ -218,7 +146,7 @@
                 let dataList = this.warningEventListTemp;
                 let tempList = [];
                 if(type.length > 0){
-                    tempList = dataList.filter((item)=>type.includes(item.statusId))
+                    tempList = dataList.filter((item)=>type.includes(item.status.id))
                 }else{
                     tempList = dataList;
                 }
@@ -254,20 +182,21 @@
                     }
                     this.choseInfoId = this.choseInfos.map(item=>item.id)
                 }
+
                 if (this.choseInfoId.length > 0) {
                     this.$confirm('此操作将永久删除该数据, 是否继续?', '提示', {
                         confirmButtonText: '确定',
                         cancelButtonText: '取消',
                         type: 'warning'
                     }).then(() => {
-                        api.alarm.deleteAlarmRule(this.choseInfoId).then(res => {
+                        api.alarm.deleteAlarmEvent(this.choseInfoId).then(res => {
                             console.log(res, '删除成功')
                             this.$message.success('删除成功')
-                            for (let i = 0; i < this.choseInfos.length; i++) {
-                                this.alarmcolumnList = this.alarmcolumnList.filter((item, index) => {
-                                    if (item.id === this.choseInfos[i].id){
-                                        this.alarmcolumnList[index].checked = false
-                                        this.alarmcolumnList[index].status = false
+                            for (let i = 0; i < this.choseInfoId.length; i++) {
+                                this.warningEventList = this.warningEventList.filter((item, index) => {
+                                    if (item.id === this.choseInfoId[i]){
+                                        this.warningEventList[index].checked = false
+                                        this.warningEventList[index].status = false
                                     }
                                     return item.status !== false
                                 })
@@ -288,19 +217,37 @@
                     return
                 }
             },
-            checked (id) {
+            checked (row) {
+                // this.warningEventList = this.warningEventList.filter(item => {
+                //     if (item.id === id) {
+                //         item.checked = item.checked
+                //     }
+                //     return item
+                // })
+                // if (this.choseInfos.includes(id)) {
+                //     this.choseInfos = this.choseInfos.filter((item) =>{
+                //         return item !== id
+                //     })
+                // } else {
+                //     this.choseInfos.push(id)
+                // }
+
                 this.warningEventList = this.warningEventList.filter(item => {
-                    if (item.id === id) {
+                    if (item.id === row.id) {
                         item.checked = item.checked
                     }
                     return item
                 })
-                if (this.choseInfos.includes(id)) {
+                if (this.choseInfos.includes(row)) {
                     this.choseInfos = this.choseInfos.filter((item) =>{
-                        return item !== id
+                        return item !== row
+                    })
+                    this.choseInfoId = this.choseInfoId.filter((item) =>{
+                        return item !== row.id
                     })
                 } else {
-                    this.choseInfos.push(id)
+                    this.choseInfos.push(row)
+                    this.choseInfoId.push(row.id)
                 }
             },
             selectedAll (state) {
@@ -330,30 +277,70 @@
                     return
                 }
             },
-            saveEditInfo(){ //编辑保存
-                if(this.isBatchEdit){  //批量编辑保存
-
-                }else{  //单个编辑保存
-
-                }
+            saveEditInfo(objArray){ //编辑保存
+                api.alarm.updateAlarmEvent(objArray).then(res => {
+                    console.log(res, '修改成功')
+                    this.$message.success('修改成功')
+                    this.getAllAlarmEvent();
+                    this.choseInfos = []
+                    this.visible = false
+                }).catch(err => {
+                    this.$message.error('修改失败，请稍后重试')
+                    console.log(err)
+                    this.choseInfos = []
+                })
             },
             async getAllAlarmEvent () {
-                this.isShowLoading = true
                 await   api.alarm.getAllAlarmEvent().then(res => {
                                 console.log(res, '请求成功')
                                 this.isShowLoading = false
-                                this.warningEventList = res
-                                this.warningEventListTemp = res
+                                this.warningEventList = JSON.parse(JSON.stringify(res))
+
                                 this.warningEventList.forEach(item => {
                                     item.checked = false;
+                                    item.rule.alarmTypeName = this.getAlarmTypeNameById(item.rule.alarmTypeId)
+                                    if(item.attachments && item.attachments.length > 0){
+                                        let fileList = []
+                                        item.attachments.forEach((obj)=>{
+                                               let fileObj = {
+                                                   title : obj.path.replace(/(.*\/)*([^.]+).*/ig,"$2").split('_')[0],
+                                                   id:obj.id,
+                                                   checked:false
+                                               }
+                                            fileList.push(fileObj)
+                                        })
+                                        if(fileList.length > 0){
+                                            item.fileList = fileList
+                                        }
+                                    }
                                 })
+
+                            this.warningEventListTemp = JSON.parse(JSON.stringify(this.warningEventList))
                         }).catch(err => {
                             console.log(err, '请求失败')
                             this.isShowLoading = false
                         })
+            },
+            getAlarmTypeNameById(typeId){
+                let typeInfo =  this.alarmType.filter(item=>item.id == typeId)
+                return typeInfo[0].name;
+            },
+            async getAllAlarmTypes(){
+                await api.alarm.getAllAlarmTypes().then(res => {
+                    console.log(res, '请求type成功')
+                    this.alarmType = res;
+                }).catch(err => {
+                    console.log(err, '请求失败')
+                    console.log(err, '请求失败')
+                })
+            },
+            initData(){
+                this.getAllAlarmTypes();
             }
         },
         created () {
+            this.isShowLoading = true
+            this.initData();
             this.getAllAlarmEvent();
             console.log(this.personInfo)
         },
