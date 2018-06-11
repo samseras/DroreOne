@@ -54,7 +54,7 @@
                                 <!--<div class="inputText el-input"></div>-->
                             </p>
                             <p class="level">严重等级：
-                                <el-select  v-model="eventInfo.severity.id" size="mini" class="" placeholder="请选择" :disabled="isReadonly">
+                                <el-select  v-model="eventInfo.severity.id" size="mini" class="" placeholder="请选择" :disabled="readOnly">
                                     <el-option
                                         v-for="item in levelInfo"
                                         :key="item.id"
@@ -64,7 +64,7 @@
                                 </el-select>
                             </p>
                             <p class="owner">负责人员：
-                                <el-select  v-model="eventInfo.owner.id" @change="ownerChange" size="mini" class="" placeholder="请选择" :disabled="isReadonly">
+                                <el-select  v-model="eventInfo.owner.id" @change="ownerChange" size="mini" class="" placeholder="请选择" :disabled="readOnly">
                                     <el-option-group
                                         v-for="group in personInfo"
                                         :key="group.label"
@@ -82,7 +82,7 @@
                                 <el-input type="text" v-model="eventInfo.owner.phone" class="inputText" :maxlength="15" :disabled="true"></el-input>
                             </p>
                             <p class="status">状&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 态:
-                                <el-select  v-model="eventInfo.status.id" size="mini" class="" placeholder="请选择" :disabled="isReadonly">
+                                <el-select  v-model="eventInfo.status.id" size="mini" class="" placeholder="请选择" :disabled="readOnly">
                                     <el-option
                                         v-for="item in statusInfo"
                                         :key="item.id"
@@ -93,7 +93,7 @@
                             </p>
                             <p class="description">处理备注：<br>
                                 <textarea name="" v-model='handleDescription' cols="30"
-                                          rows="5" placeholder="请输入描述信息" :disabled="isReadonly"></textarea >
+                                          rows="5" placeholder="请输入描述信息" :disabled="readOnly"></textarea >
                             </p>
                             <div class="attachment">附&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;件：
                                 <div v-loading="isShowLoading" class="showFilelist" >
@@ -104,8 +104,8 @@
                                     </div>
                                 </div>
                                 <div class="uploadContent">
-                                    <el-button size="mini" class="hold" @click="$refs.uploadFile.click()" :disabled="isReadonly">上传附件</el-button>
-                                     <el-button size="mini" class="hold" @click="deleteFile" :disabled="isReadonly || emptyFile">删除文件</el-button>
+                                    <el-button size="mini" class="hold" @click="$refs.uploadFile.click()" :disabled="readOnly">上传附件</el-button>
+                                     <el-button size="mini" class="hold" @click="deleteFile" :disabled="readOnly || emptyFile">删除文件</el-button>
                                     <input type="file" ref="uploadFile" class="multiFile"  multiple="multiple" @change="selectFile">
                                 </div>
                             </div>
@@ -135,7 +135,8 @@
         <AlarmDetail  v-if="ruleVisible"
                       :ruleVisible="ruleVisible"
                       @closeDialog ="closeDialog"
-                      :alarmRuleId="eventInfo.rule.id">
+                      :alarmRuleId="eventInfo.rule.id"
+                      :isReadonly="isReadonly">
 
         </AlarmDetail>
     </div>
@@ -146,9 +147,8 @@
      import ScrollContainer from '@/components/ScrollContainer'
      import api from '@/api'
      import AlarmDetail from '../alarmRule/alarmRuleDialog'
-     // import index from '@/config'
     export default {
-        props: ['visible','isReadonly','isBatchEdit','choseInfoId','Info','choseInfos'],
+        props: ['visible','readOnly','isBatchEdit','choseInfoId','Info','choseInfos'],
         data () {
             return{
                 eventInfo:{},
@@ -166,7 +166,8 @@
                 fileList:[],
                 fileAddIds:[],
                 modifiedFields:'',
-                handleDescription:''
+                handleDescription:'',
+                isReadonly:false
             }
         },
         methods: {
@@ -176,6 +177,7 @@
             showRuleDetail(){
                 console.log(this.eventInfo.rule.id)
                 this.ruleVisible = true;
+                this.isReadonly = true;
             },
             ownerChange(id){
                 console.log(id);
@@ -190,7 +192,6 @@
                 }
             },
             downloadFile(val){
-                console.log(val.path)
                 window.location.href = 'http://192.168.0.150:8090/'+val.path
             },
             closeEventDialog () {
@@ -286,9 +287,7 @@
                             handleDescription: this.handleDescription
                         }
                     }
-                    //编辑或查看
                     objArray.push(newInfo)
-
                     await this.deleteUpload();
                     let param = {
                         data : objArray,

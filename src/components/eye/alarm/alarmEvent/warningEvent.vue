@@ -79,7 +79,7 @@
                 <AlarmDetail v-if="visible"
                               :visible="visible"
                               :Info="warningEventInfo"
-                              :isReadonly="isReadonly"
+                              :readOnly="readOnly"
                               @closeDialog ="closeDialog"
                               :title = "title"
                               @saveEditInfo="saveEditInfo"
@@ -106,7 +106,7 @@
                 warningEventInfo: {},
                 choseInfos: [],
                 choseInfoId:[],
-                isReadonly: true,
+                readOnly: true,
                 title:'',
                 selection:[],
                 isShowloading: false,
@@ -170,7 +170,7 @@
                 this.warningEventInfo = info;
                 this.visible = true;
                 this.isBatchEdit = false;
-                this.isReadonly = state;
+                this.readOnly = state;
                 if(title){
                     this.title = title;
                 }
