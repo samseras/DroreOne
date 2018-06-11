@@ -29,20 +29,54 @@ const iotHome = {
             url:''
         })*/
     },
-    editDeviceListInfo(val){
-        console.log('3333333333');
-        console.log(val);
-        /*return axios({
+    editDeviceCardInfo(val){
+        console.log('3333333333',val);
+        return axios ({
             method:'POST',
-            url:''
-        })*/
+            url:'/iot/devices/properties',
+            data:{
+                condition:val
+
+            }
+        })
     },
-    getDeviceListInfo(category){
+    getDeviceListInfo(category,curpage,pagesize){
+        console.log(category,curpage,pagesize);
         return axios ({
             method:'POST',
             url:'/iot/devices/query',
             data:{
-                deviceTypes:[category]
+                "pageCondition" : {
+                    "pageno" : curpage,
+                    "pagesize" : pagesize
+                },
+                "ioTDeviceCondition" : {
+                    "deviceTypes" : [ category ]
+                }
+                /*deviceTypes:[category],*/
+            }
+        })
+    },
+    getDeviceEditInfo(id){   //卡片列表查询可编辑的数据
+        return axios ({
+            method:'GET',
+
+            url:'/iot/devices/properties?id='+id
+
+        })
+    },
+    DevicePoliceInfo(){
+        return axios ({
+            method:'POST',
+            url:'/iot/events/query',
+            data:{
+                "pageCondition" : {
+                    "pageno" : 1,
+                    "pagesize" : 10
+                },
+                "ioTEventCondition" : {
+                    "types" : [ "ALARM" ]
+                }
             }
         })
     },

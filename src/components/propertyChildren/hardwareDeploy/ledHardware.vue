@@ -170,16 +170,13 @@
                 console.log(info, '这是要过滤的')
                 if (info.trim() !== '') {
                     this.ledList = this.checkList.filter(item => {
-                        if (item.regionName.includes(info)) {
-                            return item
-                        }
                         if (item.ip && item.ip.includes(info)) {
                             return item
                         }
                         if (item.name.includes(info)) {
                             return item
                         }
-                        if (item.modelName && item.modelName.includes(info)) {
+                        if (item.regionName && item.regionName.includes(info)) {
                             return item
                         }
                         if (item.description && item.description.includes(info)) {
@@ -218,6 +215,7 @@
                     name:info.name,
                     model:info.model,
                     ip:info.ip,
+                    mac:info.mac,
                     port:info.port,
                     serialNum:info.serialNum,
                     regionId:info.regionId,
@@ -313,7 +311,6 @@
                     positionType:info.positionType,
                     name:info.name,
                     model:info.model,
-                    /*ip:info.ip,*/
                     port:info.port,
                     serialNum:info.serialNum,
                     regionId:info.regionId,

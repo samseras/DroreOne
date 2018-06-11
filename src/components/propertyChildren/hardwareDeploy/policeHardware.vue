@@ -173,12 +173,6 @@
                         if (item.ip && item.ip.includes(info)) {
                             return item
                         }
-                        if (item.name.includes(info)) {
-                            return item
-                        }
-                        if (item.modelName && item.modelName.includes(info)) {
-                            return item
-                        }
                         if (item.description && item.description.includes(info)) {
                             return item
                         }
@@ -207,6 +201,7 @@
                 let latitude = info.location.substring(index + 1)
                 let policeObj=[{
                     typeId: 8,
+                    mac:info.mac,
                     id:info.id,
                     sensorType:info.sensorType,
                     name:info.name,

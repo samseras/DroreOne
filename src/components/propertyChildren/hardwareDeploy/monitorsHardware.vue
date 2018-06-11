@@ -215,6 +215,7 @@
                     name:info.name,
                     model:info.model,
                     ip:info.ip,
+                    mac:info.mac,
                     port:info.port,
                     serialNum:info.serialNum,
                     regionId:info.regionId,
