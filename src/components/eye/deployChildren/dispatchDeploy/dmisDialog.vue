@@ -240,7 +240,7 @@
                         <!--<el-radio v-model="radio" label="0">否</el-radio>-->
                         <!--</p>-->
                         <p class="name">片&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 区：
-                            <el-select v-model="purifier.regionIds" size="mini" class="" multiple placeholder="请选择" :disabled='isDisabled'>
+                            <el-select v-model="regionId" size="mini" class="" multiple placeholder="请选择" :disabled='isDisabled'>
                                 <el-option
                                     v-for="item in options"
                                     :key="item.id"
@@ -331,7 +331,7 @@
     import broadcastDialog from './broadcastDialog'
     import ScreenDialog from './screenDialog'
     // import Cropper from 'cropperjs'
-    import FileUpload from 'vue-upload-component'
+    // import FileUpload from 'vue-upload-component'
     import ScrollContainer from '@/components/ScrollContainer'
     export default {
         name: "person-detail",
@@ -400,7 +400,7 @@
                         routeId:''
                     },
                     cleanerIds: [],
-                    regionIds: []
+                    regionIds: ''
                 },
                 screen:{
                     ledSchedule:{
@@ -449,7 +449,8 @@
                 fileList:[],
                 uploadText:false,
                 personList: [],
-                regionIdList: []
+                regionIdList: [],
+                regionId: []
             }
         },
         methods: {
@@ -653,6 +654,7 @@
                         this.purifier.cleanSchedule.classTime = this.timeSelect
                     }
                     newInfo = this.purifier
+                    newInfo.regionIds  = this.regionId
                 } else if(this.route.includes('screen')) {
                     if (!(this.screen.ledSchedule.name && this.screen.ledSchedule.name !== '')
                         || !(this.screen.ledIds && this.screen.ledIds !== [])) {
@@ -904,6 +906,7 @@
                 this.getAllPurifierPerson()
                 this.getAllRegion()
                 this.purifier = this.Info;
+                this.regionId = this.Info.regionIds
                 if (this.purifier.cleanSchedule.customizedDays === false) {
                     this.filterList = this.purifier.cleanSchedule.days;
                 }else {
@@ -928,7 +931,6 @@
             }
         },
         components: {
-            FileUpload,
             MapDialog,
             broadcastDialog,
             ScreenDialog,
