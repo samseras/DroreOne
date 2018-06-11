@@ -477,15 +477,15 @@
                         <el-input type="text"v-model="tree.plant.genera" :disabled="isDisabled"></el-input>
                     </p>
                     <p class="name">
-                        <s>高&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;度：</s>
+                        <s>高&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;度(m)：</s>
                         <el-input type="number"v-model="tree.plant.height"  min = "0" placeholder="请输入树木高度（数字）" :disabled="isDisabled"></el-input>
                     </p>
                     <p class="name wrapstyle selectstyle">年&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;代：
                         <el-date-picker
                             v-model="tree.plant.plantYear"
-                            type="year"
                             :disabled="isDisabled"
-                            placeholder="选择年份">
+                            type="year"
+                            placeholder="选择年代">
                         </el-date-picker>
                     </p>
                     <p class="phoneNum wrapstyle selectstyle">所属片区：
@@ -520,11 +520,11 @@
                         <el-input type="text"v-model="build.building.name" :disabled="isDisabled" :maxlength="15"></el-input>
                     </p>
                     <p class="name">
-                        <s>层&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;高：</s>
+                        <s>层&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;高(m)：</s>
                         <el-input type="number" min="0" v-model="build.building.layers"  placeholder="请输入建筑层高（数字）" :disabled="isDisabled"></el-input>
                     </p>
                     <p class="name">
-                        <s>高&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;度：</s>
+                        <s>高&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;度(m)：</s>
                         <el-input type="number"v-model="build.building.height"  min="0" placeholder="请输入建筑高度（数字）" :disabled="isDisabled"></el-input>
                     </p>
                     <p class="name">
@@ -532,8 +532,8 @@
                         <el-date-picker
                             v-model="build.building.buildYear"
                             :disabled="isDisabled"
-                            type="date"
-                            placeholder="选择日期">
+                            type="year"
+                            placeholder="选择年代">
                         </el-date-picker>
                     </p>
                     <p class="phoneNum">
