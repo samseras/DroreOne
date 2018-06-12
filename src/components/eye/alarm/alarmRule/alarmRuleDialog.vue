@@ -187,6 +187,81 @@
                     </p>
                 </div>
 
+                <div class="alarmContent" v-if="route.includes('speeding') && isBatchEdit">
+                    <p class="name">严重等级：
+                        <el-select  v-model="batchEdit.level" size="mini" class="" placeholder="请选择">
+                            <el-option
+                                v-for="item in levelInfo"
+                                :key="item.id"
+                                :label="item.name"
+                                :value="item.id">
+                            </el-option>
+                        </el-select>
+                    </p>
+                </div>
+                <div v-if="(route.includes('speeding') && !isBatchEdit) || speedingInfo.alarmTypeId == '5'"  class="alarmContent">
+                    <p class="name">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称：
+                        <el-input type="text" v-model='speedingInfo.name' class="inputText" :maxlength="15" :disabled='isReadonly'></el-input>
+                    </p>
+
+                    <p class="severityName">严重等级：
+                        <el-select  v-model="speedingInfo.severityId" size="mini" placeholder="请选择" :disabled='isReadonly'>
+                            <el-option
+                                v-for="item in levelInfo"
+                                :key="item.id"
+                                :label="item.name"
+                                :value="item.id">
+                            </el-option>
+                        </el-select>
+                    </p>
+                    <p class="name">交通工具：
+                        <el-select  v-model="speedingInfo.relatedVehicleIds" size="mini" multiple class="" placeholder="请选择" :disabled='isReadonly'>
+                            <el-option
+                                v-for="item in vehicleInfo"
+                                :key="item.id"
+                                :label="item.serialNum"
+                                :value="item.id">
+                            </el-option>
+                        </el-select>
+                    </p>
+
+                    <p class="name">限速（千米/小时）：
+                        <el-input type="text" v-model='speedingInfo.upperThreshold' class="inputText" :maxlength="15" :disabled='isReadonly'></el-input>
+                    </p>
+
+                    <p class="name">超速时长阈值（千米/小时）：
+                        <el-input type="text" v-model='speedingInfo.extendThreshold' class="inputText" :maxlength="15" :disabled='isReadonly'></el-input>
+                    </p>
+
+                    <p class="deviceScope">调度范围：
+                        <el-input type="text" v-model='speedingInfo.deviceScope' class="inputText" :maxlength="15" :disabled='isReadonly'></el-input>
+                        (设备)
+                    </p>
+                    <p class="securityScope">调度范围：
+                        <el-input type="text"  v-model='speedingInfo.securityScope' class="inputText" :maxlength="15" :disabled='isReadonly'></el-input>
+                        (安保)
+                    </p>
+                    <p class="relatedManager">管&nbsp;理&nbsp;&nbsp;者：
+                        <el-select v-model="speedingInfo.relatedManagerIds" size="mini" multiple placeholder="请选择" :disabled='isReadonly'>
+                            <el-option-group
+                                v-for="group in personInfo"
+                                :key="group.label"
+                                :label="group.label">
+                                <el-option
+                                    v-for="item in group.options"
+                                    :key="item.id"
+                                    :label="item.name"
+                                    :value="item.id">
+                                </el-option>
+                            </el-option-group>
+                        </el-select>
+                    </p>
+                    <p class="description">描&nbsp;&nbsp;&nbsp;&nbsp;述：<br>
+                        <textarea name="" v-model='speedingInfo.description' cols="30"
+                                  rows="5" placeholder="请输入描述信息" :disabled='isReadonly'></textarea >
+                    </p>
+                </div>
+
                 <div class="alarmContent" v-if="route.includes('offtrack') && isBatchEdit">
                     <p class="name">严重等级：
                         <el-select  v-model="batchEdit.level" size="mini" class="" placeholder="请选择">
@@ -537,6 +612,7 @@
                 conditionDeviceInfo:[],
                 patrolInfo:[],
                 levelInfo:[],
+                vehicleInfo:[],
                 envType:[],
                 sourceInfo:[
                     {
@@ -770,7 +846,8 @@
                             this.$emit('saveInfo',newInfo)
                         }
                     }
-                } else if(this.route.includes('crossborder')){
+                }
+                else if(this.route.includes('crossborder')){
                     if(this.isBatchEdit){   //批量编辑
                         objArray = this.choseInfos.map((item)=>{
                             var obj = {
@@ -862,6 +939,107 @@
                             this.$emit('saveEditInfo',objArray)
                         } else {
                             newInfo = this.crossborderInfo;
+                            newInfo.isEnabled =true;//默认启用
+                            this.$emit('saveInfo',newInfo)
+                        }
+                    }
+                }
+                else if(this.route.includes('speeding')){
+                    if(this.isBatchEdit){   //批量编辑
+                        objArray = this.choseInfos.map((item)=>{
+                            var obj = {
+                                id: item.id,
+                                name: item.name,
+                                alarmTypeId: item.alarmTypeId,
+                                severityId: item.severityId,
+                                isEnabled: item.isEnabled,
+                                isDeleted: item.isDeleted,
+                                deviceScope:item.deviceScope,
+                                securityScope:item.securityScope,
+                                upperThreshold:item.upperThreshold,
+                                lowerThreshold:item.lowerThreshold,
+                                extendThreshold:item.extendThreshold,
+                                envTypeId:item.envTypeId,
+                                envDataSource:item.envDataSource,
+                                description:item.description
+                            }
+                            if(item.relatedDeviceIds && item.relatedDeviceIds.length > 0){
+                                obj.relatedDeviceIds = item.relatedDeviceIds
+                            }
+                            if(item.relatedManagerIds && item.relatedManagerIds.length > 0){
+                                obj.relatedManagerIds = item.relatedManagerIds
+                            }
+                            if(item.relatedVehicleIds && item.relatedVehicleIds.length > 0){
+                                obj.relatedVehicleIds =item.relatedVehicleIds
+                            }
+                            if(item.relatedScheduleIds && item.relatedScheduleIds.length > 0){
+                                obj.relatedScheduleIds = item.relatedScheduleIds
+                            }
+
+                            return obj
+                        });
+                        if(!this.batchEdit.level){
+                            this.$message.error('请选择严重性等级')
+                            return;
+                        }
+                        objArray.forEach((item,index)=>{
+                            item.severityId = this.batchEdit.level;
+                        })
+
+                        this.$emit('saveEditInfo',objArray);
+
+                    }else{  //单个编辑或查看
+                        if(!this.speedingInfo.severityId){
+                            this.$message.error('请选择严重性等级！')
+                            return;
+                        }
+                        if(!this.speedingInfo.name ||this.speedingInfo.name == ""){
+                            this.$message.error('请输入名称！')
+                            return;
+                        }
+                        if((this.speedingInfo.deviceScope && !floatReg.test(this.speedingInfo.deviceScope)) || (this.speedingInfo.securityScope && !floatReg.test(this.speedingInfo.securityScope))){
+                            this.$message.error('调度范围必须为数字！')
+                            return;
+                        }
+                        if((this.speedingInfo.upperThreshold && !floatReg.test(this.speedingInfo.upperThreshold)) || (this.speedingInfo.extendThreshold && !floatReg.test(this.speedingInfo.extendThreshold))){
+                            this.$message.error('限速及超速时长必须为数字！')
+                            return;
+                        }
+
+                        if (this.speedingInfo.id) {
+                            newInfo = {
+                                id: this.speedingInfo.id,
+                                name: this.speedingInfo.name,
+                                alarmTypeId: this.speedingInfo.alarmTypeId,
+                                severityId: this.speedingInfo.severityId,
+                                isEnabled: this.speedingInfo.isEnabled,
+                                isDeleted: this.speedingInfo.isDeleted,
+                                deviceScope:this.speedingInfo.deviceScope,
+                                securityScope:this.speedingInfo.securityScope,
+                                upperThreshold:this.speedingInfo.upperThreshold,
+                                lowerThreshold:this.speedingInfo.lowerThreshold,
+                                extendThreshold:this.speedingInfo.extendThreshold,
+                                envTypeId:this.speedingInfo.envTypeId,
+                                envDataSource:this.speedingInfo.envDataSource,
+                                description:this.speedingInfo.description
+                            }
+
+                            if(this.speedingInfo.relatedDeviceIds && this.speedingInfo.relatedDeviceIds.length > 0){
+                                newInfo.relatedDeviceIds = this.crossborderInfo.relatedDeviceIds
+                            }
+                            if(this.speedingInfo.relatedManagerIds && this.speedingInfo.relatedManagerIds.length > 0){
+                                newInfo.relatedManagerIds = this.speedingInfo.relatedManagerIds
+                            }
+                            if(this.speedingInfo.relatedVehicleIds && this.speedingInfo.relatedVehicleIds.length > 0){
+                                newInfo.relatedVehicleIds =this.speedingInfo.relatedVehicleIds
+                            }
+                            if(this.speedingInfo.relatedScheduleIds && this.speedingInfo.relatedScheduleIds.length > 0){
+                                newInfo.relatedScheduleIds = this.speedingInfo.relatedScheduleIds
+                            }
+                            objArray.push(newInfo)
+                            this.$emit('saveEditInfo',objArray)
+                        } else {
+                            newInfo = this.speedingInfo;
                             newInfo.isEnabled =true;//默认启用
                             this.$emit('saveInfo',newInfo)
                         }
@@ -1379,6 +1557,17 @@
                 }).catch(err => {
                 })
             },
+            async getVehicle(){
+                await api.boat.getAllBoat().then(res=>{
+                    this.vehicleInfo = res.map(item=>{
+                        return {
+                            id: item.vehicle.id,
+                            serialNum: item.vehicle.serialNum
+                        }
+                    })
+                }).catch(err=>{
+                })
+            },
             getAlarmRuleById(id){
                 return new Promise((resolve,reject)=>{
                     api.alarm.getAlarmRuleById(id).then(res => {
@@ -1407,6 +1596,8 @@
                 this.getAlarmType();
                 //获取指标类型  --环境
                 this.getEnvType();
+
+                this.getVehicle();
             },
             initEventDialog(){
                 //调查询rule接口
@@ -1417,24 +1608,31 @@
                          case '2':
                              this.alarmcolumnInfo = this.ruleInfo;
                              this.title = '查看报警柱告警规则'
+                             break
                          case '3':
                              this.firefightingInfo = this.ruleInfo;
                              this.title = '查看消防告警规则'
+                             break
                          case '4':
                              this.crossborderInfo = this.ruleInfo;
                              this.title = '查看越界告警规则'
+                             break
                          case '6':
                              this.offtrackInfo = this.ruleInfo;
                              this.title = '查看偏离轨迹告警规则'
+                             break
                          case '7':
                              this.overlimitInfo = this.ruleInfo;
                              this.title = '查看客流量告警规则'
+                             break
                          case '8':
                              this.waterlevelInfo = this.ruleInfo;
                              this.title = '查看水位告警规则'
+                             break
                          case '9':
                              this.conditionInfo = this.ruleInfo;
                              this.title = '查看环境告警规则'
+                             break
                      }
                      console.log(this.alarmcolumnInfo);
                  });
@@ -1460,8 +1658,6 @@
                     }
 
                 } else if(this.route.includes('speeding')) {
-                    // this.getAllPurifierPerson()
-                    // this.getAllRegion()
                     this.speedingInfo = JSON.parse(JSON.stringify(this.Info));
 
                 } else if(this.route.includes('offtrack')) {
