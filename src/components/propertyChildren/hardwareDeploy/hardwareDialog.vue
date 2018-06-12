@@ -18,7 +18,7 @@
                             <el-option label='室外' :value="1"></el-option>
                         </el-select>
                     </p>
-                    <p class="sex">
+                    <p class="sex title">
                         <s>名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称：</s>
                         <el-input type="text" v-model="camera.name" :disabled="isDisabled" :maxlength="15"></el-input>
                     </p>
@@ -141,12 +141,18 @@
                             </el-option>
                         </el-select>
                     </p>
-                    <p class="width">屏幕宽高(cm)：
-                        <el-input type="text" v-model="led.area" :disabled="isDisabled" placeholder="例：22,33"></el-input>
-                    </p>
+                    <!--<p class="width">屏幕宽高(cm)：-->
+                        <!--<el-input type="text" v-model="led.area" :disabled="isDisabled" placeholder="例：22,33"></el-input>-->
+                    <!--</p>-->
                     <!--<p class="IP">IP&nbsp;&nbsp;地&nbsp;&nbsp;址:
                         <el-input type="text" v-model="led.ip" :disabled="isDisabled"></el-input>
                     </p>-->
+                    <p class="width">屏幕宽(cm)：
+                        <el-input type="text" v-model="led.screenWidth" :disabled="isDisabled"></el-input>
+                    </p>
+                    <p class="width">屏幕高(cm)：
+                        <el-input type="text" v-model="led.screenHeight" :disabled="isDisabled"></el-input>
+                    </p>
                     <p class="port">设备端口：
                         <el-input type="text" v-model="led.port" :disabled="isDisabled"></el-input>
                     </p>
@@ -553,7 +559,9 @@
                    mac:'',
                    positionType:'',
                    name:'',
-                   area:'',
+//                   area:'',
+                   screenHeight:'',
+                   screenWidth:'',
                    model:'',
                    ip:'',
                    port:'',
@@ -736,11 +744,11 @@
                       return
                   }
                   if(!(newInfo.ip && myip.test(newInfo.ip))){
-                      this.$message.error('请输入有效ip地址！')
+                      this.$message.error('请输入有效ip地址')
                       return
                   }
                   if(!(newInfo.port && myport.test(newInfo.port))){
-                      this.$message.error('请输入正确端口号！')
+                      this.$message.error('请输入正确端口号')
                       return
                   }
 
@@ -757,11 +765,11 @@
                        return
                    }
                    if(!(newInfo.ip && myip.test(newInfo.ip))){
-                       this.$message.error('请输入有效ip地址！')
+                       this.$message.error('请输入有效ip地址')
                        return
                    }
                    if(!(newInfo.port && myport.test(newInfo.port))){
-                       this.$message.error('请输入正确端口号！')
+                       this.$message.error('请输入正确端口号')
                        return
                    }
 
@@ -781,7 +789,7 @@
                        return
                    }*/
                    if(!(newInfo.port && myport.test(newInfo.port))){
-                       this.$message.error('请输入正确端口号！')
+                       this.$message.error('请输入正确端口号')
                        return
                    }
                    if(!(newInfo.mac && myMac.test(newInfo.mac))){
@@ -809,7 +817,7 @@
                        return
                    }*/
                    if(!(newInfo.port && myport.test(newInfo.port))){
-                       this.$message.error('请输入正确端口号！')
+                       this.$message.error('请输入正确端口号')
                        return
                    }
                    /*if(!(newInfo.serialNum && intreg.test(newInfo.serialNum))){
@@ -837,7 +845,7 @@
                        return
                    }*/
                    if(!(newInfo.port && myport.test(newInfo.port))){
-                       this.$message.error('请输入正确端口号！')
+                       this.$message.error('请输入正确端口号')
                        return
                    }
                    /*if(!(newInfo.serialNum && intreg.test(newInfo.serialNum))){
@@ -861,7 +869,7 @@
                        return
                    }
                    if(!(newInfo.port && myport.test(newInfo.port))){
-                       this.$message.error('请输入正确端口号！')
+                       this.$message.error('请输入正确端口号')
                        return
                    }
 
@@ -881,7 +889,7 @@
                        return
                    }*/
                    if(!(newInfo.port && myport.test(newInfo.port))){
-                       this.$message.error('请输入正确端口号！')
+                       this.$message.error('请输入正确端口号')
                        return
                    }
                    if(!(newInfo.mac && myMac.test(newInfo.mac))){
@@ -910,7 +918,7 @@
                        return
                    }*/
                    if(!(newInfo.port && myport.test(newInfo.port))){
-                       this.$message.error('请输入正确端口号！')
+                       this.$message.error('请输入正确端口号')
                        return
                    }
                    if(!(newInfo.mac && myMac.test(newInfo.mac))){
@@ -1436,6 +1444,9 @@
     }
     .hardwareDialog .wrapstyle .el-date-editor .el-input__prefix{
         left:14.3rem
+    }
+    .hardwareDialog .card .title .el-input__inner{
+        width:200px;
     }
 
 </style>
