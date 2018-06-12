@@ -38,8 +38,8 @@
                             label="交通工具">
                         </el-table-column>
                         <el-table-column
-                            prop="speedTime"
-                            label="超速时长(min)">
+                            prop="extendThreshold"
+                            label="超速时长阈值(min)">
                         </el-table-column>
                         <el-table-column
                             prop="upperThreshold"
@@ -365,7 +365,7 @@
                     this.isBatchEdit = true;
                     this.visible = true;
                     this.isReadonly = false;
-                    this.title="编辑报警柱告警规则"
+                    this.title="编辑超速告警规则"
                 } else {
                     this.$message.error('请选择要编辑的数据')
                     return
@@ -420,6 +420,15 @@
                             item.relatedManagerNames = ''
                             item.relatedManagerIds = []
                         }
+
+                        if(item.relatedVehicles.length > 0) {
+                            item.relatedVehicleNames = item.relatedVehicles.map(vehicle => vehicle.serialNum)
+                            item.relatedVehicleIds = item.relatedVehicles.map(vehicle => vehicle.id)
+                            item.relatedVehicleNames = item.relatedVehicleNames.join(",")
+                        }else{
+                            item.relatedVehicleNames = ''
+                            item.relatedVehicleIds = []
+                        }
                     })
                 }).catch(err => {
                     console.log(err, '请求失败')
@@ -437,7 +446,8 @@
                 }).catch(err => {
                     console.log(err, '请求失败')
                 })
-            },
+            }
+
 
         },
         created () {
