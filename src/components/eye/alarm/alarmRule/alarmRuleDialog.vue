@@ -523,86 +523,14 @@
                 batchEdit:{
                     level:''
                 },
-                alarmcolumnInfo:{
-                    id:'',
-                    batchEdit:{
-                        batchEdit:''
-                    },
-                    name:'',
-                    relatedDevices:[],
-                    alarmSeverity:{
-                        id:'2',
-                        name:'中'
-                    },
-                    deviceScope:'',
-                    securityScope:'',
-                    relatedManagerIds:[],
-                    description:'',
-                    isEnabled:false
-                },
-                firefightingInfo:{
-                    id:'',
-                    name:'',
-                    deviceScope:'',
-                    securityScope:'',
-                    relatedManagerIds:[],
-                    description:'',
-                    isEnabled:false
-                },
-                crossborderInfo:{
-                    id:'',
-                    name:'',
-                    deviceScope:'',
-                    securityScope:'',
-                    relatedManagerIds:[],
-                    description:'',
-                    isEnabled:false
-                },
-                speedingInfo:{
-
-                },
-                offtrackInfo:{
-                    id:'',
-                    name:'',
-                    relatedSchedule:'',
-                    extendThreshold:'',
-                    upperThreshold:'',
-                    relatedManagerIds:[],
-                    description:'',
-                    isEnabled:false
-                },
-                overlimitInfo:{
-                    id:'',
-                    name:'',
-                    relatedDevice:[],
-                    upperThreshold:'',
-                    relatedManagerIds:[],
-                    description:'',
-                    isEnabled:false
-                },
-                waterlevelInfo:{
-                    id:'',
-                    name:'',
-                    relatedDevice:[],
-                    upperThreshold:'',
-                    lowerThreshold:'',
-                    relatedManagerIds:[],
-                    description:'',
-                    isEnabled:false
-                },
-                conditionInfo:{
-                    id:'',
-                    name:'',
-                    envTypeId:'',
-                    envTypeName:'',
-                    envDataSource:'',
-                    relatedDevice:[],
-                    upperThreshold:'',
-                    lowerThreshold:'',
-                    relatedManagerIds:[],
-                    description:'',
-                    isEnabled:false
-                },
+                alarmcolumnInfo:{},
+                firefightingInfo:{},
+                crossborderInfo:{},
+                speedingInfo:{},
+                offtrackInfo:{},
+                overlimitInfo:{},
+                waterlevelInfo:{},
+                conditionInfo:{},
                 policeInfo:[],
                 overlimitDeviceInfo:[],
                 waterlevelDeviceInfo:[],
@@ -1451,10 +1379,13 @@
                 }).catch(err => {
                 })
             },
-            async getAlarmRuleById(id){
-                await api.alarm.getAlarmRuleById(id).then(res => {
-                    this.ruleInfo = res;
-                }).catch(err => {
+            getAlarmRuleById(id){
+                return new Promise((resolve,reject)=>{
+                    api.alarm.getAlarmRuleById(id).then(res => {
+                        resolve(res)
+                    }).catch(err => {
+                        reject(reject)
+                    })
                 })
             },
             initData(){
@@ -1478,43 +1409,35 @@
                 this.getEnvType();
             },
             initEventDialog(){
-                this.isReadonly = true;
                 //调查询rule接口
-                this.getAlarmRuleById(this.alarmRuleId);
-                // this.ruleInfo = {
-                //     id:'1',
-                //     name:'sos报警规则01',
-                //     relatedDevices:[],
-                //     alarmSeverity:{
-                //         id:"1",
-                //         name:'高'
-                //     },
-                //     deviceScope:'100米',
-                //     securityScope:'200米',
-                //     relatedManagerIds:'0',
-                //     relatedManagerNames:'aaa',
-                //     isEnabled:true,
-                //     alarmTypeId :'2'
-                // }
-                // this.alarmcolumnInfo = this.ruleInfo;
-                //判断
-                switch (this.ruleInfo.alarmTypeId) {
-                    case 2:
-                        this.alarmcolumnInfo = this.ruleInfo;
-                    case 3:
-                        this.firefightingInfo = this.ruleInfo;
-                    case 4:
-                        this.crossborderInfo = this.ruleInfo;
-                    case 6:
-                        this.offtrackInfo = this.ruleInfo;
-                    case 7:
-                        this.overlimitInfo = this.ruleInfo;
-                    case 8:
-                        this.waterlevelInfo = this.ruleInfo;
-                    case 9:
-                        this.conditionInfo = this.ruleInfo;
-                }
-
+                 this.getAlarmRuleById(this.alarmRuleId).then(res=>{
+                     this.ruleInfo = res[0]
+                     console.log(this.ruleInfo);
+                     switch (this.ruleInfo.alarmTypeId) {
+                         case '2':
+                             this.alarmcolumnInfo = this.ruleInfo;
+                             this.title = '查看报警柱告警规则'
+                         case '3':
+                             this.firefightingInfo = this.ruleInfo;
+                             this.title = '查看消防告警规则'
+                         case '4':
+                             this.crossborderInfo = this.ruleInfo;
+                             this.title = '查看越界告警规则'
+                         case '6':
+                             this.offtrackInfo = this.ruleInfo;
+                             this.title = '查看偏离轨迹告警规则'
+                         case '7':
+                             this.overlimitInfo = this.ruleInfo;
+                             this.title = '查看客流量告警规则'
+                         case '8':
+                             this.waterlevelInfo = this.ruleInfo;
+                             this.title = '查看水位告警规则'
+                         case '9':
+                             this.conditionInfo = this.ruleInfo;
+                             this.title = '查看环境告警规则'
+                     }
+                     console.log(this.alarmcolumnInfo);
+                 });
             },
             initRuleDialog(){
                 this.route = this.$route.path
@@ -1575,12 +1498,6 @@
             }else{
                 this.initRuleDialog();
             }
-        },
-        watch:{
-
-        },
-        components : {
-             // 'a-player': VueAplayer
         }
     }
 </script>
