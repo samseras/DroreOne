@@ -225,14 +225,15 @@
                         </el-select>
                     </p>
 
-                    <p class="name">限速（千米/小时）：
+                    <p class="name">限&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;速：
                         <el-input type="text" v-model='speedingInfo.upperThreshold' class="inputText" :maxlength="15" :disabled='isReadonly'></el-input>
+                        (千米/小时)
                     </p>
 
-                    <p class="name">超速时长阈值（千米/小时）：
+                    <p class="name">超速时长阈值：
                         <el-input type="text" v-model='speedingInfo.extendThreshold' class="inputText" :maxlength="15" :disabled='isReadonly'></el-input>
+                        (千米/小时)
                     </p>
-
                     <p class="deviceScope">调度范围：
                         <el-input type="text" v-model='speedingInfo.deviceScope' class="inputText" :maxlength="15" :disabled='isReadonly'></el-input>
                         (设备)
@@ -1616,6 +1617,10 @@
                          case '4':
                              this.crossborderInfo = this.ruleInfo;
                              this.title = '查看越界告警规则'
+                             break
+                         case '5':
+                             this.speedingInfo = this.ruleInfo;
+                             this.title = '查看超速告警规则'
                              break
                          case '6':
                              this.offtrackInfo = this.ruleInfo;

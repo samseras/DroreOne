@@ -5,7 +5,7 @@
             :close-on-click-modal = false
             title="告警事件处理"
             :before-close="closeEventDialog"
-            width="500px"
+            width="580px"
             class="dialog edit_Dialog"
             center>
 
@@ -78,6 +78,16 @@
                                     </el-option-group>
                                 </el-select>
                             </p>
+
+                            <p v-if="ruleInfo.alarmTypeId == '5'" class="name">实际时长阈值：
+                                <el-input type="text" v-model='eventInfo.acturalExtendValue' class="inputText" :maxlength="15" :disabled='true'></el-input>
+                                (千米/小时)
+                            </p>
+                            <p v-if="ruleInfo.alarmTypeId == '5'" class="name">实际最高速度：
+                                <el-input type="text" v-model='eventInfo.actualValue' class="inputText" :maxlength="15" :disabled='true'></el-input>
+                                (千米/小时)
+                            </p>
+
                             <p class="tel">电话号码：
                                 <el-input type="text" v-model="eventInfo.owner.phone" class="inputText" :maxlength="15" :disabled="true"></el-input>
                             </p>
@@ -167,7 +177,8 @@
                 fileAddIds:[],
                 modifiedFields:'',
                 handleDescription:'',
-                isReadonly:false
+                isReadonly:false,
+                ruleInfo:{}
             }
         },
         methods: {
@@ -436,7 +447,17 @@
                     console.log(err, '请求失败')
                 })
                 return personInfo;
-            }
+            },
+            async getAlarmRuleById(alarmRuleId){
+                //调查询rule接口
+                await api.alarm.getAlarmRuleById(alarmRuleId).then(res => {
+                    if(res instanceof Array && res.length == 1){
+                        this.ruleInfo = res[0]
+                    }
+                }).catch(err => {
+                    console.log(err, '请求失败')
+                })
+            },
         },
         async created () {
             this.init();
@@ -446,6 +467,7 @@
                 this.fileList = JSON.parse(JSON.stringify(this.Info.fileList));
             }
             this.eventInfo = JSON.parse(JSON.stringify(this.Info));
+            this.getAlarmRuleById(this.eventInfo.rule.id)
         },
         components : {
             AlarmDetail,
