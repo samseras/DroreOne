@@ -21,15 +21,17 @@
 
         <div class="page">
             <span>当前第1页/共8页</span>
-            <span class="upPage"><</span>
-            <span class="downPage">></span>
+            <span class="upPage"></span>
+            <span class="downPage"></span>
         </div>
     </div>
 </template>
 
 <script>
     import api from '@/api'
+
     export default {
+        props: ['choseId','listLength'],
         data () {
             return {
                 route: '',
@@ -64,7 +66,54 @@
 
             },
             batchDownload(){
-                this.$emit('batchDownload')
+                if(this.listLength == 0){
+                    this.$message.error('没有数据导出,添加后再试')
+                    return
+                }
+
+                if (this.choseId.length > 0) {
+                    api.alarm.exportSelectedAlarmEvents({ids : this.choseId}).then((res) =>{
+                        const content = res
+                        const blob = new Blob([content])
+                        const fileName = 'data.csv'
+                        if('download' in document.createElement('a')){
+                            const elink = document.createElement('a')
+                            elink.download = fileName
+                            elink.style.display = 'none'
+                            elink.href = URL.createObjectURL(blob)
+                            document.body.appendChild(elink)
+                            elink.click()
+                            URL.revokeObjectURL(elink.href) // 释放URL 对象
+                            document.body.removeChild(elink)
+                        }else{
+                            navigator.msSaveBlob(blob, fileName)
+                        }
+                        this.$message.success('导出成功')
+                    }).catch(err =>{
+                        this.$message.error('导出失败，请稍后再试')
+                    })
+                } else {
+                    api.alarm.exportAlarmEvents().then((res) => {
+                        const content = res
+                        const blob = new Blob([content])
+                        const fileName = 'data.csv'
+                        if('download' in document.createElement('a')){
+                            const elink = document.createElement('a')
+                            elink.download = fileName
+                            elink.style.display = 'none'
+                            elink.href = URL.createObjectURL(blob)
+                            document.body.appendChild(elink)
+                            elink.click()
+                            URL.revokeObjectURL(elink.href) // 释放URL 对象
+                            document.body.removeChild(elink)
+                        }else{
+                            navigator.msSaveBlob(blob, fileName)
+                        }
+                        this.$message.success('导出成功')
+                    }).catch(err => {
+                        this.$message.error('导出失败，请稍后再试')
+                    })
+                }
             },
             async getStatusType(){
                 await api.alarm.getAlarmEventStatus().then(res => {
@@ -98,6 +147,7 @@
             margin-right: rem(2);
         }
     }
+    .warningEvent{
     .personList{
         .el-table{
             font-size: rem(14);
@@ -112,7 +162,6 @@
                 }
             }
             td,th{
-                padding: 5px 0;
             }
             .cell{
                 font-size: rem(14);
@@ -122,6 +171,7 @@
                 }
             }
         }
+    }
     }
 </style>
 

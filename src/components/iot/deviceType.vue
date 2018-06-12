@@ -1,5 +1,8 @@
 <template>
     <div class="device-type" >
+        <div class="title">
+           <h2>设备型号</h2>
+        </div>
         <template>
             <el-table
                 :data="tableData"
@@ -110,5 +113,14 @@
     .device-type{
         margin:rem(16);
         border:1px solid red;
+        .title{
+            background-color: #fff;
+            border-bottom: 1px solid #eee;
+            h2{
+                color: #000;
+                font-weight: 600;
+                padding: rem(16) rem(9.6);
+            }
+        }
     }
 </style>

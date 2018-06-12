@@ -9,7 +9,9 @@
                         @selectedAll = 'selectedAll'
                         @batchEdit = 'batchEdit'
                         @choseType='choseType'
-                        @batchDownload="batchDownload">
+                        @batchDownload="batchDownload"
+                        :choseId="choseInfoId"
+                        :listLength = "listLength">
                 </Header>
             </div>
             <div class="personList" v-loading="isShowloading">
@@ -37,6 +39,7 @@
                             label="指标类型">
                         </el-table-column>
                         <el-table-column
+                            show-overflow-tooltip
                             prop="device.name"
                             label="来源">
                         </el-table-column>
@@ -76,7 +79,7 @@
                 <AlarmDetail v-if="visible"
                               :visible="visible"
                               :Info="warningEventInfo"
-                              :isReadonly="isReadonly"
+                              :readOnly="readOnly"
                               @closeDialog ="closeDialog"
                               :title = "title"
                               @saveEditInfo="saveEditInfo"
@@ -103,12 +106,15 @@
                 warningEventInfo: {},
                 choseInfos: [],
                 choseInfoId:[],
-                isReadonly: true,
+                readOnly: true,
                 title:'',
                 selection:[],
                 isShowloading: false,
                 isBatchEdit:false,
-                alarmType:''
+                alarmType:'',
+                listLength:'',
+                dataLength:'',
+                updateParams:[]
             }
         },
         methods: {
@@ -164,7 +170,7 @@
                 this.warningEventInfo = info;
                 this.visible = true;
                 this.isBatchEdit = false;
-                this.isReadonly = state;
+                this.readOnly = state;
                 if(title){
                     this.title = title;
                 }
@@ -217,20 +223,6 @@
                 }
             },
             checked (row) {
-                // this.warningEventList = this.warningEventList.filter(item => {
-                //     if (item.id === id) {
-                //         item.checked = item.checked
-                //     }
-                //     return item
-                // })
-                // if (this.choseInfos.includes(id)) {
-                //     this.choseInfos = this.choseInfos.filter((item) =>{
-                //         return item !== id
-                //     })
-                // } else {
-                //     this.choseInfos.push(id)
-                // }
-
                 this.warningEventList = this.warningEventList.filter(item => {
                     if (item.id === row.id) {
                         item.checked = item.checked
@@ -276,24 +268,68 @@
                     return
                 }
             },
-            saveEditInfo(objArray){ //编辑保存
-                api.alarm.updateAlarmEvent(objArray).then(res => {
-                    console.log(res, '修改成功')
-                    this.$message.success('修改成功')
-                    this.getAllAlarmEvent();
-                    this.choseInfos = []
-                    this.visible = false
-                }).catch(err => {
-                    this.$message.error('修改失败，请稍后重试')
-                    console.log(err)
-                    this.choseInfos = []
+            saveEditInfo(param){ //编辑保存
+                if(this.isBatchEdit){
+                    this.updateAlarmEvent(param.data)
+                }else{
+                    this.addUpload(param)
+                }
+            },
+            addUpload(param){
+                let objArray = param.data
+                let fileAddList = param.fileAddList
+                let params = []
+                if(fileAddList.length > 0){
+                    fileAddList.forEach((item)=>{
+                        var data = new FormData();
+                        data.append('f1',item);
+                        params.push(this.uploadFile(data));
+
+                    })
+                    console.log(params)
+                    Promise.all(params).then((result)=>{
+                        console.log(result)
+                        objArray[0].attachmentIds = objArray[0].attachmentIds.concat(result.map(item=>item.id))
+                        this.updateParams = objArray
+
+                    }).then(objArray=>{
+                        this.updateAlarmEvent(this.updateParams)
+                    })
+                }else{
+                    this.updateAlarmEvent(objArray)
+                }
+
+
+            },
+            uploadFile (data) {
+                return new Promise((resolve, reject) => {
+                    api.alarm.uploadAttachments(data).then(res => {
+                        console.log(res, '上传成功')
+                        resolve(res)
+                    }).catch(err => {
+                        reject(res)
+                        console.log(err, '上传失败')
+                    })
                 })
             },
+            async updateAlarmEvent(objArray){
+                await api.alarm.updateAlarmEvent(objArray).then(res => {
+                        console.log(res, '修改成功')
+                        this.$message.success('修改成功')
+                        this.choseInfos = []
+                        this.visible = false
+                        this.getAllAlarmEvent();
+                    }).catch(err => {
+                        this.$message.error('修改失败，请稍后重试')
+                        console.log(err)
+                        this.choseInfos = []
+                    })
+            },
             async getAllAlarmEvent () {
-                this.isShowLoading = true
                 await   api.alarm.getAllAlarmEvent().then(res => {
                                 console.log(res, '请求成功')
                                 this.isShowLoading = false
+                                this.listLength = res.length
                                 this.warningEventList = JSON.parse(JSON.stringify(res))
 
                                 this.warningEventList.forEach(item => {
@@ -305,6 +341,7 @@
                                                let fileObj = {
                                                    title : obj.path.replace(/(.*\/)*([^.]+).*/ig,"$2").split('_')[0],
                                                    id:obj.id,
+                                                   path:obj.path,
                                                    checked:false
                                                }
                                             fileList.push(fileObj)
@@ -331,6 +368,7 @@
                     this.alarmType = res;
                 }).catch(err => {
                     console.log(err, '请求失败')
+                    console.log(err, '请求失败')
                 })
             },
             initData(){
@@ -338,6 +376,7 @@
             }
         },
         created () {
+            this.isShowLoading = true
             this.initData();
             this.getAllAlarmEvent();
             console.log(this.personInfo)

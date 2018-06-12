@@ -561,7 +561,7 @@
                         .checkBtn{
                             position:absolute;
                             right:rem(5);
-                            top:rem(-2);
+                            top:rem(1);
                             cursor:pointer;
                         }
                     }

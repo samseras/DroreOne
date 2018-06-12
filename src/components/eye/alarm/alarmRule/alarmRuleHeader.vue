@@ -85,7 +85,6 @@
                 if (this.choseId.length > 0) {
 
                     api.alarm.exportSelectedAlarmRules({ids : this.choseId},alarmTypeId).then((res) =>{
-                        console.log(res,'niaho')
                         const content = res
                         const blob = new Blob([content])
                         const fileName = 'data.csv'
@@ -107,7 +106,6 @@
                     })
                 } else {
                     api.alarm.exportAlarmRules(alarmTypeId).then((res) => {
-                        console.log(res,'ni')
                         const content = res
                         const blob = new Blob([content])
                         const fileName = 'data.csv'
@@ -136,10 +134,8 @@
             },
             async getAllAlarmTypes(){
                 await api.alarm.getAllAlarmTypes().then(res => {
-                    console.log(res, '请求type成功')
                     this.alarmType = res;
                 }).catch(err => {
-                    console.log(err, '请求失败')
                 })
             },
         },
@@ -166,31 +162,39 @@
             margin-right: rem(2);
         }
     }
-    .personList{
-        .el-table{
-            font-size: rem(14);
-            table{
-                th{
-                    background: #f3f3f3;
-                    .cell{
-                        font-size: rem(16);
-                        font-weight: 500;
-                        color: #333;
+    .condition,
+    .crossborder,
+    .firefighting,
+    .offtrack,
+    .overlimit,
+    .waterlevel,
+    .alarmcolumn{
+        .personList{
+            .el-table{
+                font-size: rem(14);
+                table{
+                    th{
+                        background: #f3f3f3;
+                        .cell{
+                            font-size: rem(16);
+                            font-weight: 500;
+                            color: #333;
+                        }
                     }
                 }
-            }
-            td,th{
-                padding: 5px 0;
-            }
-            .cell{
-                font-size: rem(14);
-                span:hover{
-                    color: #54c5f2;
-                    cursor:pointer;
+                td,th{
+                }
+                .cell{
+                    font-size: rem(14);
+                    span:hover{
+                        color: #54c5f2;
+                        cursor:pointer;
+                    }
                 }
             }
         }
     }
+
 </style>
 
 <style lang="scss" scoped type="text/scss">

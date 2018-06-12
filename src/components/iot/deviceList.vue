@@ -16,6 +16,7 @@
                     </el-form>
                 </div>
                 <div class="page">
+
                     <el-pagination
                         @size-change="handleSizeChange"
                         @current-change="handleCurrentChange"
@@ -23,8 +24,8 @@
                         background
                         :page-sizes="[20,50, 100, 300, 400]"
                         :page-size="20"
-                        layout="prev, pager, next"
-                        :total="100">
+                        layout="total, prev, pager, next, jumper"
+                        :total="allNum">
                     </el-pagination>
                 </div>
             </div>
@@ -45,10 +46,12 @@
         name: "devicelist",
         data(){
             return{
+                allNum:0,
                 allData:[],
                 route:1,
                 currentPage:1,
                 curPage:1,
+                pageSize:20,
                 searchInfo:'',
                 formInline: {
                     user: '',
@@ -64,10 +67,13 @@
             }
         },
         methods:{
+
             getDeviceListInfo(route){
-                api.iotHome.getDeviceListInfo(route).then(res=>{
+                this.pageSize=20;
+                api.iotHome.getDeviceListInfo(route,this.curPage,this.pageSize).then(res=>{
                     console.log(res,'这是传回来的设备列表信息');
-                    this.allData=res.tableDatas;
+                    this.allNum=res.pageCondition.allcount;
+                    this.allData=res.pageData.tableDatas;
 
                 }).catch(err=>{
                     console.log(err,'失败')
@@ -89,6 +95,16 @@
             handleCurrentChange(val) {
                 console.log(`当前页: ${val}`);
                 this.curPage=val;
+                //后端分页
+                console.log(this.route,this.curPage,this.pageSize);
+                api.iotHome.getDeviceListInfo(this.route,this.curPage,this.pageSize).then(res=>{
+                    console.log(res,'这是传回来的设备列表信息');
+                    this.allNum=res.pageCondition.allcount;
+                    this.allData=res.pageData.tableDatas;
+
+                }).catch(err=>{
+                    console.log(err,'失败1')
+                })
                 //this.$store.commit('CURPAGE', val)
             },
             ...mapMutations(['CURPAGE'])
@@ -137,7 +153,7 @@
                 }
                 .page{
                     float:right;
-                    width:33%;
+                    max-width:58%;
                     height:rem(16);
                     border:1px solid transparent;
                     margin-top: rem(16);
