@@ -92,7 +92,7 @@
 
                             left: '2%',
                             right: '2%',
-                            top: '8%',
+                            top: '16%',      //图在框中显示的位置
                             bottom: '20%',
 
                             symbol: 'emptyCircle',
@@ -104,10 +104,10 @@
                             label: {
                                 normal: {
                                     position: 'top',
-                                    rotate: -90,
+                                    rotate: 0,
                                     verticalAlign: 'middle',
                                     align: 'right',
-                                    fontSize: 9
+                                    fontSize: 16
                                 }
                             },
 
@@ -148,7 +148,7 @@
         margin:rem(16);
         #my-chart{
             width:rem(400);
-            height:rem(300);
+            height:rem(400);
             border:1px solid red;
             margin:rem(80) auto;
         }

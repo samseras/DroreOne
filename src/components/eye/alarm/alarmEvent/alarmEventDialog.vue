@@ -14,7 +14,7 @@
                     <ScrollContainer>
                         <div class="alarmContent" v-if="isBatchEdit">
                             <p class="level">严重等级：
-                            <el-select  v-model="batchEdit.level" size="mini" class="" placeholder="请选择">
+                            <el-select  v-model="batchlevel" size="mini" class="" placeholder="请选择">
                                 <el-option
                                     v-for="item in levelInfo"
                                     :key="item.id"
@@ -24,7 +24,7 @@
                             </el-select>
                         </p>
                             <p class="status">状&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 态：
-                                <el-select  v-model="batchEdit.status" size="mini" class="" placeholder="请选择">
+                                <el-select  v-model="batchstatus" size="mini" class="" placeholder="请选择">
                                     <el-option
                                         v-for="item in statusInfo"
                                         :key="item.id"
@@ -54,7 +54,7 @@
                                 <!--<div class="inputText el-input"></div>-->
                             </p>
                             <p class="level">严重等级：
-                                <el-select  v-model="eventInfo.severity.id" size="mini" class="" placeholder="请选择" :disabled="isReadonly">
+                                <el-select  v-model="eventInfo.severity.id" size="mini" class="" placeholder="请选择" :disabled="readOnly">
                                     <el-option
                                         v-for="item in levelInfo"
                                         :key="item.id"
@@ -64,7 +64,7 @@
                                 </el-select>
                             </p>
                             <p class="owner">负责人员：
-                                <el-select  v-model="eventInfo.owner.id" @change="ownerChange" size="mini" class="" placeholder="请选择" :disabled="isReadonly">
+                                <el-select  v-model="eventInfo.owner.id" @change="ownerChange" size="mini" class="" placeholder="请选择" :disabled="readOnly">
                                     <el-option-group
                                         v-for="group in personInfo"
                                         :key="group.label"
@@ -82,7 +82,7 @@
                                 <el-input type="text" v-model="eventInfo.owner.phone" class="inputText" :maxlength="15" :disabled="true"></el-input>
                             </p>
                             <p class="status">状&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 态:
-                                <el-select  v-model="eventInfo.status.id" size="mini" class="" placeholder="请选择" :disabled="isReadonly">
+                                <el-select  v-model="eventInfo.status.id" size="mini" class="" placeholder="请选择" :disabled="readOnly">
                                     <el-option
                                         v-for="item in statusInfo"
                                         :key="item.id"
@@ -93,18 +93,19 @@
                             </p>
                             <p class="description">处理备注：<br>
                                 <textarea name="" v-model='handleDescription' cols="30"
-                                          rows="5" placeholder="请输入描述信息" :disabled="isReadonly"></textarea >
+                                          rows="5" placeholder="请输入描述信息" :disabled="readOnly"></textarea >
                             </p>
                             <div class="attachment">附&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;件：
                                 <div v-loading="isShowLoading" class="showFilelist" >
                                     <div class="uploadlist" v-for="item in fileList">
                                         <el-checkbox v-model="item.checked" class="checkBoxBtn"></el-checkbox>
-                                        <span class="downloadThis" @click="downloadFile(item.title)">{{item.title}}</span>
+                                        <span v-if="item.path" class="downloadThis" @click="downloadFile(item)">{{item.title}}</span>
+                                        <span v-else>{{item.title}}</span>
                                     </div>
                                 </div>
                                 <div class="uploadContent">
-                                    <el-button size="mini" class="hold" @click="$refs.uploadFile.click()" :disabled="isReadonly">上传附件</el-button>
-                                     <el-button size="mini" class="hold" @click="deleteFile" :disabled="isReadonly || emptyFile">删除文件</el-button>
+                                    <el-button size="mini" class="hold" @click="$refs.uploadFile.click()" :disabled="readOnly">上传附件</el-button>
+                                     <el-button size="mini" class="hold" @click="deleteFile" :disabled="readOnly || emptyFile">删除文件</el-button>
                                     <input type="file" ref="uploadFile" class="multiFile"  multiple="multiple" @change="selectFile">
                                 </div>
                             </div>
@@ -134,7 +135,8 @@
         <AlarmDetail  v-if="ruleVisible"
                       :ruleVisible="ruleVisible"
                       @closeDialog ="closeDialog"
-                      :alarmRuleId="eventInfo.rule.id">
+                      :alarmRuleId="eventInfo.rule.id"
+                      :isReadonly="isReadonly">
 
         </AlarmDetail>
     </div>
@@ -142,19 +144,16 @@
 </template>
 
 <script>
-     import VueAplayer from 'vue-aplayer'
      import ScrollContainer from '@/components/ScrollContainer'
      import api from '@/api'
      import AlarmDetail from '../alarmRule/alarmRuleDialog'
     export default {
-        props: ['visible','isReadonly','isBatchEdit','choseInfoId','Info'],
+        props: ['visible','readOnly','isBatchEdit','choseInfoId','Info','choseInfos'],
         data () {
             return{
                 eventInfo:{},
-                batchEdit:{
-                    level:'',
-                    status:''
-                },
+                batchlevel:'',
+                batchstatus:'',
                 levelInfo:[],
                 statusInfo:[],
                 isShowLoading: false,
@@ -167,7 +166,8 @@
                 fileList:[],
                 fileAddIds:[],
                 modifiedFields:'',
-                handleDescription:''
+                handleDescription:'',
+                isReadonly:false
             }
         },
         methods: {
@@ -177,24 +177,22 @@
             showRuleDetail(){
                 console.log(this.eventInfo.rule.id)
                 this.ruleVisible = true;
+                this.isReadonly = true;
             },
-            ownerChange(val){
-                console.log(val);
-                console.log(this.eventInfo);
-                this.getTelById(val);
-            },
-            getTelById(id){
+            ownerChange(id){
+                console.log(id);
                 if(this.personInfo.length > 0){
                     this.personInfo.forEach((item)=>{
-                        if(item.options.id == id){
-                            this.eventInfo.ownerTel =  item.options.phone;
-                            this.eventInfo.ownerName = item.options.name;
-                        }
+                        item.options.forEach((obj)=>{
+                            if(obj.id == id){
+                                this.eventInfo.owner.phone = obj.phone
+                            }
+                        })
                     });
                 }
             },
             downloadFile(val){
-                console.log(val)
+                window.location.href = 'http://192.168.0.150:8090/'+val.path
             },
             closeEventDialog () {
                 this.$emit('closeDialog')
@@ -204,19 +202,18 @@
                 let newInfo = {};
                 if(this.isBatchEdit){    //批量编辑
                     console.log(this.choseInfoId);
-
-                    if(!this.batchEdit.level && !this.batchEdit.status){
+                    if(!this.batchlevel && !this.batchstatus){
                         return;
                     }
 
-                    // objArray = this.choseInfos;
                     objArray = this.choseInfos.map((item)=>{
+                        let attachmentIds = item.attachments.map(item=>item.id)
                         var obj = {
                             id:item.id,
                             ownerId:item.owner.id,
                             statusId:item.status.id,
                             severityId:item.severity.id,
-                            attachmentIds:item.attachmentIds,
+                            attachmentIds:attachmentIds,
                             handleRecord:{
                                 modifiedFields:item.modifiedFields,
                                 handleDescription: item.handleDescription
@@ -226,39 +223,40 @@
                     });
 
                     objArray.forEach((item)=>{
-                        if(this.batchEdit.level){
-                            item.severityId = this.batchEdit.level;
+                        if(this.batchlevel){
+                            if(item.handleRecord.modifiedFields && item.handleRecord.modifiedFields != ""){
+                                item.handleRecord.modifiedFields += this.getServityNameById(item.severityId)+"->"+this.getServityNameById(this.batchlevel)+' '
+                            }else{
+                                item.handleRecord.modifiedFields ='严重等级：'+this.getServityNameById(item.severityId)+"->"+this.getServityNameById(this.batchlevel)+' '
+                            }
+
+                            item.severityId = this.batchlevel;
                         }
-                        if(this.batchEdit.status){
-                            item.statusId = this.batchEdit.status;
+                        if(this.batchstatus){
+                            if(item.handleRecord.modifiedFields && item.handleRecord.modifiedFields!= ""){
+                                item.handleRecord.modifiedFields += this.getStatusNameById(item.statusId)+"->"+this.getStatusNameById(this.batchstatus)+' '
+                            }else{
+                                item.handleRecord.modifiedFields = '状态：'+this.getStatusNameById(item.statusId)+"->"+this.getStatusNameById(this.batchstatus)+' '
+                            }
+
+                            item.statusId = this.batchstatus;
                         }
                     })
-                    console.log(objArray)
-                    this.$emit('saveEditInfo',objArray);
+                    let param = {
+                        data:objArray
+                    }
+                    this.$emit('saveEditInfo',param);
                 }else{  //单个编辑或查看
 
                     if(!this.eventInfo.severity.id){
                         this.$message.error('请选择严重性等级')
                         return;
                     }
+
                     if(!this.eventInfo.status.id){
                         this.$message.error('请选择状态')
                         return;
                     }
-
-                    // //TODO 判断删除，新增的文件
-                    await this.deleteUpload();
-
-                    await this.addUpload();
-
-                    let ids = this.fileList.map((item)=>{
-                                if(this.initFileList.includes(item)){
-                                    return item.id
-                                }
-                              })
-                    console.log(this.fileAddIds)
-                    ids.concat(this.fileAddIds)
-
                     //监听变化
                     if(this.Info.severity.id != this.eventInfo.severity.id){
                         this.modifiedFields += '严重等级：'+this.Info.severity.name+'->'+this.getServityNameById(this.eventInfo.severity.id)+ " "
@@ -270,25 +268,33 @@
                         this.modifiedFields += '状态：'+this.Info.status.name+'->'+this.getStatusNameById(this.eventInfo.status.id)
                     }
 
+                    let  idArray = this.initFileList.map(item=>item.id)
+                    let ids = []
+                    this.fileList.forEach((item)=>{
+                        if(idArray.includes(item.id)){
+                            ids.push(item.id)
+                        }
+                    })
+
                     newInfo = {
                         id:this.eventInfo.id,
                         ownerId:this.eventInfo.owner.id,
                         statusId:this.eventInfo.status.id,
                         severityId:this.eventInfo.severity.id,
-                        // attachmentIds:ids.concat(this.fileAddIds),
+                        attachmentIds:ids,
                         handleRecord:{
                             modifiedFields:this.modifiedFields,
                             handleDescription: this.handleDescription
                         }
                     }
-
-                     //编辑或查看
                     objArray.push(newInfo)
-
-                    //保存修改
-                    this.$emit('saveEditInfo',objArray)
+                    await this.deleteUpload();
+                    let param = {
+                        data : objArray,
+                        fileAddList : this.fileAddList
+                    }
+                    await this.$emit('saveEditInfo',param)
                 }
-
             },
             guid() {
                  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
@@ -297,9 +303,6 @@
                  });
             },
             selectFile (e) {
-
-                console.log(e.target.files[0], 'opopopopopops')
-                // this.fileAddList = this.fileAddList.concat(e.target.files)
                 let fileObjs = []
                 for(let i = 0,j=e.target.files.length;i<j;i++){
                     let id = this.guid()
@@ -345,21 +348,6 @@
                 this.getPersonInfo();
                 this.getSeverityType();
                 this.getAlarmEventStatus();
-            },
-            async addUpload(){
-                if(this.fileAddList.length >0){
-                    var data = new FormData();
-                    this.fileAddList.forEach((item,index)=>{
-                        data.append('f'+index,item);
-                    })
-                    console.log('data0',data.get('f0'))
-                    await api.alarm.uploadAttachments(data).then(res => {
-                        console.log(res, '上传成功')
-                        this.fileAddIds = res
-                    }).catch(err => {
-                        console.log(err, '上传失败')
-                    })
-                }
             },
             async deleteUpload(){
                 if(this.initFileList.length > 0){
@@ -453,8 +441,10 @@
         async created () {
             this.init();
             console.log(this.Info);
-            this.initFileList = JSON.parse(JSON.stringify(this.Info.fileList))
-            this.fileList = JSON.parse(JSON.stringify(this.Info.fileList));
+            if(this.Info.fileList instanceof Array && this.Info.fileList.length > 0){
+                this.initFileList = JSON.parse(JSON.stringify(this.Info.fileList))
+                this.fileList = JSON.parse(JSON.stringify(this.Info.fileList));
+            }
             this.eventInfo = JSON.parse(JSON.stringify(this.Info));
         },
         components : {

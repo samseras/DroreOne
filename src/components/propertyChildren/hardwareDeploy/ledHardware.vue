@@ -170,16 +170,13 @@
                 console.log(info, '这是要过滤的')
                 if (info.trim() !== '') {
                     this.ledList = this.checkList.filter(item => {
-                        if (item.regionName.includes(info)) {
-                            return item
-                        }
                         if (item.ip && item.ip.includes(info)) {
                             return item
                         }
                         if (item.name.includes(info)) {
                             return item
                         }
-                        if (item.modelName && item.modelName.includes(info)) {
+                        if (item.regionName && item.regionName.includes(info)) {
                             return item
                         }
                         if (item.description && item.description.includes(info)) {
@@ -208,9 +205,9 @@
                 let index = info.location.includes(',')?info.location.indexOf(','):info.location.indexOf('，')
                 let longitude = info.location.substring(0,index)
                 let latitude = info.location.substring(index+1)
-                let item = info.area.includes(',')?info.area.indexOf(','):info.area.indexOf('，')
-                let screenWidth=info.area.substring(0,item)
-                let screenHeight = info.area.substring(item + 1)
+//                let item = info.area.includes(',')?info.area.indexOf(','):info.area.indexOf('，')
+//                let screenWidth=info.area.substring(0,item)
+//                let screenHeight = info.area.substring(item + 1)
                 let ledObj=[{
                     typeId: 4,
                     id:info.id,
@@ -218,14 +215,17 @@
                     name:info.name,
                     model:info.model,
                     ip:info.ip,
+                    mac:info.mac,
                     port:info.port,
                     serialNum:info.serialNum,
                     regionId:info.regionId,
                     description:info.description,
                     latitude:latitude,
                     longitude:longitude,
-                    screenWidth:screenWidth,
-                    screenHeight:screenHeight
+                    screenWidth:info.screenWidth,
+                    screenHeight:info.screenHeight
+//                    screenWidth:screenWidth,
+//                    screenHeight:screenHeight
                 }]
                 if (info.imgUrl !== '') {
                     await api.person.updataAva(info.imgUrl).then(res => {
@@ -304,24 +304,25 @@
                 let index = info.location.includes(',')?info.location.indexOf(','):info.location.indexOf('，')
                 let longitude = info.location.substring(0, index)
                 let latitude = info.location.substring(index + 1)
-                let item = info.area.includes(',')?info.area.indexOf(','):info.area.indexOf('，')
-                let screenWidth=info.area.substring(0,item)
-                let screenHeight = info.area.substring(item + 1)
+//                let item = info.area.includes(',')?info.area.indexOf(','):info.area.indexOf('，')
+//                let screenWidth=info.area.substring(0,item)
+//                let screenHeight = info.area.substring(item + 1)
                 let ledObj=[{
                     mac:info.mac,
                     typeId: 4,
                     positionType:info.positionType,
                     name:info.name,
                     model:info.model,
-                    /*ip:info.ip,*/
                     port:info.port,
                     serialNum:info.serialNum,
                     regionId:info.regionId,
                     description:info.description,
+                    screenWidth:info.screenWidth,
+                    screenHeight:info.screenHeight,
                     latitude:latitude,
                     longitude:longitude,
-                    screenWidth:screenWidth,
-                    screenHeight:screenHeight
+//                    screenWidth:screenWidth,
+//                    screenHeight:screenHeight
                 }]
                 if (info.imgUrl !== '') {
                     await api.person.updataAva(info.imgUrl).then(res => {
@@ -446,7 +447,7 @@
                         this.ledList[i].id = this.ledList[i].id
                         this.ledList[i].mac = this.ledList[i].mac
                         this.ledList[i].location=`${this.ledList[i].longitude},${this.ledList[i].latitude}`
-                        this.ledList[i].area=`${this.ledList[i].screenWidth},${this.ledList[i].screenHeight}`
+//                        this.ledList[i].area=`${this.ledList[i].screenWidth},${this.ledList[i].screenHeight}`
                         this.ledList[i].modifyTime=this.ledList[i].modifyTime.replace("-","/")
                         this.ledList[i].byTime = -(new Date(this.ledList[i].modifyTime)).getTime()
                     }

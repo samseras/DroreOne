@@ -88,6 +88,20 @@ const alarm = {
         })
     },
 
+    exportSelectedAlarmEvents(ids){
+        return axios ({
+            method: 'PUT',
+            url: getUrl('/alarm/event/export'),
+            data:JSON.stringify(ids)
+        })
+    },
+
+    exportAlarmEvents(){
+        return axios ({
+            method: 'GET',
+            url: getUrl('/alarm/event/export')
+        })
+    },
     deleteAlarmEvent(params){
         console.log(params, 'ids')
         return axios({

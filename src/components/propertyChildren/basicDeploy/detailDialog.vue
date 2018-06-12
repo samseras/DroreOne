@@ -791,6 +791,14 @@
                                 imgSrc = './../../../static/img/trickCard.png';
                                 break
                             }
+                            case '7':{
+                                imgSrc = './../../../static/img/person.png';
+                                break
+                            }
+                            case '8':{
+                                imgSrc = './../../../static/img/person.png';
+                                break
+                            }
                         }
                     } else {
                         console.log(this.$route.path, 'p[ppppp[p')

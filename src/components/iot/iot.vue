@@ -5,9 +5,19 @@
                 <!--<img src="../../../static/img/logo.svg" alt="">-->
                 <span>卓锐IOT平台</span>
             </div>
+            <div class="search-head">
+                <el-form :inline="true"  class="demo-form-inline">
+                    <el-form-item label="">
+                        <el-input  placeholder="search..." ></el-input>
+                    </el-form-item>
+                    <el-form-item>
+                        <el-button type="primary" @click="onHeadSubmit"><i class="el-icon-search"></i></el-button>
+                    </el-form-item>
+                </el-form>
+            </div>
             <div class="func">
                 <el-menu  class="el-menu-demo" mode="horizontal" default-active="sss" >
-                    <el-submenu index="" >
+                    <el-submenu index="" class="bell">
                         <template slot="title">
                             <el-badge :value="12" class="item">
                                 <img src="../../../static/img/iot/lingdang.png" alt="">
@@ -34,7 +44,7 @@
                         </el-submenu>-->
                         <el-submenu index="2">
                             <template slot="title">
-                                <img src="../../../static/img/peopleInfo.svg" alt="">
+                                <img src="../../../static/img/iot/portrait.jpg" alt="" class="portrait">
                                 <span class="Admin">Drore</span>
                             </template>
                             <el-menu-item index="/droreone">返回主页</el-menu-item>
@@ -101,6 +111,9 @@
             IotDeviceMenu
         },
         methods:{
+            onHeadSubmit(){
+                console.log('11111');
+            },
             logout() {
                 this.$router.push('/login')
             }
@@ -109,7 +122,35 @@
 </script>
 <style lang="scss" type="text/scss">
     .home{
-
+        .bell{
+            .item{
+                top:rem(3.2)
+            }
+        }
+        .search-head{
+            .el-input__inner{
+                border:1px solid transparent;
+            }
+            .el-form--inline .el-form-item__content{
+                vertical-align: middle;
+            }
+            .el-button--primary{
+                color:#606266;
+                background-color:transparent ;
+                border-color: transparent;
+            }
+            margin-left:rem(19.2);
+            margin-right: 52%;
+            .el-form-item__content{
+                line-height:rem(60);
+            }
+        }
+        .el-menu--horizontal>.bell .el-submenu__icon-arrow{
+            display:none
+        }
+        .el-submenu__title{
+            padding:0 rem(7);
+        }
         .el-badge__content {
             background-color: #14B9D6;
             border-radius: rem(16);
@@ -121,19 +162,19 @@
             padding:0;
         }
         .el-menu--horizontal>.el-submenu .el-submenu__title{
-            line-height:3.6rem;
+            line-height:rem(57.6);
         }
         .el-badge__content.is-fixed{
-            top: 1rem;
-            right: 0.6rem;
+            top: rem(16);
+            right: rem(12.8);
         };
         .el-menu--horizontal>.el-submenu .el-submenu__title:hover{
             background-color: transparent;
         }
         .func .el-submenu__title img{
             display: inline-block;
-            width: rem(20);
-            height: rem(20);
+            width: rem(24);
+            height: rem(24);
             vertical-align: middle;
             margin-top: rem(-4);
             margin-left: rem(5);
@@ -183,10 +224,16 @@
                 }
             }
             .pro_router{
-                flex: 1;
+                /*flex: 1;*/
                 /*background: #2D3E50;*/
-                padding: 0 rem(35);
+                /*padding: 0 rem(35);*/
                 box-sizing: border-box;
+                .portrait{
+                    width: rem(36);
+                    height: rem(36);
+                    border-radius: rem(16);
+
+                }
                 a{
                     display: inline-block;
                     color: #fff;

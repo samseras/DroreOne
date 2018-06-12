@@ -47,7 +47,7 @@
                             label="状态">
                             <template slot-scope="scope">
                                 <span>
-                                    {{scope.row.positionType |changeFilter }}
+                                    {{scope.row.lightStatus  |changeFilter }}
                                 </span>
                             </template>
 

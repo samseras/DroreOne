@@ -396,6 +396,15 @@
                             align: 'left'
                         },
                         tooltip: {},
+                        toolbox: {
+                            show: true,
+                            feature: {
+                                // dataView: {readOnly: false},
+                                // restore: {},
+                                saveAsImage: {}
+                            },
+                            right:'18'
+                        },
                         xAxis: {
                             data: legendData
                         },
@@ -434,7 +443,15 @@
                             trigger: 'item',
                             formatter: "{a} <br/>{b} : {c} ({d}%)"
                         },
-
+                        toolbox: {
+                            show: true,
+                            feature: {
+                                // dataView: {readOnly: false},
+                                // restore: {},
+                                saveAsImage: {}
+                            },
+                            right:'18'
+                        },
                         legend: {
                             // formatter:  function(name){
                             //     var total = 0;
@@ -500,6 +517,15 @@
                                 trigger: 'item',
                                 formatter: "{a} <br/>{b} : {c} ({d}%)"
                             },
+                        toolbox: {
+                            show: true,
+                            feature: {
+                                // dataView: {readOnly: false},
+                                // restore: {},
+                                saveAsImage: {}
+                            },
+                            right:'18'
+                        },
                             legend: {
                                 left:'3%',
                                 top:'5%',
@@ -561,6 +587,15 @@
                         tooltip: {
                             trigger: 'item',
                             formatter: "{a} <br/>{b} : {c}%"
+                        },
+                        toolbox: {
+                            show: true,
+                            feature: {
+                                // dataView: {readOnly: false},
+                                // restore: {},
+                                saveAsImage: {}
+                            },
+                            right:'18'
                         },
                         legend: {
                             data: legendData
@@ -637,6 +672,15 @@
                         legend: {
                             data:valueColumns
                         },
+                        toolbox: {
+                            show: true,
+                            feature: {
+                                // dataView: {readOnly: false},
+                                // restore: {},
+                                saveAsImage: {}
+                            },
+                            right:'18'
+                        },
                         grid: {
                             left: '3%',
                             right: '4%',
@@ -672,6 +716,15 @@
                     this.scatterDom = this.$echarts.init(document.getElementById(scenarioId));
                     scatter0ption = {
                         tooltip: {trigger: 'axis'},
+                        toolbox: {
+                            show: true,
+                            feature: {
+                                // dataView: {readOnly: false},
+                                // restore: {},
+                                saveAsImage: {}
+                            },
+                            right:'18'
+                        },
                         grid: {
                             left: '5%',
                             right: '20%',
@@ -708,6 +761,15 @@
                         tooltip: {
                             trigger: 'item',
                             formatter: "{a} <br/>{b}: {c} ({d}%)"
+                        },
+                        toolbox: {
+                            show: true,
+                            feature: {
+                                // dataView: {readOnly: false},
+                                // restore: {},
+                                saveAsImage: {}
+                            },
+                            right:'18'
                         },
                         legend: {
                             orient: 'vertical',
@@ -763,6 +825,15 @@
                             axisPointer : {            // 坐标轴指示器，坐标轴触发有效
                                 type : 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
                             }
+                        },
+                        toolbox: {
+                            show: true,
+                            feature: {
+                                // dataView: {readOnly: false},
+                                // restore: {},
+                                saveAsImage: {}
+                            },
+                            right:'18'
                         },
                         legend: {
                             data:relativebarResult.lengeData
@@ -847,6 +918,15 @@
                         tooltip : {
                             formatter: "{a} <br/>{b} : {c}%"
                         },
+                        toolbox: {
+                            show: true,
+                            feature: {
+                                // dataView: {readOnly: false},
+                                // restore: {},
+                                saveAsImage: {}
+                            },
+                            right:'18'
+                        },
                         series: [
                             {
                                 name: nameColumn,
@@ -885,6 +965,15 @@
                             {
                                 text: ''
                             },
+                        toolbox: {
+                            show: true,
+                            feature: {
+                                // dataView: {readOnly: false},
+                                // restore: {},
+                                saveAsImage: {}
+                            },
+                            right:'18'
+                        },
                         grid: {
                             left: '5%',
                             right: '5%',
@@ -928,6 +1017,15 @@
                                 subtext: ''
                             },
                             tooltip: {},
+                        toolbox: {
+                            show: true,
+                            feature: {
+                                // dataView: {readOnly: false},
+                                // restore: {},
+                                saveAsImage: {}
+                            },
+                            right:'18'
+                        },
                             legend: {
                                 data: legendData,
                                 x: 'left',

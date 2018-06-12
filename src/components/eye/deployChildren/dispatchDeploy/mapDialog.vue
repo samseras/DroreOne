@@ -5,7 +5,7 @@
             :close-on-click-modal = false
             title="巡更路线图"
             :before-close="closeMapDialog"
-            width="50%"
+            width="70%"
             class="dialog map_Dialog"
             center>
             <p>路线名称： <input type="text" v-model="name"></p>
@@ -102,13 +102,13 @@
 <style lang="scss" scoped type="text/scss">
     .mapDialog {
         width: 100%;
-        height: rem(300);
+        height: rem(550);
         .map_Dialog{
             width: 100%;
             height: 100%;
             .map{
                 width: 100%;
-                height: rem(400);
+                height: rem(550);
                 background: yellowgreen;
                 border-radius: rem(5);
             }
