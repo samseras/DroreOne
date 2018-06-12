@@ -54,7 +54,7 @@
 
                         <el-table-column
                             prop="regionName"
-                            label="区域">
+                            label="所属片区">
                         </el-table-column>
 
                         <el-table-column
