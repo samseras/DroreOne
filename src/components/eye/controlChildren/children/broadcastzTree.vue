@@ -1,7 +1,7 @@
 <template>
     <div class="broadcast_tree">
         <el-input
-            placeholder="设备名称,组名称"
+            placeholder="名称"
             v-model="filterText">
         </el-input>
         <div class="manage">
