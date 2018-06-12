@@ -1,7 +1,7 @@
 <template>
     <div class="facility_tree">
         <el-input
-            placeholder="设备名称,组名称"
+            placeholder="类型或名称"
             v-model="filterText">
         </el-input>
         <div class="manage">
