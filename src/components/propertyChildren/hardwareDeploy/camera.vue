@@ -362,7 +362,7 @@
                         console.log(res,'niaho')
                         const content = res
                         const blob = new Blob([content])
-                        const fileName = '设备文件.csv'
+                        const fileName = '设备.csv'
                         if('download' in document.createElement('a')){
                             const elink = document.createElement('a')
                             elink.download = fileName
@@ -385,7 +385,7 @@
                         console.log(res,'niaho')
                         const content = res
                         const blob = new Blob([content])
-                        const fileName = '测试.csv'
+                        const fileName = '设备.csv'
                         if('download' in document.createElement('a')){
                             const elink = document.createElement('a')
                             elink.download = fileName
