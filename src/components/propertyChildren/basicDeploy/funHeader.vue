@@ -215,28 +215,28 @@
                 console.log(window.location.href)
                 switch (true) {
                     case route.includes("boat"):
-                        window.location.href = "/vehicle.csv";
+                        window.location.href = "/static/template/vehicle.csv";
                         break;
                     case route.includes("toilet"):
-                        window.location.href = "/toilet.csv";
+                        window.location.href = "/static/template/toilet.csv";
                         break;
                     case route.includes("park"):
-                        window.location.href = "/parking.csv";
+                        window.location.href = "/static/template/parking.csv";
                         break;
                     case route.includes("shop"):
-                        window.location.href = "/business.csv";
+                        window.location.href = "/static/template/business.csv";
                         break;
                     case route.includes("scenic"):
-                        window.location.href = "/scenicspot.csv";
+                        window.location.href = "/static/template/scenicspot.csv";
                         break;
                     case route.includes("trash"):
-                        window.location.href = "/dustbin.csv";
+                        window.location.href = "/static/template/dustbin.csv";
                         break;
                     case route.includes("indicator"):
-                        window.location.href = "/signboard.csv";
+                        window.location.href = "/static/template/signboard.csv";
                         break;
                     case route.includes("plant"):
-                        window.location.href = "/plant.csv";
+                        window.location.href = "/static/template/plant.csv";
                         break;
                     case route.includes("construction"):
                         window.location.href = "/static/template/severityIdv";
