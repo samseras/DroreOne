@@ -292,7 +292,6 @@
                                         this.$message.success('导入成功');
                                     }
                                 });
-
                             }else{
                                 this.$message.success('导入成功');
                             }
@@ -414,7 +413,25 @@
                 this.$store.commit('SHOWHARDWAREICON',type)
             },
             downloadTemplate(){
-                window.location.href="/static/template/devices_import.csv";
+
+                let route = this.$route.path
+                if (route.includes('broadcast')) {
+                    window.location.href="/static/template/controller/broadcast.csv";
+                }else if(route.includes('camera')){
+                    window.location.href="/static/template/controller/camera.csv";
+                }else if(route.includes('gate')){
+                    window.location.href="/static/template/controller/gate.csv";
+                } else if(route.includes('led')){
+                    window.location.href="/static/template/controller/led.csv";
+                }else if(route.includes('lampLight')){
+                    window.location.href="/static/template/controller/lampLight.csv";
+                }else if(route.includes('monitors')){
+                    window.location.href="/static/template/controller/monitors.csv";
+                }else if(route.includes('wifi')){
+                    window.location.href="/static/template/controller/wifi.csv";
+                }else if(route.includes('police')){
+                    window.location.href="/static/template/controller/police.csv";
+                }
             },
             choseType(){
                 this.$emit('choseType',this.filterList)

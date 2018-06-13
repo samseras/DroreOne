@@ -186,6 +186,7 @@
                                 this.$emit("getAllPlant");
                             }).catch(err => {
                                 this.$message.error('导入失败，请稍后重试')
+
                             })
                             break;
                         case route.includes("construction"):
@@ -215,34 +216,55 @@
                 console.log(window.location.href)
                 switch (true) {
                     case route.includes("boat"):
-                        window.location.href = "/vehicle.csv";
+                        window.location.href = "/static/template/facility/vehicle.csv";
                         break;
                     case route.includes("toilet"):
-                        window.location.href = "/toilet.csv";
+                        window.location.href = "/static/template/facility/toilet.csv";
                         break;
                     case route.includes("park"):
-                        window.location.href = "/parking.csv";
+                        window.location.href = "/static/template/facility/parking.csv";
                         break;
                     case route.includes("shop"):
-                        window.location.href = "/business.csv";
+                        window.location.href = "/static/template/facility/business.csv";
                         break;
                     case route.includes("scenic"):
-                        window.location.href = "/scenicspot.csv";
+                        window.location.href = "/static/template/facility/scenicspot.csv";
                         break;
                     case route.includes("trash"):
-                        window.location.href = "/dustbin.csv";
+                        window.location.href = "/static/template/facility/dustbin.csv";
                         break;
                     case route.includes("indicator"):
-                        window.location.href = "/signboard.csv";
+                        window.location.href = "/static/template/facility/signboard.csv";
                         break;
                     case route.includes("plant"):
-                        window.location.href = "/plant.csv";
+                        window.location.href = "/static/template/facility/plant.csv";
                         break;
                     case route.includes("construction"):
                         window.location.href = "/static/template/severityIdv";
                         break;
-                    case route.includes("person"):
-                        window.location.href = "/static/template/person.csv";
+                    case route.includes("1"):
+                        window.location.href = "/static/template/person/driver.csv";
+                        break;
+                    case route.includes("2"):
+                        window.location.href = "/static/template/person/boatman.csv";
+                        break;
+                    case route.includes("3"):
+                        window.location.href = "/static/template/person/security.csv";
+                        break;
+                    case route.includes("4"):
+                        window.location.href = "/static/template/person/cleankeeping.csv";
+                        break;
+                    case route.includes("5"):
+                        window.location.href = "/static/template/person/ticket.csv";
+                        break;
+                    case route.includes("6"):
+                        window.location.href = "/static/template/person/checkin.csv";
+                        break;
+                    case route.includes("7"):
+                        window.location.href = "/static/template/person/maintenance.csv";
+                        break;
+                    case route.includes("8"):
+                        window.location.href = "/static/template/person/manager.csv";
                         break;
                 }
             },
