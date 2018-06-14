@@ -1201,6 +1201,7 @@
                         background: transparent;
                         color: #606266;
                         margin-bottom: rem(5);
+                        padding:0;
                     }
                     span{
                         margin-right: rem(10);
