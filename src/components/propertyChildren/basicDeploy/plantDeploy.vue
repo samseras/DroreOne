@@ -23,7 +23,7 @@
             <div class="personList" v-loading="isShowLoading">
                 <ScrollContainer>
                     <el-table
-                        v-if="!isShowToiletCard"
+                        v-if="!isShowToiletCard && !show"
                         ref="multipleTable"
                         :data="treeList"
                         tooltip-effect="dark"
@@ -96,6 +96,9 @@
                             <p class="phoneNum">高&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;度：<span>{{item.plant.height}}米</span></p>
                         </div>
                     </div>
+                    <div class="tip" v-if="show">
+                        <span>暂无数据</span>
+                    </div>
                 </ScrollContainer>
                 <PersonDetail v-if="visible"
                               :visible="visible"
@@ -134,6 +137,7 @@
                 choseList: [],
                 isDisabled: true,
                 title: '',
+                show:false,
                 isShowLoading: false,
                 currentNum: 50,
                 listLength: '',
@@ -401,6 +405,11 @@
                 this.isShowLoading = true
                 await api.plant.getAllPlant().then(res => {
                     console.log(res, '这是请求回来的所有')
+                    if(res.length === 0){
+                        this.show = true
+                    }else{
+                        this.show =false
+                    }
                     this.listLength = res.length
                     this.isShowLoading = false
                     this.treeList = res
@@ -559,6 +568,13 @@
                             white-space: nowrap;
                         }
                     }
+                }
+                .tip{
+                    width:100%;
+                    height:rem(40);
+                    text-align: center;
+                    color: #909399;
+                    line-height: rem(40);
                 }
                 .handle{
                     span{

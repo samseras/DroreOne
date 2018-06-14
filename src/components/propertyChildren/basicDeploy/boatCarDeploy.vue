@@ -23,7 +23,7 @@
             <div class="personList" v-loading="isShowLoading">
                 <ScrollContainer>
                     <el-table
-                        v-if="!isShowBoatCard"
+                        v-if="!isShowBoatCard && !show"
                         ref="multipleTable"
                         :data="boatCarList"
                         tooltip-effect="dark"
@@ -107,6 +107,9 @@
                             <p class="sex text">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：<span>{{item.description}}</span></p>
                         </div>
                     </div>
+                    <div class="tip" v-if="show">
+                        <span>暂无数据</span>
+                    </div>
                 </ScrollContainer>
                 <PersonDetail v-if="visible"
                               :visible="visible"
@@ -144,6 +147,7 @@
                 choseList: [],
                 isDisabled: true,
                 title: '',
+                show:false,
                 isShowLoading: false,
                 selection: [],
                 currentNum: 50,
@@ -414,6 +418,11 @@
             async getAllBoat (){
                 this.isShowLoading = true
                 await api.boat.getAllBoat().then(res => {
+                    if(res.length === 0){
+                        this.show = true
+                    }else{
+                        this.show =false
+                    }
                     this.isShowLoading = false
                     this.listLength = res.length;
                     this.boatCarList = res
@@ -596,6 +605,13 @@
                             white-space: nowrap;
                         }
                     }
+                }
+                .tip{
+                    width:100%;
+                    height:rem(40);
+                    text-align: center;
+                    color: #909399;
+                    line-height: rem(40);
                 }
             }
         }
