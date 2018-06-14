@@ -249,7 +249,7 @@
                         window.location.href = "/static/template/facility/plant.csv";
                         break;
                     case route.includes("construction"):
-                        window.location.href = "/static/template/severityIdv";
+                        window.location.href = "/static/template/facility/building.csv";
                         break;
                     case route.includes("1"):
                         window.location.href = "/static/template/person/driver.csv";
@@ -261,7 +261,7 @@
                         window.location.href = "/static/template/person/security.csv";
                         break;
                     case route.includes("4"):
-                        window.location.href = "/static/template/person/cleankeeping.csv";
+                        window.location.href = "/static/template/person/cleaning.csv";
                         break;
                     case route.includes("5"):
                         window.location.href = "/static/template/person/ticket.csv";
