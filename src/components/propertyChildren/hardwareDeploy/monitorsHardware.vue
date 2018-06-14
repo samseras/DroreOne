@@ -24,7 +24,7 @@
             <div class="cameraList" v-loading="isShowLoading">
                 <ScrollContainer>
                     <el-table
-                        v-if="!isShowMonitorsCard"
+                        v-if="!isShowMonitorsCard && !show"
                         ref="multipleTable"
                         :data="monitorsList"
                         tooltip-effect="dark"
@@ -104,6 +104,9 @@
 
                         </div>
                     </div>
+                    <div class="tip" v-if="show">
+                        <span>暂无数据</span>
+                    </div>
                 </ScrollContainer>
                 <HardWare v-if="visible"
                           :visible="visible"
@@ -145,6 +148,7 @@
                 isDisabled:true,
                 filterList: [],
                 title:'',
+                show:false,
                 isShowLoading:false,
                 currentNum: 50,
                 listLength: '',
@@ -215,6 +219,7 @@
                     name:info.name,
                     model:info.model,
                     ip:info.ip,
+                    mac:info.mac,
                     port:info.port,
                     serialNum:info.serialNum,
                     regionId:info.regionId,
@@ -416,6 +421,11 @@
                 this.isShowLoading=true
                 await api.monitor.getAllMonitor().then((res)=>{
                     console.log(res,'这是请求')
+                    if(res.devices.length === 0){
+                        this.show = true
+                    }else{
+                        this.show = false
+                    }
                     this.listLength = res.devices.length
                     this.isShowLoading=false
                     this.monitorsList=res.devices
@@ -595,6 +605,13 @@
                             -webkit-line-clamp:2;
                         }
                     }
+                }
+                .tip{
+                    width:100%;
+                    height:rem(40);
+                    text-align: center;
+                    color: #909399;
+                    line-height: rem(40);
                 }
                 .handle{
                     span{

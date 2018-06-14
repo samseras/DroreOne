@@ -300,6 +300,7 @@
                 })
             },
            async addNewRoat (info) {
+
                 let roatObj = {
                     name: info.name,
                     description: info.description,
@@ -310,13 +311,15 @@
                     type: info.type
                 }
                 api.deployRoad.createRoute(JSON.stringify(roatObj)).then(res => {
-                    this.closeDialog()
+
                     console.log(res, '创建成功')
                     this.$message.success('创建成功')
+                    this.closeDialog()
                     this.getAllRoat()
                 }).catch(err => {
                     this.$message.error('创建失败，请稍后重试')
                 })
+               this.isDisabled = true
             },
             fixedInfo (id) {
                 if (id) {

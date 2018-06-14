@@ -72,6 +72,8 @@
                     alarmTypeId = this.getAlarmTypeId('消防')
                 }else if(route.includes('crossborder')){
                     alarmTypeId = this.getAlarmTypeId('越界')
+                }else if(route.includes('speeding')){
+                    alarmTypeId = this.getAlarmTypeId('超速')
                 } else if(route.includes('offtrack')){
                     alarmTypeId = this.getAlarmTypeId('偏离轨迹')
                 }else if(route.includes('overlimit')){
@@ -168,6 +170,7 @@
     .offtrack,
     .overlimit,
     .waterlevel,
+    .speeding,
     .alarmcolumn{
         .personList{
             .el-table{

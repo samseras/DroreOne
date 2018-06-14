@@ -12,18 +12,18 @@
                 <!--人员-->
                 <div class="personCardContent" v-if="route.includes('person') && $route.params.id">
                     <p class="name">
-                        <s>姓&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;名：</s>
+                        <span>姓&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;名：</span>
                         <el-input v-model="person.name" :disabled="isDisabled" :maxlength="15"></el-input>
                     </p>
                     <p class="sex">
-                        <s>性&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;别：</s>
+                        <span>性&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;别：</span>
                         <el-select v-model="sex" placeholder="请选择" :disabled="isDisabled" @change="ad">
                             <el-option label="男" :value="1"></el-option>
                             <el-option label="女" :value="0"></el-option>
                         </el-select>
                     </p>
                     <p class="type person-jole">
-                        <s>人员角色：</s>
+                        <span>人员角色：</span>
                         <el-select v-model="person.jobId" placeholder="请选择" disabled>
                             <el-option
                                 v-for="item in options"
@@ -34,11 +34,11 @@
                         </el-select>
                     </p>
                     <p class="idNum">
-                        <s>身份证号：</s>
+                        <span>身份证号：</span>
                         <el-input type="text"v-model="person.idNum" :disabled="isDisabled"></el-input>
                     </p>
-                    <p class="phoneNum">
-                        <s>电话号码：</s>
+                    <p class="phone">
+                        <span>电话号码：</span>
                         <el-input type="text"v-model="person.phone" :disabled="isDisabled"></el-input>
                     </p>
                     <p class="textarea ms ms-person">
@@ -55,24 +55,25 @@
                 <!--车船-->
                 <div class="personCardContent boatCardContent" v-if="route.includes('boat')">
                     <p class="name wrapstyle">
-                        类&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;型：
+                       <span>类&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;型：</span>
                         <el-select v-model="boatCar.vehicle.type" placeholder="请选择" @change="selectePerson(boatCar.vehicle.type)" :disabled="isDisabled">
                             <el-option label="船只" :value="1"></el-option>
                             <el-option label="车辆" :value="0"></el-option>
                         </el-select>
                     </p>
                     <p class="sex">
-                        <s>名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称:</s>
+                        <span>名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称：</span>
                         <el-input type="text"v-model="boatCar.vehicle.serialNum" :maxlength="15" :disabled="isDisabled"></el-input>
                     </p>
-                    <p class="type wrapstyle">维护状态：
+                    <p class="type wrapstyle">
+                        <span>维护状态：</span>
                         <el-select v-model="boatCar.vehicle.maintenanceStatus" placeholder="请选择" :disabled="isDisabled">
                             <el-option label="异常" :value="1"></el-option>
                             <el-option label="正常" :value="0"></el-option>
                         </el-select>
                     </p>
                     <p class="idNum">
-                        <s>核载人数：</s>
+                        <span>核载人数：</span>
                         <el-input type="text"v-model="boatCar.vehicle.capacity" :disabled="isDisabled"></el-input>
                     </p>
                     <p class="phoneNum data wrapstyle">购买时间：
@@ -84,7 +85,8 @@
                             placeholder="选择日期">
                         </el-date-picker>
                     </p>
-                    <p class="phoneNum data wrapstyle">维护时间：
+                    <p class="phoneNum data wrapstyle">
+                        <span>维护时间：</span>
                         <el-date-picker
                             v-model="boatCar.vehicle.maintenanceDate"
                             type="date"
@@ -103,12 +105,13 @@
                         </el-select>
                     </p>-->
                     <!--目前车船人员不显示，暂时隐藏-->
-                    <p class="phoneNum " v-if="false">联系电话：
+                    <p class="phoneNum " v-if="false">
+                        <span>联系电话：</span>
                     <!--<p class="phoneNum person-driv" v-if="isDisabled">联系电话：-->
                         <el-input type="text"v-model="boatCar.driverPhone" :disabled="isDisabled"></el-input>
                     </p>
-                    <p class="phoneNum">
-                        <s>序列号码：</s>
+                    <p class="phoneNm">
+                        <span>序列号码：</span>
                         <el-input type="text"v-model="boatCar.vehicle.model" :disabled="isDisabled"></el-input>
                     </p>
                     <p class="textarea ms">
@@ -125,15 +128,15 @@
                 <!--指示牌-->
                 <div class="personCardContent boatCardContent" v-if="route.includes('indicator')">
                     <p class="name selectstyle">
-                        <s>类&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;型：</s>
+                        <span>类&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;型：</span>
                         <el-select v-model="indicator.signboardBean.type" placeholder="请选择" :disabled="isDisabled">
                             <el-option label="标语类" :value="0"></el-option>
                             <el-option label="路线类" :value="1"></el-option>
                             <el-option label="设施类" :value="2"></el-option>
                         </el-select>
                     </p>
-                    <p class="phoneNum selectstyle">
-                        <s>所属片区：</s>
+                    <p class=" selectstyle">
+                        <span>所属片区：</span>
                         <el-select v-model="indicator.regionId" placeholder="请选择" :disabled="isDisabled">
                             <el-option
                                 v-for="item in regions"
@@ -144,7 +147,7 @@
                         </el-select>
                     </p>
                     <p class="phoneNum">
-                        <s>位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置：</s>
+                        <span>位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置：</span>
                         <span :class="{ps:isDisabled}">{{indicator.location}}</span><i class="el-icon-location-outline" @click="showMapDialog"></i>
                     </p>
                     <p class="textarea ms">
@@ -161,32 +164,33 @@
                 <!--垃圾桶-->
                 <div class="personCardContent boatCardContent" v-if="route.includes('trash')">
                     <p class="name selectstyle">
-                        <s>类&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;型：</s>
+                        <span>类&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;型：</span>
                         <el-select v-model="trash.dustbinBean.type" placeholder="请选择" :disabled="isDisabled">
                             <el-option label="临时" :value="1"></el-option>
                             <el-option label="固定" :value="0"></el-option>
                         </el-select>
                     </p>
                     <p class="sex">
-                        <s>名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称：</s>
+                        <span>名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称：</span>
                         <el-input type="text"v-model="trash.dustbinBean.name" :disabled="isDisabled" :maxlength="15"></el-input>
                     </p>
                     <p class="type" v-if="false">
-                        <s>状&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;态：</s>
+                        <span>状&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;态：</span>
                         <el-select v-model="trash.status" placeholder="请选择" :disabled="isDisabled">
                             <el-option label="充裕" value="充裕"></el-option>
                             <el-option label="已满" value="已满"></el-option>
                         </el-select>
                     </p>
                     <p class="idNum">
-                        <s>个&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;数：</s>
+                        <span>个&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;数：</span>
                         <el-input type="text"v-model="trash.dustbinBean.dustbinCount" :disabled="isDisabled"></el-input>
                     </p>
                     <p class="phoneNum">
-                        <s>位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置:</s>
+                        <span>位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置:</span>
                         <span :class="{ps:isDisabled}">{{trash.location}}</span><i class="el-icon-location-outline" @click="showMapDialog"></i>
                     </p>
-                    <p class="phoneNum wrapstyle selectstyle">所属片区：
+                    <p class="wrapstyle selectstyle">
+                        <span>所属片区：</span>
                         <el-select v-model="trash.regionId" placeholder="请选择" :disabled="isDisabled">
                             <el-option
                                 v-for="item in regions"
@@ -210,11 +214,11 @@
                 <!--景点-->
                 <div class="personCardContent boatCardContent" v-if="route.includes('scenic')">
                     <p class="name">
-                        <s>景点名称：</s>
+                        <span>景点名称：</span>
                         <el-input type="text"v-model="scenic.scenicspotBean.name" :disabled="isDisabled" :maxlength="15"></el-input>
                     </p>
                     <p class="sex selectstyle">
-                        <s>所属片区：</s>
+                        <span>所属片区：</span>
                         <el-select v-model="scenic.regionId" placeholder="请选择" :disabled="isDisabled">
                             <el-option
                                 v-for="item in regions"
@@ -226,14 +230,14 @@
 
                     </p>
                     <p class="type" v-if="isDisabled">
-                        <s>状&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;态：</s>
+                        <span>状&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;态：</span>
                         <el-select v-model="scenic.scenicspotBean.statu" placeholder="请选择" :disabled="isDisabled">
                             <el-option label="充裕" value="充裕"></el-option>
                             <el-option label="已满" value="已满"></el-option>
                         </el-select>
                     </p>
                     <p class="idNum">
-                        <s>容&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;量：</s>
+                        <span>容&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;量：</span>
                         <el-input type="text"v-model="scenic.scenicspotBean.capacity" :disabled="isDisabled"></el-input>
                     </p>
 
@@ -241,7 +245,7 @@
                         <el-input type="text"v-model="scenic.scenicspotBean.currentNum" :disabled="isDisabled"></el-input>
                     </p>-->
                     <p class="phoneNum">
-                        <s>位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置：</s>
+                        <span>位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置：</span>
                         <span :class="{ps:isDisabled}">{{scenic.location}}</span><i class="el-icon-location-outline" @click="showMapDialog"></i>
                     </p>
                     <p class="textarea ms">
@@ -258,7 +262,7 @@
                 <!--商圈-->
                 <div class="personCardContent boatCardContent" v-if="route.includes('shop')">
                     <p class="name selectstyle">
-                        <s>类&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;型：</s>
+                        <span>类&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;型：</span>
                         <el-select v-model="shop.businessBean.businessTypeId" placeholder="请选择" :disabled="isDisabled">
                             <el-option
                                 v-for="item in businesstype"
@@ -269,18 +273,18 @@
                         </el-select>
                     </p>
                     <p class="sex">
-                        <s>名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称：</s>
+                        <span>名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称：</span>
                         <el-input type="text"v-model="shop.businessBean.name" :disabled="isDisabled" :maxlength="15"></el-input>
                     </p>
                     <p class="type wrapstyle selectstyle" v-if="isDisabled">
-                       <s>状&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;态：</s>
+                       <span>状&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;态：</span>
                         <el-select v-model="shop.businessBean.state" placeholder="请选择" :disabled="isDisabled">
                             <el-option label="充裕" :value="充裕"></el-option>
                             <el-option label="已满" :value="已满"></el-option>
                         </el-select>
                     </p>
                     <p class="idNum">
-                        <s>容&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;量：</s>
+                        <span>容&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;量：</span>
                         <el-input type="text"v-model="shop.businessBean.capacity" :disabled="isDisabled" ></el-input>
                     </p>
 
@@ -288,10 +292,11 @@
                         <el-input type="text"v-model="shop.businessBean.currentNum" :disabled="isDisabled"></el-input>
                     </p>-->
                     <p class="phoneNum">
-                        <s>位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置：</s>
+                        <span>位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置：</span>
                         <span :class="{ps:isDisabled}">{{shop.location}}</span><i class="el-icon-location-outline" @click="showMapDialog"></i>
                     </p>
-                    <p class="phoneNum wrapstyle selectstyle">所属片区：
+                    <p class="wrapstyle selectstyle">
+                        <span>所属片区：</span>
                         <el-select v-model="shop.regionId" placeholder="请选择" :disabled="isDisabled">
                             <el-option
                                 v-for="item in regions"
@@ -315,18 +320,18 @@
                 <!--停车场-->
                 <div class="personCardContent boatCardContent" v-if="route.includes('park')">
                     <p class="name selectstyle">
-                        <s>类&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;型：</s>
+                        <span>类&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;型：</span>
                         <el-select v-model="park.parkingBean.type" placeholder="请选择" :disabled="isDisabled">
                             <el-option label="室外" :value="0"></el-option>
                             <el-option label="室内" :value="1"></el-option>
                         </el-select>
                     </p>
                     <p class="sex">
-                        <s>名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称：</s>
+                        <span>名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称：</span>
                         <el-input type="text"v-model="park.parkingBean.name" :disabled="isDisabled" :maxlength="15"></el-input>
                     </p>
                     <p class="type" v-if="isDisabled">
-                        状&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;态：
+                        <span>状&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;态：</span>
                         <el-input type="text"v-model="park.parkingBean.state" :disabled="isDisabled" :maxlength="15"></el-input>
                         <!--<el-select v-model="park.parkingBean.state" placeholder="请选择" :disabled="isDisabled">
                             <el-option label="充裕" value="充裕"></el-option>
@@ -341,11 +346,12 @@
                         <el-input type="text"v-model="park.parkingBean.capacity" :disabled="isDisabled"></el-input>
                     </p>-->
                     <p class="phoneNum">
-                        <s>位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置：</s>
+                        <span>位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置：</span>
                         <span :class="{ps:isDisabled}">{{park.location}}</span>
                         <i class="el-icon-location-outline" @click="showMapDialog"></i>
                     </p>
-                    <p class="phoneNum wrapstyle selectstyle">所属片区：
+                    <p class="wrapstyle selectstyle">
+                        <span>所属片区：</span>
                         <el-select v-model="park.regionId" placeholder="请选择" :disabled="isDisabled">
                             <el-option
                                 v-for="item in regions"
@@ -369,11 +375,11 @@
                 <!--卫生间-->
                 <div class="personCardContent boatCardContent" v-if="route.includes('toilet')">
                     <p class="sex">
-                        <s>名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称：</s>
+                        <span>名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称：</span>
                         <el-input type="text"v-model="toilet.toiletBean.name" :disabled="isDisabled" :maxlength="15"></el-input>
                     </p>
-                    <p class="phoneNum selectstyle">
-                        <s>所属片区：</s>
+                    <p class=" selectstyle">
+                        <span>所属片区：</span>
                         <el-select v-model="toilet.regionId" placeholder="请选择" :disabled="isDisabled">
                             <el-option
                                 v-for="item in regions"
@@ -384,14 +390,14 @@
                         </el-select>
                     </p>
                     <p class="type" v-if="isDisabled">
-                        状&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;态：
+                        <span>状&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;态：</span>
                         <el-select v-model="toilet.state" placeholder="请选择" :disabled="isDisabled">
                             <el-option label="正常" value="正常"></el-option>
                             <el-option label="紧张" value="紧张"></el-option>
                         </el-select>
                     </p>
                     <p class="phoneNum">
-                        <s>位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置：</s>
+                        <span>位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置：</span>
                         <span :class="{ps:isDisabled}">{{toilet.location}}</span><i class="el-icon-location-outline" @click="showMapDialog"></i>
                     </p>
                     <p class="textarea ms">
@@ -408,33 +414,33 @@
                 <!--片区-->
                 <div class="personCardContent boatCardContent" v-if="route.includes('area')">
                     <p class="sex">
-                        <s>片区名称：</s>
+                        <span>片区名称：</span>
                         <el-input type="text" v-model="area.name" required="required" :disabled="isDisabled" :maxlength="15"></el-input>
                     </p>
                     <p class="phoneNum" v-if="false">所在景区：
                         <el-input type="text"v-model="area.placeScenic" :disabled="isDisabled"></el-input>
                     </p>
                     <p class="phoneNum">
-                        <s>位置范围：</s>
+                        <span>位置范围：</span>
                         <span class="ps">{{area.location}}</span><i class="el-icon-location-outline" @click="showMapDialog"></i>
                     </p>
                     <p class="textarea ms">
                         <span class="des">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：</span>
-                        <el-input type="textarea"  v-model="area.description" :disabled="isDisabled" :maxlength="140"></el-input>
+                        <el-input type="textarea" :rows="3" v-model="area.description" :disabled="isDisabled" :maxlength="140"></el-input>
                     </p>
                 </div>
                 <!--路网-->
                 <div class="personCardContent boatCardContent" v-if="route.includes('roat')">
                     <p class="sex">
-                       <s>路线名称：</s>
+                       <span>路线名称：</span>
                         <el-input type="text"v-model="roat.name" :disabled="isDisabled" :maxlength="15"></el-input>
                     </p>
                     <p class="phoneNum">
-                        <s>位置范围：</s>
+                        <span>位置范围：</span>
                         <span class="ps">{{roat.location}}</span><i class="el-icon-location-outline" @click="showMapDialog"></i>
                     </p>
                     <p class="type wrapstyle">
-                        路线类型：
+                        <span>路线类型：</span>
                         <el-select v-model="roat.type" placeholder="请选择" :disabled="isDisabled">
                             <el-option label="水路" :value="1"></el-option>
                             <el-option label="公交道路" :value="2"></el-option>
@@ -444,7 +450,7 @@
                     </p>
                     <p class="textarea ms">
                         <span class="des">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：</span>
-                        <el-input type="textarea"  v-model="roat.description" :disabled="isDisabled" :maxlength="140"></el-input>
+                        <el-input type="textarea" :rows="3" v-model="roat.description" :disabled="isDisabled" :maxlength="140"></el-input>
                     </p>
                 </div>
                 <!--设施类行-->
@@ -469,18 +475,19 @@
                 <!--植物-->
                 <div class="personCardContent boatCardContent" v-if="route.includes('plant-deploy')">
                     <p class="sex">
-                        <s>名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称：</s>
+                        <span>名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称：</span>
                         <el-input type="text"v-model="tree.plant.name" :disabled="isDisabled" :maxlength="15"></el-input>
                     </p>
                     <p class="name">
-                        <s>科&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;目：</s>
+                        <span>科&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;目：</span>
                         <el-input type="text"v-model="tree.plant.genera" :disabled="isDisabled"></el-input>
                     </p>
                     <p class="name">
-                        <s>高&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;度：</s>
+                        <span>高&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;度：</span>
                         <el-input type="number"v-model="tree.plant.height"  min = "0" placeholder="请输入树木高度（数字）" :disabled="isDisabled"></el-input>
                     </p>
-                    <p class="name wrapstyle selectstyle">年&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;代：
+                    <p class="name wrapstyle selectstyle">
+                        <span>年&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;代：</span>
                         <el-date-picker
                             v-model="tree.plant.plantYear"
                             type="year"
@@ -488,7 +495,8 @@
                             placeholder="选择年份">
                         </el-date-picker>
                     </p>
-                    <p class="phoneNum wrapstyle selectstyle">所属片区：
+                    <p class=" wrapstyle selectstyle">
+                        <span>所属片区：</span>
                         <el-select v-model="tree.regionId" placeholder="请选择" :disabled="isDisabled">
                             <el-option
                                 v-for="item in regions"
@@ -499,12 +507,12 @@
                         </el-select>
                     </p>
                     <p class="phoneNum">
-                        <s>位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置：</s>
+                        <span>位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置：</span>
                         <span :class="{ps:isDisabled}">{{tree.location}}</span><i class="el-icon-location-outline" @click="showMapDialog"></i>
                     </p>
                     <p class="textarea ms">
                         <span class="des">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：</span>
-                        <el-input type="textarea"  v-model="tree.plant.description" :disabled="isDisabled" :maxlength="140"></el-input>
+                        <el-input type="textarea" :rows="3" v-model="tree.plant.description" :disabled="isDisabled" :maxlength="140"></el-input>
                     </p>
                     <div class="img">
                         <img :src="getUrl(tree.picturePath)" alt="" v-if="isDisabled" @error="imgError">
@@ -516,19 +524,19 @@
                 <!--建筑-->
                 <div class="personCardContent boatCardContent" v-if="route.includes('construction')">
                     <p class="sex">
-                        <s>名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称：</s>
+                        <span>名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称：</span>
                         <el-input type="text"v-model="build.building.name" :disabled="isDisabled" :maxlength="15"></el-input>
                     </p>
                     <p class="name">
-                        <s>层&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;高：</s>
+                        <span>层&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;高：</span>
                         <el-input type="number" min="0" v-model="build.building.layers"  placeholder="请输入建筑层高（数字）" :disabled="isDisabled"></el-input>
                     </p>
                     <p class="name">
-                        <s>高&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;度：</s>
+                        <span>高&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;度：</span>
                         <el-input type="number"v-model="build.building.height"  min="0" placeholder="请输入建筑高度（数字）" :disabled="isDisabled"></el-input>
                     </p>
                     <p class="name">
-                        <s>年&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;代：</s>
+                        <span>年&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;代：</span>
                         <el-date-picker
                             v-model="build.building.buildYear"
                             :disabled="isDisabled"
@@ -536,8 +544,8 @@
                             placeholder="选择日期">
                         </el-date-picker>
                     </p>
-                    <p class="phoneNum">
-                        <s>所属片区：</s>
+                    <p class="phone">
+                        <span>所属片区：</span>
                         <el-select v-model="build.regionId" placeholder="请选择" :disabled="isDisabled">
                             <el-option
                                 v-for="item in regions"
@@ -548,12 +556,12 @@
                         </el-select>
                     </p>
                     <p class="phoneNum">
-                        <s>位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置：</s>
+                        <span>位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置：</span>
                         <span :class="{ps:isDisabled}">{{build.location}}</span><i class="el-icon-location-outline" @click="showMapDialog"></i>
                     </p>
                     <p class="textarea ms">
                         <span class="des">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：</span>
-                        <el-input type="textarea"  v-model="build.building.description" :disabled="isDisabled" :maxlength="140"></el-input>
+                        <el-input type="textarea" :rows="3"  v-model="build.building.description" :disabled="isDisabled" :maxlength="140"></el-input>
                     </p>
                     <div class="img">
                         <img :src="getUrl(build.picturePath)" alt="" v-if="isDisabled" @error="imgError">
@@ -789,6 +797,14 @@
                             }
                             case '6': {
                                 imgSrc = './../../../static/img/trickCard.png';
+                                break
+                            }
+                            case '7':{
+                                imgSrc = './../../../static/img/person.png';
+                                break
+                            }
+                            case '8':{
+                                imgSrc = './../../../static/img/person.png';
                                 break
                             }
                         }
@@ -1750,12 +1766,14 @@
                     }
                     span{
                         display: inline-block;
-                        width: rem(200);
+                        /*width: rem(200);*/
                         /*overflow: hidden;
                         text-overflow: ellipsis;
                         white-space: nowrap;*/
                         line-height: rem(15);
                         overflow: hidden;
+                        padding-bottom: rem(-1);
+
                     }
                     .ps{
                         color:#c0c4cc;
@@ -1827,7 +1845,7 @@
                     }
                     span{
                         line-height: rem(26);
-                        margin-left: rem(16);
+                        /*margin-left: rem(16);*/
                     }
                     i{
                         margin-top: rem(3);
