@@ -3,7 +3,7 @@
         <div class="pro_menu">
             <div class="pro_title">
                 <!--<img src="../../../static/img/logo.svg" alt="">-->
-                <span>卓锐IOT平台</span>
+                <span>卓锐IOT平台11</span>
             </div>
             <div class="search-head">
                 <el-form :inline="true"  class="demo-form-inline">
@@ -33,15 +33,6 @@
             <div class="pro_router">
                 <div class="func">
                     <el-menu  class="el-menu-demo" mode="horizontal" router>
-                        <!--<el-submenu index="1">
-                            <template slot="title">
-                                <img src="../../../static/img/peopleInfo.svg" alt="">
-                                <span class="Admin">IoT管理员</span>
-
-                            </template>
-                            <el-menu-item index="/droreone">返回主页</el-menu-item>
-                            <el-menu-item @click="logout"index="/login">退出</el-menu-item>
-                        </el-submenu>-->
                         <el-submenu index="2">
                             <template slot="title">
                                 <img src="../../../static/img/iot/portrait.jpg" alt="" class="portrait">
@@ -56,18 +47,102 @@
             </div>
         </div>
         <div class="pro_content">
+           <!-- <div class="iotDeviceMenu">
+                <el-menu default-active=""
+                         text-color="#fff"
+                         :collapse="isCollapse"
+                         active-text-color="#ffd04b" router>
+                    <ScrollContainer>
+                        <template v-for="item in items">
+                            <template v-if="item.subs">
+                                <el-submenu :index="item.index">
+                                    <template slot="title">
+                                        <img :src="item.icon" alt="">{{ item.title }}-1
+                                    </template>
+                                    <template v-for="(subItem,i) in item.subs" >
+                                        <template v-if="subItem.isShow===true">
+                                            <template v-if="subItem.sonSubs">
+                                                <el-submenu   :index="subItem.index">
+                                                    <template slot="title">
+                                                        <img :src="'../../../static/img/iot/'+subItem.index+'.svg'" alt="">
+                                                        {{ subItem.title }}-2
+                                                    </template>
+                                                    <el-menu-item v-for="(sonSubItem,r) in subItem.sonSubs"  :index="'/basicStruc'+sonSubItem.index">
+                                                        <img :src="'../../../static/img/iot/'+sonSubItem.mark+'.svg'" alt="">
+                                                        {{sonSubItem.title}}-3
+                                                    </el-menu-item>
+                                                </el-submenu>
+                                            </template>
+                                            <template v-else>
+                                                <el-menu-item :index="subItem.index">
+                                                    <img :src="subItem.icon" alt="">{{ subItem.title }}
+                                                </el-menu-item>
+                                            </template>
+                                        </template>
+                                    </template>
+                                </el-submenu>
+                            </template>
+                            <template v-else>
+                                <el-menu-item :index="item.index">
+                                    <img :src="item.icon" alt="">{{ item.title }}
+                                </el-menu-item>
+                            </template>
+                        </template>
+                    </ScrollContainer>
+                </el-menu>
+                <div class="content">
+                    <ScrollContainer>
+                        <router-view/>
+                    </ScrollContainer>
+                </div>
+            </div>-->
+
             <IotDeviceMenu></IotDeviceMenu>
         </div>
     </div>
 </template>
 
 <script>
-    //import ScrollContainer from '@/components/ScrollContainer'
+    import ScrollContainer from '@/components/ScrollContainer'
+    import api from '@/api'
     import IotDeviceMenu from '@/components/iot/iotDeviceMenu'
     export default {
         name: "home",
         data() {
             return {
+                isCollapse: false,
+                items: [
+                    {
+                        icon: '../../../static/img/iot/iot-index.svg',
+                        index: '/basicStruc/iotHome',
+                        title: '首页'
+                    },
+                    {
+                        icon: '../../../static/img/iot/iot-equipment.svg',
+                        index:'1',
+                        title: 'IoT设备',
+                        subs:[]
+                    },
+                    {
+                        icon: '../../../static/img/iot/iot-system-manage.svg',
+                        index: '2',
+                        title: '系统监控',
+                        subs: [
+                            {
+                                isShow:true,
+                                icon:'../../../static/img/camera.svg',
+                                index: '/basicStruc/iotLog/systemLog',
+                                title: '系统日志'
+                            },
+                            {
+                                isShow:true,
+                                icon:'../../../static/img/broadcast.svg',
+                                index: '/basicStruc/iotLog/nowStatus',
+                                title: '实时状态'
+                            }
+                        ]
+                    }
+                ],
                 route: '',
                 msgPushData: [
                     {
@@ -99,7 +174,7 @@
             }
         },
         created () {
-            this.route = this.$route.path
+            this.route = this.$route.path;
         },
         watch: {
             '$route'(){
@@ -107,8 +182,9 @@
             }
         },
         components: {
-            //ScrollContainer,
+            ScrollContainer,
             IotDeviceMenu
+
         },
         methods:{
             onHeadSubmit(){
@@ -116,7 +192,8 @@
             },
             logout() {
                 this.$router.push('/login')
-            }
+            },
+
         }
     }
 </script>
@@ -139,7 +216,7 @@
                 background-color:transparent ;
                 border-color: transparent;
             }
-            margin-left:rem(19.2);
+            //margin-left:rem(16);
             margin-right: 52%;
             .el-form-item__content{
                 line-height:rem(60);
@@ -207,7 +284,7 @@
             }*/
             div {
                 display: inline-block;
-               /* background-color:#2D3E50;*/
+                /* background-color:#2D3E50;*/
             }
             .pro_title {
                 width: 15%;

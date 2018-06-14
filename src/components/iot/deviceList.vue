@@ -2,7 +2,7 @@
     <div class="device-list">
         <header>
             <div class="title">
-                设备列表
+                设备列表11
             </div>
             <div class="sub-title clearfix">
                 <div class="search">
@@ -99,11 +99,14 @@
                 console.log(this.route,this.curPage,this.pageSize);
                 api.iotHome.getDeviceListInfo(this.route,this.curPage,this.pageSize).then(res=>{
                     console.log(res,'这是传回来的设备列表信息');
+                    for(var i=0;i<res.pageData.tableDatas.length;i++){
+                        console.log((res.pageData.tableDatas)[i].kind);
+                    };
                     this.allNum=res.pageCondition.allcount;
                     this.allData=res.pageData.tableDatas;
 
                 }).catch(err=>{
-                    console.log(err,'失败1')
+                    console.log(err,'失败')
                 })
                 //this.$store.commit('CURPAGE', val)
             },
@@ -120,7 +123,7 @@
 
 <style lang="scss" type="text/scss">
     .device-list{
-        border:1px solid red;
+        border:1px solid transparent;
         margin:rem(16);
         border-radius:rem(8);
         header{

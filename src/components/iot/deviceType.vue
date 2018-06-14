@@ -1,7 +1,7 @@
 <template>
     <div class="device-type" >
         <div class="title">
-           <h2>设备型号</h2>
+           <h2>设备型号11</h2>
         </div>
         <template>
             <el-table
@@ -29,6 +29,8 @@
             @saveEvent="saveDialog"
             @cancelEvent="cancelDialog">
         </IotDialog>
+
+
     </div>
 </template>
 
@@ -112,7 +114,7 @@
 <style  lang="scss" type="text/scss">
     .device-type{
         margin:rem(16);
-        border:1px solid red;
+        border:1px solid transparent;
         .title{
             background-color: #fff;
             border-bottom: 1px solid #eee;

@@ -1198,7 +1198,7 @@ $.extend( $.validator, {
 		} else if ( type === method && type !== "range" ) {
 
 			// Exception: the jquery validate 'range' method
-			// does not test for the html5 'range' type
+			// does not test1 for the html5 'range' type
 			rules[ method ] = true;
 		}
 	},
