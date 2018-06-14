@@ -45,7 +45,7 @@
                         <span>{{camera.location}}</span>
                         <i class="el-icon-location-outline" @click="showMapDialog"></i>
                     </p>
-                    <p class="area wrapstyle selectstyle">
+                    <p class="wrapstyle selectstyle">
                         <span>所属片区：</span>
                         <el-select name="" v-model="camera.regionId" :disabled="isDisabled">
                             <el-option

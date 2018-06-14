@@ -208,6 +208,7 @@ s't<template>
                 let latitude = info.location.substring(index + 1)
                 let gateObj=[{
                     typeId:3,
+                    mac:info.mac,
                     id:info.id,
                     gateType:info.gateType,
                     name:info.name,
