@@ -60,7 +60,7 @@
     export default {
         name: "fun-header",
         props: ['choseId', 'listsLength', 'personListFlag'],
-
+        inject:['reload'],
         data() {
             return {
                 filterList: [],
@@ -123,6 +123,7 @@
                                 this.$emit("getAllBoat");
                             }).catch(err => {
                                 this.$message.error('导入失败，请稍后重试')
+                                this.reload()
                             })
                             break;
                         case route.includes("toilet"):
@@ -132,6 +133,7 @@
                                 this.$emit("getAllToilet");
                             }).catch(err => {
                                 this.$message.error('导入失败，请稍后重试')
+                                this.reload()
                             })
                             break;
                         case route.includes("park"):
@@ -141,6 +143,7 @@
                                 this.$emit("getAllPark");
                             }).catch(err => {
                                 this.$message.error('导入失败，请稍后重试')
+                                this.reload()
                             })
                             break;
                         case route.includes("shop"):
@@ -150,6 +153,7 @@
                                 this.$emit("getAllShop");
                             }).catch(err => {
                                 this.$message.error('导入失败，请稍后重试')
+                                this.reload()
                             })
                             break;
                         case route.includes("scenic"):
@@ -159,6 +163,7 @@
                                 this.$emit("getAllScenic");
                             }).catch(err => {
                                 this.$message.error('导入失败，请稍后重试')
+                                this.reload()
                             })
                             break;
                         case route.includes("trash"):
@@ -168,6 +173,7 @@
                                 this.$emit("getAllTrash");
                             }).catch(err => {
                                 this.$message.error('导入失败，请稍后重试')
+                                this.reload()
                             })
                             break;
                         case route.includes("indicator"):
@@ -177,6 +183,7 @@
                                 this.$emit("getAllIndicator");
                             }).catch(err => {
                                 this.$message.error('导入失败，请稍后重试')
+                                this.reload()
                             })
                             break;
                         case route.includes("plant"):
@@ -186,7 +193,7 @@
                                 this.$emit("getAllPlant");
                             }).catch(err => {
                                 this.$message.error('导入失败，请稍后重试')
-
+                                this.reload()
                             })
                             break;
                         case route.includes("construction"):
@@ -196,6 +203,7 @@
                                 this.$emit("getAllBuild");
                             }).catch(err => {
                                 this.$message.error('导入失败，请稍后重试')
+                                this.reload()
                             })
                             break;
                         case route.includes("person"):
@@ -205,6 +213,7 @@
                                 this.$emit("getAllPerson");
                             }).catch(err => {
                                 this.$message.error('导入失败，请稍后重试')
+                                this.reload()
                             })
                             break;
 

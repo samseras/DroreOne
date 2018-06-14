@@ -62,7 +62,7 @@
                 LED:false,
                 PERSON:false,
                 CAR:false,
-                LIGHT:false,
+                LIGHT:false
             }
         },
         components: {
