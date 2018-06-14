@@ -28,7 +28,7 @@
 
         <div class="content">
             <ScrollContainer>
-                <router-view></router-view>
+                <router-view v-if="isRouterAlive"></router-view>
             </ScrollContainer>
         </div>
     </div>
@@ -40,8 +40,14 @@
     import _ from 'lodash'
     export default {
         name: "hard-ware-menu",
+        provide(){
+            return {
+                reload:this.reload
+            }
+        },
         data () {
             return{
+                isRouterAlive:true,
                 items: [
                     {
                         icon: './../../../static/img/hardwareType.svg',
@@ -154,7 +160,13 @@
             }
         },
         methods: {
-            ...mapActions(['getDeviceType'])
+            ...mapActions(['getDeviceType']),
+            reload(){
+                this.isRouterAlive = false
+                this.$nextTick(()=>{
+                        this.isRouterAlive = true
+                })
+            }
         },
         created() {
           this.getDeviceType()
