@@ -23,7 +23,7 @@
             <div class="personList" v-loading="isShowLoading">
                 <ScrollContainer>
                     <el-table
-                        v-if="!isShowPersonCard"
+                        v-if="!isShowPersonCard && !show"
                         ref="multipleTable"
                         :data="personList"
                         tooltip-effect="dark"
@@ -111,8 +111,8 @@
                             </p>
                         </div>
                     </div>
-                    <div v-if="show">
-                        没有数据
+                    <div class="tip" v-if="show">
+                        <span>暂无数据</span>
                     </div>
                 </ScrollContainer>
                 <PersonDetail v-if="visible"
@@ -467,8 +467,10 @@
                 let id = this.$route.params.id
                 await api.person.getJobPerson(id).then(res => {
                     console.log(res, '这是请求回来的')
-                    if(res.length ===0){
+                    if(res.length === 0){
                         this.show = true
+                    }else{
+                        this.show = false
                     }
                     this.listLength = res.length
                     this.isShowLoading = false
@@ -664,6 +666,12 @@
                             white-space: nowrap;
                         }
                     }
+                }
+                .tip{
+                    width:100%;
+                    height:rem(40);
+                    text-align: center;
+                    color: #909399
                 }
                 .handle {
                     span{
