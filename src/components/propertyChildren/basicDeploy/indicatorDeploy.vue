@@ -150,7 +150,7 @@
                 console.log(info, '这是要过滤的')
                 if (info.trim() !== '') {
                     this.indicatorList = this.checkList.filter(item => {
-                        if ((item.regionName)&&(item.regionName.includes(info))) {
+                        if (item.regionName && item.regionName.includes(info)) {
                             return item
                         }
                     })
