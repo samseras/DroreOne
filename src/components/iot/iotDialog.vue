@@ -137,7 +137,7 @@
                         obj[item.key] = item.prop
                     })
                     console.log(obj, '这个是最终编辑的')
-                    fixContent=obj;
+                   /* fixContent=obj;*/
                 }else if(this.route.includes('deviceList')){
                     console.log(this.editObj, '这个是编辑后的')
                     let finalObj={}

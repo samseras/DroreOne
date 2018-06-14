@@ -835,7 +835,7 @@
                        this.$message.error('请输入完整信息')
                        return
                    }
-                   /*if(!(newInfo.ip && myip.test(newInfo.ip))){
+                   /*if(!(newInfo.ip && myip.test1(newInfo.ip))){
                        this.$message.error('请输入有效ip地址！')
                        return
                    }*/
@@ -847,7 +847,7 @@
                        this.$message.error('请输入正确的MAC编号')
                        return
                    }
-                   /*if(!(newInfo.serialNum && intreg.test(newInfo.serialNum))){
+                   /*if(!(newInfo.serialNum && intreg.test1(newInfo.serialNum))){
                        this.$message.error('编号只能输入数字！')
                        return
                    }*/
@@ -863,7 +863,7 @@
                        this.$message.error('请输入完整信息')
                        return
                    }
-                   /*if(!(newInfo.ip && myip.test(newInfo.ip))){
+                   /*if(!(newInfo.ip && myip.test1(newInfo.ip))){
                        this.$message.error('请输入有效ip地址！')
                        return
                    }*/
@@ -871,7 +871,7 @@
                        this.$message.error('请输入正确端口号')
                        return
                    }
-                   /*if(!(newInfo.serialNum && intreg.test(newInfo.serialNum))){
+                   /*if(!(newInfo.serialNum && intreg.test1(newInfo.serialNum))){
                        this.$message.error('编号只能输入数字！')
                        return
                    }*/
@@ -891,7 +891,7 @@
                        this.$message.error('请输入完整信息')
                        return
                    }
-                   /*if(!(newInfo.ip && myip.test(newInfo.ip))){
+                   /*if(!(newInfo.ip && myip.test1(newInfo.ip))){
                        this.$message.error('请输入有效ip地址！')
                        return
                    }*/
@@ -899,7 +899,7 @@
                        this.$message.error('请输入正确端口号')
                        return
                    }
-                   /*if(!(newInfo.serialNum && intreg.test(newInfo.serialNum))){
+                   /*if(!(newInfo.serialNum && intreg.test1(newInfo.serialNum))){
                        this.$message.error('编号只能输入数字！')
                        return
                    }*/
@@ -935,7 +935,7 @@
                        this.$message.error('请输入完整信息')
                        return
                    }
-                   /*if(!(newInfo.ip && myip.test(newInfo.ip))){
+                   /*if(!(newInfo.ip && myip.test1(newInfo.ip))){
                        this.$message.error('请输入有效ip地址！')
                        return
                    }*/
@@ -948,7 +948,7 @@
                        return
                    }
 
-                   /*if(!(newInfo.serialNum && intreg.test(newInfo.serialNum))){
+                   /*if(!(newInfo.serialNum && intreg.test1(newInfo.serialNum))){
                        this.$message.error('编号只能输入数字！')
                        return
                    }*/
@@ -964,7 +964,7 @@
                        this.$message.error('请输入完整信息')
                        return
                    }
-                   /*if(!(newInfo.ip && myip.test(newInfo.ip))){
+                   /*if(!(newInfo.ip && myip.test1(newInfo.ip))){
                        this.$message.error('请输入有效ip地址！')
                        return
                    }*/
@@ -976,7 +976,7 @@
                        this.$message.error('请输入正确的MAC编号')
                        return
                    }
-                   /*if(!(newInfo.serialNum && intreg.test(newInfo.serialNum))){
+                   /*if(!(newInfo.serialNum && intreg.test1(newInfo.serialNum))){
                        this.$message.error('编号只能输入数字！')
                        return
                    }*/

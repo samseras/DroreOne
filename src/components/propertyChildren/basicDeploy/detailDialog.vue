@@ -897,7 +897,7 @@
                         this.$message.error('请填写正确的电话号码')
                         return
                     }
-                   /* if (!(newInfo.idNum && newInfo.idNum !== '') || !idReg.test(newInfo.idNum)) {
+                   /* if (!(newInfo.idNum && newInfo.idNum !== '') || !idReg.test1(newInfo.idNum)) {
                         this.$message.error('请填写正确的身份证号码')
                         return
                     }*/
@@ -917,7 +917,7 @@
                         return
                     }
 
-                    // if (!(newInfo.driverPhone && newInfo.driverPhone !== '') || !myreg.test(newInfo.driverPhone)) {
+                    // if (!(newInfo.driverPhone && newInfo.driverPhone !== '') || !myreg.test1(newInfo.driverPhone)) {
                     //     this.$message.error('请填写正确的电话号码')
                     //     return
                     // }
@@ -941,7 +941,7 @@
                     }
 
                     /*if(!(newInfo.dustbinBean.dustbinCount && newInfo.dustbinBean.dustbinCount !== '') ||
-                        !intreg.test(newInfo.dustbinBean.dustbinCount)){
+                        !intreg.test1(newInfo.dustbinBean.dustbinCount)){
                         this.$message.error('个数只能输入数字！')
                         return
                     }*/
@@ -970,13 +970,13 @@
                     }
 
                     /*if(!(newInfo.scenicspotBean.capacity && newInfo.scenicspotBean.capacity !== '') ||
-                        !intreg.test(newInfo.scenicspotBean.capacity)){
+                        !intreg.test1(newInfo.scenicspotBean.capacity)){
                         this.$message.error('容量只能输入数字！')
                         return
                     }*/
 
                     /*if(!(newInfo.scenicspotBean.currentNum && newInfo.scenicspotBean.currentNum !== '') ||
-                        !intreg.test(newInfo.scenicspotBean.currentNum)){
+                        !intreg.test1(newInfo.scenicspotBean.currentNum)){
                         this.$message.error('当前人数只能输入数字！')
                         return
                     }*/
@@ -995,13 +995,13 @@
                     }
 
                     /*if(!(newInfo.businessBean.capacity && newInfo.businessBean.capacity !== '') ||
-                        !intreg.test(newInfo.businessBean.capacity)){
+                        !intreg.test1(newInfo.businessBean.capacity)){
                         this.$message.error('容量只能输入数字！')
                         return
                     }*/
 
                     /*if(!(newInfo.businessBean.currentNum && newInfo.businessBean.currentNum !== '') ||
-                        !intreg.test(newInfo.businessBean.currentNum)){
+                        !intreg.test1(newInfo.businessBean.currentNum)){
                         this.$message.error('当前人数只能输入数字！')
                         return
                     }*/
@@ -1021,13 +1021,13 @@
                     }
 
                     /*if(!(newInfo.parkingBean.surplusNum && newInfo.parkingBean.surplusNum !== '') ||
-                        !intreg.test(newInfo.parkingBean.surplusNum)){
+                        !intreg.test1(newInfo.parkingBean.surplusNum)){
                         this.$message.error('空余车位只能输入数字！')
                         return
                     }*/
 
                     /*if(!(newInfo.parkingBean.capacity && newInfo.parkingBean.capacity !== '') ||
-                        !intreg.test(newInfo.parkingBean.capacity)){
+                        !intreg.test1(newInfo.parkingBean.capacity)){
                         this.$message.error('车位总数只能输入数字！')
                         return
                     }*/

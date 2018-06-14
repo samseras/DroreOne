@@ -36,7 +36,6 @@ const iotHome = {
             url:'/iot/devices/properties',
             data:{
                 condition:val
-
             }
         })
     },
@@ -65,19 +64,106 @@ const iotHome = {
 
         })
     },
-    DevicePoliceInfo(){
+    DeviceDetailInfo(id){  //卡片列表查询不可编辑的数据
+        return axios ({
+            method:'GET',
+            url:'/iot/devices/attributes?id='+id,
+        })
+    },
+    tenDevicePoliceInfo(id){  //最新十条数据
         return axios ({
             method:'POST',
             url:'/iot/events/query',
             data:{
                 "pageCondition" : {
+                    "orders": [
+                        {
+                            "enable": true,
+                            "prop": "createTime"
+                        }],
                     "pageno" : 1,
                     "pagesize" : 10
                 },
                 "ioTEventCondition" : {
-                    "types" : [ "ALARM" ]
+                    "types" : [ "STATUS_CHANGED" ],
+                    "deviceCondition":{
+                        "deviceIds":[
+                            id
+                        ]
+                    }
                 }
             }
+        })
+    },
+    DeviceMonitorInfo(val,id){  //设备状态监控数据
+        console.log('看id',id,val);
+        return axios ({
+            method:'POST',
+            url:'/iot/events/query',
+            data:{
+                "pageCondition" : {
+                    "pageno" : val,
+                    "pagesize" : 20
+                },
+                "ioTEventCondition" : {
+                    "types" : [ "STATUS_CHANGED" ],
+                    "deviceCondition":{
+                        "deviceIds":[
+                            id
+                        ]
+                    }
+                },
+
+            }
+        })
+    },
+    DeviceAlermInfo(val,id){
+        console.log('看报警事件id',id,val);
+        return axios ({
+            method:'POST',
+            url:'/iot/events/query',
+            data:{
+                "pageCondition" : {
+                    "pageno" : val,
+                    "pagesize" : 20
+                },
+                "ioTEventCondition" : {
+                    "types" : [ "STATUS_CHANGED" ],
+                    "deviceCondition":{
+                        "deviceIds":[
+                            id
+                        ]
+                    }
+                },
+
+            }
+        })
+    },
+    DevicePickInfo(val,id){
+        return axios ({
+            method:'POST',
+            url:'/iot/events/query',
+            data:{
+                "pageCondition" : {
+                    "pageno" : val,
+                    "pagesize" : 20
+                },
+                "ioTEventCondition" : {
+                    "types" : [ "DATA_CHANGED" ],
+                    "deviceCondition":{
+                        "deviceIds":[
+                            id
+                        ]
+                    }
+                },
+
+            }
+        })
+    },
+    DataPickInfo(eventId){
+        return axios ({
+            method:'GET',
+            url:'/iot/events/'+eventId+'/data',
         })
     },
     setDeviceStatusInfo(id){
