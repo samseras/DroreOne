@@ -338,7 +338,10 @@
                 })
             },
             editInfo (info,state,title) {
-                console.log(info);
+                if (info.isEnabled) {
+                    this.$message.info('所选规则已经开启，请关闭后再修改')
+                    return
+                }
                 this.showDetail(info,state,title);
             },
             batchEdit(){
