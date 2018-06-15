@@ -23,7 +23,7 @@
             <div class="personList" v-loading="isShowLoading">
                 <ScrollContainer>
                     <el-table
-                        v-if="!isShowShopCard"
+                        v-if="!isShowShopCard && !show"
                         ref="multipleTable"
                         :data="shopList"
                         tooltip-effect="dark"
@@ -107,6 +107,9 @@
                             <p class="phoneNum">最大容量：<span>{{item.businessBean.capacity}}</span></p>
                         </div>
                     </div>
+                    <div class="tip" v-if="show">
+                        <span>暂无数据</span>
+                    </div>
                 </ScrollContainer>
                 <PersonDetail v-if="visible"
                               :visible="visible"
@@ -145,6 +148,7 @@
                 choseList: [],
                 isDisabled: true,
                 title: '',
+                show:false,
                 isShowLoading: false,
                 currentNum: 50,
                 listLength: '',
@@ -439,6 +443,11 @@
                 this.isShowLoading = true
                 await api.shop.getAllShop().then(res => {
                     console.log(res, '这是所有商铺')
+                    if(res.length === 0){
+                        this.show = true
+                    }else{
+                        this.show =false
+                    }
                     this.listLength =res.length
                     this.isShowLoading = false
                     this.shopList = res
@@ -622,6 +631,13 @@
                             white-space: nowrap;
                         }
                     }
+                }
+                .tip{
+                    width:100%;
+                    height:rem(40);
+                    text-align: center;
+                    color: #909399;
+                    line-height: rem(40);
                 }
                 .handle{
                     span{

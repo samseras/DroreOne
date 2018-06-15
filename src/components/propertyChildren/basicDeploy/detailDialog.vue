@@ -905,26 +905,15 @@
                     newInfo = this.boatCar;
                     console.log(newInfo);
                     if(!(newInfo.vehicle.hasOwnProperty("type") && integerreg.test(newInfo.vehicle.type)) ||
-                        !(newInfo.vehicle.serialNum && newInfo.vehicle.serialNum.trim() !== '') ||  //编号改为名称
-                        !(newInfo.vehicle.hasOwnProperty("maintenanceStatus") && integerreg.test(newInfo.vehicle.maintenanceStatus)) ||
-                        !(newInfo.vehicle.purchaseDate && newInfo.vehicle.purchaseDate !== '') ||
+                        !(newInfo.vehicle.serialNum && newInfo.vehicle.serialNum.trim() !== '')   //编号改为名称
+//                        !(newInfo.vehicle.hasOwnProperty("maintenanceStatus") && integerreg.test(newInfo.vehicle.maintenanceStatus)) ||
                        /* !(newInfo.vehicle.maintenanceDate && newInfo.vehicle.maintenanceDate !== '') ||*/
                         //!(newInfo.driverId  && newInfo.driverId !== '') ||   //驾驶员信息
-                        !(newInfo.vehicle.model && newInfo.vehicle.model.trim() !== '')
+//                        !(newInfo.vehicle.model && newInfo.vehicle.model.trim() !== '')
                     ){
 
                         this.$message.error('请输入完整信息')
                         return
-                    }
-
-                    // if (!(newInfo.driverPhone && newInfo.driverPhone !== '') || !myreg.test1(newInfo.driverPhone)) {
-                    //     this.$message.error('请填写正确的电话号码')
-                    //     return
-                    // }
-
-                    if (!(newInfo.vehicle.capacity && newInfo.vehicle.capacity !== '') || !intreg.test(newInfo.vehicle.capacity)) {
-                            this.$message.error('核载人数只能输入数字！')
-                            return
                     }
 
                 } else if(this.route.includes('trash')) {
@@ -1048,9 +1037,8 @@
                 } else if(this.route.includes('area')) {
                     newInfo = this.area;
                     if(!(newInfo.name && newInfo.name.trim() !== '') ||
-                        !(newInfo.location && newInfo.location !== '') ||
+                        !(newInfo.location && newInfo.location !== '')
                         // !(newInfo.placeScenic && newInfo.placeScenic !== '') ||
-                        !(newInfo.description && newInfo.description !== '')
                     ){
 
                         this.$message.error('请输入完整信息')
@@ -1061,8 +1049,7 @@
                     console.log(newInfo)
                     if(!(newInfo.name && newInfo.name.trim() !== '') ||
                         !(newInfo.location && newInfo.location !== '') ||
-                        !(newInfo.type && newInfo.type !== '') ||
-                        !(newInfo.description && newInfo.description !== '')
+                        !(newInfo.type && newInfo.type !== '')
                     ){
 
                         console.log(newInfo.type);

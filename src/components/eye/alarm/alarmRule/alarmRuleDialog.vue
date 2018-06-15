@@ -70,8 +70,7 @@
                         </el-select>
                     </p>
                     <p class="description">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：<br>
-                        <textarea name="" v-model='alarmcolumnInfo.description' cols="30"
-                                  rows="5" placeholder="请输入描述信息" :disabled='isReadonly'></textarea >
+                        <el-input type="textarea" :rows='5' :cols="30" placeholder="请输入描述信息" v-model="alarmcolumnInfo.description" :disabled="isReadonly" :maxlength="140"></el-input>
                     </p>
                 </div>
 
@@ -126,8 +125,7 @@
                         </el-select>
                     </p>
                     <p class="description">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：<br>
-                        <textarea name="" v-model='firefightingInfo.description' cols="30"
-                                  rows="5" placeholder="请输入描述信息" :disabled='isReadonly'></textarea >
+                        <el-input type="textarea" :rows='5' :cols="30" placeholder="请输入描述信息" v-model="firefightingInfo.description" :disabled="isReadonly" :maxlength="140"></el-input>
                     </p>
                 </div>
 
@@ -182,8 +180,7 @@
                         </el-select>
                     </p>
                     <p class="description">描&nbsp;&nbsp;&nbsp;&nbsp;述：<br>
-                        <textarea name="" v-model='crossborderInfo.description' cols="30"
-                                  rows="5" placeholder="请输入描述信息" :disabled='isReadonly'></textarea >
+                        <el-input type="textarea" :rows='5' :cols="30" placeholder="请输入描述信息" v-model="crossborderInfo.description" :disabled="isReadonly" :maxlength="140"></el-input>
                     </p>
                 </div>
 
@@ -258,8 +255,7 @@
                         </el-select>
                     </p>
                     <p class="description">描&nbsp;&nbsp;&nbsp;&nbsp;述：<br>
-                        <textarea name="" v-model='speedingInfo.description' cols="30"
-                                  rows="5" placeholder="请输入描述信息" :disabled='isReadonly'></textarea >
+                        <el-input type="textarea" :rows='5' :cols="30" placeholder="请输入描述信息" v-model="speedingInfo.description" :disabled="isReadonly" :maxlength="140"></el-input>
                     </p>
                 </div>
 
@@ -323,8 +319,8 @@
                         </el-select>
                     </p>
                     <p class="description">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：<br>
-                        <textarea name="" v-model='offtrackInfo.description' cols="30"
-                                  rows="5" placeholder="请输入描述信息" :disabled='isReadonly'></textarea >
+                        <el-input type="textarea" :rows='5' :cols="30" placeholder="请输入描述信息" v-model="offtrackInfo.description" :disabled="isReadonly" :maxlength="140"></el-input>
+
                     </p>
                 </div>
 
@@ -389,8 +385,7 @@
                         </el-select>
                     </p>
                     <p class="description">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：<br>
-                        <textarea name="" v-model='overlimitInfo.description' cols="30"
-                                  rows="5" placeholder="请输入描述信息" :disabled='isReadonly'></textarea >
+                        <el-input type="textarea" :rows='5' :cols="30" placeholder="请输入描述信息" v-model="overlimitInfo.description" :disabled="isReadonly" :maxlength="140"></el-input>
                     </p>
                 </div>
 
@@ -459,8 +454,7 @@
                         </el-select>
                     </p>
                     <p class="description">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：<br>
-                        <textarea name="" v-model='waterlevelInfo.description' cols="30"
-                                  rows="5" placeholder="请输入描述信息" :disabled='isReadonly'></textarea >
+                        <el-input type="textarea" :rows='5' :cols="30" placeholder="请输入描述信息" v-model="waterlevelInfo.description" :disabled="isReadonly" :maxlength="140"></el-input>
                     </p>
                 </div>
 
@@ -575,8 +569,7 @@
                         </el-select>
                     </p>
                     <p class="description">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：<br>
-                        <textarea name="" v-model='conditionInfo.description' cols="30"
-                                  rows="5" placeholder="请输入描述信息" :disabled='isReadonly'></textarea >
+                        <el-input type="textarea" :rows='5' :cols="30" placeholder="请输入描述信息" v-model="conditionInfo.description" :disabled="isReadonly" :maxlength="140"></el-input>
                     </p>
                 </div>
 
@@ -1709,6 +1702,9 @@
         height: 100%;
         .el-dialog .el-dialog--center{
             width: 100%;
+        }
+        .el-input.is-disabled .el-input__inner,.el-textarea.is-disabled .el-textarea__inner{
+            background-color:transparent;
         }
         .el-dialog--center{
             padding: 0;

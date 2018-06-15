@@ -21,7 +21,7 @@
             <div class="personList" v-loading="isShowLoading">
                 <ScrollContainer>
                     <el-table
-                        v-if="!isShowRoatCard"
+                        v-if="!isShowRoatCard && !show"
                         ref="multipleTable"
                         :data="roatList"
                         tooltip-effect="dark"
@@ -89,6 +89,9 @@
                             <p class="sex text">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：<span>{{item.description}}</span></p>
                         </div>
                     </div>
+                    <div class="tip" v-if="show">
+                        <span>暂无数据</span>
+                    </div>
                 </ScrollContainer>
                 <PersonDetail v-if="visible"
                               :visible="visible"
@@ -127,6 +130,7 @@
                 choseList: [],
                 isDisabled: true,
                 title: '',
+                show:false,
                 isShowLoading: false,
                 currentNum: 50,
                 listLength: '',
@@ -355,6 +359,11 @@
                 this.isShowLoading = true
                 await api.deployRoad.getAllRoute().then(res => {
                     console.log(res, '请求路网成功')
+                    if(res.length === 0){
+                        this.show = true
+                    }else{
+                        this.show =false
+                    }
                     this.listLength = res.length
                     this.isShowLoading = false
                     this.roatList = res
@@ -563,6 +572,13 @@
                             -webkit-line-clamp:3;
                         }
                     }
+                }
+                .tip{
+                    width:100%;
+                    height:rem(40);
+                    text-align: center;
+                    color: #909399;
+                    line-height: rem(40);
                 }
                 .handle {
                     span{
