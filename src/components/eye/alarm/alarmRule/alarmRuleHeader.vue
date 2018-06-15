@@ -9,7 +9,7 @@
             <el-checkbox v-model="isSelected" @change="selectedAll">全选</el-checkbox>
             <el-button size="mini"plain @click="deleteCard"><i class="el-icon-delete"></i>删除</el-button>
             <el-button size="mini" plain @click="batchDownload"><i class="el-icon-download"></i>导出</el-button>
-            <el-button v-if="!route.includes('firefighting') && !route.includes('crossborder')" size="mini"plain @click="batchEdit"><i class="el-icon-edit"></i>批量修改</el-button>
+            <el-button v-if="!route.includes('firefighting') && !route.includes('crossborder')" size="mini"plain @click="batchEdit"><i class="el-icon-edit"></i>修改</el-button>
             <el-button size="mini"plain @click="batchEnabled(true)"><i class="el-icon-circle-check"></i>批量启用</el-button>
             <el-button size="mini"plain @click="batchEnabled(false)"><i class="el-icon-circle-close"></i>批量停用</el-button>
         </div>
@@ -157,7 +157,7 @@
     .ruleHeader{
         .el-checkbox__label{
             padding-left: rem(5);
-            font-size: rem(14);
+            font-size: rem(12);
         }
         .el-checkbox__inner{
             margin-top: rem(2);
