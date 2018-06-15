@@ -11,7 +11,8 @@
                         @choseType='choseType'
                         @batchDownload="batchDownload"
                         :choseId="choseInfoId"
-                        :listLength = "listLength">
+                        :listLength = "listLength"
+                        @searchAnything="searchAnything">
                 </Header>
             </div>
             <div class="personList" v-loading="isShowloading">
@@ -118,6 +119,36 @@
             }
         },
         methods: {
+            searchAnything (info) {
+                console.log(info, '这是要过滤的')
+                if (info.trim() !== '') {
+                    this.warningEventList = this.warningEventList.filter(item => {
+                        if (item.serialNum.includes(info)) {
+                            return item
+                        }
+                        if(item.severity.name.includes(info)){
+                            return item
+                        }
+                        if(item.status.name.includes(info)){
+                            return item
+                        }
+                        if(item.owner.name.includes(info)){
+                            return item
+                        }
+                        if(item.owner.phone.includes(info)){
+                            return item
+                        }
+                        if(item.rule.alarmTypeName.includes(info)){
+                            return item
+                        }
+                        if(item.device.name.includes(info)){
+                            return item
+                        }
+                    })
+                } else {
+                    this.getAllAlarmEvent()
+                }
+            },
             batchDownload(){
                 console.log(this.choseInfos)
                 if (this.choseInfos.length > 0) {

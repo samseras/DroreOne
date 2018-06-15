@@ -11,7 +11,8 @@
                         @addNewInfo="addNewInfo"
                         @batchEnabled="batchEnabled"
                         :choseId="choseInfoId"
-                        :listsLength = "listLength">
+                        :listsLength = "listLength"
+                        @searchAnything="searchAnything">
                 </Header>
             </div>
             <div class="personList" v-loading="isShowloading">
@@ -103,6 +104,30 @@
             }
         },
         methods: {
+            searchAnything (info) {
+                console.log(info, '这是要过滤的')
+                if (info.trim() !== '') {
+                    this.crossborderList = this.crossborderList.filter(item => {
+                        if (item.name.includes(info)) {
+                            return item
+                        }
+                        if(item.relatedManagerNames.includes(info)){
+                            return item
+                        }
+                        if(item.deviceScope.toString().includes(info)){
+                            return item
+                        }
+                        if(item.securityScope.toString().includes(info)){
+                            return item
+                        }
+                        if(item.alarmSeverity.name.includes(info)){
+                            return item
+                        }
+                    })
+                } else {
+                    this.getAlarmRule()
+                }
+            },
             addNewInfo () {
                 this.showDetail({},false,'添加越界告警规则',)
             },

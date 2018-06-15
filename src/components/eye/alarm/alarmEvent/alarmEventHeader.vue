@@ -1,7 +1,7 @@
 <template>
     <div class="alarmEventHeader">
         <div class="searchInfo">
-            <input type="text" placeholder="请输入搜索内容">
+            <input type="text" placeholder="请输入搜索内容" v-model="searchContent" @keyup="startSearch">
             <i class="el-icon-search"></i>
         </div>
         <div class="funcBtn">
@@ -40,10 +40,15 @@
                 isShowIndicatorType: true,
                 isShowTrashType: true,
                 statusInfo:[],
-                filterList:[]
+                filterList:[],
+                searchContent: ''
             }
         },
         methods: {
+            startSearch(){
+                console.log(this.searchContent)
+                this.$emit('searchAnything',this.searchContent)
+            },
             selected () {
                 this.isSelected = !this.isSelected
                 this.$emit('selectedAll', this.isSelected)
