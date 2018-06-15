@@ -22,8 +22,7 @@
                         :data="alarmcolumnList"
                         tooltip-effect="dark"
                         style="width: 100%"
-                        @selection-change="handleSelectionChange"
-                        :default-sort = "{prop: 'relatedManagerNames', order: 'descending'}">
+                        @selection-change="handleSelectionChange">
                         <el-table-column
                             width="50">
                             <template slot-scope="scope">
@@ -439,7 +438,10 @@
                             item.relatedManagerNames = ''
                             item.relatedManagerIds = []
                         }
+                        item.modifyTime=item.modifyTime.replace("-","/")
+                        item.byTime = -(new Date(item.modifyTime)).getTime()
                     })
+                    this.alarmcolumnList = _.sortBy(this.alarmcolumnList,'byTime')
                 }).catch(err => {
                     this.isShowLoading = false
                 })

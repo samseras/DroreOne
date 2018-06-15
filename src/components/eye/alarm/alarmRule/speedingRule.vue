@@ -22,8 +22,7 @@
                         :data="speedingList"
                         tooltip-effect="dark"
                         style="width: 100%"
-                        @selection-change="handleSelectionChange"
-                        :default-sort = "{prop: 'relatedManagerNames', order: 'descending'}">
+                        @selection-change="handleSelectionChange">
                         <el-table-column
                             width="50">
                             <template slot-scope="scope">
@@ -462,7 +461,10 @@
                             item.relatedVehicleNames = ''
                             item.relatedVehicleIds = []
                         }
+                        item.modifyTime=item.modifyTime.replace("-","/")
+                        item.byTime = -(new Date(item.modifyTime)).getTime()
                     })
+                    this.speedingList = _.sortBy(this.speedingList,'byTime')
                 }).catch(err => {
                     console.log(err, '请求失败')
                     this.isShowLoading = false
