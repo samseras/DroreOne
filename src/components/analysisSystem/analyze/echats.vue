@@ -3,7 +3,7 @@
         <el-dialog
             :visible="visible"
             :before-close="closeDialog"
-            width="90%"
+            width="100%"
             class="dialog echatDialog"
             center>
            <div id="bigChart">
