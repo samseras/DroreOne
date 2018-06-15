@@ -73,8 +73,8 @@
                         <el-table-column label="操作" width="200">
                             <template slot-scope="scope">
                                 <span @click="fixedInfo(scope.row,'修改巡更计划')">编辑</span> |
-                                <span @click="stop(scope.row)" v-if="scope.row.inspectionSchedule.enabled">停止 |</span>
-                                <span @click="stop(scope.row)" v-else="!scope.row.inspectionSchedule.enabled">开始 |</span>
+                                <span @click="stop(scope.row)" v-if="scope.row.inspectionSchedule.enabled">停用 |</span>
+                                <span @click="stop(scope.row)" v-else="!scope.row.inspectionSchedule.enabled">启用 |</span>
                                 <span @click="showPersonDetail(scope.row,'巡更路线信息',true)">查看</span> |
                                 <span @click="deletInfo(scope.row.id,'片区信息')">删除</span>
                             </template>

@@ -35,6 +35,7 @@
                         </el-table-column>
                         <el-table-column
                             prop="relatedVehicleNames"
+                            show-overflow-tooltip
                             label="交通工具">
                         </el-table-column>
                         <el-table-column
@@ -52,6 +53,7 @@
                         </el-table-column>
                         <el-table-column
                             sortable
+                            show-overflow-tooltip
                             prop="relatedManagerNames"
                             label="管理者">
                         </el-table-column>

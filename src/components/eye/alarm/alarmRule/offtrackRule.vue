@@ -34,6 +34,7 @@
                             label="名称">
                         </el-table-column>
                         <el-table-column
+                            show-overflow-tooltip
                             prop="relatedScheduleNames"
                             label="关联巡检计划">
                         </el-table-column>
@@ -52,6 +53,7 @@
                         </el-table-column>
                         <el-table-column
                             sortable
+                            show-overflow-tooltip
                             prop="relatedManagerNames"
                             label="管理者">
                         </el-table-column>

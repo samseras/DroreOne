@@ -34,6 +34,7 @@
                             label="名称">
                         </el-table-column>
                         <el-table-column
+                            show-overflow-tooltip
                             prop="relatedDeviceNames"
                             label="关联设备">
                         </el-table-column>
@@ -48,6 +49,7 @@
                         </el-table-column>
                         <el-table-column
                             sortable
+                            show-overflow-tooltip
                             prop="relatedManagerNames"
                             label="管理者">
                         </el-table-column>

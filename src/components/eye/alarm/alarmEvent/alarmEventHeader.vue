@@ -1,7 +1,7 @@
 <template>
     <div class="alarmEventHeader">
         <div class="searchInfo">
-            <input type="text" placeholder="Search Anything">
+            <input type="text" placeholder="请输入搜索内容">
             <i class="el-icon-search"></i>
         </div>
         <div class="funcBtn">

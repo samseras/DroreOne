@@ -1,7 +1,7 @@
 <template>
     <div class="dmisHeader">
         <div class="searchInfo">
-            <input type="text" placeholder="Search Anything" v-model="searchContent" @keyup="startSearch">
+            <input type="text" placeholder="请输入搜索内容" v-model="searchContent" @keyup="startSearch">
             <i class="el-icon-search"></i>
         </div>
         <div class="funcBtn">
