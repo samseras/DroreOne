@@ -1048,9 +1048,8 @@
                 } else if(this.route.includes('area')) {
                     newInfo = this.area;
                     if(!(newInfo.name && newInfo.name.trim() !== '') ||
-                        !(newInfo.location && newInfo.location !== '') ||
+                        !(newInfo.location && newInfo.location !== '') 
                         // !(newInfo.placeScenic && newInfo.placeScenic !== '') ||
-                        !(newInfo.description && newInfo.description !== '')
                     ){
 
                         this.$message.error('请输入完整信息')
@@ -1061,8 +1060,7 @@
                     console.log(newInfo)
                     if(!(newInfo.name && newInfo.name.trim() !== '') ||
                         !(newInfo.location && newInfo.location !== '') ||
-                        !(newInfo.type && newInfo.type !== '') ||
-                        !(newInfo.description && newInfo.description !== '')
+                        !(newInfo.type && newInfo.type !== '')
                     ){
 
                         console.log(newInfo.type);
