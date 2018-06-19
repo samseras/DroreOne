@@ -12,7 +12,9 @@
                         @batchDownload="batchDownload"
                         :choseId="choseInfoId"
                         :listLength = "listLength"
-                        @searchAnything="searchAnything">
+                        @searchAnything="searchAnything"
+                        @previousPage="previousPage"
+                        @nextPage="nextPage">
                 </Header>
             </div>
             <div class="personList" v-loading="isShowloading">
@@ -115,7 +117,8 @@
                 alarmType:'',
                 listLength:'',
                 dataLength:'',
-                updateParams:[]
+                updateParams:[],
+                pageNum:1
             }
         },
         methods: {
@@ -343,6 +346,16 @@
                     })
                 })
             },
+            previousPage (page) {
+                console.log(page, '这是传过来的pageNum')
+                this.pageNum = page
+                this.getAllAlarmEvent ()
+            },
+            nextPage (page) {
+                console.log(page, '这个是下一页的pageNUM')
+                this.pageNum = page
+                this.getAllAlarmEvent ()
+            },
             async updateAlarmEvent(objArray){
                 await api.alarm.updateAlarmEvent(objArray).then(res => {
                         console.log(res, '修改成功')
@@ -362,7 +375,6 @@
                                 this.isShowLoading = false
                                 this.listLength = res.length
                                 this.warningEventList = JSON.parse(JSON.stringify(res))
-
                                 this.warningEventList.forEach(item => {
                                     item.checked = false;
                                     item.rule.alarmTypeName = this.getAlarmTypeNameById(item.rule.alarmTypeId)
@@ -381,9 +393,20 @@
                                             item.fileList = fileList
                                         }
                                     }
+                                    item.modifyTime=item.modifyTime.replace("-","/")
+                                    item.byTime = -(new Date(item.modifyTime)).getTime()
                                 })
 
-                            this.warningEventListTemp = JSON.parse(JSON.stringify(this.warningEventList))
+                                this.warningEventList = _.sortBy(this.warningEventList,'byTime')
+
+                                this.warningEventList = this.warningEventList.filter((item,index) => {
+                                    if (index < (this.pageNum * 10 ) && index > ((this.pageNum -1) * 10 ) - 1 ) {
+                                        return item
+                                    }
+                                })
+                                this.warningEventListTemp = JSON.parse(JSON.stringify(this.warningEventList))
+
+
                         }).catch(err => {
                             console.log(err, '请求失败')
                             this.isShowLoading = false
