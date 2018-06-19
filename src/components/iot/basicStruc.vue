@@ -47,56 +47,6 @@
             </div>
         </div>
         <div class="pro_content">
-           <!-- <div class="iotDeviceMenu">
-                <el-menu default-active=""
-                         text-color="#fff"
-                         :collapse="isCollapse"
-                         active-text-color="#ffd04b" router>
-                    <ScrollContainer>
-                        <template v-for="item in items">
-                            <template v-if="item.subs">
-                                <el-submenu :index="item.index">
-                                    <template slot="title">
-                                        <img :src="item.icon" alt="">{{ item.title }}-1
-                                    </template>
-                                    <template v-for="(subItem,i) in item.subs" >
-                                        <template v-if="subItem.isShow===true">
-                                            <template v-if="subItem.sonSubs">
-                                                <el-submenu   :index="subItem.index">
-                                                    <template slot="title">
-                                                        <img :src="'../../../static/img/iot/'+subItem.index+'.svg'" alt="">
-                                                        {{ subItem.title }}-2
-                                                    </template>
-                                                    <el-menu-item v-for="(sonSubItem,r) in subItem.sonSubs"  :index="'/basicStruc'+sonSubItem.index">
-                                                        <img :src="'../../../static/img/iot/'+sonSubItem.mark+'.svg'" alt="">
-                                                        {{sonSubItem.title}}-3
-                                                    </el-menu-item>
-                                                </el-submenu>
-                                            </template>
-                                            <template v-else>
-                                                <el-menu-item :index="subItem.index">
-                                                    <img :src="subItem.icon" alt="">{{ subItem.title }}
-                                                </el-menu-item>
-                                            </template>
-                                        </template>
-                                    </template>
-                                </el-submenu>
-                            </template>
-                            <template v-else>
-                                <el-menu-item :index="item.index">
-                                    <img :src="item.icon" alt="">{{ item.title }}
-                                </el-menu-item>
-                            </template>
-                        </template>
-                    </ScrollContainer>
-                </el-menu>
-                <div class="content">
-                    <ScrollContainer>
-                        <router-view/>
-                    </ScrollContainer>
-                </div>
-            </div>-->
-
             <IotDeviceMenu></IotDeviceMenu>
         </div>
     </div>
