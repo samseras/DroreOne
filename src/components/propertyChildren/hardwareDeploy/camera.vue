@@ -354,31 +354,39 @@
                     return
                 }
 
-                let type
+                let type,fileNames
                 let route = this.$route.path
                 if (route.includes('broadcast')) {
                     type = 1
+                    fileNames = '广播.csv'
                 }else if(route.includes('camera')){
                     type = 2
+                    fileNames = '摄像机.csv'
                 }else if(route.includes('gate')){
                     type = 3
+                    fileNames = '闸机.csv'
                 } else if(route.includes('led')){
                     type =4
+                    fileNames = 'LED.csv'
                 }else if(route.includes('lampLight')){
                     type = 5
+                    fileNames = '路灯.csv'
                 }else if(route.includes('monitors')){
                     type = 6
+                    fileNames = '传感器.csv'
                 }else if(route.includes('wifi')){
                     type = 7
+                    fileNames = 'Wifi.csv'
                 }else if(route.includes('police')){
                     type = 8
+                    fileNames = '报警柱.csv'
                 }
                 if (this.choseId.length > 0) {
                     api.exportFile.exportSingle(this.choseId).then((res) =>{
                         console.log(res,'niaho')
                         const content = res
                         const blob = new Blob([content])
-                        const fileName = '设备.csv'
+                        const fileName = fileNames
                         if('download' in document.createElement('a')){
                             const elink = document.createElement('a')
                             elink.download = fileName
@@ -401,7 +409,7 @@
                         console.log(res,'niaho')
                         const content = res
                         const blob = new Blob([content])
-                        const fileName = '设备.csv'
+                        const fileName = fileNames
                         if('download' in document.createElement('a')){
                             const elink = document.createElement('a')
                             elink.download = fileName

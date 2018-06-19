@@ -103,9 +103,7 @@
                         }
                     })
                     arr = this.lightList
-
                 }
-                console.log(arr, '这是最后提交的')
                 this.$store.commit('SHOW_TREE', arr)
             },
             handleCheckChange(data,checked) {

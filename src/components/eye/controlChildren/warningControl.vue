@@ -148,44 +148,49 @@
             },
             async getAllAlarmEvent () {
                 await api.alarm.getAllAlarmEvent().then(res => {
-                    console.log(res,'这是请求的数据ddd')
-                    // this.lightList=res
-                    // this.number=this.lightList.length
-                    // let arr = []
-                    // let icon=''
-                    // this.lightList.forEach(item => {
-                    //     if (item.inspectionSchedule.id && !this.regionId.includes(item.inspectionSchedule.id)) {
-                    //         this.regionId.push(item.inspectionSchedule.id)
-                    //     }
-                    // })
-                    // this.lightList.forEach(item => {
-                    //     console.log(item)
-                    //     item.children=[]
-                    //     for(let i=0;i< item.securityIds.length;i++){
-                    //         if (item.securityIds[i].status == "FAULT") {
-                    //             icon = '../../../static/img/light_damage.svg'
-                    //         } else if (item.securityIds[i].status == "OFFLINE") {
-                    //             icon = '../../../static/img/light.svg'
-                    //         } else {
-                    //             icon = '../../../static/img/light_open.svg'
-                    //         }
-                    //         let children={
-                    //             label:item.securityIds[i],
-                    //             type:'person',
-                    //             icon:icon,
-                    //             id:item.securityIds[i]
-                    //         }
-                    //         item.children.push(children)
-                    //     }
-                    //     let obj = {
-                    //         label: item.inspectionSchedule.name,
-                    //         type:'person',
-                    //         id: item.inspectionSchedule.id,
-                    //         children:item.children
-                    //     }
-                    //     arr.push(obj)
-                    // })
-                    // this.lightInfo = arr
+                    this.lightList=res.devices
+                    this.number=this.lightList.length
+                    let regionIdList = []
+                    let arr = []
+                    let idList = []
+
+
+                    this.lightList.forEach(item => {
+                        item.label = item.name
+                        item.type = 'warn'
+                        if (item.severity.id =="FAULT")  {
+                            item.icon = '../../../static/img/wifi_damage.svg'
+                        } else  if (item.status =="OFFLINE") {
+                            item.icon = '../../../static/img/wifi.svg'
+                        }else {
+                            item.icon = '../../../static/img/wifi_open.svg'
+                        }
+                        if (!regionIdList.includes(item.regionId)) {
+                            regionIdList.push(item.regionId)
+                            let obj = {
+                                label: item.regionName,
+                                type: 'wifi',
+                                id: item.regionId,
+                                children: []
+                            }
+                            arr.push(obj)
+                        }
+                        arr.forEach(item1 => {
+                            if (item1.id == item.regionId) {
+                                if (item1.children.length < 1) {
+                                    item1.children.push(item)
+                                } else {
+                                    item1.children.forEach(item2 => {
+                                        if (!idList.includes(item2.id)) {
+                                            idList.push(item.id)
+                                            item1.children.push(item)
+                                        }
+                                    })
+                                }
+                            }
+                        })
+                    })
+                    this.lightInfo = arr
                     console.log(this.lightInfo,'16565623');
                 }).catch(err =>{
                     console.log(err)

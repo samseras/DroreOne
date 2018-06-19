@@ -140,7 +140,6 @@ const map = {
             } else {
                 state.treeData = data
             }
-            // console.log(state.treeData,'commit')
         },
         [types.CONTROLER_LIGHT] (state, data) {
             state.controleLight = data
