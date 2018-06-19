@@ -11,7 +11,8 @@
                         @addNewInfo="addNewInfo"
                         @batchEnabled="batchEnabled"
                         :choseId="choseInfoId"
-                        :listsLength = "listLength">
+                        :listsLength = "listLength"
+                        @searchAnything="searchAnything">
                 </Header>
             </div>
             <div class="personList" v-loading="isShowloading">
@@ -21,8 +22,7 @@
                         :data="firefightingList"
                         tooltip-effect="dark"
                         style="width: 100%"
-                        @selection-change="handleSelectionChange"
-                        :default-sort = "{prop: 'relatedManagerNames', order: 'descending'}">
+                        @selection-change="handleSelectionChange">
                         <el-table-column
                             width="50">
                             <template slot-scope="scope">
@@ -52,6 +52,7 @@
                         </el-table-column>
                         <el-table-column
                             sortable
+                            show-overflow-tooltip
                             prop="relatedManagerNames"
                             label="管理者">
                         </el-table-column>
@@ -106,6 +107,30 @@
             }
         },
         methods: {
+            searchAnything (info) {
+                console.log(info, '这是要过滤的')
+                if (info.trim() !== '') {
+                    this.firefightingList = this.firefightingList.filter(item => {
+                        if (item.name.includes(info)) {
+                            return item
+                        }
+                        if(item.relatedManagerNames.includes(info)){
+                            return item
+                        }
+                        if(item.deviceScope.toString().includes(info)){
+                            return item
+                        }
+                        if(item.securityScope.toString().includes(info)){
+                            return item
+                        }
+                        if(item.alarmSeverity.name.includes(info)){
+                            return item
+                        }
+                    })
+                } else {
+                    this.getAlarmRule()
+                }
+            },
             addNewInfo () {
                 this.showDetail({},false,'添加消防告警规则',)
             },
@@ -337,7 +362,10 @@
                 })
             },
             editInfo (info,state,title) {
-                console.log(info);
+                if (info.isEnabled) {
+                    this.$message.info('所选规则已经开启，请关闭后再修改')
+                    return
+                }
                 this.showDetail(info,state,title);
             },
             batchEdit(){
@@ -415,7 +443,10 @@
                             item.relatedManagerNames = ''
                             item.relatedManagerIds = []
                         }
+                        item.modifyTime=item.modifyTime.replace("-","/")
+                        item.byTime = -(new Date(item.modifyTime)).getTime()
                     })
+                    this.firefightingList = _.sortBy(this.firefightingList,'byTime')
                 }).catch(err => {
                     console.log(err, '请求失败')
                     this.isShowLoading = false

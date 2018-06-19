@@ -26,7 +26,7 @@
 
         <div class="content">
             <ScrollContainer>
-                <router-view></router-view>
+                <router-view v-if="isRouterAlive"></router-view>
             </ScrollContainer>
         </div>
     </div>
@@ -37,8 +37,14 @@
     import { mapGetters, mapActions} from 'vuex'
     export default {
         name: "basic-menu",
+        provide(){
+            return {
+                reload:this.reload
+            }
+        },
         data () {
             return{
+                isRouterAlive:true,
                 openeds:['2'],
                 items: [
                     {
@@ -116,7 +122,13 @@
             }
         },
         methods: {
-            ...mapActions(['getFacilityType'])
+            ...mapActions(['getFacilityType']),
+            reload(){
+                this.isRouterAlive = false
+                this.$nextTick(()=>{
+                    this.isRouterAlive = true
+                })
+            }
         },
         created () {
             this.getFacilityType()

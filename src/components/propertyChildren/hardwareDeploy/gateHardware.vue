@@ -24,7 +24,7 @@ s't<template>
             <div class="cameraList" v-loading="isShowLoading">
                 <ScrollContainer>
                     <el-table
-                        v-if="!isShowGateCard"
+                        v-if="!isShowGateCard && !show"
                         ref="multipleTable"
                         :data="gateList"
                         tooltip-effect="dark"
@@ -104,6 +104,9 @@ s't<template>
                             <p class="sex text">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：<span>{{item.description}}</span></p>
                         </div>
                     </div>
+                    <div class="tip" v-if="show">
+                        <span>暂无数据</span>
+                    </div>
                 </ScrollContainer>
                 <HardWare v-if="visible"
                           :visible="visible"
@@ -146,6 +149,7 @@ s't<template>
                 isDisabled:true,
                 filterList: [],
                 title:'',
+                show: false,
                 isShowLoading:false,
                 currentNum: 50,
                 listLength: '',
@@ -208,6 +212,7 @@ s't<template>
                 let latitude = info.location.substring(index + 1)
                 let gateObj=[{
                     typeId:3,
+                    mac:info.mac,
                     id:info.id,
                     gateType:info.gateType,
                     name:info.name,
@@ -423,6 +428,11 @@ s't<template>
                 this.isShowLoading=true
                 await api.gate.getAllGate().then((res)=>{
                     console.log(res,'这是拿到的数据')
+                    if(res.devices.length === 0){
+                        this.show = true
+                    }else{
+                        this.show = false
+                    }
                     this.isShowLoading=false
                     this.listLength = res.devices.length
                     this.gateList=res.devices
@@ -622,6 +632,13 @@ s't<template>
                             -webkit-line-clamp:2;
                         }
                     }
+                }
+                .tip{
+                    width:100%;
+                    height:rem(40);
+                    text-align: center;
+                    color: #909399;
+                    line-height: rem(40);
                 }
                 .handle {
                     span{

@@ -54,7 +54,7 @@
                 }else{
                     $('#checkCode').val("");
                 }
-				// return reg1.test($('#userid').val()) && reg2.test($('#userpass').val()) && s == x;
+				// return reg1.test1($('#userid').val()) && reg2.test1($('#userpass').val()) && s == x;
 			},
 			changeCheckCode(){
 				//随机产生验证码

@@ -3510,7 +3510,7 @@ define(function(require, exports, module) {
                         mapData._baseMap.addControl(lay.overviewMap);
                     }
                     //				mapData._baseMap.addControl(new mapControls.Custom())
-                    //				var test = new mapControls.Custom()
+                    //				var test1 = new mapControls.Custom()
                 },
                 removeControl: function(lay) {
                     mapData._baseMap.removeControl(lay.overviewMap);

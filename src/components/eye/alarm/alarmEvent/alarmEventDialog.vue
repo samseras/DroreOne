@@ -37,16 +37,16 @@
 
                         <div  v-if="!isBatchEdit"  class="alarmContent">
                             <p class="serialNum">编&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 号：
-                                <el-input type="text" v-model='eventInfo.serialNum' class="inputText" :maxlength="15" :readonly="true"></el-input>
+                                <el-input type="text" v-model='eventInfo.serialNum' class="inputText" :maxlength="15" :disabled="true"></el-input>
                             </p>
                             <p class="type">指标类型：
-                                <el-input type="text" v-model='eventInfo.rule.alarmTypeName' class="inputText" :maxlength="15" :readonly='true'></el-input>
+                                <el-input type="text" v-model='eventInfo.rule.alarmTypeName' class="inputText" :maxlength="15" :disabled='true'></el-input>
                             </p>
                             <p class="sourceDevice">来&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 源：
-                                <el-input type="text"  v-model='eventInfo.device.name' class="inputText" :maxlength="15" :readonly='true'></el-input>
+                                <el-input type="text"  v-model='eventInfo.device.name' class="inputText" :maxlength="15" :disabled='true'></el-input>
                             </p>
                             <p class="occurenceTime">发生时间：
-                                <el-input type="text"  v-model='eventInfo.occurenceTime' class="inputText" :maxlength="15" :readonly='true'></el-input>
+                                <el-input type="text"  v-model='eventInfo.occurenceTime' class="inputText" :maxlength="15" :disabled='true'></el-input>
                             </p>
                             <p class="alarmRule">关联规则：
                                 <!--<el-input type="text" v-model='eventInfo.alarmRuleName' class="inputText" :maxlength="15" :readonly='true'></el-input>-->
@@ -102,8 +102,7 @@
                                 </el-select>
                             </p>
                             <p class="description">处理备注：<br>
-                                <textarea name="" v-model='handleDescription' cols="30"
-                                          rows="5" placeholder="请输入描述信息" :disabled="readOnly"></textarea >
+                                <el-input type="textarea" :rows='5' :cols="30" placeholder="请输入描述信息" v-model="handleDescription" :disabled="readOnly" :maxlength="140"></el-input>
                             </p>
                             <div class="attachment">附&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;件：
                                 <div v-loading="isShowLoading" class="showFilelist" >
@@ -135,7 +134,7 @@
                         </div>
                     </ScrollContainer>
 
-                    <div slot="footer" class="dialog-footer cardFooter">
+                    <div slot="footer" v-if="!readOnly" class="dialog-footer cardFooter">
                         <el-button size="mini" class="hold" @click='saveDialog'>提交</el-button>
                         <el-button size="mini" @click = 'closeEventDialog'>取消</el-button>
                     </div>
@@ -484,6 +483,9 @@
         height: 100%;
         .el-dialog .el-dialog--center{
             width: 100%;
+        }
+        .el-input.is-disabled .el-input__inner,.el-textarea.is-disabled .el-textarea__inner{
+            background-color:transparent;
         }
         .el-dialog--center{
             padding: 0;

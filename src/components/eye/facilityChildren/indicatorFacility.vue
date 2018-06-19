@@ -109,9 +109,9 @@
                     })
                     this.regionId.push('10010')
                     this.lightList.forEach(item => {
-                        if (item.signboardBean.type ==="0") {
+                        if (item.signboardBean.type ===0) {
                             item.label = '标语'
-                        } else if (item.signboardBean.type ==="1") {
+                        } else if (item.signboardBean.type ===1) {
                             item.label = '路线'
                         }else {
                             item.label = '设施'
