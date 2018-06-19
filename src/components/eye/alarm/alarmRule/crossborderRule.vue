@@ -12,7 +12,9 @@
                         @batchEnabled="batchEnabled"
                         :choseId="choseInfoId"
                         :listsLength = "listLength"
-                        @searchAnything="searchAnything">
+                        @searchAnything="searchAnything"
+                        @previousPage="previousPage"
+                        @nextPage="nextPage">
                 </Header>
             </div>
             <div class="personList" v-loading="isShowloading">
@@ -98,7 +100,8 @@
                 selection:[],
                 isShowloading: false,
                 isBatchEdit:false,
-                listLength:''
+                listLength:'',
+                pageNum:1
 
             }
         },
@@ -415,7 +418,16 @@
                 await this.getAllAlarmTypes();
                 await this.getAlarmRule();
             },
-
+            previousPage (page) {
+                console.log(page, '这是传过来的pageNum')
+                this.pageNum = page
+                this.getAlarmRule ()
+            },
+            nextPage (page) {
+                console.log(page, '这个是下一页的pageNUM')
+                this.pageNum = page
+                this.getAlarmRule ()
+            },
             async getAlarmRule(){
                 this.isShowLoading = true
                 this.alarmTypeId = this.getAlarmTypeId("越界")
@@ -447,6 +459,11 @@
                         item.byTime = -(new Date(item.modifyTime)).getTime()
                     })
                     this.crossborderList = _.sortBy(this.crossborderList,'byTime')
+                    this.crossborderList = this.crossborderList.filter((item,index) => {
+                        if (index < (this.pageNum * 10 ) && index > ((this.pageNum -1) * 10 ) - 1 ) {
+                            return item
+                        }
+                    })
                 }).catch(err => {
                     console.log(err, '请求失败')
                     this.isShowLoading = false

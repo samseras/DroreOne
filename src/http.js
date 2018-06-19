@@ -34,7 +34,7 @@ axios.interceptors.response.use(
         if (error.response) {
             switch (error.response.status){
                 case 401:
-                    store.dispatch('logout').then(() => location.reload())
+                    store.dispatch('clearToken').then(() => location.reload())
             }
         }
         return Promise.reject(error.response.data)

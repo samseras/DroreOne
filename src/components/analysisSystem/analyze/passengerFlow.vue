@@ -32,7 +32,6 @@
 
 <script>
     import ScrollContainer from '@/components/ScrollContainer'
-    // import EchatsCard from '@/components/analysisSystem/analyze/echats'
     import api from '@/api'
     import errPage from "../../pages/err.vue"
     import {mapGetters} from 'vuex'
@@ -72,7 +71,6 @@
                 gaugeDom:null,
                 funnelDom:null,
                 isAllScreen:false,
-                // currenId:null,
                 isErr:true,
                 echatListErr:{
                     pullData:false,
@@ -84,24 +82,10 @@
         methods: {
             getDom(){
                  this.chartH = window.innerHeight-140;
-                    this.chartW = window.innerWidth-220;
-                // this.chartT = this.$refs.content.documentElement.clientTop;
-                // this.chartB = this.$refs.content.documentElement.clientBottom;
-                // this.chartL = this.$refs.content.documentElement.clientLeft;
-                // this.chartR = this.$refs.content.documentElement.clientRight;
-                // this.chartT = this.$refs.content.getBoundingClientRect().top;
-                // this.chartB = this.$refs.content.getBoundingClientRect().bottom;
-                // this.chartL = this.$refs.content.getBoundingClientRect().left;
-                // this.chartR = this.$refs.content.getBoundingClientRect().right;
-                // this.chartH = this.chartB - this.chartT;
-                // this.chartW = this.chartR - this.chartL;
-                // console.log(this.chartH,"this.chartH")
-                // console.log(this.chartW,"this.chartW")
+                 this.chartW = window.innerWidth-220;
              },
             fullscreen(){
                 this.fullHeight = window.screen.availHeight;
-                // this.fullHeight = window.innerHeight;
-                // this.fullWidth = window.innerWidth;
                 this.fullWidth =  window.screen.availWidth;
                 this.isBigScreen = !this.isBigScreen;
                 this.isSetOut = !this.isSetOut;
@@ -132,22 +116,13 @@
                     this.isPackUp = false;
                     let data = false;
                     let changeH,changeW;
-                    // this.chartT = this.$refs.content.getBoundingClientRect().top;
-                    // this.chartB = this.$refs.content.getBoundingClientRect().bottom;
-                    // this.chartL = this.$refs.content.getBoundingClientRect().left;
-                    // this.chartR = this.$refs.content.getBoundingClientRect().right;
-                    // this.chartH = this.chartB-this.chartT-42;
-                    // this.chartW = this.chartR - 220;
                      this.chartH = window.innerHeight-140;
                 this.chartW = window.innerWidth-220;
-                    console.log(this.chartT,"this.chartT")
-                    console.log(this.chartB,"this.chartB")
                     that.$emit('hideList',data);//fullscreen事件触发后，自动触发hideList事件 var docElm = document.documentElement;
                     for(let i=0;i<this.echatList.length;i++){
                         changeH = this.echatList[i].pos_height/100;
                         changeW = this.echatList[i].pos_width/100;
                             $($(".echatsContent")[i]).css({"height":this.chartH*changeH-42+"px"});
-                         // $($(".echatsContent")[i]).prev(".echatsTitle").css({"width":this.chartW*changeW-10+"px"});
                     };
                     this.moveChart();
                 }
@@ -186,8 +161,6 @@
                 for(let i=0;i<this.echatList.length;i++){
                     changeH = this.echatList[i].pos_height/100;
                     changeW = this.echatList[i].pos_width/100;
-                    // $($(".echatsContent")[i]).css({"width":this.chartW*changeW-10+"px"});
-                    // $($(".echatsContent")[i]).prev(".echatsTitle").css({"width":this.chartW*changeW-10+"px"});
                     this.moveChart();
                 };
 
@@ -204,37 +177,27 @@
                 for(let i=0;i<this.echatList.length;i++){
                     changeH = this.echatList[i].pos_height/100;
                     changeW = this.echatList[i].pos_width/100;
-                    // $($(".echatsContent")[i]).css({"width":this.fullWidth*changeW-14+"px"});
                     this.moveChart();
                 };
             },
             async getEchats () {
-                // console.log(this.$route.params,"{}}}}}}}}}}}}}}")
-                // let that = this;
-                // setTimeout(function(){
-                //     console.log(that.typeTemp,"@@@@@@@@")
-                // },1000)
                 this.isShowLoading = true
                 let id = this.$route.params.id;
 
                 await api.analyze.getStreamDataById(id).then(res=> {
-                    // console.log(res,'nimeide ')
                     this.isShowloading = false;
                     this.echatList = res.result;
-                    // console.log(this.echatList.length,"this.echatList.length")
                     if(this.echatList.length == 0){
                         this.isErr = false;
                         this.echatListErr.errInform = false;
                         this.echatListErr.pullData = true;
                         return
-                        console.log(echatListErr.pullData,"echatListErr.pullData")
                     }else{
                         this.isErr = true;
                         this.echatListErr.errInform = false;
                         this.echatListErr.pullData = false;
                     }
                     let scenarioId,chartId,chartDomH;
-                   console.log(this.echatList, '这是请求回来的图表');
                     for(let i=0;i<this.echatList.length;i++){
                          scenarioId = this.echatList[i].scenario_id;
                          chartId = this.echatList[i].id;
@@ -250,7 +213,6 @@
                 this.moveChart();
             },
             showBigEchat (index,item,id) {
-              //  this.isActive = index
                 this.isShowIcon = !this.isShowIcon;
                 let dom = $("#"+id).parent(".echatsForm");
                  dom.css({"left":"10%","top":"10%",width:"80%",height:"80%",position:"fixed",backgroundColor:"#fff",zIndex:"10"});
@@ -366,7 +328,6 @@
                 await api.analyze.getScenarioMapData(scenarioId).then(res=>{
                     this.echatData = res.result;
                     barResult = JSON.parse(res.result);
-                     // console.log(barResult, 'sdsdfhdsfhsdf')
                     var title = barResult.title;
                     //var subtitle = chartData.subtitle;
                     var legendData = barResult.legendData;
@@ -422,7 +383,6 @@
                 await api.analyze.getScenarioMapData(scenarioId).then(res=>{
                     this.echatData = res.result;
                     pieResult = JSON.parse(res.result);
-                    // console.log(pieResult,"这是返回的pie图数据");
                     var title = pieResult.title;
                     var subtitle = pieResult.subtitle;
                     var legendData = pieResult.legendData;
@@ -501,7 +461,6 @@
                 await api.analyze.getScenarioMapData(scenarioId).then(res=>{
                     this.echatData = res.result;
                     roseResult = JSON.parse(res.result);
-                    // console.log(roseResult,"这是返回的rose数据");
                     var title = roseResult.title;
                     var legendData = roseResult.legendData;
                     var seriesData = roseResult.seriesData;
@@ -573,12 +532,10 @@
                 await api.analyze.getScenarioMapData(scenarioId).then(res=>{
                     this.echatData = res.result;
                     funnelResult = JSON.parse(res.result);
-                    // console.log(funnelResult,"这是返回的funnelResult数据");
                     var title = funnelResult.title;
                     var nameColumn = funnelResult.nameColumn;
                     var legendData = funnelResult.legendData;
                     var seriesData = funnelResult.seriesData;
-                //    console.log(res,"这是返回的funnel数据");
                     $("#"+scenarioId).prev().find(".title").text(funnelResult.title);
                     this.funnelDom = this.$echarts.init(document.getElementById(scenarioId));
                     funnel0ption = {
@@ -659,7 +616,6 @@
                 await api.analyze.getScenarioMapData(scenarioId).then(res=>{
                     this.echatData = res.result;
                     lineResult = JSON.parse(res.result);
-                    // console.log(lineResult,"这是返回的line数据");
                     var title = lineResult.title;
                     var legendData = lineResult.legendData;
                     var seriesData = lineResult.seriesData;
@@ -708,7 +664,6 @@
                 await api.analyze.getScenarioMapData(scenarioId).then(res=>{
                     this.echatData = res.result;
                     scatterResult = JSON.parse(res.result);
-                    // console.log(scatterResult,"这是返scatter回的scatter数据");
                     var title = scatterResult.title;
                     var xColumn = scatterResult.xColumn;
                     var yColumn = scatterResult.yColumn;
@@ -751,7 +706,6 @@
                 await api.analyze.getScenarioMapData(scenarioId).then(res=>{
                     this.echatData = res.result;
                     ringResult = JSON.parse(res.result);
-                    console.log(ringResult,"这是返回的ring数据");
                     var legendData = ringResult.legendData;
                     var seriesData = ringResult.seriesData;
                     var nameColumn = ringResult.nameColumn;
@@ -817,7 +771,6 @@
                 await api.analyze.getScenarioMapData(scenarioId).then(res=>{
                     this.echatData = res.result;
                     relativebarResult = JSON.parse(res.result);
-                    console.log(relativebarResult,"这是返回的relativebar数据");
                     $("#"+scenarioId).prev().find(".title").text(relativebarResult.title);
                     this.relativebarDom = this.$echarts.init(document.getElementById(scenarioId));
                     relativebar0ption = {
@@ -905,7 +858,6 @@
                 await api.analyze.getScenarioMapData(scenarioId).then(res=>{
                     this.echatData = res.result;
                     gaugeResult = JSON.parse(res.result);
-                    console.log(gaugeResult,"这是返回的gauge数据");
                     // var title = gaugeResult.title;
                     var title = gaugeResult.seriesData[0].name;
                     var nameColumn = gaugeResult.nameColumn;
@@ -955,7 +907,6 @@
                 await api.analyze.getScenarioMapData(scenarioId).then(res=>{
                     this.echatData = res.result;
                     candlestickResult = JSON.parse(res.result);
-                    console.log(candlestickResult,"这是返回的candlestick数据");
                     var title = candlestickResult.title;
                     var legendData = candlestickResult.legendData;
                     var seriesData = candlestickResult.seriesData;
@@ -1004,7 +955,6 @@
                 await api.analyze.getScenarioMapData(scenarioId).then(res=>{
                     this.echatData = res.result;
                     radarResult = JSON.parse(res.result);
-                    console.log(radarResult,"这是返回的radar数据");
                     var legendData = radarResult.legendData;
                     var seriesName = radarResult.seriesName;
                     var seriesData = radarResult.seriesData;
@@ -1060,7 +1010,6 @@
                 })
             },
             getRefreshTime () {
-                console.log('禁止刷新')
                 if (this.getRefresh == 0) {
                     return
                 }
