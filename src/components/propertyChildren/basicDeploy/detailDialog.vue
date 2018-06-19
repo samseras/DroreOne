@@ -483,11 +483,7 @@
                         <el-input type="text"v-model="tree.plant.genera" :disabled="isDisabled"></el-input>
                     </p>
                     <p class="name">
-<<<<<<< HEAD
                         <s>高&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;度(m)：</s>
-=======
-                        <span>高&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;度：</span>
->>>>>>> a8512a0529f57533b80acce71177695d2171cd9a
                         <el-input type="number"v-model="tree.plant.height"  min = "0" placeholder="请输入树木高度（数字）" :disabled="isDisabled"></el-input>
                     </p>
                     <p class="name wrapstyle selectstyle">
@@ -532,20 +528,12 @@
                         <el-input type="text"v-model="build.building.name" :disabled="isDisabled" :maxlength="15"></el-input>
                     </p>
                     <p class="name">
-<<<<<<< HEAD
                         <s>层&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;高(m)：</s>
                         <el-input type="number" min="0" v-model="build.building.layers"  placeholder="请输入建筑层高（数字）" :disabled="isDisabled"></el-input>
                     </p>
                     <p class="name">
                         <s>高&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;度(m)：</s>
-=======
-                        <span>层&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;高：</span>
                         <el-input type="number" min="0" v-model="build.building.layers"  placeholder="请输入建筑层高（数字）" :disabled="isDisabled"></el-input>
-                    </p>
-                    <p class="name">
-                        <span>高&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;度：</span>
->>>>>>> a8512a0529f57533b80acce71177695d2171cd9a
-                        <el-input type="number"v-model="build.building.height"  min="0" placeholder="请输入建筑高度（数字）" :disabled="isDisabled"></el-input>
                     </p>
                     <p class="name">
                         <span>年&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;代：</span>
