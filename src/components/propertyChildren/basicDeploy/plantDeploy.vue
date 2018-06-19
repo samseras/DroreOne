@@ -17,7 +17,7 @@
                         @selectedAll = 'selectedAll'
                         @fixedInfo = 'fixedInfo'
                         @searchAnything="searchAnything"
-                        @getAllPlant="getAllTree">
+                        @getAllPlant="getAllPlant">
                 </Header>
             </div>
             <div class="personList" v-loading="isShowLoading">
@@ -157,7 +157,7 @@
             },
             closeDialog () {
                 this.visible = false
-                this.getAllTree()
+                this.getAllPlant()
             },
             searchAnything (info) {
                 console.log(info, '这是要过滤的')
@@ -174,7 +174,7 @@
                         }
                     })
                 } else {
-                    this.getAllTree()
+                    this.getAllPlant()
                 }
             },
             handleSelectionChange(val) {
@@ -213,11 +213,12 @@
                             this.getAllPlant()
                             this.$message.success('删除成功')
                             this.choseInfoId = []
+                            this.getAllPlant()
                         }).catch(err => {
                             console.log('删除失败')
                             this.$message.error('删除失败，请稍后重试')
                             this.choseInfoId = []
-                            this.getAllTree()
+                            this.getAllPlant()
                         })
                     }).catch(() => {
                         this.$message.info('取消删除')
@@ -328,7 +329,7 @@
                     console.log(res, '修改成功')
                     this.$message.success('修改成功')
                     this.choseInfoId = []
-                    this.getAllTree()
+                    this.getAllPlant()
                 }).catch(err => {
                     console.log(err, '修改失败')
                     this.$message.error('修改失败，请稍后重试')
@@ -364,7 +365,7 @@
                     this.closeDialog()
                     console.log(res, '添加成功')
                     this.$message.success('创建成功')
-                    this.getAllTree()
+                    this.getAllPlant()
                 }).catch(err => {
                     this.$message.error('创建失败，请稍后重试')
                 })
@@ -394,14 +395,14 @@
             previousPage (page) {
                 console.log(page, '这是传过来的pageNum')
                 this.pageNum = page
-                this.getAllTree ()
+                this.getAllPlant ()
             },
             nextPage (page) {
                 console.log(page, '这个是下一页的pageNUM')
                 this.pageNum = page
-                this.getAllTree ()
+                this.getAllPlant ()
             },
-            async getAllTree () {
+            async getAllPlant () {
                 this.isShowLoading = true
                 await api.plant.getAllPlant().then(res => {
                     console.log(res, '这是请求回来的所有')
@@ -447,7 +448,7 @@
             //     this.toiletList[i].status = true
             // }
             // this.choseList = this.toiletList
-            this.getAllTree()
+            this.getAllPlant()
         },
         components: {
             ScrollContainer,
