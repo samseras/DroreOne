@@ -259,7 +259,7 @@
             async initScreen(){
                 let id = this.$route.params.id;
                 await api.analyze.getDashboradList().then(res=>{
-                    console.log(res.result,"dashboardList")
+                    // console.log(res.result,"dashboardList")
                     for(let i=0;i<res.result.length;i++){
                         if(res.result[i].dashboard_id == id){
                             this.dashboradName = res.result[i].name;
@@ -278,7 +278,7 @@
             afreshType(){
                 for(let i=0;i<this.attr.length;i++){
                     if(this.attr[i].index == this.idx){
-                        console.log(this.idx,"~~~~~~~~~")
+                        // console.log(this.idx,"~~~~~~~~~")
                         this.isShowHead = true;
                         this.backgroundImg = this.attr[i].backgroundImg;
                         this.allEchartColor = this.attr[i].echartColor.contentColor;
@@ -328,9 +328,9 @@
                             this.bgCorol = this.attr[i].bgCorol;
                             this.borderLine = this.attr[i].borderLine;
                         }
-                        console.log(this.headLeft,"this.backgroundImg")
-                        console.log(this.headRight,"this.allEchartColor")
-                        console.log(this.rightB,"this.rightB")
+                        // console.log(this.headLeft,"this.backgroundImg")
+                        // console.log(this.headRight,"this.allEchartColor")
+                        // console.log(this.rightB,"this.rightB")
                     }
                 }
             },
@@ -340,7 +340,7 @@
                 await api.analyze.getStreamDataById(id).then(res=> {
                     this.echartsContent = res.result;
                     this.isShowLoading = true;
-                      console.log(res.result,"结果")
+                      // console.log(res.result,"结果")
                     // console.log(this.allEchartColor,"this.allEchartColor")
                     let scenarioId,chartId,chartDomH,echartsColor;
                     for(let i=0;i<this.echartsContent.length;i++){
@@ -1137,7 +1137,7 @@
             this.getCurrentTime();
              this.companyName = localStorage.getItem("title");
              this.getDom();
-             console.log(this.companyName,'this.companyName')
+             // console.log(this.companyName,'this.companyName')
              // console.log(this.$route,"OOOOOOOOOOOO")
              // console.log(this.$route.params.n,"PPPPPP")
              // console.log(this.$route.params.id,"@@@@@@@@@@@")
