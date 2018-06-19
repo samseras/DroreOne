@@ -254,7 +254,7 @@
                             </el-option-group>
                         </el-select>
                     </p>
-                    <p class="description">描&nbsp;&nbsp;&nbsp;&nbsp;述：<br>
+                    <p class="description">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：<br>
                         <el-input type="textarea" :rows='5' :cols="30" placeholder="请输入描述信息" v-model="speedingInfo.description" :disabled="isReadonly" :maxlength="140"></el-input>
                     </p>
                 </div>
@@ -573,9 +573,9 @@
                     </p>
                 </div>
 
-                <div v-if="!isReadonly" class=""slot="footer" class="dialog-footer cardFooter">
-                    <el-button size="mini" class="hold" @click='saveDialog'>保存</el-button>
-                    <el-button size="mini" @click = 'closeDialog'>取消</el-button>
+                <div class=""slot="footer" class="dialog-footer cardFooter">
+                    <el-button size="mini" class="hold" @click='saveDialog' :disabled="isReadonly">保存</el-button>
+                    <el-button size="mini" @click = 'closeDialog' :disabled="isReadonly">取消</el-button>
                 </div>
             </div>
         </el-dialog>
