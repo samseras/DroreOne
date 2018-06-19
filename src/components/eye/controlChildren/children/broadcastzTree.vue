@@ -104,7 +104,6 @@
                     })
                     arr = this.lightList
                 }
-
                 this.$store.commit('SHOW_TREE', arr)
             },
             handleCheckChange(data,checked) {

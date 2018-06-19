@@ -2047,7 +2047,7 @@
             },
             getTreeState(){
                 console.log(this.getTreeState,'213123')
-                if(this.getTreeState.length>0) {
+                if(this.getTreeState.length>1) {
                     // console.log(this.getTreeState,'ioioioiooioioiooi')
                     //    这边是全选
                     if (this.getTreeState[0].checked) {//显示
