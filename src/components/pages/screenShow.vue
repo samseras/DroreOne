@@ -198,7 +198,6 @@
                          index: 2,
                          backgroundImg: "../../../static/img/screenBg2.png",
                          headBgColor:"#fff",
-                         // headImg:"../../../static/img/screenHead.svg",
                          headTop:20,
                          headLineH:65,
                          homeMarginT:0,
@@ -247,19 +246,10 @@
             getDom(){
                 this.chartH = window.innerHeight-120;
                 this.chartW = window.innerWidth;
-                // this.chartT = this.$refs.content.getBoundingClientRect().top;
-                // this.chartB = this.$refs.content.getBoundingClientRect().bottom;
-                // this.chartL = this.$refs.content.getBoundingClientRect().left;
-                // this.chartR = this.$refs.content.getBoundingClientRect().right;
-                // this.chartH = this.chartB - this.chartT;
-                // this.chartW = this.chartR - this.chartL;
-                // console.log(this.chartH,"this.chartH")
-                // console.log(this.chartW,"this.chartW")
             },
             async initScreen(){
                 let id = this.$route.params.id;
                 await api.analyze.getDashboradList().then(res=>{
-                    // console.log(res.result,"dashboardList")
                     for(let i=0;i<res.result.length;i++){
                         if(res.result[i].dashboard_id == id){
                             this.dashboradName = res.result[i].name;
@@ -278,7 +268,6 @@
             afreshType(){
                 for(let i=0;i<this.attr.length;i++){
                     if(this.attr[i].index == this.idx){
-                        // console.log(this.idx,"~~~~~~~~~")
                         this.isShowHead = true;
                         this.backgroundImg = this.attr[i].backgroundImg;
                         this.allEchartColor = this.attr[i].echartColor.contentColor;
@@ -328,9 +317,6 @@
                             this.bgCorol = this.attr[i].bgCorol;
                             this.borderLine = this.attr[i].borderLine;
                         }
-                        // console.log(this.headLeft,"this.backgroundImg")
-                        // console.log(this.headRight,"this.allEchartColor")
-                        // console.log(this.rightB,"this.rightB")
                     }
                 }
             },
@@ -340,8 +326,6 @@
                 await api.analyze.getStreamDataById(id).then(res=> {
                     this.echartsContent = res.result;
                     this.isShowLoading = true;
-                      // console.log(res.result,"结果")
-                    // console.log(this.allEchartColor,"this.allEchartColor")
                     let scenarioId,chartId,chartDomH,echartsColor;
                     for(let i=0;i<this.echartsContent.length;i++){
                         scenarioId = this.echartsContent[i].scenario_id;
@@ -349,9 +333,6 @@
                         chartDomH = this.echartsContent[i].pos_height/100;
                          echartsColor = this.allEchartColor[i];
                         this.getchartKind(scenarioId,chartDomH,echartsColor);
-                        // console.log(scenarioId,"scenarioId")
-                        // console.log(chartDomH,"chartDomH")
-
                     };
                 }).catch(err => {
                     console.log(err)
@@ -362,9 +343,7 @@
                     let chartDomHpx;
                     this.kind = res.result;
                     let kindName = res.result;
-                    // console.log(echartsColor,"echartsColor")
                         chartDomHpx = this.chartH*chartDomH-34+"px";
-                    // console.log(chartDomHpx,"chartDomHpx")
                     $("#"+scenarioId).css("height",chartDomHpx);
                     switch(kindName) {
                         case "component_sink_bar":
@@ -410,18 +389,11 @@
                 await api.analyze.getScenarioMapData(scenarioId).then(res=>{
                     this.echatData = res.result;
                     barResult = JSON.parse(res.result);
-                    // console.log(barResult, 'sdsdfhdsfhsdf')
                     var title = barResult.title;
                     //var subtitle = chartData.subtitle;
                     var legendData = barResult.legendData;
                     var seriesData = barResult.seriesData;
                     var valueNames = barResult.valueNames;
-                    // if(barResult.subtitle==''){
-                    //     var colors = ['#C1232B', '#B5C334', '#FCCE10', '#ff6600'];
-                    // }else {
-                    //     var color = barResult.subtitle;
-                    //     var colors = color.split(",");
-                    // }
                     $("#"+scenarioId).prev().find(".title").text(barResult.title);
                     this.barDom = this.$echarts.init(document.getElementById(scenarioId));
                     bar0ption={
@@ -478,7 +450,6 @@
                 await api.analyze.getScenarioMapData(scenarioId).then(res=>{
                     this.echatData = res.result;
                     pieResult = JSON.parse(res.result);
-                    // console.log(pieResult,"这是返回的pie数据");
                     var title = pieResult.title;
                     var subtitle = pieResult.subtitle;
                     var legendData = pieResult.legendData;
@@ -499,15 +470,6 @@
                             trigger: 'item',
                             formatter: "{a} <br/>{b} : {c} ({d}%)"
                         },
-                        // legend: {
-                        //     icon: 'circle',
-                        //     orient: 'vertical',
-                        //     right: '7%',
-                        //     top:'10%',
-                        //     // bottom:'30px',
-                        //     data:legendData,
-                        //     textStyle:{color:this.legentColor}
-                        // },
                         series : [
                             {
                                 name: title,
@@ -544,7 +506,6 @@
                 await api.analyze.getScenarioMapData(scenarioId).then(res=>{
                     this.echatData = res.result;
                     roseResult = JSON.parse(res.result);
-                    //   console.log(res,"这是返回的rose数据");
                     var title = roseResult.title;
                     var legendData = roseResult.legendData;
                     var seriesData = roseResult.seriesData;
@@ -569,7 +530,6 @@
                             textStyle:{
                                 color:this.legentColor
                             }
-                            // orient: 'vertical'
                         },
                         calculable : true,
                         series : [
@@ -617,7 +577,6 @@
                     var nameColumn = funnelResult.nameColumn;
                     var legendData = funnelResult.legendData;
                     var seriesData = funnelResult.seriesData;
-                    //    console.log(res,"这是返回的funnel数据");
                     $("#"+scenarioId).prev().find(".title").text(funnelResult.title);
                     this.funnelDom = this.$echarts.init(document.getElementById(scenarioId));
                     funnel0ption = {
@@ -641,10 +600,8 @@
                                 type:'funnel',
                                 left: '10%',
                                 top: 30,
-                                //x2: 80,
                                 bottom: 30,
                                 width: '80%',
-                                // height: {totalHeight} - y - y2,
                                 min: 0,
                                 max: 200,
                                 minSize: '0%',
@@ -693,7 +650,6 @@
                 await api.analyze.getScenarioMapData(scenarioId).then(res=>{
                     this.echatData = res.result;
                     lineResult = JSON.parse(res.result);
-                    // console.log(lineResult,"这是返回的line数据");
                     var title = lineResult.title;
                     var legendData = lineResult.legendData;
                     var seriesData = lineResult.seriesData;
@@ -761,7 +717,6 @@
                 let scatter0ption,scatterResult;
                 await api.analyze.getScenarioMapData(scenarioId).then(res=>{
                     this.echatData = res.result;
-                    //    console.log(res,"这是返scatter回的scatter数据");
                     scatterResult = JSON.parse(res.result);
                     var title = scatterResult.title;
                     var xColumn = scatterResult.xColumn;
@@ -796,7 +751,6 @@
                 let ring0ption,ringResult;
                 await api.analyze.getScenarioMapData(scenarioId).then(res=>{
                     this.echatData = res.result;
-                    //   console.log(res,"这是返回的ring数据");
                     ringResult = JSON.parse(res.result);
                     var legendData = ringResult.legendData;
                     var seriesData = ringResult.seriesData;
@@ -857,7 +811,6 @@
                 let relativebar0ption,relativebarResult;
                 await api.analyze.getScenarioMapData(scenarioId).then(res=>{
                     this.echatData = res.result;
-                    console.log(res,"这是返回的relativebar数据");
                     relativebarResult = JSON.parse(res.result);
                     $("#"+scenarioId).prev().find(".title").text(relativebarResult.title);
                     this.relativebarDom = this.$echarts.init(document.getElementById(scenarioId));
@@ -936,7 +889,6 @@
                 let gauge0ption,gaugeResult;
                 await api.analyze.getScenarioMapData(scenarioId).then(res=>{
                     this.echatData = res.result;
-                    //  console.log(res,"这是返回的gauge数据");
                     gaugeResult = JSON.parse(res.result);
                     // var title = gaugeResult.title;
                     var title = gaugeResult.seriesData[0].name;
@@ -978,7 +930,6 @@
                 let candlestick0ption,candlestickResult;
                 await api.analyze.getScenarioMapData(scenarioId).then(res=>{
                     this.echatData = res.result;
-                    //    console.log(res,"这是返回的candlestick数据");
                     candlestickResult = JSON.parse(res.result);
                     var title = candlestickResult.title;
                     var legendData = candlestickResult.legendData;
@@ -1019,7 +970,6 @@
                 let radar0ption,radarResult;
                 await api.analyze.getScenarioMapData(scenarioId).then(res=>{
                     this.echatData = res.result;
-                    // console.log(res,"这是返回的radar数据");
                     radarResult = JSON.parse(res.result);
                     var legendData = radarResult.legendData;
                     var seriesName = radarResult.seriesName;
@@ -1111,7 +1061,6 @@
         },
         filters: {
             dayFiler(item) {
-                // console.log(item, '9090')
                 return moment(item).format('YYYY年MM月DD日')
             },
             weekFiler(item) {
@@ -1137,10 +1086,6 @@
             this.getCurrentTime();
              this.companyName = localStorage.getItem("title");
              this.getDom();
-             // console.log(this.companyName,'this.companyName')
-             // console.log(this.$route,"OOOOOOOOOOOO")
-             // console.log(this.$route.params.n,"PPPPPP")
-             // console.log(this.$route.params.id,"@@@@@@@@@@@")
         },
         computed: {
             ...mapGetters(['getRefresh','getCompanyName'])
