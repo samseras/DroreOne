@@ -47,8 +47,11 @@
                         </el-table-column>
                         <el-table-column
                             width="180"
-                            prop="building.buildYear"
+                            prop=""
                             label="年代">
+                            <template slot-scope="scope">
+                                <span>{{scope.row.building.buildYear | yearFilter}}</span>
+                            </template>
                         </el-table-column>
                         <el-table-column
                             width="100"
@@ -91,7 +94,7 @@
                         </div>
                         <div class="specificInfo">
                             <p class="name">所属区域：<span>{{item.regionName}}</span></p>
-                            <p class="sex">年&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;代：<span>{{item.building.buildYear}}</span></p>
+                            <p class="sex">年&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;代：<span>{{item.building.buildYear | yearFilter}}</span></p>
                             <p class="sex">层&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;高：<span>{{item.building.layers}}层</span></p>
                             <p class="phoneNum">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置：<span>{{item.location}}</span></p>
                         </div>
