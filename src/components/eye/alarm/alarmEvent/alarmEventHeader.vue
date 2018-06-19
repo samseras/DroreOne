@@ -1,14 +1,14 @@
 <template>
     <div class="alarmEventHeader">
         <div class="searchInfo">
-            <input type="text" placeholder="请输入搜索内容">
+            <input type="text" placeholder="请输入搜索内容" v-model="searchContent" @keyup="startSearch">
             <i class="el-icon-search"></i>
         </div>
         <div class="funcBtn">
 
             <el-checkbox v-model="isSelected" @change="selectedAll">全选</el-checkbox>
             <el-button size="mini"plain @click="deleteCard"><i class="el-icon-delete"></i>删除</el-button>
-            <el-button size="mini"plain @click="batchEdit"><i class="el-icon-edit"></i>批量修改</el-button>
+            <el-button size="mini"plain @click="batchEdit"><i class="el-icon-edit"></i>修改</el-button>
             <el-button size="mini" plain @click="batchDownload"><i class="el-icon-download"></i>导出</el-button>
 
         </div>
@@ -18,11 +18,10 @@
             </el-checkbox-group>
         </div>
 
-
         <div class="page">
-            <span>当前第1页/共8页</span>
-            <span class="upPage"></span>
-            <span class="downPage"></span>
+            <span>当前第{{currentPageNum}}页/共{{pageAllNum}}页</span>
+            <span class="upPage"@click="previousPage"><</span>
+            <span class="downPage" @click="nextPage">></span>
         </div>
     </div>
 </template>
@@ -40,10 +39,17 @@
                 isShowIndicatorType: true,
                 isShowTrashType: true,
                 statusInfo:[],
-                filterList:[]
+                filterList:[],
+                searchContent: '',
+                currentPageNum:1,
+                pageAllNum:1
             }
         },
         methods: {
+            startSearch(){
+                console.log(this.searchContent)
+                this.$emit('searchAnything',this.searchContent)
+            },
             selected () {
                 this.isSelected = !this.isSelected
                 this.$emit('selectedAll', this.isSelected)
@@ -122,11 +128,32 @@
                 }).catch(err => {
                     console.log(err, '查询告警事情状态失败')
                 })
+            },
+            previousPage() {//上一页
+                this.currentPageNum--
+                if (this.currentPageNum < 1) {
+                    this.currentPageNum = 1
+                    return
+                }
+                this.$emit('previousPage', this.currentPageNum)
+            },
+            nextPage() {//下一页
+                this.currentPageNum++
+                if (this.currentPageNum > this.pageAllNum) {
+                    this.currentPageNum = this.pageAllNum
+                    return
+                }
+                this.$emit('nextPage', this.currentPageNum)
             }
         },
         watch: {
             '$route' () {
                 this.showPersonJob()
+            },
+            listLength() {
+                if (this.listLength > 0) {
+                    this.pageAllNum = Math.ceil(this.listLength / 10)
+                }
             }
         },
         created () {
@@ -140,7 +167,7 @@
     .alarmEventHeader{
         .el-checkbox__label{
             padding-left: rem(5);
-            font-size: rem(14);
+            font-size: rem(12);
         }
         .el-checkbox__inner{
             margin-top: rem(2);

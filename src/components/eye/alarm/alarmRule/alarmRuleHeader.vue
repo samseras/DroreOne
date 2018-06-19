@@ -1,7 +1,7 @@
 <template>
     <div class="ruleHeader">
         <div class="searchInfo">
-            <input type="text" placeholder="请输入搜索内容">
+            <input type="text" placeholder="请输入搜索内容" v-model="searchContent" @keyup="startSearch">
             <i class="el-icon-search"></i>
         </div>
         <div class="funcBtn">
@@ -9,15 +9,15 @@
             <el-checkbox v-model="isSelected" @change="selectedAll">全选</el-checkbox>
             <el-button size="mini"plain @click="deleteCard"><i class="el-icon-delete"></i>删除</el-button>
             <el-button size="mini" plain @click="batchDownload"><i class="el-icon-download"></i>导出</el-button>
-            <el-button v-if="!route.includes('firefighting') && !route.includes('crossborder')" size="mini"plain @click="batchEdit"><i class="el-icon-edit"></i>批量修改</el-button>
+            <el-button v-if="!route.includes('firefighting') && !route.includes('crossborder')" size="mini"plain @click="batchEdit"><i class="el-icon-edit"></i>修改</el-button>
             <el-button size="mini"plain @click="batchEnabled(true)"><i class="el-icon-circle-check"></i>批量启用</el-button>
             <el-button size="mini"plain @click="batchEnabled(false)"><i class="el-icon-circle-close"></i>批量停用</el-button>
         </div>
 
         <div class="page">
-            <span>当前第1页/共8页</span>
-            <span class="upPage"><</span>
-            <span class="downPage">></span>
+            <span>当前第{{currentPageNum}}页/共{{pageAllNum}}页</span>
+            <span class="upPage"@click="previousPage"><</span>
+            <span class="downPage" @click="nextPage">></span>
         </div>
     </div>
 </template>
@@ -33,10 +33,17 @@
                 isShowJobType: true,
                 isShowIndicatorType: true,
                 isShowTrashType: true,
-                alarmType:[]
+                alarmType:[],
+                searchContent:'',
+                currentPageNum:1,
+                pageAllNum:1
             }
         },
         methods: {
+            startSearch(){
+                console.log(this.searchContent)
+                this.$emit('searchAnything',this.searchContent)
+            },
             selected () {
                 this.isSelected = !this.isSelected
                 this.$emit('selectedAll', this.isSelected)
@@ -130,6 +137,22 @@
                 }
 
             },
+            previousPage() {//上一页
+                this.currentPageNum--
+                if (this.currentPageNum < 1) {
+                    this.currentPageNum = 1
+                    return
+                }
+                this.$emit('previousPage', this.currentPageNum)
+            },
+            nextPage() {//下一页
+                this.currentPageNum++
+                if (this.currentPageNum > this.pageAllNum) {
+                    this.currentPageNum = this.pageAllNum
+                    return
+                }
+                this.$emit('nextPage', this.currentPageNum)
+            },
             getAlarmTypeId(typeName){
                 let typeInfo =  this.alarmType.filter(item=>item.name == typeName)
                 return typeInfo[0].id;
@@ -144,6 +167,11 @@
         watch: {
             '$route' () {
                 this.showPersonJob()
+            },
+            listsLength() {
+                if (this.listsLength > 0) {
+                    this.pageAllNum = Math.ceil(this.listsLength / 10)
+                }
             }
         },
         created () {
@@ -157,7 +185,7 @@
     .ruleHeader{
         .el-checkbox__label{
             padding-left: rem(5);
-            font-size: rem(14);
+            font-size: rem(12);
         }
         .el-checkbox__inner{
             margin-top: rem(2);

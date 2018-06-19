@@ -11,7 +11,10 @@
                         @addNewInfo="addNewInfo"
                         @batchEnabled="batchEnabled"
                         :choseId="choseInfoId"
-                        :listsLength = "listLength">
+                        :listsLength = "listLength"
+                        @searchAnything="searchAnything"
+                        @previousPage="previousPage"
+                        @nextPage="nextPage">
                 </Header>
             </div>
             <div class="personList" v-loading="isShowloading">
@@ -21,8 +24,7 @@
                         :data="waterlevelList"
                         tooltip-effect="dark"
                         style="width: 100%"
-                        @selection-change="handleSelectionChange"
-                        :default-sort = "{prop: 'relatedManagerNames', order: 'descending'}">
+                        @selection-change="handleSelectionChange">
                         <el-table-column
                             width="50">
                             <template slot-scope="scope">
@@ -103,11 +105,39 @@
                 selection:[],
                 isShowloading: false,
                 isBatchEdit:false,
-                listLength:''
+                listLength:'',
+                pageNum:1
 
             }
         },
         methods: {
+            searchAnything (info) {
+                console.log(info, '这是要过滤的')
+                if (info.trim() !== '') {
+                    this.waterlevelList = this.waterlevelList.filter(item => {
+                        if (item.name.includes(info)) {
+                            return item
+                        }
+                        if(item.relatedManagerNames.includes(info)){
+                            return item
+                        }
+                        if(item.relatedDeviceNames.includes(info)){
+                            return item
+                        }
+                        if(item.alarmSeverity.name.includes(info)){
+                            return item
+                        }
+                        if(item.lowerThreshold.toString().includes(info)){
+                            return item
+                        }
+                        if(item.upperThreshold,toString().includes(info)){
+                            return item
+                        }
+                    })
+                } else {
+                    this.getAlarmRule()
+                }
+            },
             addNewInfo () {
                 this.showDetail({},false,'添加水位告警规则',)
             },
@@ -394,7 +424,16 @@
                 await this.getAllAlarmTypes();
                 await this.getAlarmRule();
             },
-
+            previousPage (page) {
+                console.log(page, '这是传过来的pageNum')
+                this.pageNum = page
+                this.getAlarmRule ()
+            },
+            nextPage (page) {
+                console.log(page, '这个是下一页的pageNUM')
+                this.pageNum = page
+                this.getAlarmRule ()
+            },
             async getAlarmRule(){
                 this.isShowLoading = true
                 this.alarmTypeId = this.getAlarmTypeId("水位")
@@ -420,6 +459,14 @@
                         }else{
                             item.relatedManagerNames = ''
                             item.relatedManagerIds = []
+                        }
+                        item.modifyTime=item.modifyTime.replace("-","/")
+                        item.byTime = -(new Date(item.modifyTime)).getTime()
+                    })
+                    this.waterlevelList = _.sortBy(this.waterlevelList,'byTime')
+                    this.waterlevelList = this.waterlevelList.filter((item,index) => {
+                        if (index < (this.pageNum * 10 ) && index > ((this.pageNum -1) * 10 ) - 1 ) {
+                            return item
                         }
                     })
                 }).catch(err => {

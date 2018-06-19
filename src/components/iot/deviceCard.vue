@@ -124,6 +124,20 @@
                     <el-tab-pane label="事件告警" name="eventPoliceTab">
                         <div class="data-flow eventsAlerm">
                             <div class="small-header clearfix">
+                                <div class="block">
+                                    <el-date-picker
+                                        @change="timeSelect"
+                                        value-format="yyyy-MM-dd"
+                                        v-model="valueTime"
+                                        type="daterange"
+                                        align="right"
+                                        unlink-panels
+                                        range-separator="至"
+                                        start-placeholder="开始日期"
+                                        end-placeholder="结束日期"
+                                        :picker-options="pickerOptions">
+                                    </el-date-picker>
+                                </div>
                                 <div class="page">
                                     <el-pagination
                                         @size-change="handleSizeChangeAlerm"
@@ -202,7 +216,13 @@
                         </div>
                     </el-tab-pane>
                     <el-tab-pane label="设备认证"  name="qualificationTab">
-                        设备认证
+                        <p class="edit-qualification" v-for="item in qualificationEditInfo">
+                            <span>{{item.label}}</span>
+
+                            <el-input v-model="item.name"></el-input>
+                            <!--<el-input v-model="item.prop":disabled="!item.isDisabled"></el-input>-->
+                        </p>
+                        <el-button @click="saveQualification">保存</el-button>
 
                     </el-tab-pane>
 
@@ -210,12 +230,13 @@
 
 
                  <el-dialog
+                     class="inner-dialog"
                      width="40%"
                      title="采集信息详情"
                      :visible.sync="innerVisible"
                      append-to-body>
                      <ul class="pick-info-detail">
-                         <li v-for="(item) in pickSignalInfo">
+                         <li v-for="(item) in pickSignalInfo" >
                              {{item.name}}：{{item.key}}
                          </li>
                      </ul>
@@ -233,7 +254,6 @@
             @saveEvent="saveEdit"
             :detailEditInfo="detailEditInfo"
             :editData="editData">
-
         </IotDialog>
     </div>
 </template>
@@ -248,7 +268,7 @@
         data() {
             return {
                 alermTableData:[],
-                /***设备监控状态数据***/
+                /***详情标签页数据***/
                 pickSignalInfo:[],
                 horizontalData:[],
                 zongData:[],
@@ -267,7 +287,35 @@
                 allMonitorNum:100,
                 allAlermNum:100,
                 allPickNum:100,
-                /***设备监控状态数据***/
+                pickerOptions: {
+                    shortcuts: [{
+                        text: '最近一周',
+                        onClick(picker) {
+                            const end = new Date();
+                            const start = new Date();
+                            start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
+                            picker.$emit('pick', [start, end]);
+                        }
+                    }, {
+                        text: '最近一个月',
+                        onClick(picker) {
+                            const end = new Date();
+                            const start = new Date();
+                            start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
+                            picker.$emit('pick', [start, end]);
+                        }
+                    }, {
+                        text: '最近三个月',
+                        onClick(picker) {
+                            const end = new Date();
+                            const start = new Date();
+                            start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
+                            picker.$emit('pick', [start, end]);
+                        }
+                    }]
+                },
+                valueTime: '',
+                /***详情标签页数据***/
                 activeTabNames:'attributeTab',
                 editData:{},  //列表
                 showDialog:false,
@@ -288,11 +336,13 @@
                 category:'',
                 detailEditInfo:[], //卡片
                 detailObj:[],  //暂存
+                qualificationInfo:[],  //设备认证标签的可编辑信息
+                qualificationEditInfo:[]  //可编辑的认证信息
+
 
             }
         },
         created () {
-
             this.route = this.$route.path;
             this.selectDatas=[];
             console.log(this.selectDatas);
@@ -305,20 +355,20 @@
             '$route'(){
                 this.route = this.$route.path
             },
-            searchInfo(x,y){
+            /*searchInfo(x,y){
                 if (x !== '') {
-                    /*this.arrDatas = this.checkList.filter(item => {
-                        if (item.name.includes(x)) {
+                    this.selectDatas = this.selectDatas.filter(item => {
+                        if (item.status.includes(x)) {
                             return item
                         }
-                    })*/
+                    })
                 } else {
-                    //this.arrDatas=?;
+                    alert('333');
+                    this.selectDatas=;
                 }
-            },
+            },*/
             curPage(news,olds){
                 this.curPageMy=news;
-
                 //前端分页
                 /* this.selectDatas=this.arrDatas.slice((this.curPageMy-1)*this.pageSizesMy,this.curPageMy*this.pageSizesMy);
                  //字符串转为对象
@@ -328,7 +378,6 @@
                          (this.selectDatas)[i].attributes=JSON.parse(this.selectDatas[i].attributes);
                      }
                  }*/
-
             },
             allData(news,olds){
                 this.selectDatas=news;
@@ -340,14 +389,25 @@
                 for(let i=0;i<len;i++){
                     (this.selectDatas)[i].attributes=JSON.parse(this.selectDatas[i].attributes);
                 }*/
-
             }
-
         },
         components: {
             IotDialog
         },
         methods:{
+            timeSelect(){  //事件告警时间范围选择
+                console.log(this.valueTime,'哈哈哈哈哈哈哈');
+                //查询设备报警信息
+                api.iotHome.DeviceAlermInfo(this.alermCurPage,this.curId,this.valueTime[0],this.valueTime[1]).then(res=>{
+                    console.log(res,'分页传回的报警事件信息');
+                    this.alermCols=res.pageData.cols;
+                    this.alermTableData=res.pageData.tableDatas;
+                    console.log(this.alermTableData,'我的测试');
+                    this.allAlermNum=res.pageCondition.allcount;
+                }).catch(err=>{
+                    console.log(err,'失败')
+                })
+            },
             handleTablePick(row){
                 console.log(row,'采集');
                 let eventid=row.id;
@@ -356,7 +416,6 @@
                     console.log(res,'传回的采集详情信息');
                     let tempres=JSON.parse(res);
                     console.log(tempres.data);
-
                     tempres.data.forEach((item)=>{
                         Object.keys(item).forEach((key,i)=>{
                             let obj={};
@@ -370,7 +429,6 @@
                     //this.pickSignalInfo=tempres.data;
                     //console.log( this.pickSignalInfo,' this.pickSignalInfo');
                     this.innerVisible = true;
-
                 }).catch(err=>{
                     console.log(err,'失败')
                 })
@@ -399,11 +457,12 @@
             },
             handleCurrentChangeAlerm(val){
                 this.alermCurPage=val;
-                //查询设备监控状态信息
+                //查询设备报警信息
                 api.iotHome.DeviceAlermInfo(this.alermCurPage,this.curId).then(res=>{
                     console.log(res,'分页传回的报警事件信息');
                     this.alermCols=res.pageData.cols;
                     this.alermTableData=res.pageData.tableDatas;
+                    console.log(this.alermTableData,'我的测试');
                     this.allAlermNum=res.pageCondition.allcount;
                 }).catch(err=>{
                     console.log(err,'失败')
@@ -425,8 +484,8 @@
                         this.horizontalData.push(item.modifyTime);
                         this.zongData.push(item.currentStatus);
                     })
-                    console.log(this.horizontalData);
-                    console.log(this.zongData);
+                    //console.log(this.horizontalData);
+                    //console.log(this.zongData);
                     let zongStr=this.zongData.join(',');
                     let a=zongStr.replace(/WORKING/g, "1");
                     let b=a.replace(/CONFIG/g, "0");
@@ -455,7 +514,7 @@
                     resizeCharts()
                     let option1 = {
                         legend: {
-                            data:['1表示WORKING  0表示CONFIG']
+                            data:['1表示WORKING  0表示OFFLINE/CONFIG']
                         },
                         grid: {
                             //left: '10%',
@@ -479,10 +538,18 @@
                             splitNumber:1
                         },
                         series: [{
-                            name:'1表示WORKING  0表示CONFIG',
+                            name:'1表示WORKING  0表示OFFLINE/CONFIG',
                             //data: [0, 1, 0, 1, 1, 0, 1],
                             data: this.zongData,
-                            type: 'line'
+                            type: 'line',
+                            itemStyle : {
+                                normal : {
+                                    color:'#e4353c',
+                                    lineStyle:{
+                                        color:'#98FF80'
+                                    }
+                                }
+                            },
                         }]
                     };
                     let maiChart = this.$echarts.init(document.getElementById('monitorWrap'));
@@ -492,11 +559,14 @@
 
                 })
             },
+
             handleTabClicks(tab, event){
                 console.log('333333:',tab, event);
 
                 if(tab.name==="logTab"){
                     this.loadMonitorEchart();
+
+                }else if(tab.name==='eventPoliceTab'){
 
                 }
             },
@@ -561,7 +631,7 @@
                 console.log(99999999999999999999999999999999999999)
                 this.outerVisible = true;
                  this.detailObj=[];
-
+                this.qualificationEditInfo=[];
 
                  console.log(index,o,'这是第几项的详情信息');
                  this.signalObj=o;
@@ -579,7 +649,6 @@
                                   obj.label= item.label;
                                   obj.key=item.name;
                                   this.detailObj.push(obj);
-
                               }
                           })
                       })
@@ -607,13 +676,12 @@
                           this.horizontalData.push(item.modifyTime);
                           this.zongData.push(item.currentStatus);
                       })
-                      console.log(this.horizontalData);
-                      console.log(this.zongData);
+                      //console.log(this.horizontalData);
+                      //console.log(this.zongData);
                       let zongStr=this.zongData.join(',');
                       let a=zongStr.replace(/WORKING/g, "1");
                       let b=a.replace(/CONFIG/g, "0");
                       let c=b.replace(/OFFLINE/g, "0");
-
                       let d=c.split(',');
                       console.log(d);
                       this.zongData=d.map(Number);
@@ -640,6 +708,30 @@
                 }).catch(err=>{
                     console.log(err,'失败')
                 })
+                //设备认证标签页
+                api.iotHome.getDeviceEditInfo(this.curId).then(res=>{
+                    console.log(res,'这是设备认证页面传回来的可编辑信息');
+
+                    res.fieldInfos.forEach(item => {
+                        Object.keys(res.properties).forEach( (key, i) => {
+                            //console.log(key, '这个是拿过来的对象的键')
+                            if (item.name === key) {
+                                // this.deviceObj[item.prop] = i
+                                // this.deviceObj.label = item.label
+                                let obj = {}
+                                obj.name = res.properties[key]
+                                obj.label = item.label
+                                obj.key = item.name
+                                this.qualificationEditInfo.push(obj)
+                            }
+                        });
+                    })
+                    console.log(this.qualificationEditInfo,'55555555');
+                }).catch(err=>{
+                    console.log(err,'失败')
+                })
+
+
                 //数据采集列表详细信息查询
                 /*api.iotHome.DataPickInfo(this.curId).then(res=>{
                     console.log(res,'传回的数据采集信息');
@@ -653,6 +745,18 @@
 
 
             },
+            saveQualification(){
+                let finalObj={}
+                this.qualificationEditInfo.forEach(item=>{
+                    finalObj[item.key]=item.name
+                })
+                finalObj.id=this.curId;
+                api.iotHome.editDeviceCardInfo(finalObj).then(res=>{
+                    console.log(res,'这是编辑认证信息')
+                }).catch(err=>{
+                    console.log(err,'失败')
+                })
+            },
             showInnerMore(){
 
 
@@ -663,22 +767,15 @@
     }
 </script>
 <style lang="scss" type="text/scss">
-    .device-card{
-        .more-detail{
-            .pick-info-detail{
-                li{
-                    border:1px solid red;
-                    padding:rem(8) rem(8)
-                }
+    .inner-dialog{   //直接添加到body的dialog
+        .pick-info-detail{
+            li{
+                padding:rem(8) rem(8)
             }
         }
+    }
+    .device-card{
         .myrow{
-            .pick-info-detail{
-                li{
-                    padding-top:rem(8);
-                    padding-bottom:rem(8);
-                }
-            }
             .mycol{
                 width:32.3333%;
                 padding-top:rem(16);
@@ -727,6 +824,13 @@
                         width:100%;
                         height:rem(368)
                     }
+                    .alertWrap{
+                        width:100%;
+                        height:rem(368)
+                    }
+                }
+                .edit-qualification{
+                    padding:rem(8) rem(8)
                 }
                 .el-dialog__body{
                     padding:rem(0) rem(20);
@@ -735,6 +839,10 @@
                 .small-header{
                     border-bottom:1px solid #eee;
                     padding-bottom:rem(8);
+                    .block{
+                        float:left;
+                        margin-top:rem(-5);
+                    }
                     .page{
                         margin-right:rem(16);
                         float: right;

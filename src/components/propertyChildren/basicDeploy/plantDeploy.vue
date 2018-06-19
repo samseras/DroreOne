@@ -63,6 +63,9 @@
                             width="180"
                             prop="plant.plantYear"
                             label="年代">
+                             <template slot-scope="scope">
+                                 <span>{{scope.row.plant.plantYear | yearFilter}}</span>
+                             </template>
                         </el-table-column>
                         <el-table-column
                             width="150"
@@ -91,7 +94,7 @@
                         </div>
                         <div class="specificInfo">
                             <p class="name">所属区域：<span>{{item.regionName}}</span></p>
-                            <p class="sex">年&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;代：<span>{{item.plant.plantYear}}</span></p>
+                            <p class="sex">年&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;代：<span>{{item.plant.plantYear | yearFilter}}</span></p>
                             <p class="phoneNum">位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置：<span>{{item.location}}</span></p>
                             <p class="phoneNum">高&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;度：<span>{{item.plant.height}}米</span></p>
                         </div>

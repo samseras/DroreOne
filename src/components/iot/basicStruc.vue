@@ -3,7 +3,7 @@
         <div class="pro_menu">
             <div class="pro_title">
                 <!--<img src="../../../static/img/logo.svg" alt="">-->
-                <span>卓锐IOT平台11</span>
+                <span>卓锐IOT平台</span>
             </div>
             <div class="search-head">
                 <el-form :inline="true"  class="demo-form-inline">
