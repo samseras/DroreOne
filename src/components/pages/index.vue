@@ -43,7 +43,7 @@
                             </li>
                             <li class="two">
                                 <div class="bigData">
-                                    <div class="change"><a target="_blank" href="http://192.168.0.150:9527/analysis/public/main.html">大数据分析>><img src="../../../static/img/bagData.png"/></a></div>
+                                    <div class="change"><a target="_blank" href="http://121.199.5.95:9527/analysis/public/main.html">大数据分析>><img src="../../../static/img/bagData.png"/></a></div>
                                     <div class="dataCenter change" id="dataCenter"><router-link to="/property">数据中心>><img src="../../../static/img/dataCenter.png"/></router-link></div>
                                 </div>
                                 <div class="eye">
