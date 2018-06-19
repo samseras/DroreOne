@@ -95,8 +95,8 @@
                 // this.chartR = this.$refs.content.getBoundingClientRect().right;
                 // this.chartH = this.chartB - this.chartT;
                 // this.chartW = this.chartR - this.chartL;
-                console.log(this.chartH,"this.chartH")
-                console.log(this.chartW,"this.chartW")
+                // console.log(this.chartH,"this.chartH")
+                // console.log(this.chartW,"this.chartW")
              },
             fullscreen(){
                 this.fullHeight = window.screen.availHeight;
@@ -209,7 +209,7 @@
                 };
             },
             async getEchats () {
-                console.log(this.$route.params,"{}}}}}}}}}}}}}}")
+                // console.log(this.$route.params,"{}}}}}}}}}}}}}}")
                 // let that = this;
                 // setTimeout(function(){
                 //     console.log(that.typeTemp,"@@@@@@@@")
@@ -221,7 +221,7 @@
                     // console.log(res,'nimeide ')
                     this.isShowloading = false;
                     this.echatList = res.result;
-                    console.log(this.echatList.length,"this.echatList.length")
+                    // console.log(this.echatList.length,"this.echatList.length")
                     if(this.echatList.length == 0){
                         this.isErr = false;
                         this.echatListErr.errInform = false;
@@ -422,7 +422,7 @@
                 await api.analyze.getScenarioMapData(scenarioId).then(res=>{
                     this.echatData = res.result;
                     pieResult = JSON.parse(res.result);
-                   // console.log(pieResult,"这是返回的pie数据");
+                    // console.log(pieResult,"这是返回的pie图数据");
                     var title = pieResult.title;
                     var subtitle = pieResult.subtitle;
                     var legendData = pieResult.legendData;
@@ -501,7 +501,7 @@
                 await api.analyze.getScenarioMapData(scenarioId).then(res=>{
                     this.echatData = res.result;
                     roseResult = JSON.parse(res.result);
-                 //   console.log(res,"这是返回的rose数据");
+                    // console.log(roseResult,"这是返回的rose数据");
                     var title = roseResult.title;
                     var legendData = roseResult.legendData;
                     var seriesData = roseResult.seriesData;
@@ -573,6 +573,7 @@
                 await api.analyze.getScenarioMapData(scenarioId).then(res=>{
                     this.echatData = res.result;
                     funnelResult = JSON.parse(res.result);
+                    // console.log(funnelResult,"这是返回的funnelResult数据");
                     var title = funnelResult.title;
                     var nameColumn = funnelResult.nameColumn;
                     var legendData = funnelResult.legendData;
@@ -706,8 +707,8 @@
                 let scatter0ption,scatterResult;
                 await api.analyze.getScenarioMapData(scenarioId).then(res=>{
                     this.echatData = res.result;
-                //    console.log(res,"这是返scatter回的scatter数据");
                     scatterResult = JSON.parse(res.result);
+                    // console.log(scatterResult,"这是返scatter回的scatter数据");
                     var title = scatterResult.title;
                     var xColumn = scatterResult.xColumn;
                     var yColumn = scatterResult.yColumn;
@@ -749,8 +750,8 @@
                 let ring0ption,ringResult;
                 await api.analyze.getScenarioMapData(scenarioId).then(res=>{
                     this.echatData = res.result;
-                 //   console.log(res,"这是返回的ring数据");
                     ringResult = JSON.parse(res.result);
+                    console.log(ringResult,"这是返回的ring数据");
                     var legendData = ringResult.legendData;
                     var seriesData = ringResult.seriesData;
                     var nameColumn = ringResult.nameColumn;
@@ -815,8 +816,8 @@
                 let relativebar0ption,relativebarResult;
                 await api.analyze.getScenarioMapData(scenarioId).then(res=>{
                     this.echatData = res.result;
-                   console.log(res,"这是返回的relativebar数据");
                     relativebarResult = JSON.parse(res.result);
+                    console.log(relativebarResult,"这是返回的relativebar数据");
                     $("#"+scenarioId).prev().find(".title").text(relativebarResult.title);
                     this.relativebarDom = this.$echarts.init(document.getElementById(scenarioId));
                     relativebar0ption = {
@@ -903,8 +904,8 @@
                 let gauge0ption,gaugeResult;
                 await api.analyze.getScenarioMapData(scenarioId).then(res=>{
                     this.echatData = res.result;
-                  //  console.log(res,"这是返回的gauge数据");
                     gaugeResult = JSON.parse(res.result);
+                    console.log(gaugeResult,"这是返回的gauge数据");
                     // var title = gaugeResult.title;
                     var title = gaugeResult.seriesData[0].name;
                     var nameColumn = gaugeResult.nameColumn;
@@ -953,8 +954,8 @@
                 let candlestick0ption,candlestickResult;
                 await api.analyze.getScenarioMapData(scenarioId).then(res=>{
                     this.echatData = res.result;
-                //    console.log(res,"这是返回的candlestick数据");
                     candlestickResult = JSON.parse(res.result);
+                    console.log(candlestickResult,"这是返回的candlestick数据");
                     var title = candlestickResult.title;
                     var legendData = candlestickResult.legendData;
                     var seriesData = candlestickResult.seriesData;
@@ -1002,8 +1003,8 @@
                 let radar0ption,radarResult;
                 await api.analyze.getScenarioMapData(scenarioId).then(res=>{
                     this.echatData = res.result;
-                   // console.log(res,"这是返回的radar数据");
                     radarResult = JSON.parse(res.result);
+                    console.log(radarResult,"这是返回的radar数据");
                     var legendData = radarResult.legendData;
                     var seriesName = radarResult.seriesName;
                     var seriesData = radarResult.seriesData;
@@ -1082,7 +1083,6 @@
                    this.getDom();
                   this.getEchats()
                   window.SETTIMER = setInterval(this.getRefreshTime,this.getRefresh)
-                  console.log(this.radarDom, 'opopopopopopopopopop')
               }
           },
 
@@ -1102,7 +1102,6 @@
             window.onresize = function(){
                 that.showList();
             };
-            console.log(this.getDashboradName,"@@@@@@@@")
         },
         components: {
             ScrollContainer,

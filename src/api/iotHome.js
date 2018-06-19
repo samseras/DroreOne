@@ -117,27 +117,52 @@ const iotHome = {
             }
         })
     },
-    DeviceAlermInfo(val,id){
-        console.log('看报警事件id',id,val);
-        return axios ({
-            method:'POST',
-            url:'/iot/events/query',
-            data:{
-                "pageCondition" : {
-                    "pageno" : val,
-                    "pagesize" : 20
-                },
-                "ioTEventCondition" : {
-                    "types" : [ "STATUS_CHANGED" ],
-                    "deviceCondition":{
-                        "deviceIds":[
-                            id
-                        ]
-                    }
-                },
+    DeviceAlermInfo(val,id,start,end){
+        console.log('看报警事件:',id,val,start,end);
+        if(!start){
+            return axios ({
+                method:'POST',
+                url:'/iot/events/query',
+                data:{
+                    "pageCondition" : {
+                        "pageno" : val,
+                        "pagesize" : 20
+                    },
+                    "ioTEventCondition" : {
+                        "types" : [ "STATUS_CHANGED" ],
+                        "deviceCondition":{
+                            "deviceIds":[
+                                id
+                            ]
+                        }
+                    },
+                }
+            })
+        }else{
+            return axios ({
+                method:'POST',
+                url:'/iot/events/query',
+                data:{
+                    "pageCondition" : {
+                        "pageno" : val,
+                        "pagesize" : 20
+                    },
+                    "ioTEventCondition" : {
+                        "types" : [ "STATUS_CHANGED" ],
+                        "deviceCondition":{
+                            "deviceIds":[
+                                id
+                            ]
+                        },
+                         "start":start+'00:00:00',
+                         "end":end+'00:00:00'
 
-            }
-        })
+                    },
+
+                }
+            })
+        }
+
     },
     DevicePickInfo(val,id){
         return axios ({

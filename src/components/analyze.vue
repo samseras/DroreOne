@@ -205,21 +205,26 @@
             async getDashboradList(){
                 await api.analyze.getDashboradList().then(res => {
                     this.sidebarList = res.result;
-                    console.log(this.sidebarList,"!!!!!!@@@@@@@")
+                    // console.log(this.sidebarList,"!!!!!!@@@@@@@")
                     this.type = this.sidebarList[0].template_type;
-                    console.log(this.type,"_____")
+                    // console.log(this.type,"_____")
                     this.currenId = this.sidebarList[0].dashboard_id;
                     this.dashboradName = this.sidebarList[0].name;
-                    if(this.sidebarList.length == 0){
-                        this.confirmErr = false;
-                        this.echatListErr.errInform = false;
-                        this.echatListErr.pullData = true;
-                        return
-                    }else{
-                        this.confirmErr = true;
-                        this.echatListErr.errInform = false;
-                        this.echatListErr.pullData = false;
-                    }
+                    let that = this;
+                    setTimeout(function(){
+                        console.log("!!!!!!!!~~~~~~~~")
+                        if(that.sidebarList.length == 0){
+                            that.confirmErr = false;
+                            that.echatListErr.errInform = false;
+                            that.echatListErr.pullData = true;
+                            return
+                        }else{
+                            that.confirmErr = true;
+                            that.echatListErr.errInform = false;
+                            that.echatListErr.pullData = false;
+                        }
+                    },100)
+
                     //  this.sidebarList = this.sidebarList.map(item => {
                     //     item.refreshData = 20000
                     //     return item

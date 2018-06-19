@@ -2,13 +2,13 @@
     <div class="device-list">
         <header>
             <div class="title">
-                设备列表11
+                设备列表
             </div>
             <div class="sub-title clearfix">
                 <div class="search">
-                    <el-form :inline="true" :model="formInline" class="demo-form-inline">
+                    <el-form :inline="true"  class="demo-form-inline">
                         <el-form-item label="">
-                            <el-input v-model="formInline.user" placeholder="请输入..." ></el-input>
+                            <el-input v-model="formInline" placeholder="请输入..." ></el-input>
                         </el-form-item>
                         <el-form-item>
                             <el-button type="primary" @click="onSubmit"><i class="el-icon-search"></i></el-button>
@@ -16,7 +16,6 @@
                     </el-form>
                 </div>
                 <div class="page">
-
                     <el-pagination
                         @size-change="handleSizeChange"
                         @current-change="handleCurrentChange"
@@ -30,7 +29,6 @@
                 </div>
             </div>
         </header>
-
         <div v-if="" class="card-list">
             <DeviceCard :curPage="curPage" :searchInfo="searchInfo" :allData="allData"></DeviceCard>
         </div>
@@ -48,15 +46,13 @@
             return{
                 allNum:0,
                 allData:[],
+                tempData:[],//缓存原始数据
                 route:1,
                 currentPage:1,
                 curPage:1,
                 pageSize:20,
                 searchInfo:'',
-                formInline: {
-                    user: '',
-                    region: ''
-                }
+                formInline:''
             }
         },
         watch:{
@@ -74,6 +70,7 @@
                     console.log(res,'这是传回来的设备列表信息');
                     this.allNum=res.pageCondition.allcount;
                     this.allData=res.pageData.tableDatas;
+                    this.tempData=res.pageData.tableDatas;
 
                 }).catch(err=>{
                     console.log(err,'失败')
@@ -85,8 +82,21 @@
                 this.getDeviceListInfo(this.route);
             },
             onSubmit() {
-                console.log('submit!');
-                this.searchInfo=this.formInline.user;
+                console.log(this.formInline);
+
+
+                    if (this.formInline !== '') {
+                        this.allData = this.allData.filter(item => {
+                            if (item.status.includes(this.formInline)) {
+                                return item
+                            }
+                        })
+                    } else {
+
+                        this.allData=this.tempData;
+                    }
+
+
             },
             handleSizeChange(val){
                 this.pageSize=val;
