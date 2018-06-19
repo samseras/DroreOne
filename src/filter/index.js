@@ -1,4 +1,5 @@
 import vue from 'vue'
+import moment from 'moment'
 
 function changeFilter(item) {
     if(item == 0){
@@ -36,10 +37,17 @@ function changeFilter(item) {
         return week.join()
     }
 
+    function yearFilter(item) {
+        if (item) {
+            return moment(item).format('YYYY')
+        }
+    }
+
 
 const filters ={
     changeFilter,
-    weekFilter
+    weekFilter,
+    yearFilter
 }
 
 for (let key in filters) {

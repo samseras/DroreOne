@@ -410,7 +410,7 @@
             choseType (type) {
                 console.log(type, '这是传过来的')
                 type = type.map(item => {
-                    if (item === '开启') {
+                    if (item === '开始') {
                         return true
                     } else{
                         return false

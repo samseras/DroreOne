@@ -15,9 +15,9 @@
         </div>
 
         <div class="page">
-            <span>当前第1页/共8页</span>
-            <span class="upPage"><</span>
-            <span class="downPage">></span>
+            <span>当前第{{currentPageNum}}页/共{{pageAllNum}}页</span>
+            <span class="upPage"@click="previousPage"><</span>
+            <span class="downPage" @click="nextPage">></span>
         </div>
     </div>
 </template>
@@ -34,7 +34,9 @@
                 isShowIndicatorType: true,
                 isShowTrashType: true,
                 alarmType:[],
-                searchContent:''
+                searchContent:'',
+                currentPageNum:1,
+                pageAllNum:1
             }
         },
         methods: {
@@ -135,6 +137,22 @@
                 }
 
             },
+            previousPage() {//上一页
+                this.currentPageNum--
+                if (this.currentPageNum < 1) {
+                    this.currentPageNum = 1
+                    return
+                }
+                this.$emit('previousPage', this.currentPageNum)
+            },
+            nextPage() {//下一页
+                this.currentPageNum++
+                if (this.currentPageNum > this.pageAllNum) {
+                    this.currentPageNum = this.pageAllNum
+                    return
+                }
+                this.$emit('nextPage', this.currentPageNum)
+            },
             getAlarmTypeId(typeName){
                 let typeInfo =  this.alarmType.filter(item=>item.name == typeName)
                 return typeInfo[0].id;
@@ -149,6 +167,11 @@
         watch: {
             '$route' () {
                 this.showPersonJob()
+            },
+            listsLength() {
+                if (this.listsLength > 0) {
+                    this.pageAllNum = Math.ceil(this.listsLength / 10)
+                }
             }
         },
         created () {

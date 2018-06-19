@@ -12,8 +12,8 @@
             <el-button size="mini"plain @click="startPlan"><img src="./../../../../../static/img/start.svg" alt="">启用</el-button>
             <el-button size="mini"plain @click="endPlan"><img src="./../../../../../static/img/stop.svg" alt="">停用</el-button>
             <el-checkbox-group v-model="filterList" @change="choseType">
-                <el-checkbox  label="开启"></el-checkbox>
-                <el-checkbox  label="关闭"></el-checkbox>
+                <el-checkbox  label="开始"></el-checkbox>
+                <el-checkbox  label="停止"></el-checkbox>
             </el-checkbox-group>
         </div>
 

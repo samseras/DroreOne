@@ -12,7 +12,9 @@
                         @batchEnabled="batchEnabled"
                         :choseId="choseInfoId"
                         :listsLength = "listLength"
-                        @searchAnything="searchAnything">
+                        @searchAnything="searchAnything"
+                        @previousPage="previousPage"
+                        @nextPage="nextPage">
                 </Header>
             </div>
             <div class="personList" v-loading="isShowloading">
@@ -62,7 +64,7 @@
                                 <span @click="showDetail(scope.row,true,'查看消防告警规则')">查看</span> |
                                 <span v-if="scope.row.isEnabled" @click="enabledClick(scope.row,false)">停用</span>
                                 <span v-else @click="enabledClick(scope.row,true)">启用</span>
-                                <span @click="deletInfo(scope.row.id)">删除</span>
+                                | <span @click="deletInfo(scope.row.id)">删除</span>
                             </template>
                         </el-table-column>
                     </el-table>
@@ -102,7 +104,8 @@
                 selection:[],
                 isShowloading: false,
                 isBatchEdit:false,
-                listLength:''
+                listLength:'',
+                pageNum:1
 
             }
         },
@@ -415,7 +418,16 @@
                 await this.getAllAlarmTypes();
                 await this.getAlarmRule();
             },
-
+            previousPage (page) {
+                console.log(page, '这是传过来的pageNum')
+                this.pageNum = page
+                this.getAlarmRule ()
+            },
+            nextPage (page) {
+                console.log(page, '这个是下一页的pageNUM')
+                this.pageNum = page
+                this.getAlarmRule ()
+            },
             async getAlarmRule(){
                 this.isShowLoading = true
                 this.alarmTypeId = this.getAlarmTypeId("消防")
@@ -447,6 +459,11 @@
                         item.byTime = -(new Date(item.modifyTime)).getTime()
                     })
                     this.firefightingList = _.sortBy(this.firefightingList,'byTime')
+                    this.firefightingList = this.firefightingList.filter((item,index) => {
+                        if (index < (this.pageNum * 10 ) && index > ((this.pageNum -1) * 10 ) - 1 ) {
+                            return item
+                        }
+                    })
                 }).catch(err => {
                     console.log(err, '请求失败')
                     this.isShowLoading = false

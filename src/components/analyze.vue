@@ -7,9 +7,6 @@
                         <el-col :xs="19" :sm="19" :md="21" :lg="21" :xl="21" >
                             <img src="../../static/img/eye.png"/>分析
                         </el-col>
-                        <!--<el-col :xs="9" :sm="9" :md="13" :lg="13" :xl="13" class="control">-->
-                        <!--<p>内容</p>-->
-                        <!--</el-col>-->
                         <el-col :xs="5" :sm="5" :md="3" :lg="3" :xl="3" class="control">
                             <div class="func">
                                 <el-menu  class="el-menu-demo" mode="horizontal" router>
@@ -26,10 +23,6 @@
                                 </el-menu>
                             </div>
                         </el-col>
-                        <!--<el-col :xs="2" :sm="2" :md="2" :lg="2" :xl="2" class="control">-->
-                        <!--&lt;!&ndash;<button class="publish" ><router-link :to="'/screen/'+currenId">发布</router-link></button>&ndash;&gt;-->
-                        <!--&lt;!&ndash;<button class="publish" @click="requestFullScreen"><router-link :to="{ path:'/screen/'+currenId, params: {'n': type} }" >发布</router-link></button>&ndash;&gt;-->
-                        <!--</el-col>-->
                     </el-row>
                 </el-header>
             </el-container>
@@ -47,9 +40,7 @@
                     <div class="conTentHead">
                         <p>{{dashboradName}}</p>
                         <div>
-                            <!--<button class="publish" @click="requestFullScreen"><router-link :to="{ path:'/screen/'+currenId, params: {'n': type} }" >发布</router-link></button>-->
                             <button class="publish" @click="showSubheading">发布</button>
-                            <!--<button class="publish">导出</button>-->
                             <button class="publish" @click="sharedLinks">分享</button>
                         </div>
                         <div class="subheading" v-if="showTile">
@@ -128,17 +119,16 @@
       methods:{
             ...mapMutations(['REFRESH_DATA_TYPE','COMPANY_DATA_NAME']),
             ...mapActions(['logout','getUserDetailInfo']),
-            isErr(data,data1){
-                console.log(data,"OOOOdata")
-                console.log(this.confirmErr,"this.confirmErrthis.confirmErr")
-            },
+            // isErr(data,data1){
+            //     console.log(data,"OOOOdata")
+            //     console.log(this.confirmErr,"this.confirmErrthis.confirmErr")
+            // },
             cancelRequest(){
                 this.showTile = false;
             },
             hideLists(data){
                 this.hideList = !data.list;
                 this.isshowHead = !data.head;
-                // this.$emit('hideHead',hideData);
             },
             showSubheading(){
                 this.showTile = true;
@@ -146,7 +136,6 @@
             sharedLinks(){
                 this.showLink = true;
                 this.screenHrefVal = window.location.href.replace("analyze","screen");
-                // console.log(window.location.href,"!!!!!!!!!!!!!!")
             },
             copy(){
                 let clipboard = new Clipboard('.screenLink');
@@ -193,9 +182,8 @@
                 }
             },
             isShowAnalyze (id,index,refresh,type,name) {
-                // console.log(this.$router,"this.$router.path")
                 this.type = type;
-                console.log(this.type,"this.type")
+
                 this.currenId = id;
                 this.dashboradName = name;
                 this.$router.push({path: `/analyze/${id}`});
@@ -205,21 +193,22 @@
             async getDashboradList(){
                 await api.analyze.getDashboradList().then(res => {
                     this.sidebarList = res.result;
-                    console.log(this.sidebarList,"!!!!!!@@@@@@@")
                     this.type = this.sidebarList[0].template_type;
-                    console.log(this.type,"_____")
                     this.currenId = this.sidebarList[0].dashboard_id;
                     this.dashboradName = this.sidebarList[0].name;
-                    if(this.sidebarList.length == 0){
-                        this.confirmErr = false;
-                        this.echatListErr.errInform = false;
-                        this.echatListErr.pullData = true;
-                        return
-                    }else{
-                        this.confirmErr = true;
-                        this.echatListErr.errInform = false;
-                        this.echatListErr.pullData = false;
-                    }
+                    let that = this;
+                    setTimeout(function(){
+                        if(that.sidebarList.length == 0){
+                            that.confirmErr = false;
+                            that.echatListErr.errInform = false;
+                            that.echatListErr.pullData = true;
+                            return
+                        }else{
+                            that.confirmErr = true;
+                            that.echatListErr.errInform = false;
+                            that.echatListErr.pullData = false;
+                        }
+                    },100)
                     //  this.sidebarList = this.sidebarList.map(item => {
                     //     item.refreshData = 20000
                     //     return item

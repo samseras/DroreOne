@@ -18,12 +18,21 @@
             </el-checkbox-group>
         </div>
 
-
         <div class="page">
-            <span>当前第1页/共8页</span>
-            <span class="upPage"></span>
-            <span class="downPage"></span>
+            <span>当前第{{currentPageNum}}页/共{{pageAllNum}}页</span>
+            <span class="upPage"@click="previousPage"><</span>
+            <span class="downPage" @click="nextPage">></span>
         </div>
+
+        <!--<el-pagination-->
+            <!--@size-change="handleSizeChange"-->
+            <!--@current-change="handleCurrentChange"-->
+            <!--:current-page="currentPageNum"-->
+            <!--:page-sizes="[10, 20]"-->
+            <!--:page-size="10"-->
+            <!--layout="total, sizes, prev, pager, next, jumper"-->
+            <!--:total="listLength">-->
+        <!--</el-pagination>-->
     </div>
 </template>
 
@@ -41,7 +50,9 @@
                 isShowTrashType: true,
                 statusInfo:[],
                 filterList:[],
-                searchContent: ''
+                searchContent: '',
+                currentPageNum:1,
+                pageAllNum:1
             }
         },
         methods: {
@@ -127,11 +138,32 @@
                 }).catch(err => {
                     console.log(err, '查询告警事情状态失败')
                 })
+            },
+            previousPage() {//上一页
+                this.currentPageNum--
+                if (this.currentPageNum < 1) {
+                    this.currentPageNum = 1
+                    return
+                }
+                this.$emit('previousPage', this.currentPageNum)
+            },
+            nextPage() {//下一页
+                this.currentPageNum++
+                if (this.currentPageNum > this.pageAllNum) {
+                    this.currentPageNum = this.pageAllNum
+                    return
+                }
+                this.$emit('nextPage', this.currentPageNum)
             }
         },
         watch: {
             '$route' () {
                 this.showPersonJob()
+            },
+            listLength() {
+                if (this.listLength > 0) {
+                    this.pageAllNum = Math.ceil(this.listLength / 10)
+                }
             }
         },
         created () {
