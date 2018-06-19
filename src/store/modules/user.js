@@ -47,6 +47,10 @@ const user = {
             localStorage.removeItem('token')
             return await api.login.userLogout(data)
         },
+        clearToken ({commit}) {
+            commit(types.SET_USER, '')
+            localStorage.removeItem('token')
+        },
         async getUserRoles ({commit},userName) {
             try {
                 let data = await api.login.getUserRoles(userName)
