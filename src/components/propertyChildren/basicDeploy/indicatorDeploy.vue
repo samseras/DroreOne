@@ -23,7 +23,7 @@
             <div class="personList" v-loading="isShowLoading">
                 <ScrollContainer>
                     <el-table
-                        v-if="!isShowIndicatorCard"
+                        v-if="!isShowIndicatorCard && !show"
                         ref="multipleTable"
                         :data="indicatorList"
                         tooltip-effect="dark"
@@ -82,6 +82,9 @@
                             <p class="sex">位置信息：<span>{{item.location}}</span></p>
                         </div>
                     </div>
+                    <div class="tip" v-if="show">
+                        <span>暂无数据</span>
+                    </div>
                 </ScrollContainer>
                 <DetailDialog v-if="visible"
                               :visible="visible"
@@ -120,6 +123,7 @@
                 choseList: [],
                 isDisabled: true,
                 title: '',
+                show:false,
                 isShowLoading: false,
                 currentNum: 50,
                 listLength: '',
@@ -146,7 +150,7 @@
                 console.log(info, '这是要过滤的')
                 if (info.trim() !== '') {
                     this.indicatorList = this.checkList.filter(item => {
-                        if ((item.regionName)&&(item.regionName.includes(info))) {
+                        if (item.regionName && item.regionName.includes(info)) {
                             return item
                         }
                     })
@@ -389,6 +393,11 @@
                 this.isShowLoading = true
                 await api.indicator.getAllIndicator().then(res => {
                     console.log(res, '这是数据')
+                    if(res.length === 0){
+                        this.show = true
+                    }else{
+                        this.show =false
+                    }
                     this.listLength = res.length
                     this.isShowLoading = false
                     this.indicatorList = res
@@ -558,6 +567,13 @@
                             white-space: nowrap;
                         }
                     }
+                }
+                .tip{
+                    width:100%;
+                    height:rem(40);
+                    text-align: center;
+                    color: #909399;
+                    line-height: rem(40);
                 }
                 .handle{
                     span{

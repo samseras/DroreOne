@@ -19,7 +19,7 @@
                                             <template slot="title">
                                                 <img :src="'../../../static/img/iot/'+subItem.index+'.svg'" alt="">{{ subItem.title }}
                                             </template>
-                                            <el-menu-item v-for="(sonSubItem,r) in subItem.sonSubs"  :index="sonSubItem.index">
+                                            <el-menu-item v-for="(sonSubItem,r) in subItem.sonSubs"  :index="'/basicStruc'+sonSubItem.index">
                                                 <img :src="'../../../static/img/iot/'+sonSubItem.mark+'.svg'" alt="">{{sonSubItem.title}}
                                             </el-menu-item>
                                         </el-submenu>
@@ -60,7 +60,7 @@
                 items: [
                     {
                         icon: '../../../static/img/iot/iot-index.svg',
-                        index: '/iotHome',
+                        index: '/basicStruc/iotHome',
                         title: '首页'
                     },
                     {
@@ -77,13 +77,13 @@
                             {
                                 isShow:true,
                                 icon:'../../../static/img/camera.svg',
-                                index: '/iotLog/systemLog',
+                                index: '/basicStruc/iotLog/systemLog',
                                 title: '系统日志'
                             },
                             {
                                 isShow:true,
                                 icon:'../../../static/img/broadcast.svg',
-                                index: '/iotLog/nowStatus',
+                                index: '/basicStruc/iotLog/nowStatus',
                                 title: '实时状态'
                             }
                         ]
@@ -97,7 +97,7 @@
         methods:{
             getIotMenu(){
                 api.iotHome.getIotMenu().then(res=>{
-                    //console.log(res,'这是传回来的Iotmenu菜单')
+                    console.log(res,'这是传回来的Iotmenu菜单')
                     this.items[1].subs=res;
                 }).catch(err=>{
                     console.log(err,'失败')

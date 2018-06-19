@@ -68,8 +68,8 @@
                         <el-table-column label="操作" width="200">
                             <template slot-scope="scope">
                                 <span @click="fixedInfo(scope.row,'修改LED播放计划')" class="edit">编辑</span> |
-                                <span @click="stop(scope.row,)" v-if="scope.row.ledSchedule.enabled">停止 |</span>
-                                <span @click="stop(scope.row,)" v-else="!scope.row.ledSchedule.enabled">开始 |</span>
+                                <span @click="stop(scope.row,)" v-if="scope.row.ledSchedule.enabled">停用 |</span>
+                                <span @click="stop(scope.row,)" v-else="!scope.row.ledSchedule.enabled">启用 |</span>
                                 <span @click="showPersonDetail(scope.row,'LED信息',true)">查看</span> |
                                 <span @click="deletInfo(scope.row.id)">删除</span>
                             </template>

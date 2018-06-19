@@ -74,8 +74,6 @@
                             <i class="el-icon-location-outline" @click="showMapDialog"></i>
                         </p>
                         <p class="type textArea">
-                            <!--描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：<textarea name="" v-model="security.inspectionSchedule.description" cols="30"-->
-                                                                                   <!--rows="5" placeholder="请输入描述信息" style="background: #fafafa"></textarea>-->
                             <span class="description">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：</span>
                             <el-input type="textarea"  v-model="security.inspectionSchedule.description" :disabled="isDisabled" ></el-input>
                         </p>
@@ -132,8 +130,6 @@
                             <el-button slot="trigger" size="small" type="primary" @click="showBroadcastDialog" v-if='!isDisabled'>曲目编辑</el-button>
                         </p>
                         <p class="type textArea">
-                            <!--描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：<textarea name="" v-model="broadList.broadcastSchedule.description" cols="30"-->
-                                                                                   <!--rows="5" placeholder="请输入描述信息"></textarea>-->
                             <span class="description">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：</span>
                             <el-input type="textarea"  v-model="broadList.broadcastSchedule.description" :disabled="isDisabled" ></el-input>
                         </p>
@@ -182,8 +178,6 @@
                             </el-tree>
                         </p>
                         <p class="type textArea">
-                            <!--描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：<textarea name="" v-model="lamppost.lightSchedule.description" cols="30"-->
-                                                                                   <!--rows="5" placeholder="请输入描述信息"></textarea>-->
                             <span class="description">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：</span>
                             <el-input type="textarea"  v-model="lamppost.lightSchedule.description" :disabled="isDisabled" ></el-input>
                         </p>
@@ -250,8 +244,6 @@
                             </el-select>
                         </p>
                         <p class="type textArea">
-                            <!--描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：<textarea name="" v-model="" cols="30"-->
-                                                                                   <!--rows="5" placeholder="请输入描述信息" style="background: #fafafa"></textarea>-->
                             <span class="description">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：</span>
                             <el-input type="textarea"  v-model="purifier.cleanSchedule.description" :disabled="isDisabled" ></el-input>
                         </p>
@@ -970,6 +962,9 @@
             padding: 0;
             /*height: rem(300);*/
         }
+        .el-input.is-disabled .el-input__inner,.el-textarea.is-disabled .el-textarea__inner{
+            background-color:transparent;
+        }
         .el-dialog__header{
             padding: rem(10) 0 rem(5) rem(20);
             text-align: left;
@@ -1201,6 +1196,7 @@
                         background: transparent;
                         color: #606266;
                         margin-bottom: rem(5);
+                        padding:0;
                     }
                     span{
                         margin-right: rem(10);

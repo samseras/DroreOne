@@ -50,7 +50,7 @@
                 isSearch: false,
                 controler:[
                     {enable: true,names:'WARN',route: '/controler/warn', img: '../../../static/img/warn.svg', desc: "告警",controlShow:true},
-                    {enable: true,names:'CAR',route: '/controler/car', img: '../../../static/img/boatCar.svg', desc: "车船调度",controlShow:true},
+                    {enable: false,names:'CAR',route: '/controler/car', img: '../../../static/img/boatCar.svg', desc: "车船调度",controlShow:true},
                     {enable: true,names:'PERSON',route: '/controler/person', img: '../../../static/img/dmis.svg', desc: "个人定位",controlShow:true},
                 ],
                 controlShow:true,
@@ -62,7 +62,7 @@
                 LED:false,
                 PERSON:false,
                 CAR:false,
-                LIGHT:false,
+                LIGHT:false
             }
         },
         components: {

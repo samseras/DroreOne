@@ -23,7 +23,7 @@
             <div class="personList" v-loading="isShowLoading">
                 <ScrollContainer>
                     <el-table
-                        v-if="!isShowPersonCard"
+                        v-if="!isShowPersonCard && !show"
                         ref="multipleTable"
                         :data="personList"
                         tooltip-effect="dark"
@@ -90,7 +90,7 @@
                             </template>
                         </el-table-column>
                     </el-table>
-                    <div class="personInfo" v-for="(item,index) in personList" v-if="isShowPersonCard && item.status">
+                    <div class="personInfo"  v-for="(item,index) in personList" v-if="isShowPersonCard && item.status">
                         <div class="checkBox">
                             <el-checkbox v-model="item.checked" @change="checked(item.id)"
                                          class="checkBtn"></el-checkbox>
@@ -110,6 +110,9 @@
                             <p class="phoneNum">电&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;话：<span>{{item.phone}}</span>
                             </p>
                         </div>
+                    </div>
+                    <div class="tip" v-if="show">
+                        <span>暂无数据</span>
                     </div>
                 </ScrollContainer>
                 <PersonDetail v-if="visible"
@@ -145,6 +148,7 @@
                 filterList: [],
                 personList: [],
                 visible: false,
+                show: false,
                 personInfo: {},
                 choseInfoId: [],
                 choseList: [],
@@ -463,6 +467,11 @@
                 let id = this.$route.params.id
                 await api.person.getJobPerson(id).then(res => {
                     console.log(res, '这是请求回来的')
+                    if(res.length === 0){
+                        this.show = true
+                    }else{
+                        this.show = false
+                    }
                     this.listLength = res.length
                     this.isShowLoading = false
                     this.personList = res
@@ -657,6 +666,12 @@
                             white-space: nowrap;
                         }
                     }
+                }
+                .tip{
+                    width:100%;
+                    height:rem(40);
+                    text-align: center;
+                    color: #909399
                 }
                 .handle {
                     span{

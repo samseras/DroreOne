@@ -1,11 +1,14 @@
 <template>
     <div class="device-tree">
+        1111
         <div class="charts">
             <div id="my-chart">
 
             </div>
         </div>
+        <div id="test-a">
 
+        </div>
 
     </div>
 </template>
@@ -78,7 +81,7 @@
 
                 let mainChart = this.$echarts.init(document.getElementById('my-chart'));
                 let data=this.myData;
-
+                console.log(mainChart);
                 let option = {
                     tooltip: {
                         trigger: 'item',
@@ -128,7 +131,58 @@
                 }
                 mainChart.setOption(option);
 
-            }
+
+                var a=document.getElementById('test-a');
+                let mainChart1 = this.$echarts.init(document.getElementById('test-a'));
+                let option1 = {
+                    tooltip: {
+                        trigger: 'item',
+                        formatter: "{a} <br/>{b}: {c} ({d}%)"
+                    },
+                    legend: {
+                        orient: 'vertical',
+                        x: 'left',
+                        data:['直接访问','邮件营销','联盟广告','视频广告','搜索引擎']
+                    },
+                    series: [
+                        {
+                            name:'访问来源',
+                            type:'pie',
+                            radius: ['50%', '70%'],
+                            avoidLabelOverlap: false,
+                            label: {
+                                normal: {
+                                    show: false,
+                                    position: 'center'
+                                },
+                                emphasis: {
+                                    show: true,
+                                    textStyle: {
+                                        fontSize: '30',
+                                        fontWeight: 'bold'
+                                    }
+                                }
+                            },
+                            labelLine: {
+                                normal: {
+                                    show: false
+                                }
+                            },
+                            data:[
+                                {value:335, name:'直接访问'},
+                                {value:310, name:'邮件营销'},
+                                {value:234, name:'联盟广告'},
+                                {value:135, name:'视频广告'},
+                                {value:1548, name:'搜索引擎'}
+                            ]
+                        }
+                    ]
+                };
+
+                mainChart1.setOption(option1);
+
+            },
+
         },
         components:{
 
@@ -144,6 +198,10 @@
 
 <style  lang="scss" type="text/scss">
     .device-tree{
+        #test-a{
+            width:200px;
+            height:200px;
+        }
         border:1px solid red;
         margin:rem(16);
         #my-chart{

@@ -22,7 +22,7 @@
             <div class="cameraList" v-loading="isShowLoading">
                 <ScrollContainer>
                     <el-table
-                        v-if="!isShowPoliceCard"
+                        v-if="!isShowPoliceCard && !show"
                         ref="multipleTable"
                         :data="policeList"
                         tooltip-effect="dark"
@@ -102,6 +102,9 @@
 
                         </div>
                     </div>
+                    <div class="tip" v-if="show">
+                        <span>暂无数据</span>
+                    </div>
                 </ScrollContainer>
                 <HardWare v-if="visible"
                           :visible="visible"
@@ -142,6 +145,7 @@
                 isDisabled:true,
                 filterList: [],
                 title:'',
+                show:false,
                 isShowLoading:false,
                 currentNum: 50,
                 listLength: '',
@@ -412,6 +416,11 @@
                 this.isShowLoading=true
                 await api.police.getAllPolice().then((res)=>{
                     console.log(res,'这是请求的数据')
+                    if(res.devices.length === 0){
+                        this.show = true
+                    }else{
+                        this.show = false
+                    }
                     this.listLength = res.devices.length
                     this.isShowLoading=false
                     this.policeList=res.devices
@@ -601,6 +610,13 @@
                             -webkit-line-clamp:2;
                         }
                     }
+                }
+                .tip{
+                    width:100%;
+                    height:rem(40);
+                    text-align: center;
+                    color: #909399;
+                    line-height: rem(40);
                 }
                 .handle {
                     span{

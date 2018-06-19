@@ -66,6 +66,7 @@
 
     export default{
         props: ['choseId','listsLength','personListFlag'],
+        inject:['reload'],
         data(){
             return{
                 searchKeys:'',
@@ -130,22 +131,24 @@
                                     dangerouslyUseHTMLString:true,
                                     callback: action => {
                                         this.$message.success('导入成功');
+                                        this.reload()
                                     }
                                 });
                             }else{
                                 this.$message.success('导入成功');
+                                this.reload()
                             }
                             this.$emit("getAllBroadcast");
                         }).catch(err => {
                             this.$message.error('导入失败，请稍后重试')
                             console.log(err, '导入失败')
+                            this.reload()
                         })
 
                     }else if(this.$route.path.includes("camera")) {
                         params.fileParam = form;
                         params.type = '2';
                         api.importfile.importFileData(params).then(res => {
-                            this.$message.success('导入成功');
                             if(Object.keys(res).length > 0){
                                 let messages = '';
                                 for(let i in res){
@@ -156,22 +159,24 @@
                                     dangerouslyUseHTMLString:true,
                                     callback: action => {
                                         this.$message.success('导入成功');
+                                        this.reload()
                                     }
                                 });
 
                             }else{
                                 this.$message.success('导入成功');
+                                this.reload()
                             }
                             this.$emit("getAllCamera");
                         }).catch(err => {
                             this.$message.error('导入失败，请稍后重试')
                             console.log(err, '导入失败')
+                            this.reload()
                         })
                     }else if(this.$route.path.includes("monitors")){
                         params.fileParam = form;
                         params.type = '6';
                         api.importfile.importFileData(params).then(res => {
-                            this.$message.success('导入成功');
                             if(Object.keys(res).length > 0){
                                 let messages = '';
                                 for(let i in res){
@@ -182,22 +187,24 @@
                                     dangerouslyUseHTMLString:true,
                                     callback: action => {
                                         this.$message.success('导入成功');
+                                        this.reload()
                                     }
                                 });
 
                             }else{
                                 this.$message.success('导入成功');
+                                this.reload()
                             }
                             this.$emit("getAllMonitor");
                         }).catch(err => {
                             this.$message.error('导入失败，请稍后重试')
                             console.log(err, '导入失败')
+                            this.reload()
                         })
                     }else if(this.$route.path.includes("police")){
                         params.fileParam = form;
                         params.type = '8';
                         api.importfile.importFileData(params).then(res => {
-                            this.$message.success('导入成功');
                             if(Object.keys(res).length > 0){
                                 let messages = '';
                                 for(let i in res){
@@ -208,23 +215,24 @@
                                     dangerouslyUseHTMLString:true,
                                     callback: action => {
                                         this.$message.success('导入成功');
+                                        this.reload()
                                     }
                                 });
-
                             }else{
                                 this.$message.success('导入成功');
+                                this.reload()
                             }
                             this.$emit("getAllPolice");
                         }).catch(err => {
                             this.$message.error('导入失败，请稍后重试')
                             console.log(err, '导入失败')
+                            this.reload()
                         })
 
                     }else if(this.$route.path.includes("led")){
                         params.fileParam = form;
                         params.type = '4';
                         api.importfile.importFileData(params).then(res => {
-                            this.$message.success('导入成功');
                             if(Object.keys(res).length > 0){
                                 let messages = '';
                                 for(let i in res){
@@ -235,16 +243,19 @@
                                     dangerouslyUseHTMLString:true,
                                     callback: action => {
                                         this.$message.success('导入成功');
+                                        this.reload()
                                     }
                                 });
 
                             }else{
                                 this.$message.success('导入成功');
+                                this.reload()
                             }
                             this.$emit("getAllLed");
                         }).catch(err => {
                             this.$message.error('导入失败，请稍后重试')
                             console.log(err, '导入失败')
+                            this.reload()
                         })
 
                     }else if(this.$route.path.includes("wifi")){
@@ -252,7 +263,6 @@
                         params.type = '7';
                         console.log(form, 'opopopopoppopop')
                         api.importfile.importFileData(params).then(res => {
-                            this.$message.success('导入成功');
                             if(Object.keys(res).length > 0){
                                 let messages = '';
                                 for(let i in res){
@@ -263,23 +273,25 @@
                                     dangerouslyUseHTMLString:true,
                                     callback: action => {
                                         this.$message.success('导入成功');
+                                        this.reload()
                                     }
                                 });
 
                             }else{
                                 this.$message.success('导入成功');
+                                this.reload()
                             }
                             this.$emit("getAllWifi");
                         }).catch(err => {
                             this.$message.error('导入失败，请稍后重试')
                             console.log(err, '导入失败')
+                            this.reload()
                         })
 
                     }else if(this.$route.path.includes("gate")){
                         params.fileParam = form;
                         params.type = '3';
                         api.importfile.importFileData(params).then(res => {
-                            this.$message.success('导入成功');
                             if(Object.keys(res).length > 0){
                                 let messages = '';
                                 for(let i in res){
@@ -290,23 +302,24 @@
                                     dangerouslyUseHTMLString:true,
                                     callback: action => {
                                         this.$message.success('导入成功');
+                                        this.reload()
                                     }
                                 });
-
                             }else{
                                 this.$message.success('导入成功');
+                                this.reload()
                             }
                             this.$emit("getAllGate");
                         }).catch(err => {
                             this.$message.error('导入失败，请稍后重试')
                             console.log(err, '导入失败')
+                            this.reload()
                         })
 
                     }else if(this.$route.path.includes("lampLight")){
                         params.fileParam = form;
                         params.type = '5';
                         api.importfile.importFileData(params).then(res => {
-                            this.$message.success('导入成功');
                             if(Object.keys(res).length > 0){
                                 let messages = '';
                                 for(let i in res){
@@ -317,16 +330,19 @@
                                     dangerouslyUseHTMLString:true,
                                     callback: action => {
                                         this.$message.success('导入成功');
+                                        this.reload()
                                     }
                                 });
 
                             }else{
                                 this.$message.success('导入成功');
+                                this.reload()
                             }
                             this.$emit("getAllLight");
                         }).catch(err => {
                             this.$message.error('导入失败，请稍后重试')
                             console.log(err, '导入失败')
+                            this.reload()
                         })
                     }
                 }
@@ -362,7 +378,7 @@
                         console.log(res,'niaho')
                         const content = res
                         const blob = new Blob([content])
-                        const fileName = '设备文件.csv'
+                        const fileName = '设备.csv'
                         if('download' in document.createElement('a')){
                             const elink = document.createElement('a')
                             elink.download = fileName
@@ -385,7 +401,7 @@
                         console.log(res,'niaho')
                         const content = res
                         const blob = new Blob([content])
-                        const fileName = '测试.csv'
+                        const fileName = '设备.csv'
                         if('download' in document.createElement('a')){
                             const elink = document.createElement('a')
                             elink.download = fileName
@@ -414,7 +430,25 @@
                 this.$store.commit('SHOWHARDWAREICON',type)
             },
             downloadTemplate(){
-                window.location.href="/static/template/devices_import.csv";
+
+                let route = this.$route.path
+                if (route.includes('broadcast')) {
+                    window.location.href="/static/template/controller/broadcast.csv";
+                }else if(route.includes('camera')){
+                    window.location.href="/static/template/controller/camera.csv";
+                }else if(route.includes('gate')){
+                    window.location.href="/static/template/controller/gate.csv";
+                } else if(route.includes('led')){
+                    window.location.href="/static/template/controller/led.csv";
+                }else if(route.includes('lampLight')){
+                    window.location.href="/static/template/controller/lampLight.csv";
+                }else if(route.includes('monitors')){
+                    window.location.href="/static/template/controller/monitors.csv";
+                }else if(route.includes('wifi')){
+                    window.location.href="/static/template/controller/wifi.csv";
+                }else if(route.includes('police')){
+                    window.location.href="/static/template/controller/police.csv";
+                }
             },
             choseType(){
                 this.$emit('choseType',this.filterList)
