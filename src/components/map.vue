@@ -110,6 +110,7 @@
                 this.getAllCamera();//摄像头现有标注
                 this.overView();//鹰眼
                 this.rangeSearch();// 范围查找
+                this.getAllRoute();//调度路线
             } else if (route.includes('area-deploy')) {
                 if(!this.getLocationId){
                     this.getAllArea();// 片区输出
@@ -1684,6 +1685,18 @@
                         var data = {"id": res[i].id, "name": res[i].name,"constructor":''}
                         areaEvtList.addRoad(area, data)
                         droreMap.road.addRoadLayer(areaEvtList, res[i].id)
+                        let route = this.$route.path
+                        if(route.includes('controler')){
+                            droreMap.road.removeStyleById(res[i].id,false)
+                        }
+                    }
+                    let route = this.$route.path
+                    if(route.includes('controler')) {
+                        if (this.getfacilityRoad.length > 0) {
+                            for (let i = 0; i < this.getfacilityRoad.length; i++) {
+                                this.roadShowID(this.getfacilityRoad[i]);
+                            }
+                        }
                     }
                 }).catch(err => {
                     console.log(err, '请求失败')
@@ -1871,6 +1884,9 @@
             roadHide(data){
                 droreMap.road.removeStyleById(data.id,false)
             },
+            roadHideID(data){
+                droreMap.road.removeStyleById(data,false)
+            },
             areaShow(data){
                 droreMap.area.removeStyleById(data.id,true)
             },
@@ -2030,7 +2046,7 @@
                 this.searchShow(this.getSearchInfo);
             },
             getTreeState(){
-                // console.log(this.getTreeState,'213123')
+                console.log(this.getTreeState,'213123')
                 if(this.getTreeState.length>1) {
                     // console.log(this.getTreeState,'ioioioiooioioiooi')
                     //    这边是全选
@@ -2042,6 +2058,8 @@
                                 }else {
                                     if(item1.type!='person'){
                                         this.treeShow(item1);
+                                    }else {
+                                        this.roadShowID(item1.routeId);
                                     }
                                 }
                                 if(item1.type=='light'){
@@ -2100,6 +2118,8 @@
                             }else {
                                 if(item.type!='person'){
                                     this.treeHide(item);
+                                }else {
+                                    this.roadHideID(item.routeId)
                                 }
                             }
                             if(item.type=='light'){
@@ -2161,6 +2181,8 @@
                                 }else {
                                     if(data[i].type!='person'){
                                         this.treeShow(data[i]);
+                                    }else {
+                                        this.roadShowID(data[i].routeId)
                                     }
                                 }
                                 // console.log(this.getTreeState[0]);
@@ -2235,6 +2257,8 @@
                                 }else {
                                     if(this.getTreeState[0].children[i].type!='person'){
                                         this.treeHide(this.getTreeState[0].children[i]);
+                                    }else {
+                                        this.roadHideID(this.getTreeState[0].children[i].routeId)
                                     }
                                 }
                                 if(this.getTreeState[0].children[i].type=='light'){
@@ -2338,6 +2362,8 @@
                             }else {
                                 if(this.getTreeState[0].type!='person'){
                                     this.treeShow(this.getTreeState[0]);
+                                }else {
+                                    this.roadShowID(this.getTreeState[0].routeId)
                                 }
                             }
                             if(this.getTreeState[0].type=='light'){
@@ -2408,6 +2434,8 @@
                             }else {
                                 if(this.getTreeState[0].type!='person'){
                                     this.treeHide(this.getTreeState[0]);
+                                }else {
+                                    this.roadHideID(this.getTreeState[0].routeId)
                                 }
                             }
                             if(this.getTreeState[0].type=='light'){

@@ -147,11 +147,11 @@
                         type:'wifi',
                         children:[]
                     }
-                    this.lightList.forEach(item => {
-                        if (item.regionId && !this.regionId.includes(item.regionId)) {
-                            this.regionId.push(item.regionId)
-                        }
-                    })
+                    // this.lightList.forEach(item => {
+                    //     if (item.regionId && !this.regionId.includes(item.regionId)) {
+                    //         this.regionId.push(item.regionId)
+                    //     }
+                    // })
                     this.regionId.push('10010')
                     this.lightList.forEach(item => {
                         item.label = item.name

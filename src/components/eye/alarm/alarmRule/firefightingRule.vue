@@ -53,7 +53,6 @@
                             label="严重等级">
                         </el-table-column>
                         <el-table-column
-                            sortable
                             show-overflow-tooltip
                             prop="relatedManagerNames"
                             label="管理者">
@@ -64,7 +63,7 @@
                                 <span @click="showDetail(scope.row,true,'查看消防告警规则')">查看</span> |
                                 <span v-if="scope.row.isEnabled" @click="enabledClick(scope.row,false)">停用</span>
                                 <span v-else @click="enabledClick(scope.row,true)">启用</span>
-                                <span @click="deletInfo(scope.row.id)">删除</span>
+                                | <span @click="deletInfo(scope.row.id)">删除</span>
                             </template>
                         </el-table-column>
                     </el-table>

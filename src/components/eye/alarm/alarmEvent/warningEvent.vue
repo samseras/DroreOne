@@ -405,8 +405,6 @@
                                     }
                                 })
                                 this.warningEventListTemp = JSON.parse(JSON.stringify(this.warningEventList))
-
-
                         }).catch(err => {
                             console.log(err, '请求失败')
                             this.isShowLoading = false

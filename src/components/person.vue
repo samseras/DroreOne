@@ -28,7 +28,7 @@
 
             <div class="content">
                 <ScrollContainer>
-                    <router-view></router-view>
+                    <router-view v-if="isRouterAlive"></router-view>
                 </ScrollContainer>
             </div>
         </div>
@@ -42,8 +42,14 @@
 
     export default {
         name: "property",
+        provide(){
+            return {
+                reload:this.reload
+            }
+        },
         data() {
             return {
+                isRouterAlive:true,
                 openeds:['2'],
                 isActive: false,
                 items: [
@@ -69,6 +75,12 @@
             ...mapActions([
                 'getJobType',
             ]),
+            reload(){
+                this.isRouterAlive = false
+                this.$nextTick(()=>{
+                    this.isRouterAlive = true
+                })
+            },
             imgUrl (id) {
                 switch (id) {
                     case '1': {

@@ -23,6 +23,16 @@
             <span class="upPage"@click="previousPage"><</span>
             <span class="downPage" @click="nextPage">></span>
         </div>
+
+        <!--<el-pagination-->
+            <!--@size-change="handleSizeChange"-->
+            <!--@current-change="handleCurrentChange"-->
+            <!--:current-page="currentPageNum"-->
+            <!--:page-sizes="[10, 20]"-->
+            <!--:page-size="10"-->
+            <!--layout="total, sizes, prev, pager, next, jumper"-->
+            <!--:total="listLength">-->
+        <!--</el-pagination>-->
     </div>
 </template>
 

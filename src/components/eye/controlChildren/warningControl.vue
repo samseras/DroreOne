@@ -74,7 +74,7 @@
                 regionId:[],
                 lightList:[],
                 selectAll:[],
-                title:'处理中'
+                title:'告警事件'
             }
         },
         components: {
@@ -148,44 +148,123 @@
             },
             async getAllAlarmEvent () {
                 await api.alarm.getAllAlarmEvent().then(res => {
-                    console.log(res,'这是请求的数据ddd')
-                    // this.lightList=res
-                    // this.number=this.lightList.length
-                    // let arr = []
-                    // let icon=''
-                    // this.lightList.forEach(item => {
-                    //     if (item.inspectionSchedule.id && !this.regionId.includes(item.inspectionSchedule.id)) {
-                    //         this.regionId.push(item.inspectionSchedule.id)
-                    //     }
-                    // })
-                    // this.lightList.forEach(item => {
-                    //     console.log(item)
-                    //     item.children=[]
-                    //     for(let i=0;i< item.securityIds.length;i++){
-                    //         if (item.securityIds[i].status == "FAULT") {
-                    //             icon = '../../../static/img/light_damage.svg'
-                    //         } else if (item.securityIds[i].status == "OFFLINE") {
-                    //             icon = '../../../static/img/light.svg'
-                    //         } else {
-                    //             icon = '../../../static/img/light_open.svg'
-                    //         }
-                    //         let children={
-                    //             label:item.securityIds[i],
-                    //             type:'person',
-                    //             icon:icon,
-                    //             id:item.securityIds[i]
-                    //         }
-                    //         item.children.push(children)
-                    //     }
-                    //     let obj = {
-                    //         label: item.inspectionSchedule.name,
-                    //         type:'person',
-                    //         id: item.inspectionSchedule.id,
-                    //         children:item.children
-                    //     }
-                    //     arr.push(obj)
-                    // })
-                    // this.lightInfo = arr
+                    console.log(res,'16565623');
+                    this.lightList=res
+                    this.number=this.lightList.length
+                    let regionIdList = []
+                    let arr = []
+                    let idList = []
+                    this.lightList.forEach(item => {
+                        item.label = item.serialNum
+                        item.type = 'warn'
+                        if(item.rule.alarmTypeId =="1"){
+                            item.regionName="设备故障"
+                            if (item.status.id =="1")  {
+                                item.icon = '../../../static/img/detection_open.svg'
+                            } else  if (item.status.id =="2") {
+                                item.icon = '../../../static/img/detection_damage.svg'
+                            }else {
+                                item.icon = '../../../static/img/detection.svg'
+                            }
+                        }else if(item.rule.alarmTypeId =="2") {
+                            item.regionName="报警柱"
+                            if (item.status.id =="1")  {
+                                item.icon = '../../../static/img/alarm/alarmcolumnRule_one.svg'
+                            } else  if (item.status.id =="2") {
+                                item.icon = '../../../static/img/alarm/alarmcolumnRule_two.svg'
+                            }else {
+                                item.icon = '../../../static/img/alarm/alarmcolumnRule_three.svg'
+                            }
+                        }else if(item.rule.alarmTypeId =="3") {
+                            item.regionName="消防"
+                            if (item.status.id =="1")  {
+                                item.icon = '../../../static/img/alarm/firefightingRule_one.svg'
+                            } else  if (item.status.id =="2") {
+                                item.icon = '../../../static/img/alarm/firefightingRule_two.svg'
+                            }else {
+                                item.icon = '../../../static/img/alarm/firefightingRule_three.svg'
+                            }
+                        }else if(item.rule.alarmTypeId =="4") {
+                            item.regionName="越界"
+                            if (item.status.id =="1")  {
+                                item.icon = '../../../static/img/alarm/crossborderRule_one.svg'
+                            } else  if (item.status.id =="2") {
+                                item.icon = '../../../static/img/alarm/crossborderRule_two.svg'
+                            }else {
+                                item.icon = '../../../static/img/alarm/crossborderRule_three.svg'
+                            }
+                        }else if(item.rule.alarmTypeId =="5") {
+                            item.regionName="超速"
+                            if (item.status.id =="1")  {
+                                item.icon = '../../../static/img/alarm/clearer_one.svg'
+                            } else  if (item.status.id =="2") {
+                                item.icon = '../../../static/img/alarm/clearer_two.svg'
+                            }else {
+                                item.icon = '../../../static/img/alarm/clearer_three.svg'
+                            }
+                        }else if(item.rule.alarmTypeId =="6") {
+                            item.regionName="偏离轨迹"
+                            if (item.status.id =="1")  {
+                                item.icon = '../../../static/img/alarm/offtrackRule_one.svg'
+                            } else  if (item.status.id =="2") {
+                                item.icon = '../../../static/img/alarm/offtrackRule_two.svg'
+                            }else {
+                                item.icon = '../../../static/img/alarm/offtrackRule_three.svg'
+                            }
+                        }else if(item.rule.alarmTypeId =="7") {
+                            item.regionName="客流量"
+                            if (item.status.id =="1")  {
+                                item.icon = '../../../static/img/alarm/overlimitRule_one.svg'
+                            } else  if (item.status.id =="2") {
+                                item.icon = '../../../static/img/alarm/overlimitRule_two.svg'
+                            }else {
+                                item.icon = '../../../static/img/alarm/overlimitRule_three.svg'
+                            }
+                        }else if(item.rule.alarmTypeId =="8") {
+                            item.regionName="水位"
+                            if (item.status.id =="1")  {
+                                item.icon = '../../../static/img/alarm/waterlevelRule_one.svg'
+                            } else  if (item.status.id =="2") {
+                                item.icon = '../../../static/img/alarm/waterlevelRule_two.svg'
+                            }else {
+                                item.icon = '../../../static/img/alarm/waterlevelRule_three.svg'
+                            }
+                        }else if(item.rule.alarmTypeId =="9") {
+                            item.regionName="环境"
+                            if (item.status.id =="1")  {
+                                item.icon = '../../../static/img/alarm/conditionRule_one.svg'
+                            } else  if (item.status.id =="2") {
+                                item.icon = '../../../static/img/alarm/conditionRule_two.svg'
+                            }else {
+                                item.icon = '../../../static/img/alarm/conditionRule_three.svg'
+                            }
+                        }
+                        if (!regionIdList.includes(item.rule.alarmTypeId)) {
+                            regionIdList.push(item.rule.alarmTypeId)
+                            let obj = {
+                                label: item.regionName,
+                                type: 'warn',
+                                id: item.rule.alarmTypeId,
+                                children: []
+                            }
+                            arr.push(obj)
+                        }
+                        arr.forEach(item1 => {
+                            if (item1.id == item.rule.alarmTypeId) {
+                                if (item1.children.length < 1) {
+                                    item1.children.push(item)
+                                } else {
+                                    item1.children.forEach(item2 => {
+                                        if (!idList.includes(item2.id)) {
+                                            idList.push(item.id)
+                                            item1.children.push(item)
+                                        }
+                                    })
+                                }
+                            }
+                        })
+                    })
+                    this.lightInfo = arr
                     console.log(this.lightInfo,'16565623');
                 }).catch(err =>{
                     console.log(err)

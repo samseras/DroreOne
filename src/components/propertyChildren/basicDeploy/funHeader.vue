@@ -284,32 +284,41 @@
                 }
                 let route = this.$route.path
                 if (route.includes('basic')) {
-                    let type
+                    let type,fileNames
                     if (route.includes('park')) {
                         type = 'parking'  //停车场
+                        fileNames = '停车场.csv'
                     } else if (route.includes('trash')) {
                         type = 'dustbin'  //垃圾桶
+                        fileNames = '垃圾桶.csv'
                     } else if (route.includes('construction')) {
                         type = 'building' //建筑
+                        fileNames = '建筑.csv'
                     } else if (route.includes('plant')) {
                         type = 'plant' //植物
+                        fileNames = '植物.csv'
                     } else if (route.includes('indicator')) {
                         type = 'signboard'  //指示牌
+                        fileNames = '指示牌.csv'
                     } else if (route.includes('shop')) {
                         type = 'business'  //景点
+                        fileNames = '商铺.csv'
                     } else if (route.includes('toilet')) {
                         type = 'toilet'  //厕所
+                        fileNames = '厕所.csv'
                     } else if (route.includes('scenic')) {
                         type = 'scenicspot'  //景点
+                        fileNames = '景区.csv'
                     } else if (route.includes('boat')) {
                         type = 'vehicle'  //车船
+                        fileNames = '车船.csv'
                     }
 
                     if (this.choseId.length > 0) {
                         api.exportFile.exportSingleBasic(this.choseId, type).then((res) => {
                             const content = res
                             const blob = new Blob([content])
-                            const fileName = '设施.csv'
+                            const fileName = fileNames
                             if ('download' in document.createElement('a')) {
                                 const elink = document.createElement('a')
                                 elink.download = fileName
@@ -332,7 +341,7 @@
                             console.log(res, 'niaho')
                             const content = res
                             const blob = new Blob([content])
-                            const fileName = '设施.csv'
+                            const fileName = fileNames
                             if ('download' in document.createElement('a')) {
                                 const elink = document.createElement('a')
                                 elink.download = fileName
@@ -351,30 +360,38 @@
                         })
                     }
                 } else {
-                    let type
+                    let type,fileNames
                     if (route.includes('1')) {
                         type = 1
+                        fileNames = '司机.csv'
                     } else if (route.includes('2')) {
                         type = 2
+                        fileNames = '船夫.csv'
                     } else if (route.includes('3')) {
                         type = 3
+                        fileNames = '安保.csv'
                     } else if (route.includes('4')) {
                         type = 4
+                        fileNames = '保洁.csv'
                     } else if (route.includes('5')) {
                         type = 5
+                        fileNames = '售票.csv'
                     } else if (route.includes('6')) {
                         type = 6
+                        fileNames = '检票.csv'
                     } else if (route.includes('7')) {
                         type = 7
+                        fileNames = '维保.csv'
                     } else if (route.includes('8')) {
                         type = 8
+                        fileNames = '管理者.csv'
                     }
 
                     if (this.choseId.length > 0) {
                         api.exportFile.exportSinglePerson(this.choseId).then((res) => {
                             const content = res
                             const blob = new Blob([content])
-                            const fileName = '人员.csv'
+                            const fileName = fileNames
                             if ('download' in document.createElement('a')) {
                                 const elink = document.createElement('a')
                                 elink.download = fileName
@@ -397,7 +414,7 @@
                             console.log(res, 'niaho')
                             const content = res
                             const blob = new Blob([content])
-                            const fileName = '人员.csv'
+                            const fileName = fileNames
                             if ('download' in document.createElement('a')) {
                                 const elink = document.createElement('a')
                                 elink.download = fileName

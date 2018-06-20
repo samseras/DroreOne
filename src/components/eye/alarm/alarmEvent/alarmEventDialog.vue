@@ -36,24 +36,30 @@
                         </div>
 
                         <div  v-if="!isBatchEdit"  class="alarmContent">
-                            <p class="serialNum">编&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 号：
+                            <p class="serialNum">
+                                <span>编&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 号：</span>
                                 <el-input type="text" v-model='eventInfo.serialNum' class="inputText" :maxlength="15" :disabled="true"></el-input>
                             </p>
-                            <p class="type">指标类型：
+                            <p class="type">
+                                <span>指标类型：</span>
                                 <el-input type="text" v-model='eventInfo.rule.alarmTypeName' class="inputText" :maxlength="15" :disabled='true'></el-input>
                             </p>
-                            <p class="sourceDevice">来&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 源：
+                            <p class="sourceDevice">
+                                <span>来&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 源：</span>
                                 <el-input type="text"  v-model='eventInfo.device.name' class="inputText" :maxlength="15" :disabled='true'></el-input>
                             </p>
-                            <p class="occurenceTime">发生时间：
+                            <p class="occurenceTime">
+                                <span>发生时间：</span>
                                 <el-input type="text"  v-model='eventInfo.occurenceTime' class="inputText" :maxlength="15" :disabled='true'></el-input>
                             </p>
-                            <p class="alarmRule">关联规则：
+                            <p class="alarmRule">
+                                <span>关联规则：</span>
                                 <!--<el-input type="text" v-model='eventInfo.alarmRuleName' class="inputText" :maxlength="15" :readonly='true'></el-input>-->
                                 <span class="inputText el-input showRuleDetail" @click="showRuleDetail">{{eventInfo.rule.name}}</span>
                                 <!--<div class="inputText el-input"></div>-->
                             </p>
-                            <p class="level">严重等级：
+                            <p class="level">
+                                <span>严重等级：</span>
                                 <el-select  v-model="eventInfo.severity.id" size="mini" class="" placeholder="请选择" :disabled="readOnly">
                                     <el-option
                                         v-for="item in levelInfo"
@@ -63,7 +69,8 @@
                                     </el-option>
                                 </el-select>
                             </p>
-                            <p class="owner">负责人员：
+                            <p class="owner">
+                                <span>负责人员：</span>
                                 <el-select  v-model="eventInfo.owner.id" @change="ownerChange" size="mini" class="" placeholder="请选择" :disabled="readOnly">
                                     <el-option-group
                                         v-for="group in personInfo"
@@ -79,19 +86,23 @@
                                 </el-select>
                             </p>
 
-                            <p v-if="ruleInfo.alarmTypeId == '5'" class="name">实际时长阈值：
+                            <p v-if="ruleInfo.alarmTypeId == '5'" class="name">
+                                <span>实际时长阈值：</span>
                                 <el-input type="text" v-model='eventInfo.acturalExtendValue' class="inputText" :maxlength="15" :disabled='true'></el-input>
                                 (千米/小时)
                             </p>
-                            <p v-if="ruleInfo.alarmTypeId == '5'" class="name">实际最高速度：
+                            <p v-if="ruleInfo.alarmTypeId == '5'" class="name">
+                                <span>实际最高速度：</span>
                                 <el-input type="text" v-model='eventInfo.actualValue' class="inputText" :maxlength="15" :disabled='true'></el-input>
                                 (千米/小时)
                             </p>
 
-                            <p class="tel">电话号码：
+                            <p class="tel">
+                                <span>电话号码：</span>
                                 <el-input type="text" v-model="eventInfo.owner.phone" class="inputText" :maxlength="15" :disabled="true"></el-input>
                             </p>
-                            <p class="status">状&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 态:
+                            <p class="status">
+                                <span>状&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 态:</span>
                                 <el-select  v-model="eventInfo.status.id" size="mini" class="" placeholder="请选择" :disabled="readOnly">
                                     <el-option
                                         v-for="item in statusInfo"
@@ -101,10 +112,12 @@
                                     </el-option>
                                 </el-select>
                             </p>
-                            <p class="description">处理备注：<br>
+                            <p class="description">
+                                <span>处理备注：</span>
                                 <el-input type="textarea" :rows='5' :cols="30" placeholder="请输入描述信息" v-model="handleDescription" :disabled="readOnly" :maxlength="140"></el-input>
                             </p>
-                            <div class="attachment">附&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;件：
+                            <div class="attachment">
+                                <span>附&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;件：</span>
                                 <div v-loading="isShowLoading" class="showFilelist" >
                                     <div class="uploadlist" v-for="item in fileList">
                                         <el-checkbox v-model="item.checked" class="checkBoxBtn"></el-checkbox>
@@ -120,7 +133,7 @@
                             </div>
 
                             <div class="processLog">
-                                <p>处理记录：</p>
+                                <span>处理记录：</span>
                                 <div class="processDiv" v-for="item in eventInfo.handleRecords">
                                     <div class="processTime">{{item.submitTime}}</div>
                                     <div class="processContent">
@@ -490,6 +503,7 @@
         .el-dialog--center{
             padding: 0;
             height: rem(530);
+            text-align: left;
         }
         .el-dialog__header{
             padding: rem(10) 0 rem(5) rem(20);
@@ -733,11 +747,14 @@
                      i{
                          font-size: rem(16);
                      }
-                     /*span{*/
-                         /*background: #f0f2f5;*/
-                         /*color: #909399;*/
-                     /*}*/
+                     span{
+                         display: inline-block;
+                         line-height: rem(15);
+                         overflow: hidden;
+                         padding-bottom: rem(-1);
+                     }
                  }
+
 
              }
             .cardFooter {
