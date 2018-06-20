@@ -109,7 +109,7 @@
                         title:'报警柱'
                     },
                     {
-                        icon:'./../../../static/img/船夫.svg',
+                        icon:'./../../../static/img/gps.svg',
                         index:'/hard-property/gpsType',
                         title:'GPS'
                     },
@@ -170,6 +170,17 @@
         },
         created() {
           this.getDeviceType()
+            if (this.getDeviceTypeMenu.length > 0) {
+                let route = ''
+                this.deviceInfo.forEach(item => {
+                    if (item.title.includes(this.getDeviceTypeMenu[0].name)) {
+                        route = item.index
+                        return
+                    }
+                })
+                this.$router.push(route)
+            }
+
         },
         components: {
             ScrollContainer

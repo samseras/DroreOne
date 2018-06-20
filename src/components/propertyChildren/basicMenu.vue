@@ -132,6 +132,16 @@
         },
         created () {
             this.getFacilityType()
+            if (this.getFacilitTypeMenu.length > 0) {
+                let route = ''
+                this.subs.forEach(item => {
+                    if (item.title === this.getFacilitTypeMenu[this.getFacilitTypeMenu.length -1].name) {
+                        route = item.index
+                        return
+                    }
+                })
+                this.$router.push(route)
+            }
         },
         watch: {
             getFacilitTypeMenu () {

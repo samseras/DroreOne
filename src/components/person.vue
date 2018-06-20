@@ -2,7 +2,7 @@
     <div class="person">
         <div class="pro_content">
             <!--<el-menu :default-active="'/person/'+ getJobTypeList[0].id"router-->
-            <el-menu default-active='/person/1'router
+            <el-menu default-active='/person'router
                      text-color="#fff"
                      active-text-color="#ffd04b"
                      :default-openeds="openeds">
@@ -119,7 +119,7 @@
         async created () {
             await this.getJobType()
             if (this.getJobTypeList.length > 0) {
-                await this.$router.push(`/person/${this.getJobTypeList[0].id}`)
+                await this.$router.push(`/person/${this.getJobTypeList[this.getJobTypeList.length - 1].id}`)
             }
         },
         mounted () {
