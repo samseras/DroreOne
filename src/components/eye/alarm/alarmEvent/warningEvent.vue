@@ -17,7 +17,7 @@
                         @nextPage="nextPage">
                 </Header>
             </div>
-            <div class="personList" v-loading="isShowloading">
+            <div class="personList" v-loading="loading">
                 <ScrollContainer>
                     <el-table
                         ref="multipleTable"
@@ -112,7 +112,7 @@
                 readOnly: true,
                 title:'',
                 selection:[],
-                isShowloading: false,
+                loading: false,
                 isBatchEdit:false,
                 alarmType:'',
                 listLength:'',
@@ -370,10 +370,9 @@
                     })
             },
             async getAllAlarmEvent () {
-                this.isShowLoading = true
-                await   api.alarm.getAllAlarmEvent().then(res => {
-                                console.log(res, '请求成功')
-                                this.isShowLoading = false
+                this.loading = true
+                await api.alarm.getAllAlarmEvent().then(res => {
+                                this.loading = false
                                 this.listLength = res.length
                                 this.warningEventList = JSON.parse(JSON.stringify(res))
                                 this.warningEventList.forEach(item => {
@@ -407,8 +406,7 @@
                                 })
                                 this.warningEventListTemp = JSON.parse(JSON.stringify(this.warningEventList))
                         }).catch(err => {
-                            console.log(err, '请求失败')
-                            this.isShowLoading = false
+                            this.loading = false
                         })
             },
             getAlarmTypeNameById(typeId){
@@ -417,11 +415,8 @@
             },
             async getAllAlarmTypes(){
                 await api.alarm.getAllAlarmTypes().then(res => {
-                    console.log(res, '请求type成功')
                     this.alarmType = res;
                 }).catch(err => {
-                    console.log(err, '请求失败')
-                    console.log(err, '请求失败')
                 })
             },
             initData(){
