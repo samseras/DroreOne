@@ -17,7 +17,7 @@
                         @nextPage="nextPage">
                 </Header>
             </div>
-            <div class="personList" v-loading="isShowloading">
+            <div class="personList" v-loading="loading">
                 <ScrollContainer>
                     <el-table
                         ref="multipleTable"
@@ -97,7 +97,7 @@
                 isReadonly: true,
                 title:'',
                 selection:[],
-                isShowloading: false,
+                loading: false,
                 isBatchEdit:false,
                 listLength:'',
                 pageNum:1
@@ -130,6 +130,10 @@
                 }
             },
             addNewInfo () {
+                if(this.listLength > 0){
+                    this.$message.info('只能添加一条越界告警规则')
+                    return
+                }
                 this.showDetail({},false,'添加越界告警规则',)
             },
             enabledClick(obj,flag){
@@ -303,15 +307,16 @@
                         api.alarm.deleteAlarmRule(this.choseInfoId).then(res => {
                             console.log(res, '删除成功')
                             this.$message.success('删除成功')
-                            for (let i = 0; i < this.choseInfoId.length; i++) {
-                                this.crossborderList = this.crossborderList.filter((item, index) => {
-                                    if (item.id === this.choseInfoId[i]){
-                                        this.crossborderList[index].checked = false
-                                        this.crossborderList[index].status = false
-                                    }
-                                    return item.status !== false
-                                })
-                            }
+                            this.getAlarmRule ()
+                            // for (let i = 0; i < this.choseInfoId.length; i++) {
+                            //     this.crossborderList = this.crossborderList.filter((item, index) => {
+                            //         if (item.id === this.choseInfoId[i]){
+                            //             this.crossborderList[index].checked = false
+                            //             this.crossborderList[index].status = false
+                            //         }
+                            //         return item.status !== false
+                            //     })
+                            // }
                             this.choseInfos = []
                             this.choseInfoId = []
                         }).catch(err => {
@@ -428,12 +433,12 @@
                 this.getAlarmRule ()
             },
             async getAlarmRule(){
-                this.isShowLoading = true
+                this.loading = true
                 this.alarmTypeId = this.getAlarmTypeId("越界")
                 console.log( this.alarmTypeId)
                 await api.alarm.getAlarmRulesByParameters(this.alarmTypeId).then(res => {
                     console.log(res, '请求成功')
-                    this.isShowLoading = false
+                    this.loading = false
                     this.crossborderList = res
                     this.listLength = this.crossborderList.length
                     this.crossborderList.forEach(item => {
@@ -465,7 +470,7 @@
                     })
                 }).catch(err => {
                     console.log(err, '请求失败')
-                    this.isShowLoading = false
+                    this.loading = false
                 })
             },
             getAlarmTypeId(typeName){

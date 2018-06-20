@@ -17,7 +17,7 @@
                         @nextPage="nextPage">
                 </Header>
             </div>
-            <div class="personList" v-loading="isShowloading">
+            <div class="personList" v-loading="loading">
                 <ScrollContainer>
                     <el-table
                         ref="multipleTable"
@@ -102,7 +102,7 @@
                 isReadonly: true,
                 title:'',
                 selection:[],
-                isShowloading: false,
+                loading: false,
                 isBatchEdit:false,
                 listLength:'',
                 pageNum:1
@@ -434,12 +434,12 @@
                 this.getAlarmRule ()
             },
             async getAlarmRule(){
-                this.isShowLoading = true
+                this.loading = true
                 this.alarmTypeId = this.getAlarmTypeId("偏离轨迹")
                 console.log( this.alarmTypeId)
                 await api.alarm.getAlarmRulesByParameters(this.alarmTypeId).then(res => {
                     console.log(res, '请求成功')
-                    this.isShowLoading = false
+                    this.loading = false
                     this.offtrackList = res
                     this.listLength = this.offtrackList.length
                     this.offtrackList.forEach(item => {
@@ -471,7 +471,7 @@
                     })
                 }).catch(err => {
                     console.log(err, '请求失败')
-                    this.isShowLoading = false
+                    this.loading = false
                 })
             },
             getAlarmTypeId(typeName){

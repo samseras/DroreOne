@@ -118,7 +118,7 @@
                             </p>
                             <div class="attachment">
                                 <span>附&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;件：</span>
-                                <div v-loading="isShowLoading" class="showFilelist" >
+                                <div class="showFilelist" >
                                     <div class="uploadlist" v-for="item in fileList">
                                         <el-checkbox v-model="item.checked" class="checkBoxBtn"></el-checkbox>
                                         <span v-if="item.path" class="downloadThis" @click="downloadFile(item)">{{item.title}}</span>
@@ -134,8 +134,9 @@
 
                             <div class="processLog">
                                 <span>处理记录：</span>
-                                <div class="processDiv" v-for="item in eventInfo.handleRecords">
+                                <div class="processDiv" v-for="(item, index) in orderByTime">
                                     <div class="processTime">{{item.submitTime}}</div>
+                                    <img :src="getStatusPng(item.alarmStatusId,index)" alt="">
                                     <div class="processContent">
                                         编辑人：{{item.submitter}}<br>
                                         <div>{{item.modifiedFields}}
@@ -178,7 +179,6 @@
                 batchstatus:'',
                 levelInfo:[],
                 statusInfo:[],
-                isShowLoading: false,
                 fileAddList:[],
                 fileDelList:[],
                 personInfo:[],
@@ -193,7 +193,38 @@
                 ruleInfo:{}
             }
         },
+        computed:{
+          orderByTime(){
+              return this.eventInfo.handleRecords.reverse()
+          }
+        },
         methods: {
+            getStatusPng(statusId,index){
+                let imgSrc
+                if(index == 0){
+                    switch (statusId) {
+                        case "1":
+                            imgSrc = "./../../../../../static/img/alarm/start.png"
+                            break
+                        case "2":
+                            imgSrc = "./../../../../../static/img/alarm/process.png"
+                            break
+                        case "3":
+                            imgSrc = "./../../../../../static/img/alarm/end.png"
+                    }
+                }else{
+                    switch (statusId) {
+                        case "1":
+                            imgSrc = "./../../../../../static/img/alarm/start_gray.png"
+                            break
+                        case "2":
+                            imgSrc = "./../../../../../static/img/alarm/process_gray.png"
+                        case "3":
+                            imgSrc = "./../../../../../static/img/alarm/end_gray.png"
+                    }
+                }
+                return imgSrc
+            },
             closeDialog () {
                 this.ruleVisible = false
             },
@@ -691,6 +722,11 @@
                      .processTime{
                          width:30%;
                          float:left;
+                     }
+                     img{
+                         display: inline-block;
+                         float:left;
+                         margin-right: rem(30);
                      }
                      .processContent{
                          overflow: hidden;

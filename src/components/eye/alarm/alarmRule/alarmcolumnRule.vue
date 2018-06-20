@@ -17,7 +17,7 @@
                         @nextPage="nextPage">
                 </Header>
             </div>
-            <div class="personList" v-loading="isShowloading">
+            <div class="personList" v-loading="loading">
                 <ScrollContainer>
                     <el-table
                         ref="multipleTable"
@@ -50,7 +50,6 @@
                         </el-table-column>
                         <el-table-column
                             sortable
-                            sort-method
                             prop="alarmSeverity.name"
                             label="严重等级">
                         </el-table-column>
@@ -102,7 +101,7 @@
                 isReadonly: true,
                 title:'',
                 selection:[],
-                isShowloading: false,
+                loading: false,
                 isBatchEdit:false,
                 alarmTypeId:'',
                 listLength:'',
@@ -426,10 +425,10 @@
                 this.getAlarmRule ()
             },
             async getAlarmRule(){
-                this.isShowLoading = true
+                this.loading = true
                 this.alarmTypeId = this.getAlarmTypeId("报警柱")
                 await api.alarm.getAlarmRulesByParameters(this.alarmTypeId).then(res => {
-                    this.isShowLoading = false
+                    this.loading = false
                     this.alarmcolumnList = res
                     this.listLength = this.alarmcolumnList.length
                     this.alarmcolumnList.forEach(item => {
@@ -460,7 +459,7 @@
                         }
                     })
                 }).catch(err => {
-                    this.isShowLoading = false
+                    this.loading = false
                 })
             },
             getAlarmTypeId(typeName){
