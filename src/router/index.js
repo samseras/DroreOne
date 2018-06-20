@@ -274,7 +274,7 @@ const routes = [
             {
                 path: '/basic-property',
                 name: 'ProBasicMenu',
-                redirect: '/basic-property/park-deploy',
+                // redirect: '/basic-property/park-deploy',
                 component: ProBasicMenu,
                 children: [
                     {path: '/basic-property/basictype', name: 'BasicType', component: BasicType},
@@ -297,7 +297,7 @@ const routes = [
             {
                 path: '/hard-property',
                 name: 'HardWareMenu',
-                redirect: '/hard-property/camera-Hware',
+                // redirect: '/hard-property/camera-Hware',
                 component: HardWareMenu,
                 children: [
                     {path: '/hard-property/deviceType', name: 'DeviceType', component: DeviceType},
