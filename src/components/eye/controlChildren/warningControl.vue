@@ -42,7 +42,7 @@
                 </div>
             </div>
             <div class="last">
-                <h5>设备故障率</h5>
+                <h5>事件处理</h5>
                 <div>
                     <div id="pie"></div>
                 </div>
@@ -66,7 +66,6 @@
                 options: [],
                 value: '',
                 number: '0',
-                fault: '0',
                 optionMisic: [],
                 isShowBroadCard: false,
                 lightInfo: [],
@@ -74,7 +73,14 @@
                 regionId:[],
                 lightList:[],
                 selectAll:[],
-                title:'告警事件'
+                title:'告警事件',
+                pending:'0',
+                pendinglist:[],
+                fault: '0',
+                faultlist:[],
+                stocks: '0',
+                stockslist:[],
+
             }
         },
         components: {
@@ -101,8 +107,13 @@
                 let myChart = this.$echarts.init(document.getElementById('pie'))
                 // 绘制图表
                 myChart.setOption({
+                    tooltip : {
+                        trigger: 'item',
+                        formatter: "{a} <br/>{b} : {c}"
+                    },
                     series: [
                         {
+                            name: '事件处理',
                             laber: {
                                 color: "#7d7d7d"
                             },
@@ -117,19 +128,26 @@
                             },
                             data: [
                                 {
-                                    value: 150,
-                                    name: "4人",
+                                    value: this.stocks,
+                                    name: '已处理',
                                     label: {normal: {show: false}},
                                     labelLine: {normal: {show: false}}
                                 },
                                 {
-                                    value: 70, name: "1人",
-                                    label: {normal: {show: true, color: "#646464", fontSize: 12}},
+                                    value: this.fault,
+                                    name: '处理中',
+                                    label: {normal: {show: false}},
+                                    labelLine: {normal: {show: false}}
+                                },
+                                {
+                                    value: this.pending,
+                                    name: '待处理',
+                                    label: {normal: {show: true, color: "#f36a5a", fontSize: 12}},
                                     labelLine: {
                                         normal: {
                                             length: 4,
                                             lineStyle: {
-                                                color: "#646464",
+                                                color: "#f36a5a",
                                                 type: "dashed",
 
                                             }
@@ -143,7 +161,7 @@
 
                         }
                     ],
-                    color: ['#26bbf0', '#f36a5a']
+                    color: ['#26bbf0','#f39943','#f36a5a']
                 });
             },
             async getAllAlarmEvent () {
@@ -160,82 +178,163 @@
                         if(item.rule.alarmTypeId =="1"){
                             item.regionName="设备故障"
                             if (item.status.id =="1")  {
-                                item.icon = '../../../static/img/detection_open.svg'
+                                this.pendinglist.push(item.id)
+                                if(item.device.typeId =="1"){
+                                    item.icon = '../../../static/img/broadcast_danage.svg'
+                                }else if(item.device.typeId =="2"){
+                                    item.icon = '../../../static/img/camera_danage.svg'
+                                }else  if(item.device.typeId =="3") {
+                                    item.icon = '../../../static/img/machine_danage.svg'
+                                }else  if(item.device.typeId =="4") {
+                                    item.icon = '../../../static/img/led_danage.svg'
+                                }else  if(item.device.typeId =="5") {
+                                    item.icon = '../../../static/img/light_danage.svg'
+                                }else  if(item.device.typeId =="6") {
+                                    item.icon = '../../../static/img/detection_danage.svg'
+                                }else  if(item.device.typeId =="7") {
+                                    item.icon = '../../../static/img/wifi_danage.svg'
+                                }else  if(item.device.typeId =="8") {
+                                    item.icon = '../../../static/img/wring_danage.svg'
+                                }else  if(item.device.typeId =="9") {
+                                    item.icon = '../../../static/img/gps_danage.svg'
+                                }
                             } else  if (item.status.id =="2") {
-                                item.icon = '../../../static/img/detection_damage.svg'
+                                this.faultlist.push(item.id)
+                                if(item.device.typeId =="1"){
+                                    item.icon = '../../../static/img/broadcast_two.svg'
+                                }else if(item.device.typeId =="2"){
+                                    item.icon = '../../../static/img/camera_two.svg'
+                                }else  if(item.device.typeId =="3") {
+                                    item.icon = '../../../static/img/machine_two.svg'
+                                }else  if(item.device.typeId =="4") {
+                                    item.icon = '../../../static/img/led_two.svg'
+                                }else  if(item.device.typeId =="5") {
+                                    item.icon = '../../../static/img/light_two.svg'
+                                }else  if(item.device.typeId =="6") {
+                                    item.icon = '../../../static/img/detection_two.svg'
+                                }else  if(item.device.typeId =="7") {
+                                    item.icon = '../../../static/img/wifi_two.svg'
+                                }else  if(item.device.typeId =="8") {
+                                    item.icon = '../../../static/img/wring_two.svg'
+                                }else  if(item.device.typeId =="9") {
+                                    item.icon = '../../../static/img/gps_two.svg'
+                                }
                             }else {
-                                item.icon = '../../../static/img/detection.svg'
+                                this.stockslist.push(item.id)
+                                if(item.device.typeId =="1"){
+                                    item.icon = '../../../static/img/broadcast_big.svg'
+                                }else if(item.device.typeId =="2"){
+                                    item.icon = '../../../static/img/camera_big.svg'
+                                }else  if(item.device.typeId =="3") {
+                                    item.icon = '../../../static/img/machine_big.svg'
+                                }else  if(item.device.typeId =="4") {
+                                    item.icon = '../../../static/img/led_open.svg'
+                                }else  if(item.device.typeId =="5") {
+                                    item.icon = '../../../static/img/light_big.svg'
+                                }else  if(item.device.typeId =="6") {
+                                    item.icon = '../../../static/img/detection_big.svg'
+                                }else  if(item.device.typeId =="7") {
+                                    item.icon = '../../../static/img/wifi_big.svg'
+                                }else  if(item.device.typeId =="8") {
+                                    item.icon = '../../../static/img/wring_big.svg'
+                                }else  if(item.device.typeId =="9") {
+                                    item.icon = '../../../static/img/detection_big.svg'
+                                }
                             }
                         }else if(item.rule.alarmTypeId =="2") {
                             item.regionName="报警柱"
                             if (item.status.id =="1")  {
+                                this.pendinglist.push(item.id)
                                 item.icon = '../../../static/img/alarm/alarmcolumnRule_one.svg'
                             } else  if (item.status.id =="2") {
+                                this.faultlist.push(item.id)
                                 item.icon = '../../../static/img/alarm/alarmcolumnRule_two.svg'
                             }else {
+                                this.stockslist.push(item.id)
                                 item.icon = '../../../static/img/alarm/alarmcolumnRule_three.svg'
                             }
                         }else if(item.rule.alarmTypeId =="3") {
                             item.regionName="消防"
                             if (item.status.id =="1")  {
+                                this.pendinglist.push(item.id)
                                 item.icon = '../../../static/img/alarm/firefightingRule_one.svg'
                             } else  if (item.status.id =="2") {
+                                this.faultlist.push(item.id)
                                 item.icon = '../../../static/img/alarm/firefightingRule_two.svg'
                             }else {
+                                this.stockslist.push(item.id)
                                 item.icon = '../../../static/img/alarm/firefightingRule_three.svg'
                             }
                         }else if(item.rule.alarmTypeId =="4") {
                             item.regionName="越界"
                             if (item.status.id =="1")  {
+                                this.pendinglist.push(item.id)
                                 item.icon = '../../../static/img/alarm/crossborderRule_one.svg'
                             } else  if (item.status.id =="2") {
+                                this.faultlist.push(item.id)
                                 item.icon = '../../../static/img/alarm/crossborderRule_two.svg'
                             }else {
+                                this.stockslist.push(item.id)
                                 item.icon = '../../../static/img/alarm/crossborderRule_three.svg'
                             }
                         }else if(item.rule.alarmTypeId =="5") {
                             item.regionName="超速"
                             if (item.status.id =="1")  {
+                                this.pendinglist.push(item.id)
                                 item.icon = '../../../static/img/alarm/clearer_one.svg'
                             } else  if (item.status.id =="2") {
+                                this.faultlist.push(item.id)
                                 item.icon = '../../../static/img/alarm/clearer_two.svg'
                             }else {
+                                this.stockslist.push(item.id)
                                 item.icon = '../../../static/img/alarm/clearer_three.svg'
                             }
                         }else if(item.rule.alarmTypeId =="6") {
                             item.regionName="偏离轨迹"
                             if (item.status.id =="1")  {
+                                this.pendinglist.push(item.id)
                                 item.icon = '../../../static/img/alarm/offtrackRule_one.svg'
                             } else  if (item.status.id =="2") {
+                                this.faultlist.push(item.id)
                                 item.icon = '../../../static/img/alarm/offtrackRule_two.svg'
                             }else {
+                                this.stockslist.push(item.id)
                                 item.icon = '../../../static/img/alarm/offtrackRule_three.svg'
                             }
                         }else if(item.rule.alarmTypeId =="7") {
                             item.regionName="客流量"
                             if (item.status.id =="1")  {
+                                this.pendinglist.push(item.id)
                                 item.icon = '../../../static/img/alarm/overlimitRule_one.svg'
                             } else  if (item.status.id =="2") {
+                                this.faultlist.push(item.id)
                                 item.icon = '../../../static/img/alarm/overlimitRule_two.svg'
                             }else {
+                                this.stockslist.push(item.id)
                                 item.icon = '../../../static/img/alarm/overlimitRule_three.svg'
                             }
                         }else if(item.rule.alarmTypeId =="8") {
                             item.regionName="水位"
                             if (item.status.id =="1")  {
+                                this.pendinglist.push(item.id)
                                 item.icon = '../../../static/img/alarm/waterlevelRule_one.svg'
                             } else  if (item.status.id =="2") {
+                                this.faultlist.push(item.id)
                                 item.icon = '../../../static/img/alarm/waterlevelRule_two.svg'
                             }else {
+                                this.stockslist.push(item.id)
                                 item.icon = '../../../static/img/alarm/waterlevelRule_three.svg'
                             }
                         }else if(item.rule.alarmTypeId =="9") {
                             item.regionName="环境"
                             if (item.status.id =="1")  {
+                                this.pendinglist.push(item.id)
                                 item.icon = '../../../static/img/alarm/conditionRule_one.svg'
                             } else  if (item.status.id =="2") {
+                                this.faultlist.push(item.id)
                                 item.icon = '../../../static/img/alarm/conditionRule_two.svg'
                             }else {
+                                this.stockslist.push(item.id)
                                 item.icon = '../../../static/img/alarm/conditionRule_three.svg'
                             }
                         }
@@ -265,7 +364,10 @@
                         })
                     })
                     this.lightInfo = arr
-                    console.log(this.lightInfo,'16565623');
+                    this.pending=this.pendinglist.length
+                    this.fault=this.faultlist.length
+                    this.stocks=this.stockslist.length
+                    this.drawLine();
                 }).catch(err =>{
                     console.log(err)
                 })
@@ -279,7 +381,6 @@
         },
         mounted() {
             this.getAllAlarmEvent();
-            this.drawLine();
         },
         computed: {
             ...mapGetters(['getcontroleLight'])
