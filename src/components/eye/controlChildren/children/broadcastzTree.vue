@@ -20,7 +20,7 @@
             ref="tree"
             @check="handleCheckChange">
             <span class="custom-tree-node" slot-scope="{ node, Info }">
-                <img class="icon" :src="node.icon"/>
+                <img class="icon" :src="node.icon" v-if="node.icon"/>
                 <span>{{ node.label }}</span>
             </span>
         </el-tree>
