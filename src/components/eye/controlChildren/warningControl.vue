@@ -74,7 +74,7 @@
                 regionId:[],
                 lightList:[],
                 selectAll:[],
-                title:'处理中'
+                title:'告警事件'
             }
         },
         components: {
@@ -148,35 +148,109 @@
             },
             async getAllAlarmEvent () {
                 await api.alarm.getAllAlarmEvent().then(res => {
-                    this.lightList=res.devices
+                    console.log(res,'16565623');
+                    this.lightList=res
                     this.number=this.lightList.length
                     let regionIdList = []
                     let arr = []
                     let idList = []
-
-
                     this.lightList.forEach(item => {
-                        item.label = item.name
+                        item.label = item.serialNum
                         item.type = 'warn'
-                        if (item.severity.id =="FAULT")  {
-                            item.icon = '../../../static/img/wifi_damage.svg'
-                        } else  if (item.status =="OFFLINE") {
-                            item.icon = '../../../static/img/wifi.svg'
-                        }else {
-                            item.icon = '../../../static/img/wifi_open.svg'
+                        if(item.rule.alarmTypeId =="1"){
+                            item.regionName="设备故障"
+                            if (item.status.id =="1")  {
+                                item.icon = '../../../static/img/detection_open.svg'
+                            } else  if (item.status.id =="2") {
+                                item.icon = '../../../static/img/detection_damage.svg'
+                            }else {
+                                item.icon = '../../../static/img/detection.svg'
+                            }
+                        }else if(item.rule.alarmTypeId =="2") {
+                            item.regionName="报警柱"
+                            if (item.status.id =="1")  {
+                                item.icon = '../../../static/img/alarm/alarmcolumnRule_one.svg'
+                            } else  if (item.status.id =="2") {
+                                item.icon = '../../../static/img/alarm/alarmcolumnRule_two.svg'
+                            }else {
+                                item.icon = '../../../static/img/alarm/alarmcolumnRule_three.svg'
+                            }
+                        }else if(item.rule.alarmTypeId =="3") {
+                            item.regionName="消防"
+                            if (item.status.id =="1")  {
+                                item.icon = '../../../static/img/alarm/firefightingRule_one.svg'
+                            } else  if (item.status.id =="2") {
+                                item.icon = '../../../static/img/alarm/firefightingRule_two.svg'
+                            }else {
+                                item.icon = '../../../static/img/alarm/firefightingRule_three.svg'
+                            }
+                        }else if(item.rule.alarmTypeId =="4") {
+                            item.regionName="越界"
+                            if (item.status.id =="1")  {
+                                item.icon = '../../../static/img/alarm/crossborderRule_one.svg'
+                            } else  if (item.status.id =="2") {
+                                item.icon = '../../../static/img/alarm/crossborderRule_two.svg'
+                            }else {
+                                item.icon = '../../../static/img/alarm/crossborderRule_three.svg'
+                            }
+                        }else if(item.rule.alarmTypeId =="5") {
+                            item.regionName="超速"
+                            if (item.status.id =="1")  {
+                                item.icon = '../../../static/img/alarm/clearer_one.svg'
+                            } else  if (item.status.id =="2") {
+                                item.icon = '../../../static/img/alarm/clearer_two.svg'
+                            }else {
+                                item.icon = '../../../static/img/alarm/clearer_three.svg'
+                            }
+                        }else if(item.rule.alarmTypeId =="6") {
+                            item.regionName="偏离轨迹"
+                            if (item.status.id =="1")  {
+                                item.icon = '../../../static/img/alarm/offtrackRule_one.svg'
+                            } else  if (item.status.id =="2") {
+                                item.icon = '../../../static/img/alarm/offtrackRule_two.svg'
+                            }else {
+                                item.icon = '../../../static/img/alarm/offtrackRule_three.svg'
+                            }
+                        }else if(item.rule.alarmTypeId =="7") {
+                            item.regionName="客流量"
+                            if (item.status.id =="1")  {
+                                item.icon = '../../../static/img/alarm/overlimitRule_one.svg'
+                            } else  if (item.status.id =="2") {
+                                item.icon = '../../../static/img/alarm/overlimitRule_two.svg'
+                            }else {
+                                item.icon = '../../../static/img/alarm/overlimitRule_three.svg'
+                            }
+                        }else if(item.rule.alarmTypeId =="8") {
+                            item.regionName="水位"
+                            if (item.status.id =="1")  {
+                                item.icon = '../../../static/img/alarm/waterlevelRule_one.svg'
+                            } else  if (item.status.id =="2") {
+                                item.icon = '../../../static/img/alarm/waterlevelRule_two.svg'
+                            }else {
+                                item.icon = '../../../static/img/alarm/waterlevelRule_three.svg'
+                            }
+                        }else if(item.rule.alarmTypeId =="9") {
+                            item.regionName="环境"
+                            if (item.status.id =="1")  {
+                                item.icon = '../../../static/img/alarm/conditionRule_one.svg'
+                            } else  if (item.status.id =="2") {
+                                item.icon = '../../../static/img/alarm/conditionRule_two.svg'
+                            }else {
+                                item.icon = '../../../static/img/alarm/conditionRule_three.svg'
+                            }
                         }
-                        if (!regionIdList.includes(item.regionId)) {
-                            regionIdList.push(item.regionId)
+                        if (!regionIdList.includes(item.rule.alarmTypeId)) {
+                            regionIdList.push(item.rule.alarmTypeId)
                             let obj = {
                                 label: item.regionName,
-                                type: 'wifi',
-                                id: item.regionId,
+                                type: 'warn',
+                                id: item.rule.alarmTypeId,
                                 children: []
                             }
                             arr.push(obj)
                         }
                         arr.forEach(item1 => {
-                            if (item1.id == item.regionId) {
+                            if (item1.id == item.rule.alarmTypeId) {
                                 if (item1.children.length < 1) {
                                     item1.children.push(item)
                                 } else {
