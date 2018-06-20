@@ -109,7 +109,7 @@
                         title:'报警柱'
                     },
                     {
-                        icon:'./../../../static/img/船夫.svg',
+                        icon:'./../../../static/img/gps.svg',
                         index:'/hard-property/gpsType',
                         title:'GPS'
                     },
