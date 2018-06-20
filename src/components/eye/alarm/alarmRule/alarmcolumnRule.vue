@@ -50,7 +50,6 @@
                         </el-table-column>
                         <el-table-column
                             sortable
-                            sort-method
                             prop="alarmSeverity.name"
                             label="严重等级">
                         </el-table-column>

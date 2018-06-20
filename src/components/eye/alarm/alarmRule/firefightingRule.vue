@@ -134,6 +134,10 @@
                 }
             },
             addNewInfo () {
+                if(this.listLength > 0){
+                    this.$message.info('只能添加一条消防告警规则')
+                    return
+                }
                 this.showDetail({},false,'添加消防告警规则',)
             },
             enabledClick(obj,flag){
@@ -302,15 +306,16 @@
                         api.alarm.deleteAlarmRule(this.choseInfoId).then(res => {
                             console.log(res, '删除成功')
                             this.$message.success('删除成功')
-                            for (let i = 0; i < this.choseInfoId.length; i++) {
-                                this.firefightingList = this.firefightingList.filter((item, index) => {
-                                    if (item.id === this.choseInfoId[i]){
-                                        this.firefightingList[index].checked = false
-                                        this.firefightingList[index].status = false
-                                    }
-                                    return item.status !== false
-                                })
-                            }
+                            this.getAlarmRule ()
+                            // for (let i = 0; i < this.choseInfoId.length; i++) {
+                            //     this.firefightingList = this.firefightingList.filter((item, index) => {
+                            //         if (item.id === this.choseInfoId[i]){
+                            //             this.firefightingList[index].checked = false
+                            //             this.firefightingList[index].status = false
+                            //         }
+                            //         return item.status !== false
+                            //     })
+                            // }
                             this.choseInfos = []
                             this.choseInfoId = []
                         }).catch(err => {

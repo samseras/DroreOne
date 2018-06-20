@@ -40,7 +40,7 @@
                     </p>
                     <p class="severityName">
                         <span>严重等级：</span>
-                        <el-select  v-model="alarmcolumnInfo.severityId" size="mini" :disabled='isReadonly' class="" placeholder="请选择">
+                        <el-select @change="severityChange" v-model="alarmcolumnInfo.severityId" size="mini" :disabled='isReadonly' class="" placeholder="请选择">
                             <el-option
                                 v-for="item in levelInfo"
                                 :key="item.id"
@@ -689,6 +689,9 @@
             }
         },
         methods: {
+            severityChange(){
+               // this.alarmcolumnInfo = this.alarmcolumnInfo.slice(0)
+            },
             sourceChange(val){
                 if(val == 0){
                     this.deviceReadOnly  = true
@@ -1701,20 +1704,26 @@
                 this.route = this.$route.path
                 if (this.route.includes('alarmcolumn')) {
                     this.alarmcolumnInfo = JSON.parse(JSON.stringify(this.Info));
-                    if(!this.alarmcolumnInfo.id){   //如果为新增，严重等级默认为高
-                        this.alarmcolumnInfo.severityId = '1';
+                    if(!this.alarmcolumnInfo.id){
+                        this.alarmcolumnInfo = {
+                            severityId : '1'
+                        }
                     }
                 } else if(this.route.includes('firefighting')) {
                     // this.getAllBroadcast()
                     this.firefightingInfo = JSON.parse(JSON.stringify(this.Info));
                     if(!this.firefightingInfo.id){
-                        this.firefightingInfo.severityId = '1';
+                        this.firefightingInfo = {
+                            severityId : '1'
+                        }
                     }
                 } else if(this.route.includes('crossborder')) {
                     // this.getAllLight()
                     this.crossborderInfo = JSON.parse(JSON.stringify(this.Info));
                     if(!this.crossborderInfo.id){
-                        this.crossborderInfo.severityId = '1'
+                        this.crossborderInfo = {
+                            severityId : '1'
+                        }
                     }
 
                 } else if(this.route.includes('speeding')) {
@@ -1723,22 +1732,30 @@
                 } else if(this.route.includes('offtrack')) {
                     this.offtrackInfo = JSON.parse(JSON.stringify(this.Info));
                     if(!this.offtrackInfo.id){
-                        this.offtrackInfo.severityId = '3';
+                        this.offtrackInfo = {
+                            severityId : '3'
+                        }
                     }
                 } else if(this.route.includes('overlimit')){
                     this.overlimitInfo = JSON.parse(JSON.stringify(this.Info));
                     if(!this.overlimitInfo.id){
-                        this.overlimitInfo.severityId = '1';
+                        this.overlimitInfo = {
+                            severityId : '1'
+                        }
                     }
                 } else if(this.route.includes('waterlevel')){
                     this.waterlevelInfo = JSON.parse(JSON.stringify(this.Info));
                     if(!this.waterlevelInfo.id){
-                        this.waterlevelInfo.severityId = '2';
+                        this.waterlevelInfo = {
+                            severityId : '2'
+                        }
                     }
                 } else if(this.route.includes('condition')){
                     this.conditionInfo = JSON.parse(JSON.stringify(this.Info));
                     if(!this.conditionInfo.id){
-                        this.conditionInfo.severityId = '3';
+                        this.conditionInfo = {
+                            severityId : '3'
+                        }
                     }
                     //来源为外部系统，关联设备不可用
                     if(this.conditionInfo.envDataSource == "0"){

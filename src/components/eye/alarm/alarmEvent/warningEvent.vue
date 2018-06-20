@@ -370,6 +370,7 @@
                     })
             },
             async getAllAlarmEvent () {
+                this.isShowLoading = true
                 await   api.alarm.getAllAlarmEvent().then(res => {
                                 console.log(res, '请求成功')
                                 this.isShowLoading = false
@@ -428,7 +429,6 @@
             }
         },
         created () {
-            this.isShowLoading = true
             this.initData();
             this.getAllAlarmEvent();
             console.log(this.personInfo)
