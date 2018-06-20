@@ -1771,6 +1771,7 @@
         .el-dialog--center{
             padding: 0;
             /*height: rem(300);*/
+            text-align: left;
         }
         .el-dialog__header{
             padding: rem(10) 0 rem(5) rem(20);
@@ -1965,9 +1966,12 @@
                         font-size: rem(16);
                     }
                     span{
-                        background: #f0f2f5;
-                        color: #909399;
+                        display: inline-block;
+                        line-height: rem(15);
+                        overflow: hidden;
+                        padding-bottom: rem(-1);
                     }
+
                 }
                 .uploadText{
                     overflow: hidden;
