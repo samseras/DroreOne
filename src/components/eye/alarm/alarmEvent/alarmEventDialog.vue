@@ -113,7 +113,7 @@
                                 </el-select>
                             </p>
                             <p class="description">
-                                <span>处理备注：</span><br>
+                                <span>处理备注：</span>
                                 <el-input type="textarea" :rows='5' :cols="30" placeholder="请输入描述信息" v-model="handleDescription" :disabled="readOnly" :maxlength="140"></el-input>
                             </p>
                             <div class="attachment">
@@ -133,7 +133,7 @@
                             </div>
 
                             <div class="processLog">
-                                <span>处理记录：</span><br/>
+                                <span>处理记录：</span>
                                 <div class="processDiv" v-for="item in eventInfo.handleRecords">
                                     <div class="processTime">{{item.submitTime}}</div>
                                     <div class="processContent">
@@ -503,6 +503,7 @@
         .el-dialog--center{
             padding: 0;
             height: rem(530);
+            text-align: left;
         }
         .el-dialog__header{
             padding: rem(10) 0 rem(5) rem(20);
@@ -746,11 +747,14 @@
                      i{
                          font-size: rem(16);
                      }
-                     /*span{*/
-                         /*background: #f0f2f5;*/
-                         /*color: #909399;*/
-                     /*}*/
+                     span{
+                         display: inline-block;
+                         line-height: rem(15);
+                         overflow: hidden;
+                         padding-bottom: rem(-1);
+                     }
                  }
+
 
              }
             .cardFooter {

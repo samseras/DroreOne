@@ -50,11 +50,11 @@
                         </el-table-column>
                         <el-table-column
                             sortable
+                            sort-method
                             prop="alarmSeverity.name"
                             label="严重等级">
                         </el-table-column>
                         <el-table-column
-                            sortable
                             show-overflow-tooltip
                             prop="relatedManagerNames"
                             label="管理者">
