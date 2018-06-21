@@ -191,10 +191,19 @@
             table{
                 th{
                     background: #f3f3f3;
-                    .cell{
-                        font-size: rem(16);
-                        font-weight: 500;
-                        color: #333;
+                    /*.cell{*/
+                        /*font-size: rem(16);*/
+                        /*font-weight: 500;*/
+                        /*color: #333;*/
+                    /*}*/
+                    .caret-wrapper{
+                        height: rem(22);
+                        .sort-caret.ascending{
+                            top:0
+                        }
+                       .sort-caret.descending{
+                           bottom:0
+                       }
                     }
                 }
             }
