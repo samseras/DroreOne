@@ -13,6 +13,18 @@ const patrol = {
             url: getUrl('/schedule/inspection')
         })
     },
+    getAllPatrolTrue () {
+        return axios ({
+            method: 'GET',
+            url: getUrl('/schedule/inspection?isEnabled=true')
+        })
+    },
+    getAllPatrolPeople (id) {
+        return axios ({
+            method: 'GET',
+            url: getUrl('/securitystatus?id='+id)
+        })
+    },
     createdPatrol (item) {
         return axios ({
             method: 'POST',

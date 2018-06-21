@@ -709,9 +709,8 @@
                     console.log(err,'失败')
                 })
                 //设备认证标签页
-                api.iotHome.getDeviceEditInfo(this.curId).then(res=>{
+                api.iotHome.postDeviceQualificationInfo(this.curId).then(res=>{
                     console.log(res,'这是设备认证页面传回来的可编辑信息');
-
                     res.fieldInfos.forEach(item => {
                         Object.keys(res.properties).forEach( (key, i) => {
                             //console.log(key, '这个是拿过来的对象的键')

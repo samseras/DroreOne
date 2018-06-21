@@ -12,10 +12,12 @@
                         @batchDownload="batchDownload"
                         :choseId="choseInfoId"
                         :listLength = "listLength"
-                        @searchAnything="searchAnything">
+                        @searchAnything="searchAnything"
+                        @previousPage="previousPage"
+                        @nextPage="nextPage">
                 </Header>
             </div>
-            <div class="personList" v-loading="isShowloading">
+            <div class="personList" v-loading="loading">
                 <ScrollContainer>
                     <el-table
                         ref="multipleTable"
@@ -110,12 +112,13 @@
                 readOnly: true,
                 title:'',
                 selection:[],
-                isShowloading: false,
+                loading: false,
                 isBatchEdit:false,
                 alarmType:'',
                 listLength:'',
                 dataLength:'',
-                updateParams:[]
+                updateParams:[],
+                pageNum:1
             }
         },
         methods: {
@@ -343,6 +346,16 @@
                     })
                 })
             },
+            previousPage (page) {
+                console.log(page, '这是传过来的pageNum')
+                this.pageNum = page
+                this.getAllAlarmEvent ()
+            },
+            nextPage (page) {
+                console.log(page, '这个是下一页的pageNUM')
+                this.pageNum = page
+                this.getAllAlarmEvent ()
+            },
             async updateAlarmEvent(objArray){
                 await api.alarm.updateAlarmEvent(objArray).then(res => {
                         console.log(res, '修改成功')
@@ -357,12 +370,11 @@
                     })
             },
             async getAllAlarmEvent () {
-                await   api.alarm.getAllAlarmEvent().then(res => {
-                                console.log(res, '请求成功')
-                                this.isShowLoading = false
+                this.loading = true
+                await api.alarm.getAllAlarmEvent().then(res => {
+                                this.loading = false
                                 this.listLength = res.length
                                 this.warningEventList = JSON.parse(JSON.stringify(res))
-
                                 this.warningEventList.forEach(item => {
                                     item.checked = false;
                                     item.rule.alarmTypeName = this.getAlarmTypeNameById(item.rule.alarmTypeId)
@@ -381,12 +393,20 @@
                                             item.fileList = fileList
                                         }
                                     }
+                                    item.modifyTime=item.modifyTime.replace("-","/")
+                                    item.byTime = -(new Date(item.modifyTime)).getTime()
                                 })
 
-                            this.warningEventListTemp = JSON.parse(JSON.stringify(this.warningEventList))
+                                this.warningEventList = _.sortBy(this.warningEventList,'byTime')
+
+                                this.warningEventList = this.warningEventList.filter((item,index) => {
+                                    if (index < (this.pageNum * 10 ) && index > ((this.pageNum -1) * 10 ) - 1 ) {
+                                        return item
+                                    }
+                                })
+                                this.warningEventListTemp = JSON.parse(JSON.stringify(this.warningEventList))
                         }).catch(err => {
-                            console.log(err, '请求失败')
-                            this.isShowLoading = false
+                            this.loading = false
                         })
             },
             getAlarmTypeNameById(typeId){
@@ -395,11 +415,8 @@
             },
             async getAllAlarmTypes(){
                 await api.alarm.getAllAlarmTypes().then(res => {
-                    console.log(res, '请求type成功')
                     this.alarmType = res;
                 }).catch(err => {
-                    console.log(err, '请求失败')
-                    console.log(err, '请求失败')
                 })
             },
             initData(){
@@ -407,7 +424,6 @@
             }
         },
         created () {
-            this.isShowLoading = true
             this.initData();
             this.getAllAlarmEvent();
             console.log(this.personInfo)

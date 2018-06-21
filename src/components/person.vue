@@ -2,7 +2,7 @@
     <div class="person">
         <div class="pro_content">
             <!--<el-menu :default-active="'/person/'+ getJobTypeList[0].id"router-->
-            <el-menu default-active='/person/1'router
+            <el-menu default-active='/person'router
                      text-color="#fff"
                      active-text-color="#ffd04b"
                      :default-openeds="openeds">
@@ -28,7 +28,7 @@
 
             <div class="content">
                 <ScrollContainer>
-                    <router-view></router-view>
+                    <router-view v-if="isRouterAlive"></router-view>
                 </ScrollContainer>
             </div>
         </div>
@@ -42,8 +42,14 @@
 
     export default {
         name: "property",
+        provide(){
+            return {
+                reload:this.reload
+            }
+        },
         data() {
             return {
+                isRouterAlive:true,
                 openeds:['2'],
                 isActive: false,
                 items: [
@@ -69,6 +75,12 @@
             ...mapActions([
                 'getJobType',
             ]),
+            reload(){
+                this.isRouterAlive = false
+                this.$nextTick(()=>{
+                    this.isRouterAlive = true
+                })
+            },
             imgUrl (id) {
                 switch (id) {
                     case '1': {
@@ -107,7 +119,22 @@
         async created () {
             await this.getJobType()
             if (this.getJobTypeList.length > 0) {
-                await this.$router.push(`/person/${this.getJobTypeList[0].id}`)
+                console.log(this.getJobTypeList, 'hitSearchsdjfvckjsdbr')
+                let enableState = false
+                let id = ''
+                this.getJobTypeList.forEach(item => {
+                    if (item.enable) {
+                        enableState = true
+                        id = item.id
+                        return
+                    }
+                })
+                if (enableState) {
+                    await this.$router.push(`/person/${id}`)
+
+                } else {
+                    this.$router.push('/person')
+                }
             }
         },
         mounted () {

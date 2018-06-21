@@ -110,6 +110,7 @@
                 this.getAllCamera();//摄像头现有标注
                 this.overView();//鹰眼
                 this.rangeSearch();// 范围查找
+                this.getAllRoute();//调度路线
             } else if (route.includes('area-deploy')) {
                 if(!this.getLocationId){
                     this.getAllArea();// 片区输出
@@ -1684,6 +1685,18 @@
                         var data = {"id": res[i].id, "name": res[i].name,"constructor":''}
                         areaEvtList.addRoad(area, data)
                         droreMap.road.addRoadLayer(areaEvtList, res[i].id)
+                        let route = this.$route.path
+                        if(route.includes('controler')){
+                            droreMap.road.removeStyleById(res[i].id,false)
+                        }
+                    }
+                    let route = this.$route.path
+                    if(route.includes('controler')) {
+                        if (this.getfacilityRoad.length > 0) {
+                            for (let i = 0; i < this.getfacilityRoad.length; i++) {
+                                this.roadShowID(this.getfacilityRoad[i]);
+                            }
+                        }
                     }
                 }).catch(err => {
                     console.log(err, '请求失败')
@@ -1871,6 +1884,9 @@
             roadHide(data){
                 droreMap.road.removeStyleById(data.id,false)
             },
+            roadHideID(data){
+                droreMap.road.removeStyleById(data,false)
+            },
             areaShow(data){
                 droreMap.area.removeStyleById(data.id,true)
             },
@@ -2030,7 +2046,7 @@
                 this.searchShow(this.getSearchInfo);
             },
             getTreeState(){
-                // console.log(this.getTreeState,'213123')
+                console.log(this.getTreeState,'213123')
                 if(this.getTreeState.length>1) {
                     // console.log(this.getTreeState,'ioioioiooioioiooi')
                     //    这边是全选
@@ -2040,7 +2056,11 @@
                                 if(item1.typeroad=='road'){
                                     this.roadShow(item1);
                                 }else {
-                                    if(item1.type!='person'){
+                                    if(item1.type =='person'){
+                                        this.roadShowID(item1.routeId);
+                                    }else if(item1.type =='warn'){
+
+                                    }else {
                                         this.treeShow(item1);
                                     }
                                 }
@@ -2098,7 +2118,11 @@
                             if(item.typeroad=='road'){
                                 this.roadHide(item);
                             }else {
-                                if(item.type!='person'){
+                                if(item.type =='person'){
+                                    this.roadHideID(item.routeId)
+                                }else if(item.type =='warn'){
+
+                                }else {
                                     this.treeHide(item);
                                 }
                             }
@@ -2159,7 +2183,11 @@
                                 if(data[i].typeroad=='road'){
                                     this.roadShow(data[i]);
                                 }else {
-                                    if(data[i].type!='person'){
+                                    if(data[i].type =='person'){
+                                        this.roadShowID(data[i].routeId)
+                                    }else if(data[i].type =='warn'){
+
+                                    }else {
                                         this.treeShow(data[i]);
                                     }
                                 }
@@ -2233,7 +2261,11 @@
                                 if(this.getTreeState[0].children[i].typeroad=='road'){
                                     this.roadHide(this.getTreeState[0].children[i]);
                                 }else {
-                                    if(this.getTreeState[0].children[i].type!='person'){
+                                    if(this.getTreeState[0].children[i].type =='person'){
+                                        this.roadHideID(this.getTreeState[0].children[i].routeId)
+                                    }else if(this.getTreeState[0].children[i].type =='warn'){
+
+                                    }else {
                                         this.treeHide(this.getTreeState[0].children[i]);
                                     }
                                 }
@@ -2336,7 +2368,11 @@
                             if(this.getTreeState[0].typeroad=='road'){
                                 this.roadShow(this.getTreeState[0]);
                             }else {
-                                if(this.getTreeState[0].type!='person'){
+                                if(this.getTreeState[0].type =='person'){
+                                    this.roadShowID(this.getTreeState[0].routeId)
+                                }else if(this.getTreeState[0].type =='warn'){
+
+                                }else {
                                     this.treeShow(this.getTreeState[0]);
                                 }
                             }
@@ -2406,7 +2442,11 @@
                             if(this.getTreeState[0].typeroad=='road'){
                                 this.roadHide(this.getTreeState[0]);
                             }else {
-                                if(this.getTreeState[0].type!='person'){
+                                if(this.getTreeState[0].type =='person'){
+                                    this.roadHideID(this.getTreeState[0].routeId)
+                                }else if(this.getTreeState[0].type =='warn'){
+
+                                }else {
                                     this.treeHide(this.getTreeState[0]);
                                 }
                             }

@@ -12,10 +12,12 @@
                         @batchEnabled="batchEnabled"
                         :choseId="choseInfoId"
                         :listsLength = "listLength"
-                        @searchAnything="searchAnything">
+                        @searchAnything="searchAnything"
+                        @previousPage="previousPage"
+                        @nextPage="nextPage">
                 </Header>
             </div>
-            <div class="personList" v-loading="isShowloading">
+            <div class="personList" v-loading="loading">
                 <ScrollContainer>
                     <el-table
                         ref="multipleTable"
@@ -52,7 +54,6 @@
                             label="严重等级">
                         </el-table-column>
                         <el-table-column
-                            sortable
                             show-overflow-tooltip
                             prop="relatedManagerNames"
                             label="管理者">
@@ -100,10 +101,11 @@
                 isReadonly: true,
                 title:'',
                 selection:[],
-                isShowloading: false,
+                loading: false,
                 isBatchEdit:false,
                 alarmTypeId:'',
-                listLength:''
+                listLength:'',
+                pageNum:1
 
             }
         },
@@ -425,13 +427,22 @@
               await this.getAllAlarmTypes();
               await this.getAlarmRule();
             },
-
+            previousPage (page) {
+                console.log(page, '这是传过来的pageNum')
+                this.pageNum = page
+                this.getAlarmRule ()
+            },
+            nextPage (page) {
+                console.log(page, '这个是下一页的pageNUM')
+                this.pageNum = page
+                this.getAlarmRule ()
+            },
             async getAlarmRule(){
-                this.isShowLoading = true
+                this.loading = true
                 this.alarmTypeId = this.getAlarmTypeId("超速")
                 await api.alarm.getAlarmRulesByParameters(this.alarmTypeId).then(res => {
                     console.log(res, '请求成功')
-                    this.isShowLoading = false
+                    this.loading = false
                     this.speedingList = res
                     this.listLength = this.speedingList.length
                     this.speedingList.forEach(item => {
@@ -463,11 +474,17 @@
                         }
                         item.modifyTime=item.modifyTime.replace("-","/")
                         item.byTime = -(new Date(item.modifyTime)).getTime()
+
                     })
                     this.speedingList = _.sortBy(this.speedingList,'byTime')
+                    this.speedingList = this.speedingList.filter((item,index) => {
+                        if (index < (this.pageNum * 10 ) && index > ((this.pageNum -1) * 10 ) - 1 ) {
+                            return item
+                        }
+                    })
                 }).catch(err => {
                     console.log(err, '请求失败')
-                    this.isShowLoading = false
+                    this.loading = false
                 })
             },
             getAlarmTypeId(typeName){

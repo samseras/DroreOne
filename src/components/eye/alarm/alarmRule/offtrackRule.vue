@@ -12,10 +12,12 @@
                         @batchEnabled="batchEnabled"
                         :choseId="choseInfoId"
                         :listsLength = "listLength"
-                        @searchAnything="searchAnything">
+                        @searchAnything="searchAnything"
+                        @previousPage="previousPage"
+                        @nextPage="nextPage">
                 </Header>
             </div>
-            <div class="personList" v-loading="isShowloading">
+            <div class="personList" v-loading="loading">
                 <ScrollContainer>
                     <el-table
                         ref="multipleTable"
@@ -52,7 +54,6 @@
                             label="严重等级">
                         </el-table-column>
                         <el-table-column
-                            sortable
                             show-overflow-tooltip
                             prop="relatedManagerNames"
                             label="管理者">
@@ -63,7 +64,7 @@
                                 <span @click="showDetail(scope.row,true,'查看偏离轨迹告警规则')">查看</span> |
                                 <span v-if="scope.row.isEnabled" @click="enabledClick(scope.row,false)">停用</span>
                                 <span v-else @click="enabledClick(scope.row,true)">启用</span>
-                                <span @click="deletInfo(scope.row.id)">删除</span>
+                                | <span @click="deletInfo(scope.row.id)">删除</span>
                             </template>
                         </el-table-column>
                     </el-table>
@@ -101,9 +102,10 @@
                 isReadonly: true,
                 title:'',
                 selection:[],
-                isShowloading: false,
+                loading: false,
                 isBatchEdit:false,
-                listLength:''
+                listLength:'',
+                pageNum:1
 
             }
         },
@@ -421,14 +423,23 @@
                 await this.getAllAlarmTypes();
                 await this.getAlarmRule();
             },
-
+            previousPage (page) {
+                console.log(page, '这是传过来的pageNum')
+                this.pageNum = page
+                this.getAlarmRule ()
+            },
+            nextPage (page) {
+                console.log(page, '这个是下一页的pageNUM')
+                this.pageNum = page
+                this.getAlarmRule ()
+            },
             async getAlarmRule(){
-                this.isShowLoading = true
+                this.loading = true
                 this.alarmTypeId = this.getAlarmTypeId("偏离轨迹")
                 console.log( this.alarmTypeId)
                 await api.alarm.getAlarmRulesByParameters(this.alarmTypeId).then(res => {
                     console.log(res, '请求成功')
-                    this.isShowLoading = false
+                    this.loading = false
                     this.offtrackList = res
                     this.listLength = this.offtrackList.length
                     this.offtrackList.forEach(item => {
@@ -453,9 +464,14 @@
                         item.byTime = -(new Date(item.modifyTime)).getTime()
                     })
                     this.offtrackList = _.sortBy(this.offtrackList,'byTime')
+                    this.offtrackList = this.offtrackList.filter((item,index) => {
+                        if (index < (this.pageNum * 10 ) && index > ((this.pageNum -1) * 10 ) - 1 ) {
+                            return item
+                        }
+                    })
                 }).catch(err => {
                     console.log(err, '请求失败')
-                    this.isShowLoading = false
+                    this.loading = false
                 })
             },
             getAlarmTypeId(typeName){

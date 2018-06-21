@@ -33,7 +33,6 @@
                             :title="title"
                             :Info="lightInfo"
                             :lightCheckout="lightCheckout"
-                            :regionId="regionId"
                             :lightList="lightList"
                             :number="number"
                             :fault="fault">
@@ -42,7 +41,7 @@
                 </div>
             </div>
             <div class="last">
-                <h5>设备故障率</h5>
+                <h5>异常率</h5>
                 <div>
                     <div id="pie"></div>
                 </div>
@@ -71,10 +70,11 @@
                 isShowBroadCard: false,
                 lightInfo: [],
                 lightCheckout:[],
-                regionId:[],
                 lightList:[],
                 selectAll:[],
-                title:'人员'
+                title:'人员',
+                online: '0',
+                faultlist:[]
             }
         },
         components: {
@@ -117,13 +117,12 @@
                             },
                             data: [
                                 {
-                                    value: 150,
-                                    name: "4人",
+                                    value: this.online,
                                     label: {normal: {show: false}},
                                     labelLine: {normal: {show: false}}
                                 },
                                 {
-                                    value: 70, name: "1人",
+                                    value: this.fault,
                                     label: {normal: {show: true, color: "#646464", fontSize: 12}},
                                     labelLine: {
                                         normal: {
@@ -147,45 +146,52 @@
                 });
             },
             async getAllLight(){
-                await api.patrol.getAllPatrol().then(res => {
+                await api.patrol.getAllPatrolTrue().then(res => {
                     console.log(res,'这是请求的数据ddd')
                     this.lightList=res
-                    this.number=this.lightList.length
+                    let number =[]
                     let arr = []
                     let icon=''
                     this.lightList.forEach(item => {
-                        if (item.inspectionSchedule.routeId && !this.regionId.includes(item.inspectionSchedule.routeId)) {
-                            this.regionId.push(item.inspectionSchedule.routeId)
-                        }
-                    })
-                    this.lightList.forEach(item => {
                         item.children=[]
                         for(let i=0;i< item.persons.length;i++){
-                            if (item.persons[i].status == "FAULT") {
-                                icon = '../../../static/img/light_damage.svg'
-                            } else if (item.persons[i].status == "OFFLINE") {
-                                icon = '../../../static/img/light.svg'
-                            } else {
-                                icon = '../../../static/img/light_open.svg'
-                            }
-                            let children={
-                                label:item.persons[i].name,
-                                type:'person',
-                                icon:icon,
-                                id:item.persons[i].id,
-                            }
-                            item.children.push(children)
+                            api.patrol.getAllPatrolPeople(item.persons[i].id).then(res => {
+                                if (res == "FAULT") {
+                                    icon = '../../../static/img/people_damage.svg'
+                                    this.faultlist.push(item.id)
+                                } else if (res == "OFFLINE") {
+                                    icon = '../../../static/img/people.svg'
+                                } else {
+                                    icon = '../../../static/img/people_open.svg'
+                                }
+                                let children={
+                                    label:item.persons[i].name,
+                                    type:'person',
+                                    icon:icon,
+                                    routeId: item.inspectionSchedule.routeId,
+                                    id:item.persons[i].id+i,
+                                }
+                                item.children.push(children)
+                            })
+                            number.push(item.persons[i].id)
                         }
+
                         let obj = {
                             label: item.inspectionSchedule.name,
                             type:'person',
-                            id: item.inspectionSchedule.routeId,
+                            id: item.inspectionSchedule.id,
+                            routeId: item.inspectionSchedule.routeId,
                             children:item.children
                         }
                         arr.push(obj)
                     })
                     this.lightInfo = arr
-                    console.log(this.lightInfo,'16565623');
+                    this.lightList = arr
+                    console.log(this.lightList, '这是最后提交的')
+                    this.number=number.length
+                    this.fault=this.faultlist.length
+                    this.online= this.number - this.fault
+                    this.drawLine();
                 }).catch(err =>{
                     console.log(err)
                 })
@@ -199,7 +205,6 @@
         },
         mounted() {
             this.getAllLight();
-            this.drawLine();
         },
         computed: {
             ...mapGetters(['getcontroleLight'])
