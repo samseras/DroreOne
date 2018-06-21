@@ -119,7 +119,22 @@
         async created () {
             await this.getJobType()
             if (this.getJobTypeList.length > 0) {
-                await this.$router.push(`/person/${this.getJobTypeList[this.getJobTypeList.length - 1].id}`)
+                console.log(this.getJobTypeList, 'hitSearchsdjfvckjsdbr')
+                let enableState = false
+                let id = ''
+                this.getJobTypeList.forEach(item => {
+                    if (item.enable) {
+                        enableState = true
+                        id = item.id
+                        return
+                    }
+                })
+                if (enableState) {
+                    await this.$router.push(`/person/${id}`)
+
+                } else {
+                    this.$router.push('/person')
+                }
             }
         },
         mounted () {

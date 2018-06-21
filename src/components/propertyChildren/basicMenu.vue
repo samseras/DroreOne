@@ -1,6 +1,6 @@
 <template>
     <div class="basicMenu">
-        <el-menu default-active="/basic-property/park-deploy" router
+        <el-menu default-active="/basic-property" router
                  text-color="#fff"
                  active-text-color="#ffd04b"
                  :default-openeds="openeds">
@@ -134,13 +134,21 @@
             this.getFacilityType()
             if (this.getFacilitTypeMenu.length > 0) {
                 let route = ''
+                let enableState = false
                 this.subs.forEach(item => {
-                    if (item.title === this.getFacilitTypeMenu[this.getFacilitTypeMenu.length -1].name) {
-                        route = item.index
-                        return
-                    }
+                    this.getFacilitTypeMenu.forEach(item1 => {
+                        if (item.title === item1.name && item1.enable) {
+                            route = item.index
+                            enableState = true
+                            return
+                        }
+                    })
                 })
-                this.$router.push(route)
+                if (enableState){
+                    this.$router.push(route)
+                } else {
+                    this.$router.push('/basic-property')
+                }
             }
         },
         watch: {

@@ -665,18 +665,5 @@
                 }
             }
         }
-
-        .opacity{
-            filter:alpha(opacity=0); /* IE */
-            -moz-opacity:0; /* 老版Mozilla */
-            -khtml-opacity:0; /* 老版Safari */
-            opacity: 0; /* 支持opacity的浏览器*/
-        }
-        .no-opacity{
-            filter:alpha(opacity=100); /* IE */
-            -moz-opacity:1; /* 老版Mozilla */
-            -khtml-opacity:1; /* 老版Safari */
-            opacity: 1; /* 支持opacity的浏览器*/
-        }
     }
 </style>
