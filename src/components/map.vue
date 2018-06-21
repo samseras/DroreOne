@@ -1846,7 +1846,12 @@
                 this.title = this.menulist.data.type
             },
             menuOperation(){
-                alert("操作当前内容"+this.menulist.data.name);
+                if(this.menulist.data.status =="FAULT"){
+                    alert("操作当前内容"+this.menulist.id);
+                }else {
+                    this.$message.warning(this.menulist.data.name+'使用正常')
+                }
+
             },
             menuPhone(){
                 console.log(this.menulist.data);
