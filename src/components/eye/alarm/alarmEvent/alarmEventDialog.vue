@@ -8,7 +8,6 @@
             width="580px"
             class="dialog edit_Dialog"
             center>
-
                 <div class="alarmEventContent">
                     <!--批量编辑-->
                     <ScrollContainer>
@@ -112,7 +111,7 @@
                                     </el-option>
                                 </el-select>
                             </p>
-                            <p class="description">
+                            <p class="description textArea">
                                 <span>处理备注：</span>
                                 <el-input type="textarea" :rows='5' :cols="30" placeholder="请输入描述信息" v-model="handleDescription" :disabled="readOnly" :maxlength="140"></el-input>
                             </p>
@@ -153,7 +152,6 @@
                         <el-button size="mini" @click = 'closeEventDialog'>取消</el-button>
                     </div>
                 </div>
-
         </el-dialog>
         <AlarmDetail  v-if="ruleVisible"
                       :ruleVisible="ruleVisible"
@@ -667,6 +665,9 @@
         .el-input__inner{
             border: none;
         }
+        .textArea .el-textarea{
+            font-size: rem(12);
+        }
     }
 </style>
 <style lang="scss" scoped type="text/scss">
@@ -790,8 +791,9 @@
                          padding-bottom: rem(-1);
                      }
                  }
-
-
+                .textArea{
+                    border-bottom: none;
+                }
              }
             .cardFooter {
                 width: 100%;
