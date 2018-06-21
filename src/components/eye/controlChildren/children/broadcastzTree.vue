@@ -114,11 +114,12 @@
                         return item
                     }
                 })
-                if (checked.checkedNodes.length == this.lightList.length) {
+                if (checked.checkedNodes.length == this.number) {
                     this.selectAllCheckBox = true
                 } else {
                     this.selectAllCheckBox = false
                 }
+                // console.log(checked.checkedNodes.length,this.lightList.length);
                 data.checked = checked
                 console.log(data, '这是最后提交的')
                 this.$store.commit('SHOW_TREE', data)
