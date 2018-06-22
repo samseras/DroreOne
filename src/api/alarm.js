@@ -128,6 +128,13 @@ const alarm = {
         })
     },
 
+    getAllAlarmEventundone () {
+        return axios ({
+            method: 'GET',
+            url: getUrl('/alarm/event?statusId=1&statusId=2')
+        })
+    },
+
     getAlarmEventStatus(){
         return axios ({
             method: 'GET',

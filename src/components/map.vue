@@ -21,10 +21,10 @@
             <el-tooltip class="item" effect="dark" content="操作" placement="top">
                  <button @click="menuOperation" class="menuOperation"></button>
             </el-tooltip>
-            <el-tooltip class="item" effect="dark" content="待定" placement="top">
+            <el-tooltip class="item" effect="dark" content="电话" placement="top">
                 <button @click="menuPhone" class="menuPhone"></button>
             </el-tooltip>
-            <el-tooltip class="item" effect="dark" content="待定" placement="top">
+            <el-tooltip class="item" effect="dark" content="广播" placement="top">
                 <button @click="menuBroadcast" class="menuBroadcast"></button>
             </el-tooltip>
         </div>
@@ -111,6 +111,7 @@
                 this.overView();//鹰眼
                 this.rangeSearch();// 范围查找
                 this.getAllRoute();//调度路线
+                this.getAllAlarmEvent();//告警事件现有标注
             } else if (route.includes('area-deploy')) {
                 if(!this.getLocationId){
                     this.getAllArea();// 片区输出
@@ -1754,6 +1755,121 @@
                     console.log(err, '请求失败')
                 })
             },
+            async getAllAlarmEvent () {
+                await api.alarm.getAllAlarmEvent().then(res => {
+                    for (let i=0;i<res.length;i++) {
+                        res[i].location = [res[i].longitude,res[i].latitude]
+                        if(res[i].rule.alarmTypeId =="2") {
+                            if (res[i].status.id =="1")  {
+                                res[i].url = '/static/img/icon/alarmcolumnRule_one.png'
+                                res[i].subtype ='alarmcolumnRule_one'
+                            } else  if (res[i].status.id =="2") {
+                                res[i].url  = '/static/img/icon/alarmcolumnRule_two.png'
+                                res[i].subtype ='alarmcolumnRule_two'
+                            }else {
+                                res[i].url = '/static/img/icon/alarmcolumnRule_three.png'
+                                res[i].subtype ='alarmcolumnRule_three'
+                            }
+                        }else if(res[i].rule.alarmTypeId =="3") {
+                            if (res[i].status.id =="1")  {
+                                res[i].url = '/static/img/icon/firefightingRule_one.png'
+                                res[i].subtype ='firefightingRule_one'
+                            } else  if (res[i].status.id =="2") {
+                                res[i].url = '/static/img/icon/firefightingRule_two.png'
+                                res[i].subtype ='firefightingRule_two'
+                            }else {
+                                res[i].url = '/static/img/icon/firefightingRule_three.png'
+                                res[i].subtype ='firefightingRule_three'
+                            }
+                        }else if(res[i].rule.alarmTypeId =="4") {
+                            if (res[i].status.id =="1")  {
+                                res[i].url = '/static/img/icon/crossborderRule_one.png'
+                                res[i].subtype ='crossborderRule_one'
+                            } else  if (res[i].status.id =="2") {
+                                res[i].url = '/static/img/icon/crossborderRule_two.png'
+                                res[i].subtype ='crossborderRule_two'
+                            }else {
+                                res[i].url = '/static/img/icon/crossborderRule_three.png'
+                                res[i].subtype ='crossborderRule_three'
+                            }
+                        }else if(res[i].rule.alarmTypeId =="5") {
+                            if (res[i].status.id =="1")  {
+                                res[i].url = '/static/img/icon/speedingRule_one.png'
+                                res[i].subtype ='speedingRule_one'
+                            } else  if (res[i].status.id =="2") {
+                                res[i].url = '/static/img/icon/speedingRule_two.png'
+                                res[i].subtype ='speedingRule_two'
+                            }else {
+                                res[i].url = '/static/img/icon/speedingRule_three.png'
+                                res[i].subtype ='speedingRule_three'
+                            }
+                        }else if(res[i].rule.alarmTypeId =="6") {
+                            if (res[i].status.id =="1")  {
+                                res[i].url = '/static/img/icon/offtrackRule_one.png'
+                                res[i].subtype ='offtrackRule_one'
+                            } else  if (res[i].status.id =="2") {
+                                res[i].url = '/static/img/icon/offtrackRule_two.png'
+                                res[i].subtype ='offtrackRule_two'
+                            }else {
+                                res[i].url = '/static/img/icon/offtrackRule_three.png'
+                                res[i].subtype ='offtrackRule_three'
+                            }
+                        }else if(res[i].rule.alarmTypeId =="7") {
+                            if (res[i].status.id =="1")  {
+                                res[i].url = '/static/img/icon/overlimitRule_one.png'
+                                res[i].subtype ='overlimitRule_one'
+                            } else  if (res[i].status.id =="2") {
+                                res[i].url = '/static/img/icon/overlimitRule_two.png'
+                                res[i].subtype ='overlimitRule_two'
+                            }else {
+                                res[i].url = '/static/img/icon/overlimitRule_three.png'
+                                res[i].subtype ='overlimitRule_three'
+                            }
+                        }else if(res[i].rule.alarmTypeId =="8") {
+                            if (res[i].status.id =="1")  {
+                                res[i].url = '/static/img/icon/waterlevelRule_one.png'
+                                res[i].subtype ='waterlevelRule_one'
+                            } else  if (res[i].status.id =="2") {
+                                res[i].url = '/static/img/icon/waterlevelRule_two.png'
+                                res[i].subtype ='waterlevelRule_two'
+                            }else {
+                                res[i].url = '/static/img/icon/waterlevelRule_three.png'
+                                res[i].subtype ='waterlevelRule_three'
+                            }
+                        }else if(res[i].rule.alarmTypeId =="9") {
+                            if (res[i].status.id =="1")  {
+                                res[i].url = '/static/img/icon/conditionRule_one.png'
+                                res[i].subtype ='conditionRule_one'
+                            } else  if (res[i].status.id =="2") {
+                                res[i].url = '/static/img/icon/conditionRule_two.png'
+                                res[i].subtype ='conditionRule_two'
+                            }else {
+                                res[i].url = '/static/img/icon/conditionRule_three.png'
+                                res[i].subtype ='conditionRule_three'
+                            }
+                        }
+                        var icon = new droreMap.icon.Marker({
+                            coordinate: droreMap.trans.transFromWgsToLayer(res[i].location),
+                            name: res[i].serialNum,
+                            subtype: res[i].subtype,
+                            id:  res[i].id,
+                            url: res[i].url,
+                            type: 'warn',
+                            status: res[i].id,
+                            data: res[i],
+                        });
+                        droreMap.icon.addChild(icon);
+                        droreMap.icon.IconStyleById(icon.id,false);
+                        let that = this;
+                        icon.onclick(function (e) {
+                            that.menulist = e.data;
+                            that.droreMappopup(that.menulist);
+                        });
+                    }
+                }).catch(err => {
+                    console.log(err, '请求失败')
+                })
+            },
             iconShow(){
                 for (let i=0;i<this.iconList.length;i++) {
                     var icon = new droreMap.icon.Marker({
@@ -1797,6 +1913,9 @@
                     }
                 }
             },
+
+
+
             overView() {//鹰眼图
                 var overView = new droreMap.control.OverviewMap({'url': '/static/img/xxsd.jpg'});
                 droreMap.control.addControl(overView);
@@ -1841,31 +1960,62 @@
                 }
             },
             menuShow(){
-                this.buildInfo = this.menulist.data
-                this.visible = true
-                this.title = this.menulist.data.type
+                if(this.menulist.type=="warn"){
+                    this.buildInfo = this.menulist.data
+                    this.visible = true
+                    this.title = '告警事件查看'
+                }else {
+                    this.buildInfo = this.menulist.data
+                    this.visible = true
+                    this.title = this.menulist.type
+                }
             },
             menuOperation(){
                 if(this.menulist.data.status =="FAULT"){
                     alert("操作当前内容"+this.menulist.id);
                 }else {
-                    this.$message.warning(this.menulist.data.name+'使用正常')
+                    if(this.menulist.type=="warn"){
+                        this.$message.warning(this.menulist.name+'使用正常')
+                    }else {
+                        this.$message.warning(this.menulist.name+'使用正常')
+                    }
                 }
-
             },
             menuPhone(){
                 console.log(this.menulist.data);
             },
             menuBroadcast(){
-                console.log(this.menulist.data);
+                $("#contextmenu_container").hide();
+                droreMap.map.panToCoord(this.menulist.coordinate);
+                droreMap.map.setZoom(3)
+                let Circle = new droreMap.geom.Circle()
+                let radius=100
+                let coordinate=droreMap.trans.transLayerToWgs(this.menulist.coordinate)
+                let longitude = parseFloat(coordinate[0])
+                let latitude = parseFloat(coordinate[1])
+                let types={
+                    "7":[1]
+                }
+                let SearchFacility = {
+                    radius: radius,
+                    latitude: latitude,
+                    longitude: longitude,
+                    epsg:'4326',
+                    types:types
+                }
+                this.getSearchFacility(SearchFacility)
+                Circle.setCenter(this.menulist.coordinate,radius+35);
             },
             menuDelete(){
                 $("#contextmenu_container").hide();
             },
             treeShow(data){
-                data.location = [data.longitude,data.latitude]
-                droreMap.map.panToCoord(droreMap.trans.transFromWgsToLayer(data.location));
-                droreMap.icon.IconStyleById(data.id,true);
+                if(data.longitude&&data.latitude){
+                    data.location = [data.longitude,data.latitude]
+                    droreMap.map.panToCoord(droreMap.trans.transFromWgsToLayer(data.location));
+                    droreMap.icon.IconStyleById(data.id,true);
+                }
+
             },
             treeShowID(data){
                 droreMap.icon.IconStyleById(data,true);
@@ -2064,7 +2214,7 @@
                                     if(item1.type =='person'){
                                         this.roadShowID(item1.routeId);
                                     }else if(item1.type =='warn'){
-
+                                        this.treeShow(item1);
                                     }else {
                                         this.treeShow(item1);
                                     }
@@ -2126,7 +2276,7 @@
                                 if(item.type =='person'){
                                     this.roadHideID(item.routeId)
                                 }else if(item.type =='warn'){
-
+                                    this.treeHide(item);
                                 }else {
                                     this.treeHide(item);
                                 }
@@ -2191,7 +2341,7 @@
                                     if(data[i].type =='person'){
                                         this.roadShowID(data[i].routeId)
                                     }else if(data[i].type =='warn'){
-
+                                        this.treeShow(data[i]);
                                     }else {
                                         this.treeShow(data[i]);
                                     }
@@ -2269,7 +2419,7 @@
                                     if(this.getTreeState[0].children[i].type =='person'){
                                         this.roadHideID(this.getTreeState[0].children[i].routeId)
                                     }else if(this.getTreeState[0].children[i].type =='warn'){
-
+                                        this.treeHide(this.getTreeState[0].children[i]);
                                     }else {
                                         this.treeHide(this.getTreeState[0].children[i]);
                                     }
@@ -2376,7 +2526,7 @@
                                 if(this.getTreeState[0].type =='person'){
                                     this.roadShowID(this.getTreeState[0].routeId)
                                 }else if(this.getTreeState[0].type =='warn'){
-
+                                    this.treeShow(this.getTreeState[0]);
                                 }else {
                                     this.treeShow(this.getTreeState[0]);
                                 }
@@ -2450,7 +2600,7 @@
                                 if(this.getTreeState[0].type =='person'){
                                     this.roadHideID(this.getTreeState[0].routeId)
                                 }else if(this.getTreeState[0].type =='warn'){
-
+                                    this.treeHide(this.getTreeState[0]);
                                 }else {
                                     this.treeHide(this.getTreeState[0]);
                                 }
@@ -2870,10 +3020,10 @@
             /*left: rem(50);*/
         }
         button.menuBroadcast{
-            background: url("/static/img/menuPhone.svg");
+            background: url("/static/img/ware_broadcast.svg");
             background-size: cover;
-            top:rem(22);
-            right: rem(20);
+            left:rem(5);
+            bottom:rem(12);
             display: none;
         }
         button.menuPhone{
@@ -2941,6 +3091,101 @@
     .contextmenu.Broadcast i{
         background: url("/static/img/icon/guangboshebei_big.png") no-repeat;
     }
+    .contextmenu.alarmcolumnRule_one,.contextmenu.alarmcolumnRule_two,.contextmenu.alarmcolumnRule_three,
+    .contextmenu.firefightingRule_one,.contextmenu.firefightingRule_two,.contextmenu.firefightingRule_three,
+    .contextmenu.crossborderRule_one,.contextmenu.crossborderRule_two,.contextmenu.crossborderRule_three,
+    .contextmenu.speedingRule_one,.contextmenu.speedingRule_two,.contextmenu.speedingRule_three,
+    .contextmenu.offtrackRule_one,.contextmenu.offtrackRule_two,.contextmenu.offtrackRule_three,
+    .contextmenu.overlimitRule_one,.contextmenu.overlimitRule_two,.contextmenu.overlimitRule_three,
+    .contextmenu.waterlevelRule_one,.contextmenu.waterlevelRule_two,.contextmenu.waterlevelRule_three,
+    .contextmenu.conditionRule_one,.contextmenu.conditionRule_two,.contextmenu.conditionRule_three
+    {
+        .mapSwitch{
+            display: none;
+        }
+        button.menuBroadcast{
+            display: block;
+        }
+    }
+    .contextmenu.alarmcolumnRule_one i{
+        background: url("/static/img/icon/alarmcolumnRule_one_big.png") no-repeat;
+    }
+    .contextmenu.alarmcolumnRule_two i{
+        background: url("/static/img/icon/alarmcolumnRule_two_big.png") no-repeat;
+    }
+    .contextmenu.alarmcolumnRule_three i{
+        background: url("/static/img/icon/alarmcolumnRule_three_big.png") no-repeat;
+    }
+    .contextmenu.firefightingRule_one i{
+        background: url("/static/img/icon/firefightingRule_one_big.png") no-repeat;
+    }
+    .contextmenu.firefightingRule_two i{
+        background: url("/static/img/icon/firefightingRule_two_big.png") no-repeat;
+    }
+    .contextmenu.firefightingRule_three i{
+        background: url("/static/img/icon/firefightingRule_three_big.png") no-repeat;
+    }
+
+    .contextmenu.crossborderRule_one i{
+        background: url("/static/img/icon/crossborderRule_one_big.png") no-repeat;
+    }
+    .contextmenu.crossborderRule_two i{
+        background: url("/static/img/icon/crossborderRule_two_big.png") no-repeat;
+    }
+    .contextmenu.crossborderRule_three i{
+        background: url("/static/img/icon/crossborderRule_three_big.png") no-repeat;
+    }
+
+    .contextmenu.speedingRule_one i{
+        background: url("/static/img/icon/speedingRule_one_big.png") no-repeat;
+    }
+    .contextmenu.speedingRule_two i{
+        background: url("/static/img/icon/speedingRule_two_big.png") no-repeat;
+    }
+    .contextmenu.speedingRule_three i{
+        background: url("/static/img/icon/speedingRule_three_big.png") no-repeat;
+    }
+
+    .contextmenu.offtrackRule_one i{
+        background: url("/static/img/icon/offtrackRule_one_big.png") no-repeat;
+    }
+    .contextmenu.offtrackRule_two i{
+        background: url("/static/img/icon/offtrackRule_two_big.png") no-repeat;
+    }
+    .contextmenu.offtrackRule_three i{
+        background: url("/static/img/icon/offtrackRule_three_big.png") no-repeat;
+    }
+
+    .contextmenu.overlimitRule_one i{
+        background: url("/static/img/icon/overlimitRule_one_big.png") no-repeat;
+    }
+    .contextmenu.overlimitRule_two i{
+        background: url("/static/img/icon/overlimitRule_two_big.png") no-repeat;
+    }
+    .contextmenu.overlimitRule_three i{
+        background: url("/static/img/icon/overlimitRule_three_big.png") no-repeat;
+    }
+
+    .contextmenu.waterlevelRule_one i{
+        background: url("/static/img/icon/waterlevelRule_one_big.png") no-repeat;
+    }
+    .contextmenu.waterlevelRule_two i{
+        background: url("/static/img/icon/waterlevelRule_two_big.png") no-repeat;
+    }
+    .contextmenu.waterlevelRule_three i{
+        background: url("/static/img/icon/waterlevelRule_three_big.png") no-repeat;
+    }
+
+    .contextmenu.conditionRule_one i{
+        background: url("/static/img/icon/conditionRule_one_big.png") no-repeat;
+    }
+    .contextmenu.conditionRule_two i{
+        background: url("/static/img/icon/conditionRule_two_big.png") no-repeat;
+    }
+    .contextmenu.conditionRule_three i{
+        background: url("/static/img/icon/conditionRule_three_big.png") no-repeat;
+    }
+
     .contextmenu.gate,.contextmenu.police,.contextmenu.trash,.contextmenu.scenic,.contextmenu.construction,.contextmenu.plant,.contextmenu.park,.contextmenu.toilet,.contextmenu.indicator,.contextmenu.shop{
         background: none;
         width: 0;

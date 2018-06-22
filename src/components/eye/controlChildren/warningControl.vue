@@ -165,7 +165,7 @@
                 });
             },
             async getAllAlarmEvent () {
-                await api.alarm.getAllAlarmEvent().then(res => {
+                await api.alarm.getAllAlarmEventundone().then(res => {
                     console.log(res,'16565623');
                     this.lightList=res
                     this.number=this.lightList.length
@@ -281,13 +281,13 @@
                             item.regionName="超速"
                             if (item.status.id =="1")  {
                                 this.pendinglist.push(item.id)
-                                item.icon = '../../../static/img/alarm/clearer_one.svg'
+                                item.icon = '../../../static/img/alarm/speedingRule_one.svg'
                             } else  if (item.status.id =="2") {
                                 this.faultlist.push(item.id)
-                                item.icon = '../../../static/img/alarm/clearer_two.svg'
+                                item.icon = '../../../static/img/alarm/speedingRule_two.svg'
                             }else {
                                 this.stockslist.push(item.id)
-                                item.icon = '../../../static/img/alarm/clearer_three.svg'
+                                item.icon = '../../../static/img/alarm/speedingRule_three.svg'
                             }
                         }else if(item.rule.alarmTypeId =="6") {
                             item.regionName="偏离轨迹"
