@@ -9,7 +9,6 @@
                         @selectedAll = 'selectedAll'
                         @batchEdit = 'batchEdit'
                         @choseType='choseType'
-                        @batchDownload="batchDownload"
                         :choseId="choseInfoId"
                         :listLength = "listLength"
                         @searchAnything="searchAnything"
@@ -150,34 +149,6 @@
                     })
                 } else {
                     this.getAllAlarmEvent()
-                }
-            },
-            batchDownload(){
-                console.log(this.choseInfos)
-                if (this.choseInfos.length > 0) {
-                        //导出接口
-                        // api.schedulebroadcast.deleteBroadcast(this.choseInfos).then(res => {
-                        //     console.log(res, '删除成功')
-                        //     this.$message.success('删除成功')
-                        //     for (let i = 0; i < this.choseInfos.length; i++) {
-                        //         this.broadCastList = this.broadCastList.filter((item, index) => {
-                        //             if (item.id === this.choseInfos[i]){
-                        //                 this.broadCastList[index].checked = false
-                        //                 this.broadCastList[index].status = false
-                        //             }
-                        //             return item.status !== false
-                        //         })
-                        //     }
-                        //     this.choseInfos = []
-                        // }).catch(err => {
-                        //     this.$message.error('删除失败，请稍后重试')
-                        //     console.log(err)
-                        //     this.choseInfos = []
-                        // })
-
-                } else {
-                    this.$message.error('请选择要导出的数据')
-                    return
                 }
             },
             choseType(type){

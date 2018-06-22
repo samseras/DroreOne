@@ -6,7 +6,7 @@
             title="告警事件处理"
             :before-close="closeEventDialog"
             width="580px"
-            class="dialog edit_Dialog"
+            :class="isBatchEdit ? 'batchHeight' : 'normalHeight'"
             center>
                 <div class="alarmEventContent">
                     <!--批量编辑-->
@@ -52,9 +52,9 @@
                                 <el-input type="text"  v-model='eventInfo.occurenceTime' class="inputText" :maxlength="15" :disabled='true'></el-input>
                             </p>
                             <p class="alarmRule">
-                                <span>关联规则：</span>
+                                <span class="ruleStyle">关联规则：</span>
                                 <!--<el-input type="text" v-model='eventInfo.alarmRuleName' class="inputText" :maxlength="15" :readonly='true'></el-input>-->
-                                <span class="inputText el-input showRuleDetail" @click="showRuleDetail">{{eventInfo.rule.name}}</span>
+                                <span class="inputText el-input showRuleDetail ruleStyle" @click="showRuleDetail">{{eventInfo.rule.name}}</span>
                                 <!--<div class="inputText el-input"></div>-->
                             </p>
                             <p class="level">
@@ -158,7 +158,6 @@
                       @closeDialog ="closeDialog"
                       :alarmRuleId="eventInfo.rule.id"
                       :isReadonly="isReadonly">
-
         </AlarmDetail>
     </div>
 
@@ -529,9 +528,28 @@
         .el-input.is-disabled .el-input__inner,.el-textarea.is-disabled .el-textarea__inner{
             background-color:transparent;
         }
+        .batchHeight{
+            .el-dialog--center{
+                height: rem(300);
+            }
+            .el-dialog__body{
+                height: rem(220);
+                min-height: rem(150);
+            }
+        }
+        .normalHeight{
+            .el-dialog--center{
+                height: rem(530);
+            }
+            .el-dialog__body{
+                height: rem(450);
+                min-height: rem(150);
+            }
+
+        }
         .el-dialog--center{
             padding: 0;
-            height: rem(530);
+            /*height: rem(530);*/
             text-align: left;
         }
         .el-dialog__header{
@@ -547,10 +565,10 @@
         }
         .el-dialog__body{
             padding: rem(10) rem(20) 0 rem(20);
-            height: rem(450);
+            /*height: rem(450);*/
             box-sizing: border-box;
             font-size: rem(12);
-            min-height: rem(150);
+            /*min-height: rem(150);*/
             .el-select{
                 width:rem(390);
                 .el-input--suffix .el-input__inner{
@@ -693,6 +711,10 @@
                     .showRuleDetail:hover{
                         color:blue;
                         text-decoration: underline;
+                    }
+                    .ruleStyle{
+                        height:rem(40);
+                        line-height:rem(40);
                     }
                 }
                  .attachment{
