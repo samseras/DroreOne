@@ -56,7 +56,7 @@
                         </el-table-column>
                         <el-table-column label="操作" width="200">
                             <template slot-scope="scope">
-                                <span @click="editInfo(scope.row,false,'编辑客流量告警规则')" class="edit">编辑</span> |
+                                <span @click="editInfo(scope.row,false,'编辑客流量告警规则')" class="edit">处理</span> |
                                 <span @click="showDetail(scope.row,true,'查看客流量告警规则')">查看</span> |
                                 <span v-if="scope.row.isEnabled" @click="enabledClick(scope.row,false)">停用</span>
                                 <span v-else @click="enabledClick(scope.row,true)">启用</span>

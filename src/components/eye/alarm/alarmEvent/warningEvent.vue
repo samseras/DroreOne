@@ -72,7 +72,7 @@
                         </el-table-column>
                         <el-table-column label="操作" width="200">
                             <template slot-scope="scope">
-                                <span @click="editInfo(scope.row,false,'编辑告警事件')" class="edit">编辑</span> |
+                                <span @click="editInfo(scope.row,false,'编辑告警事件')" class="edit">处理</span> |
                                 <span @click="showDetail(scope.row,true,'查看告警事件')">查看</span> |
                                 <span @click="deletInfo(scope.row.id)">删除</span>
                             </template>
@@ -279,11 +279,13 @@
                 this.warningEventList = this.warningEventList.filter((item) => {
                     if (state === true) {
                         item.checked = true
-                        this.choseInfos.push(item.id)
+                        this.choseInfos.push(item)
+                        this.choseInfoId.push(item.id)
                         return item.checked === true
                     } else {
                         item.checked = false
                         this.choseInfos = []
+                        this.choseInfoId = []
                         return item.checked === false
                     }
                 })

@@ -51,12 +51,12 @@
                             </el-select>
                         </p>
                         <p class="deviceScope">
-                            <span>调度范围：</span>
+                            <span>调度范围(m)：</span>
                             <el-input type="text" v-model='alarmcolumnInfo.deviceScope' class="inputText" :maxlength="15" :disabled='isReadonly'></el-input>
                             (设备)
                         </p>
                         <p class="securityScope">
-                            <span>调度范围：</span>
+                            <span>调度范围(m)：</span>
                             <el-input type="text"  v-model='alarmcolumnInfo.securityScope' class="inputText" :maxlength="15" :disabled='isReadonly'></el-input>
                             (安保)
                         </p>
@@ -113,12 +113,12 @@
                             </el-select>
                         </p>
                         <p class="deviceScope">
-                            <span>调度范围：</span>
+                            <span>调度范围(m)：</span>
                             <el-input type="text" v-model='firefightingInfo.deviceScope' class="inputText" :maxlength="15" :disabled='isReadonly'></el-input>
                             (设备)
                         </p>
                         <p class="securityScope">
-                            <span>调度范围：</span>
+                            <span>调度范围(m)：</span>
                             <el-input type="text"  v-model='firefightingInfo.securityScope' class="inputText" :maxlength="15" :disabled='isReadonly'></el-input>
                             (安保)
                         </p>
@@ -175,12 +175,12 @@
                             </el-select>
                         </p>
                         <p class="deviceScope">
-                            <span>调度范围：</span>
+                            <span>调度范围(m)：</span>
                             <el-input type="text" v-model='crossborderInfo.deviceScope' class="inputText" :maxlength="15" :disabled='isReadonly'></el-input>
                             (设备)
                         </p>
                         <p class="securityScope">
-                            <span>调度范围：</span>
+                            <span>调度范围(m)：</span>
                             <el-input type="text"  v-model='crossborderInfo.securityScope' class="inputText" :maxlength="15" :disabled='isReadonly'></el-input>
                             (安保)
                         </p>
@@ -260,12 +260,12 @@
                             (千米/小时)
                         </p>
                         <p class="deviceScope">
-                            <span>调度范围：</span>
+                            <span>调度范围(m)：</span>
                             <el-input type="text" v-model='speedingInfo.deviceScope' class="inputText" :maxlength="15" :disabled='isReadonly'></el-input>
                             (设备)
                         </p>
                         <p class="securityScope">
-                            <span>调度范围：</span>
+                            <span>调度范围(m)：</span>
                             <el-input type="text"  v-model='speedingInfo.securityScope' class="inputText" :maxlength="15" :disabled='isReadonly'></el-input>
                             (安保)
                         </p>

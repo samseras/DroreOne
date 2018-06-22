@@ -147,7 +147,7 @@
                         </div>
                     </ScrollContainer>
 
-                    <div slot="footer" v-if="!readOnly" class="dialog-footer cardFooter">
+                    <div slot="footer" v-if="!readOnly || isBatchEdit" class="dialog-footer cardFooter">
                         <el-button size="mini" class="hold" @click='saveDialog'>提交</el-button>
                         <el-button size="mini" @click = 'closeEventDialog'>取消</el-button>
                     </div>
