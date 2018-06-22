@@ -112,7 +112,10 @@
             margin-top: rem(2);
             margin-right: rem(2);
         }
-        .el-checkbox{
+        .el-checkbox-group{
+            margin-left: rem(40);
+        }
+        .el-checkbox+.el-checkbox{
             margin-left: rem(10);
         }
     }
