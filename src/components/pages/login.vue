@@ -101,7 +101,7 @@
                         }
                     }).catch(err => {
                         console.log(err, '登录失败')
-                        this.$message.info('登录失败')
+                        this.$message.info('用户名或密码错误')
                         this.checkCode = ''
                     })
                 }else{

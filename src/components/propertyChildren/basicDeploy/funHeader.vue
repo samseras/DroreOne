@@ -121,6 +121,7 @@
                             api.importfile.importBoat(form).then(res => {
                                 this.$message.success('导入成功');
                                 this.$emit("getAllBoat");
+                                this.reload()
                             }).catch(err => {
                                 this.$message.error('导入失败，请稍后重试')
                                 this.reload()
@@ -131,6 +132,7 @@
                             api.importfile.importToilet(form).then(res => {
                                 this.$message.success('导入成功');
                                 this.$emit("getAllToilet");
+                                this.reload()
                             }).catch(err => {
                                 this.$message.error('导入失败，请稍后重试')
                                 this.reload()
@@ -141,6 +143,7 @@
                             api.importfile.importPark(form).then(res => {
                                 this.$message.success('导入成功');
                                 this.$emit("getAllPark");
+                                this.reload()
                             }).catch(err => {
                                 this.$message.error('导入失败，请稍后重试')
                                 this.reload()
@@ -151,6 +154,7 @@
                             api.importfile.importShop(form).then(res => {
                                 this.$message.success('导入成功');
                                 this.$emit("getAllShop");
+                                this.reload()
                             }).catch(err => {
                                 this.$message.error('导入失败，请稍后重试')
                                 this.reload()
@@ -161,6 +165,7 @@
                             api.importfile.importScenic(form).then(res => {
                                 this.$message.success('导入成功');
                                 this.$emit("getAllScenic");
+                                this.reload()
                             }).catch(err => {
                                 this.$message.error('导入失败，请稍后重试')
                                 this.reload()
@@ -171,6 +176,7 @@
                             api.importfile.importDustbin(form).then(res => {
                                 this.$message.success('导入成功');
                                 this.$emit("getAllTrash");
+                                this.reload()
                             }).catch(err => {
                                 this.$message.error('导入失败，请稍后重试')
                                 this.reload()
@@ -191,6 +197,7 @@
                             api.importfile.importPlant(form).then(res => {
                                 this.$message.success('导入成功');
                                 this.$emit("getAllPlant");
+                                this.reload()
                             }).catch(err => {
                                 this.$message.error('导入失败，请稍后重试')
                                 this.reload()
@@ -201,6 +208,7 @@
                             api.importfile.importConstruction(form).then(res => {
                                 this.$message.success('导入成功');
                                 this.$emit("getAllBuild");
+                                this.reload()
                             }).catch(err => {
                                 this.$message.error('导入失败，请稍后重试')
                                 this.reload()
@@ -211,6 +219,7 @@
                             api.importfile.importPerson(form).then(res => {
                                 this.$message.success('导入成功');
                                 this.$emit("getAllPerson");
+                                this.reload()
                             }).catch(err => {
                                 this.$message.error('导入失败，请稍后重试')
                                 this.reload()

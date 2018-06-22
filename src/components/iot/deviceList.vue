@@ -8,7 +8,7 @@
                 <div class="search">
                     <el-form :inline="true"  class="demo-form-inline">
                         <el-form-item label="">
-                            <el-input v-model="formInline" placeholder="请输入..." ></el-input>
+                            <el-input v-model="formInline" placeholder="状态OFFLINE/WORKING" ></el-input>
                         </el-form-item>
                         <el-form-item>
                             <el-button type="primary" @click="onSubmit"><i class="el-icon-search"></i></el-button>
@@ -136,6 +136,17 @@
         border:1px solid transparent;
         margin:rem(16);
         border-radius:rem(8);
+        .el-button--primary{
+            background-color:#14B9D6;
+            border-color:#14B9D6;
+        }
+        .el-pagination.is-background .el-pager li:not(.disabled).active{
+            background-color: #14B9D6;
+        }
+        /*.card-list{
+            height:500px;
+            overflow:auto;
+        }*/
         header{
             background-color:#fff;
             .title{
