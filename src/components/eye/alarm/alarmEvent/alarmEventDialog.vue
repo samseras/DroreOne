@@ -52,9 +52,9 @@
                                 <el-input type="text"  v-model='eventInfo.occurenceTime' class="inputText" :maxlength="15" :disabled='true'></el-input>
                             </p>
                             <p class="alarmRule">
-                                <span>关联规则：</span>
+                                <span class="ruleStyle">关联规则：</span>
                                 <!--<el-input type="text" v-model='eventInfo.alarmRuleName' class="inputText" :maxlength="15" :readonly='true'></el-input>-->
-                                <span class="inputText el-input showRuleDetail" @click="showRuleDetail">{{eventInfo.rule.name}}</span>
+                                <span class="inputText el-input showRuleDetail ruleStyle" @click="showRuleDetail">{{eventInfo.rule.name}}</span>
                                 <!--<div class="inputText el-input"></div>-->
                             </p>
                             <p class="level">
@@ -711,6 +711,10 @@
                     .showRuleDetail:hover{
                         color:blue;
                         text-decoration: underline;
+                    }
+                    .ruleStyle{
+                        height:rem(40);
+                        line-height:rem(40);
                     }
                 }
                  .attachment{
