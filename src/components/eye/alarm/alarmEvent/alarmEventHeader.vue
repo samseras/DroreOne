@@ -243,15 +243,16 @@
                 cursor: pointer;
             }
         }
+        .checkStyle{
+            margin-left: rem(50);
+            .el-checkbox{
+                margin-left: rem(10);
+                margin-bottom: rem(2);
+            }
+        }
         .funcBtn{
             margin-left: rem(20);
             margin-top: rem(4);
-            .checkStyle{
-                margin-left: rem(50);
-                .el-checkbox{
-                    margin-left: rem(10);
-                }
-            }
             button{
                 border: none;
                 margin-right: rem(-5);

@@ -267,7 +267,7 @@ const routes = [
     {
         path: '/property',
         name: 'property',
-        redirect: '/basic-property',
+        redirect: '/person',
         component: Property,
         children: [
             // 设施
