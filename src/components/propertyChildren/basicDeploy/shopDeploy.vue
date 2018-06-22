@@ -48,7 +48,7 @@
                         </el-table-column>
                         <el-table-column
                             width="100"
-                            prop="state"
+                            prop="businessBean.state"
                             label="状态">
                         </el-table-column>
                         <el-table-column
