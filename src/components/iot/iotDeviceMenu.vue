@@ -71,13 +71,13 @@
                     },
                     {
                         icon: '../../../static/img/iot/iot-system-manage.svg',
-                        index: '2',
-                        title: '系统监控',
-                        subs: [
+                        index: '/basicStruc/iotLog/systemLog',
+                        title: '系统日志',
+                        /*subs: [
                             {
                                 isShow:true,
                                 icon:'../../../static/img/camera.svg',
-                                index: '/basicStruc/iotLog/systemLog',
+                                index: '',
                                 title: '系统日志'
                             },
                             {
@@ -86,7 +86,7 @@
                                 index: '/basicStruc/iotLog/nowStatus',
                                 title: '实时状态'
                             }
-                        ]
+                        ]*/
                     }
                 ]
             }
