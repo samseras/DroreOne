@@ -8,7 +8,6 @@
             width="580px"
             class="dialog edit_Dialog"
             center>
-
                 <div class="alarmEventContent">
                     <!--批量编辑-->
                     <ScrollContainer>
@@ -112,13 +111,13 @@
                                     </el-option>
                                 </el-select>
                             </p>
-                            <p class="description">
-                                <span>处理备注：</span><br>
+                            <p class="description textArea">
+                                <span>处理备注：</span>
                                 <el-input type="textarea" :rows='5' :cols="30" placeholder="请输入描述信息" v-model="handleDescription" :disabled="readOnly" :maxlength="140"></el-input>
                             </p>
                             <div class="attachment">
                                 <span>附&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;件：</span>
-                                <div v-loading="isShowLoading" class="showFilelist" >
+                                <div class="showFilelist" >
                                     <div class="uploadlist" v-for="item in fileList">
                                         <el-checkbox v-model="item.checked" class="checkBoxBtn"></el-checkbox>
                                         <span v-if="item.path" class="downloadThis" @click="downloadFile(item)">{{item.title}}</span>
@@ -133,9 +132,10 @@
                             </div>
 
                             <div class="processLog">
-                                <span>处理记录：</span><br/>
-                                <div class="processDiv" v-for="item in eventInfo.handleRecords">
+                                <span>处理记录：</span>
+                                <div class="processDiv" v-for="(item, index) in orderByTime">
                                     <div class="processTime">{{item.submitTime}}</div>
+                                    <img :src="getStatusPng(item.alarmStatusId,index)" alt="">
                                     <div class="processContent">
                                         编辑人：{{item.submitter}}<br>
                                         <div>{{item.modifiedFields}}
@@ -147,12 +147,11 @@
                         </div>
                     </ScrollContainer>
 
-                    <div slot="footer" v-if="!readOnly" class="dialog-footer cardFooter">
+                    <div slot="footer" v-if="!readOnly || isBatchEdit" class="dialog-footer cardFooter">
                         <el-button size="mini" class="hold" @click='saveDialog'>提交</el-button>
                         <el-button size="mini" @click = 'closeEventDialog'>取消</el-button>
                     </div>
                 </div>
-
         </el-dialog>
         <AlarmDetail  v-if="ruleVisible"
                       :ruleVisible="ruleVisible"
@@ -178,7 +177,6 @@
                 batchstatus:'',
                 levelInfo:[],
                 statusInfo:[],
-                isShowLoading: false,
                 fileAddList:[],
                 fileDelList:[],
                 personInfo:[],
@@ -193,7 +191,38 @@
                 ruleInfo:{}
             }
         },
+        computed:{
+          orderByTime(){
+              return this.eventInfo.handleRecords.reverse()
+          }
+        },
         methods: {
+            getStatusPng(statusId,index){
+                let imgSrc
+                if(index == 0){
+                    switch (statusId) {
+                        case "1":
+                            imgSrc = "./../../../../../static/img/alarm/start.png"
+                            break
+                        case "2":
+                            imgSrc = "./../../../../../static/img/alarm/process.png"
+                            break
+                        case "3":
+                            imgSrc = "./../../../../../static/img/alarm/end.png"
+                    }
+                }else{
+                    switch (statusId) {
+                        case "1":
+                            imgSrc = "./../../../../../static/img/alarm/start_gray.png"
+                            break
+                        case "2":
+                            imgSrc = "./../../../../../static/img/alarm/process_gray.png"
+                        case "3":
+                            imgSrc = "./../../../../../static/img/alarm/end_gray.png"
+                    }
+                }
+                return imgSrc
+            },
             closeDialog () {
                 this.ruleVisible = false
             },
@@ -503,6 +532,7 @@
         .el-dialog--center{
             padding: 0;
             height: rem(530);
+            text-align: left;
         }
         .el-dialog__header{
             padding: rem(10) 0 rem(5) rem(20);
@@ -635,6 +665,9 @@
         .el-input__inner{
             border: none;
         }
+        .textArea .el-textarea{
+            font-size: rem(12);
+        }
     }
 </style>
 <style lang="scss" scoped type="text/scss">
@@ -691,6 +724,11 @@
                          width:30%;
                          float:left;
                      }
+                     img{
+                         display: inline-block;
+                         float:left;
+                         margin-right: rem(30);
+                     }
                      .processContent{
                          overflow: hidden;
                      }
@@ -746,12 +784,16 @@
                      i{
                          font-size: rem(16);
                      }
-                     /*span{*/
-                         /*background: #f0f2f5;*/
-                         /*color: #909399;*/
-                     /*}*/
+                     span{
+                         display: inline-block;
+                         line-height: rem(15);
+                         overflow: hidden;
+                         padding-bottom: rem(-1);
+                     }
                  }
-
+                .textArea{
+                    border-bottom: none;
+                }
              }
             .cardFooter {
                 width: 100%;

@@ -127,21 +127,31 @@
                 table{
                     th{
                         background: #f3f3f3;
-                        .cell{
-                            font-size: rem(16);
-                            font-weight: 500;
-                            color: #333;
+                        .caret-wrapper{
+                                height: rem(22);
+                                line-height:rem(22);
+                            .sort-caret.ascending{
+                                top:0
+                            }
+                            .sort-caret.descending{
+                                bottom:0
+                            }
                         }
                     }
                 }
                 td,th{
-                padding: 5px 0;
                 }
                 .cell{
                     font-size: rem(14);
+                    span{
+                        display: inline-block;
+                        text-overflow: ellipsis;
+                        white-space: nowrap;
+                    }
                     span:hover{
                         color: #54c5f2;
                         cursor:pointer;
+
                     }
                 }
             }
@@ -198,6 +208,7 @@
             .el-button {
                 padding: rem(5) rem(5);
                 margin: 0;
+                padding-bottom: 0;
             }
         }
         .filite{

@@ -10,8 +10,8 @@
             <el-button size="mini"plain @click="deleteCard"><i class="el-icon-delete"></i>删除</el-button>
             <el-button size="mini" plain @click="batchDownload"><i class="el-icon-download"></i>导出</el-button>
             <el-button v-if="!route.includes('firefighting') && !route.includes('crossborder')" size="mini"plain @click="batchEdit"><i class="el-icon-edit"></i>修改</el-button>
-            <el-button size="mini"plain @click="batchEnabled(true)"><i class="el-icon-circle-check"></i>批量启用</el-button>
-            <el-button size="mini"plain @click="batchEnabled(false)"><i class="el-icon-circle-close"></i>批量停用</el-button>
+            <el-button size="mini"plain @click="batchEnabled(true)"><img src="./../../../../../static/img/start.svg" alt="">启用</el-button>
+            <el-button size="mini"plain @click="batchEnabled(false)"><img src="./../../../../../static/img/stop.svg" alt="">停用</el-button>
         </div>
 
         <div class="page">
@@ -206,10 +206,14 @@
                 table{
                     th{
                         background: #f3f3f3;
-                        .cell{
-                            font-size: rem(16);
-                            font-weight: 500;
-                            color: #333;
+                        .caret-wrapper{
+                            height: rem(22);
+                            .sort-caret.ascending{
+                                top:0
+                            }
+                            .sort-caret.descending{
+                                bottom:0
+                            }
                         }
                     }
                 }
@@ -260,6 +264,12 @@
                 i{
                     margin-right: rem(3);
                 }
+                img{
+                    width: rem(15);
+                    height: rem(15);
+                    vertical-align: middle;
+                    margin-right: rem(4);
+                }
             }
             .el-button.selectedAll{
                 padding-bottom: rem(0);
@@ -270,6 +280,7 @@
             .el-button {
                 padding: rem(5) rem(5);
                 margin: 0;
+                padding-bottom: 0;
             }
         }
         .filite{

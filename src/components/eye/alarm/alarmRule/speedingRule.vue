@@ -17,7 +17,7 @@
                         @nextPage="nextPage">
                 </Header>
             </div>
-            <div class="personList" v-loading="isShowloading">
+            <div class="personList" v-loading="loading">
                 <ScrollContainer>
                     <el-table
                         ref="multipleTable"
@@ -54,14 +54,13 @@
                             label="严重等级">
                         </el-table-column>
                         <el-table-column
-                            sortable
                             show-overflow-tooltip
                             prop="relatedManagerNames"
                             label="管理者">
                         </el-table-column>
                         <el-table-column label="操作" width="200">
                             <template slot-scope="scope">
-                                <span @click="editInfo(scope.row,false,'编辑超速告警规则')" class="edit">编辑</span> |
+                                <span @click="editInfo(scope.row,false,'编辑超速告警规则')" class="edit">处理</span> |
                                 <span @click="showDetail(scope.row,true,'查看超速告警规则')">查看</span> |
                                 <span v-if="scope.row.isEnabled" @click="enabledClick(scope.row,false)">停用</span>
                                 <span v-else @click="enabledClick(scope.row,true)">启用</span>
@@ -102,7 +101,7 @@
                 isReadonly: true,
                 title:'',
                 selection:[],
-                isShowloading: false,
+                loading: false,
                 isBatchEdit:false,
                 alarmTypeId:'',
                 listLength:'',
@@ -439,11 +438,11 @@
                 this.getAlarmRule ()
             },
             async getAlarmRule(){
-                this.isShowLoading = true
+                this.loading = true
                 this.alarmTypeId = this.getAlarmTypeId("超速")
                 await api.alarm.getAlarmRulesByParameters(this.alarmTypeId).then(res => {
                     console.log(res, '请求成功')
-                    this.isShowLoading = false
+                    this.loading = false
                     this.speedingList = res
                     this.listLength = this.speedingList.length
                     this.speedingList.forEach(item => {
@@ -485,7 +484,7 @@
                     })
                 }).catch(err => {
                     console.log(err, '请求失败')
-                    this.isShowLoading = false
+                    this.loading = false
                 })
             },
             getAlarmTypeId(typeName){

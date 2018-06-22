@@ -64,7 +64,9 @@
                 regionId:[],
                 lightList:[],
                 selectAll:[],
-                title:'传感器'
+                title:'传感器',
+                online: '0',
+                faultlist:[]
             }
         },
         components: {
@@ -107,13 +109,12 @@
                             },
                             data: [
                                 {
-                                    value: 150,
-                                    name: "4人",
+                                    value: this.online,
                                     label: {normal: {show: false}},
                                     labelLine: {normal: {show: false}}
                                 },
                                 {
-                                    value: 70, name: "1人",
+                                    value: this.fault,
                                     label: {normal: {show: true, color: "#646464", fontSize: 12}},
                                     labelLine: {
                                         normal: {
@@ -160,6 +161,7 @@
                         item.type = 'environment'
                         if (item.status =="FAULT"){
                             item.icon = '../../../static/img/detection_damage.svg'
+                            this.faultlist.push(item.id)
                         }else if(item.status =="OFFLINE") {
                             item.icon = '../../../static/img/detection.svg'
                         }else {
@@ -197,8 +199,10 @@
                     if (noRegion.children.length > 0) {
                         arr.push(noRegion)
                     }
+                    this.fault=this.faultlist.length
+                    this.online= this.number - this.fault
                     this.lightInfo = arr
-
+                    this.drawLine();
                 }).catch(err =>{
                     console.log(err)
                 })
@@ -212,7 +216,6 @@
         },
         mounted() {
             this.getAllLight();
-            this.drawLine();
         },
         computed: {
             ...mapGetters(['getcontroleEnvironment'])

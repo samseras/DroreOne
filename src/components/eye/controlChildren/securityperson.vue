@@ -41,7 +41,7 @@
                 </div>
             </div>
             <div class="last">
-                <h5>设备故障率</h5>
+                <h5>异常率</h5>
                 <div>
                     <div id="pie"></div>
                 </div>
@@ -72,7 +72,9 @@
                 lightCheckout:[],
                 lightList:[],
                 selectAll:[],
-                title:'人员'
+                title:'人员',
+                online: '0',
+                faultlist:[]
             }
         },
         components: {
@@ -115,12 +117,12 @@
                             },
                             data: [
                                 {
-                                    value: 150,
+                                    value: this.online,
                                     label: {normal: {show: false}},
                                     labelLine: {normal: {show: false}}
                                 },
                                 {
-                                    value: 150,
+                                    value: this.fault,
                                     label: {normal: {show: true, color: "#646464", fontSize: 12}},
                                     labelLine: {
                                         normal: {
@@ -156,6 +158,7 @@
                             api.patrol.getAllPatrolPeople(item.persons[i].id).then(res => {
                                 if (res == "FAULT") {
                                     icon = '../../../static/img/people_damage.svg'
+                                    this.faultlist.push(item.id)
                                 } else if (res == "OFFLINE") {
                                     icon = '../../../static/img/people.svg'
                                 } else {
@@ -185,8 +188,10 @@
                     this.lightInfo = arr
                     this.lightList = arr
                     console.log(this.lightList, '这是最后提交的')
-                    // number=[...new Set(number)];
                     this.number=number.length
+                    this.fault=this.faultlist.length
+                    this.online= this.number - this.fault
+                    this.drawLine();
                 }).catch(err =>{
                     console.log(err)
                 })
@@ -200,7 +205,6 @@
         },
         mounted() {
             this.getAllLight();
-            this.drawLine();
         },
         computed: {
             ...mapGetters(['getcontroleLight'])

@@ -20,7 +20,7 @@
             ref="tree"
             @check="handleCheckChange">
             <span class="custom-tree-node" slot-scope="{ node, Info }">
-                <img class="icon" :src="node.icon"/>
+                <img class="icon" :src="node.icon" v-if="node.icon"/>
                 <span>{{ node.label }}</span>
             </span>
         </el-tree>
@@ -114,11 +114,12 @@
                         return item
                     }
                 })
-                if (checked.checkedNodes.length == this.lightList.length) {
+                if (checked.checkedNodes.length == this.number) {
                     this.selectAllCheckBox = true
                 } else {
                     this.selectAllCheckBox = false
                 }
+                // console.log(checked.checkedNodes.length,this.lightList.length);
                 data.checked = checked
                 console.log(data, '这是最后提交的')
                 this.$store.commit('SHOW_TREE', data)

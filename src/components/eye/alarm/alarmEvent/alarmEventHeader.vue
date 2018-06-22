@@ -191,10 +191,19 @@
             table{
                 th{
                     background: #f3f3f3;
-                    .cell{
-                        font-size: rem(16);
-                        font-weight: 500;
-                        color: #333;
+                    /*.cell{*/
+                        /*font-size: rem(16);*/
+                        /*font-weight: 500;*/
+                        /*color: #333;*/
+                    /*}*/
+                    .caret-wrapper{
+                        height: rem(22);
+                        .sort-caret.ascending{
+                            top:0
+                        }
+                       .sort-caret.descending{
+                           bottom:0
+                       }
                     }
                 }
             }
@@ -234,15 +243,16 @@
                 cursor: pointer;
             }
         }
+        .checkStyle{
+            margin-left: rem(50);
+            .el-checkbox{
+                margin-left: rem(10);
+                margin-bottom: rem(2);
+            }
+        }
         .funcBtn{
             margin-left: rem(20);
             margin-top: rem(4);
-            .checkStyle{
-                margin-left: rem(50);
-                .el-checkbox{
-                    margin-left: rem(10);
-                }
-            }
             button{
                 border: none;
                 margin-right: rem(-5);

@@ -12,16 +12,19 @@
                 <div class="card">
                     <!--巡更路线-->
                     <div class="personCardContent" v-if="route.includes('security')">
-                        <p class="sex">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 称：
+                        <p class="sex">
+                            <span class="dmisTitle">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 称：</span>
                             <el-input type="text"v-model="security.inspectionSchedule.name"class="inputText" :maxlength="15" :disabled='isDisabled'></el-input>
                         </p>
-                        <p class="time">时&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 间：
+                        <p class="time">
+                            <span class="dmisTitle">时&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 间：</span>
                             <el-checkbox-group v-model="filterList" @change="selectDays" :disabled='isDisabled'>
                                 <el-checkbox v-for="item in week" :label="item.id" :key="item.id">{{item.type}}</el-checkbox>
                             </el-checkbox-group>
                             <el-checkbox label="自定义" @change="weekCustom(security.inspectionSchedule.customizedDays)" v-model="security.inspectionSchedule.customizedDays" :disabled='isDisabled'></el-checkbox>
                         </p>
-                        <p class="time" v-if="security.inspectionSchedule.customizedDays">选择时间：
+                        <p class="time" v-if="security.inspectionSchedule.customizedDays">
+                            <span class="dmisTitle">选择时间：</span>
                             <el-date-picker
                                 v-model="daySelect"
                                 size ="mini"
@@ -32,7 +35,8 @@
                                 end-placeholder="结束日期">
                             </el-date-picker>
                         </p>
-                        <p class="time">班&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 次：
+                        <p class="time">
+                            <span class="dmisTitle">班&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 次：</span>
                             <el-checkbox-group v-model="classesList" @change="security.inspectionSchedule.customizedShift = false" :disabled='isDisabled'>
                                 <el-checkbox v-for="item in classes" :label="item.id" :key="item.id">{{item.type}}</el-checkbox>
                             </el-checkbox-group>
@@ -47,7 +51,8 @@
                                             placeholder="选择时间范围">
                             </el-time-picker>
                         </p>
-                        <p class="name">人&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 员：
+                        <p class="name">
+                            <span class="dmisTitle">人&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 员：</span>
                             <el-select v-model="security.securityIds" size="mini" class="" multiple placeholder="请选择" :disabled='isDisabled'>
                                 <el-option
                                     v-for="item in personList"
@@ -61,7 +66,8 @@
                         <!--<el-radio v-model="radio" label="1">是</el-radio>-->
                         <!--<el-radio v-model="radio" label="0">否</el-radio>-->
                         <!--</p>-->
-                        <p class="phoneNum">线路绘制：
+                        <p class="phoneNum">
+                            <span class="dmisTitle">线路绘制：</span>
                             <!--<input type="text"v-model="security.location" class="location">-->
                             <el-select v-model="security.inspectionSchedule.routeId" placeholder="请选择" :disabled='isDisabled'>
                                 <el-option
@@ -74,22 +80,24 @@
                             <i class="el-icon-location-outline" @click="showMapDialog"></i>
                         </p>
                         <p class="type textArea">
-                            <span class="description">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：</span>
+                            <span class="description dmisTitle">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：</span>
                             <el-input type="textarea"  v-model="security.inspectionSchedule.description" :disabled="isDisabled" ></el-input>
                         </p>
                     </div>
                     <!--广播-->
                     <div class="personCardContent" v-if="route.includes('broadcast')">
-                        <p class="sex">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 称：
+                        <p class="sex"><span class="dmisTitle"> 名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 称：</span>
                             <el-input type="text"v-model="broadList.broadcastSchedule.name" class="inputText" :maxlength="15" :disabled='isDisabled'></el-input>
                         </p>
-                        <p class="time">时&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 间：
+                        <p class="time">
+                            <span class="dmisTitle">时&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 间：</span>
                             <el-checkbox-group v-model="filterList" @change="selectDays" :disabled='isDisabled'>
                                 <el-checkbox v-for="item in week" :label="item.id" :key="item.id">{{item.type}}</el-checkbox>
                             </el-checkbox-group>
                             <el-checkbox label="自定义" @change="weekCustom(broadList.broadcastSchedule.customizedDays)" v-model="broadList.broadcastSchedule.customizedDays" :disabled='isDisabled'></el-checkbox>
                         </p>
-                        <p class="time" v-if="broadList.broadcastSchedule.customizedDays">选择时间：
+                        <p class="time" v-if="broadList.broadcastSchedule.customizedDays">
+                            <span class="dmisTitle">选择时间：</span>
                             <el-date-picker
                                 v-model="daySelect"
                                 size ="mini"
@@ -100,7 +108,8 @@
                                 end-placeholder="结束日期">
                             </el-date-picker>
                         </p>
-                        <p class="Hardware">执行时间：
+                        <p class="Hardware">
+                            <span class="dmisTitle">执行时间：</span>
                             <el-time-picker is-range
                                             v-model="timeSelect"
                                             :disabled='isDisabled'
@@ -110,7 +119,8 @@
                                             placeholder="选择时间范围">
                             </el-time-picker>
                         </p>
-                        <p class="name">关联广播：
+                        <p class="name">
+                            <span class="dmis">关联广播：</span>
                             <el-tree
                                 :data="options"
                                 show-checkbox
@@ -124,29 +134,32 @@
                         <!--<el-radio v-model="radio" label="1">是</el-radio>-->
                         <!--<el-radio v-model="radio" label="0">否</el-radio>-->
                         <!--</p>-->
-                        <p class="uploadText"><span class="updataTitle">定义内容：</span>
+                        <p class="uploadText"><span class="updataTitle dmisTitle">定义内容：</span>
                             <!--<input type="text"v-model="broadList.musicIds" class="inputText">-->
                             <span v-for="item in broadList.musics" :key="item.id">{{item.title}}</span>
                             <el-button slot="trigger" size="small" type="primary" @click="showBroadcastDialog" v-if='!isDisabled'>曲目编辑</el-button>
                         </p>
                         <p class="type textArea">
-                            <span class="description">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：</span>
+                            <span class="description dmisTitle">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：</span>
                             <el-input type="textarea"  v-model="broadList.broadcastSchedule.description" :disabled="isDisabled" ></el-input>
                         </p>
                     </div>
                     <!--路灯-->
                     <div class="personCardContent" v-if="route.includes('lamppost')">
-                        <p class="sex">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 称：
+                        <p class="sex">
+                            <span class="dmisTitle">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 称：</span>
                             <el-input type="text" v-model="lamppost.lightSchedule.name" class="inputText" :maxlength="15" :disabled='isDisabled'></el-input>
                         </p>
-                        <p class="time">时&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 间：
+                        <p class="time">
+                            <span class="dmisTitle">时&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 间：</span>
                             <!--<el-checkbox-group v-model="filterList" @change="lamppost.lightSchedule.customizedDays = false" :disabled='isDisabled'>-->
                             <el-checkbox-group v-model="filterList" @change="selectDays" :disabled='isDisabled'>
                                 <el-checkbox v-for="item in week" :label="item.id" :key="item.id">{{item.type}}</el-checkbox>
                             </el-checkbox-group>
                             <el-checkbox label="自定义" @change="weekCustom(lamppost.lightSchedule.customizedDays)" v-model="lamppost.lightSchedule.customizedDays" :disabled='isDisabled'></el-checkbox>
                         </p>
-                        <p class="time" v-if="lamppost.lightSchedule.customizedDays">选择时间：
+                        <p class="time" v-if="lamppost.lightSchedule.customizedDays">
+                            <span class="dmisTitle">选择时间：</span>
                             <el-date-picker
                                 v-model="daySelect"
                                 size ="mini"
@@ -157,7 +170,8 @@
                                 end-placeholder="结束日期">
                             </el-date-picker>
                         </p>
-                        <p class="Hardware">执行时间：
+                        <p class="Hardware">
+                            <span class="dmisTitle">执行时间：</span>
                             <el-time-picker is-range
                                             v-model="timeSelect"
                                             :disabled='isDisabled'
@@ -167,7 +181,8 @@
                                             placeholder="选择时间范围">
                             </el-time-picker>
                         </p>
-                        <p class="name">关联路灯：
+                        <p class="name">
+                            <span class="dmis">关联路灯：</span>
                             <el-tree
                                 :data="options"
                                 show-checkbox
@@ -178,22 +193,25 @@
                             </el-tree>
                         </p>
                         <p class="type textArea">
-                            <span class="description">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：</span>
+                            <span class="description dmisTitle">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：</span>
                             <el-input type="textarea"  v-model="lamppost.lightSchedule.description" :disabled="isDisabled" ></el-input>
                         </p>
                     </div>
                     <!--保洁-->
                     <div class="personCardContent" v-if="route.includes('purifier')">
-                        <p class="sex">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 称：
+                        <p class="sex">
+                            <span class="dmisTitle">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 称：</span>
                             <el-input type="text"v-model="purifier.cleanSchedule.name"class="inputText" :maxlength="15" :disabled='isDisabled'></el-input>
                         </p>
-                        <p class="time">时&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 间：
+                        <p class="time">
+                            <span class="dmisTitle">时&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 间：</span>
                             <el-checkbox-group v-model="filterList" @change="selectDays" :disabled='isDisabled'>
                                 <el-checkbox v-for="item in week" :label="item.id" :key="item.id">{{item.type}}</el-checkbox>
                             </el-checkbox-group>
                             <el-checkbox label="自定义" @change="weekCustom(purifier.cleanSchedule.customizedDays)" v-model="purifier.cleanSchedule.customizedDays":disabled='isDisabled' ></el-checkbox>
                         </p>
-                        <p class="time" v-if="purifier.cleanSchedule.customizedDays">选择时间：
+                        <p class="time" v-if="purifier.cleanSchedule.customizedDays">
+                            <span class="dmisTitle">选择时间：</span>
                             <el-date-picker
                                 v-model="daySelect"
                                 size ="mini"
@@ -204,7 +222,8 @@
                                 end-placeholder="结束日期">
                             </el-date-picker>
                         </p>
-                        <p class="time">班&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 次：
+                        <p class="time">
+                            <span class="dmisTitle">班&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 次：</span>
                             <el-checkbox-group v-model="classesList" @change="purifier.cleanSchedule.customizedShift = false" :disabled='isDisabled'>
                                 <el-checkbox v-for="item in classes" :label="item.id" :key="item.id" >{{item.type}}</el-checkbox>
                             </el-checkbox-group>
@@ -219,7 +238,8 @@
                                             placeholder="选择时间范围">
                             </el-time-picker>
                         </p>
-                        <p class="name">人&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 员：
+                        <p class="name">
+                            <span class="dmisTitle">人&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 员：</span>
                             <el-select v-model="purifier.cleanerIds" size="mini" class="" multiple placeholder="请选择" :disabled='isDisabled'>
                                 <el-option
                                     v-for="item in personList"
@@ -233,7 +253,8 @@
                         <!--<el-radio v-model="radio" label="1">是</el-radio>-->
                         <!--<el-radio v-model="radio" label="0">否</el-radio>-->
                         <!--</p>-->
-                        <p class="name">片&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 区：
+                        <p class="name">
+                            <span class="dmisTitle">片&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 区：</span>
                             <el-select v-model="regionId" size="mini" class="" multiple placeholder="请选择" :disabled='isDisabled'>
                                 <el-option
                                     v-for="item in options"
@@ -244,22 +265,25 @@
                             </el-select>
                         </p>
                         <p class="type textArea">
-                            <span class="description">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：</span>
+                            <span class="description dmisTitle">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：</span>
                             <el-input type="textarea"  v-model="purifier.cleanSchedule.description" :disabled="isDisabled" ></el-input>
                         </p>
                     </div>
                     <!--LED-->
                     <div class="personCardContent" v-if="route.includes('screen')">
-                        <p class="sex">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 称：
+                        <p class="sex">
+                            <span class="dmisTitle">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 称：</span>
                             <el-input type="text"v-model="screen.ledSchedule.name" class="inputText" :disabled="isDisabled" :maxlength="15"></el-input>
                         </p>
-                        <p class="time">时&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 间：
+                        <p class="time">
+                            <span class="dmisTitle">时&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 间：</span>
                             <el-checkbox-group v-model="filterList" @change="selectDays" :disabled='isDisabled'>
                                 <el-checkbox v-for="item in week" :label="item.id" :key="item.id">{{item.type}}</el-checkbox>
                             </el-checkbox-group>
                             <el-checkbox label="自定义" @change="weekCustom(screen.ledSchedule.customizedDays)" v-model="screen.ledSchedule.customizedDays" :disabled='isDisabled'></el-checkbox>
                         </p>
-                        <p class="time" v-if="screen.ledSchedule.customizedDays">选择时间：
+                        <p class="time" v-if="screen.ledSchedule.customizedDays">
+                            <span class="dmisTitle">选择时间：</span>
                             <el-date-picker
                                 v-model="daySelect"
                                 size ="mini"
@@ -270,7 +294,8 @@
                                 end-placeholder="结束日期">
                             </el-date-picker>
                         </p>
-                        <p class="Hardware">执行时间：
+                        <p class="Hardware">
+                            <span class="dmisTitle">执行时间：</span>
                             <el-time-picker is-range
                                             v-model="timeSelect"
                                             :disabled='isDisabled'
@@ -280,7 +305,8 @@
                                             placeholder="选择时间范围">
                             </el-time-picker>
                         </p>
-                        <p class="name">关联大屏：
+                        <p class="name">
+                            <span class="dmis">关联大屏：</span>
                             <el-tree
                                 :data="options"
                                 show-checkbox
@@ -294,12 +320,12 @@
                         <!--<el-radio v-model="radio" label="1">是</el-radio>-->
                         <!--<el-radio v-model="radio" label="0">否</el-radio>-->
                         <!--</p>-->
-                        <p class="uploadText"><span class="updataTitle">定义内容：</span>
+                        <p class="uploadText"><span class="updataTitle dmisTitle">定义内容：</span>
                             <span v-for="item in screen.contents" :key="item.id">{{item.content}}</span>
                             <el-button slot="trigger" size="small" type="primary" @click = "showScreenDialog" v-if="!isDisabled" >定义内容</el-button>
                         </p>
                         <p class="type textArea">
-                            <span class="description">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：</span>
+                            <span class="description dmisTitle">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：</span>
                             <el-input type="textarea"  v-model="screen.ledSchedule.description" :disabled="isDisabled" ></el-input>
                         </p>
                     </div>
@@ -962,6 +988,9 @@
             padding: 0;
             /*height: rem(300);*/
         }
+        .el-input{
+            top:rem(-3)
+        }
         .el-input.is-disabled .el-input__inner,.el-textarea.is-disabled .el-textarea__inner{
             background-color:transparent;
         }
@@ -985,7 +1014,8 @@
                 max-height: rem(500);
             }
             .el-select{
-                width:rem(475);
+                width:rem(455);
+                top: rem(-3 );
                 .el-input--suffix .el-input__inner{
                     border: none;
                 }
@@ -1095,8 +1125,11 @@
         .el-select-dropdown__item span{
             font-size: rem(12);
         }
+
         .el-input__inner{
            border: none;
+            height: rem(30);
+            line-height: rem(20);
         }
         .el-tree-node__children{
             /*display: inline-block;*/
@@ -1181,6 +1214,20 @@
                         background: transparent;
                         color: #606266;
                     }
+                    .dmisTitle{
+                        display: inline-block;
+                        float: left;
+                        background: transparent;
+                        color: #606266;
+                        line-height: rem(20);
+                    }
+                    .dmis{
+                        display: block;
+                        text-align: left;
+                        background: transparent;
+                        color: #606266;
+                        line-height: rem(20);
+                    }
                 }
                 .textArea{
                     border-bottom: none;
@@ -1227,7 +1274,4 @@
             height: rem(400);
         }
     }
-</style>
-<style lang="scss">
-
 </style>

@@ -237,10 +237,12 @@
                  this.isshowHead = hideData;
             },
             showSearch(e){
+                console.log('显示搜索')
                 this.$refs.searchInput.style.opacity = "1";
                 this.$refs.hitSearch.style.opacity = "0";
             },
             hideSearch(){
+                console.log('隐藏搜索')
                 this.$refs.searchInput.style.opacity = "0";
                 this.$refs.hitSearch.style.opacity = "1";
             },
@@ -274,8 +276,9 @@
             },
             closeSearch (e) {
                 //showSearch
+                // 需注意ie浏览器使用e.target, 拿不到最底下一层
                 this.searchList = []
-                if (e.target.className.includes('showSearch') || e.target.className === 'searchBox') {
+                if (e.target.className.includes('showSearch') || e.target.className === 'searchBox' || e.target.className === 'hitSearch') {
                     this.showSearch()
                 } else {
                     this.hideSearch()

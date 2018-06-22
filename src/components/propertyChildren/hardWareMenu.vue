@@ -1,6 +1,6 @@
 <template>
     <div class="hardwareMenu">
-        <el-menu default-active="/hard-property/camera-Hware"
+        <el-menu default-active="/hard-property"
                  text-color="#fff"
                  active-text-color="#ffd04b" router>
 
@@ -109,7 +109,7 @@
                         title:'报警柱'
                     },
                     {
-                        icon:'./../../../static/img/船夫.svg',
+                        icon:'./../../../static/img/gps.svg',
                         index:'/hard-property/gpsType',
                         title:'GPS'
                     },
@@ -170,6 +170,34 @@
         },
         created() {
           this.getDeviceType()
+            // if (this.getDeviceTypeMenu.length > 0) {
+            //     let route = ''
+            //     this.deviceInfo.forEach(item => {
+            //         if (item.title.includes(this.getDeviceTypeMenu[0].name)) {
+            //             route = item.index
+            //             return
+            //         }
+            //     })
+            //     this.$router.push(route)
+            // }
+            if (this.getDeviceTypeMenu.length > 0) {
+                let route = ''
+                let enableState = false
+                this.deviceInfo.forEach(item => {
+                    this.getDeviceTypeMenu.forEach(item1 => {
+                        if (item.title.includes(item1.name) && item1.enable) {
+                            route = item.index
+                            enableState = true
+                            return
+                        }
+                    })
+                })
+                if (enableState){
+                    this.$router.push(route)
+                } else {
+                    this.$router.push('/hard-property')
+                }
+            }
         },
         components: {
             ScrollContainer

@@ -1846,7 +1846,12 @@
                 this.title = this.menulist.data.type
             },
             menuOperation(){
-                alert("操作当前内容"+this.menulist.data.name);
+                if(this.menulist.data.status =="FAULT"){
+                    alert("操作当前内容"+this.menulist.id);
+                }else {
+                    this.$message.warning(this.menulist.data.name+'使用正常')
+                }
+
             },
             menuPhone(){
                 console.log(this.menulist.data);
@@ -2056,10 +2061,12 @@
                                 if(item1.typeroad=='road'){
                                     this.roadShow(item1);
                                 }else {
-                                    if(item1.type!='person'){
-                                        this.treeShow(item1);
-                                    }else {
+                                    if(item1.type =='person'){
                                         this.roadShowID(item1.routeId);
+                                    }else if(item1.type =='warn'){
+
+                                    }else {
+                                        this.treeShow(item1);
                                     }
                                 }
                                 if(item1.type=='light'){
@@ -2116,10 +2123,12 @@
                             if(item.typeroad=='road'){
                                 this.roadHide(item);
                             }else {
-                                if(item.type!='person'){
-                                    this.treeHide(item);
-                                }else {
+                                if(item.type =='person'){
                                     this.roadHideID(item.routeId)
+                                }else if(item.type =='warn'){
+
+                                }else {
+                                    this.treeHide(item);
                                 }
                             }
                             if(item.type=='light'){
@@ -2179,10 +2188,12 @@
                                 if(data[i].typeroad=='road'){
                                     this.roadShow(data[i]);
                                 }else {
-                                    if(data[i].type!='person'){
-                                        this.treeShow(data[i]);
-                                    }else {
+                                    if(data[i].type =='person'){
                                         this.roadShowID(data[i].routeId)
+                                    }else if(data[i].type =='warn'){
+
+                                    }else {
+                                        this.treeShow(data[i]);
                                     }
                                 }
                                 // console.log(this.getTreeState[0]);
@@ -2255,10 +2266,12 @@
                                 if(this.getTreeState[0].children[i].typeroad=='road'){
                                     this.roadHide(this.getTreeState[0].children[i]);
                                 }else {
-                                    if(this.getTreeState[0].children[i].type!='person'){
-                                        this.treeHide(this.getTreeState[0].children[i]);
-                                    }else {
+                                    if(this.getTreeState[0].children[i].type =='person'){
                                         this.roadHideID(this.getTreeState[0].children[i].routeId)
+                                    }else if(this.getTreeState[0].children[i].type =='warn'){
+
+                                    }else {
+                                        this.treeHide(this.getTreeState[0].children[i]);
                                     }
                                 }
                                 if(this.getTreeState[0].children[i].type=='light'){
@@ -2360,10 +2373,12 @@
                             if(this.getTreeState[0].typeroad=='road'){
                                 this.roadShow(this.getTreeState[0]);
                             }else {
-                                if(this.getTreeState[0].type!='person'){
-                                    this.treeShow(this.getTreeState[0]);
-                                }else {
+                                if(this.getTreeState[0].type =='person'){
                                     this.roadShowID(this.getTreeState[0].routeId)
+                                }else if(this.getTreeState[0].type =='warn'){
+
+                                }else {
+                                    this.treeShow(this.getTreeState[0]);
                                 }
                             }
                             if(this.getTreeState[0].type=='light'){
@@ -2432,10 +2447,12 @@
                             if(this.getTreeState[0].typeroad=='road'){
                                 this.roadHide(this.getTreeState[0]);
                             }else {
-                                if(this.getTreeState[0].type!='person'){
-                                    this.treeHide(this.getTreeState[0]);
-                                }else {
+                                if(this.getTreeState[0].type =='person'){
                                     this.roadHideID(this.getTreeState[0].routeId)
+                                }else if(this.getTreeState[0].type =='warn'){
+
+                                }else {
+                                    this.treeHide(this.getTreeState[0]);
                                 }
                             }
                             if(this.getTreeState[0].type=='light'){

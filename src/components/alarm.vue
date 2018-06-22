@@ -53,7 +53,7 @@
                                 title: '越界'
                             },
                             {
-                                icon: './../../static/img/clearer.svg',
+                                icon: './../../static/img/alarm/speedingRule.svg',
                                 index: '/alarm/speeding-Rule',
                                 title: '超速'
                             },
