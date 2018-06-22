@@ -357,7 +357,7 @@
         data () {
             return {
                 daySelect:[],
-                timeSelect: [],
+                timeSelect: undefined,
                 files: [],
                 selectLight:[],
                 edit: false,

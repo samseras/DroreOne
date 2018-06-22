@@ -80,7 +80,7 @@
                             <template slot-scope="scope">
                                 <span @click="fixedInfo(scope.row,'修改保洁计划')">编辑</span> |
                                 <span @click="stop(scope.row)" v-if="scope.row.cleanSchedule.enabled">停用 |</span>
-                                <span @click="stop(scope.row)" v-else="!scope.row.cleanSchedule.enabled">启用</span>
+                                <span @click="stop(scope.row)" v-else="!scope.row.cleanSchedule.enabled">启用 |</span>
                                 <span @click="showPersonDetail(scope.row,'保洁信息',true)">查看</span> |
                                 <span @click="deletInfo(scope.row.id,'片区信息')">删除</span>
                             </template>
