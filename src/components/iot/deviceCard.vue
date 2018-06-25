@@ -222,7 +222,7 @@
                             <el-input v-model="item.name"></el-input>
                             <!--<el-input v-model="item.prop":disabled="!item.isDisabled"></el-input>-->
                         </p>
-                        <el-button @click="saveQualification">去认证</el-button>
+                        <el-button @click="saveQualification" class="go-qualificate">去认证</el-button>
 
                     </el-tab-pane>
 
@@ -268,7 +268,7 @@
         data() {
             return {
                 alermTableData:[],
-                /***详情标签页数据***/
+                /***详情标签页开始***/
                 pickSignalInfo:[],
                 horizontalData:[],
                 zongData:[],
@@ -315,7 +315,7 @@
                     }]
                 },
                 valueTime: '',
-                /***详情标签页数据***/
+                /***详情标签页结束***/
                 activeTabNames:'attributeTab',
                 editData:{},  //列表
                 showDialog:false,
@@ -346,10 +346,10 @@
             this.route = this.$route.path;
             this.selectDatas=[];
             console.log(this.selectDatas);
-            //console.log(this.$store.getters.getCurPage)
+
         },
         computed:{
-            //console.log(this.$store.getters.getCurPage)
+
         },
         watch: {
             '$route'(){
@@ -774,28 +774,28 @@
         }
     }
     .device-card{
+        $blue:#14B9D6;
         .el-button--primary{
-            background-color:#14B9D6;
-            border-color:#14B9D6;
+            background-color:$blue;
+            border-color:$blue;
         }
         .el-switch__label.is-active{
-            color:#14B9D6;
+            color:$blue;
         }
         .el-pagination.is-background .el-pager li:not(.disabled):hover{
-            color:#14B9D6;
+            @extend .el-switch__label.is-active
         }
         .el-switch.is-checked .el-switch__core{
-            background-color:#14B9D6;
-            border-color:#14B9D6;
+            @extend .el-button--primary
         }
         .el-button--text{
-            color:#14B9D6;
+            @extend .el-switch__label.is-active
         }
         .el-tabs--border-card>.el-tabs__header .el-tabs__item.is-active{
-            color:#14B9D6;
+            @extend .el-switch__label.is-active
         }
         .el-tabs--border-card>.el-tabs__header .el-tabs__item:not(.is-disabled):hover{
-            color:#14B9D6;
+            @extend .el-switch__label.is-active
         }
         .myrow{
             .mycol{
@@ -859,6 +859,9 @@
                 }
                 .edit-qualification{
                     padding:rem(8) rem(8)
+                }
+                .go-qualificate{
+                    margin:rem(8)
                 }
                 .el-dialog__body{
                     padding:rem(0) rem(20);

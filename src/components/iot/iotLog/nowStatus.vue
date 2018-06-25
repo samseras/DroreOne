@@ -53,8 +53,8 @@
                 </el-form-item>
             </el-form>
             <template>
-
-                <br>
+                test：
+                {{getCurPage}}
 
             </template>
         </div>
@@ -62,7 +62,7 @@
 </template>
 
 <script>
-
+    import {mapGetters,mapMutations,mapActions} from 'vuex'
     import api from '@/api'
     export default {
         name: "iotHome",
@@ -105,12 +105,19 @@
 
                     checkedCities1: ['上海', '北京'],   //多选默认值选中
                     cities: ['上海', '北京', '广州', '深圳']
-                }
+                },
+                mutationFlag:5
 
 
             }
         },
+        computed:{
+            ...mapGetters(['getCurPage']),
+
+        },
         methods:{
+            ...mapMutations(['CURPAGE']),
+            ...mapActions(['getActionTest']),
             hallo(){
                 this.$refs.anniu.innerText=this.message;
             },
@@ -125,8 +132,14 @@
             },
             onSubmit(val) {
                 console.log(this.formInline,'提交的东西');
+                this.$store.dispatch('getActionTest');
             }
 
+        },
+        mounted(){
+            this.$store.commit('CURPAGE',this.mutationFlag);
+
+            console.log(this.getCurPage);
         },
         created () {
 

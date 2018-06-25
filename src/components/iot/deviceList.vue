@@ -38,7 +38,6 @@
 
 <script>
     import DeviceCard from './deviceCard'
-    import {mapMutations} from 'vuex'
     import api from '@/api'
     export default {
         name: "devicelist",
@@ -119,8 +118,8 @@
                     console.log(err,'失败')
                 })
                 //this.$store.commit('CURPAGE', val)
-            },
-            ...mapMutations(['CURPAGE'])
+            }
+
         },
         components:{
             DeviceCard
@@ -133,20 +132,17 @@
 
 <style lang="scss" type="text/scss">
     .device-list{
+        $blue:#14B9D6;
         border:1px solid transparent;
         margin:rem(16);
         border-radius:rem(8);
         .el-button--primary{
-            background-color:#14B9D6;
-            border-color:#14B9D6;
+            background-color:$blue;
+            border-color:$blue;
         }
         .el-pagination.is-background .el-pager li:not(.disabled).active{
-            background-color: #14B9D6;
+            background-color:$blue;
         }
-        /*.card-list{
-            height:500px;
-            overflow:auto;
-        }*/
         header{
             background-color:#fff;
             .title{
@@ -169,11 +165,6 @@
                     display:inline-block;
                     margin-top: rem(8);
                     padding-bottom: rem(8);
-                    /*.el-button--primary {
-                        background-color: #fff;
-                        border-color: #dcdfe6;
-                        color: #bbb;
-                    }*/
                 }
                 .page{
                     float:right;
