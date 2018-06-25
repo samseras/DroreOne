@@ -52,10 +52,12 @@
                 visible: false
             }
         },
-        created () {
+       async created () {
             this.route = this.$route.path
             this.getUserRoles(this.getUserInfo)
             this.getUserDetailInfo(this.getUserInfo)
+            await this.getFacilityType()
+           await this.getDeviceType()
         },
         watch: {
           '$route'(){
@@ -67,7 +69,7 @@
             UserInfoDialog
         },
         methods:{
-            ...mapActions(['logout','getUserRoles','getUserDetailInfo']),
+            ...mapActions(['logout','getUserRoles','getUserDetailInfo','getFacilityType','getDeviceType']),
             logout() {
                 let data = JSON.parse(localStorage.getItem('token'))
                 this.$store.dispatch('logout',data).then(() => {
