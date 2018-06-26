@@ -9,7 +9,6 @@
                         @selectedAll = 'selectedAll'
                         @batchEdit = 'batchEdit'
                         @choseType='choseType'
-                        @batchDownload="batchDownload"
                         :choseId="choseInfoId"
                         :listLength = "listLength"
                         @searchAnything="searchAnything"
@@ -72,7 +71,7 @@
                         </el-table-column>
                         <el-table-column label="操作" width="200">
                             <template slot-scope="scope">
-                                <span @click="editInfo(scope.row,false,'编辑告警事件')" class="edit">编辑</span> |
+                                <span @click="editInfo(scope.row,false,'编辑告警事件')" class="edit">处理</span> |
                                 <span @click="showDetail(scope.row,true,'查看告警事件')">查看</span> |
                                 <span @click="deletInfo(scope.row.id)">删除</span>
                             </template>
@@ -150,34 +149,6 @@
                     })
                 } else {
                     this.getAllAlarmEvent()
-                }
-            },
-            batchDownload(){
-                console.log(this.choseInfos)
-                if (this.choseInfos.length > 0) {
-                        //导出接口
-                        // api.schedulebroadcast.deleteBroadcast(this.choseInfos).then(res => {
-                        //     console.log(res, '删除成功')
-                        //     this.$message.success('删除成功')
-                        //     for (let i = 0; i < this.choseInfos.length; i++) {
-                        //         this.broadCastList = this.broadCastList.filter((item, index) => {
-                        //             if (item.id === this.choseInfos[i]){
-                        //                 this.broadCastList[index].checked = false
-                        //                 this.broadCastList[index].status = false
-                        //             }
-                        //             return item.status !== false
-                        //         })
-                        //     }
-                        //     this.choseInfos = []
-                        // }).catch(err => {
-                        //     this.$message.error('删除失败，请稍后重试')
-                        //     console.log(err)
-                        //     this.choseInfos = []
-                        // })
-
-                } else {
-                    this.$message.error('请选择要导出的数据')
-                    return
                 }
             },
             choseType(type){
@@ -279,11 +250,13 @@
                 this.warningEventList = this.warningEventList.filter((item) => {
                     if (state === true) {
                         item.checked = true
-                        this.choseInfos.push(item.id)
+                        this.choseInfos.push(item)
+                        this.choseInfoId.push(item.id)
                         return item.checked === true
                     } else {
                         item.checked = false
                         this.choseInfos = []
+                        this.choseInfoId = []
                         return item.checked === false
                     }
                 })

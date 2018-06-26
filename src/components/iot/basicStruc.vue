@@ -166,8 +166,8 @@
                 background-color:transparent ;
                 border-color: transparent;
             }
-            //margin-left:rem(16);
-            margin-right: 52%;
+            //margin-right: 52%;
+            margin-right: 59%;
             .el-form-item__content{
                 line-height:rem(60);
             }

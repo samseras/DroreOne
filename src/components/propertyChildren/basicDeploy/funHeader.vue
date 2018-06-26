@@ -119,7 +119,23 @@
                         case route.includes("boat"):
                             console.log("boat");
                             api.importfile.importBoat(form).then(res => {
-                                this.$message.success('导入成功');
+                                if(Object.keys(res).length > 0){
+                                    let messages = '';
+                                    for(let i in res){
+                                        messages += "第"+i+"行错误: "+res[i]+"<br>";
+                                    }
+                                    this.$alert(messages, '导入提示', {
+                                        confirmButtonText: '确定',
+                                        dangerouslyUseHTMLString:true,
+                                        callback: action => {
+                                            this.$message.success('导入成功');
+                                            this.reload()
+                                        }
+                                    });
+                                }else{
+                                    this.$message.success('导入成功');
+                                    this.reload()
+                                }
                                 this.$emit("getAllBoat");
                             }).catch(err => {
                                 this.$message.error('导入失败，请稍后重试')
@@ -129,7 +145,23 @@
                         case route.includes("toilet"):
                             console.log("toilet");
                             api.importfile.importToilet(form).then(res => {
-                                this.$message.success('导入成功');
+                                if(Object.keys(res).length > 0){
+                                    let messages = '';
+                                    for(let i in res){
+                                        messages += "第"+i+"行错误: "+res[i]+"<br>";
+                                    }
+                                    this.$alert(messages, '导入提示', {
+                                        confirmButtonText: '确定',
+                                        dangerouslyUseHTMLString:true,
+                                        callback: action => {
+                                            this.$message.success('导入成功');
+                                            this.reload()
+                                        }
+                                    });
+                                }else{
+                                    this.$message.success('导入成功');
+                                    this.reload()
+                                }
                                 this.$emit("getAllToilet");
                             }).catch(err => {
                                 this.$message.error('导入失败，请稍后重试')
@@ -139,7 +171,23 @@
                         case route.includes("park"):
                             console.log("park");
                             api.importfile.importPark(form).then(res => {
-                                this.$message.success('导入成功');
+                                if(Object.keys(res).length > 0){
+                                    let messages = '';
+                                    for(let i in res){
+                                        messages += "第"+i+"行错误: "+res[i]+"<br>";
+                                    }
+                                    this.$alert(messages, '导入提示', {
+                                        confirmButtonText: '确定',
+                                        dangerouslyUseHTMLString:true,
+                                        callback: action => {
+                                            this.$message.success('导入成功');
+                                            this.reload()
+                                        }
+                                    });
+                                }else{
+                                    this.$message.success('导入成功');
+                                    this.reload()
+                                }
                                 this.$emit("getAllPark");
                             }).catch(err => {
                                 this.$message.error('导入失败，请稍后重试')
@@ -149,7 +197,23 @@
                         case route.includes("shop"):
                             console.log("shop");
                             api.importfile.importShop(form).then(res => {
-                                this.$message.success('导入成功');
+                                if(Object.keys(res).length > 0){
+                                    let messages = '';
+                                    for(let i in res){
+                                        messages += "第"+i+"行错误: "+res[i]+"<br>";
+                                    }
+                                    this.$alert(messages, '导入提示', {
+                                        confirmButtonText: '确定',
+                                        dangerouslyUseHTMLString:true,
+                                        callback: action => {
+                                            this.$message.success('导入成功');
+                                            this.reload()
+                                        }
+                                    });
+                                }else{
+                                    this.$message.success('导入成功');
+                                    this.reload()
+                                }
                                 this.$emit("getAllShop");
                             }).catch(err => {
                                 this.$message.error('导入失败，请稍后重试')
@@ -159,7 +223,23 @@
                         case route.includes("scenic"):
                             console.log("scenic");
                             api.importfile.importScenic(form).then(res => {
-                                this.$message.success('导入成功');
+                                if(Object.keys(res).length > 0){
+                                    let messages = '';
+                                    for(let i in res){
+                                        messages += "第"+i+"行错误: "+res[i]+"<br>";
+                                    }
+                                    this.$alert(messages, '导入提示', {
+                                        confirmButtonText: '确定',
+                                        dangerouslyUseHTMLString:true,
+                                        callback: action => {
+                                            this.$message.success('导入成功');
+                                            this.reload()
+                                        }
+                                    });
+                                }else{
+                                    this.$message.success('导入成功');
+                                    this.reload()
+                                }
                                 this.$emit("getAllScenic");
                             }).catch(err => {
                                 this.$message.error('导入失败，请稍后重试')
@@ -169,7 +249,23 @@
                         case route.includes("trash"):
                             console.log("trash");
                             api.importfile.importDustbin(form).then(res => {
-                                this.$message.success('导入成功');
+                                if(Object.keys(res).length > 0){
+                                    let messages = '';
+                                    for(let i in res){
+                                        messages += "第"+i+"行错误: "+res[i]+"<br>";
+                                    }
+                                    this.$alert(messages, '导入提示', {
+                                        confirmButtonText: '确定',
+                                        dangerouslyUseHTMLString:true,
+                                        callback: action => {
+                                            this.$message.success('导入成功');
+                                            this.reload()
+                                        }
+                                    });
+                                }else{
+                                    this.$message.success('导入成功');
+                                    this.reload()
+                                }
                                 this.$emit("getAllTrash");
                             }).catch(err => {
                                 this.$message.error('导入失败，请稍后重试')
@@ -179,7 +275,23 @@
                         case route.includes("indicator"):
                             console.log("indicator");
                             api.importfile.importIndicator(form).then(res => {
-                                this.$message.success('导入成功');
+                                if(Object.keys(res).length > 0){
+                                    let messages = '';
+                                    for(let i in res){
+                                        messages += "第"+i+"行错误: "+res[i]+"<br>";
+                                    }
+                                    this.$alert(messages, '导入提示', {
+                                        confirmButtonText: '确定',
+                                        dangerouslyUseHTMLString:true,
+                                        callback: action => {
+                                            this.$message.success('导入成功');
+                                            this.reload()
+                                        }
+                                    });
+                                }else{
+                                    this.$message.success('导入成功');
+                                    this.reload()
+                                }
                                 this.$emit("getAllIndicator");
                             }).catch(err => {
                                 this.$message.error('导入失败，请稍后重试')
@@ -189,7 +301,23 @@
                         case route.includes("plant"):
                             console.log("plant");
                             api.importfile.importPlant(form).then(res => {
-                                this.$message.success('导入成功');
+                                if(Object.keys(res).length > 0){
+                                    let messages = '';
+                                    for(let i in res){
+                                        messages += "第"+i+"行错误: "+res[i]+"<br>";
+                                    }
+                                    this.$alert(messages, '导入提示', {
+                                        confirmButtonText: '确定',
+                                        dangerouslyUseHTMLString:true,
+                                        callback: action => {
+                                            this.$message.success('导入成功');
+                                            this.reload()
+                                        }
+                                    });
+                                }else{
+                                    this.$message.success('导入成功');
+                                    this.reload()
+                                }
                                 this.$emit("getAllPlant");
                             }).catch(err => {
                                 this.$message.error('导入失败，请稍后重试')
@@ -199,7 +327,23 @@
                         case route.includes("construction"):
                             console.log("construction");
                             api.importfile.importConstruction(form).then(res => {
-                                this.$message.success('导入成功');
+                                if(Object.keys(res).length > 0){
+                                    let messages = '';
+                                    for(let i in res){
+                                        messages += "第"+i+"行错误: "+res[i]+"<br>";
+                                    }
+                                    this.$alert(messages, '导入提示', {
+                                        confirmButtonText: '确定',
+                                        dangerouslyUseHTMLString:true,
+                                        callback: action => {
+                                            this.$message.success('导入成功');
+                                            this.reload()
+                                        }
+                                    });
+                                }else{
+                                    this.$message.success('导入成功');
+                                    this.reload()
+                                }
                                 this.$emit("getAllBuild");
                             }).catch(err => {
                                 this.$message.error('导入失败，请稍后重试')
@@ -209,7 +353,23 @@
                         case route.includes("person"):
                             console.log("person");
                             api.importfile.importPerson(form).then(res => {
-                                this.$message.success('导入成功');
+                                if(Object.keys(res).length > 0){
+                                    let messages = '';
+                                    for(let i in res){
+                                        messages += "第"+i+"行错误: "+res[i]+"<br>";
+                                    }
+                                    this.$alert(messages, '导入提示', {
+                                        confirmButtonText: '确定',
+                                        dangerouslyUseHTMLString:true,
+                                        callback: action => {
+                                            this.$message.success('导入成功');
+                                            this.reload()
+                                        }
+                                    });
+                                }else{
+                                    this.$message.success('导入成功');
+                                    this.reload()
+                                }
                                 this.$emit("getAllPerson");
                             }).catch(err => {
                                 this.$message.error('导入失败，请稍后重试')

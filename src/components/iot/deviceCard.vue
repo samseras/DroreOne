@@ -1,12 +1,12 @@
 <template>
     <div class="device-card">
-        <el-row class="myrow">
-            <el-col :span="8" v-for="(o, index) in selectDatas" :key="o.name"   class="mycol">
+        <el-row class="myrow" :gutter="16">
+            <el-col :span="6" v-for="(o, index) in selectDatas" :key="o.name"   class="mycol">
                 <el-card   class="mycard">
                     <img src="../../../static/img/iot/东区.png" class="image">
                     <!-- <img :src="'../../../static/img/iot/'+o.areaName+'.png'" class="image">-->
                     <!--<img :src="'../../../static/img/iot/'+o.type+'.svg'" class="icons">-->
-                    <div style="padding: 14px;" class="card-bottoms">
+                    <div  class="card-bottoms">
                         <span v-if="o.attributes.label">名称：{{o.attributes.label}}</span>
                         <div class="bottom">
                             <p>mac：{{o.mac}}</p>
@@ -28,9 +28,9 @@
                                  </el-row>
                              </p>-->
                         </div>
-                        <div class="more">
+                        <div class="more moreBtn">
                             <template>
-                                <el-button type="text" @click="showOuterMore(o,index)">详情>></el-button>
+                                <el-button type="text" @click="showOuterMore(o,index)" class="details">详情>></el-button>
                             </template>
                         </div>
                     </div>
@@ -222,7 +222,7 @@
                             <el-input v-model="item.name"></el-input>
                             <!--<el-input v-model="item.prop":disabled="!item.isDisabled"></el-input>-->
                         </p>
-                        <el-button @click="saveQualification">保存</el-button>
+                        <el-button @click="saveQualification" class="go-qualificate">去认证</el-button>
 
                     </el-tab-pane>
 
@@ -268,7 +268,7 @@
         data() {
             return {
                 alermTableData:[],
-                /***详情标签页数据***/
+                /***详情标签页开始***/
                 pickSignalInfo:[],
                 horizontalData:[],
                 zongData:[],
@@ -315,7 +315,7 @@
                     }]
                 },
                 valueTime: '',
-                /***详情标签页数据***/
+                /***详情标签页结束***/
                 activeTabNames:'attributeTab',
                 editData:{},  //列表
                 showDialog:false,
@@ -346,10 +346,10 @@
             this.route = this.$route.path;
             this.selectDatas=[];
             console.log(this.selectDatas);
-            //console.log(this.$store.getters.getCurPage)
+
         },
         computed:{
-            //console.log(this.$store.getters.getCurPage)
+
         },
         watch: {
             '$route'(){
@@ -709,7 +709,7 @@
                     console.log(err,'失败')
                 })
                 //设备认证标签页
-                api.iotHome.postDeviceQualificationInfo(this.curId).then(res=>{
+                api.iotHome.getDeviceQualificationInfo(this.curId).then(res=>{
                     console.log(res,'这是设备认证页面传回来的可编辑信息');
                     res.fieldInfos.forEach(item => {
                         Object.keys(res.properties).forEach( (key, i) => {
@@ -750,8 +750,8 @@
                     finalObj[item.key]=item.name
                 })
                 finalObj.id=this.curId;
-                api.iotHome.editDeviceCardInfo(finalObj).then(res=>{
-                    console.log(res,'这是编辑认证信息')
+                api.iotHome.postDeviceQualificationInfo(finalObj).then(res=>{
+                    console.log(res,'这是编辑认证提交后的信息')
                 }).catch(err=>{
                     console.log(err,'失败')
                 })
@@ -774,19 +774,47 @@
         }
     }
     .device-card{
+        $blue:#14B9D6;
+        .el-button--primary{
+            background-color:$blue;
+            border-color:$blue;
+        }
+        .el-switch__label.is-active{
+            color:$blue;
+        }
+        .el-pagination.is-background .el-pager li:not(.disabled):hover{
+            @extend .el-switch__label.is-active
+        }
+        .el-switch.is-checked .el-switch__core{
+            @extend .el-button--primary
+        }
+        .el-button--text{
+            @extend .el-switch__label.is-active
+        }
+        .el-tabs--border-card>.el-tabs__header .el-tabs__item.is-active{
+            @extend .el-switch__label.is-active
+        }
+        .el-tabs--border-card>.el-tabs__header .el-tabs__item:not(.is-disabled):hover{
+            @extend .el-switch__label.is-active
+        }
         .myrow{
             .mycol{
-                width:32.3333%;
-                padding-top:rem(16);
-                margin-right:1%;
-
+                margin-top:1rem;
             }
             .mycard{
                 .card-bottoms{
-                    height:rem(182.4);
+                    padding:rem(14);
+                    padding-bottom:0;
+                    .moreBtn{
+                        text-align:right;
+                    }
+                }
+                .el-card__body{
+                    padding-bottom:0;
                 }
             }
         }
+
         .time {
             font-size: rem(13);
             color: #999;
@@ -813,6 +841,7 @@
             top:rem(39);
         }
         div.more{
+
             .detail-dialog{
                 .echartWrap{
                     border:1px solid transparent;
@@ -830,6 +859,9 @@
                 }
                 .edit-qualification{
                     padding:rem(8) rem(8)
+                }
+                .go-qualificate{
+                    margin:rem(8)
                 }
                 .el-dialog__body{
                     padding:rem(0) rem(20);
@@ -859,8 +891,6 @@
                     }
                 }
             }
-            padding-top:rem(16);
-            padding-bottom:rem(16);
             .el-dialog{
                 width:78%;
                 min-height:rem(400);

@@ -45,6 +45,7 @@
                     style="width: 100%">
                     <el-table-column
                         show-overflow-tooltip
+                        sortable
                         prop="id"
                         label="ID" >
                     </el-table-column>
@@ -73,9 +74,12 @@
                         prop="action"
                         label="执行动作" >
                     </el-table-column>
-
-
-
+                    <el-table-column
+                        show-overflow-tooltip
+                        prop="time"
+                        sortable
+                        label="时间" >
+                    </el-table-column>
 
                     <!--<el-table-column label="操作">
                         <template slot-scope="scope">
@@ -99,7 +103,7 @@
             return{
                 cols:[],
                 tableData:[],
-                allNum:100,
+                allNum:1,
                 pageSize:40,
                 currentPage:1,
                 valueTime:'',
@@ -174,14 +178,16 @@
         methods:{
             timeSelect(){
                 console.log(this.valueTime);
-                api.iotHome.getSystemLogInfo(this.valueTime[0],this.valueTime[1],this.startItem,this.pageSize).then(res=>{
-                    console.log(res,'传回的系统日志信息');
-                    this.allNum=res.pagination.itemsTotal;
-                    /* this.alermCols=res.pageData.cols;*/
-                    this.tableData=res.logs;
-                }).catch(err=>{
-                    console.log(err,'失败')
-                })
+                if(this.valueTime){
+                    api.iotHome.getSystemLogInfo(this.valueTime[0],this.valueTime[1],this.startItem,this.pageSize).then(res=>{
+                        console.log(res,'传回的系统日志信息');
+                        this.allNum=res.pagination.itemsTotal;
+                        /* this.alermCols=res.pageData.cols;*/
+                        this.tableData=res.logs;
+                    }).catch(err=>{
+                        console.log(err,'失败')
+                    })
+                }
             },
             handleSizeChange(val){
               console.log(val);
@@ -203,15 +209,33 @@
 </script>
 
 <style lang="scss" type="text/scss">
+    .el-date-table td.end-date span, .el-date-table td.start-date span{  //时间插件直接绑在body上
+        background-color:#14B9D6;
+    }
+    .el-time-panel__btn.confirm{
+        color:#14B9D6;
+    }
     .system-log{
-        border:1px solid transparent;
+        border:1px solid #ccc;
         margin:rem(16);
+        .el-button--text{
+            color:#14B9D6;
+        }
+        .el-pagination.is-background .el-pager li:not(.disabled):hover{
+            background-color:#14B9D6;
+        }
+        .el-pagination.is-background .el-pager li:not(.disabled).active{
+            background-color:#14B9D6;
+        }
+        .el-pagination.is-background .el-pager li:not(.disabled):hover{
+            color:#fff;
+        }
         header{
             background-color:#fff;
             .title{
                 text-align:left;
                 height:rem(16);
-                border-bottom:1px solid #transparent;
+                border-bottom:1px solid transparent;
                 padding:rem(16);
 
             }

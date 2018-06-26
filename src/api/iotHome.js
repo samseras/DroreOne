@@ -62,12 +62,20 @@ const iotHome = {
             }
         })
     },
-    postDeviceQualificationInfo(id){  //设备认证编辑
+    getDeviceQualificationInfo(id){  //查询设备认证编辑
+        return axios ({
+            method:'GET',
+            url:'/iot/devices/properties?id='+id,
+        })
+    },
+    postDeviceQualificationInfo(val){  //设备认证编辑确认
+        console.log('4444444444设备认证提交的信息',val)
         return axios ({
             method:'POST',
             url:'/iot/devices/properties',
             data:{
-                "deviceIds":[id]
+                //"deviceIds":[id]
+                condition:val
             }
         })
     },

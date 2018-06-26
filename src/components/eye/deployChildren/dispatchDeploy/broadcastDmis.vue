@@ -67,10 +67,13 @@
                         </el-table-column>
                         <el-table-column label="操作" width="200">
                             <template slot-scope="scope">
-                                <span @click="fixedInfo(scope.row,'修改广播计划')" class="edit">编辑</span> |
-                                <span @click="stop(scope.row)" v-if="scope.row.broadcastSchedule.enabled">停用 |</span>
-                                <span @click="stop(scope.row)" v-if="!scope.row.broadcastSchedule.enabled">启用 |</span>
-                                <span @click="showPersonDetail(scope.row,'广播信息',true)">查看</span> |
+                                <span @click="fixedInfo(scope.row,'修改广播计划')" class="edit">编辑</span>
+                                <span class="line">|</span>
+                                <span @click="stop(scope.row)" v-if="scope.row.broadcastSchedule.enabled">停用</span>
+                                <span @click="stop(scope.row)" v-if="!scope.row.broadcastSchedule.enabled">启用</span>
+                                <span class="line">|</span>
+                                <span @click="showPersonDetail(scope.row,'广播信息',true)">查看</span>
+                                <span class="line">|</span>
                                 <span @click="deletInfo(scope.row.id,)">删除</span>
                             </template>
                         </el-table-column>
@@ -564,11 +567,6 @@
                     display: inline-block;
                     width: rem(150);
                     text-align: left;
-                    padding-right: rem(5);
-                    padding-top: rem(5);
-                    overflow: hidden;
-                    text-overflow: ellipsis;
-                    white-space: nowrap;
                 }
             }
         }

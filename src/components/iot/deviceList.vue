@@ -8,7 +8,7 @@
                 <div class="search">
                     <el-form :inline="true"  class="demo-form-inline">
                         <el-form-item label="">
-                            <el-input v-model="formInline" placeholder="请输入..." ></el-input>
+                            <el-input v-model="formInline" placeholder="状态OFFLINE/WORKING" ></el-input>
                         </el-form-item>
                         <el-form-item>
                             <el-button type="primary" @click="onSubmit"><i class="el-icon-search"></i></el-button>
@@ -38,7 +38,6 @@
 
 <script>
     import DeviceCard from './deviceCard'
-    import {mapMutations} from 'vuex'
     import api from '@/api'
     export default {
         name: "devicelist",
@@ -119,8 +118,8 @@
                     console.log(err,'失败')
                 })
                 //this.$store.commit('CURPAGE', val)
-            },
-            ...mapMutations(['CURPAGE'])
+            }
+
         },
         components:{
             DeviceCard
@@ -133,9 +132,17 @@
 
 <style lang="scss" type="text/scss">
     .device-list{
+        $blue:#14B9D6;
         border:1px solid transparent;
         margin:rem(16);
         border-radius:rem(8);
+        .el-button--primary{
+            background-color:$blue;
+            border-color:$blue;
+        }
+        .el-pagination.is-background .el-pager li:not(.disabled).active{
+            background-color:$blue;
+        }
         header{
             background-color:#fff;
             .title{
@@ -158,11 +165,6 @@
                     display:inline-block;
                     margin-top: rem(8);
                     padding-bottom: rem(8);
-                    /*.el-button--primary {
-                        background-color: #fff;
-                        border-color: #dcdfe6;
-                        color: #bbb;
-                    }*/
                 }
                 .page{
                     float:right;

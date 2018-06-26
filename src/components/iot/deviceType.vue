@@ -1,11 +1,13 @@
 <template>
     <div class="device-type" >
         <div class="title">
-           <h2>设备型号11</h2>
+           <h2>设备型号</h2>
         </div>
         <template>
             <el-table
                 :data="tableData"
+                border
+                show-summary
                 style="width: 100%">
                 <el-table-column
                     v-for="col in cols"
@@ -29,8 +31,6 @@
             @saveEvent="saveDialog"
             @cancelEvent="cancelDialog">
         </IotDialog>
-
-
     </div>
 </template>
 
@@ -38,7 +38,6 @@
     import api from '@/api'
     import IotDialog from './iotDialog'
     export default {
-
         name: "devicetype",
         data(){
             return{
@@ -113,15 +112,22 @@
 
 <style  lang="scss" type="text/scss">
     .device-type{
+        .el-table td, .el-table th.is-leaf{
+            text-align: center;
+        }
+        .el-button--primary{
+            background-color:#14B9D6;
+            border-color:#14B9D6;
+        };
         margin:rem(16);
         border:1px solid transparent;
         .title{
             background-color: #fff;
             border-bottom: 1px solid #eee;
             h2{
-                color: #000;
-                font-weight: 600;
+
                 padding: rem(16) rem(9.6);
+                font-family: '\5FAE\8F6F\96C5\9ED1';
             }
         }
     }
