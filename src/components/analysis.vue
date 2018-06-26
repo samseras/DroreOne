@@ -75,7 +75,7 @@
 
 <script>
   // import echarts from "../../static/js/echarts.min.js"
-  import passengerFlow from "./analysisSystem/analyze/passengerFlow.vue"
+  import passengerFlow from "./analysisSystem/analysis/passengerFlow.vue"
   import api from "@/api"
   import errList from "./pages/err.vue"
   import { mapMutations,mapGetters,mapActions } from 'vuex'
@@ -108,7 +108,7 @@
       async created () {
         this.getUserDetailInfo(this.getUserInfo)
   	    await this.getDashboradList()
-        this.$router.push({path:`/analyze/${this.sidebarList[0].dashboard_id}`});
+        this.$router.push({path:`/analysis/${this.sidebarList[0].dashboard_id}`});
         this.$store.commit('REFRESH_DATA_TYPE', this.sidebarList[0].refresh_interval)
       },
       components:{
@@ -135,7 +135,7 @@
             },
             sharedLinks(){
                 this.showLink = true;
-                this.screenHrefVal = window.location.href.replace("analyze","screen");
+                this.screenHrefVal = window.location.href.replace("analysis","screen");
             },
             copy(){
                 let clipboard = new Clipboard('.screenLink');
@@ -186,12 +186,12 @@
 
                 this.currenId = id;
                 this.dashboradName = name;
-                this.$router.push({path: `/analyze/${id}`});
+                this.$router.push({path: `/analysis/${id}`});
                 this.activeIndex = index;
                 this.$store.commit('REFRESH_DATA_TYPE', refresh)
             },
             async getDashboradList(){
-                await api.analyze.getDashboradList().then(res => {
+                await api.analysis.getDashboradList().then(res => {
                     this.sidebarList = res.result;
                     this.type = this.sidebarList[0].template_type;
                     this.currenId = this.sidebarList[0].dashboard_id;

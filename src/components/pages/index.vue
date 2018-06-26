@@ -49,7 +49,7 @@
                                 <div class="eye">
                                     <router-link to="/eye"  id="eye" class="change">全视之眼>><img src="../../../static/img/eye.png"/></router-link>
                                     <!---->
-                                    <div class="change"><router-link to="/analyze" class="change">数据可视化>><img src="../../../static/img/sentiment.png"/></router-link></div>
+                                    <div class="change"><router-link to="/analysis" class="change">数据可视化>><img src="../../../static/img/sentiment.png"/></router-link></div>
                                 </div>
                             </li>
                             <li class="change" id="bee"><router-link to="/basicStruc">物联网>><img src="../../../static/img/ZigBee.png"/></router-link></li>

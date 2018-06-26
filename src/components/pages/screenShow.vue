@@ -237,7 +237,7 @@
             async changeType(type){
                 let id = this.$route.params.id;
                 this.constent.template_type = type;
-                await api.analyze.updateDashborad(this.constent,id).then(res=>{
+                await api.analysis.updateDashborad(this.constent,id).then(res=>{
                        this.idx = res.result.template_type;
                        this.afreshType();
                        this.getContent()
@@ -249,7 +249,7 @@
             },
             async initScreen(){
                 let id = this.$route.params.id;
-                await api.analyze.getDashboradList().then(res=>{
+                await api.analysis.getDashboradList().then(res=>{
                     for(let i=0;i<res.result.length;i++){
                         if(res.result[i].dashboard_id == id){
                             this.dashboradName = res.result[i].name;
@@ -323,7 +323,7 @@
             async getContent(){
                 let id = this.$route.params.id;
                 this.initScreen();
-                await api.analyze.getStreamDataById(id).then(res=> {
+                await api.analysis.getStreamDataById(id).then(res=> {
                     this.echartsContent = res.result;
                     this.isShowLoading = true;
                     let scenarioId,chartId,chartDomH,echartsColor;
@@ -339,7 +339,7 @@
                 })
              },
             async getchartKind(scenarioId,chartDomH,echartsColor){
-                await api.analyze.getChartDashboardName(scenarioId).then(res=>{
+                await api.analysis.getChartDashboardName(scenarioId).then(res=>{
                     let chartDomHpx;
                     this.kind = res.result;
                     let kindName = res.result;
@@ -386,7 +386,7 @@
             },
             async getBarData(scenarioId,echartsColor){
                 let bar0ption,barResult,bigDom;
-                await api.analyze.getScenarioMapData(scenarioId).then(res=>{
+                await api.analysis.getScenarioMapData(scenarioId).then(res=>{
                     this.echatData = res.result;
                     barResult = JSON.parse(res.result);
                     var title = barResult.title;
@@ -447,7 +447,7 @@
             },
             async getPieData(scenarioId,echartsColor){
                 let pie0ption,pieResult;
-                await api.analyze.getScenarioMapData(scenarioId).then(res=>{
+                await api.analysis.getScenarioMapData(scenarioId).then(res=>{
                     this.echatData = res.result;
                     pieResult = JSON.parse(res.result);
                     var title = pieResult.title;
@@ -503,7 +503,7 @@
             },
             async getRoseData(scenarioId,echartsColor){
                 let rose0ption,roseResult;
-                await api.analyze.getScenarioMapData(scenarioId).then(res=>{
+                await api.analysis.getScenarioMapData(scenarioId).then(res=>{
                     this.echatData = res.result;
                     roseResult = JSON.parse(res.result);
                     var title = roseResult.title;
@@ -570,7 +570,7 @@
             },
             async getFunnelData(scenarioId,echartsColor){
                 let funnel0ption,funnelResult;
-                await api.analyze.getScenarioMapData(scenarioId).then(res=>{
+                await api.analysis.getScenarioMapData(scenarioId).then(res=>{
                     this.echatData = res.result;
                     funnelResult = JSON.parse(res.result);
                     var title = funnelResult.title;
@@ -647,7 +647,7 @@
             },
             async getLineData(scenarioId,echartsColor){
                 let line0ption,lineResult;
-                await api.analyze.getScenarioMapData(scenarioId).then(res=>{
+                await api.analysis.getScenarioMapData(scenarioId).then(res=>{
                     this.echatData = res.result;
                     lineResult = JSON.parse(res.result);
                     var title = lineResult.title;
@@ -715,7 +715,7 @@
             },
             async getScatterData(scenarioId,echartsColor){
                 let scatter0ption,scatterResult;
-                await api.analyze.getScenarioMapData(scenarioId).then(res=>{
+                await api.analysis.getScenarioMapData(scenarioId).then(res=>{
                     this.echatData = res.result;
                     scatterResult = JSON.parse(res.result);
                     var title = scatterResult.title;
@@ -749,7 +749,7 @@
             },
             async getRingData(scenarioId,echartsColor){
                 let ring0ption,ringResult;
-                await api.analyze.getScenarioMapData(scenarioId).then(res=>{
+                await api.analysis.getScenarioMapData(scenarioId).then(res=>{
                     this.echatData = res.result;
                     ringResult = JSON.parse(res.result);
                     var legendData = ringResult.legendData;
@@ -809,7 +809,7 @@
             },
             async getRelativebarData(scenarioId,echartsColor){
                 let relativebar0ption,relativebarResult;
-                await api.analyze.getScenarioMapData(scenarioId).then(res=>{
+                await api.analysis.getScenarioMapData(scenarioId).then(res=>{
                     this.echatData = res.result;
                     relativebarResult = JSON.parse(res.result);
                     $("#"+scenarioId).prev().find(".title").text(relativebarResult.title);
@@ -887,7 +887,7 @@
             },
             async getGaugeData(scenarioId,echartsColor){
                 let gauge0ption,gaugeResult;
-                await api.analyze.getScenarioMapData(scenarioId).then(res=>{
+                await api.analysis.getScenarioMapData(scenarioId).then(res=>{
                     this.echatData = res.result;
                     gaugeResult = JSON.parse(res.result);
                     // var title = gaugeResult.title;
@@ -928,7 +928,7 @@
             },
             async getCandlestickData(scenarioId,echartsColor){
                 let candlestick0ption,candlestickResult;
-                await api.analyze.getScenarioMapData(scenarioId).then(res=>{
+                await api.analysis.getScenarioMapData(scenarioId).then(res=>{
                     this.echatData = res.result;
                     candlestickResult = JSON.parse(res.result);
                     var title = candlestickResult.title;
@@ -968,7 +968,7 @@
             },
             async getRadarData(scenarioId,echartsColor){
                 let radar0ption,radarResult;
-                await api.analyze.getScenarioMapData(scenarioId).then(res=>{
+                await api.analysis.getScenarioMapData(scenarioId).then(res=>{
                     this.echatData = res.result;
                     radarResult = JSON.parse(res.result);
                     var legendData = radarResult.legendData;

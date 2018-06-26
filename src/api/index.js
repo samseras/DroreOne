@@ -1,7 +1,7 @@
 /*
 此文件总体导出axios的每一个接口
 * */
-import analyze from './analyze'
+import analysis from './analysis'
 import scenic from './scenic'
 import toilet from './toilet'
 import dustbin from './dustbin'
@@ -41,7 +41,7 @@ import lib from './lib'
 
 
 export default {
-    analyze,
+    analysis,
     scenic,
     toilet,
     park,

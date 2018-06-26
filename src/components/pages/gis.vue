@@ -163,7 +163,7 @@
                         this.$router.push({path: '/facility'});
                         break;
                     case 'message.analyze':
-                        this.$router.push({path: '/analyze'});
+                        this.$router.push({path: '/analysis'});
                         break;
                     case 'message.deploy':
                         this.$router.push({path: '/deploy'});

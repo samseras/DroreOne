@@ -128,8 +128,8 @@ import waterlevelRule from  '@/components/eye/alarm/alarmRule/waterlevelRule'
 import conditionRule from '@/components/eye/alarm/alarmRule/conditionRule'
 import speedingRule from '@/components/eye/alarm/alarmRule/speedingRule'
 // 数据分析（图表）
-import Analyze from '@/components/analyze'
-import Passenger from '@/components/analysisSystem/analyze/passengerFlow'
+import Analysis from '@/components/analysis'
+import Passenger from '@/components/analysisSystem/analysis/passengerFlow'
 
 
 //iot
@@ -224,7 +224,6 @@ const routes = [
                     {path: '/facility/plant',name: 'Plant', component:Plant},
                     {path: '/facility/indicator',name: 'Indicator', component:Indicator},
                     {path: '/facility/trash',name: 'Trash', component:Trash}
-
                 ]
             },
             //调度
@@ -375,11 +374,11 @@ const routes = [
     },
   //  分析
     {
-        path: '/analyze',
-        name: 'analyze',
-        component: Analyze,
+        path: '/analysis',
+        name: 'analysis',
+        component: Analysis,
         children: [
-            {path: '/analyze/:id',name: 'Passenger', component:Passenger}
+            {path: '/analysis/:id',name: 'Passenger', component:Passenger}
         ]
     },
 

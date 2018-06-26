@@ -5,7 +5,7 @@ import axios from '@/http'
 
 
 
-const analyze = {
+const analysis = {
     getDashboradList () {
         return axios ({
             method: 'GET',
@@ -40,4 +40,4 @@ const analyze = {
 
 }
 
-export default analyze
+export default analysis

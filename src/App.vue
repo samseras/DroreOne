@@ -24,7 +24,7 @@ export default {
                   window.document.getElementsByTagName('title')[0].innerHTML = '数据中心'
               } else if (route.includes('gisMap')) {
                   window.document.getElementsByTagName('title')[0].innerHTML = 'GIS地图'
-              } else if (route.includes('analyze')) {
+              } else if (route.includes('analysis')) {
                   window.document.getElementsByTagName('title')[0].innerHTML = '数据可视化'
               } else {
                   window.document.getElementsByTagName('title')[0].innerHTML = 'drore'
