@@ -53,3 +53,6 @@ export const COMPANY_DATA_NAME = 'COMPANY_DATA_NAME'
 
 //iot
 export const CURPAGE = 'CURPAGE'  //测试
+
+// file
+export const SET_FILE_TYPE = 'SET_FILE_TYPE'

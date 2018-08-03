@@ -38,6 +38,7 @@ import login from './login'
 import iotHome from './iotHome'
 import controler from './controler'
 import lib from './lib'
+import file from './file'
 
 
 export default {
@@ -77,5 +78,6 @@ export default {
     login,
     iotHome,
     controler,
-    lib
+    lib,
+    file
 }

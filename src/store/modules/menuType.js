@@ -9,7 +9,8 @@ import api from '@/api'
 const menu = {
     state: {
         facilityType: [],
-        deviceType: []
+        deviceType: [],
+        fileType: []
     },
     getters: {
         getFacilitTypeMenu (state) {
@@ -17,27 +18,28 @@ const menu = {
         },
         getDeviceTypeMenu (state) {
             return state.deviceType
+        },
+        getFileTypeMenu (state) {
+            return state.fileType
         }
     },
     setters: {},
 
     mutations: {
         [types.SET_FACILITY_TYPE] (state, data) {
-            // state.facilityType = data
             Vue.set(state,'facilityType',data)
-            console.log( state.facilityType, 'vuex')
         },
         [types.SET_DEVICE_TYPE] (state, data) {
-            // state.deviceType = data
             Vue.set(state,'deviceType', data)
-            console.log(state.deviceType, 'veux-deviceTypes')
+        },
+        [types.SET_FILE_TYPE] (state, data) {
+            Vue.set(state,'fileType', data)
         },
     },
     actions: {
         async getFacilityType ({commit}) {
             try {
                 let res = await api.lib.getAllFacilityType()
-                console.log(res, '8888888888888888888888888888888888888')
                 commit(types.SET_FACILITY_TYPE, res)
                 return res
             } catch (err) {
@@ -51,6 +53,15 @@ const menu = {
             } catch (err) {
             }
         },
+        async getFileType ({commit}) {
+            try {
+                let res = await api.file.getFileType()
+                commit(types.SET_FILE_TYPE, res)
+                return res
+            } catch (err) {
+                console.log(err)
+            }
+        }
     }
 }
 

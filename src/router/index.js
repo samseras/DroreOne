@@ -115,6 +115,11 @@ import BuildDeploy from '@/components/propertyChildren/basicDeploy/buildingDeplo
 import PersonPlat from '@/components/person'
 import PersonType from '@/components/personChildren/personType'
 
+// 数据中心 -- 文件
+import File from '@/components/propertyChildren/files/index'
+import FileType from '@/components/propertyChildren/files/FileType'
+import Document from '@/components/propertyChildren/files/File'
+
 
 //告警
 import Alarm from '@/components/alarm'
@@ -333,6 +338,24 @@ const routes = [
                     { path: '/person/:id',name: 'PersonDeploy', component:PersonDeploy }
                 ]
             },
+        //    文件
+            {
+                path: '/file',
+                name: 'File',
+                component: File,
+                children: [
+                    {
+                        path: '/file/fileType',
+                        name: 'FileType',
+                        component: FileType
+                    },
+                    {
+                        path: `/file/document:id`,
+                        name: 'Document',
+                        component: Document
+                    }
+                ]
+            }
         ]
     },
     //GIS

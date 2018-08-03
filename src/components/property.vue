@@ -9,6 +9,7 @@
                 <router-link to="/person" :class="route.includes('person')? 'active' : ''">人员</router-link>
                 <router-link to="/basic-property" :class="route.includes('basic')? 'active' : ''">设施</router-link>
                 <router-link to="/hard-property" :class="route.includes('hard')? 'active' : ''">设备</router-link>
+                <router-link to="/file" :class="route.includes('file')? 'active' : ''">文件</router-link>
 
                 <!--<router-link to="/building" :class="route.includes('build')? 'active' : ''">建筑</router-link>-->
                 <!--<router-link to="">植物</router-link>-->
@@ -58,6 +59,7 @@
             this.getUserDetailInfo(this.getUserInfo)
             await this.getFacilityType()
            await this.getDeviceType()
+           await this.getFileType()
         },
         watch: {
           '$route'(){
@@ -69,7 +71,7 @@
             UserInfoDialog
         },
         methods:{
-            ...mapActions(['logout','getUserRoles','getUserDetailInfo','getFacilityType','getDeviceType']),
+            ...mapActions(['logout','getUserRoles','getUserDetailInfo','getFacilityType','getDeviceType', 'getFileType']),
             logout() {
                 let data = JSON.parse(localStorage.getItem('token'))
                 this.$store.dispatch('logout',data).then(() => {

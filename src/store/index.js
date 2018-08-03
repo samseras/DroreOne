@@ -6,6 +6,7 @@ import job from './modules/job'
 import user from './modules/user'
 import iot from './modules/iot'
 import menu from  './modules/menuType'
+import file from './modules/file'
 
 
 vue.use(vuex)
@@ -16,6 +17,7 @@ export default new vuex.Store({
         job,
         user,
         iot,
-        menu
+        menu,
+        file
     }
 })
