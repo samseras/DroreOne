@@ -179,7 +179,7 @@
         .map{
             flex: 1;
             height: 100%;
-            background: yellowgreen;
+            background: #000;
         }
     }
 </style>

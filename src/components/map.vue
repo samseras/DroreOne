@@ -81,7 +81,7 @@
         mounted() {
             this.requestGisMain();//加载地图
             droreMap.object.getMap().getLayers().getArray()[1].setVisible(false)
-            droreMap.status.limitExtent = true
+            // droreMap.status.limitExtent = true
             let route = this.$route.path
             if (route.includes('facility')) {
                 droreMap.interaction.enableMapClick = true
@@ -291,7 +291,7 @@
                             "olTileY": obj.olTileY,
                             "centerX": obj.sceinitx,//120.07951802513782
                             "centerY": obj.sceinity,//30.267776483960148
-                            "path": "/static/map_xxsd/map{z}/{x},{y}.jpg",
+                            "path": "http://img.weyoo.cn/map/map_sec_zhejiang0152/map{z}/{x},{y}.jpg",
                             "curZoom": obj.scefit + obj.initlevel,
                             "minZoom": obj.scefit,
                             "maxZoom": obj.scefit + obj.zoom - 1
@@ -1917,7 +1917,7 @@
 
 
             overView() {//鹰眼图
-                var overView = new droreMap.control.OverviewMap({'url': '/static/img/xxsd.jpg'});
+                var overView = new droreMap.control.OverviewMap({'url': '/static/img/jhdyh.png'});
                 droreMap.control.addControl(overView);
                 overView.setBoxColor("#f60")
                 overView.setRect('270px','150px')

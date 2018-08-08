@@ -648,7 +648,7 @@
             flex: 1;
             height: 100%;
             width:100%;
-            background: yellowgreen;
+            background: #000;
         }
         .card{
             width: 100%;

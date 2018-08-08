@@ -5,6 +5,12 @@
             <i class="el-icon-search"></i>
         </div>
         <div class="funcBtn">
+            <el-button size="mini"plain @click="uploadFile" v-if="!(getSelectFileList.length > 0)"><img src="./../../../../static/img/uploadFiles.svg" alt="">上传文件</el-button>
+            <el-button size="mini"plain @click="createdFloder" v-if="!(getSelectFileList.length > 0)"><img src="./../../../../static/img/newfile.svg" alt="">新建文件夹</el-button>
+            <el-button size="mini"plain @click="" v-if="getSelectFileList.length === 1"><img src="./../../../../static/img/fixfile.svg" alt="">编辑</el-button>
+            <el-button size="mini"plain @click="" v-if="isShowDownlodFile"><img src="./../../../../static/img/downloadfile.svg" alt="">下载</el-button>
+            <el-button size="mini"plain @click=""  v-if="getSelectFileList.length > 0"><img src="./../../../../static/img/moveFile.svg" alt="">移动</el-button>
+            <el-button size="mini"plain @click="deleteFile"  v-if="getSelectFileList.length > 0"><i class="el-icon-delete"></i>删除</el-button>
         </div>
         <div class="page">
             <span>当前第1页/共1页</span>
@@ -18,18 +24,40 @@
     import api from '@/api'
     import {mapGetters,mapMutations} from 'vuex'
     export default {
-        name: "fun-header",
-        props: ['choseId', 'listsLength', 'personListFlag'],
-        inject:['reload'],
         data() {
             return {
+                isShowDownlodFile: false,
+            }
+        },
+        methods: {
+            ...mapMutations(['DELET_FILE_LIST']),
+            createdFloder () {
+                this.$emit('createdFloder')
+            },
+            deleteFile () {
+                this.$store.commit('DELET_FILE_LIST', new Date().getTime())
+            },
+            uploadFile () {
+                this.$emit('uploadFile')
             }
         },
         watch: {
+            getSelectFileList () {
+                if (this.getSelectFileList.length > 0) {
+                    this.getSelectFileList.forEach(item => {
+                        if (item.type === 0) {
+                            this.isShowDownlodFile = false
+                        } else {
+                            this.isShowDownlodFile = true
+                        }
+                    })
+                }
+            }
         },
         created() {
         },
         computed: {
+            ...mapGetters(['getSelectFileList'])
         }
     }
 </script>
@@ -74,12 +102,16 @@
         }
         .funcBtn{
             margin-left: rem(20);
-            margin-top: rem(4);
+            margin-top: rem(3);
             button{
                 border: none;
-                margin-right: rem(-5);
                 font-weight: 500;
-
+                img{
+                    display: inline-block;
+                    width: rem(16);
+                    vertical-align: bottom;
+                    margin-right: rem(3);
+                }
                 i{
                     margin-right: rem(3);
                 }

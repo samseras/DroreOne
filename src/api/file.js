@@ -19,6 +19,34 @@ const file = {
             url: getUrl(`/document/type`),
             data: params
         })
+    },
+    createdFloder (data) {
+        return axios({
+            method: 'POST',
+            url: getUrl('/document'),
+            data: data
+        })
+    },
+    deleteFile (data) {
+        return axios({
+            method: 'DELETE',
+            url: getUrl('/document'),
+            data: {
+                ids: data
+            }
+        })
+    },
+    getFloderList (id) {
+        return axios({
+            method: 'GET',
+            url: getUrl(`/document/type/dir?typeId=${id}`)
+        })
+    },
+    getMoreFile (id) {
+        return axios({
+            method: 'GET',
+            url: getUrl(`/document?folderId=${id}`)
+        })
     }
 
 }

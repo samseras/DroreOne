@@ -109,7 +109,7 @@
             .map{
                 width: 100%;
                 height: rem(550);
-                background: yellowgreen;
+                background: #000;
                 border-radius: rem(5);
             }
             p{

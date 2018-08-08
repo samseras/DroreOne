@@ -56,3 +56,9 @@ export const CURPAGE = 'CURPAGE'  //测试
 
 // file
 export const SET_FILE_TYPE = 'SET_FILE_TYPE'
+export const SET_CREATED_STATUS = 'SET_CREATED_STATUS'
+export const SET_CRUMBS = 'SET_CRUMBS'
+export const SET_CLICK_CRUMBS = 'SET_CLICK_CRUMBS'
+export const SELECT_FILE_LIST = 'SELECT_FILE_LIST'
+export const DELET_FILE_LIST = 'DELET_FILE_LIST'
+export const CRUMBS_LIST = 'CRUMBS_LIST'

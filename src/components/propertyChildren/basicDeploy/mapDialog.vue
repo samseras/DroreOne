@@ -143,7 +143,7 @@
             .map{
                 width: 100%;
                 height: rem(600);
-                background: yellowgreen;
+                background: #000;
                 border-radius: rem(5);
             }
         }
