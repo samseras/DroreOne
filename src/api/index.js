@@ -39,6 +39,7 @@ import iotHome from './iotHome'
 import controler from './controler'
 import lib from './lib'
 import file from './file'
+import portal from './portal'
 
 
 export default {
@@ -79,5 +80,6 @@ export default {
     iotHome,
     controler,
     lib,
-    file
+    file,
+    portal
 }
