@@ -32,7 +32,7 @@
                 </div>
             </div>
             <div class=""slot="footer" class="dialog-footer cardFooter">
-                <el-button size="mini" class="hold" @click="saveFileHandler">保存</el-button>
+                <el-button size="mini" class="hold" @click="saveFileHandler">提交</el-button>
                 <el-button size="mini" @click="closeDialog">取消</el-button>
             </div>
         </el-dialog>
@@ -40,6 +40,7 @@
 </template>
 
 <script>
+    import {mapGetters} from 'vuex'
     export default {
         name: "upload-file-dialog",
         props: ['visible'],
@@ -56,7 +57,18 @@
                 this.$emit('closeFileDialog')
             },
             saveFileHandler () {
-                this.$emit('saveFileHandler')
+                var form = new FormData();
+                form.append('z1', this.file);
+                form.append('name', this.name);
+                form.append('description', this.description);
+                // let obj = {
+                //     name: this.name,
+                //     description: this.description,
+                //     z: form
+                // }
+                // console.log(form, 'opopopopopopopopop')
+                // this.$emit('saveFileHandler',obj)
+                this.$emit('saveFileHandler', form)
             },
             uploadFile (e) {
                 this.file = e.target.files[0]
@@ -92,6 +104,14 @@
                 this.imgUrl = ''
                 console.log(this.file)
             }
+        },
+        watch: {
+            getFixFile () {
+                console.log(this.getFixFile, 'sjkdhcjkdshkjdfhkds')
+            }
+        },
+        computed: {
+            ...mapGetters(['getFixFile'])
         }
     }
 </script>

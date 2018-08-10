@@ -1,0 +1,67 @@
+[
+  {
+    "key": "property_management",
+    "name": "物业管理",
+    "uri": ""
+  },
+  {
+    "key": "3rd_applications",
+    "name": "第三方应用",
+    "uri": ""
+  },
+  {
+    "key": "system_config",
+    "name": "系统配置",
+    "uri": ""
+  },
+  {
+    "key": "dap",
+    "name": "大数据分析",
+    "uri": "http://192.168.0.150:9527/analysis/public/main.html"
+  },
+  {
+    "key": "data_center",
+    "name": "数据中心",
+    "uri": "/property"
+  },
+  {
+    "key": "eye",
+    "name": "全视之眼",
+    "uri": "/eye"
+  },
+  {
+    "key": "analysis",
+    "name": "数据可视化",
+    "uri": "/analysis"
+  },
+  {
+    "key": "iot",
+    "name": "物联网",
+    "uri": "/basicStruc"
+  },
+  {
+    "key": "gis",
+    "name": "GIS地图",
+    "uri": "/gisMap"
+  },
+  {
+    "key": "official_website",
+    "name": "官网门户",
+    "uri": ""
+  },
+  {
+    "key": "ticket",
+    "name": "电子票务",
+    "uri": ""
+  },
+  {
+    "key": "business",
+    "name": "电子商圈",
+    "uri": ""
+  },
+  {
+    "key": "wechat_subscription",
+    "name": "微信公众号",
+    "uri": ""
+  }
+]

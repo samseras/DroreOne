@@ -9,7 +9,7 @@ const portal = {
     getAllportal () {
         return axios ({
             method: 'GET',
-            url: getUrl('/config/portal')
+            url: './../static/portal(1).json'
         })
 
     },

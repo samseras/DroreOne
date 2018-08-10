@@ -47,6 +47,31 @@ const file = {
             method: 'GET',
             url: getUrl(`/document?folderId=${id}`)
         })
+    },
+    uploadFile (data) {
+        return axios({
+            method: 'POST',
+            url: getUrl(`/document/upload`),
+            processData : false,
+            contentType : false,
+            dataType: 'formData',
+            data: data,
+            // contentType: 'multipart/form-data',
+        })
+    },
+    moveFile (data) {
+        return axios({
+            method: 'PUT',
+            url: getUrl(`/document/move`),
+            data: data
+        })
+    },
+    editeFile (data) {
+        return axios({
+            method: 'PUT',
+            url: getUrl(`/document`),
+            data: data
+        })
     }
 
 }

@@ -33,18 +33,18 @@
                         <span class="description">{{scope.row.description}}</span>
                     </template>
                 </el-table-column>
-                <!--<el-table-column-->
-                    <!--label="大小">-->
-                    <!--<template slot-scope="scope">-->
-                        <!--<span class="description">{{scope.row.description}}</span>-->
-                    <!--</template>-->
-                <!--</el-table-column>-->
+                <el-table-column
+                    label="大小">
+                    <template slot-scope="scope">
+                        <span class="description">{{scope.row.description}}</span>
+                    </template>
+                </el-table-column>
 
                 <el-table-column
                     label="操作">
                     <template slot-scope="scope">
                         <div class="handle">
-                            <span @click="fixedInfo(scope.row.id )">编辑</span>
+                            <span @click="fixedInfo(scope.row)">编辑</span>
                             <span class="line">|</span>
                             <span @click="deleteFileHandle(scope.row.id)">删除</span>
                             <span class="line" v-if="scope.row.type === 1">|</span>
@@ -76,7 +76,7 @@
             this.getFolderList()
         },
         methods: {
-            ...mapMutations(['SET_CRUMBS', 'SET_CLICK_CRUMBS', 'SELECT_FILE_LIST']),
+            ...mapMutations(['SET_CRUMBS', 'SET_CLICK_CRUMBS', 'SELECT_FILE_LIST', 'SET_FIX_FILE']),
             checked (row) {
                 this.fileList = this.fileList.filter(item => {
                     if (item.id ===row.id) {
@@ -96,6 +96,15 @@
                     this.selectRowsList.push(row)
                 }
                 this.$store.commit('SELECT_FILE_LIST', this.selectRowsList)
+            },
+            fixedInfo (row) {
+                row.time = new Date().getTime()
+                if (row.type === 1) {
+                    this.$emit('fixFileContent')
+                } else {
+                    this.$emit('fixFolderContent')
+                }
+                this.$store.commit('SET_FIX_FILE', row)
             },
             getFolderList () {
                 let type = this.$route.params.id
@@ -127,7 +136,15 @@
                     } else if (fileType.includes('pdf')) {
                         image = './../../../../static/img/PDF.svg'
                     } else if (fileType.includes('txt')) {
-                        image = './../../../../static/img/word.svg'
+                        image = './../../../../static/img/txt.svg'
+                    }else if (fileType.includes('csv')) {
+                        image = './../../../../static/img/excel.svg'
+                    }else if (fileType.includes('jpg')) {
+                        image = './../../../../static/img/jpg.svg'
+                    }else if (fileType.includes('png')) {
+                        image = './../../../../static/img/png.svg'
+                    }else if (fileType.includes('svg')) {
+                        image = './../../../../static/img/svg.svg'
                     } else {
                         image = './../../../../static/img/file.svg'
                     }
@@ -138,6 +155,7 @@
                 console.log(row, 'fofofofofofofo')
                 this.isShowFileLoading = true
                 if (row.type === 1) {
+                    this.isShowFileLoading = false
                     return
                 }
                 api.file.getMoreFile(row.id).then(res => {
@@ -242,6 +260,14 @@
             },
             getDeleteFileState () {
                 this.deleteFileHandle()
+            },
+            getUploadSuccessFile () {
+                console.log(this.getUploadSuccessFile)
+                this.getFileList(this.getCrumbsList[this.getCrumbsList.length - 1])
+            },
+            getMoveSuccessFile () {
+                console.log(this.getMoveSuccessFile)
+                this.getFileList(this.getCrumbsList[this.getCrumbsList.length - 1])
             }
         },
         computed: {
@@ -249,7 +275,9 @@
                 'getCreatedState',
                 'getClickCrumbs',
                 'getDeleteFileState',
-                'getCrumbsList'
+                'getCrumbsList',
+                'getUploadSuccessFile',
+                'getMoveSuccessFile'
             ])
         }
     }

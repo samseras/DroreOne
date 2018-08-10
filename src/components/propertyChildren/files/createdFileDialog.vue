@@ -29,13 +29,22 @@
 </template>
 
 <script>
+    import {mapGetters} from 'vuex'
     export default {
         name: "created-file-dialog",
         props: ['visible', 'title'],
         data () {
             return {
                 name: '',
-                description: ''
+                description: '',
+                fileObj: {}
+            }
+        },
+        created () {
+            if (this.title.includes('修改')) {
+                this.fileObj = this.getFixFile
+                this.name = this.getFixFile.name
+                this.description = this.getFixFile.description
             }
         },
         methods: {
@@ -43,12 +52,21 @@
                 this.$emit('closeDialog')
             },
             saveHandler () {
-                let obj = {
-                    name: this.name,
-                    description: this.description
+                if (this.fileObj.id) {
+                    this.fileObj.name = this.name
+                    this.fileObj.description = this.description
+                    this.$emit('SaveFixFile', this.fileObj)
+                } else {
+                    let obj = {
+                        name: this.name,
+                        description: this.description
+                    }
+                    this.$emit('saveAsFloder', obj)
                 }
-                this.$emit('saveAsFloder', obj)
             }
+        },
+        computed: {
+            ...mapGetters(['getFixFile'])
         }
     }
 </script>

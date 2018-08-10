@@ -10,11 +10,15 @@
             <div class="funcTitle">
                 <FileHeader
                     @createdFloder="createdFloder"
+                    @moveFile="moveFile"
                     @uploadFile="uploadFile">
                 </FileHeader>
             </div>
             <div class="personList judge-title">
-                <Document></Document>
+                <Document
+                    @fixFileContent="fixFileContent"
+                    @fixFolderContent="fixFolderContent">
+                </Document>
             </div>
         </div>
         <CreatedFileDialog
@@ -22,6 +26,7 @@
             :visible="createdVisible"
             :title="title"
             @closeDialog="closeDialog"
+            @SaveFixFile="SaveFixFileHandler"
             @saveAsFloder="saveAsFloder">
         </CreatedFileDialog>
         <UploadFileDialog
@@ -30,6 +35,12 @@
             @closeFileDialog="closeFileDialog"
             @saveFileHandler="saveFileHandler">
         </UploadFileDialog>
+        <MoveFileDialog
+            v-if="moveFileVisible"
+            :visible="moveFileVisible"
+            @closeMoveFileDialog="closeMoveFileDialog"
+            @moveFileHandler="moveFileHandler">
+        </MoveFileDialog>
     </div>
 </template>
 
@@ -39,6 +50,7 @@
     import Document from '@/components/propertyChildren/files/Document'
     import CreatedFileDialog from '@/components/propertyChildren/files/createdFileDialog'
     import UploadFileDialog from '@/components/propertyChildren/files/uploadFileDialog'
+    import MoveFileDialog from '@/components/propertyChildren/files/moveFileDialog'
     import api from '@/api'
     import {mapMutations, mapGetters, mapActions} from 'vuex'
     import _ from 'lodash'
@@ -49,14 +61,15 @@
                 createdVisible: false,
                 title: '',
                 crumbList: [],
-                uploadFileVisible: false
+                uploadFileVisible: false,
+                moveFileVisible: false
             }
         },
         created () {
             this.getCrumbsList()
         },
         methods: {
-            ...mapMutations(['SET_CREATED_STATUS', 'SET_CLICK_CRUMBS', 'SET_CRUMBS', 'CRUMBS_LIST']),
+            ...mapMutations(['SET_CREATED_STATUS', 'SET_CLICK_CRUMBS', 'SET_CRUMBS', 'CRUMBS_LIST', 'UPLOAD_FILE_SUCCESS', 'MOVE_FILE_SUCCESS']),
             ...mapActions(['getFileType']),
             getCrumbsList () {
                 let router = this.$route.params.id
@@ -74,14 +87,27 @@
                 this.createdVisible = true
                 this.title = '创建文件夹'
             },
+            fixFileContent () {
+                this.uploadFileVisible = true
+            },
+            fixFolderContent () {
+                this.createdVisible = true
+                this.title = '修改文件夹'
+            },
             uploadFile () {
                 this.uploadFileVisible = true
+            },
+            moveFile () {
+                this.moveFileVisible = true
             },
             closeDialog () {
                 this.createdVisible = false
             },
             closeFileDialog () {
                 this.uploadFileVisible = false
+            },
+            closeMoveFileDialog () {
+                this.moveFileVisible = false
             },
             saveAsFloder (obj) {
                 if (this.crumbList.length > 1) {
@@ -96,8 +122,47 @@
                 })
                 this.closeDialog()
             },
-            saveFileHandler () {
-              console.log('上传文件回调函数')
+            saveFileHandler (file) {
+                file.append('folderId', this.crumbList[this.crumbList.length - 1].id)
+                api.file.uploadFile(file).then(res => {
+                    console.log(res, '上传成功')
+                    this.uploadFileVisible = false
+                    this.$store.commit('UPLOAD_FILE_SUCCESS', new Date().getTime())
+                }).catch(err => {
+                    console.log(err, '上传失败')
+                })
+            },
+            SaveFixFileHandler (row) {
+                console.log(row, '这个失修改的文件夹')
+                row.pid = this.$route.params.id
+                delete row.checked
+                delete row.time
+                api.file.editeFile(JSON.stringify(row)).then(res => {
+                    console.log(res, '文件修改成功')
+                    this.$message.success('修改文件成功')
+                    this.$store.commit('UPLOAD_FILE_SUCCESS', new Date().getTime())
+                }).catch(err => {
+                    console.log(err, '修改失败')
+                })
+            },
+            moveFileHandler (id) {
+                console.log('move')
+                let selectList = this.getSelectFileList.map(item => {
+                    return item.id
+                })
+                let obj = {
+                    documentIds: selectList,
+                    folderId: id
+                }
+                api.file.moveFile(JSON.stringify(obj)).then(res => {
+                    console.log(res, 'opopopopopopo')
+                    this.$message.success('文件移动成功')
+                    this.$store.commit('MOVE_FILE_SUCCESS', new Date().getTime())
+                    this.moveFileVisible = false
+                }).catch(err => {
+                    console.log(err, '移动文件失败')
+                    this.$message.error('文件移动失败')
+                })
             },
             getCrumbItem (item, index) {
                 if (index === this.crumbList.length - 1) {
@@ -113,7 +178,8 @@
             FileHeader,
             Document,
             CreatedFileDialog,
-            UploadFileDialog
+            UploadFileDialog,
+            MoveFileDialog
         },
         watch: {
             '$route' () {
@@ -128,7 +194,7 @@
             }
         },
         computed: {
-            ...mapGetters(['getCrumbs'])
+            ...mapGetters(['getCrumbs', 'getSelectFileList'])
         }
     }
 

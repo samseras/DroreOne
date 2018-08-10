@@ -5,11 +5,11 @@
             <i class="el-icon-search"></i>
         </div>
         <div class="funcBtn">
-            <el-button size="mini"plain @click="uploadFile" v-if="!(getSelectFileList.length > 0)"><img src="./../../../../static/img/uploadFiles.svg" alt="">上传文件</el-button>
+            <el-button size="mini"plain @click="uploadFile" v-if="(!(getSelectFileList.length > 0)) && getCrumbsList.length > 1"><img src="./../../../../static/img/uploadFiles.svg" alt="">上传文件</el-button>
             <el-button size="mini"plain @click="createdFloder" v-if="!(getSelectFileList.length > 0)"><img src="./../../../../static/img/newfile.svg" alt="">新建文件夹</el-button>
             <el-button size="mini"plain @click="" v-if="getSelectFileList.length === 1"><img src="./../../../../static/img/fixfile.svg" alt="">编辑</el-button>
             <el-button size="mini"plain @click="" v-if="isShowDownlodFile"><img src="./../../../../static/img/downloadfile.svg" alt="">下载</el-button>
-            <el-button size="mini"plain @click=""  v-if="getSelectFileList.length > 0"><img src="./../../../../static/img/moveFile.svg" alt="">移动</el-button>
+            <el-button size="mini"plain @click="moveFileHandler"  v-if="getSelectFileList.length > 0"><img src="./../../../../static/img/moveFile.svg" alt="">移动</el-button>
             <el-button size="mini"plain @click="deleteFile"  v-if="getSelectFileList.length > 0"><i class="el-icon-delete"></i>删除</el-button>
         </div>
         <div class="page">
@@ -39,6 +39,9 @@
             },
             uploadFile () {
                 this.$emit('uploadFile')
+            },
+            moveFileHandler () {
+                this.$emit('moveFile')
             }
         },
         watch: {
@@ -57,7 +60,7 @@
         created() {
         },
         computed: {
-            ...mapGetters(['getSelectFileList'])
+            ...mapGetters(['getSelectFileList', 'getCrumbsList'])
         }
     }
 </script>

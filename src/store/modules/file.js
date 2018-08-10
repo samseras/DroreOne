@@ -11,7 +11,10 @@ const file = {
         clickCrumbs: {},
         crumbsList: [],
         selectFileList: [],
-        deleteFileState: ''
+        deleteFileState: '',
+        uploadFileSuccess: '',
+        moveFileSuccess: '',
+        fixFile: {}
     },
     getters: {
         getCreatedState (state) {
@@ -31,6 +34,15 @@ const file = {
         },
         getDeleteFileState (state) {
             return state.deleteFileState
+        },
+        getUploadSuccessFile (state) {
+            return state.uploadFileSuccess
+        },
+        getMoveSuccessFile (state) {
+            return state.moveFileSuccess
+        },
+        getFixFile (state) {
+            return state.fixFile
         }
     },
     setters: {},
@@ -39,15 +51,12 @@ const file = {
             state.createdState = data
         },
         [types.SET_CRUMBS] (state, data) {
-            console.log(data, '这个是什么面包屑')
             state.crumbs = data
         },
         [types.CRUMBS_LIST] (state, data) { // 获取面包屑列表
-            console.log(data, '这个是什么东西')
             state.crumbsList = data
         },
         [types.SET_CLICK_CRUMBS] (state, data) {
-            console.log(data, '这个是点击的面包屑')
             Vue.set(state, 'clickCrumbs', data)
         },
         [types.SELECT_FILE_LIST] (state, data) {
@@ -55,6 +64,15 @@ const file = {
         },
         [types.DELET_FILE_LIST] (state, data) {
             state.deleteFileState = data
+        },
+        [types.UPLOAD_FILE_SUCCESS] (state, data) {
+            state.uploadFileSuccess = data
+        },
+        [types.MOVE_FILE_SUCCESS] (state, data) {
+            state.getMoveSuccessFile = data
+        },
+        [types.SET_FIX_FILE] (state, data) {
+            state.fixFile = data
         }
     },
     actions: {
