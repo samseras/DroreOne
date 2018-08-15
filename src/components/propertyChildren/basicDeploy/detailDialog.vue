@@ -333,18 +333,7 @@
                     <p class="type" v-if="isDisabled">
                         <span>状&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;态：</span>
                         <el-input type="text"v-model="park.parkingBean.state" :disabled="isDisabled" :maxlength="15"></el-input>
-                        <!--<el-select v-model="park.parkingBean.state" placeholder="请选择" :disabled="isDisabled">
-                            <el-option label="充裕" value="充裕"></el-option>
-                            <el-option label="已满" value="已满"></el-option>
-                            <el-option label="紧张" value="紧张"></el-option>
-                        </el-select>-->
                     </p>
-                    <!--<p class="idNum">空余车位：
-                        <el-input type="text"v-model="park.parkingBean.surplusNum" :disabled="isDisabled"></el-input>
-                    </p>
-                    <p class="phoneNum">车位总数：
-                        <el-input type="text"v-model="park.parkingBean.capacity" :disabled="isDisabled"></el-input>
-                    </p>-->
                     <p class="phoneNum">
                         <span>位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置：</span>
                         <span :class="{ps:isDisabled}">{{park.location}}</span>
@@ -571,6 +560,43 @@
                     </div>
                 </div>
 
+                <!--站点码头-->
+                <div class="personCardContent boatCardContent" v-if="route.includes('wharf')">
+                    <p class="sex">
+                        <span>名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称：</span>
+                        <el-input type="text"v-model="wharf.name" :disabled="isDisabled" :maxlength="15"></el-input>
+                    </p>
+                    <p class="sex">
+                        <span>站点容量：</span>
+                        <el-input type="text"v-model="wharf.capacity" :disabled="isDisabled"></el-input>
+                    </p>
+                    <p class="phoneNum">
+                        <span>位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置：</span>
+                        <span :class="{ps:isDisabled}">{{wharf.location}}</span>
+                        <i class="el-icon-location-outline" @click="showMapDialog"></i>
+                    </p>
+                    <p class="wrapstyle selectstyle">
+                        <span>所属片区：</span>
+                        <el-select v-model="wharf.regionId" placeholder="请选择" :disabled="isDisabled">
+                            <el-option
+                                v-for="item in regions"
+                                :key="item.id"
+                                :label="item.name"
+                                :value="item.id">
+                            </el-option>
+                        </el-select>
+                    </p>
+                    <p class="textarea ms">
+                        <span class="des">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：</span>
+                        <el-input type="textarea"  v-model="wharf.description" :disabled="isDisabled" :maxlength="140"></el-input>
+                    </p>
+                    <div class="img">
+                        <img :src="getUrl(park.picturePath)" alt="" v-if="isDisabled" @error="imgError">
+                        <label for="avatar" v-if="!isDisabled">
+                            <img :src="files.length ? files[0].url : getUrl(park.picturePath)"  @error="imgError" class="rounded-circle" />
+                        </label>
+                    </div>
+                </div>
                 <div class="text-center p-2">
                     <file-upload
                         extensions="gif,jpg,jpeg,png,webp"
@@ -751,6 +777,14 @@
                     location:'',
                     regionId: ''
                 },
+                wharf: {
+                    name: '',
+                    description: '',
+                    location:'',
+                    regionId: '',
+                    capacity: ''
+
+                },
                 job: {
                     name: ''
                 },
@@ -830,11 +864,10 @@
                            imgSrc = './../../../../static/img/bulidCard.png'
                        } else if (route.includes('boat')) {//车船
                            imgSrc = './../../../../static/img/boatCartCard.png'
-
+                       } else if (route.includes('wharf')) {// 站点码头
+                           imgSrc = './../../../../static/img/boatCartCard.png'
                        }
                     }
-
-                    console.log(imgSrc, 'opopopopopopopo')
                     return imgSrc
                 } else {
                     return url
@@ -873,6 +906,8 @@
                     this.tree.location = locationString
                 } else if (this.route.includes('construction')) {
                     this.build.location = locationString
+                } else if (this.route.includes('wharf')) {
+                    this.wharf.location = locationString
                 }
                 this.mapVisible = false
             },
@@ -928,12 +963,6 @@
                         this.$message.error('请输入完整信息')
                         return
                     }
-
-                    /*if(!(newInfo.dustbinBean.dustbinCount && newInfo.dustbinBean.dustbinCount !== '') ||
-                        !intreg.test1(newInfo.dustbinBean.dustbinCount)){
-                        this.$message.error('个数只能输入数字！')
-                        return
-                    }*/
                 } else if(this.route.includes('indicator')) {
                     newInfo = this.indicator
                     if(!(newInfo.signboardBean.hasOwnProperty("type") && integerreg.test(newInfo.signboardBean.type)) ||
@@ -949,7 +978,6 @@
                     newInfo = this.scenic
                     if(!(newInfo.scenicspotBean.name && newInfo.scenicspotBean.name.trim() !== '') ||
                         !(newInfo.regionId && newInfo.regionId !== '') ||
-                        // !(newInfo.scenicspotBean.statu && newInfo.scenicspotBean.statu !== '') ||
                         !(newInfo.location && newInfo.location !== '')
 
                     ){
@@ -958,17 +986,6 @@
                         return
                     }
 
-                    /*if(!(newInfo.scenicspotBean.capacity && newInfo.scenicspotBean.capacity !== '') ||
-                        !intreg.test1(newInfo.scenicspotBean.capacity)){
-                        this.$message.error('容量只能输入数字！')
-                        return
-                    }*/
-
-                    /*if(!(newInfo.scenicspotBean.currentNum && newInfo.scenicspotBean.currentNum !== '') ||
-                        !intreg.test1(newInfo.scenicspotBean.currentNum)){
-                        this.$message.error('当前人数只能输入数字！')
-                        return
-                    }*/
 
                 } else if(this.route.includes('shop')) {
                     newInfo = this.shop
@@ -983,17 +1000,6 @@
                         return
                     }
 
-                    /*if(!(newInfo.businessBean.capacity && newInfo.businessBean.capacity !== '') ||
-                        !intreg.test1(newInfo.businessBean.capacity)){
-                        this.$message.error('容量只能输入数字！')
-                        return
-                    }*/
-
-                    /*if(!(newInfo.businessBean.currentNum && newInfo.businessBean.currentNum !== '') ||
-                        !intreg.test1(newInfo.businessBean.currentNum)){
-                        this.$message.error('当前人数只能输入数字！')
-                        return
-                    }*/
 
                 } else if(this.route.includes('park')) {
                     newInfo = this.park
@@ -1008,19 +1014,6 @@
                         this.$message.error('请输入完整信息')
                         return
                     }
-
-                    /*if(!(newInfo.parkingBean.surplusNum && newInfo.parkingBean.surplusNum !== '') ||
-                        !intreg.test1(newInfo.parkingBean.surplusNum)){
-                        this.$message.error('空余车位只能输入数字！')
-                        return
-                    }*/
-
-                    /*if(!(newInfo.parkingBean.capacity && newInfo.parkingBean.capacity !== '') ||
-                        !intreg.test1(newInfo.parkingBean.capacity)){
-                        this.$message.error('车位总数只能输入数字！')
-                        return
-                    }*/
-
 
                 } else if(this.route.includes('toilet')) {
                     newInfo = this.toilet
@@ -1063,11 +1056,8 @@
                     newInfo = this.tree
                     if(!(newInfo.plant.name && newInfo.plant.name.trim() !== '') ||
                         !(newInfo.plant.genera && newInfo.plant.genera !== '') ||
-                        /*!(newInfo.plant.height && newInfo.plant.height !== '') ||
-                        !(newInfo.plant.plantYear && newInfo.plant.plantYear !== '') ||*/
                         !(newInfo.location && newInfo.location !== '') ||
                         !(newInfo.regionId && newInfo.regionId !== '')
-                        /*!(newInfo.plant.description && newInfo.plant.description.trim() !== '')*/
                     ){
 
                         this.$message.error('请输入完整信息')
@@ -1078,14 +1068,19 @@
                     newInfo = this.build
 
                     if(!(newInfo.building.name && newInfo.building.name.trim() !== '') ||
-                        /*!(newInfo.building.layers && newInfo.building.layers !== '') ||
-                        !(newInfo.building.height && newInfo.building.height !== '') ||
-                        !(newInfo.building.buildYear && newInfo.building.buildYear !== '') ||*/
                         !(newInfo.location && newInfo.location !== '') ||
                         !(newInfo.regionId && newInfo.regionId !== '')
-                        /*!(newInfo.building.description && newInfo.building.description.trim() !== '')*/
                     ){
 
+                        this.$message.error('请输入完整信息')
+                        return
+                    }
+                } else if (this.route.includes('wharf')) {
+                    newInfo = this.wharf
+                    if (!(newInfo.name && newInfo.name.trim() !== '') ||
+                        !(newInfo.location && newInfo.location !== '') ||
+                        !(newInfo.regionId && newInfo.regionId !== '')
+                    ) {
                         this.$message.error('请输入完整信息')
                         return
                     }
@@ -1093,11 +1088,6 @@
                 newInfo.status = true
                 newInfo.checked = false
                 newInfo.imgUrl = this.src
-                // if (this.src.trim() === '') {
-                //     newInfo.imgUrl = ''
-                // }else {
-                //     newInfo.imgUrl = this.src
-                // }
 
                 if (this.Info.id) {
                     newInfo.id = this.Info.id
@@ -1197,25 +1187,6 @@
                 this.sex = this.person.gender
                 this.person.jobId = jobId
             } else if(this.route.includes('boat')) {
-                // let jobId
-                // if (this.Info.vehicle) {
-                //     if (this.Info.vehicle.type == 0){
-                //         jobId = 1
-                //     }else {
-                //         jobId = 2
-                //     }
-                //     api.person.getJobPerson(jobId).then(res => {
-                //         console.log(res, '成功')
-                //         this.driverList = res
-                //         this.driverList.forEach(item => {
-                //             item.id = item.personBean.id
-                //             item.name = item.personBean.name
-                //         })
-                //         console.log(this.driverList)
-                //     }).catch(err => {
-                //         console.log(err, '失败')
-                //     })
-                // }
                 this.boatCar = this.Info
             } else if(this.route.includes('trash')) {
                 console.log(this.Info, '909090909090')
@@ -1245,6 +1216,8 @@
                 this.tree = this.Info
             }  else if (this.route.includes('construction')) {
                 this.build = this.Info
+            } else if (this.route.includes('wharf')) {
+                this.wharf = this.Info
             }
             if (this.Info.id) {
                 console.log(this.Info.id, '这是拿到的Id')

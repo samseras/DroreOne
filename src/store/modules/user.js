@@ -8,7 +8,7 @@ import * as types from '../mutations-type'
 const user = {
     state: {
         user: '',
-        userRoles: '',
+        userRoles: 'ADMIN',
         userDetailInfo: {}
     },
     getters: {

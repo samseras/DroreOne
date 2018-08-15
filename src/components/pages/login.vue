@@ -91,14 +91,18 @@
                 }
 				if(this.checkCode !== "" && this.checkCode == $("#Code").val().toLowerCase()){
                     let obj = `BASIC ${Base64.encode(this.username +  ":"+ this.password)}`
+                    localStorage.setItem('userName',this.username)
+                    localStorage.setItem('token', JSON.stringify(obj))
+                    this.$store.commit('SET_USER', this.username)
+                    this.$router.push('droreone')
                     await api.login.userLogin(obj).then(res => {
                         localStorage.setItem('userName',this.username)
                         localStorage.setItem('token', JSON.stringify(obj))
                         this.$store.commit('SET_USER', this.username)
                         this.getUserDetailInfo(this.username)
-                        if(res != []){
-                             this.$router.push('droreone')
-                        }
+                        // if(res != []){
+                        //      this.$router.push('droreone')
+                        // }
                     }).catch(err => {
                         console.log(err, '登录失败')
                         this.$message.info('用户名或密码错误')

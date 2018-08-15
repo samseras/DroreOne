@@ -40,6 +40,7 @@ import controler from './controler'
 import lib from './lib'
 import file from './file'
 import portal from './portal'
+import wharf from './wharf'
 
 
 export default {
@@ -81,5 +82,6 @@ export default {
     controler,
     lib,
     file,
-    portal
+    portal,
+    wharf
 }

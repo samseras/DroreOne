@@ -1,21 +1,23 @@
 <template>
     <div class="funHeader">
         <div class="searchInfo">
-            <input type="text" placeholder="请输入搜索内容">
-            <i class="el-icon-search"></i>
+            <input type="text" placeholder="请输入搜索内容" v-model="searchContent">
+            <i class="el-icon-search" @click="startSearch"></i>
         </div>
         <div class="funcBtn">
             <el-button size="mini"plain @click="uploadFile" v-if="(!(getSelectFileList.length > 0)) && getCrumbsList.length > 1"><img src="./../../../../static/img/uploadFiles.svg" alt="">上传文件</el-button>
+            <el-button size="mini"plain @click="$refs.batchUpload.click()" v-if="(!(getSelectFileList.length > 0)) && getCrumbsList.length > 1"><img src="./../../../../static/img/uploadFiles.svg" alt="">批量上传</el-button>
             <el-button size="mini"plain @click="createdFloder" v-if="!(getSelectFileList.length > 0)"><img src="./../../../../static/img/newfile.svg" alt="">新建文件夹</el-button>
-            <el-button size="mini"plain @click="" v-if="getSelectFileList.length === 1"><img src="./../../../../static/img/fixfile.svg" alt="">编辑</el-button>
-            <el-button size="mini"plain @click="" v-if="isShowDownlodFile"><img src="./../../../../static/img/downloadfile.svg" alt="">下载</el-button>
+            <el-button size="mini"plain @click="fixFile" v-if="getSelectFileList.length === 1"><img src="./../../../../static/img/fixfile.svg" alt="">编辑</el-button>
+            <el-button size="mini"plain @click="downloadFile" v-if="isShowDownlodFile"><img src="./../../../../static/img/downloadfile.svg" alt="">下载</el-button>
             <el-button size="mini"plain @click="moveFileHandler"  v-if="getSelectFileList.length > 0"><img src="./../../../../static/img/moveFile.svg" alt="">移动</el-button>
             <el-button size="mini"plain @click="deleteFile"  v-if="getSelectFileList.length > 0"><i class="el-icon-delete"></i>删除</el-button>
+            <input type="file" class="fileInput" ref="batchUpload" @change="uploadFileHandler" style="FILTER: alpha(opacity=0); moz-opacity: 0; opacity: 0;width: 0px;height: 0px;" multiple>
         </div>
         <div class="page">
-            <span>当前第1页/共1页</span>
-            <span class="upPage"><</span>
-            <span class="downPage">></span>
+            <span>当前第{{currentPageNum}}页/共{{pageAllNum}}页</span>
+            <span class="upPage"@click="previousPage"><</span>
+            <span class="downPage" @click="nextPage">></span>
         </div>
     </div>
 </template>
@@ -27,10 +29,14 @@
         data() {
             return {
                 isShowDownlodFile: false,
+                index: 0,
+                pageAllNum: 1,
+                currentPageNum: 1,
+                searchContent: ''
             }
         },
         methods: {
-            ...mapMutations(['DELET_FILE_LIST']),
+            ...mapMutations(['DELET_FILE_LIST', 'GET_FILE_PAGE_NUMBER', 'SEARCH_FILE_LIST']),
             createdFloder () {
                 this.$emit('createdFloder')
             },
@@ -42,6 +48,93 @@
             },
             moveFileHandler () {
                 this.$emit('moveFile')
+            },
+            uploadFileHandler (e) {
+                let fileList = [...e.target.files]
+                console.log(fileList)
+                var form = new FormData()
+                fileList.forEach((item, index) => {
+                    form.append(`f${index}`, item)
+                })
+                this.$emit('batchFile', form)
+            },
+            fixFile () {
+                this.$emit('fixFile')
+            },
+            downloadFileHandler (item, name) {
+                api.file.downloadFile(item).then(res => {
+                    console.log(res, '下載成功')
+                    const content = res
+                    const blob = new Blob([content])
+                    const fileName = name
+                    if ('download' in document.createElement('a')) {
+                        const elink = document.createElement('a')
+                        elink.download = fileName
+                        elink.style.display = 'none'
+                        elink.href = URL.createObjectURL(blob)
+                        document.body.appendChild(elink)
+                        elink.click()
+                        URL.revokeObjectURL(elink.href) // 释放URL 对象
+                        document.body.removeChild(elink)
+                        this.index += 1
+                        this.downloadFile()
+                    }
+                }).catch(err => {
+                    console.log(err, 'oppopopop')
+                })
+            },
+            downloadFile () {
+                console.log(this.getSelectFileList, '下載')
+                let ids = this.getSelectFileList.map(item => {
+                    return item.id
+                })
+                let fileNames = this.getSelectFileList.map(item => {
+                    if (item.name.includes('.')) {
+                        return item.name
+                    } else {
+                        return `${item.name}.${item.fileType}`
+                    }
+                })
+                if (!(this.index > ids.length - 1)) {
+                    this.downloadFileHandler(ids[this.index], fileNames[this.index])
+                } else {
+                    this.index = 0
+                }
+            },
+            previousPage() {//上一页
+                this.currentPageNum--
+                if (this.currentPageNum < 1) {
+                    this.currentPageNum = 1
+                    return
+                }
+                let obj = {
+                    page: this.currentPageNum,
+                    time: new Date().getTime()
+                }
+                this.$store.commit('GET_FILE_PAGE_NUMBER', obj)
+            },
+            nextPage() {//下一页
+                this.currentPageNum++
+                if (this.currentPageNum > this.pageAllNum) {
+                    this.currentPageNum = this.pageAllNum
+                    return
+                }
+                let obj = {
+                    page: this.currentPageNum,
+                    time: new Date().getTime()
+                }
+                this.$store.commit('GET_FILE_PAGE_NUMBER', obj)
+            },
+            startSearch () {
+                if (this.searchContent.trim() === '') {
+                    this.$message.error('请输入要搜索的内容！')
+                    return
+                }
+                let obj = {
+                    content: this.searchContent,
+                    time: new Date().getTime()
+                }
+                this.$store.commit('SEARCH_FILE_LIST', obj)
             }
         },
         watch: {
@@ -50,17 +143,35 @@
                     this.getSelectFileList.forEach(item => {
                         if (item.type === 0) {
                             this.isShowDownlodFile = false
+                            return
                         } else {
                             this.isShowDownlodFile = true
                         }
                     })
+                } else {
+                    this.isShowDownlodFile = false
                 }
+            },
+            getFileListLength () {
+                console.log(this.getFileListLength, '這個是請求回來的數據的長度')
+                if (this.getFileListLength.length > 0) {
+                    this.pageAllNum = Math.ceil(this.getFileListLength.length / 15)
+                }
+            },
+            getCrumbsList () {
+                // this.pageAllNum = 1
+                this.currentPageNum = 1
+            },
+            '$route' () {
+                this.pageAllNum = 1
+                this.currentPageNum = 1
+                this.searchContent = ''
             }
         },
         created() {
         },
         computed: {
-            ...mapGetters(['getSelectFileList', 'getCrumbsList'])
+            ...mapGetters(['getSelectFileList', 'getCrumbsList', 'getFileListLength'])
         }
     }
 </script>

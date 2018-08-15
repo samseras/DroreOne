@@ -18,6 +18,10 @@ module.exports = {
             //     '^/v1': '/'//需要rewrite重写
             // }
         },
+        '/file': {
+            target: 'http://192.168.0.150:8090/',
+            changeOrigin: true
+        },
         '/resource': {
             target: 'http://192.168.0.150:8090/',
             changeOrigin: true

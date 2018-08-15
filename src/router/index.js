@@ -105,6 +105,8 @@ import ToiletDeploy from '@/components/propertyChildren/basicDeploy/toiletDeploy
 import TrashDeploy from '@/components/propertyChildren/basicDeploy/trashDeploy'       //垃圾桶
 import PlantDeploy from '@/components/propertyChildren/basicDeploy/plantDeploy'       //植物
 import BuildDeploy from '@/components/propertyChildren/basicDeploy/buildingDeploy'       //建筑
+import WharfDeploy from '@/components/propertyChildren/basicDeploy/WharfDeploy'       //码头
+
 //  建筑  （目前在设施）
 // import BuildingMenu from '@/components/propertyChildren/buildingMenu'
 // import BuildingType from '@/components/propertyChildren/buildingDeploy/buildingType'
@@ -295,6 +297,7 @@ const routes = [
                     {path: '/basic-property/trash-deploy', name: 'TrashDeploy', component: TrashDeploy},
                     {path: '/basic-property/plant-deploy', name: 'PlantDeploy', component: PlantDeploy},
                     {path: '/basic-property/construction-deploy', name: 'BuildDeploy', component: BuildDeploy},
+                    {path: '/basic-property/wharf-deploy', name: 'WharfDeploy', component: WharfDeploy},
                 ]
             },
             // 设备
@@ -340,17 +343,17 @@ const routes = [
             },
         //    文件
             {
-                path: '/file',
+                path: '/floder',
                 name: 'File',
                 component: File,
                 children: [
                     {
-                        path: '/file/fileType',
+                        path: '/floder/fileType',
                         name: 'FileType',
                         component: FileType
                     },
                     {
-                        path: `/file/document:id`,
+                        path: `/floder/document:id`,
                         name: 'Document',
                         component: Document
                     }

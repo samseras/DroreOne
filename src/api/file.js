@@ -72,6 +72,25 @@ const file = {
             url: getUrl(`/document`),
             data: data
         })
+    },
+    downloadFile (id) {
+        return axios({
+            method: 'GET',
+            url: getUrl(`/document/download?id=${id}`),
+            responseType: 'arraybuffer'
+        })
+    },
+    searchAnything (pid, content) {
+        return axios({
+            method: 'GET',
+            url: getUrl(`/search/document?typeId=${pid}&keywords=${content}`)
+        })
+    },
+    previewFile (id) {
+        return axios({
+            method: 'GET',
+            url: getUrl(`/document/preview?fileId=${id}`)
+        })
     }
 
 }

@@ -14,7 +14,11 @@ const file = {
         deleteFileState: '',
         uploadFileSuccess: '',
         moveFileSuccess: '',
-        fixFile: {}
+        fixFile: {},
+        fileListLength: {},
+        filePageNum: {},
+        searchContent: {},
+        checkFileRow: {}
     },
     getters: {
         getCreatedState (state) {
@@ -43,6 +47,19 @@ const file = {
         },
         getFixFile (state) {
             return state.fixFile
+        },
+        getFileListLength (state) {
+            return state.fileListLength
+        },
+        getFilePageNum (state) {
+            return state.filePageNum
+        },
+        getSearchContent (state) {
+            return state.searchContent
+        },
+        getCheckFileRow (state) {
+            console.log()
+            return state.checkFileRow
         }
     },
     setters: {},
@@ -69,10 +86,23 @@ const file = {
             state.uploadFileSuccess = data
         },
         [types.MOVE_FILE_SUCCESS] (state, data) {
-            state.getMoveSuccessFile = data
+            state.moveFileSuccess = data
         },
         [types.SET_FIX_FILE] (state, data) {
             state.fixFile = data
+        },
+        [types.SET_FILE_LIST_LENGTH] (state, data) {
+            state.fileListLength = data
+        },
+        [types.GET_FILE_PAGE_NUMBER] (state, data) {
+            state.filePageNum = data
+        },
+        [types.SEARCH_FILE_LIST] (state, data) {
+            state.searchContent = data
+        },
+        [types.CHECK_FILE_ROW] (state, data) {
+            Vue.set(state, 'checkFileRow', {})
+            Vue.set(state, 'checkFileRow', data)
         }
     },
     actions: {

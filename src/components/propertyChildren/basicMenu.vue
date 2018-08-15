@@ -117,6 +117,11 @@
                         index: '/basic-property/construction-deploy',
                         title: '建筑'
                     },
+                    {
+                        icon: './../../../static/img/build.svg',
+                        index: '/basic-property/wharf-deploy',
+                        title: '站点'
+                    }
                 ],
                 facilityMenu: []
             }

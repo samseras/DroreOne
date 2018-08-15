@@ -261,6 +261,14 @@
                 }else {
                     this.getAllBuildEdit();// 建筑修改
                 }
+            }else if (route.includes('wharf'))  {
+                this.getAllArea();// 片区输出
+                if(!this.getLocationId) {
+                    this.getAllWhrash();//站点现有标注
+                    this.labelDot();// 站点打点
+                }else {
+                    this.getAllWhrashEdit();// 站点修改
+                }
             }
             if(this.getSearchInfo.id){
                 this.searchShow();
@@ -327,6 +335,68 @@
                         console.log(droreMap.trans.transLayerToWgs(data.end));
                         that.$store.commit('MAP_LOCATION', droreMap.trans.transLayerToWgs(data.end))
                     }
+                })
+            },
+            async getAllWhrash () { //站点现有标注
+                await api.wharf.getAllWharf().then(res => {
+                    this.iconList=res
+                    for (let i=0;i<this.iconList.length;i++){
+                        this.iconList[i].type="站点"
+                        this.iconList[i].id=this.iconList[i].id
+                        this.iconList[i].name =this.iconList[i].name
+                        this.iconList[i].location = [this.iconList[i].longitude,this.iconList[i].latitude]
+                        this.iconList[i].url="/static/img/icon/trash.png"
+                        this.iconList[i].subtype='whraf'
+                    }
+                    this.iconShow();
+                }).catch(err => {
+                    console.log(err)
+                    this.isShowLoading = false
+                })
+            },
+            async getAllWhrashEdit () { //垃圾桶现有标注修改
+                await api.wharf.getAllWharf().then(res => {
+                    this.trashList = res
+                    for (let i = 0; i < this.trashList.length; i++) {
+                        if(this.trashList[i].id === this.getLocationId){
+                            this.trashList[i].location = [this.trashList[i].longitude,this.trashList[i].latitude]
+                            var iconedit = new droreMap.icon.Marker({
+                                coordinate: droreMap.trans.transFromWgsToLayer(this.trashList[i].location),
+                                name: this.trashList[i].name,
+                                subtype: "wharf",
+                                id: this.trashList[i].id,
+                                url: "/static/img/icon/trash_on.png"
+                            });
+                            droreMap.icon.addChild(iconedit);
+                            droreMap.interaction.ifDrag = true;
+                            let that =this
+                            droreMap.event.addMouseEvent(Event.SINGLECLICK_EVENT, "single", function(evt){
+                                iconedit.setPosition(evt.coordinate)
+                                console.log(evt.coordinate)
+                                that.$store.commit('MAP_LOCATION', droreMap.trans.transLayerToWgs(evt.coordinate))
+                            })
+                            droreMap.event.DragEvent(function(tabInfor) {
+                                var data = tabInfor.data
+                                if(data.data.id === that.getLocationId){
+                                    console.log(droreMap.trans.transLayerToWgs(data.end));
+                                    that.$store.commit('MAP_LOCATION', droreMap.trans.transLayerToWgs(data.end))
+                                }
+                            })
+                        }else{
+                            this.trashList[i].location = [this.trashList[i].longitude,this.trashList[i].latitude]
+                            var icon1 = new droreMap.icon.Marker({
+                                coordinate: droreMap.trans.transFromWgsToLayer(this.trashList[i].location),
+                                name: this.trashList[i].name,
+                                subtype: "wharf",
+                                id: this.trashList[i].id,
+                                url: "/static/img/icon/trash.png"
+                            });
+                            droreMap.icon.addChild(icon1);
+                        }
+                    }
+                }).catch(err => {
+                    console.log(err)
+                    this.isShowLoading = false
                 })
             },
             async getAllIndicator () {//指示牌

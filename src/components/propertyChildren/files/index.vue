@@ -10,7 +10,7 @@
                         <template v-if="item.subs">
                             <el-submenu :index="item.index">
                                 <template slot="title"><img :src="item.icon" alt="">{{ item.title }}</template>
-                                <el-menu-item v-for="(subItem,i) in getFileTypeMenu" :key="i" :index="'/file/document' + subItem.id" v-if="subItem.enable">
+                                <el-menu-item v-for="(subItem,i) in getFileTypeMenu" :key="i" :index="'/floder/document' + subItem.id" v-if="subItem.enable">
                                     <img :src="imgUrl(subItem.id)" alt="">
                                     {{ subItem.type }}
                                 </el-menu-item>
@@ -54,7 +54,7 @@
                 items: [
                     {
                         icon: './../../static/img/peopleType.svg',
-                        index: '/file/fileType',
+                        index: '/floder/fileType',
                         title: '文件类型',
                     },
                     {

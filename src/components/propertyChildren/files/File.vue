@@ -11,6 +11,8 @@
                 <FileHeader
                     @createdFloder="createdFloder"
                     @moveFile="moveFile"
+                    @batchFile="saveFileHandler"
+                    @fixFile="fixFile"
                     @uploadFile="uploadFile">
                 </FileHeader>
             </div>
@@ -32,7 +34,9 @@
         <UploadFileDialog
             v-if="uploadFileVisible"
             :visible="uploadFileVisible"
+            :title="uploadTitle"
             @closeFileDialog="closeFileDialog"
+            @SaveFixFile="SaveFixFileHandler"
             @saveFileHandler="saveFileHandler">
         </UploadFileDialog>
         <MoveFileDialog
@@ -41,6 +45,11 @@
             @closeMoveFileDialog="closeMoveFileDialog"
             @moveFileHandler="moveFileHandler">
         </MoveFileDialog>
+        <CheckFileDialog
+            v-if="checkFileVisible"
+            :visible="checkFileVisible"
+            @closeCheckFileDialog="closeCheckFileDialog">
+        </CheckFileDialog>
     </div>
 </template>
 
@@ -51,6 +60,7 @@
     import CreatedFileDialog from '@/components/propertyChildren/files/createdFileDialog'
     import UploadFileDialog from '@/components/propertyChildren/files/uploadFileDialog'
     import MoveFileDialog from '@/components/propertyChildren/files/moveFileDialog'
+    import CheckFileDialog from '@/components/propertyChildren/files/checkFileDialog'
     import api from '@/api'
     import {mapMutations, mapGetters, mapActions} from 'vuex'
     import _ from 'lodash'
@@ -62,14 +72,16 @@
                 title: '',
                 crumbList: [],
                 uploadFileVisible: false,
-                moveFileVisible: false
+                moveFileVisible: false,
+                uploadTitle: '',
+                checkFileVisible: false
             }
         },
         created () {
             this.getCrumbsList()
         },
         methods: {
-            ...mapMutations(['SET_CREATED_STATUS', 'SET_CLICK_CRUMBS', 'SET_CRUMBS', 'CRUMBS_LIST', 'UPLOAD_FILE_SUCCESS', 'MOVE_FILE_SUCCESS']),
+            ...mapMutations(['SET_CREATED_STATUS', 'SET_CLICK_CRUMBS', 'SET_CRUMBS', 'CRUMBS_LIST', 'UPLOAD_FILE_SUCCESS', 'MOVE_FILE_SUCCESS', 'SET_FIX_FILE']),
             ...mapActions(['getFileType']),
             getCrumbsList () {
                 let router = this.$route.params.id
@@ -87,7 +99,16 @@
                 this.createdVisible = true
                 this.title = '创建文件夹'
             },
+            fixFile () {
+                if (this.getSelectFileList[0].type === 0) {
+                    this.fixFolderContent()
+                } else {
+                    this.fixFileContent()
+                }
+                this.$store.commit('SET_FIX_FILE', this.getSelectFileList[0])
+            },
             fixFileContent () {
+                this.uploadTitle = '修改文件信息'
                 this.uploadFileVisible = true
             },
             fixFolderContent () {
@@ -95,6 +116,7 @@
                 this.title = '修改文件夹'
             },
             uploadFile () {
+                this.uploadTitle = '上传文件'
                 this.uploadFileVisible = true
             },
             moveFile () {
@@ -108,6 +130,9 @@
             },
             closeMoveFileDialog () {
                 this.moveFileVisible = false
+            },
+            closeCheckFileDialog () {
+                this.checkFileVisible = false
             },
             saveAsFloder (obj) {
                 if (this.crumbList.length > 1) {
@@ -134,13 +159,14 @@
             },
             SaveFixFileHandler (row) {
                 console.log(row, '这个失修改的文件夹')
-                row.pid = this.$route.params.id
                 delete row.checked
                 delete row.time
                 api.file.editeFile(JSON.stringify(row)).then(res => {
                     console.log(res, '文件修改成功')
                     this.$message.success('修改文件成功')
                     this.$store.commit('UPLOAD_FILE_SUCCESS', new Date().getTime())
+                    this.uploadFileVisible = false
+                    this.createdVisible = false
                 }).catch(err => {
                     console.log(err, '修改失败')
                 })
@@ -165,7 +191,7 @@
                 })
             },
             getCrumbItem (item, index) {
-                if (index === this.crumbList.length - 1) {
+                if (index === this.crumbList.length - 1 && this.crumbList.length > 1) {
                     return
                 }
                 this.crumbList = this.crumbList.slice(0, index + 1)
@@ -179,7 +205,8 @@
             Document,
             CreatedFileDialog,
             UploadFileDialog,
-            MoveFileDialog
+            MoveFileDialog,
+            CheckFileDialog
         },
         watch: {
             '$route' () {
@@ -191,10 +218,15 @@
             },
             crumbList () {
                 this.$store.commit('CRUMBS_LIST', this.crumbList)
+            },
+            getCheckFileRow () {
+                if (this.getCheckFileRow.id) {
+                    this.checkFileVisible = true
+                }
             }
         },
         computed: {
-            ...mapGetters(['getCrumbs', 'getSelectFileList'])
+            ...mapGetters(['getCrumbs', 'getSelectFileList', 'getCheckFileRow'])
         }
     }
 

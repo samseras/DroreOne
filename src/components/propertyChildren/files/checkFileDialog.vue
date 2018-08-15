@@ -1,29 +1,21 @@
 <template>
     <div class="checkFileDialog">
         <el-dialog
-            title="查看文件"
+            title=""
             :close-on-click-modal = false
             :visible="visible"
             :before-close="closeDialog"
             width="100%"
             class="dialog echatDialog"
+            top="0"
             center>
-            <div class="card">
-                <!--<el-tree-->
-                    <!--:data="folderList"-->
-                    <!--:props="defaultProps"-->
-                    <!--accordion-->
-                    <!--lazy-->
-                    <!--show-checkbox-->
-                    <!--:check-strictly="true"-->
-                    <!--:load="loadNode1"-->
-                    <!--@check="getCurrentNode"-->
-                    <!--@node-click="handleCheckChange">-->
-                <!--</el-tree>-->
+            <div class="card" v-loading="isShowFilePreviewLoading">
+                <div class="image">
+                    <img :src="getFileUrl(getCheckFileRow.path)" alt="" v-if="isShowImage">
+                    <textarea class="text"  cols="30" rows="10" v-model="text" v-if="!isShowImage" ></textarea>
+                </div>
             </div>
             <div class=""slot="footer" class="dialog-footer cardFooter">
-                <!--<el-button size="mini" class="hold" @click="saveMoveFile">提交</el-button>-->
-                <!--<el-button size="mini" @click="closeDialog">取消</el-button>-->
             </div>
         </el-dialog>
     </div>
@@ -31,69 +23,58 @@
 
 <script>
     import api from '@/api'
+    import {mapGetters} from 'vuex'
     export default {
         name: "upload-file-dialog",
         props: ['visible'],
         data () {
             return {
-                selectNodeId: '',
-                folderList: [],
-                defaultProps: {
-                    label: 'name',
-                    children: 'name'
-                },
-                filterText: 0,
+                isShowFilePreviewLoading: false,
+                isShowImage: false,
+                text: ''
             }
         },
-        async created () {
-            let route = this.$route.params.id
-            await this.getFileList(route)
+        created () {
+            this.getFileText()
+            this.getCheckw()
         },
         methods: {
-            async getFileList (id) {
-                await api.file.getFloderList(id).then(res => {
-                    console.log(res, '請求成功')
-                    this.folderList = res
-                }).catch(err => {
-                    console.log(err)
-                })
-            },
             closeDialog () {
-                this.$emit('closeMoveFileDialog')
+                this.$emit('closeCheckFileDialog')
             },
-            saveMoveFile () {
-                if (this.selectNodeId === '') {
-                    this.$message.error('请选择移动到文件夹')
-                } else {
-                    this.$emit('moveFileHandler', this.selectNodeId)
-                }
+            getFileUrl (url) {
+                return `/file${url.substring(5, url.length)}`
             },
-            handleCheckChange(data, checked, indeterminate) {
-                console.log(data, checked, indeterminate);
-            },
-            loadNode1 (node, resolve) {
-                console.log(node, 'lplplplpplplp')
-                let id  = node.data.id
-                console.log(id)
-                api.file.getMoreFile(id).then(res => {
-                    console.log(res, '请求文件成功')
-                    res = res.filter(item => {
-                        return item.type === 0
-                    })
-                    resolve(res)
+            getFileText () {
+                this.isShowFilePreviewLoading = true
+                api.file.previewFile(this.getCheckFileRow.id).then(res => {
+                    console.log(res, 'djsjj')
+                    this.text = res
+                    // this.$refs.preview.innerHTML = res
+                    this.isShowFilePreviewLoading = false
                 }).catch(err => {
-                    console.log(err, '请求失败')
+                    console.log(err, '这个是失败的请求')
                 })
             },
-            getCurrentNode (data) {
-                this.selectNodeId = data.id
+            getCheckw () {
+                let types = ['jpg', 'png', 'svg', 'gif']
+                if (types.includes(this.getCheckFileRow.fileType)) {
+                    this.isShowImage = true
+                } else {
+                    this.isShowImage = false
+                }
             }
+        },
+        watch: {
+        },
+        computed: {
+            ...mapGetters(['getCheckFileRow'])
         }
     }
 </script>
 
 <style lang="scss" type="text/scss">
-    .moveFileDialog{
+    .checkFileDialog{
         width: 100%;
         height: 100%;
         .name{
@@ -108,19 +89,69 @@
                 border-radius: rem(0);
             }
         }
-
+        .el-dialog,.el-dialog--center{
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            background: rgba(0 , 0, 0, .5);
+        }
+        .el-dialog__body{
+            width: 100%;
+            height: 95%;
+            padding: 0;
+        }
+        .el-dialog__footer{
+            display: none;
+        }
+        .el-dialog__header{
+            height: 0;
+            .el-dialog__headerbtn{
+                background: rgba(171, 171, 171, 0.5);
+                border-radius: 50%;
+                z-index: 99;
+                i{
+                    font-size: rem(35);
+                }
+            }
+        }
     }
 </style>
 <style scoped lang="scss" type="text/scss">
-    .moveFileDialog{
+    .checkFileDialog{
         width: 100%;
         height: 100%;
         .card{
             width: 100%;
             height: 100%;
-            min-height: rem(200);
-            div{
+            position: relative;
+            .image{
+                width: 90%;
+                height: 90%;
+                overflow: hidden;
+                position: absolute;
+                left: 50%;
+                top: 50%;
+                transform: translate(-50%, -50%);
+                img{
+                    display: inline-block;
+                    max-width: 100%;
+                    /*display: none;*/
+                }
+                .text{
+                    width: 100%;
+                    height: 100%;
+                    color: #fff;
+                    background: rgba(0, 0, 0, .5);
+                    overflow: auto;
+                    border: none;
+                    resize: none;
+                    outline: none;
+                    padding-left: rem(20);
+                    box-sizing: border-box;
+                    font-size: rem(16);
+                }
             }
+
         }
     }
 </style>

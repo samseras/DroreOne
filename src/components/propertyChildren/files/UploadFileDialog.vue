@@ -1,7 +1,7 @@
 <template>
     <div class="UploadFileDialog">
         <el-dialog
-            title="上传文件"
+            :title="title"
             :close-on-click-modal = false
             :visible="visible"
             :before-close="closeDialog"
@@ -20,13 +20,13 @@
                     </p>
                     <p class="uploadFileBtn">
                         <span>附&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;件：</span>
-                        <span @click="$refs.uploadFile.click()">上传</span>
+                        <span @click="uploadFileClick">上传</span>
                         <input type="file" class="fileInput" ref="uploadFile" @change="uploadFile" style="FILTER: alpha(opacity=0); moz-opacity: 0; opacity: 0;width: 0px;height: 0px;">
                     </p>
                     <p class="image">
                         <span v-if="imgUrl.includes('/')">
                             <img :src="imgUrl" alt="">
-                            <span class="closeFile el-icon-circle-close-outline" @click="closeFile"></span>
+                            <span class="closeFile el-icon-circle-close-outline" @click="closeFile" v-if="isDisabled"></span>
                         </span>
                     </p>
                 </div>
@@ -43,32 +43,39 @@
     import {mapGetters} from 'vuex'
     export default {
         name: "upload-file-dialog",
-        props: ['visible'],
+        props: ['visible', 'title'],
         data () {
             return {
                 name: '',
                 description: '',
                 file: {},
-                imgUrl: ''
+                imgUrl: '',
+                fileObj: {},
+                isDisabled: true
             }
         },
         methods: {
             closeDialog () {
                 this.$emit('closeFileDialog')
             },
+            uploadFileClick () {
+                if (this.isDisabled) {
+                    this.$refs.uploadFile.click()
+                }
+            },
             saveFileHandler () {
-                var form = new FormData();
-                form.append('z1', this.file);
-                form.append('name', this.name);
-                form.append('description', this.description);
-                // let obj = {
-                //     name: this.name,
-                //     description: this.description,
-                //     z: form
-                // }
-                // console.log(form, 'opopopopopopopopop')
-                // this.$emit('saveFileHandler',obj)
-                this.$emit('saveFileHandler', form)
+                if (this.fileObj.id) {
+                    this.fileObj.name = this.name
+                    this.fileObj.description = this.description
+                    this.$emit('SaveFixFile', this.fileObj)
+                } else {
+                    var form = new FormData()
+                    form.append('z1', this.file)
+                    form.append('name', this.name)
+                    form.append('description', this.description)
+                    form.append('documentType', this.$route.params.id)
+                    this.$emit('saveFileHandler', form)
+                }
             },
             uploadFile (e) {
                 this.file = e.target.files[0]
@@ -102,13 +109,40 @@
                 console.log(e.target.files[0], 'opopopopopo')
                 this.file = {}
                 this.imgUrl = ''
-                console.log(this.file)
+            }
+        },
+        created () {
+            console.log(this.getFixFile, '这个是要修改的文件')
+            if (this.title.includes('修改')) {
+                this.fileObj = this.getFixFile
+                this.name = this.getFixFile.name
+                this.description = this.getFixFile.description
+                this.isDisabled = false
+                let fileType = this.getFixFile.fileType
+                if (fileType.includes('doc')) {
+                    this.imgUrl = './../../../../static/img/word.svg'
+                } else if (fileType.includes('xl')) {
+                    this.imgUrl = './../../../../static/img/word.svg'
+                } else if (fileType.includes('ppt')) {
+                    this.imgUrl = './../../../../static/img/ppt.svg'
+                } else if (fileType.includes('pdf')) {
+                    this.imgUrl = './../../../../static/img/PDF.svg'
+                } else if (fileType.includes('txt')) {
+                    this.imgUrl = './../../../../static/img/txt.svg'
+                }else if (fileType.includes('csv')) {
+                    this.imgUrl = './../../../../static/img/excel.svg'
+                }else if (fileType.includes('jpg')) {
+                    this.imgUrl = './../../../../static/img/jpg.svg'
+                }else if (fileType.includes('png')) {
+                    this.imgUrl = './../../../../static/img/png.svg'
+                }else if (fileType.includes('svg')) {
+                    this.imgUrl = './../../../../static/img/svg.svg'
+                } else {
+                    this.imgUrl = './../../../../static/img/file.svg'
+                }
             }
         },
         watch: {
-            getFixFile () {
-                console.log(this.getFixFile, 'sjkdhcjkdshkjdfhkds')
-            }
         },
         computed: {
             ...mapGetters(['getFixFile'])
