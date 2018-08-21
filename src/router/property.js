@@ -4,7 +4,7 @@
 
 
 //数据中心
-import Property from '@/components/property'
+// import Property from '@/components/property'
 
 
 
@@ -25,7 +25,7 @@ const property = [
         path: '/property',
         name: 'property',
         redirect: '/person',
-        component: Property,
+        component: resolve => require(['@/components/property'], resolve),
         children: [
             // 设施
             ...basic,

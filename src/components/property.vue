@@ -102,7 +102,7 @@
 
 <style lang="scss">
     .property{
-        .el-menu-demo,.el-menu--horizontal,.el-menu{
+        .el-menu-demo,.el-menu--horizontal{
             background-color: transparent;
         }
         /*.el-menu-demo,.el-menu--horizontal,.el-menu:hover{*/

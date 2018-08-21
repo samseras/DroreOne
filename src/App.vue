@@ -1,6 +1,9 @@
 <template>
   <div id="app">
-    <!--<img src="./assets/logo.png">-->
+      <div class="BG_image">
+          <img src="./../static/img/index-bg.png" alt="">
+          <img src="./../static/img/1.png" alt="">
+      </div>
     <router-view/>
   </div>
 </template>
@@ -15,8 +18,11 @@ export default {
   },
     methods: {
       getTitle() {
-          let route = this.$route.matched[0].path
-          console.log(route, this.$route,'klklklklklklklkl')
+          console.log(this.$route,'klklklklklklklkl')
+          let route = null
+          if (this.$route.matched.length > 0) {
+              route = this.$route.matched[0].path
+          }
           if (route) {
               if (route.includes('eye')) {
                   window.document.getElementsByTagName('title')[0].innerHTML = '全视之眼'
@@ -37,6 +43,9 @@ export default {
     created () {
         this.getTitle()
     },
+    // mounted () {
+    //     this.getTitle()
+    // },
     watch: {
       '$route'() {
           this.getTitle()
@@ -53,4 +62,7 @@ html,body,#app {
   width: 100%;
   height: 100%;
   }
+    .BG_image{
+        display: none;
+    }
 </style>

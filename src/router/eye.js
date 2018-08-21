@@ -1,4 +1,4 @@
-import eyes from '@/components/pages/eye'
+// import eyes from '@/components/pages/eye'
 
 //管控
 import controler from './controler'
@@ -18,7 +18,7 @@ const eye = [
         path: '/eye',
         name: 'eye',
         redirect: '/controler',
-        component: eyes,
+        component: resolve => require(['@/components/pages/eye'], resolve),
         children: [
             // 管控
             ...controler,

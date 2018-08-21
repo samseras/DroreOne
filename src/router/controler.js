@@ -1,33 +1,33 @@
 // 全视之眼-----管控
-import Controler from '@/components/controler'
-import Broad from '@/components/eye/controlChildren/broadcast'
-import Person from '@/components/eye/controlChildren/securityperson'
-import Warn from '@/components/eye/controlChildren/warningControl'
-import Wifi from '@/components/eye/controlChildren/wifiControl'
-import Screen from '@/components/eye/controlChildren/screenControl'
-import Car from '@/components/eye/controlChildren/carControl'
-import Other from '@/components/eye/controlChildren/otherControl'
-import Camera from '@/components/eye/controlChildren/cameraControl'
-import Environment from '@/components/eye/controlChildren/environment'
-import Light from '@/components/eye/controlChildren/lightControl' //
+// import Controler from '@/components/controler'
+// import Broad from '@/components/eye/controlChildren/broadcast'
+// import Person from '@/components/eye/controlChildren/securityperson'
+// import Warn from '@/components/eye/controlChildren/warningControl'
+// import Wifi from '@/components/eye/controlChildren/wifiControl'
+// import Screen from '@/components/eye/controlChildren/screenControl'
+// import Car from '@/components/eye/controlChildren/carControl'
+// import Other from '@/components/eye/controlChildren/otherControl'
+// import Camera from '@/components/eye/controlChildren/cameraControl'
+// import Environment from '@/components/eye/controlChildren/environment'
+// import Light from '@/components/eye/controlChildren/lightControl' //
 
 const controler = [
     {
         path: '/controler',
         name: 'controler',
         redirect: '/controler/broad',
-        component: Controler,
+        component: resolve => require(['@/components/controler'], resolve),
         children: [
-            {path: '/controler/broad',name: 'Broad', component:Broad},
-            {path: '/controler/person',name: 'Person', component:Person},
-            {path: '/controler/warn',name: 'Warn', component:Warn},
-            {path: '/controler/wifi',name: 'Wifi', component:Wifi},
-            {path: '/controler/screen',name: 'Screen', component:Screen},
-            {path: '/controler/car',name: 'Car', component:Car},
-            {path: '/controler/camera',name: 'Camera', component:Camera},
-            {path: '/controler/other',name: 'Other', component:Other},
-            {path: '/controler/environment',name: 'Environment', component:Environment},
-            {path: '/controler/light',name: 'Light', component:Light},
+            {path: '/controler/broad',name: 'Broad', component: resolve => require(['@/components/eye/controlChildren/broadcast'], resolve)},
+            {path: '/controler/person',name: 'Person', component: resolve => require(['@/components/eye/controlChildren/securityperson'], resolve)},
+            {path: '/controler/warn',name: 'Warn', component: resolve => require(['@/components/eye/controlChildren/securityperson'], resolve)},
+            {path: '/controler/wifi',name: 'Wifi', component: resolve => require(['@/components/eye/controlChildren/warningControl'], resolve)},
+            {path: '/controler/screen',name: 'Screen', component: resolve => require(['@/components/eye/controlChildren/wifiControl'], resolve)},
+            {path: '/controler/car',name: 'Car', component: resolve => require(['@/components/eye/controlChildren/carControl'], resolve)},
+            {path: '/controler/camera',name: 'Camera', component: resolve => require(['@/components/eye/controlChildren/cameraControl'], resolve)},
+            {path: '/controler/other',name: 'Other', component: resolve => require(['@/components/eye/controlChildren/otherControl'], resolve)},
+            {path: '/controler/environment',name: 'Environment', component: resolve => require(['@/components/eye/controlChildren/environment'], resolve)},
+            {path: '/controler/light',name: 'Light', component: resolve => require(['@/components/eye/controlChildren/lightControl'], resolve)},
         ]
     }
 ]

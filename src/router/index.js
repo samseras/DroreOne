@@ -16,10 +16,10 @@ import iot from './iot'
 // 数据分析 (图表)
 import analyze from './analyze'
 
-import MicServiceManagementSystem from '@/components/pages/MicroService/MicroServiceManagementSystem'
-import Index from '@/components/pages/index'
+// import MicServiceManagementSystem from '@/components/pages/MicroService/MicroServiceManagementSystem'
+// import Index from '@/components/pages/index'
 import login from '@/components/pages/login'
-import screen from '@/components/pages/screenShow'
+// import screen from '@/components/pages/screenShow'
 
 
 
@@ -30,24 +30,29 @@ const routes = [
     {
       path: '/',
       redirect: '/droreone',
-      component: Index
+      name: 'Index',
+      component: resolve => require(['@/components/pages/index'], resolve)
     },
     {
       path: '/MicServiceManagementSystem',
-      component: MicServiceManagementSystem
+      component: resolve => require(['@/components/pages/MicroService/MicroServiceManagementSystem'], resolve)
     },
       // 主页面
     {
       path: '/droreone',
-      component: Index
+      name: 'Droreone',
+        component: resolve => require(['@/components/pages/index'], resolve)
+      // component: Index
     },
     {
       path: '/login',
-      component: login
+      name: 'Login',
+      // component: resolve => require(['@/components/pages/login'], resolve)
+        component: login
     },
     {
         path: "/screen/:id",
-        component: screen
+        component: resolve => require(['@/components/pages/screenShow'], resolve)
     },
 
     //数据中心
@@ -73,6 +78,7 @@ const router = new Router({
 router.beforeEach((to, from, next) => {
     next(true)
     let token = localStorage.getItem('token')
+    console.log(token, 'token')
     if (token) {
         if (to.path === '/login') {
             next()
