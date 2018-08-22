@@ -18,7 +18,6 @@ export default {
   },
     methods: {
       getTitle() {
-          console.log(this.$route,'klklklklklklklkl')
           let route = null
           if (this.$route.matched.length > 0) {
               route = this.$route.matched[0].path

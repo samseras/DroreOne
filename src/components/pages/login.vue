@@ -16,8 +16,8 @@
  	    			<form>
  	    				<input type="text" v-model="username" id="userid" placeholder="请输入用户名" ref="userid"/>
  	    				<input type="password" v-model="password" id="userpass" placeholder="请输入密码" ref="userpass"/>
- 	    				<input type="text" name="checkname" id="checkCode" placeholder="请输入验证码" v-model="checkCode" @keyup="enter" @blur="regForm()" ref="checkCode"/>
- 	    				<input type="text" name="codename" id="Code" @click="changeCheckCode"/>
+ 	    				<!--<input type="text" name="checkname" id="checkCode" placeholder="请输入验证码" v-model="checkCode" @keyup="enter" @blur="regForm()" ref="checkCode"/>-->
+ 	    				<!--<input type="text" name="codename" id="Code" @click="changeCheckCode"/>-->
  	    				<input type="button" @click="loginOn" value="登录" id="submit">
  	    			</form>
  	    		</aside>
@@ -89,7 +89,7 @@
                     this.$message.error('请输入密码')
                     return
                 }
-				if(this.checkCode !== "" && this.checkCode == $("#Code").val().toLowerCase()){
+				// if(this.checkCode !== "" && this.checkCode == $("#Code").val().toLowerCase()){
                     let obj = `BASIC ${Base64.encode(this.username +  ":"+ this.password)}`
                     localStorage.setItem('userName',this.username)
                     localStorage.setItem('token', JSON.stringify(obj))
@@ -105,17 +105,17 @@
                         // }
                     }).catch(err => {
                         console.log(err, '登录失败')
-                        this.$message.info('用户名或密码错误')
+                        // this.$message.info('用户名或密码错误')
                         this.checkCode = ''
                     })
-                }else{
-                    this.changeCheckCode();
-                    this.$refs.checkCode.style.border="1px solid red";
-                    this.$refs.userpass.style.border="none";
-                    this.$refs.userid.style.border="none";
-                    this.changeCheckCode();
-                    this.$message.info('验证码不能为空或错误')
-                }
+                // }else{
+                //     this.changeCheckCode();
+                //     this.$refs.checkCode.style.border="1px solid red";
+                //     this.$refs.userpass.style.border="none";
+                //     this.$refs.userid.style.border="none";
+                //     this.changeCheckCode();
+                //     this.$message.info('验证码不能为空或错误')
+                // }
 			}
 		},
 		mounted(){
