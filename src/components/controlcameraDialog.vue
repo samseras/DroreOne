@@ -1,290 +1,404 @@
 <template>
-    <div class="controlDialog">
+    <div class="controlcameraDialog">
         <el-dialog
             :title="title"
             :close-on-click-modal = false
             :visible="visible"
             :before-close="closeDialog"
-            width="480px"
+            :width="width"
             class="dialog echatDialog"
             center>
-            <div class="card">
-                <div class="personCardContent">
-                    <p class="name">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称：
-                        {{this.Info.name}}
-                    </p>
-                    <p class="name">所属片区：
-                        {{this.Info.regionName}}
-                    </p>
-                    <p class="name" v-if="wifiShow">当前连接数：
-                        {{this.Info.currentConnections}}
-                    </p>
-                    <p class="name" v-if="wifiShow">上行速率：
-                        {{this.Info.upRate}}
-                    </p>
-                    <p class="name" v-if="wifiShow">下行速率：
-                        {{this.Info.downRate}}
-                    </p>
-                    <p class="name" v-if="facility">厂&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;家：
-                        {{this.Info.modelName}}
-                    </p>
-                    <p class="name">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：
-                        {{this.Info.description}}
-                    </p>
+            <div class="Supcontal">
+                <div class="playback"  v-if="playback">
+                    <el-button class="on playView" @click="playView()">预览</el-button>
+                    <el-button class="playBackButtom" @click="playBackButtom()">回放</el-button>
+                    <!--<el-button type="success" @click="clickCapturePic()">抓图</el-button>-->
+                    <div class="ptz" v-if="ptz">
+                        <fieldset>
+                            <legend>云台控制</legend>
+                            <div class="ptzedit">
+                                <div class="ptzDirection">
+                                    <input type="button" class="button" value="左上" @mousedown="mouseDownPTZControl(5);" @mouseup="mouseUpPTZControl();" />
+                                    <input type="button" class="button" value="上" @mousedown="mouseDownPTZControl(1);" @mouseup="mouseUpPTZControl();" />
+                                    <input type="button" class="button" value="右上" @mousedown="mouseDownPTZControl(7);" @mouseup="mouseUpPTZControl();" />
+                                    <input type="button" class="button" value="左" @mousedown="mouseDownPTZControl(3);" @mouseup="mouseUpPTZControl();" />
+                                    <input type="button" class="button" value="自动" @click="mouseDownPTZControl(9);" >
+                                    <input type="button" class="button" value="右" @mousedown="mouseDownPTZControl(4);" @mouseup="mouseUpPTZControl();" />
+                                    <input type="button" class="button" value="左下" @mousedown="mouseDownPTZControl(6);" @mouseup="mouseUpPTZControl();" />
+                                    <input type="button" class="button" value="下" @mousedown="mouseDownPTZControl(2);" @mouseup="mouseUpPTZControl();" />
+                                    <input type="button" class="button" value="右下" @mousedown="mouseDownPTZControl(8);" @mouseup="mouseUpPTZControl();" />
+                                </div>
+                                <div class="ptzButton">
+                                    <input type="button" class="button" value="云台复位" @click="clickGoPreset();" >
+                                    <input type="button" class="button" value="放大" @mousedown="PTZZoomIn()" @mouseup="PTZZoomStop()">
+                                    <input type="button" class="button" value="缩小" @mousedown="PTZZoomout()" @mouseup="PTZZoomStop()">
+                                </div>
+                            </div>
+                        </fieldset>
+                    </div>
+                    <div class="datetimerange" v-if="datetimerange">
+                        <el-date-picker
+                            value-format="yyyy-MM-dd HH:mm:ss"
+                            v-model="Time"
+                            type="datetimerange"
+                            start-placeholder="开始日期"
+                            end-placeholder="结束日期"
+                            :default-time="['00:00:00', '23:59:59']">
+                        </el-date-picker>
+                        <el-button type="primary" @click="clickRecordSearch();">开始回放</el-button>
+                    </div>
                 </div>
+                <div id="obj">
+                    <object id="DPSDK_OCX" classid="CLSID:D3E383B6-765D-448D-9476-DFD8B499926D" style="width: 100%; height: 100%" codebase="DpsdkOcx.cab#version=1.0.0.0"></object>
+                </div>
+                <div class="clearfix"></div>
             </div>
+        </el-dialog>
+        <el-dialog title="提示" :visible.sync="dialogVisible" width="480px" center top="10vh">
+            系统未检测到控件，请先安装控件！<a style="color:#d52424;cursor:pointer;" @click="cmsocxDown();">点击此处</a>进行下载
         </el-dialog>
     </div>
 </template>
 
 <script>
     export default {
-        name: "control-dialog",
-        props: ['visible', 'Info','title'],
+        name: "supcontol",
+        props: ['iStreamType', 'iChannelID','visible', 'Info','title','width'],
         data () {
             return {
-                route:'',
-                wifiShow:false,
-                facility:true,
+                obj:'',
+                g_iWndIndex: '0',
+                g_iWndIndexTwo: '1',
+                g_bPTZAuto:false,
+                szIP: '10.2.0.1',
+                szPort: '9000',
+                szUsername: 'drore',
+                szPassword: 'drore789',
+                playback:true,
+                channel:'1',
+                Time:'',
+                dialogVisible:false,
+                datetimerange:false,
+                ptz:true,
+                gWndId:'0',
+                nWndCount:'1',
+                channel:'1000022$1$0$0',
+                nStreamType:'1',
+                nMediaType:'1',
+                nTransType:'1',
             }
         },
         methods: {
             closeDialog () {
+                this.obj.DPSDK_Logout()
                 this.$emit('closeInfoDialog')
             },
+            cmsocxDown(){
+                let host=window.location.host,
+                    protocol = window.location.protocol;
+                window.open(protocol+'//'+host+"/static/template/DPSDK_OCX.exe");
+            },
+            init(){
+                if(this.Info.channel==null && this.Info.channel==undefined){
+                    this.playback=false
+                }else {
+                    this.channel=this.Info.channel
+                }
+            },
+            initViedo () {
+                this.obj = document.getElementById("DPSDK_OCX");
+                this.gWndId = this.obj.DPSDK_CreateSmartWnd(0, 0, 100, 100);
+                this.obj.DPSDK_SetWndCount(this.gWndId, this.nWndCount);
+                this.obj.DPSDK_SetSelWnd(this.gWndId, 0);
+                this.login()
+            },
+            login () {
+                let nRet = this.obj.DPSDK_Login(this.szIP, this.szPort, this.szUsername, this.szPassword);
+                if(nRet == 0)
+                {
+                    this.playView()
+                }else {
+                    this.playView()
+                }
+            },
+            dateFormat(oDate, fmt) {
+                var o = {
+                    "M+": oDate.getMonth() + 1, //月份
+                    "d+": oDate.getDate(), //日
+                    "h+": oDate.getHours(), //小时
+                    "m+": oDate.getMinutes(), //分
+                    "s+": oDate.getSeconds(), //秒
+                    "q+": Math.floor((oDate.getMonth() + 3) / 3), //季度
+                    "S": oDate.getMilliseconds()//毫秒
+                };
+                if (/(y+)/.test(fmt)) {
+                    fmt = fmt.replace(RegExp.$1, (oDate.getFullYear() + "").substr(4 - RegExp.$1.length));
+                }
+                for (var k in o) {
+                    if (new RegExp("(" + k + ")").test(fmt)) {
+                        fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+                    }
+                }
+                return fmt;
+            },
+            playView(){
+                $('.playBackButtom').removeClass('on')
+                $('.playView').addClass('on')
+                this.datetimerange=false
+                this.ptz=true
+                let nWndNo = this.obj.DPSDK_GetSelWnd(this.gWndId);
+                let nRet = this.obj.DPSDK_StartRealplayByWndNo(this.gWndId, nWndNo, this.channel, this.nStreamType, this.nMediaType, this.nTransType);
+                if(nRet == 0)
+                {
+                }else {
+                    this.dialogVisible=true
+                }
+            },
+            playBackButtom(){
+                var szCurTime = this.dateFormat(new Date(), "yyyy-MM-dd");
+                this.Time=[szCurTime + " 00:00:00",szCurTime + " 23:59:59"];
+                this.datetimerange=true
+                this.ptz=false
+                $('.playView').removeClass('on')
+                $('.playBackButtom').addClass('on')
+            },
+            clickCapturePic(){
+                let oWndInfo = WebVideoCtrl.I_GetWindowStatus(this.g_iWndIndex);
+                console.log(oWndInfo,'123123');
+                if (oWndInfo != null) {
+                    let szCaptureFileFormat = "0",
+                        CapturePath='';
+                    let xmlDoc = WebVideoCtrl.I_GetLocalCfg();
+                    if (xmlDoc != null) {
+                        szCaptureFileFormat = $(xmlDoc).find("CaptureFileFormat").eq(0).text();
+                        CapturePath = $(xmlDoc).find("CapturePath").eq(0).text();
+                    }
+                    let szPicName =  this.Info.consoleIp + "_" + this.channel + "_" + new Date().getTime();
+                        szPicName += ("0" === szCaptureFileFormat) ? ".jpg": ".bmp";
+                    let iRet = WebVideoCtrl.I_CapturePic(szPicName, {
+                        bDateDir: true  //是否生成日期文件
+                    });
+                    if (0 == iRet) {
+                        this.$message.success('抓图成功！请去本地文件夹'+ CapturePath +'查看');
+                    } else {
+                        this.$message.error('抓图失败！');
+                    }
+                }
+            },
+            mouseDownPTZControl(iPTZIndex) {
+                let oWndInfo = WebVideoCtrl.I_GetWindowStatus(this.g_iWndIndex),
+                    iPTZSpeed = 1;
+
+                if (oWndInfo != null) {
+                    if (9 == iPTZIndex && this.g_bPTZAuto) {
+                        iPTZSpeed = 0;// 自动开启后，速度置为0可以关闭自动
+                    } else {
+                        this.g_bPTZAuto = false;// 点击其他方向，自动肯定会被关闭
+                    }
+                    WebVideoCtrl.I_PTZControl(iPTZIndex, false, {
+                        iPTZSpeed: iPTZSpeed,
+                        success: function (xmlDoc) {
+                            if (9 == iPTZIndex) {
+                                this.g_bPTZAuto = !this.g_bPTZAuto;
+                            }
+                            this.$message.success('开启云台成功！');
+                        },
+                        error: function () {
+                            this.$message.error('开启云台失败！');
+                        }
+                    });
+                }
+            },
+            // 方向PTZ停止
+            mouseUpPTZControl() {
+                var oWndInfo = WebVideoCtrl.I_GetWindowStatus(this.g_iWndIndex);
+                if (oWndInfo != null) {
+                    WebVideoCtrl.I_PTZControl(1, true, {
+                        success: function (xmlDoc) {
+                            this.$message.success('停止云台成功！');
+                        },
+                        error: function () {
+                            this.$message.error('停止云台失败！');
+                        }
+                    });
+                }
+            },
+            // 调用预置点
+            clickGoPreset() {
+                let oWndInfo = WebVideoCtrl.I_GetWindowStatus(this.g_iWndIndex);
+                if (oWndInfo != null) {
+                    WebVideoCtrl.I_GoPreset(1, {
+                        success: function (xmlDoc) {
+                            this.$message.success('调用预置点成功！');
+                        },
+                        error: function () {
+                            this.$message.error('调用预置点失败！');
+                        }
+                    });
+                }
+            },
+            PTZZoomIn() {
+                var oWndInfo = WebVideoCtrl.I_GetWindowStatus(this.g_iWndIndex);
+                if (oWndInfo != null) {
+                    WebVideoCtrl.I_PTZControl(10, false, {
+                        iWndIndex: this.g_iWndIndex,
+                        success: function (xmlDoc) {
+                            this.$message.success('放大成功！');
+                        },
+                        error: function () {
+                            this.$message.error('放大失败！');
+                        }
+                    });
+                }
+            },
+            PTZZoomout() {
+                var oWndInfo = WebVideoCtrl.I_GetWindowStatus(this.g_iWndIndex);
+                if (oWndInfo != null) {
+                    WebVideoCtrl.I_PTZControl(11, false, {
+                        iWndIndex: this.g_iWndIndex,
+                        success: function (xmlDoc) {
+                            this.$message.success('缩小成功！');
+                        },
+                        error: function () {
+                            this.$message.error('缩小失败！');
+                        }
+                    });
+                }
+            },
+            PTZZoomStop() {
+                var oWndInfo = WebVideoCtrl.I_GetWindowStatus(this.g_iWndIndex);
+                if (oWndInfo != null) {
+                    WebVideoCtrl.I_PTZControl(11, true, {
+                        iWndIndex: this.g_iWndIndex,
+                        success: function (xmlDoc) {
+                            this.$message.success('调焦停止成功！');
+                        },
+                        error: function () {
+                            this.$message.error('调焦停止失败！');
+                        }
+                    });
+                }
+            },
+            clickRecordSearch() {
+                if (this.Time==null) {
+                    this.$message.error('请选择回放时间再开始回放！');
+                    return;
+                }
+                var oWndInfo = WebVideoCtrl.I_GetWindowStatus(this.g_iWndIndex),
+                    szStartTime = this.Time[0],
+                    szEndTime = this.Time[1];
+                if (oWndInfo != null) {// 已经在播放了，先停止
+                    WebVideoCtrl.I_Stop();
+                }
+                WebVideoCtrl.I_StartPlayback(this.Info.consoleIp, {
+                    iChannelID: this.channel,
+                    szStartTime: szStartTime,
+                    szEndTime: szEndTime
+                });
+            }
         },
         mounted () {
-
+            this.init()
+            setTimeout(() => {
+                this.initViedo()
+            },500)
         },
         created () {
-            if(this.Info.type==="wifi"){
-                this.wifiShow=true
-            }
-            if(this.Info.type==="卫生间"){
-                this.Info.description=this.Info.toiletBean.description
-                this.facility=false
-            }
-            if(this.Info.type==="停车场"){
-                this.Info.description=this.Info.parkingBean.description
-                this.facility=false
-            }
-            if(this.Info.type==="建筑"){
-                this.Info.description=this.Info.building.description
-                this.facility=false
-            }
-            if(this.Info.type==="商圈"){
-                this.Info.description=this.Info.businessBean.description
-                this.facility=false
-            }
-            if(this.Info.type==="景点"){
-                this.Info.description=this.Info.scenicspotBean.description
-                this.facility=false
-            }
-            if(this.Info.type==="垃圾桶"){
-                this.Info.description=this.Info.dustbinBean.description
-                this.facility=false
-            }
-            if(this.Info.type==="植物"){
-                this.Info.description=this.Info.plant.description
-                this.facility=false
-            }
-            if(this.Info.type==="指示牌"){
-                this.Info.description=this.Info.signboardBean.description
-                this.facility=false
-            }
-            if(this.Info.regionName==null){
-                this.Info.regionName="未知片区设备"
-            }
         },
         computed: {
 
         },
     }
 </script>
-<style lang="scss">
-    .controlDialog{
+<style scoped lang="scss" type="text/scss">
+    .Supcontal{
         width: 100%;
         height: 100%;
-        .el-dialog .el-dialog--center{
-            width: 100%;
+        #obj{
+            width:600px;
+            height: 480px;
         }
-        .el-dialog--center{
-            padding: 0;
-            /*height: rem(300);*/
-        }
-        .el-dialog__header{
-            padding: rem(10) rem(20);
-            text-align: left;
-            border-bottom: 1px solid #ccc;
-        }
-        .el-dialog__title{
-            font-size: rem(16);
-        }
-        .el-dialog__headerbtn {
-            top: rem(12);
-            i{
-                font-size: rem(20);
-            }
-        }
-        .el-dialog__body{
-            padding: rem(10) rem(20);
-            box-sizing: border-box;
-            font-size: rem(14);
-            min-height: rem(150);
-        }
-        .el-input__prefix {
-            left: rem(135);
-        }
-        .el-dialog__footer{
-            padding: 0;
-            padding: rem(5) 0;
-        }
-        .el-dialog--center .el-dialog__footer{
-            text-align: right;
-            padding-right: rem(15);
-            border-top: 1px solid #ccc;
-            margin-top: rem(15);
-        }
-        .el-date-editor,.el-input,.el-input--prefix,.el-input--suffix,.el-date-editor--date{
-            margin-top: rem(-2);
-        }
-        .el-date-editor,.el-input,.el-input--prefix,.el-input--suffix,.el-date-editor--date .el-input__inner{
-            border: none;
-            height: rem(30);
-            line-height: rem(30);
-        }
-        .el-date-editor,.el-input,.el-input--prefix,.el-input--suffix,.el-date-editor--date .el-input__icon{
-            line-height: rem(30);
-        }
-        .el-select .el-input,.el-input--suffix{
-            margin-top: rem(-3);
-        }
-        .data .el-input__inner{
-            padding-left: rem(10);
-        }
-        .el-input__inner{
-            border: none;
-            height: rem(30);
-            line-height: rem(30);
-            font-size: rem(12);
-            padding: 0;
-            padding-left: rem(10);
-        }
-        .el-input{
-            width: rem(160);
-            padding-left: rem(5);
-        }
-    }
-</style>
-<style lang="scss" scoped type="text/scss">
-    .controlDialog{
-        .card{
-            width: 100%;
+        .plugin{
+            width: rem(600);
             height: 100%;
-            .personCardContent ,.boatCardContent {
-                width: 100%;
-                height: 100%;
-                position: relative;
-                p{
-                    margin-top: rem(8);
-                    /*border-bottom: 1px solid #ccc;*/
-                    font-size: rem(14);
-                    line-height:rem(32) ;
-                    input{
-                        border: none;
-                        list-style: none;
-                        outline: none;
-                        font-size: rem(12);
-                        padding-left: rem(10);
-                    }
-                    span{
+            display: inline-block;
+            float: left;
+        }
+        .playback{
+            text-align: left!important;
+            margin-left: rem(5);
+            margin-bottom: rem(5);
+            float: right;
+            width: rem(420);
+            .playView{
+                width: rem(120);
+            }
+            .playBackButtom{
+                width: rem(120);
+            }
+            .on{
+                color: #fff;
+                background-color: #409EFF;
+                border-color: #409EFF;
+            }
+            .datetimerange{
+                display: inline-block;
+                margin-top: rem(10);
+                button{
+                    margin-top: rem(10);
+                }
+            }
+            .ptz{
+                margin-top: rem(20);
+                legend{
+                    font-size: rem(16);
+                    padding: 0 rem(5);
+                    margin-left: rem(10);
+                }
+                .ptzedit{
+                    margin: rem(20) rem(10) rem(10);
+                    .button{
+                        width:rem(70);
+                        margin-bottom: rem(15);
+                        text-align: center;
+                        margin-left: rem(10);
                         display: inline-block;
-                        width: rem(180);
-                        overflow: hidden;
-                        text-overflow: ellipsis;
+                        line-height: 1;
                         white-space: nowrap;
-                        line-height: rem(15);
-                    }
-                    select{
-                        border: none;
+                        cursor: pointer;
+                        background: #fff;
+                        border: 1px solid #dcdfe6;
+                        border-color: #dcdfe6;
+                        color: #606266;
+                        -webkit-appearance: none;
+                        text-align: center;
+                        box-sizing: border-box;
                         outline: none;
-                        width: rem(100);
-                        font-size: rem(12);
-                        option{
-                            appearance:none;
-                            list-style: none;
-                            border: none;
-                            width: 100%;
-                            outline: none;
-                            padding: 0;
-                            margin: 0;
-                            /*border:  1px solid #ccc;*/
-                            background: #fff;
-
+                        transition: .1s;
+                        font-weight: 500;
+                        -moz-user-select: none;
+                        -webkit-user-select: none;
+                        -ms-user-select: none;
+                        padding: 12px 20px;
+                        font-size: 14px;
+                        border-radius: 4px;
+                    }
+                    .ptzDirection{
+                        width: rem(250);
+                        display: inline-block;
+                    }
+                    .ptzButton{
+                        width: rem(120);
+                        display: inline-block;
+                        float: right;
+                        .button{
+                            width: rem(100);
                         }
                     }
-                    i {
-                        display: inline-block;
-                        font-size: rem(16);
-                        vertical-align: middle;
-                        cursor: pointer;
-                    }
-                    textarea{
-                        resize: none;
-                        outline: none;
-                        padding: rem(3);
-                        box-sizing: border-box;
-                        border-radius: rem(5);
-                    }
-                }
-                .person-driv{
-                    display:none;
-                }
-                .ms{
-                    span{
-                        width:rem(66)
-                    }
-                    div{
-                        width:70%
-                    }
-                }
-                .textarea{
-                    border-bottom: 1px solid transparent;
-                }
-                .basicType{
-                    text-align: center;
-                }
-                .img{
-                    width: rem(100);
-                    height: rem(60);
-                    position: absolute;
-                    top: rem(0);
-                    right: rem(-20);
-                    background: #fff;
-                    img{
-                        width: rem(55);
-                        height: rem(55);
-                        display: inline-block;
-                        border-radius: 50%;
-                        margin-left: rem(18);
-                    }
                 }
             }
-            .cardFooter {
-                width: 100%;
-                padding: rem(5) rem(10);
-                box-sizing: border-box;
-                border-top: 1px solid #ccc;
-                .el-button{
-                    padding: 0;
-                    padding: rem(4) rem(6);
-                }
-            }
+        }
 
-        }
-        .map {
-            width: rem(400);
-            height: rem(400);
-        }
     }
+
 </style>
