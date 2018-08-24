@@ -12,7 +12,7 @@
                 <div class="playback"  v-if="playback">
                     <el-button class="on playView" @click="playView()">预览</el-button>
                     <el-button class="playBackButtom" @click="playBackButtom()">回放</el-button>
-                    <!--<el-button type="success" @click="clickCapturePic()">抓图</el-button>-->
+                    <el-button type="success" @click="clickCapturePic()">抓图</el-button>
                     <div class="ptz" v-if="ptz">
                         <fieldset>
                             <legend>云台控制</legend>
@@ -48,7 +48,7 @@
                         <el-button type="primary" @click="clickRecordSearch();">开始回放</el-button>
                     </div>
                 </div>
-                <div id="obj">
+                <div id="obj" style="width: 100%;">
                     <object id="DPSDK_OCX" classid="CLSID:D3E383B6-765D-448D-9476-DFD8B499926D" style="width: 100%; height: 100%" codebase="DpsdkOcx.cab#version=1.0.0.0"></object>
                 </div>
                 <div class="clearfix"></div>
@@ -90,6 +90,7 @@
         },
         methods: {
             closeDialog () {
+                this.obj.DPSDK_GetSelWnd(this.gWndId)
                 this.obj.DPSDK_Logout()
                 this.$emit('closeInfoDialog')
             },
@@ -99,6 +100,7 @@
                 window.open(protocol+'//'+host+"/static/template/DPSDK_OCX.exe");
             },
             init(){
+                console.log( this.Info );
                 if(this.Info.channel==null && this.Info.channel==undefined){
                     this.playback=false
                 }else {
@@ -113,6 +115,7 @@
                 this.login()
             },
             login () {
+                this.obj.DPSDK_Logout()
                 let nRet = this.obj.DPSDK_Login(this.szIP, this.szPort, this.szUsername, this.szPassword);
                 if(nRet == 0)
                 {
@@ -150,8 +153,6 @@
                 let nRet = this.obj.DPSDK_StartRealplayByWndNo(this.gWndId, nWndNo, this.channel, this.nStreamType, this.nMediaType, this.nTransType);
                 if(nRet == 0)
                 {
-                }else {
-                    this.dialogVisible=true
                 }
             },
             playBackButtom(){
@@ -315,7 +316,6 @@
         width: 100%;
         height: 100%;
         #obj{
-            width:600px;
             height: 480px;
         }
         .plugin{

@@ -214,11 +214,13 @@
                 let cameraObj=[{
                     typeId:2,
                     id:info.id,
+                    cameraType:info.cameraType,
                     name:info.name,
                     positionType:info.positionType,
                     regionId:info.regionId,
                     model:info.model,
                     port:info.port,
+                    channel:info.channel,
                     ip:info.ip,
                     description:info.description,
                     latitude:latitude,
@@ -311,17 +313,18 @@
                 }
                 let cameraObj=[{
                     typeId:2,
-                    name:info.name,
                     cameraType:info.cameraType,
+                    name:info.name,
+                    positionType:info.positionType,
                     regionId:info.regionId,
                     model:info.model,
                     port:info.port,
+                    channel:info.channel,
                     ip:info.ip,
                     description:info.description,
                     latitude:latitude,
                     longitude:longitude,
                     channel: info.channel
-
                 }]
                 if (info.imgUrl !== '') {
                     await api.person.updataAva(info.imgUrl).then(res => {
@@ -386,10 +389,10 @@
                     })
                 }else{
                     this.cameraList=this.checkList.filter((item,index)=>{
-                        if(item.positionType == 0){
-                            item.type = '室内'
+                        if(item.cameraType == 0){
+                            item.type = '球机'
                         }else {
-                            item.type = '室外'
+                            item.type = '枪机'
                         }
                         if(type.includes(item.type)){
                             item.status=true
@@ -459,6 +462,11 @@
                         this.cameraList[i].location = `${this.cameraList[i].longitude},${this.cameraList[i].latitude}`
                         this.cameraList[i].modifyTime=this.cameraList[i].modifyTime.replace("-","/")
                         this.cameraList[i].byTime = -(new Date(this.cameraList[i].modifyTime)).getTime()
+                        if(this.cameraList[i].cameraType == 0){
+                            this.cameraList[i].cameraType = '球机'
+                        }else {
+                            this.cameraList[i].cameraType = '枪机'
+                        }
                     }
                     this.cameraList = _.sortBy(this.cameraList,'byTime')
                     this.checkList = this.cameraList
