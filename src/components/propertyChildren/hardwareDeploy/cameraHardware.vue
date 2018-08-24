@@ -45,8 +45,13 @@
                             prop="positionType"
                             label="类型">
                             <template slot-scope="scope">
-                                <span>{{scope.row.positionType | changeFilter}}</span>
+                                <span>{{scope.row.cameraType | typeFilter}}</span>
                             </template>
+                        </el-table-column>
+
+                        <el-table-column
+                            prop="channel"
+                            label="通道编号">
                         </el-table-column>
 
                         <el-table-column
@@ -93,9 +98,9 @@
                         </div>
                         <div class="specificInfo" >
                             <p class="name">所属区域：<span>{{item.regionName}}</span></p>
-                            <p class="type">类&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;型：<span>{{item.positionType | changeFilter}}</span></p>
+                            <p class="name">通道编号：<span>{{item.channel}}</span></p>
+                            <p class="type">类&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;型：<span>{{item.cameraType | typeFilter}}</span></p>
                             <p class="sex text">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：<span>{{item.description}}</span></p>
-
                         </div>
                     </div>
                     <div class="tip" v-if="show">
@@ -293,23 +298,28 @@
                 } else {
                     this.$message.error('请选择要删除的数据')
                 }
-
             },
             async addNewPerson(info){
-                let index = info.location.includes(',')?info.location.indexOf(','):info.location.indexOf('，')
-                let longitude = info.location.substring(0, index)
-                let latitude  = info.location.substring(index + 1)
+                let longitude = ''
+                let latitude = ''
+                if (info.location) {
+                    let index = info.location.includes(',')?info.location.indexOf(','):info.location.indexOf('，')
+                    longitude = info.location.substring(0, index)
+                    latitude  = info.location.substring(index + 1)
+                }
                 let cameraObj=[{
                     typeId:2,
                     name:info.name,
-                    positionType:info.positionType,
+                    cameraType:info.cameraType,
                     regionId:info.regionId,
                     model:info.model,
                     port:info.port,
                     ip:info.ip,
                     description:info.description,
                     latitude:latitude,
-                    longitude:longitude
+                    longitude:longitude,
+                    channel: info.channel
+
                 }]
                 if (info.imgUrl !== '') {
                     await api.person.updataAva(info.imgUrl).then(res => {
@@ -457,11 +467,19 @@
 //          this.choseList=this.camera
             this.getAllCamera()
         },
+        filters: {
+            typeFilter (item) {
+                if(item == 0){
+                    return '球机'
+                }else {
+                    return '枪机'
+                }
+            }
+        },
         components:{
             ScrollContainer,
             Header,
             HardWare
-
         }
     }
 

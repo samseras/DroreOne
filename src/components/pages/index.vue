@@ -83,7 +83,7 @@
                     <div id="bottom" class="entrence-cont">
                         <ul>
                             <li class="change gis">
-                                <router-link :to="this.gis_url" id="GIS">
+                                <router-link :to="gis_url" id="GIS">
                                     {{this.gis_name}}>><img src="../../../static/img/GIS.png"/>
                                 </router-link>
                             </li>
@@ -158,7 +158,7 @@
                     {title: '全视之眼', route: '/eye'},
                     {title: '数据中心', route: '/property'},
                     {title: '大数据分析', route: ''},
-                    {title: 'GIS地图', route: '/gisMap'},
+                    {title: 'GIS地图', route: ''},
                     {title: '物业管理', route: ''},
                     {title: '第三方应用', route: ''},
                     {title: '系统配置', route: ''},

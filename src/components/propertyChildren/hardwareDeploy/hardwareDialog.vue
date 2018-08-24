@@ -13,9 +13,9 @@
                 <div class="cameraCard popCard" v-if="route.includes('camera')">
                     <p class="type selectstyle equipmentStyle">
                         <span>类&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;型：</span>
-                        <el-select name="" v-model="camera.positionType" :disabled="isDisabled">
-                            <el-option label='室内' :value="0"></el-option>
-                            <el-option label='室外' :value="1"></el-option>
+                        <el-select name="" v-model="camera.cameraType" :disabled="isDisabled">
+                            <el-option label='球机' :value="0"></el-option>
+                            <el-option label='枪机' :value="1"></el-option>
                         </el-select>
                     </p>
                     <p class="sex title">
@@ -39,6 +39,10 @@
                     <p class="port">
                         <span>端&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;口：</span>
                         <el-input type="text" v-model="camera.port" :disabled="isDisabled"></el-input>
+                    </p>
+                    <p class="port">
+                        <span>通道编号：</span>
+                        <el-input type="text" v-model="camera.channel" :disabled="isDisabled"></el-input>
                     </p>
                     <p class="area place ps wrapstyle selectstyle" >
                         <span>位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置：</span>
@@ -130,7 +134,7 @@
                 <div class="cameraCard popCard" v-if="route.includes('led')">
                     <p class="type equipmentStyle selectstyle">
                         <span>类&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;型：</span>
-                        <el-select name="" v-model="led.positionType" :disabled="isDisabled">
+                        <el-select v-model="led.positionType" :disabled="isDisabled">
                             <el-option label='室内' :value="0"></el-option>
                             <el-option label='室外' :value="1"></el-option>
                         </el-select>
@@ -164,7 +168,7 @@
                         <el-input type="text" v-model="led.screenHeight" :disabled="isDisabled"></el-input>
                     </p>
                     <p class="port">
-                        <sapn>设备端口：</sapn>
+                        <span>设备端口：</span>
                         <el-input type="text" v-model="led.port" :disabled="isDisabled"></el-input>
                     </p>
                     <p class="host">
@@ -181,7 +185,6 @@
                     </p>
                     <p class=" wrapstyle selectstyle">
                         <span>所属片区：</span>
-
                         <el-select name="" v-model="led.regionId" :disabled="isDisabled">
                             <el-option
                                 v-for="item in regions"
@@ -587,11 +590,12 @@
                modelType:{},
                regions: [],
               camera:{
-                  positionType:'',
+                  cameraType:'',
                   name:'',
                   model:'',
                   ip:'',
                   port:'',
+                  channel: '',
                   regionId:'',
                   description:'',
                   location:''
@@ -785,52 +789,61 @@
                let myMac = /([A-Fa-f0-9]{2}-){5}[A-Fa-f0-9]{2}/
                if(this.route.includes('camera')){
                    newInfo = this.camera
-                  if(!(newInfo.hasOwnProperty("positionType")&& integerreg.test(newInfo.positionType))||
-                     !(newInfo.name && newInfo.name !=='') ||
-                     !(newInfo.hasOwnProperty("model")&& newInfo.model) ||
-                     !(newInfo.regionId && newInfo.regionId !=='') ||
-                     !(newInfo.location && newInfo.location !== '')
+                  if(
+                      // !(newInfo.hasOwnProperty("positionType")&& integerreg.test(newInfo.positionType))||
+                     !(newInfo.name && newInfo.name !=='')
+                     // !(newInfo.hasOwnProperty("model")&& newInfo.model)
+                     // !(newInfo.regionId && newInfo.regionId !=='') ||
+                     // !(newInfo.location && newInfo.location !== '')
                   ){
                        this.$message.error('请输入完整信息')
                       return
                   }
-                  if(!(newInfo.ip && myip.test(newInfo.ip))){
-                      this.$message.error('请输入有效ip地址')
-                      return
+                  if (newInfo.ip && newInfo.ip !== '') {
+                      if(!(newInfo.ip && myip.test(newInfo.ip))){
+                          this.$message.error('请输入有效ip地址')
+                          return
+                      }
                   }
-                  if(!(newInfo.port && myport.test(newInfo.port))){
-                      this.$message.error('请输入正确端口号')
-                      return
+                  if (newInfo.port && newInfo.port !== '') {
+                      if(!(newInfo.port && myport.test(newInfo.port))){
+                          this.$message.error('请输入正确端口号')
+                          return
+                      }
                   }
-
-
                }else if(this.route.includes('broadcast')){
                    newInfo=this.broadCast
-                   if(!(newInfo.hasOwnProperty("positionType")&& integerreg.test(newInfo.positionType))||
-                       !(newInfo.name && newInfo.name !=='') ||
-                       !(newInfo.hasOwnProperty("model")&& newInfo.model) ||
-                       !(newInfo.regionId && newInfo.regionId !=='') ||
-                       !(newInfo.location && newInfo.location !== '')
+                   if(
+                       // !(newInfo.hasOwnProperty("positionType")&& integerreg.test(newInfo.positionType))||
+                       !(newInfo.name && newInfo.name !=='')
+                       // !(newInfo.hasOwnProperty("model")&& newInfo.model) ||
+                       // !(newInfo.regionId && newInfo.regionId !=='') ||
+                       // !(newInfo.location && newInfo.location !== '')
                    ){
                        this.$message.error('请输入完整信息')
                        return
                    }
-                   if(!(newInfo.ip && myip.test(newInfo.ip))){
-                       this.$message.error('请输入有效ip地址')
-                       return
+                   if (newInfo.ip && newInfo.ip !== '') {
+                       if(!(newInfo.ip && myip.test(newInfo.ip))){
+                           this.$message.error('请输入有效ip地址')
+                           return
+                       }
                    }
-                   if(!(newInfo.port && myport.test(newInfo.port))){
-                       this.$message.error('请输入正确端口号')
-                       return
+                   if (newInfo.port && newInfo.port !== '') {
+                       if(!(newInfo.port && myport.test(newInfo.port))){
+                           this.$message.error('请输入正确端口号')
+                           return
+                       }
                    }
 
                }else if(this.route.includes('led')) {
                    newInfo = this.led
-                   if(!(newInfo.hasOwnProperty("positionType")&& integerreg.test(newInfo.positionType))||
-                       !(newInfo.name && newInfo.name !=='') ||
-                       !(newInfo.hasOwnProperty("model")&& newInfo.model) ||
-                       !(newInfo.regionId && newInfo.regionId !=='') ||
-                       !(newInfo.location && newInfo.location !== '')
+                   if(
+                       // !(newInfo.hasOwnProperty("positionType")&& integerreg.test(newInfo.positionType))||
+                       !(newInfo.name && newInfo.name !=='')
+                       // !(newInfo.hasOwnProperty("model")&& newInfo.model) ||
+                       // !(newInfo.regionId && newInfo.regionId !=='') ||
+                       // !(newInfo.location && newInfo.location !== '')
                    ){
                        this.$message.error('请输入完整信息')
                        return
@@ -839,14 +852,19 @@
                        this.$message.error('请输入有效ip地址！')
                        return
                    }*/
-                   if(!(newInfo.port && myport.test(newInfo.port))){
-                       this.$message.error('请输入正确端口号')
-                       return
+                   if (newInfo.port && newInfo.port !== '') {
+                       if(!(newInfo.port && myport.test(newInfo.port))){
+                           this.$message.error('请输入正确端口号')
+                           return
+                       }
                    }
-                   if(!(newInfo.mac && myMac.test(newInfo.mac))){
-                       this.$message.error('请输入正确的MAC编号')
-                       return
+                   if (newInfo.mac && newInfo.mac !== '') {
+                       if(!(newInfo.mac && myMac.test(newInfo.mac))){
+                           this.$message.error('请输入正确的MAC编号')
+                           return
+                       }
                    }
+
                    /*if(!(newInfo.serialNum && intreg.test1(newInfo.serialNum))){
                        this.$message.error('编号只能输入数字！')
                        return
@@ -854,11 +872,12 @@
 
                }else if(this.route.includes('wifi')) {
                    newInfo = this.wifi
-                   if(!(newInfo.hasOwnProperty("positionType")&& integerreg.test(newInfo.positionType))||
-                       !(newInfo.name && newInfo.name !=='') ||
-                       !(newInfo.hasOwnProperty("model")&& newInfo.model) ||
-                       !(newInfo.regionId && newInfo.regionId !=='') ||
-                       !(newInfo.location && newInfo.location !== '')
+                   if(
+                       // !(newInfo.hasOwnProperty("positionType")&& integerreg.test(newInfo.positionType))||
+                       !(newInfo.name && newInfo.name !=='')
+                       // !(newInfo.hasOwnProperty("model")&& newInfo.model) ||
+                       // !(newInfo.regionId && newInfo.regionId !=='') ||
+                       // !(newInfo.location && newInfo.location !== '')
                    ){
                        this.$message.error('请输入完整信息')
                        return
@@ -867,26 +886,27 @@
                        this.$message.error('请输入有效ip地址！')
                        return
                    }*/
-                   if(!(newInfo.port && myport.test(newInfo.port))){
-                       this.$message.error('请输入正确端口号')
-                       return
+                   if (newInfo.port && newInfo.port !== '') {
+                       if(!(newInfo.port && myport.test(newInfo.port))){
+                           this.$message.error('请输入正确端口号')
+                           return
+                       }
                    }
-                   /*if(!(newInfo.serialNum && intreg.test1(newInfo.serialNum))){
-                       this.$message.error('编号只能输入数字！')
-                       return
-                   }*/
-                   if(!(newInfo.mac && myMac.test(newInfo.mac))){
-                       this.$message.error('请输入正确的MAC编号')
-                       return
+                   if (newInfo.mac && newInfo.mac !== '') {
+                       if(!(newInfo.mac && myMac.test(newInfo.mac))){
+                           this.$message.error('请输入正确的MAC编号')
+                           return
+                       }
                    }
 
                }else if(this.route.includes('monitors')) {
                    newInfo = this.monitors
-                   if(!(newInfo.hasOwnProperty("sensorType")&& integerreg.test(newInfo.sensorType))||
-                       !(newInfo.name && newInfo.name !=='') ||
-                       !(newInfo.hasOwnProperty("model")&& newInfo.model) ||
-                       !(newInfo.regionId && newInfo.regionId !=='') ||
-                       !(newInfo.location && newInfo.location !== '')
+                   if(
+                       // !(newInfo.hasOwnProperty("sensorType")&& integerreg.test(newInfo.sensorType))||
+                       !(newInfo.name && newInfo.name !=='')
+                       // !(newInfo.hasOwnProperty("model")&& newInfo.model) ||
+                       // !(newInfo.regionId && newInfo.regionId !=='') ||
+                       // !(newInfo.location && newInfo.location !== '')
                    ){
                        this.$message.error('请输入完整信息')
                        return
@@ -895,42 +915,46 @@
                        this.$message.error('请输入有效ip地址！')
                        return
                    }*/
-                   if(!(newInfo.port && myport.test(newInfo.port))){
-                       this.$message.error('请输入正确端口号')
-                       return
+                   if (newInfo.port && newInfo.port !== '') {
+                       if(!(newInfo.port && myport.test(newInfo.port))){
+                           this.$message.error('请输入正确端口号')
+                           return
+                       }
                    }
-                   /*if(!(newInfo.serialNum && intreg.test1(newInfo.serialNum))){
-                       this.$message.error('编号只能输入数字！')
-                       return
-                   }*/
-                   if(!(newInfo.mac && myMac.test(newInfo.mac))){
-                       this.$message.error('请输入正确的MAC编号')
-                       return
+                   if (newInfo.mac && newInfo.mac !== '') {
+                       if(!(newInfo.mac && myMac.test(newInfo.mac))){
+                           this.$message.error('请输入正确的MAC编号')
+                           return
+                       }
                    }
 
                }else if(this.route.includes('Light')) {
                    newInfo = this.Light
-                   if(!(newInfo.name && newInfo.name !=='') ||
-                       !(newInfo.hasOwnProperty("model")&& newInfo.model) ||
-                       !(newInfo.regionId && newInfo.regionId !=='') ||
-                       !(newInfo.location && newInfo.location !== '')
-                       /*!(newInfo.serialNum && newInfo.serialNum !== '')*/
+                   if(
+                       !(newInfo.name && newInfo.name !=='')
+                       // !(newInfo.hasOwnProperty("model")&& newInfo.model) ||
+                       // !(newInfo.regionId && newInfo.regionId !=='') ||
+                       // !(newInfo.location && newInfo.location !== '')
+                       // /*!(newInfo.serialNum && newInfo.serialNum !== '')*/
                    ){
                        this.$message.error('请输入完整信息')
                        return
                    }
-                   if(!(newInfo.port && myport.test(newInfo.port))){
-                       this.$message.error('请输入正确端口号')
-                       return
+                   if (newInfo.port && newInfo.port !== '') {
+                       if(!(newInfo.port && myport.test(newInfo.port))){
+                           this.$message.error('请输入正确端口号')
+                           return
+                       }
                    }
 
                }else if(this.route.includes('gate')) {
                    newInfo = this.gate
-                   if(!(newInfo.hasOwnProperty("gateType")&& integerreg.test(newInfo.gateType))||
-                       !(newInfo.name && newInfo.name !=='') ||
-                       !(newInfo.hasOwnProperty("model")&& newInfo.model) ||
-                       !(newInfo.regionId && newInfo.regionId !=='') ||
-                       !(newInfo.location && newInfo.location !== '')
+                   if(
+                       // !(newInfo.hasOwnProperty("gateType")&& integerreg.test(newInfo.gateType))||
+                       !(newInfo.name && newInfo.name !=='')
+                       // !(newInfo.hasOwnProperty("model")&& newInfo.model) ||
+                       // !(newInfo.regionId && newInfo.regionId !=='') ||
+                       // !(newInfo.location && newInfo.location !== '')
                    ){
                        this.$message.error('请输入完整信息')
                        return
@@ -939,27 +963,27 @@
                        this.$message.error('请输入有效ip地址！')
                        return
                    }*/
-                   if(!(newInfo.port && myport.test(newInfo.port))){
-                       this.$message.error('请输入正确端口号')
-                       return
+                   if (newInfo.port && newInfo.port !== '') {
+                       if(!(newInfo.port && myport.test(newInfo.port))){
+                           this.$message.error('请输入正确端口号')
+                           return
+                       }
                    }
-                   if(!(newInfo.mac && myMac.test(newInfo.mac))){
-                       this.$message.error('请输入正确的MAC编号')
-                       return
+                   if (newInfo.mac && newInfo.mac !== '') {
+                       if(!(newInfo.mac && myMac.test(newInfo.mac))){
+                           this.$message.error('请输入正确的MAC编号')
+                           return
+                       }
                    }
-
-                   /*if(!(newInfo.serialNum && intreg.test1(newInfo.serialNum))){
-                       this.$message.error('编号只能输入数字！')
-                       return
-                   }*/
 
                }else if(this.route.includes('police')) {
                    newInfo = this.police
-                   if(!(newInfo.hasOwnProperty("sensorType")&& integerreg.test(newInfo.sensorType))||
-                       !(newInfo.name && newInfo.name !=='') ||
-                       !(newInfo.hasOwnProperty("model")&& newInfo.model) ||
-                       !(newInfo.regionId && newInfo.regionId !=='') ||
-                       !(newInfo.location && newInfo.location !== '')
+                   if(
+                       // !(newInfo.hasOwnProperty("sensorType")&& integerreg.test(newInfo.sensorType))||
+                       !(newInfo.name && newInfo.name !=='')
+                       // !(newInfo.hasOwnProperty("model")&& newInfo.model) ||
+                       // !(newInfo.regionId && newInfo.regionId !=='') ||
+                       // !(newInfo.location && newInfo.location !== '')
                    ){
                        this.$message.error('请输入完整信息')
                        return
@@ -968,13 +992,17 @@
                        this.$message.error('请输入有效ip地址！')
                        return
                    }*/
-                   if(!(newInfo.port && myport.test(newInfo.port))){
-                       this.$message.error('请输入正确端口号')
-                       return
+                   if (newInfo.port && newInfo.port !== '') {
+                       if(!(newInfo.port && myport.test(newInfo.port))){
+                           this.$message.error('请输入正确端口号')
+                           return
+                       }
                    }
-                   if(!(newInfo.mac && myMac.test(newInfo.mac))){
-                       this.$message.error('请输入正确的MAC编号')
-                       return
+                   if (newInfo.mac && newInfo.mac !== '') {
+                       if(!(newInfo.mac && myMac.test(newInfo.mac))){
+                           this.$message.error('请输入正确的MAC编号')
+                           return
+                       }
                    }
                    /*if(!(newInfo.serialNum && intreg.test1(newInfo.serialNum))){
                        this.$message.error('编号只能输入数字！')

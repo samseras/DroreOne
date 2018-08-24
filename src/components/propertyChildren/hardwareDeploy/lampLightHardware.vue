@@ -298,10 +298,13 @@
             },
 
             async addLight(info){
-                console.log
-                let index = info.location.includes(',')?info.location.indexOf(','):info.location.indexOf('，')
-                let longitude = info.location.substring(0, index)
-                let latitude = info.location.substring(index + 1)
+                let longitude = ''
+                let latitude = ''
+                if (info.location) {
+                    let index = info.location.includes(',')?info.location.indexOf(','):info.location.indexOf('，')
+                    longitude  = info.location.substring(0, index)
+                    latitude = info.location.substring(index + 1)
+                }
                 let lightObj=[{
                     typeId: 5,
                     lightStatus:info.lightStatus,
