@@ -10,7 +10,8 @@ const menu = {
     state: {
         facilityType: [],
         deviceType: [],
-        fileType: []
+        fileType: [],
+        dataLength: {}
     },
     getters: {
         getFacilitTypeMenu (state) {
@@ -21,6 +22,9 @@ const menu = {
         },
         getFileTypeMenu (state) {
             return state.fileType
+        },
+        getDataLength (state) {
+            return state.dataLength
         }
     },
     setters: {},
@@ -35,6 +39,9 @@ const menu = {
         [types.SET_FILE_TYPE] (state, data) {
             Vue.set(state,'fileType', data)
         },
+        [types.DATA_LENGTH] (state, data) {
+            Vue.set(state, 'dataLength', data)
+        }
     },
     actions: {
         async getFacilityType ({commit}) {

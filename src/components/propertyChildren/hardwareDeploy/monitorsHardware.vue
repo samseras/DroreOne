@@ -129,6 +129,7 @@
     import HardWare from './hardwareDialog.vue'
     import api from '@/api'
     import _ from 'lodash'
+    import {mapMutations} from 'vuex'
 
     export default{
         data(){
@@ -156,6 +157,7 @@
             }
         },
         methods:{
+            ...mapMutations(['DATA_LENGTH']),
             imgError (e) {
                 e.target.src = this.getUrl(null);
             },
@@ -431,6 +433,12 @@
                         this.show = false
                     }
                     this.listLength = res.devices.length
+                    let obj = {
+                        listLength: res.devices.length
+                    }
+                    obj[new Date().getTime()] = new Date().getTime()
+                    this.$store.commit('DATA_LENGTH', obj)
+
                     this.isShowLoading=false
                     this.monitorsList=res.devices
                     this.monitorsList = this.monitorsList.filter((item,index) => {

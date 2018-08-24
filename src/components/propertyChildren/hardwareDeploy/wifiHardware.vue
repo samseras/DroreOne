@@ -11,7 +11,7 @@
                         @fixedInfo="fixedInfo"
                         @searchAnything="searchAnything"
                         :choseId="choseInfoId"
-                        :listsLength = "wifiList.length"
+                        :listsLength = "listLength"
                         :personListFlag="selectFlag"
                         @nextPage="nextPage"
                         @previousPage="previousPage"
@@ -136,6 +136,7 @@
     import HardWare from './hardwareDialog.vue'
     import api from '@/api'
     import _ from 'lodash'
+    import {mapMutations} from 'vuex'
 
     export default{
         data(){
@@ -162,6 +163,7 @@
             }
         },
         methods:{
+            ...mapMutations(['DATA_LENGTH']),
             imgError (e) {
                 e.target.src = this.getUrl(null);
             },
@@ -442,6 +444,11 @@
                         this.show = false
                     }
                     this.listLength = res.devices.length
+                    let obj = {
+                        listLength: res.devices.length
+                    }
+                    obj[new Date().getTime()] = new Date().getTime()
+                    this.$store.commit('DATA_LENGTH', obj)
                     this.isShowLoading=false
                     this.wifiList=res.devices
                     this.wifiList = this.wifiList.filter((item,index) => {

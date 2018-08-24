@@ -129,6 +129,7 @@ s't<template>
     import HardWare from './hardwareDialog.vue'
     import api from '@/api'
     import _ from 'lodash'
+    import {mapMutations} from 'vuex'
 
     export default{
         data(){
@@ -157,6 +158,7 @@ s't<template>
             }
         },
         methods:{
+            ...mapMutations(['DATA_LENGTH']),
             imgError (e) {
                 e.target.src = this.getUrl(null);
             },
@@ -439,6 +441,11 @@ s't<template>
                     }
                     this.isShowLoading=false
                     this.listLength = res.devices.length
+                    let obj = {
+                        listLength: res.devices.length
+                    }
+                    obj[new Date().getTime()] = new Date().getTime()
+                    this.$store.commit('DATA_LENGTH', obj)
                     this.gateList=res.devices
                     this.gateList = this.gateList.filter((item,index) => {
                         if (index < (this.pageNum * 35 ) && index > ((this.pageNum -1) * 35 ) - 1 ) {

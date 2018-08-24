@@ -65,11 +65,12 @@
     import {mapGetters,mapMutations} from 'vuex'
 
     export default{
-        props: ['choseId','listsLength','personListFlag'],
+        props: ['choseId','personListFlag'],
         inject:['reload'],
         data(){
             return{
                 searchKeys:'',
+                listsLength: 0,
                 filterList:[],
                 cameraList:[
                     {type:'室内'},
@@ -500,9 +501,10 @@
                     this.isSelected=false
                 }
             },
-            listsLength () {
-                if (this.listsLength > 0) {
-                    this.pageAllNum = Math.ceil(this.listsLength / 35)
+            getDataLength () {
+                if (this.getDataLength.listLength > 0) {
+                    this.listsLength = this.getDataLength.listLength
+                    this.pageAllNum = Math.ceil(this.getDataLength.listLength / 35)
                 }
             },
             getHardWareIcon () {
@@ -512,9 +514,12 @@
         created(){
             this.showPersonJob()
             this.toggleList(this.getHardWareIcon)
+            if (this.getDataLength && this.getDataLength.listLength > 0) {
+                this.listsLength = this.getDataLength.listLength
+            }
         },
         computed: {
-            ...mapGetters(['getHardWareIcon'])
+            ...mapGetters(['getHardWareIcon', 'getDataLength'])
         }
     }
 </script>
