@@ -5,7 +5,7 @@
         </div>
         <div id="contextmenu_container" class="contextmenu">
             <i @click="menuDelete"></i>
-            <el-tooltip class="item" effect="dark" content="状态" placement="top">
+            <el-tooltip class="item" effect="dark" content="启停" placement="top">
                 <el-switch
                     class="mapSwitch"
                     v-model="open"
@@ -27,6 +27,12 @@
             <el-tooltip class="item" effect="dark" content="广播" placement="top">
                 <button @click="menuBroadcast" class="menuBroadcast"></button>
             </el-tooltip>
+            <el-tooltip class="item" effect="dark" content="查看摄像头" placement="top">
+                <button @click="menuCamera" class="menuCamera"></button>
+            </el-tooltip>
+            <el-tooltip class="item" effect="dark" content="查看周围摄像头" placement="top">
+                <button @click="warnCamera" class="warnCamera"></button>
+            </el-tooltip>
         </div>
         <PersonDetail v-if="visible"
                       :Info="buildInfo"
@@ -34,6 +40,13 @@
                       :visible="visible"
                       @closeInfoDialog ="closeDialog">
         </PersonDetail>
+        <controlcameraDialog v-if="cameravisible"
+                      :Info="buildInfo"
+                      :title="title"
+                      :width="width"
+                      :visible="cameravisible"
+                      @closeInfoDialog ="closeDialog">
+        </controlcameraDialog>
     </Scrollcontainer>
 
 </template>
@@ -45,6 +58,7 @@
     import { mapMutations,mapGetters } from 'vuex'
     import api from '@/api'
     import PersonDetail from '@/components/controlDialog'
+    import controlcameraDialog from '@/components/controlcameraDialog'
 
     export default {
         name: "map1",
@@ -70,6 +84,8 @@
                 buildInfo:[],
                 visible:false,
                 title:'',
+                width:'1080px',
+                cameravisible:false,
                 isDisabled: true,
                 lightCheckout:[],
                 searchFacilityList:[],
@@ -284,6 +300,7 @@
             ]),
             closeDialog () {
                 this.visible = false
+                this.cameravisible = false
             },
             requestGisMain() {
                 document.getElementById('map').innerHTML = ""
@@ -2023,10 +2040,33 @@
                 $("#contextmenu_container").show();
             },
             mapSwitch(){
-                if(this.menulist.data.status =="ONLINE"){
-                    alert("关闭，id是"+this.menulist.id);
-                }else {
-                    alert("开启，id是"+this.menulist.id);
+                if(this.menulist.data.status =="FAULT"){
+                    this.open=false
+                    this.$message.error("设备故障，id是"+this.menulist.id)
+                }else if(this.menulist.data.status =="OFFLINE"){
+                    this.open=false
+                    this.$confirm('是否开启设备?', '提示', {
+                        confirmButtonText: '确定',
+                        cancelButtonText: '取消',
+                        type: 'warning'
+                    }).then(() => {
+                        this.startBroadcast();
+                    }).catch(() => {
+                        this.$message.info('取消开启设备')
+                        this.open=false
+                    })
+                }else{
+                    this.open=true
+                    this.$confirm('是否关闭设备?', '提示', {
+                        confirmButtonText: '确定',
+                        cancelButtonText: '取消',
+                        type: 'warning'
+                    }).then(() => {
+                        this.stopBroadcast();
+                    }).catch(() => {
+                        this.$message.info('取消关闭设备')
+                        this.open= true
+                    })
                 }
             },
             menuShow(){
@@ -2052,7 +2092,119 @@
                 }
             },
             menuPhone(){
-                console.log(this.menulist.data);
+                this.menuBroadvolume=false;
+                this.$message.success(this.menulist.name+'使用正常')
+            },
+            menuCamera(){
+                this.menuBroadvolume=false;
+                var explorer = window.navigator.userAgent;
+                if (explorer.indexOf("MSIE") >= 0 || (!!window.ActiveXObject || "ActiveXObject" in window)) {
+                    // if (!this.Info.id) {
+                    //     this.$message.error("该设备ID为空！");
+                    // } else if (!this.Info.serialNum) {
+                    //     this.$message.error("该设备serialNum未设置！");
+                    // } else {
+                    //     this.buildInfo = this.menulist.data
+                    //     this.cameravisible = true
+                    //     this.title = this.menulist.type+' :  '+this.menulist.name
+                    // }
+                    this.buildInfo = this.menulist.data
+                    this.cameravisible = true
+                    this.title = this.menulist.type+' :  '+this.menulist.name
+                    if(this.buildInfo.channel==null && this.buildInfo.channel==undefined){
+                        this.width="650px"
+                    }else {
+                        this.width="1080px"
+                    }
+                } else {
+                    this.$message.error('您当前的浏览器不支持该控件的播放，请使用IE10以上的浏览器');
+                    return false;
+                }
+            },
+            warnCameraShow(data){
+                this.menuBroadvolume=false;
+                var explorer = window.navigator.userAgent;
+                if (explorer.indexOf("MSIE") >= 0 || (!!window.ActiveXObject || "ActiveXObject" in window)) {
+                    // if (!this.Info.id) {
+                    //     this.$message.error("该设备ID为空！");
+                    // } else if (!this.Info.serialNum) {
+                    //     this.$message.error("该设备serialNum未设置！");
+                    // } else {
+                    //     this.buildInfo = this.menulist.data
+                    //     this.cameravisible = true
+                    //     this.title = this.menulist.type+' :  '+this.menulist.name
+                    // }
+
+                    this.buildInfo = data
+                    this.cameravisible = true
+                    this.title = '摄像头 : '+ data.name
+                } else {
+                    this.$message.error('您当前的浏览器不支持该控件的播放，请使用IE10以上的浏览器');
+                    return false;
+                }
+            },
+            warnCamera(){
+                this.menuBroadvolume=false;
+                droreMap.map.panToCoord(this.menulist.coordinate);
+                droreMap.map.setZoom(3)
+                let Circle = new droreMap.geom.Circle()
+                let radius= 100
+                let coordinate=droreMap.trans.transLayerToWgs(this.menulist.coordinate)
+                let longitude = parseFloat(coordinate[0])
+                let latitude = parseFloat(coordinate[1])
+                let types={
+                    "7":[2]
+                }
+                let SearchFacility = {
+                    radius: radius,
+                    latitude: latitude,
+                    longitude: longitude,
+                    epsg:'4326',
+                    types:types
+                }
+                this.getSearchFacility(SearchFacility)
+                Circle.setCenter(this.menulist.coordinate,radius);
+            },
+            warnListShow(data){
+                this.menuBroadvolume=false;
+                droreMap.map.panToCoord(data.coordinate);
+                droreMap.map.setZoom(3)
+                let Circle = new droreMap.geom.Circle()
+                let radius= 100
+                let coordinate=droreMap.trans.transLayerToWgs(data.coordinate)
+                let longitude = parseFloat(coordinate[0])
+                let latitude = parseFloat(coordinate[1])
+                let types={
+                    "7":[1,2]
+                }
+                let SearchFacility = {
+                    radius: radius,
+                    latitude: latitude,
+                    longitude: longitude,
+                    epsg:'4326',
+                    types:types
+                }
+                this.getSearchFacility(SearchFacility)
+                Circle.setCenter(this.menulist.coordinate,radius);
+            },
+            menuBroad(){
+                this.jsonAttrList=JSON.parse(this.menulist.data.jsonAttr)
+                this.menuBroadvolumeNumber=this.jsonAttrList.status.volume
+                if(this.menuBroadvolume){
+                    this.menuBroadvolume=false;
+                }else {
+                    this.menuBroadvolume=true;
+                }
+            },
+            async setBroadcastVolume(val){
+                await api.broadcast.setBroadcastVolume(this.menulist.id,val).then(res => {
+                    setTimeout(() => {
+                        this.$message.success('调节广播'+this.menulist.name+'音量成功！')
+                    },1000)
+                }).catch(() => {
+                    this.$message.info('调节广播音量失败！')
+                    this.open=true
+                })
             },
             menuBroadcast(){
                 $("#contextmenu_container").hide();
@@ -2264,7 +2416,8 @@
         },
         components: {
             Scrollcontainer,
-            PersonDetail
+            PersonDetail,
+            controlcameraDialog
         },
         watch: {
             getSearchInfo () {
@@ -3051,6 +3204,15 @@
         height: rem(76);
         position: relative;
         display: none;
+        .menuBroadvolume{
+            position: absolute;
+            right: -55px;
+            top: -43px;
+            padding: 0 rem(20);
+            width: rem(200);
+            background:rgba(255,255,255,0.7);
+            border-radius: rem(5);
+        }
         i{
             cursor: pointer;
             display: inline-block;
@@ -3076,10 +3238,10 @@
         button.menuShow{
             background: url("/static/img/menuShow.svg");
             background-size: cover;
-            top:rem(10);
+            top:rem(8);
             left: rem(50);
-            /*top:rem(22);*/
-            /*left:rem(20);*/
+            width: rem(24);
+            height: rem(24);
         }
         button.menuOperation{
             background: url("/static/img/menuOperation.svg");
@@ -3095,12 +3257,45 @@
             left:rem(5);
             bottom:rem(12);
             display: none;
+            width: rem(24);
+            height: rem(24);
+        }
+        button.menuCamera{
+            background: url("/static/img/menuCamera.svg");
+            background-size: cover;
+            right:rem(30);
+            top:rem(15);
+            display: none;
+        }
+        button.menuCamera{
+            background: url("/static/img/menuCamera.svg");
+            background-size: cover;
+            right:rem(30);
+            top:rem(15);
+            display: none;
         }
         button.menuPhone{
             background: url("/static/img/menuPhone.svg");
             background-size: cover;
             right:rem(5);
             bottom: rem(8);
+            display: none;
+        }
+        button.menuBroad{
+            background: url("/static/img/ware_broadcast.svg");
+            background-size: cover;
+            right:rem(28);
+            top:rem(13);
+            display: none;
+            width: rem(24);
+            height: rem(24);
+        }
+
+        button.warnCamera{
+            background: url("/static/img/menuCamera.svg");
+            background-size: cover;
+            right:rem(30);
+            top:rem(15);
             display: none;
         }
     }
@@ -3161,6 +3356,26 @@
     .contextmenu.Broadcast i{
         background: url("/static/img/icon/guangboshebei_big.png") no-repeat;
     }
+    .contextmenu.camera,.contextmenu.camera_close,.contextmenu.camera_damage
+    {
+        button.menuShow{
+            left:rem(30);
+            top:rem(15);
+        }
+        button.menuCamera{
+            display: block;
+        }
+    }
+    .contextmenu.broadcast
+    {
+        button.menuShow{
+            left:rem(28);
+            top:rem(13);
+        }
+        button.menuBroad{
+            display: block;
+        }
+    }
     .contextmenu.alarmcolumnRule_one,.contextmenu.alarmcolumnRule_two,.contextmenu.alarmcolumnRule_three,
     .contextmenu.firefightingRule_one,.contextmenu.firefightingRule_two,.contextmenu.firefightingRule_three,
     .contextmenu.crossborderRule_one,.contextmenu.crossborderRule_two,.contextmenu.crossborderRule_three,
@@ -3174,6 +3389,13 @@
             display: none;
         }
         button.menuBroadcast{
+            display: block;
+        }
+        button.menuShow{
+            left:rem(30);
+            top:rem(15);
+        }
+        button.warnCamera{
             display: block;
         }
     }
