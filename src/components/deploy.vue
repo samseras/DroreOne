@@ -63,6 +63,11 @@
                                 icon: './../../static/img/roat.svg',
                                 index: '/deploy/security-Dmis',
                                 title: '巡更路线'
+                            },
+                            {
+                                icon: './../../static/img/boatCar.svg',
+                                index: '/deploy/transport-Dmis',
+                                title: '车船调度'
                             }
                         ]
                     },

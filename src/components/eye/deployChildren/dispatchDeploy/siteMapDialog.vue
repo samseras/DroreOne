@@ -1,9 +1,9 @@
 <template>
-    <div class="mapDialog">
+    <div class="siteMapDialog">
         <el-dialog
             :visible="visible"
             :close-on-click-modal = false
-            title="巡更路线图"
+            title="车船调度路线图"
             :before-close="closeMapDialog"
             width="70%"
             class="dialog map_Dialog"
@@ -25,11 +25,11 @@
     import api from '@/api'
     import {mapGetters} from 'vuex'
     export default {
-        props: ['visible'],
+        props: ['visible','type'],
         name: "map-dialog",
         data () {
             return{
-                name: ''
+                name:''
             }
         },
         methods: {
@@ -42,8 +42,10 @@
                     geo: {
                         type:"LineString",
                         coordinates: this.getRoatLocation
-                    }
+                    },
+                    type:this.type == '0' ? 2 : 3  //车 :2  船:3
                 }
+                console.log(this.type)
                 api.roat.createRoat(JSON.stringify(roatObj)).then(res => {
                     console.log(res, '创建成功')
                     this.$message.success('创建成功')
@@ -65,7 +67,7 @@
 </script>
 
 <style lang="scss">
-    .mapDialog{
+    .siteMapDialog{
         position: relative;
         .el-dialog__body {
             padding: rem(3) rem(3) 0 rem(3);
@@ -100,7 +102,7 @@
     }
 </style>
 <style lang="scss" scoped type="text/scss">
-    .mapDialog {
+    .siteMapDialog {
         width: 100%;
         height: rem(550);
         .map_Dialog{
@@ -109,7 +111,7 @@
             .map{
                 width: 100%;
                 height: rem(550);
-                background: #000;
+                background: yellowgreen;
                 border-radius: rem(5);
             }
             p{

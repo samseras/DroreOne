@@ -54,6 +54,13 @@ const boat = {
                 ids: par
             }
         })
+    },
+    getAllVehicle(id) {
+        return axios ({
+            method: 'GET',
+            url: getUrl('ehicle?type='+id)
+        })
+
     }
 }
 

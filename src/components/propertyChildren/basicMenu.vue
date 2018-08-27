@@ -118,8 +118,8 @@
                         title: '建筑'
                     },
                     {
-                        icon: './../../../static/img/build.svg',
-                        index: '/basic-property/wharf-deploy',
+                        icon: './../../../static/imgild.svg',
+                        index: '/basic-property/station-deploy',
                         title: '站点'
                     }
                 ],

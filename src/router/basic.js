@@ -35,7 +35,7 @@ const basic = [
             {path: '/basic-property/trash-deploy', name: 'TrashDeploy', component: resolve => require(['@/components/propertyChildren/basicDeploy/trashDeploy'], resolve)},
             {path: '/basic-property/plant-deploy', name: 'PlantDeploy', component: resolve => require(['@/components/propertyChildren/basicDeploy/plantDeploy'], resolve)},
             {path: '/basic-property/construction-deploy', name: 'BuildDeploy', component: resolve => require(['@/components/propertyChildren/basicDeploy/buildingDeploy'], resolve)},
-            {path: '/basic-property/wharf-deploy', name: 'WharfDeploy', component: resolve => require(['@/components/propertyChildren/basicDeploy/WharfDeploy'], resolve)},
+            {path: '/basic-property/station-deploy', name: 'StationDeploy', component: resolve => require(['@/components/propertyChildren/basicDeploy/stationDeploy'], resolve)},
         ]
     },
 ]

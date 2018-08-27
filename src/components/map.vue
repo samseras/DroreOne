@@ -88,7 +88,8 @@
                 cameravisible:false,
                 isDisabled: true,
                 lightCheckout:[],
-                searchFacilityList:[],
+                searchFacilityList: [],
+                controleTransportList: [],
             }
         },
         created () {
@@ -128,6 +129,9 @@
                 this.rangeSearch();// 范围查找
                 this.getAllRoute();//调度路线
                 this.getAllAlarmEvent();//告警事件现有标注
+                this.getAllTransportRoute();// 车船调度路线输出
+                this.getAllStation();
+                this.getAllVehicle();
             } else if (route.includes('area-deploy')) {
                 if(!this.getLocationId){
                     this.getAllArea();// 片区输出
@@ -189,7 +193,24 @@
                 }else {
                     this.getAllParkEdit();// 停车场修改
                 }
-            }else if (route.includes('toilet-deploy'))  {
+            }else if (route.includes('station-deploy'))  {
+                this.getAllArea();// 片区输出
+                if(!this.getLocationId) {
+                    this.getStation();//站点现有标注
+                    this.labelDot();// 站点打点
+                }else {
+                    this.getAllStationEdit();// 站点修改
+                }
+            } else if (route.includes('transport-Dmis')) {
+                if(!this.getLocationId){
+                    this.getTransportRoute();// 车船调度路线输出
+                    this.getStation(); //站点现有标注
+                    this.road(); // 路线打点
+                }else {
+                    this.getStation();
+                    this.getAllTransportRouteEdit();//修改车船路线调度
+                }
+            } else if (route.includes('toilet-deploy'))  {
                 this.getAllArea();// 片区输出
                 if(!this.getLocationId) {
                     this.getAllToilet();//卫生间现有标注
@@ -352,6 +373,238 @@
                         console.log(droreMap.trans.transLayerToWgs(data.end));
                         that.$store.commit('MAP_LOCATION', droreMap.trans.transLayerToWgs(data.end))
                     }
+                })
+            },
+            async getStation(){ //站点
+                await api.station.getAllStation().then(res=>{
+                    console.log(this.getTransportType)
+
+                    if(this.getTransportType == '0'){
+                        this.iconList=res.filter(item=>{
+                            if(item.type == '0'){
+                                return true
+                            }
+                        })
+                    }else if(this.getTransportType == '1'){
+                        this.iconList=res.filter(item=>{
+                            if(item.type == '1'){
+                                return true
+                            }
+                        })
+                    }
+
+                    for (let i=0;i<this.iconList.length;i++){
+                        this.iconList[i].location = [this.iconList[i].longitude,this.iconList[i].latitude]
+                        if(this.iconList[i].type == "0"){
+                            this.iconList[i].type == "车站"
+                            this.iconList[i].subtype = "station"
+                            this.iconList[i].url="/static/img/icon/station_check.png"
+                        }else if(this.iconList[i].type == "1"){
+                            this.iconList[i].type == "码头"
+                            this.iconList[i].subtype = "landing"
+                            this.iconList[i].url="/static/img/icon/landing_check.png"
+                        }
+                    }
+                    this.iconShow();
+                }).catch(err=>{
+                    console.log(err)
+                })
+            },
+            async getAllStation(){ //站点
+                await api.station.getAllStation().then(res=>{
+                    this.iconList=res
+                    for (let i=0;i<this.iconList.length;i++){
+                        this.iconList[i].location = [this.iconList[i].longitude,this.iconList[i].latitude]
+                        if(this.iconList[i].type == "0"){
+                            //假数据
+                            this.iconList[i].type == "transport"
+                            this.iconList[i].subtype = "car"
+                            // this.iconList[i].type == "车站"
+                            // this.iconList[i].subtype = "station"
+                            this.iconList[i].url="/static/img/icon/station_check.png"
+                        }else if(this.iconList[i].type == "1"){
+                            //假数据
+                            this.iconList[i].type == "transport"
+                            this.iconList[i].subtype = "boat"
+                            // this.iconList[i].type == "码头"
+                            // this.iconList[i].subtype = "landing"
+                            this.iconList[i].url="/static/img/icon/landing_check.png"
+                        }
+                    }
+                    this.iconShow();
+                }).catch(err=>{
+                    console.log(err)
+                })
+            },
+            async getAllStationEdit(){//站点修改
+                await api.station.getAllStation().then(res => {
+                    if(this.getTransportType == '0'){
+                        this.stationList=res.filter(item=>{
+                            if(item.type == '0'){
+                                return true
+                            }
+                        })
+                    }else if(this.getTransportType == '1'){
+                        this.stationList=res.filter(item=>{
+                            if(item.type == '1'){
+                                return true
+                            }
+                        })
+                    }
+
+                    for (let i = 0; i < this.stationList.length; i++) {
+                        if(this.stationList[i].id === this.getLocationId){
+                            this.stationList[i].location = [this.stationList[i].longitude,this.stationList[i].latitude]
+                            var iconedit = new droreMap.icon.Marker({
+                                coordinate: droreMap.trans.transFromWgsToLayer(this.stationList[i].location),
+                                name: this.stationList[i].name,
+                                subtype: this.stationList[i].type=='0'?"station":"landing",
+                                id: this.stationList[i].id,
+                                url: this.stationList[i].type=='0'?"/static/img/icon/station_edit.png":"/static/img/icon/landing_edit.png"
+                            });
+                            droreMap.icon.addChild(iconedit);
+                            droreMap.interaction.ifDrag = true;
+                            let that =this
+                            droreMap.event.addMouseEvent(Event.SINGLECLICK_EVENT, "single", function(evt){
+                                iconedit.setPosition(evt.coordinate)
+                                console.log(evt.coordinate)
+                                that.$store.commit('MAP_LOCATION', droreMap.trans.transLayerToWgs(evt.coordinate))
+                            })
+                            droreMap.event.DragEvent(function(tabInfor) {
+                                var data = tabInfor.data
+                                if(data.data.id === that.getLocationId){
+                                    console.log(droreMap.trans.transLayerToWgs(data.end));
+                                    that.$store.commit('MAP_LOCATION', droreMap.trans.transLayerToWgs(data.end))
+                                }
+                            })
+                        }else{
+                            this.stationList[i].location = [this.stationList[i].longitude,this.stationList[i].latitude];
+                            var urlImage = ''
+                            console.log(this.stationList[i].type)
+                            if(this.stationList[i].type=='0'){
+                                urlImage = "/static/img/icon/station_check.png"
+                            }else{
+                                urlImage = "/static/img/icon/landing_check.png"
+                            }
+                            var icon1 = new droreMap.icon.Marker({
+                                coordinate: droreMap.trans.transFromWgsToLayer(this.stationList[i].location),
+                                name: this.stationList[i].name,
+                                subtype: this.stationList[i].type=='0'?"station":"landing",
+                                id: this.stationList[i].id,
+                                // url:this.stationList[i].type=='0'?"/static/img/icon/station_check.png":"/static/img/icon/landing_check.png"
+                                url:urlImage
+                            });
+                            console.log(icon1)
+                            droreMap.icon.addChild(icon1);
+                        }
+                    }
+                }).catch(err => {
+                    console.log(err)
+                })
+            },
+            async getTransportRoute(){
+                console.log(this.getTransportType)
+                await api.roat.getTransportRoat(this.getTransportType == '0'?2:3).then(res=>{
+                    for (var i = 0; i < res.length; i++) {
+                        var areaEvtList =new droreMap.road.RoadLayer('ROUTE_list', '#26bbf0', 'blue')
+                        let geo =JSON.parse(res[i].geo);
+                        let area = [];
+                        for(var j = 0; j < geo.length; j++) {
+                            let wgs=droreMap.trans.transFromWgsToLayer(geo[j])
+                            area.push(wgs);
+                        }
+                        var data = {"id": res[i].id, "name": res[i].name,"constructor":''}
+                        areaEvtList.addRoad(area, data)
+                        droreMap.road.addRoadLayer(areaEvtList,res[i].id)
+                        let route = this.$route.path
+                        if(route.includes('controler')){
+                            droreMap.road.removeStyleById(res[i].id,false)
+                        }
+                    }
+                }).catch(err=>{
+                    console.log(err)
+                })
+            },
+            async getAllTransportRoute(){
+                console.log(this.getTransportType)
+                Promise.all([this.getTransportRouteCar(),this.getTransportRouteBoat()]).then(result=>{
+                    let res = result[0].concat(result[1])
+                    for (var i = 0; i < res.length; i++) {
+                        var areaEvtList =new droreMap.road.RoadLayer('ROUTE_list', '#26bbf0', 'blue')
+                        let geo =JSON.parse(res[i].geo);
+                        let area = [];
+                        for(var j = 0; j < geo.length; j++) {
+                            let wgs=droreMap.trans.transFromWgsToLayer(geo[j])
+                            area.push(wgs);
+                        }
+                        var data = {"id": res[i].id, "name": res[i].name,"constructor":''}
+                        areaEvtList.addRoad(area, data)
+                        droreMap.road.addRoadLayer(areaEvtList,res[i].id)
+                        let route = this.$route.path
+                        if(route.includes('controler')){
+                            droreMap.road.removeStyleById(res[i].id,false)
+                        }
+                    }
+                }).catch(err=>{
+                    console.log(err)
+                })
+            },
+            async getTransportRouteCar(){
+                return await api.roat.getTransportRoat(2)
+            },
+            async getTransportRouteBoat(){
+                return await api.roat.getTransportRoat(3)
+            },
+            async getAllTransportRouteEdit () {
+                await api.roat.getTransportRoat(this.getTransportType == '0'?2:3).then(res => {
+                    for (var i = 0; i < res.length; i++) {
+                        if(res[i].id === this.getLocationId){
+                            var areaEvts =new droreMap.road.RoadLayer('ROUTE_show', 'red', 'red')
+                            let geo =JSON.parse(res[i].geo);
+                            let area = [];
+                            for(var j = 0; j < geo.length; j++) {
+                                let wgs=droreMap.trans.transFromWgsToLayer(geo[j])
+                                area.push(wgs);
+                            }
+                            var data = {"id": res[i].id, "name": res[i].name,"constructor":''}
+                            areaEvts.addRoad(area, data)
+                            droreMap.road.addRoadLayer(areaEvts,res[i].id)
+                        }else{
+                            var areaEvtList =new droreMap.road.RoadLayer('ROUTE_list', '#fb9000', 'blue')
+                            let geo =JSON.parse(res[i].geo);
+                            let area = [];
+                            for(var j = 0; j < geo.length; j++) {
+                                let wgs=droreMap.trans.transFromWgsToLayer(geo[j])
+                                area.push(wgs);
+                            }
+                            var data = {"id": res[i].id, "name": res[i].name,"constructor":''}
+                            areaEvtList.addRoad(area, data)
+                            droreMap.road.addRoadLayer(areaEvtList,res[i].id)
+                        }
+                    }
+                    let that =this
+                    areaEvts.ifModify = true;
+                    areaEvts.ifSelect = true;
+                    areaEvts.addEventListener('select', "select", function(e) {
+                        if(e.select){
+                            that.$store.commit('ROAT_LOCATION_STATE', false)
+                            if(e.select.type == 'Point') {
+                                //点击路网中的点，出现面板，包括延长、拆分和关键点
+                                alert('请点击路网进行拖拽编辑！')
+                            }
+                        }else if(e.unSelect){
+                            let arrayObj = new Array();
+                            for (var i = 0; i < e.unSelect.area.length; i++) {
+                                let wgs = droreMap.trans.transLayerToWgs(e.unSelect.area[i])
+                                arrayObj.push(wgs);
+                            }
+                            console.log(arrayObj);
+                            that.$store.commit('MAP_ROAT_LOCATION', arrayObj)
+                            that.$store.commit('ROAT_LOCATION_STATE', true)
+                        }
+                    })
+                }).catch(err => {
+                    console.log(err, '请求失败')
                 })
             },
             async getAllWhrash () { //站点现有标注
@@ -1980,7 +2233,13 @@
                                 that.droreMappopup(that.menulist);
                                 that.menuShow()
                             });
-                        }else {
+                        } else if(icon.subtype=="station" || icon.subtype == "landing"){
+                            //站点没有点击事件
+                        }
+                        // else if(icon.subtype=="car" || icon.subtype == "boat"){
+                        //     //车船有点击事件
+                        // }
+                        else {
                             icon.onclick(function (e) {
                                 that.menulist = e.data;
                                 that.droreMappopup(that.menulist);
@@ -2074,7 +2333,11 @@
                     this.buildInfo = this.menulist.data
                     this.visible = true
                     this.title = '告警事件查看'
-                }else {
+                }else if(this.menulist.type=="transport"){
+                    this.buildInfo = this.menulist.data
+                    this.visible = true
+                    this.title = this.menulist.subtype == 'car'?'车辆':'船只'
+                } else {
                     this.buildInfo = this.menulist.data
                     this.visible = true
                     this.title = this.menulist.type
@@ -2288,6 +2551,11 @@
                         this.treeShowID(this.getcontroBroad[i]);
                     }
                 }
+                if(this.getcontroTransport.length > 0){
+                    for (let i=0;i<this.getcontroTransport.length;i++) {
+                        this.treeShowID(this.getcontroTransport[i]);
+                    }
+                }
                 if(this.getcontroCamera.length > 0){
                     for (let i=0;i<this.getcontroCamera.length;i++) {
                         this.treeShowID(this.getcontroCamera[i]);
@@ -2424,7 +2692,6 @@
                 this.searchShow(this.getSearchInfo);
             },
             getTreeState(){
-                console.log(this.getTreeState,'213123')
                 if(this.getTreeState.length>1) {
                     // console.log(this.getTreeState,'ioioioiooioioiooi')
                     //    这边是全选
@@ -2460,6 +2727,9 @@
                                 } else if(item1.type =='led'){
                                     this.controleLedList.push(item1.id);
                                     this.$store.commit('CONTROLER_LED', this.controleLedList)
+                                } else if(item1.type =='transport'){
+                                    this.controleTransportList.push(item1.id);
+                                    this.$store.commit('CONTROLER_TRANSPORT', this.controleTransportList)
                                 } else if(item1.type =='park'){
                                     this.facilityPark.push(item1.id);
                                     this.$store.commit('FACILITY_PARK', this.facilityPark)
@@ -2522,6 +2792,9 @@
                             }else if(item.type=='led'){
                                 this.controleLedList=[];
                                 this.$store.commit('CONTROLER_LED', this.controleLedList)
+                            }else if(item.type=='transport'){
+                                this.controleTransportList=[];
+                                this.$store.commit('CONTROLER_TRANSPORT', this.controleTransportList)
                             } else if(item.type =='park'){
                                 this.facilityPark=[];
                                 this.$store.commit('FACILITY_PARK', this.facilityPark)
@@ -2594,6 +2867,10 @@
                                     this.controleLedList.push(data[i].id);
                                     this.controleLedList=[...new Set(this.controleLedList)];
                                     this.$store.commit('CONTROLER_LED', this.controleLedList)
+                                }else if(data[i].type=='transport'){
+                                    this.controleTransportList.push(data[i].id);
+                                    this.controleTransportList=[...new Set(this.controleTransportList)];
+                                    this.$store.commit('CONTROLER_TRANSPORT', this.controleTransportList)
                                 } else if(data[i].type =='park'){
                                     this.facilityPark.push(data[i].id);
                                     this.facilityPark=[...new Set(this.facilityPark)];
@@ -2683,6 +2960,12 @@
                                         this.controleLedList.splice(index, 1);
                                     }
                                     this.$store.commit('CONTROLER_LED', this.controleLedList)
+                                }else if(this.getTreeState[0].children[i].type=='transport'){
+                                    let index = this.controleTransportList.indexOf(this.getTreeState[0].children[i].id);
+                                    if (index > -1) {
+                                        this.controleTransportList.splice(index, 1);
+                                    }
+                                    this.$store.commit('CONTROLER_TRANSPORT', this.controleTransportList)
                                 }else if(this.getTreeState[0].children[i].type=='park'){
                                     let index = this.facilityPark.indexOf(this.getTreeState[0].children[i].id);
                                     if (index > -1) {
@@ -2750,6 +3033,24 @@
                                     this.roadShowID(this.getTreeState[0].routeId)
                                 }else if(this.getTreeState[0].type =='warn'){
                                     this.treeShow(this.getTreeState[0]);
+                                }else if(this.getTreeState[0].type =='transport'){
+
+                                    this.roadShowID(this.getTreeState[0].transportObj.routeId)
+                                    var stationArray = this.getTreeState[0].transportObj.stations
+                                    if(stationArray instanceof  Array && stationArray.length > 0){
+                                        stationArray.forEach(item=>{
+                                            this.treeShow(item);
+                                        })
+                                    }
+                                    if(this.getTreeState[0].transportObj.carObjs || this.getTreeState[0].transportObj.carObjs.length>0){
+                                        var carObjs = this.getTreeState[0].transportObj.carObjs
+                                        if(carObjs instanceof  Array && carObjs.length > 0){
+                                            carObjs.forEach(item=>{
+                                                this.treeShow(item);
+                                            })
+                                        }
+                                    }
+
                                 }else {
                                     this.treeShow(this.getTreeState[0]);
                                 }
@@ -2778,6 +3079,10 @@
                                 this.controleLedList.push(this.getTreeState[0].id);
                                 this.controleLedList=[...new Set(this.controleLedList)];
                                 this.$store.commit('CONTROLER_LED', this.controleLedList)
+                            }else if(this.getTreeState[0].type=='transport'){
+                                this.controleTransportList.push(this.getTreeState[0].id);
+                                this.controleTransportList=[...new Set(this.controleTransportList)];
+                                this.$store.commit('CONTROLER_TRANSPORT', this.controleTransportList)
                             }else if(this.getTreeState[0].type=='park'){
                                 this.facilityPark.push(this.getTreeState[0].id);
                                 this.facilityPark=[...new Set(this.facilityPark)];
@@ -2824,7 +3129,24 @@
                                     this.roadHideID(this.getTreeState[0].routeId)
                                 }else if(this.getTreeState[0].type =='warn'){
                                     this.treeHide(this.getTreeState[0]);
-                                }else {
+                                }else if(this.getTreeState[0].type =='transport'){
+                                    this.roadHideID(this.getTreeState[0].transportObj.routeId)
+                                    let stationArray = this.getTreeState[0].transportObj.stations
+                                    if(stationArray instanceof  Array && stationArray.length > 0){
+                                        stationArray.forEach(item=>{
+                                            this.treeHide(item)
+                                        })
+                                    }
+                                    if(this.getTreeState[0].transportObj.carObjs || this.getTreeState[0].transportObj.carObjs.length>0){
+                                        var carObjs = this.getTreeState[0].transportObj.carObjs
+                                        if(carObjs instanceof  Array && carObjs.length > 0){
+                                            carObjs.forEach(item=>{
+                                                this.treeHide(item);
+                                            })
+                                        }
+                                    }
+                                }
+                                else {
                                     this.treeHide(this.getTreeState[0]);
                                 }
                             }
@@ -2864,6 +3186,12 @@
                                     this.controleLedList.splice(index, 1);
                                 }
                                 this.$store.commit('CONTROLER_LED', this.controleLedList)
+                            }else if(this.getTreeState[0].type=='transport'){
+                                let index = this.controleTransportList.indexOf(this.getTreeState[0].id);
+                                if (index > -1) {
+                                    this.controleTransportList.splice(index, 1);
+                                }
+                                this.$store.commit('CONTROLER_TRANSPORT', this.controleTransportList)
                             }else if(this.getTreeState[0].type=='park'){
                                 let index = this.facilityPark.indexOf(this.getTreeState[0].id);
                                 if (index > -1) {
@@ -2944,7 +3272,8 @@
                 'getfacilityTrash',
                 'getfacilityPlant',
                 'getfacilityIndicator',
-                'getfacilityRoad'
+                'getfacilityRoad',
+                'getTransportType'
             ])
         }
     }

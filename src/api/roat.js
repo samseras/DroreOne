@@ -37,6 +37,19 @@ const roat = {
             }
         })
     },
+    getTransportRoat (type) {
+        return axios ({
+            method: 'GET',
+            url: getUrl('/route?type='+type)
+        })
+
+    },
+    getRouteNameById (id) {
+        return axios ({
+            method: 'GET',
+            url: getUrl('/route?id='+id)
+        })
+    }
 }
 
 export default roat

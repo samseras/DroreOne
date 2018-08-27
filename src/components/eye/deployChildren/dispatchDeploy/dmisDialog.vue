@@ -329,6 +329,139 @@
                             <el-input type="textarea"  v-model="screen.ledSchedule.description" :disabled="isDisabled" ></el-input>
                         </p>
                     </div>
+                    <!--车船调度-->
+                    <div class="personCardContent" v-if="route.includes('transport')">
+                        <div class="row">
+                            <span class="dmisTitle">调度类型：</span>
+                            <el-select v-model="transport.type" @change = "typeChange" placeholder="请选择" :disabled="isDisabled" :maxlength="15">
+                                <el-option
+                                    v-for="item in toolType"
+                                    :key="item.value"
+                                    :label="item.label"
+                                    :value="item.value">
+                                </el-option>
+                            </el-select>
+                        </div>
+                        <div class="row">
+                            <span class="dmisTitle">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 称：</span>
+                            <el-input type="text"v-model="transport.name" class="inputText" :disabled="isDisabled" :maxlength="15"></el-input>
+                        </div>
+                        <div class="row">
+                            <span class="dmisTitle">时&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 间：</span>
+                            <el-checkbox-group v-model="filterList" @change="selectDays" :disabled='isDisabled'>
+                                <el-checkbox v-for="item in week" :label="item.id" :key="item.id">{{item.type}}</el-checkbox>
+                            </el-checkbox-group>
+                            <el-checkbox label="自定义" @change="weekCustom(transport.customizedDays)" v-model="transport.customizedDays" :disabled='isDisabled'></el-checkbox>
+                        </div>
+                        <div class="row" v-if="transport.customizedDays">
+                            <span class="dmisTitle">选择时间：</span>
+                            <el-date-picker
+                                v-model="daySelect"
+                                size ="mini"
+                                type="daterange"
+                                :disabled='isDisabled'
+                                range-separator="至"
+                                start-placeholder="开始日期"
+                                end-placeholder="结束日期">
+                            </el-date-picker>
+                        </div>
+                        <div class="Hardware row">
+                            <span class="dmisTitle">执行时间：</span>
+                            <el-time-picker is-range
+                                            v-model="timeSelect"
+                                            :disabled='isDisabled'
+                                            range-separator="至"
+                                            start-placeholder="开始时间"
+                                            end-placeholder="结束时间"
+                                            placeholder="选择时间范围">
+                            </el-time-picker>
+                        </div>
+                        <div class="relateVehicle">
+                            <div class="dmisTitle">关联车船：</div>
+                            <div class="dmisContent">
+                                <table>
+                                    <thead>
+                                    <tr>
+                                        <th class="headCar">车船信息</th>
+                                        <th class="headPerson">人员信息</th>
+                                        <th class="headAdd" @click="addRow"><i class="el-icon-plus"></i></th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr v-for="(dataObj,index) in transport.vDriverMaps" :key="index">
+                                        <td class="vehicle">
+                                            <el-select @change="vehicleChange" v-show="transport.type == '0'" v-model="dataObj.vehicleId" placeholder="请选择" :disabled="isDisabled" :maxlength="15">
+                                                <el-option
+                                                    v-for="item in cars"
+                                                    :key="item.id"
+                                                    :label="item.label"
+                                                    :value="item.id"
+                                                    :disabled="item.disabled">
+                                                </el-option>
+                                            </el-select>
+                                            <el-select @change="vehicleChange" v-show="transport.type == '1'" v-model="dataObj.vehicleId" placeholder="请选择" :disabled="isDisabled" :maxlength="15">
+                                                <el-option
+                                                    v-for="item in boats"
+                                                    :key="item.id"
+                                                    :label="item.label"
+                                                    :value="item.id"
+                                                    :disabled="item.disabled">
+                                                </el-option>
+                                            </el-select>
+
+                                        </td>
+                                        <td class="person">
+                                            <el-select @change="driverChange" v-show="transport.type == '0'" v-model="dataObj.driverId" placeholder="请选择" :disabled="isDisabled" :maxlength="15">
+                                                <el-option
+                                                    v-for="item in drivers"
+                                                    :key="item.id"
+                                                    :label="item.label"
+                                                    :value="item.id"
+                                                    :disabled="item.disabled">
+                                                </el-option>
+                                            </el-select>
+                                            <el-select @change="driverChange" v-show="transport.type == '1'" v-model="dataObj.driverId" placeholder="请选择" :disabled="isDisabled" :maxlength="15">
+                                                <el-option
+                                                    v-for="item in crew"
+                                                    :key="item.id"
+                                                    :label="item.label"
+                                                    :value="item.id"
+                                                    :disabled="item.disabled">
+                                                </el-option>
+                                            </el-select>
+                                        </td>
+                                        <td class="delete" @click="deleteRow(dataObj)">
+                                            <i class="el-icon-close"></i>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="uploadText row">
+                            <div class="updataTitle dmisTitle">绘制路线：</div>
+                            <el-select v-model="transport.routeId" placeholder="请选择" :disabled='isDisabled'>
+                                <el-option
+                                    v-for="ite in lineOptions"
+                                    :key="ite.id"
+                                    :label="ite.name"
+                                    :value="ite.id">
+                                    <template slot-scope="scope">
+                                        <span style="float: left">{{ ite.name }}</span>
+                                        <span style="float: right;" @click="deleteRouteLine(ite.id)">
+                                                <i class="el-icon-close"></i>
+                                        </span>
+                                    </template>
+                                </el-option>
+                            </el-select>
+
+                            <i class="el-icon-location-outline" @click="showSiteMap"></i>
+                        </div>
+                        <div class="row textArea">
+                            <div class="description dmisTitle">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：</div>
+                            <el-input type="textarea" v-model="transport.description" :disabled="isDisabled" ></el-input>
+                        </div>
+                    </div>
                 </div>
             </ScrollContainer>
             <div class=""slot="footer" class="dialog-footer cardFooter">
@@ -339,23 +472,23 @@
         <MapDialog v-if="mapVisible" :visible="mapVisible" class="map" @closeMapDialog = 'closeMapDialog'></MapDialog>
         <broadcastDialog v-if="broadcastVisible" :visible="broadcastVisible" :broadList="broadList.musics" class="broadcastContent" @closeBroadcastDialog = 'closeBroadcastDialog' @saveMusicList = "musicList"></broadcastDialog>
         <ScreenDialog v-if="screenVisible" :visible="screenVisible" :screenContentList="screen.contents" class="screenContent" @closeScreenDialog = 'closeScreenDialog' @saveContent="saveContent"></ScreenDialog>
+        <SiteMap v-if="siteMapVisible" :visible="siteMapVisible" :type="transport.type" class="map" @closeMapDialog = 'closeSiteMapDialog'></SiteMap>
     </div>
 </template>
 
 <script>
     import MapDialog from './mapDialog'
+    import SiteMap from './siteMapDialog'
     import api from '@/api'
-    // import moment from 'moment'
     import broadcastDialog from './broadcastDialog'
     import ScreenDialog from './screenDialog'
-    // import Cropper from 'cropperjs'
-    // import FileUpload from 'vue-upload-component'
     import ScrollContainer from '@/components/ScrollContainer'
     export default {
         name: "person-detail",
         props: ['visible', 'Info','isDisabled','title'],
         data () {
             return {
+                tableData:[{}],
                 daySelect:[],
                 timeSelect: undefined,
                 files: [],
@@ -366,6 +499,7 @@
                 radio: '1',
                 isShowMapDialog: false,
                 mapVisible: false,
+                siteMapVisible:false,
                 broadcastVisible:false,
                 screenVisible:false,
                 broadList: {
@@ -433,8 +567,35 @@
                     ledIds: [],
                     contents: []
                 },
-                options: [
+                toolType:[
+                    {
+                        label:'车辆',
+                        value:'0'
+                    },
+                    {
+                        label:'船只',
+                        value:'1'
+                    }
                 ],
+                boats:[],
+                cars:[],
+                drivers:[],
+                crew:[],
+                lineOptions:[],
+                transport:{
+                        id:"",
+                        name:"",
+                        customizedDays:true,
+                        days:[],
+                        description:"",
+                        time: [],
+                        watchTime: []
+                },
+                transObj:{
+                    vId:"",
+                    dId:""
+                },
+                options: [],
                 associatedRadio:true,
                 associatedScreen:false,
                 associatedStreet:false,
@@ -468,10 +629,127 @@
                 uploadText:false,
                 personList: [],
                 regionIdList: [],
-                regionId: []
+                regionId: [],
+                rowNum:0
             }
         },
         methods: {
+            async deleteRouteLine(id){
+                await api.transport.isBindScheduleByRoute(id).then(item=>{
+                    if(item){
+                        this.$message.error("该路线已绑定计划,无法删除！")
+                    }else{
+                        this.deleteLine(id)
+                    }
+                })
+            },
+            async deleteLine(id){
+               await api.roat.deleteRoat([id]).then(ite=>{
+                    this.lineOptions = this.lineOptions.filter(item=>{
+                        return  item.id != id
+                    })
+                    this.transport.routeId = ""
+                    this.$message.error("删除成功！")
+                }).catch(err=>{
+                    console.log(err)
+                })
+            },
+            vehicleChange(val){
+                if(this.transport.type == '0'){
+                    this.cars.forEach(item=>{
+                        if(item.id == val){
+                            item.disabled = true
+                        }
+                    })
+                }else{
+                    this.boats.forEach(item=>{
+                        if(item.id == val){
+                            item.disabled = true
+                        }
+                    })
+                }
+            },
+            driverChange(val){
+                if(this.transport.type == '0'){
+                    this.drivers.forEach(item=>{
+                        if(item.id == val){
+                            item.disabled = true
+                        }
+                    })
+                }else{
+                    this.crew.forEach(item=>{
+                        if(item.id == val){
+                            item.disabled = true
+                        }
+                    })
+                }
+            },
+            addRow(){
+                if(this.isDisabled){
+                    return
+                }
+                this.rowNum++;
+                this.transport.vDriverMaps.push({
+                    id:this.rowNum,
+                    vehicleId:'',
+                    driverId:''
+                })
+            },
+            deleteRow(obj){
+                if(this.isDisabled){
+                    return
+                }
+                this.transport.vDriverMaps.forEach((item,index)=>{
+                    if(item.id == obj.id){
+                        this.transport.vDriverMaps.splice(index,1)
+                    }
+                })
+
+                if(this.transport.type == '0'){
+                    if(obj.vehicleId){
+                        this.cars.forEach(item=>{
+                            if(item.id == obj.vehicleId){
+                                item.disabled = false
+                            }
+                        })
+                    }
+                    if(obj.driverId){
+                        this.drivers.forEach(item=>{
+                            if(item.id == obj.driverId){
+                                item.disabled = false
+                            }
+                        })
+                    }
+                }else{
+                    if(obj.vehicleId){
+                        this.boats.forEach(item=>{
+                            if(item.id == obj.vehicleId){
+                                item.disabled = false
+                            }
+                        })
+                    }
+                    if(obj.driverId){
+                        this.crew.forEach(item=>{
+                            if(item.id == obj.driverId){
+                                item.disabled = false
+                            }
+                        })
+                    }
+                }
+            },
+            async typeChange(val){
+                this.transport.type = val;
+                this.transport.vDriverMaps = []
+                this.$store.commit('TRANSPORT_TYPE', val)
+                //清空线路绘制值
+                this.transport.routeId = ""
+                //类型改变，重新获取数据
+                await this.getTransportRoat()
+                await this.getAllVehicle(0);  //车辆数据
+                await this.getAllVehicle(1);  //船数据
+                await this.getAllDriver(1);  //司机数据
+                await this.getAllDriver(2); //船夫数据
+            },
             selectDays () {
                 let route = this.$route.path
                 if (route.includes('lamppost')) {
@@ -484,6 +762,8 @@
                     this.purifier.cleanSchedule.customizedDays = false
                 } else if (route.includes('security')) {
                     this.security.inspectionSchedule.customizedDays = false
+                } else if(route.includes('transport')){
+                    this.transport.customizedDays = false
                 }
             },
             handleCheckChange (data,checked) {//此处形参data不能删除，必须使用第二个形参
@@ -516,7 +796,6 @@
             addNewInfo () {
                 let newInfo = {}
                 if (this.route.includes('security')) {
-                    console.log(!this.security.inspectionSchedule.name, '这个是啥')
                     if (!this.security.inspectionSchedule.name || this.security.inspectionSchedule.name === ''){
                         this.$message.error('请输入完整信息')
                         return
@@ -705,6 +984,43 @@
                     }
                     this.screen.ledSchedule.watchTime= this.timeSelect
                     newInfo = this.screen
+                } else if(this.route.includes('transport')) {
+                    if (!(this.transport.name && this.transport.name !== '')) {
+                        this.$message.error('请输入完整信息')
+                        return
+                    }
+                    if(this.transport.customizedDays === undefined) {
+                        if(this.filterList === [] || this.daySelect === [] || this.daySelect === undefined){
+                            this.$message.error('请选择开启日期')
+                            return
+                        }
+                    }else {
+                        if ((this.filterList.length < 1 && this.daySelect === undefined) || (this.filterList.length < 1 && this.daySelect.length < 1)) {
+                            this.$message.error('请选择开启日期')
+                            return
+                        }
+                    }
+                    if(this.timeSelect === [] || this.timeSelect === undefined) {
+                        this.$message.error('请选择开启班次或时间')
+                        return
+                    }
+                    if (!this.transport.customizedDays) {
+                        this.transport.days = this.filterList.join()
+                        this.transport.customizedDays = false
+                    }else {
+                        this.transport.time= this.daySelect
+                    }
+                    this.transport.watchTime= this.timeSelect
+
+                    if(this.transport.vDriverMaps.length >0){
+                        this.transport.vDriverMaps = this.transport.vDriverMaps.map(item=>{
+                            return {
+                                vehicleId:item.vehicleId,
+                                driverIds : new Array(item.driverId)
+                            }
+                        })
+                    }
+                    newInfo = this.transport
                 }
                 newInfo.status = true
                 newInfo.checked = false
@@ -722,7 +1038,6 @@
                 }
             },
             weekDay(state){
-                console.log(this.filterList)
                 state = false
             },
             dayCustom(state){
@@ -737,6 +1052,9 @@
             showMapDialog () {
                 this.mapVisible  = true
             },
+            showSiteMap(){
+                this.siteMapVisible = true
+            },
             showBroadcastDialog () {
                 this.broadcastVisible  = true
             },
@@ -746,6 +1064,10 @@
             closeMapDialog () {
                 this.mapVisible = false
                 this.getAllRouteLine()
+            },
+            closeSiteMapDialog(){
+                this.siteMapVisible = false
+                this.getTransportRoat()
             },
             closeBroadcastDialog(){
                 this.broadcastVisible = false
@@ -758,7 +1080,7 @@
                 let arr = []
                 let idList = []
                 let noRegion = {
-                    label: '未知片区设备',
+                    label: this.$config.regionName,
                     id: 10010,
                     children:[]
                 }
@@ -807,7 +1129,6 @@
                         item.label = item.name
                         item.disabled=this.isDisabled
                     })
-                    console.log(res.devices)
                     this.classFunction(res.devices)
                 }).catch(err => {
                     console.log(err, '请求失败')
@@ -883,11 +1204,73 @@
                 }).catch(err => {
                     console.log(err, '请求失败')
                 })
-            }
+            },
+            async getTransportRoat(){
+                await api.roat.getTransportRoat(this.transport.type == '0'?2:3).then(res => {
+                    this.lineOptions = res
+                }).catch(err => {
+                    console.log(err, '请求失败')
+                })
+            },
+            async getAllVehicle(id){
+                await api.boat.getAllVehicle(id).then(res=>{
+                    if(res instanceof Array && res.length>0){
+                            if (id === 0) {
+                                this.cars = res.map(item=>{
+                                    if(item.vehicle){
+                                        return {
+                                            id : item.vehicle.id,
+                                            label : item.vehicle.serialNum
+                                        }
+                                    }
+                                })
+                            } else if (id === 1) {
+                                this.boats = res.map(item=>{
+                                    if(item.vehicle){
+                                        return {
+                                            id : item.vehicle.id,
+                                            label : item.vehicle.serialNum
+                                        }
+                                    }
+                                })
+                            }
+                    }
+                }).catch(err=>{
+                    console.log(err)
+                })
+            },
+            async getAllDriver(id){
+                await api.person.getJobPerson(id).then(res=>{
+                    console.log(res, ' this is driver')
+                    if(res instanceof Array && res.length>0){
+                            if (id === 1) {
+                                this.drivers = res.map(item=>{
+                                    if(item.personBean){
+                                        return {
+                                            id : item.personBean.id,
+                                            label : item.personBean.name
+                                        }
+                                    }
+                                })
+                            } else if (id === 2) {
+                                this.crew = res.map(item=>{
+                                    if(item.personBean){
+                                        return {
+                                            id : item.personBean.id,
+                                            label : item.personBean.name
+                                        }
+                                    }
+                                })
+                            }
+                    }
+                }).catch(err=>{
+                    console.log(err)
+                })
+            },
+
         },
         async created () {
             this.route = this.$route.path
-            console.log(this.Info,'  opopop')
             if (this.route.includes('security')) {
                 this.getSafePerson()
                 this.getAllRouteLine()
@@ -946,10 +1329,39 @@
                 this.timeSelect = this.screen.ledSchedule.watchTime
             } else if(this.route.includes('label')){
                 this.label = this.Info;
+            } else if(this.route.includes('transport')){
+                this.transport = this.Info;
+
+                await this.getTransportRoat();
+                await this.getAllVehicle(0);  //车辆数据
+                await this.getAllVehicle(1);  //船数据
+                await this.getAllDriver(1);  //司机数据
+                await this.getAllDriver(2); //船夫数据
+
+
+                if(this.transport.customizedDays === false) {
+                    this.filterList = this.transport.days;
+                }else {
+                    this.daySelect = this.transport.time
+                }
+                this.timeSelect = this.transport.watchTime
+
+                this.transport.vDriverMaps.forEach(item=>{
+                    item.driverId = item.driverIds[0]
+                })
+
+                if (this.Info.id) {
+                    this.$store.commit('LOCATION_ID', this.Info.id)
+                }else {
+                    this.$store.commit('LOCATION_ID', '')
+                }
+
+                this.$store.commit('TRANSPORT_TYPE', this.Info.type)
             }
         },
         components: {
             MapDialog,
+            SiteMap,
             broadcastDialog,
             ScreenDialog,
             ScrollContainer
@@ -1022,6 +1434,17 @@
                 .el-tag__close.el-icon-close{
                     top:rem(-2);
                 }
+            }
+            .relateVehicle{
+                .el-select{
+                    width:rem(150);
+                    line-height:rem(30);
+                    vertical-align:middle;
+                    .el-input__inner{
+                        text-align: center;
+                    }
+                }
+
             }
             .el-checkbox-group{
                 display: inline-block;
@@ -1227,6 +1650,152 @@
                         background: transparent;
                         color: #606266;
                         line-height: rem(20);
+                    }
+                }
+                .row{
+                    margin-top: rem(8);
+                    border-bottom: 1px solid #ccc;
+                    font-size: rem(12);
+                    input{
+                        border: none;
+                        list-style: none;
+                        outline: none;
+                        font-size: rem(12);
+                    }
+                    select{
+                        border: none;
+                        outline: none;
+                        width: rem(100);
+                        font-size: rem(12);
+                        option{
+                            appearance:none;
+                            list-style: none;
+                            border: none;
+                            width: 100%;
+                            outline: none;
+                            padding: 0;
+                            margin: 0;
+                            /*border:  1px solid #ccc;*/
+                            background: #fff;
+
+                        }
+                    }
+                    img {
+                        display: inline-block;
+                        width: rem(20);
+                        height: rem(20);
+                        border-radius: 50%;
+                        vertical-align: middle;
+                    }
+                    .location{
+                        width: rem(470);
+                    }
+                    textarea{
+                        resize: none;
+                        outline: none;
+                        padding: rem(3);
+                        box-sizing: border-box;
+                        border-radius: rem(5);
+                        border: 1px solid #ccc;
+                        line-height: rem(28);
+                        width: rem(490);
+                    }
+                    i{
+                        font-size: rem(16);
+                    }
+                    span{
+                        background: #f0f2f5;
+                        color: #909399;
+                    }
+                    .description{
+                        background: transparent;
+                        color: #606266;
+                    }
+                    .dmisTitle{
+                        display: inline-block;
+                        float: left;
+                        background: transparent;
+                        color: #606266;
+                        line-height: rem(20);
+                    }
+                    .dmis{
+                        display: block;
+                        text-align: left;
+                        background: transparent;
+                        color: #606266;
+                        line-height: rem(20);
+                    }
+                }
+                .relateVehicle{
+                    width: 100%;
+                    margin-top: rem(8);
+                    border-bottom: 1px solid #ccc;
+                    font-size: rem(12);
+                    display: flex;
+                    flex-direction: row;
+                    .dmisTitle{
+                        width: 12%;
+                        background: transparent;
+                        color: #606266;
+                    }
+                    .dmisContent{
+                        flex: 1;
+                        background: transparent;
+                        color: #606266;
+                    }
+
+
+                    table{
+                        width: 100%;
+                        border:1px solid #dcdfe6;
+                        border-collapse: collapse;
+                        min-height: rem(38);
+                        line-height:rem(38);
+                        thead{
+                            tr{
+                                .headCar{
+                                    width:40%;
+                                }
+                                .headPerson{
+                                    width: 40%;
+                                }
+                                .headAdd{
+                                    width:20%;
+                                    cursor: pointer;
+                                }
+                            }
+
+                        }
+                        tbody{
+                            display:block;
+                            height:rem(150);
+                            overflow-y:scroll;
+                        }
+                        th{
+                            border:1px solid #dcdfe6;
+                        }
+                        td{
+                            text-align:center;
+                            border:1px solid #dcdfe6;
+                        }
+                        .vehicle{
+                            width:40%;
+                        }
+                        .person{
+                            width: 40%;
+                        }
+                        .delete{
+                            width: 20%;
+                            cursor: pointer;
+                        }
+                    }
+                    table thead, tbody tr {
+                        display:table;
+                        width:100%;
+                        table-layout:fixed;
+                    }
+                    table thead{
+                        width: calc( 100% - 1rem)
                     }
                 }
                 .textArea{

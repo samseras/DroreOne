@@ -561,23 +561,26 @@
                 </div>
 
                 <!--站点码头-->
-                <div class="personCardContent boatCardContent" v-if="route.includes('wharf')">
+                <!--站点-->
+                <div class="personCardContent boatCardContent" v-if="route.includes('station')">
+                    <p class="type">
+                        <span>类&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;型：</span>
+                        <el-select v-model="station.type" @change = "stationTypeChange" placeholder="请选择" :disabled="isDisabled">
+                            <el-option
+                                v-for="item in siteType"
+                                :key="item.id"
+                                :label="item.name"
+                                :value="item.id">
+                            </el-option>
+                        </el-select>
+                    </p>
                     <p class="sex">
                         <span>名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称：</span>
-                        <el-input type="text"v-model="wharf.name" :disabled="isDisabled" :maxlength="15"></el-input>
+                        <el-input type="text"v-model="station.name" :disabled="isDisabled" :maxlength="15"></el-input>
                     </p>
-                    <p class="sex">
-                        <span>站点容量：</span>
-                        <el-input type="text"v-model="wharf.capacity" :disabled="isDisabled"></el-input>
-                    </p>
-                    <p class="phoneNum">
-                        <span>位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置：</span>
-                        <span :class="{ps:isDisabled}">{{wharf.location}}</span>
-                        <i class="el-icon-location-outline" @click="showMapDialog"></i>
-                    </p>
-                    <p class="wrapstyle selectstyle">
+                    <p class="phone">
                         <span>所属片区：</span>
-                        <el-select v-model="wharf.regionId" placeholder="请选择" :disabled="isDisabled">
+                        <el-select v-model="station.regionId" placeholder="请选择" :disabled="isDisabled">
                             <el-option
                                 v-for="item in regions"
                                 :key="item.id"
@@ -586,17 +589,16 @@
                             </el-option>
                         </el-select>
                     </p>
+                    <p class="phoneNum">
+                        <span>位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置：</span>
+                        <span :class="{ps:isDisabled}">{{station.location}}</span><i class="el-icon-location-outline" @click="showMapDialog"></i>
+                    </p>
                     <p class="textarea ms">
                         <span class="des">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：</span>
-                        <el-input type="textarea"  v-model="wharf.description" :disabled="isDisabled" :maxlength="140"></el-input>
+                        <el-input type="textarea" :rows="3"  v-model="station.description" :disabled="isDisabled" :maxlength="140"></el-input>
                     </p>
-                    <div class="img">
-                        <img :src="getUrl(park.picturePath)" alt="" v-if="isDisabled" @error="imgError">
-                        <label for="avatar" v-if="!isDisabled">
-                            <img :src="files.length ? files[0].url : getUrl(park.picturePath)"  @error="imgError" class="rounded-circle" />
-                        </label>
-                    </div>
                 </div>
+
                 <div class="text-center p-2">
                     <file-upload
                         extensions="gif,jpg,jpeg,png,webp"
@@ -777,14 +779,24 @@
                     location:'',
                     regionId: ''
                 },
-                wharf: {
+                station: {
                     name: '',
                     description: '',
                     location:'',
                     regionId: '',
-                    capacity: ''
-
+                    typeId:'1'
                 },
+                siteType:[
+                    {
+                        id:'1',
+                        name:'车站'
+                    },
+                    {
+                        id:'2',
+                        name:'码头'
+                    }
+                ],
+
                 job: {
                     name: ''
                 },
@@ -797,6 +809,9 @@
             }
         },
         methods: {
+            stationTypeChange(val){
+                this.$store.commit('TRANSPORT_TYPE', val)
+            },
             ad () {
               console.log(9999999999)
             },
@@ -864,7 +879,7 @@
                            imgSrc = './../../../../static/img/bulidCard.png'
                        } else if (route.includes('boat')) {//车船
                            imgSrc = './../../../../static/img/boatCartCard.png'
-                       } else if (route.includes('wharf')) {// 站点码头
+                       } else if (route.includes('station')) {// 站点码头
                            imgSrc = './../../../../static/img/boatCartCard.png'
                        }
                     }
@@ -1075,8 +1090,8 @@
                         this.$message.error('请输入完整信息')
                         return
                     }
-                } else if (this.route.includes('wharf')) {
-                    newInfo = this.wharf
+                } else if (this.route.includes('station')) {
+                    newInfo = this.station
                     if (!(newInfo.name && newInfo.name.trim() !== '') ||
                         !(newInfo.location && newInfo.location !== '') ||
                         !(newInfo.regionId && newInfo.regionId !== '')
@@ -1216,8 +1231,11 @@
                 this.tree = this.Info
             }  else if (this.route.includes('construction')) {
                 this.build = this.Info
-            } else if (this.route.includes('wharf')) {
-                this.wharf = this.Info
+            } else if (this.route.includes('station')) {
+                this.station = this.Info
+                if(this.Info.id){
+                    this.$store.commit('TRANSPORT_TYPE', this.Info.type)
+                }
             }
             if (this.Info.id) {
                 console.log(this.Info.id, '这是拿到的Id')

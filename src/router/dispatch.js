@@ -18,6 +18,7 @@ const dispatch = [
             {path:'/deploy/screen-Dmis',name:'screenDmis',component: resolve => require(['@/components/eye/deployChildren/dispatchDeploy/screenDmis'], resolve)},
             {path:'/deploy/security-Dmis',name:'securityDmis',component: resolve => require(['@/components/eye/deployChildren/dispatchDeploy/securityDmis'], resolve)},
             {path:'/deploy/purifier-Dmis',name:'purifierDmis',component: resolve => require(['@/components/eye/deployChildren/dispatchDeploy/purifierDmis'], resolve)},
+            {path:'/deploy/transport-Dmis',name:'transportDmis',component: resolve => require(['@/components/eye/deployChildren/dispatchDeploy/transportDmis'], resolve)},
             {path:'/deploy/dispatch-Record',name:'dispatchRecord',component: resolve => require(['@/components/eye/deployChildren/recordDeploy/dispatchRecord'], resolve)}
         ]
     }

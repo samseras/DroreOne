@@ -1,5 +1,5 @@
 <template>
-    <div class="parkDeploy">
+    <div class="stationDeploy">
         <div class="title">
             站点信息
         </div>
@@ -16,7 +16,7 @@
                         @nextPage="nextPage"
                         @previousPage="previousPage"
                         @searchAnything="searchAnything"
-                        @getAllPark="getAllPark">
+                        @getAllStation="getAllStation">
                 </Header>
             </div>
             <div class="personList" v-loading="isShowLoading">
@@ -24,7 +24,7 @@
                     <el-table
                         v-if="!isShowParkCard && !show"
                         ref="multipleTable"
-                        :data="parkList"
+                        :data="stationList"
                         tooltip-effect="dark"
                         style="width: 100%"
                         @selection-change="handleSelectionChange">
@@ -38,6 +38,11 @@
                         <el-table-column
                             prop="name"
                             label="名称"
+                            width="150">
+                        </el-table-column>
+                        <el-table-column
+                            prop="typeName"
+                            label="类型"
                             width="150">
                         </el-table-column>
                         <el-table-column
@@ -72,7 +77,7 @@
                             label="操作">
                             <template slot-scope="scope">
                                 <div class="handle">
-                                    <span @click="showParkDetail(scope.row, '停车场信息',true)">查看</span>
+                                    <span @click="showStationDetail(scope.row, '站点信息',true)">查看</span>
                                     <span class="line">|</span>
                                     <span @click="fixedInfo(scope.row.id )">修改</span>
                                     <span class="line">|</span>
@@ -81,11 +86,11 @@
                             </template>
                         </el-table-column>
                     </el-table>
-                    <div class="personInfo" v-for="item in parkList" v-if="isShowParkCard && item.status">
+                    <div class="personInfo" v-for="item in stationList" v-if="isShowParkCard && item.status">
                         <div class="checkBox">
                             <el-checkbox v-model="item.checked" @change="checked(item.id)" class="checkBtn"></el-checkbox>
                         </div>
-                        <div class="personType" @click.stop="showParkDetail(item, '停车场信息',true)">
+                        <div class="personType" @click.stop="showStationDetail(item, '站点信息',true)">
                             <img src="../../../../static/img/parkCard.png" alt="">
                             <!--<img :src="getUrl(item.picturePath)" alt="" @error="imgError">-->
                             <span class="type">
@@ -104,12 +109,12 @@
                 </ScrollContainer>
                 <PersonDetail v-if="visible"
                               :visible="visible"
-                              :Info="parkInfo"
+                              :Info="stationInfo"
                               :isDisabled="isDisabled"
                               :title="title"
                               @closeInfoDialog ="closeDialog"
                               @fixInfo = "fixInfo"
-                              @addNewInfo="addNewPark">
+                              @addNewInfo="addNewStation">
                 </PersonDetail>
             </div>
         </div>
@@ -123,7 +128,7 @@
     import api from '@/api'
     import _ from 'lodash'
     export default {
-        name: "park-deploy",
+        name: "station-deploy",
         data(){
             return{
                 selectFlag:false,
@@ -131,9 +136,9 @@
                 isShowParkCard: true,
                 checkList: [],
                 filterList: [],
-                parkList: [],
+                stationList: [],
                 visible: false,
-                parkInfo: {},
+                stationInfo: {},
                 choseInfoId: [],
                 choseList: [],
                 isDisabled: true,
@@ -143,7 +148,15 @@
                 isShowLoading: false,
                 currentNum: 50,
                 listLength: '',
-                pageNum: 1
+                pageNum: 1,
+                stationTypeId2Name:{
+                    '0' : '车站',
+                    '1' : '码头'
+                },
+                stationTypeName2Id:{
+                    '车站': '0',
+                    '码头': '1'
+                }
             }
         },
         methods: {
@@ -159,13 +172,13 @@
             },
             closeDialog () {
                 this.visible = false
-                this.getAllPark()
+                this.getAllStation()
             },
             searchAnything (info) {
                 console.log(info, '这是要过滤的')
                 console.log(this.checkList)
                 if (info.trim() !== '') {
-                    this.parkList = this.checkList.filter(item => {
+                    this.stationList = this.checkList.filter(item => {
                         if ((item.regionName)&&(item.regionName.includes(info))) {
                             return item
                         }
@@ -174,20 +187,21 @@
                         }
                     })
                 } else {
-                    this.getAllPark()
+                    this.getAllStation()
                 }
             },
             handleSelectionChange(val) {
                 this.multipleSelection = val;
             },
-            showParkDetail (info, title,state) {
-                this.parkInfo = info
+            showStationDetail (info, title,state) {
+                info.type =  this.stationTypeName2Id[info.typeName]
+                this.stationInfo = info
                 this.visible = true
                 this.isDisabled = state
                 this.title = title
             },
             addNewInfo () {
-                this.showParkDetail({parkingBean:{}},'添加站点信息',false)
+                this.showStationDetail({parkingBean:{}},'添加站点信息',false)
                 this.isDisabled = false
             },
             deletInfo (id) {
@@ -200,11 +214,11 @@
                         cancelButtonText: '取消',
                         type: 'warning'
                     }).then(() => {
-                        api.wharf.deleteWharf(this.choseInfoId).then(res => {
+                        api.station.deleteStation(this.choseInfoId).then(res => {
                             console.log(res, '删除成功')
                             this.$message.success('删除成功')
                             this.choseInfoId = []
-                            this.getAllPark()
+                            this.getAllStation()
                         }).catch(err => {
                             console.log(err)
                             this.$message.error('删除失败，请稍后重试')
@@ -227,7 +241,7 @@
             },
             checked (id) {
                 this.tempSelects=[];
-                this.parkList = this.parkList.filter(item => {
+                this.stationList = this.stationList.filter(item => {
                     if (item.id === id) {
                         item.checked = item.checked
                     }
@@ -241,11 +255,11 @@
                     this.choseInfoId.push(id)
                 }
                 let that=this;
-                this.parkList.forEach(function(item,i){
+                this.stationList.forEach(function(item,i){
                     (item.checked)&&(that.tempSelects.push(item))
                 })
                 console.log(this.tempSelects)
-                if(this.tempSelects.length === this.parkList.length){
+                if(this.tempSelects.length === this.stationList.length){
                     this.selectFlag=true
                 }else{
                     this.selectFlag=false
@@ -253,7 +267,7 @@
             },
             selectedAll (state) {
                 console.log(state, 'opopopopop')
-                this.parkList = this.parkList.filter((item) => {
+                this.stationList = this.stationList.filter((item) => {
                     if (state === true) {
                         item.checked = true
                         this.choseInfoId.push(item.id)
@@ -272,7 +286,7 @@
                 let index = info.location.includes(',')?info.location.indexOf(','):info.location.indexOf('，')
                 let longitude = info.location.substring(0, index)
                 let latitude = info.location.substring(index + 1)
-                let parkObj = {
+                let stationObj = {
                     description:info.description,
                     id: info.id,
                     name: info.name,
@@ -284,30 +298,31 @@
                 if (info.imgUrl !== '') {
                     await api.person.updataAva(info.imgUrl).then(res => {
                         console.log(res, '上传成功')
-                        parkObj.pictureId = res.id
+                        stationObj.pictureId = res.id
                     }).catch(err => {
                         console.log(err, '上传失败')
                         this.$message.error('上传失败，其请稍后重试')
                         return
                     })
                 } else {
-                    parkObj.pictureId = info.pictureId
+                    stationObj.pictureId = info.pictureId
                 }
-                await api.wharf.updateWharf(JSON.stringify(parkObj)).then(res => {
+                await api.station.updateStation(JSON.stringify(stationObj)).then(res => {
                     this.closeDialog()
                     console.log(res, '修改站点成功')
                     this.$message.success('修改成功')
                     this.choseInfoId = []
-                    this.getAllPark()
+                    this.getAllStation()
                 }).catch(err => {
                     this.$message.error('修改失败，请稍后重试')
                 })
             },
-            async addNewPark (info) {
+            async addNewStation (info) {
                 let index = info.location.includes(',')?info.location.indexOf(','):info.location.indexOf('，')
                 let longitude = info.location.substring(0, index)
                 let latitude = info.location.substring(index + 1)
-                let parkObj = {
+                let stationObj = {
+                    type:info.type,
                     description:info.description,
                     name: info.name,
                     capacity: info.capacity,
@@ -318,18 +333,18 @@
                 if (info.imgUrl !== '') {
                     await api.person.updataAva(info.imgUrl).then(res => {
                         console.log(res, '上传成功')
-                        parkObj.pictureId = res.id
+                        stationObj.pictureId = res.id
                     }).catch(err => {
                         console.log(err, '上传失败')
                         this.$message.error('上传失败，其请稍后重试')
                         return
                     })
                 }
-                await api.wharf.createWharf(JSON.stringify(parkObj)).then(res => {
+                await api.station.createStation(JSON.stringify(stationObj)).then(res => {
                     this.closeDialog()
                     console.log(res, '创建站点成功')
                     this.$message.success('创建成功')
-                    this.getAllPark()
+                    this.getAllStation()
                 }).catch(err => {
                     this.$message.error('创建失败，请稍后重试')
                 })
@@ -343,12 +358,12 @@
                     return
                 }
                 if (this.choseInfoId.length > 0) {
-                    this.parkList.map((item) => {
+                    this.stationList.map((item) => {
                         if (item.id === this.choseInfoId[0]){
-                            this.parkInfo = item
+                            this.stationInfo = item
                         }
                     })
-                    this.showParkDetail(this.parkInfo, '修改站点信息',false)
+                    this.showStationDetail(this.stationInfo, '修改站点信息',false)
                     this.isDisabled = false
                     //this.choseInfoId = []
                 } else {
@@ -358,16 +373,16 @@
             previousPage (page) {
                 console.log(page, '这是传过来的pageNum')
                 this.pageNum = page
-                this.getAllPark ()
+                this.getAllStation ()
             },
             nextPage (page) {
                 console.log(page, '这个是下一页的pageNUM')
                 this.pageNum = page
-                this.getAllPark ()
+                this.getAllStation ()
             },
-            async getAllPark () {
+            async getAllStation () {
                 this.isShowLoading = true
-                await api.wharf.getAllWharf().then(res => {
+                await api.station.getAllStation().then(res => {
                     console.log(res, '这是数据')
                     if(res.length === 0){
                         this.show = true
@@ -376,21 +391,22 @@
                     }
                     this.listLength = res.length
                     this.isShowLoading = false
-                    this.parkList = res
-                    this.parkList = this.parkList.filter((item,index) =>{
+                    this.stationList = res
+                    this.stationList = this.stationList.filter((item,index) =>{
                         if(index <(this.pageNum*35) && index>(this.pageNum-1)*35-1){
                             return item
                         }
                     })
-                    for (let i = 0; i < this.parkList.length; i++) {
-                        this.parkList[i].checked = false
-                        this.parkList[i].status = true
-                        this.parkList[i].location = `${this.parkList[i].longitude},${this.parkList[i].latitude}`
-                        this.parkList[i].modifyTime=this.parkList[i].modifyTime.replace("-","/")
-                        this.parkList[i].byTime = -(new Date(this.parkList[i].modifyTime)).getTime()
+                    for (let i = 0; i < this.stationList.length; i++) {
+                        this.stationList[i].checked = false
+                        this.stationList[i].status = true
+                        this.stationList[i].location = `${this.stationList[i].longitude},${this.stationList[i].latitude}`
+                        this.stationList[i].modifyTime=this.stationList[i].modifyTime.replace("-","/")
+                        this.stationList[i].byTime = -(new Date(this.stationList[i].modifyTime)).getTime()
+                        this.stationList[i].typeName = this.stationTypeId2Name[this.stationList[i].type]
                     }
-                    this.parkList = _.sortBy(this.parkList, 'byTime')
-                    this.checkList = this.parkList
+                    this.stationList = _.sortBy(this.stationList, 'byTime')
+                    this.checkList = this.stationList
                     this.choseInfoId = []
                     this.selectFlag=false
                 }).catch(err => {
@@ -400,7 +416,7 @@
             }
         },
         created () {
-            this.getAllPark()
+            this.getAllStation()
         },
         filters: {
             typeFilter (item) {
@@ -420,12 +436,12 @@
 </script>
 
 <style lang="scss" type="text/scss">
-    .parkDeploy {
+    .stationDeploy {
         .el-checkbox__input{
             vertical-align: top;
         }
     }
-    .parkDeploy {
+    .stationDeploy {
         .el-table__header-wrapper .has-gutter {
             background-color: #f3f3f3;
         }
@@ -441,7 +457,7 @@
     }
 </style>
 <style lang="scss" scoped type="text/scss">
-    .parkDeploy{
+    .stationDeploy{
         width: 100%;
         height: 100%;
         display: flex;

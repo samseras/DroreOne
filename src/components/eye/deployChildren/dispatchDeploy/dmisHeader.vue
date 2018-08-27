@@ -1,8 +1,8 @@
 <template>
     <div class="dmisHeader">
         <div class="searchInfo">
-            <input type="text" placeholder="请输入搜索内容" v-model="searchContent" @keyup="startSearch">
-            <i class="el-icon-search"></i>
+            <input type="text" placeholder="请输入搜索内容" v-model="searchContent">
+            <i class="el-icon-search" @click="startSearch"></i>
         </div>
         <div class="funcBtn">
             <el-button size="mini"plain @click="addNewInfo"><i class="el-icon-circle-plus"></i>添加</el-button>
@@ -123,6 +123,7 @@
     .puriiferDmis,
     .screenDmise,
     .securityDmis,
+    .transportDmis,
     .broadcastDmise{
         .personList{
             .el-table{

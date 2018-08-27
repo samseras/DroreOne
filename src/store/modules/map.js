@@ -28,6 +28,8 @@ const map = {
         facilityplant:[],
         facilityindicator:[],
         facilityroad:[],
+        controtransport:[],
+        transportType:'0'
     },
     getters: {
         getLocation (state) {
@@ -101,7 +103,13 @@ const map = {
         },
         getfacilityRoad(state) {
             return state.facilityroad
-        }
+        },
+        getcontroTransport(state){
+            return state.controtransport
+        },
+        getTransportType(state){
+            return state.transportType
+        },
     },
     setters: {},
 
@@ -200,6 +208,12 @@ const map = {
         [types.FACILITY_ROAD] (state, data) {
             state.facilityroad= data
             // console.log(state.facilityroad,'commit')
+        },
+        [types.CONTROLER_TRANSPORT] (state, data) {
+            state.controtransport = data
+        },
+        [types.TRANSPORT_TYPE](state,data){
+            state.transportType = data
         }
     },
     actions: {

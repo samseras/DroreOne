@@ -1,36 +1,36 @@
 /*
-这是码头接口api
+这是站点接口api
 * */
 import axios from '@/http'
 import {getUrl} from './path'
 
 
-const wharf = {
-    getAllWharf () {
+const station = {
+    getAllStation () {
         return axios ({
             method: 'GET',
-            url: getUrl('/wharf')
+            url: getUrl('/station')
         })
 
     },
-    updateWharf  (params) {
+    updateStation  (params) {
         return axios ({
             method: 'PUT',
-            url: getUrl('/wharf'),
+            url: getUrl('/station'),
             data:params
         })
     },
-    createWharf  (params) {
+    createStation (params) {
         return axios ({
             method: 'POST',
-            url: getUrl('/wharf'),
+            url: getUrl('/station'),
             data:params
         })
     },
-    deleteWharf (par) {
+    deleteStation (par) {
         return axios ({
             method: 'DELETE',
-            url: getUrl('/wharf'),
+            url: getUrl('/station'),
             data:{
                 ids: par
             }
@@ -38,4 +38,4 @@ const wharf = {
     }
 }
 
-export default wharf
+export default station
