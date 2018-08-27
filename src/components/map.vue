@@ -43,7 +43,6 @@
         <controlcameraDialog v-if="cameravisible"
                       :Info="buildInfo"
                       :title="title"
-                      :width="width"
                       :visible="cameravisible"
                       @closeInfoDialog ="closeDialog">
         </controlcameraDialog>
@@ -2102,11 +2101,6 @@
                     this.buildInfo = this.menulist.data
                     this.cameravisible = true
                     this.title = this.menulist.type+' :  '+this.menulist.name
-                    if(this.buildInfo.channel==null && this.buildInfo.channel==undefined){
-                        this.width="1080px"
-                    }else {
-                        this.width="650px"
-                    }
                 } else {
                     this.$message.error('您当前的浏览器不支持该控件的播放，请使用IE10以上的浏览器');
                     return false;

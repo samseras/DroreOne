@@ -190,6 +190,7 @@
                     /*border-bottom: 1px solid #ccc;*/
                     font-size: rem(14);
                     line-height:rem(32) ;
+                    text-align: left;
                     input{
                         border: none;
                         list-style: none;
