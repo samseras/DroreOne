@@ -43,7 +43,6 @@
         <controlcameraDialog v-if="cameravisible"
                       :Info="buildInfo"
                       :title="title"
-                      :width="width"
                       :visible="cameravisible"
                       @closeInfoDialog ="closeDialog">
         </controlcameraDialog>
@@ -2362,23 +2361,9 @@
                 this.menuBroadvolume=false;
                 var explorer = window.navigator.userAgent;
                 if (explorer.indexOf("MSIE") >= 0 || (!!window.ActiveXObject || "ActiveXObject" in window)) {
-                    // if (!this.Info.id) {
-                    //     this.$message.error("该设备ID为空！");
-                    // } else if (!this.Info.serialNum) {
-                    //     this.$message.error("该设备serialNum未设置！");
-                    // } else {
-                    //     this.buildInfo = this.menulist.data
-                    //     this.cameravisible = true
-                    //     this.title = this.menulist.type+' :  '+this.menulist.name
-                    // }
                     this.buildInfo = this.menulist.data
                     this.cameravisible = true
                     this.title = this.menulist.type+' :  '+this.menulist.name
-                    if(this.buildInfo.channel==null && this.buildInfo.channel==undefined){
-                        this.width="650px"
-                    }else {
-                        this.width="1080px"
-                    }
                 } else {
                     this.$message.error('您当前的浏览器不支持该控件的播放，请使用IE10以上的浏览器');
                     return false;

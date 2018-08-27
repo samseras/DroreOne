@@ -21,7 +21,7 @@
         </div>
         <div class="titleCheck" v-if="route.includes('camera')" >
             <el-checkbox-group v-model="filterList" @change="choseType">
-                <el-checkbox v-for="item in cameraList" :label="item.type" :key="item.type"></el-checkbox>
+                <el-checkbox v-for="item in cameraType" :label="item.type" :key="item.type"></el-checkbox>
             </el-checkbox-group>
         </div>
         <div class="titleCheck" v-if="route.includes('broadcast')" >
@@ -75,6 +75,10 @@
                 cameraList:[
                     {type:'室内'},
                     {type:'室外'}
+                ],
+                cameraType:[
+                    {type:'球机'},
+                    {type:'枪机'}
                 ],
                 gateList:[
                     {type:'翼闸'},

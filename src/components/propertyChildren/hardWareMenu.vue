@@ -2,7 +2,7 @@
     <div class="hardwareMenu">
         <el-menu default-active="/hard-property"
                  text-color="#fff"
-                 active-text-color="#ffd04b" router>
+                 active-text-color="#ffd04b":default-openeds="openeds" router>
 
             <ScrollContainer>
                 <template v-for="item in items">
@@ -48,6 +48,7 @@
         data () {
             return{
                 isRouterAlive:true,
+                openeds:['2'],
                 items: [
                     {
                         icon: './../../../static/img/hardwareType.svg',

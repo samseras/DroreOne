@@ -14,8 +14,8 @@
                     <p class="type selectstyle equipmentStyle">
                         <span>类&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;型：</span>
                         <el-select name="" v-model="camera.cameraType" :disabled="isDisabled">
-                            <el-option label='球机' :value="0"></el-option>
                             <el-option label='枪机' :value="1"></el-option>
+                            <el-option label='球机' :value="0"></el-option>
                         </el-select>
                     </p>
                     <p class="sex title">
@@ -1013,7 +1013,11 @@
                newInfo.status=true
                newInfo.checked=false
                newInfo.imgUrl = this.src
-
+               if (newInfo.cameraType == '球机') {
+                   newInfo.cameraType='0'
+               }else if (newInfo.cameraType == '枪机')  {
+                   newInfo.cameraType='1'
+               }
                 console.log(newInfo.jsonAttr)
                if(this.Info.id){
                    newInfo.id=this.Info.id

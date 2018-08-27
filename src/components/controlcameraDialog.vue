@@ -5,14 +5,14 @@
             :close-on-click-modal = false
             :visible="visible"
             :before-close="closeDialog"
-            :width="width"
+            width="1140px"
             class="dialog echatDialog"
             center>
             <div class="Supcontal">
                 <div class="playback"  v-if="playback">
                     <el-button class="on playView" @click="playView()">预览</el-button>
                     <el-button class="playBackButtom" @click="playBackButtom()">回放</el-button>
-                    <!--<el-button type="success" @click="clickCapturePic()">抓图</el-button>-->
+                    <el-button type="success" @click="clickCapturePic()">抓图</el-button>
                     <div class="ptz" v-if="ptz">
                         <fieldset>
                             <legend>云台控制</legend>
@@ -43,12 +43,13 @@
                             type="datetimerange"
                             start-placeholder="开始日期"
                             end-placeholder="结束日期"
-                            :default-time="['00:00:00', '23:59:59']">
+                            :default-time="['00:00:00', '23:59:59']"
+                        >
                         </el-date-picker>
                         <el-button type="primary" @click="clickRecordSearch();">开始回放</el-button>
                     </div>
                 </div>
-                <div id="obj">
+                <div id="obj" style="width:650px;">
                     <object id="DPSDK_OCX" classid="CLSID:D3E383B6-765D-448D-9476-DFD8B499926D" style="width: 100%; height: 100%" codebase="DpsdkOcx.cab#version=1.0.0.0"></object>
                 </div>
                 <div class="clearfix"></div>
@@ -79,17 +80,20 @@
                 Time:'',
                 dialogVisible:false,
                 datetimerange:false,
-                ptz:true,
+                ptz:false,
                 gWndId:'0',
                 nWndCount:'1',
                 channel:'1000022$1$0$0',
                 nStreamType:'1',
                 nMediaType:'1',
                 nTransType:'1',
+                nRecordSource:2,
             }
         },
         methods: {
             closeDialog () {
+                let nWndNo =this.obj.DPSDK_GetSelWnd(this.gWndId)
+                this.obj.DPSDK_StopRealplayByWndNo(this.gWndId, nWndNo)
                 this.obj.DPSDK_Logout()
                 this.$emit('closeInfoDialog')
             },
@@ -100,7 +104,7 @@
             },
             init(){
                 if(this.Info.channel==null && this.Info.channel==undefined){
-                    this.playback=false
+                    // this.playback=false
                 }else {
                     this.channel=this.Info.channel
                 }
@@ -145,44 +149,30 @@
                 $('.playBackButtom').removeClass('on')
                 $('.playView').addClass('on')
                 this.datetimerange=false
-                this.ptz=true
+                // this.ptz=true
                 let nWndNo = this.obj.DPSDK_GetSelWnd(this.gWndId);
                 let nRet = this.obj.DPSDK_StartRealplayByWndNo(this.gWndId, nWndNo, this.channel, this.nStreamType, this.nMediaType, this.nTransType);
                 if(nRet == 0)
                 {
-                }else {
-                    this.dialogVisible=true
                 }
             },
             playBackButtom(){
                 var szCurTime = this.dateFormat(new Date(), "yyyy-MM-dd");
                 this.Time=[szCurTime + " 00:00:00",szCurTime + " 23:59:59"];
                 this.datetimerange=true
-                this.ptz=false
+                // this.ptz=false
                 $('.playView').removeClass('on')
                 $('.playBackButtom').addClass('on')
+                this.obj.DPSDK_LoadDGroupInfo()
             },
             clickCapturePic(){
-                let oWndInfo = WebVideoCtrl.I_GetWindowStatus(this.g_iWndIndex);
-                console.log(oWndInfo,'123123');
-                if (oWndInfo != null) {
-                    let szCaptureFileFormat = "0",
-                        CapturePath='';
-                    let xmlDoc = WebVideoCtrl.I_GetLocalCfg();
-                    if (xmlDoc != null) {
-                        szCaptureFileFormat = $(xmlDoc).find("CaptureFileFormat").eq(0).text();
-                        CapturePath = $(xmlDoc).find("CapturePath").eq(0).text();
-                    }
-                    let szPicName =  this.Info.consoleIp + "_" + this.channel + "_" + new Date().getTime();
-                        szPicName += ("0" === szCaptureFileFormat) ? ".jpg": ".bmp";
-                    let iRet = WebVideoCtrl.I_CapturePic(szPicName, {
-                        bDateDir: true  //是否生成日期文件
-                    });
-                    if (0 == iRet) {
-                        this.$message.success('抓图成功！请去本地文件夹'+ CapturePath +'查看');
-                    } else {
-                        this.$message.error('抓图失败！');
-                    }
+                let nWndNo = this.obj.DPSDK_GetSelWnd(this.gWndId);
+                let mydate=new Date();
+                let reg=new RegExp(":","g");
+                let path="c:\\dahuaphoto\\"+mydate.toLocaleString().replace(" ","").replace("年","").replace("月","").replace("日","").replace(reg,"")+".bmp";
+                let nRet = this.obj.DPSDK_CapturePictureByWndNo(this.gWndId, nWndNo,path);
+                if(nRet == 0) {
+                    this.$message.success('抓图成功！请去本地文件夹'+ path +'查看');
                 }
             },
             mouseDownPTZControl(iPTZIndex) {
@@ -284,18 +274,13 @@
                     this.$message.error('请选择回放时间再开始回放！');
                     return;
                 }
-                var oWndInfo = WebVideoCtrl.I_GetWindowStatus(this.g_iWndIndex),
-                    szStartTime = this.Time[0],
-                    szEndTime = this.Time[1];
-                if (oWndInfo != null) {// 已经在播放了，先停止
-                    WebVideoCtrl.I_Stop();
+                let szStartTime = new Date((this.Time[0]).replace(new RegExp("-","gm"),"/")).getTime()/1000,
+                    szEndTime = new Date((this.Time[1]).replace(new RegExp("-","gm"),"/")).getTime()/1000;
+                let nWndNo = this.obj.DPSDK_GetSelWnd(this.gWndId);
+                let nRet = this.obj.DPSDK_StartTimePlaybackByWndNo(this.gWndId, nWndNo, this.channel, this.nRecordSource, szStartTime,szEndTime)
+                if(nRet == 0) {
                 }
-                WebVideoCtrl.I_StartPlayback(this.Info.consoleIp, {
-                    iChannelID: this.channel,
-                    szStartTime: szStartTime,
-                    szEndTime: szEndTime
-                });
-            }
+            },
         },
         mounted () {
             this.init()
@@ -315,7 +300,6 @@
         width: 100%;
         height: 100%;
         #obj{
-            width:600px;
             height: 480px;
         }
         .plugin{
