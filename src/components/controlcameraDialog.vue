@@ -163,7 +163,7 @@
                 // this.ptz=false
                 $('.playView').removeClass('on')
                 $('.playBackButtom').addClass('on')
-                this.obj.DPSDK_LoadDGroupInfo()
+                // this.obj.DPSDK_LoadDGroupInfo()
             },
             clickCapturePic(){
                 let nWndNo = this.obj.DPSDK_GetSelWnd(this.gWndId);
