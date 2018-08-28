@@ -6,6 +6,3 @@
   url('../font/iconfont.ttf') format('truetype'),
   url('../font/iconfont.svg#iconfont') format('svg');
 }
-body{
-	font-family: 'iconfont'
-}

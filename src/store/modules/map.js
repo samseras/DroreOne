@@ -29,7 +29,9 @@ const map = {
         facilityindicator:[],
         facilityroad:[],
         controtransport:[],
-        transportType:'0'
+        transportType:'0',
+        treeShow:[],
+
     },
     getters: {
         getLocation (state) {
@@ -110,6 +112,9 @@ const map = {
         getTransportType(state){
             return state.transportType
         },
+        getTreeShow(state){
+            return state.treeShow
+        },
     },
     setters: {},
 
@@ -148,6 +153,9 @@ const map = {
             } else {
                 state.treeData = data
             }
+        },
+        [types.TREE_SHOW] (state, data) {
+            state.treeShow = data
         },
         [types.CONTROLER_LIGHT] (state, data) {
             state.controleLight = data

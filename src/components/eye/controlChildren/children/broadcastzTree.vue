@@ -16,10 +16,10 @@
             :filter-node-method="filterNode"
             default-expand-all
             :expand-on-click-node="false"
-            :check-on-click-node="true"
+            :check-on-click-node="false"
             ref="tree"
             @check="handleCheckChange">
-            <span class="custom-tree-node" slot-scope="{ node, Info }">
+            <span class="custom-tree-node" slot-scope="{ node, Info }" @click="treeShow(node)">
                 <img class="icon" :src="node.icon" v-if="node.icon"/>
                 <span>{{ node.label }}</span>
             </span>
@@ -121,7 +121,6 @@
                 }
                 // console.log(checked.checkedNodes.length,this.lightList.length);
                 data.checked = checked
-                console.log(data, '这是最后提交的')
                 this.$store.commit('SHOW_TREE', data)
             },
             treeALL(){
@@ -131,6 +130,20 @@
                     } else {
                         this.selectAllCheckBox = false
                     }
+                }
+            },
+            treeShow(data){
+                console.log(data);
+                if(data.isLeaf){
+                    let checkedKeysId = this.$refs.tree.getCheckedKeys()
+                    checkedKeysId.push(data.data.id)
+                    this.$refs.tree.setCheckedKeys(checkedKeysId)
+                    if (checkedKeysId.length == this.lightList.length) {
+                        this.selectAllCheckBox = true
+                    } else {
+                        this.selectAllCheckBox = false
+                    }
+                    this.$store.commit('TREE_SHOW', data.data)
                 }
             }
         },

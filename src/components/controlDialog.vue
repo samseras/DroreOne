@@ -129,33 +129,6 @@
                             <span>{{this.Info.vehicle_ship_id}}</span>
                         </p>
                     </div>
-
-                    <div v-if="subtype='car'" class="car">
-                        <p class="name">编号：
-                            <span>{{this.duty}}Km/h</span>
-                        </p>
-                        <p class="name">司&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;机：
-                            <span>{{this.Info.driver}}</span>
-                        </p>
-                        <p class="name">手机号码：
-                            <span>{{this.Info.telephone}}</span>
-                        </p>
-                        <p class="name">班次：
-                            <span>{{this.Info.vehicle_ship_id}}</span>
-                        </p>
-                        <p class="name">
-                            <span style="display: inline-block">时间查询：</span>
-                            <el-date-picker
-                                v-model="dateRange"
-                                type="datetimerange"
-                                :picker-options="pickerOptions"
-                                range-separator="至"
-                                start-placeholder="开始日期"
-                                end-placeholder="结束日期"
-                                align="right">
-                            </el-date-picker>
-                        </p>
-                    </div>
                     <!--<div v-if="subtype='boat'" class="car">-->
                         <!--<p class="name">当前速度：-->
                             <!--<span>{{this.duty}}Km/h</span>-->
@@ -177,11 +150,6 @@
                         {{this.Info.description}}
                     </p>
                 </div>
-                <div v-if="type='transport'"class=""slot="footer" class="dialog-footer cardFooter">
-                    <el-button size="mini" class="hold">保存</el-button>
-                    <el-button size="mini" @click = 'closeDialog'>取消</el-button>
-                </div>
-
             </div>
         </el-dialog>
     </div>
@@ -301,6 +269,7 @@
 
         },
         created () {
+            console.log(this.Info)
             if(this.Info.type==="wifi"){
                 this.wifiShow=true
             }
@@ -422,7 +391,7 @@
                 this.Info.name=this.Info.serialNum
             }
 
-            if(this.Info.type = "transport"){
+            if(this.Info.type == "transport"){
                 this.Info.description=this.Info.transport.description
                 this.facility=false
             }

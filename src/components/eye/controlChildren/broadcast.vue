@@ -170,7 +170,7 @@
                         } else  if (item.status =="OFFLINE") {
                             item.icon = '../../../static/img/broadcast.svg'
                         }else {
-                            item.icon = '../../../static/img/broadcast_open.svg'
+                            item.icon = '../../../static/img/broadcast_big.svg'
                         }
                         if (item.regionId) {
                             if (!regionIdList.includes(item.regionId)){

@@ -128,7 +128,7 @@
             if (route.includes('facility/')){
                 this.activeIndex = 1
             }
-            this.getUserDetailInfo(this.getUserInfo)
+            // this.getUserDetailInfo(this.getUserInfo)
         },
         filters: {
             timeFiler(item) {

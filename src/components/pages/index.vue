@@ -399,7 +399,7 @@
             ScrollContainer
         },
         created () {
-            this.getUserDetailInfo(this.getUserInfo)
+            // this.getUserDetailInfo(this.getUserInfo)
         },
         computed: {
             ...mapGetters(['getUserInfo','getUserDetailMsg'])

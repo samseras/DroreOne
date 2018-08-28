@@ -33,6 +33,9 @@
             <el-tooltip class="item" effect="dark" content="查看周围摄像头" placement="top">
                 <button @click="warnCamera" class="warnCamera"></button>
             </el-tooltip>
+            <el-tooltip class="item" effect="dark" content="修改广播声音" placement="top">
+                <button @click="menuBroad" class="menuBroad"></button>
+            </el-tooltip>
         </div>
         <PersonDetail v-if="visible"
                       :Info="buildInfo"
@@ -130,7 +133,6 @@
                 this.getAllAlarmEvent();//告警事件现有标注
                 this.getAllTransportRoute();// 车船调度路线输出
                 this.getAllStation();
-                this.getAllVehicle();
             } else if (route.includes('area-deploy')) {
                 if(!this.getLocationId){
                     this.getAllArea();// 片区输出
@@ -1185,20 +1187,20 @@
             async getAllWifi(){//wifi列表
                 await api.wifi.getAllWifi().then((res)=>{
                     this.iconList=res.devices
-                    for (let i=0;i<this.iconList.length;i++){
-                        this.iconList[i].type="wifi"
-                        this.iconList[i].location = [this.iconList[i].longitude,this.iconList[i].latitude]
-                        if(this.iconList[i].status =="FAULT"){
-                            this.iconList[i].url="/static/img/icon/wifi_damage.png"
-                            this.iconList[i].subtype='wifi_damage'
-                        } else if(this.iconList[i].status =="OFFLINE") {
-                            this.iconList[i].url="/static/img/icon/wifi_close.png"
-                            this.iconList[i].subtype='wifi_close'
+                    this.iconList.forEach(item => {
+                        item.type="wifi"
+                        item.location = [item.longitude,item.latitude]
+                        if(item.status =="FAULT"){
+                            item.url="/static/img/icon/wifi_damage.png"
+                            item.subtype='wifi_damage'
+                        } else if(item.status =="OFFLINE") {
+                            item.url="/static/img/icon/wifi_close.png"
+                            item.subtype='wifi_close'
                         }else {
-                            this.iconList[i].url="/static/img/icon/wifi.png"
-                            this.iconList[i].subtype='wifi'
+                            item.url="/static/img/icon/wifi.png"
+                            item.subtype='wifi'
                         }
-                    }
+                    })
                     this.iconShow();
                  }).catch((err)=>{
                     console.log(err)
@@ -2436,13 +2438,13 @@
                 Circle.setCenter(this.menulist.coordinate,radius);
             },
             menuBroad(){
-                this.jsonAttrList=JSON.parse(this.menulist.data.jsonAttr)
-                this.menuBroadvolumeNumber=this.jsonAttrList.status.volume
-                if(this.menuBroadvolume){
-                    this.menuBroadvolume=false;
-                }else {
-                    this.menuBroadvolume=true;
-                }
+                // this.jsonAttrList=JSON.parse(this.menulist.data.jsonAttr)
+                // this.menuBroadvolumeNumber=this.jsonAttrList.status.volume
+                // if(this.menuBroadvolume){
+                //     this.menuBroadvolume=false;
+                // }else {
+                //     this.menuBroadvolume=true;
+                // }
             },
             async setBroadcastVolume(val){
                 await api.broadcast.setBroadcastVolume(this.menulist.id,val).then(res => {
@@ -2485,7 +2487,6 @@
                     droreMap.map.panToCoord(droreMap.trans.transFromWgsToLayer(data.location));
                     droreMap.icon.IconStyleById(data.id,true);
                 }
-
             },
             treeShowID(data){
                 droreMap.icon.IconStyleById(data,true);
@@ -2536,11 +2537,11 @@
                         this.treeShowID(this.getcontroBroad[i]);
                     }
                 }
-                if(this.getcontroTransport.length > 0){
-                    for (let i=0;i<this.getcontroTransport.length;i++) {
-                        this.treeShowID(this.getcontroTransport[i]);
-                    }
-                }
+                // if(this.getcontroTransport.length > 0){
+                //     for (let i=0;i<this.getcontroTransport.length;i++) {
+                //         this.treeShowID(this.getcontroTransport[i]);
+                //     }
+                // }
                 if(this.getcontroCamera.length > 0){
                     for (let i=0;i<this.getcontroCamera.length;i++) {
                         this.treeShowID(this.getcontroCamera[i]);
@@ -3237,6 +3238,17 @@
                     }
                 }
             },
+            getTreeShow(){
+                if(this.getTreeShow.typeroad=='road'){
+                    this.roadShow(this.getTreeShow);
+                }else {
+                    if(this.getTreeShow.type =='person'){
+                        this.roadShowID(this.getTreeShow.routeId);
+                    }else {
+                        this.treeShow(this.getTreeShow);
+                    }
+                }
+            }
         },
         computed: {
             ...mapGetters([
@@ -3258,7 +3270,8 @@
                 'getfacilityPlant',
                 'getfacilityIndicator',
                 'getfacilityRoad',
-                'getTransportType'
+                'getTransportType',
+                'getTreeShow'
             ])
         }
     }
@@ -3473,7 +3486,8 @@
         border:1px solid #7b98bc;
         height:144px;
         margin:2px;
-        width:264px
+        width:264px;
+        background-color: #000;
     }
     .ol-overviewmap:not(.ol-collapsed) button {
         bottom:1px;
