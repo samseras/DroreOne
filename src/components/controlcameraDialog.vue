@@ -12,7 +12,7 @@
                 <div class="playback"  v-if="playback">
                     <el-button class="on playView" @click="playView()">预览</el-button>
                     <el-button class="playBackButtom" @click="playBackButtom()">回放</el-button>
-                    <el-button type="success" @click="clickCapturePic()">抓图</el-button>
+                    <!--<el-button type="success" @click="clickCapturePic()">抓图</el-button>-->
                     <div class="ptz" v-if="ptz">
                         <fieldset>
                             <legend>云台控制</legend>

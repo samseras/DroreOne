@@ -12,8 +12,8 @@ module.exports = {
     assetsPublicPath: '/',
     proxyTable: {//做跨域配置
         '/v1': {
-            target: 'http://192.168.0.150:8090/',
-            // target: 'http://10.2.1.6:8090/',
+            // target: 'http://192.168.0.150:8090/',
+            target: 'http://10.2.1.6:8090/',
             changeOrigin: true,
             // pathRewrite: {
             //     '^/v1': '/'//需要rewrite重写

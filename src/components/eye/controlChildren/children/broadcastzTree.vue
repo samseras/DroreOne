@@ -140,8 +140,6 @@
                     this.$refs.tree.setCheckedKeys(checkedKeysId)
                     if (checkedKeysId.length == this.lightList.length) {
                         this.selectAllCheckBox = true
-                    } else {
-                        this.selectAllCheckBox = false
                     }
                     this.$store.commit('TREE_SHOW', data.data)
                 }

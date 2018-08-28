@@ -6,11 +6,9 @@
                 <h5>摄像头列表</h5>
                 <ul>
                     <li>
-                        <el-switch
-                            v-model="open"
-                            active-color="#53b6a7"
-                            inactive-color="#808080">
-                        </el-switch>
+                        <el-tooltip class="item" effect="dark" content="控件下载" placement="left">
+                            <img src="../../../../static/img/down.svg" class="multiwindow" @click="cmsocxDown"  alt=""/>
+                        </el-tooltip>
                     </li>
                     <!--<li><img src="../../../../static/img/search.png" class="search" alt=""/></li>-->
                 </ul>
@@ -79,6 +77,12 @@
                 if(this.getcontroCamera){
                     this.lightCheckout=this.getcontroCamera
                 }
+            },
+            cmsocxDown(){
+                let host=window.location.host,
+                    protocol = window.location.protocol;
+                // console.log(protocol+host);
+                window.open(protocol+'//'+host+"/static/template/DPSDK_OCX.exe");
             },
             showBroadCard() {
                 console.log(777)
@@ -247,10 +251,11 @@
                     display: flex;
                     li {
                         margin: 0 5px;
-                        .search{
-                            width: 18px;
+                        .multiwindow{
+                            width: 24px;
                             vertical-align: middle;
                             cursor: pointer;
+                            outline: none;
                         }
                     }
                 }
