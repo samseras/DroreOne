@@ -1970,7 +1970,7 @@ define(function(require, exports, module) {
                 CustomEvent.fireEvent("click", {
                     feature: fea,
                 })
-            }
+            },
         });
         Mediator.prototype.moveInteraction = new ol.interaction.Pointer({ //TODO
             handleMoveEvent: function(event) {
@@ -2093,6 +2093,27 @@ define(function(require, exports, module) {
                 DragMediator.feature_ = null;
                 return false;
             }
+        });
+        Mediator.prototype.selectdragInteraction = new ol.interaction.Pointer({
+            handleMoveEvent: function(event) {
+                if(DragMediator.cursor_) {
+                    var map = event.map;
+                    var feature = map.forEachFeatureAtPixel(event.pixel,
+                        function(feature) {
+                            return feature;
+                        });
+                    var element = event.map.getTargetElement();
+                    if(feature) {
+                        if(element.style.cursor != DragMediator.cursor_) {
+                            DragMediator.previousCursor_ = element.style.cursor;
+                            element.style.cursor = DragMediator.cursor_;
+                        }
+                    } else if(DragMediator.previousCursor_ !== undefined) {
+                        element.style.cursor = DragMediator.previousCursor_;
+                        DragMediator.previousCursor_ = undefined;
+                    }
+                }
+            },
         });
         //****************************//
         function flight(obj) {
@@ -2841,8 +2862,10 @@ define(function(require, exports, module) {
                                 DragMediator = new Mediator();
                             }
                             mapData._baseMap.addInteraction(DragMediator.selectInteraction);
+                            mapData._baseMap.addInteraction(DragMediator.selectdragInteraction);
                         } else {
                             mapData._baseMap.removeInteraction(DragMediator.selectInteraction);
+                            mapData._baseMap.removeInteraction(DragMediator.dragInteraction);
                         }
                     }
                 },
@@ -3073,10 +3096,10 @@ define(function(require, exports, module) {
                     // }
                     layer = mapLayer.creatLayer(icon.data.url, icon.subtype,icon.coordinate);
                     mapData._baseMap.addLayer(layer);
-                    pool.setSeedLayer(icon.subtype, layer);
+                    pool.setSeedLayer(icon.id, layer);
                     layer.getSource().addFeature(icon.feature);
                     pool.setSeedIcon(icon.id, icon);
-                    var iconLayer = pool.getLayerById(icon.subtype);
+                    var iconLayer = pool.getLayerById(icon.id);
                     iconLayer.setZIndex(999);
                 },
                 removeChild: function(icon) //删除标签
@@ -3140,6 +3163,10 @@ define(function(require, exports, module) {
                     if(layer) {
                         layer.setVisible(visibility);
                     }
+                },
+                returnLayer: function(id) {
+                    var layer = pool.getIconById(id);
+                    return layer
                 },
                 getIconDataByEvt: function(evt) {
                     var data = mapData._baseMap.forEachFeatureAtPixel(evt.pixel, function(feature, layer) {

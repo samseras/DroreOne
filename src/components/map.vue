@@ -104,7 +104,6 @@
             let route = this.$route.path
             if (route.includes('facility')) {
                 droreMap.interaction.enableMapClick = true
-                droreMap.interaction.showMove()
                 this.getAllIndicator();//指示牌现有标注
                 this.getAllTrash();//垃圾桶现有标注
                 this.getAllScenic();//景点现有标注
@@ -118,7 +117,7 @@
                 this.getAllArea();// 片区输出
             }else if (route.includes('controler')) {
                 droreMap.interaction.enableMapClick = true
-                droreMap.interaction.showMove()
+                // droreMap.interaction.showMove()
                 this.getAllLight();//路灯现有标注
                 this.getAllGate();//闸机现有标注
                 this.getAllWifi();//wifi现有标注
@@ -2200,7 +2199,7 @@
                             data: res[i],
                         });
                         droreMap.icon.addChild(icon);
-                        droreMap.icon.IconStyleById(icon.id,false);
+                        droreMap.icon.showLayer(icon.id,false);
                         let that = this;
                         icon.onclick(function (e) {
                             that.menulist = e.data;
@@ -2224,9 +2223,10 @@
                         data: this.iconList[i],
                     });
                     droreMap.icon.addChild(icon);
+                    icon.showName=true
                     let route = this.$route.path
                     if(route.includes('controler')){
-                        droreMap.icon.IconStyleById(icon.id,false);
+                        droreMap.icon.showLayer(icon.id,false);
                         let that = this;
                         if((icon.subtype=="police")||(icon.subtype=="gate") ){
                             icon.onclick(function (e) {
@@ -2244,11 +2244,12 @@
                             icon.onclick(function (e) {
                                 that.menulist = e.data;
                                 that.droreMappopup(that.menulist);
+                                console.log(e);
                             });
                         }
                         this.controler();//之前打的点
                     }else if(route.includes('facility')){
-                        droreMap.icon.IconStyleById(icon.id,false);
+                        droreMap.icon.showLayer(icon.id,false);
                         let that = this;
                         icon.onclick(function (e) {
                             that.menulist = e.data;
@@ -2284,7 +2285,7 @@
                 }else {
                     this.getSearchInfo.location = [this.getSearchInfo.longitude,this.getSearchInfo.latitude]
                     droreMap.map.panToCoord(droreMap.trans.transFromWgsToLayer(this.getSearchInfo.location));
-                    droreMap.icon.IconStyleById(this.getSearchInfo.id,true);
+                    droreMap.icon.showLayer(this.getSearchInfo.id,true);
                 }
             },
             droreMappopup(e){
@@ -2330,6 +2331,7 @@
                 }
             },
             menuShow(){
+                console.log(this.menulist)
                 if(this.menulist.type=="warn"){
                     this.buildInfo = this.menulist.data
                     this.visible = true
@@ -2485,18 +2487,18 @@
                 if(data.longitude&&data.latitude){
                     data.location = [data.longitude,data.latitude]
                     droreMap.map.panToCoord(droreMap.trans.transFromWgsToLayer(data.location));
-                    droreMap.icon.IconStyleById(data.id,true);
+                    droreMap.icon.showLayer(data.id,true);
                 }
             },
             treeShowID(data){
-                droreMap.icon.IconStyleById(data,true);
+                droreMap.icon.showLayer(data,true);
             },
             treeHide(data){
-                droreMap.icon.IconStyleById(data.id,false);
+                droreMap.icon.showLayer(data.id,false);
                 this.menuDelete();
             },
             treeHideID(data){
-                droreMap.icon.IconStyleById(data,false);
+                droreMap.icon.showLayer(data,false);
             },
             roadShow(data){
                 let geo =JSON.parse(data.geo);
@@ -3246,6 +3248,9 @@
                         this.roadShowID(this.getTreeShow.routeId);
                     }else {
                         this.treeShow(this.getTreeShow);
+                        let layer =  droreMap.icon.returnLayer(this.getTreeShow.id)
+                        this.menulist = layer.data;
+                        this.droreMappopup(layer);
                     }
                 }
             }
