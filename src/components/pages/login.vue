@@ -69,10 +69,14 @@
 					 return code;
 				});
 			},
-            enter (e) {
-                if (e.keyCode === 13) {
-                    this.loginOn()
-                }
+            enter () {
+                let that =this
+                $(document).keyup(function(event){
+                    switch(event.keyCode) {
+                        case 13:
+                            that.loginOn()
+                    }
+                });
             },
             async loginOn(){
                 if (this.username.trim() === '') {
@@ -119,6 +123,7 @@
 			}
 		},
 		mounted(){
+		    this.enter()
 			this.changeCheckCode()
 		}
 	}
