@@ -13,7 +13,7 @@
                 <div class="personCardContent" v-if="route.includes('person') && $route.params.id">
                     <p class="name">
                         <span>姓&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;名：</span>
-                        <el-input v-model="person.name" :disabled="isDisabled" :maxlength="15"></el-input>
+                        <el-input v-model="person.name" :disabled="isDisabled" :maxlength="50"></el-input>
                     </p>
                     <p class="sex">
                         <span>性&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;别：</span>
@@ -63,7 +63,7 @@
                     </p>
                     <p class="sex">
                         <span>名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称：</span>
-                        <el-input type="text"v-model="boatCar.vehicle.serialNum" :maxlength="15" :disabled="isDisabled"></el-input>
+                        <el-input type="text"v-model="boatCar.vehicle.serialNum" :maxlength="50" :disabled="isDisabled"></el-input>
                     </p>
                     <p class="type wrapstyle">
                         <span>维护状态：</span>
@@ -172,7 +172,7 @@
                     </p>
                     <p class="sex">
                         <span>名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称：</span>
-                        <el-input type="text"v-model="trash.dustbinBean.name" :disabled="isDisabled" :maxlength="15"></el-input>
+                        <el-input type="text"v-model="trash.dustbinBean.name" :disabled="isDisabled" :maxlength="50"></el-input>
                     </p>
                     <p class="type" v-if="false">
                         <span>状&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;态：</span>
@@ -215,7 +215,7 @@
                 <div class="personCardContent boatCardContent" v-if="route.includes('scenic')">
                     <p class="name">
                         <span>景点名称：</span>
-                        <el-input type="text"v-model="scenic.scenicspotBean.name" :disabled="isDisabled" :maxlength="15"></el-input>
+                        <el-input type="text"v-model="scenic.scenicspotBean.name" :disabled="isDisabled" :maxlength="50"></el-input>
                     </p>
                     <p class="sex selectstyle">
                         <span>所属片区：</span>
@@ -274,7 +274,7 @@
                     </p>
                     <p class="sex">
                         <span>名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称：</span>
-                        <el-input type="text"v-model="shop.businessBean.name" :disabled="isDisabled" :maxlength="15"></el-input>
+                        <el-input type="text"v-model="shop.businessBean.name" :disabled="isDisabled" :maxlength="50"></el-input>
                     </p>
                     <p class="type wrapstyle selectstyle" v-if="isDisabled">
                        <span>状&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;态：</span>
@@ -328,11 +328,11 @@
                     </p>
                     <p class="sex">
                         <span>名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称：</span>
-                        <el-input type="text"v-model="park.parkingBean.name" :disabled="isDisabled" :maxlength="15"></el-input>
+                        <el-input type="text"v-model="park.parkingBean.name" :disabled="isDisabled" :maxlength="50"></el-input>
                     </p>
                     <p class="type" v-if="isDisabled">
                         <span>状&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;态：</span>
-                        <el-input type="text"v-model="park.parkingBean.state" :disabled="isDisabled" :maxlength="15"></el-input>
+                        <el-input type="text"v-model="park.parkingBean.state" :disabled="isDisabled" :maxlength="50"></el-input>
                     </p>
                     <p class="phoneNum">
                         <span>位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置：</span>
@@ -365,7 +365,7 @@
                 <div class="personCardContent boatCardContent" v-if="route.includes('toilet')">
                     <p class="sex">
                         <span>名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称：</span>
-                        <el-input type="text"v-model="toilet.toiletBean.name" :disabled="isDisabled" :maxlength="15"></el-input>
+                        <el-input type="text"v-model="toilet.toiletBean.name" :disabled="isDisabled" :maxlength="50"></el-input>
                     </p>
                     <p class=" selectstyle">
                         <span>所属片区：</span>
@@ -404,7 +404,7 @@
                 <div class="personCardContent boatCardContent" v-if="route.includes('area')">
                     <p class="sex">
                         <span>片区名称：</span>
-                        <el-input type="text" v-model="area.name" required="required" :disabled="isDisabled" :maxlength="15"></el-input>
+                        <el-input type="text" v-model="area.name" required="required" :disabled="isDisabled" :maxlength="50"></el-input>
                     </p>
                     <p class="phoneNum" v-if="false">所在景区：
                         <el-input type="text"v-model="area.placeScenic" :disabled="isDisabled"></el-input>
@@ -422,7 +422,7 @@
                 <div class="personCardContent boatCardContent" v-if="route.includes('roat')">
                     <p class="sex">
                        <span>路线名称：</span>
-                        <el-input type="text"v-model="roat.name" :disabled="isDisabled" :maxlength="15"></el-input>
+                        <el-input type="text"v-model="roat.name" :disabled="isDisabled" :maxlength="50"></el-input>
                     </p>
                     <p class="phoneNum">
                         <span>位置范围：</span>
@@ -465,7 +465,7 @@
                 <div class="personCardContent boatCardContent" v-if="route.includes('plant-deploy')">
                     <p class="sex">
                         <span>名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称：</span>
-                        <el-input type="text"v-model="tree.plant.name" :disabled="isDisabled" :maxlength="15"></el-input>
+                        <el-input type="text"v-model="tree.plant.name" :disabled="isDisabled" :maxlength="50"></el-input>
                     </p>
                     <p class="name">
                         <span>科&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;目：</span>
@@ -514,7 +514,7 @@
                 <div class="personCardContent boatCardContent" v-if="route.includes('construction')">
                     <p class="sex">
                         <span>名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称：</span>
-                        <el-input type="text"v-model="build.building.name" :disabled="isDisabled" :maxlength="15"></el-input>
+                        <el-input type="text"v-model="build.building.name" :disabled="isDisabled" :maxlength="50"></el-input>
                     </p>
                     <p class="name">
                         <s>层&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;高(m)：</s>
@@ -576,7 +576,7 @@
                     </p>
                     <p class="sex">
                         <span>名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称：</span>
-                        <el-input type="text"v-model="station.name" :disabled="isDisabled" :maxlength="15"></el-input>
+                        <el-input type="text"v-model="station.name" :disabled="isDisabled" :maxlength="50"></el-input>
                     </p>
                     <p class="phone">
                         <span>所属片区：</span>

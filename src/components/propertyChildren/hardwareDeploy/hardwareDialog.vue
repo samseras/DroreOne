@@ -20,7 +20,7 @@
                     </p>
                     <p class="sex title">
                         <span>名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称：</span>
-                        <el-input type="text" v-model="camera.name" :disabled="isDisabled" :maxlength="15"></el-input>
+                        <el-input type="text" v-model="camera.name" :disabled="isDisabled" :maxlength="50"></el-input>
                     </p>
                     <p class="manufacturer wrapstyle selectstyle">
                         <span>型&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;号：</span>
@@ -82,7 +82,7 @@
                     </p>
                     <p class="name">
                         <span>名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称：</span>
-                        <el-input type="text" v-model="broadCast.name" :disabled="isDisabled" :maxlength="15"></el-input>
+                        <el-input type="text" v-model="broadCast.name" :disabled="isDisabled" :maxlength="50"></el-input>
                     </p>
                     <p class="manufacturer wrapstyle selectstyle">
                         <span>型&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;号：</span>
@@ -141,7 +141,7 @@
                     </p>
                     <p class="name">
                         <span>名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称：</span>
-                        <el-input type="text" v-model="led.name" :disabled="isDisabled" :maxlength="15"></el-input>
+                        <el-input type="text" v-model="led.name" :disabled="isDisabled" :maxlength="50"></el-input>
                     </p>
                     <p class="home wrapstyle selectstyle">
                         <span>型&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;号：</span>
@@ -218,7 +218,7 @@
                     </p>
                     <p class="name">
                         <span>名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称：</span>
-                        <el-input type="text" v-model="wifi.name" :disabled="isDisabled" :maxlength="15"></el-input>
+                        <el-input type="text" v-model="wifi.name" :disabled="isDisabled" :maxlength="50"></el-input>
                     </p>
                     <p class="version wrapstyle selectstyle">
                         <span>型&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;号：</span>
@@ -293,7 +293,7 @@
                     </p>
                     <p class="name">
                         <span>名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称：</span>
-                        <el-input type="text" v-model="monitors.name" :disabled="isDisabled" :maxlength="15"></el-input>
+                        <el-input type="text" v-model="monitors.name" :disabled="isDisabled" :maxlength="50"></el-input>
                     </p>
                     <p class="version wrapstyle selectstyle">
                         <span>型&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;号：</span>
@@ -359,7 +359,7 @@
                     </p>
                     <p class="name">
                         <span>名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称：</span>
-                        <el-input type="text" v-model="Light.name" :disabled="isDisabled" :maxlength="15"></el-input>
+                        <el-input type="text" v-model="Light.name" :disabled="isDisabled" :maxlength="50"></el-input>
                     </p>
                     <p class="port">
                         <span>路灯端口：</span>
@@ -421,7 +421,7 @@
                     </p>
                     <p class="name">
                         <span>名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称：</span>
-                        <el-input type="text" v-model="gate.name" :disabled="isDisabled" :maxlength="15"></el-input>
+                        <el-input type="text" v-model="gate.name" :disabled="isDisabled" :maxlength="50"></el-input>
                     </p>
                     <p class="version wrapstyle selectstyle">
                         <span> 型&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;号：</span>
@@ -485,7 +485,7 @@
                     </p>
                     <p class="name">
                         <span>名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称：</span>
-                        <el-input type="text" v-model="police.name" :disabled="isDisabled" :maxlength="15"></el-input>
+                        <el-input type="text" v-model="police.name" :disabled="isDisabled" :maxlength="50"></el-input>
                     </p>
                     <p class="version wrapstyle selectstyle">
                         <span>型&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;号：</span>

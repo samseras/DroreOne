@@ -2,8 +2,9 @@
     <div class="property">
         <div class="pro_menu">
             <div class="pro_title">
-                <img src="./../../static/img/logo.svg" alt="">
-                <span>云数据中心</span>
+                <router-link to="/droreone">
+                    <img src="./../../static/img/logo.svg" alt="">云数据中心
+                </router-link>
             </div>
             <div class="pro_router">
                 <router-link to="/person" :class="route.includes('person')? 'active' : ''">人员</router-link>
@@ -151,13 +152,14 @@
                 text-align: center;
                 background: #34495E;
                 font-family: '微软雅黑';
+                a{
+                    color: #fff;
+                }
                 img{
                     display: inline-block;
-                    width: rem(140);
-                    height: rem(35);
                     vertical-align: middle;
-                    margin-left: rem(-35);
-                    margin-right: rem(-25);
+                    margin-left: rem(5);
+                    margin-top: rem(-3);
                 }
             }
             .pro_router{

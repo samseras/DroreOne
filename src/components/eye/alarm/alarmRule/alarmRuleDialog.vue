@@ -26,7 +26,7 @@
                     <div v-if="(route.includes('alarmcolumn') && !isBatchEdit) || alarmcolumnInfo.alarmTypeId == '2'"  class="alarmContent">
                         <p class="name">
                             <span>名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称：</span>
-                            <el-input type="text" v-model='alarmcolumnInfo.name' class="inputText" :maxlength="15" :disabled='isReadonly'></el-input>
+                            <el-input type="text" v-model='alarmcolumnInfo.name' class="inputText" :maxlength="50" :disabled='isReadonly'></el-input>
                         </p>
                         <p class="status">
                             <span>报&nbsp;&nbsp;警&nbsp;&nbsp;柱：</span>
@@ -52,12 +52,12 @@
                         </p>
                         <p class="deviceScope">
                             <span>调度范围(m)：</span>
-                            <el-input type="text" v-model='alarmcolumnInfo.deviceScope' class="inputText" :maxlength="15" :disabled='isReadonly'></el-input>
+                            <el-input type="text" v-model='alarmcolumnInfo.deviceScope' class="inputText" :maxlength="50" :disabled='isReadonly'></el-input>
                             (设备)
                         </p>
                         <p class="securityScope">
                             <span>调度范围(m)：</span>
-                            <el-input type="text"  v-model='alarmcolumnInfo.securityScope' class="inputText" :maxlength="15" :disabled='isReadonly'></el-input>
+                            <el-input type="text"  v-model='alarmcolumnInfo.securityScope' class="inputText" :maxlength="50" :disabled='isReadonly'></el-input>
                             (安保)
                         </p>
                         <p class="relatedManager">
@@ -98,7 +98,7 @@
                     <div v-if="(route.includes('firefighting') && !isBatchEdit) || firefightingInfo.alarmTypeId == '3'"  class="alarmContent">
                         <p class="name">
                             <span>名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称：</span>
-                            <el-input type="text" v-model='firefightingInfo.name' class="inputText" :maxlength="15" :disabled='isReadonly'></el-input>
+                            <el-input type="text" v-model='firefightingInfo.name' class="inputText" :maxlength="50" :disabled='isReadonly'></el-input>
                         </p>
 
                         <p class="severityName">
@@ -114,12 +114,12 @@
                         </p>
                         <p class="deviceScope">
                             <span>调度范围(m)：</span>
-                            <el-input type="text" v-model='firefightingInfo.deviceScope' class="inputText" :maxlength="15" :disabled='isReadonly'></el-input>
+                            <el-input type="text" v-model='firefightingInfo.deviceScope' class="inputText" :maxlength="50" :disabled='isReadonly'></el-input>
                             (设备)
                         </p>
                         <p class="securityScope">
                             <span>调度范围(m)：</span>
-                            <el-input type="text"  v-model='firefightingInfo.securityScope' class="inputText" :maxlength="15" :disabled='isReadonly'></el-input>
+                            <el-input type="text"  v-model='firefightingInfo.securityScope' class="inputText" :maxlength="50" :disabled='isReadonly'></el-input>
                             (安保)
                         </p>
                         <p class="relatedManager">
@@ -160,7 +160,7 @@
                     <div v-if="(route.includes('crossborder') && !isBatchEdit) || crossborderInfo.alarmTypeId == '4'"  class="alarmContent">
                         <p class="name">
                             <span>名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称：</span>
-                            <el-input type="text" v-model='crossborderInfo.name' class="inputText" :maxlength="15" :disabled='isReadonly'></el-input>
+                            <el-input type="text" v-model='crossborderInfo.name' class="inputText" :maxlength="50" :disabled='isReadonly'></el-input>
                         </p>
 
                         <p class="severityName">
@@ -176,12 +176,12 @@
                         </p>
                         <p class="deviceScope">
                             <span>调度范围(m)：</span>
-                            <el-input type="text" v-model='crossborderInfo.deviceScope' class="inputText" :maxlength="15" :disabled='isReadonly'></el-input>
+                            <el-input type="text" v-model='crossborderInfo.deviceScope' class="inputText" :maxlength="50" :disabled='isReadonly'></el-input>
                             (设备)
                         </p>
                         <p class="securityScope">
                             <span>调度范围(m)：</span>
-                            <el-input type="text"  v-model='crossborderInfo.securityScope' class="inputText" :maxlength="15" :disabled='isReadonly'></el-input>
+                            <el-input type="text"  v-model='crossborderInfo.securityScope' class="inputText" :maxlength="50" :disabled='isReadonly'></el-input>
                             (安保)
                         </p>
                         <p class="relatedManager">
@@ -222,7 +222,7 @@
                     <div v-if="(route.includes('speeding') && !isBatchEdit) || speedingInfo.alarmTypeId == '5'"  class="alarmContent">
                         <p class="name">
                             <span>名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称：</span>
-                            <el-input type="text" v-model='speedingInfo.name' class="inputText" :maxlength="15" :disabled='isReadonly'></el-input>
+                            <el-input type="text" v-model='speedingInfo.name' class="inputText" :maxlength="50" :disabled='isReadonly'></el-input>
                         </p>
 
                         <p class="severityName">
@@ -250,23 +250,23 @@
 
                         <p class="name">
                             <span>限&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;速：</span>
-                            <el-input type="text" v-model='speedingInfo.upperThreshold' class="inputText" :maxlength="15" :disabled='isReadonly'></el-input>
+                            <el-input type="text" v-model='speedingInfo.upperThreshold' class="inputText" :maxlength="50" :disabled='isReadonly'></el-input>
                             (千米/小时)
                         </p>
 
                         <p class="name">
                             <span>超速时长阈值：</span>
-                            <el-input type="text" v-model='speedingInfo.extendThreshold' class="inputText" :maxlength="15" :disabled='isReadonly'></el-input>
+                            <el-input type="text" v-model='speedingInfo.extendThreshold' class="inputText" :maxlength="50" :disabled='isReadonly'></el-input>
                             (千米/小时)
                         </p>
                         <p class="deviceScope">
                             <span>调度范围(m)：</span>
-                            <el-input type="text" v-model='speedingInfo.deviceScope' class="inputText" :maxlength="15" :disabled='isReadonly'></el-input>
+                            <el-input type="text" v-model='speedingInfo.deviceScope' class="inputText" :maxlength="50" :disabled='isReadonly'></el-input>
                             (设备)
                         </p>
                         <p class="securityScope">
                             <span>调度范围(m)：</span>
-                            <el-input type="text"  v-model='speedingInfo.securityScope' class="inputText" :maxlength="15" :disabled='isReadonly'></el-input>
+                            <el-input type="text"  v-model='speedingInfo.securityScope' class="inputText" :maxlength="50" :disabled='isReadonly'></el-input>
                             (安保)
                         </p>
                         <p class="relatedManager">
@@ -307,7 +307,7 @@
                     <div v-if="(route.includes('offtrack') && !isBatchEdit) || offtrackInfo.alarmTypeId == '6'"  class="alarmContent">
                         <p class="name">
                             <span>名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称：</span>
-                            <el-input type="text" v-model='offtrackInfo.name' class="inputText" :maxlength="15" :disabled='isReadonly'></el-input>
+                            <el-input type="text" v-model='offtrackInfo.name' class="inputText" :maxlength="50" :disabled='isReadonly'></el-input>
                         </p>
                         <p class="relatedSchedule">
                             <span>关联计划：</span>
@@ -333,12 +333,12 @@
                         </p>
                         <p class="extendThreshold">
                             <span>偏离时长：</span>
-                            <el-input type="text" v-model='offtrackInfo.extendThreshold' class="inputText" :maxlength="15" :disabled='isReadonly'></el-input>
+                            <el-input type="text" v-model='offtrackInfo.extendThreshold' class="inputText" :maxlength="50" :disabled='isReadonly'></el-input>
                             (分钟)
                         </p>
                         <p class="upperThreshold">
                             <span>偏离阈值：</span>
-                            <el-input type="text"  v-model='offtrackInfo.upperThreshold' class="inputText" :maxlength="15" :disabled='isReadonly'></el-input>
+                            <el-input type="text"  v-model='offtrackInfo.upperThreshold' class="inputText" :maxlength="50" :disabled='isReadonly'></el-input>
                             (米)
                         </p>
                         <p class="relatedManager">
@@ -378,7 +378,7 @@
                     </div>
                     <div v-if="(route.includes('overlimit') && !isBatchEdit) || overlimitInfo.alarmTypeId == '7'"  class="alarmContent">
                         <p class="name">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称：
-                            <el-input type="text" v-model='overlimitInfo.name' class="inputText" :maxlength="15" :disabled='isReadonly'></el-input>
+                            <el-input type="text" v-model='overlimitInfo.name' class="inputText" :maxlength="50" :disabled='isReadonly'></el-input>
                         </p>
                         <p class="relatedDevice">关联设备：
                             <el-select  v-model="overlimitInfo.relatedDeviceIds" size="mini" multiple class="" placeholder="请选择" :disabled='isReadonly'>
@@ -406,7 +406,7 @@
                             </el-select>
                         </p>
                         <p class="upperThreshold">客流阈值：
-                            <el-input type="text" v-model='overlimitInfo.upperThreshold' class="inputText" :maxlength="15" :disabled='isReadonly'></el-input>
+                            <el-input type="text" v-model='overlimitInfo.upperThreshold' class="inputText" :maxlength="50" :disabled='isReadonly'></el-input>
                             (人)
                         </p>
                         <p class="relatedManager">管&nbsp;理&nbsp;&nbsp;者：
@@ -445,7 +445,7 @@
                     <div v-if="(route.includes('waterlevel') && !isBatchEdit) || waterlevelInfo.alarmTypeId == '8'"  class="alarmContent">
                         <p class="name">
                             <span>名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称：</span>
-                            <el-input type="text" v-model='waterlevelInfo.name' class="inputText" :maxlength="15" :disabled='isReadonly'></el-input>
+                            <el-input type="text" v-model='waterlevelInfo.name' class="inputText" :maxlength="50" :disabled='isReadonly'></el-input>
                         </p>
                         <p class="relatedDevice">
                             <span>关联设备：</span>
@@ -476,12 +476,12 @@
                         </p>
                         <p class="upperThreshold">
                             <span>水位上限：</span>
-                            <el-input type="text" v-model='waterlevelInfo.upperThreshold' class="inputText" :maxlength="15" :disabled='isReadonly'></el-input>
+                            <el-input type="text" v-model='waterlevelInfo.upperThreshold' class="inputText" :maxlength="50" :disabled='isReadonly'></el-input>
                             (米)
                         </p>
                         <p class="lowerThreshold">
                             <span>水位下限：</span>
-                            <el-input type="text" v-model='waterlevelInfo.lowerThreshold' class="inputText" :maxlength="15" :disabled='isReadonly'></el-input>
+                            <el-input type="text" v-model='waterlevelInfo.lowerThreshold' class="inputText" :maxlength="50" :disabled='isReadonly'></el-input>
                             (米)
                         </p>
                         <p class="relatedManager">
@@ -521,7 +521,7 @@
                     <div v-if="(route.includes('condition') && !isBatchEdit) || conditionInfo.alarmTypeId == '9'"  class="alarmContent">
                         <p class="name">
                             <span>名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称：</span>
-                            <el-input type="text" v-model='conditionInfo.name' class="inputText" :maxlength="15" :disabled='isReadonly'></el-input>
+                            <el-input type="text" v-model='conditionInfo.name' class="inputText" :maxlength="50" :disabled='isReadonly'></el-input>
                         </p>
                         <p class="envType">
                             <span>指标类型：</span>
@@ -576,42 +576,42 @@
 
                         <p class="upperThreshold" v-if = "!conditionInfo.envTypeId || conditionInfo.envTypeId == '1'">
                             <span>上限阈值：</span>
-                            <el-input type="text" v-model='conditionInfo.upperThreshold' class="inputText" :maxlength="15" :disabled='isReadonly'></el-input>
+                            <el-input type="text" v-model='conditionInfo.upperThreshold' class="inputText" :maxlength="50" :disabled='isReadonly'></el-input>
                             (℃)
                         </p>
                         <p class="lowerThreshold" v-if = "!conditionInfo.envTypeId || conditionInfo.envTypeId == '1'">
                             <span>下限阈值：</span>
-                            <el-input type="text" v-model='conditionInfo.lowerThreshold' class="inputText" :maxlength="15" :disabled='isReadonly'></el-input>
+                            <el-input type="text" v-model='conditionInfo.lowerThreshold' class="inputText" :maxlength="50" :disabled='isReadonly'></el-input>
                             (℃)
                         </p>
                         <p class="upperThreshold" v-if = "conditionInfo.envTypeId == '2'">
                             <span>上限阈值：</span>
-                            <el-input type="text" v-model='conditionInfo.upperThreshold' class="inputText" :maxlength="15" :disabled='isReadonly'></el-input>
+                            <el-input type="text" v-model='conditionInfo.upperThreshold' class="inputText" :maxlength="50" :disabled='isReadonly'></el-input>
                             (%)
                         </p>
                         <p class="lowerThreshold" v-if = "conditionInfo.envTypeId == '2'">
                             <span>下限阈值：</span>
-                            <el-input type="text" v-model='conditionInfo.lowerThreshold' class="inputText" :maxlength="15" :disabled='isReadonly'></el-input>
+                            <el-input type="text" v-model='conditionInfo.lowerThreshold' class="inputText" :maxlength="50" :disabled='isReadonly'></el-input>
                             (%)
                         </p>
                         <p class="upperThreshold" v-if = "conditionInfo.envTypeId == '3'">
                             <span>上限阈值：</span>
-                            <el-input type="text" v-model='conditionInfo.upperThreshold' class="inputText" :maxlength="15" :disabled='isReadonly'></el-input>
+                            <el-input type="text" v-model='conditionInfo.upperThreshold' class="inputText" :maxlength="50" :disabled='isReadonly'></el-input>
                             (微克/立方米)
                         </p>
                         <p class="lowerThreshold" v-if = "conditionInfo.envTypeId == '3'">
                             <span>下限阈值：</span>
-                            <el-input type="text" v-model='conditionInfo.lowerThreshold' class="inputText" :maxlength="15" :readonly = 'true' :disabled='true'></el-input>
+                            <el-input type="text" v-model='conditionInfo.lowerThreshold' class="inputText" :maxlength="50" :readonly = 'true' :disabled='true'></el-input>
                             (微克/立方米)
                         </p>
                         <p class="upperThreshold" v-if = "conditionInfo.envTypeId == '4'">
                             <span>上限阈值：</span>
-                            <el-input type="text" v-model='conditionInfo.upperThreshold' class="inputText" :maxlength="15" :disabled='isReadonly'></el-input>
+                            <el-input type="text" v-model='conditionInfo.upperThreshold' class="inputText" :maxlength="50" :disabled='isReadonly'></el-input>
                             (级)
                         </p>
                         <p class="lowerThreshold" v-if = "conditionInfo.envTypeId == '4'">
                             <span>下限阈值：</span>
-                            <el-input type="text" v-model='conditionInfo.lowerThreshold' class="inputText" :maxlength="15" :disabled='isReadonly'></el-input>
+                            <el-input type="text" v-model='conditionInfo.lowerThreshold' class="inputText" :maxlength="50" :disabled='isReadonly'></el-input>
                             (级)
                         </p>
                         <p class="relatedManager">

@@ -5,7 +5,9 @@
                 <el-header  v-show = "isshowHead">
                     <el-row :gutter="10" class="alleye">
                         <el-col :xs="19" :sm="19" :md="21" :lg="21" :xl="21" >
-                            <img src="../../static/img/eye.png"/>分析
+                            <router-link to="/droreone">
+                                <img src="../../static/img/eye.png"/>分析
+                            </router-link>
                         </el-col>
                         <el-col :xs="5" :sm="5" :md="3" :lg="3" :xl="3" class="control">
                             <div class="func">
@@ -329,6 +331,9 @@
             .el-col:first-child{
                 padding-right: rem(10);
                 color: #fff;
+                a{
+                    color: #fff;
+                }
                 img{
                     width: rem(60);
                     height: rem(30);

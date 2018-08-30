@@ -1991,7 +1991,7 @@ define(function(require, exports, module) {
                                 if(icon) {
                                     this.feature_ = icon;
                                     icon.showName = true;
-                                    var iconLayer = pool.getLayerById(icon.subtype);
+                                    var iconLayer = pool.getLayerById(icon.id);
                                     iconLayer.setZIndex(2);
                                 }
                             } else if(featureType == "Polygon") { //区域
@@ -2006,7 +2006,7 @@ define(function(require, exports, module) {
                                 // prevLayer.setZIndex(1);
                                 this.feature_ = icon;
                                 icon.showName = true;
-                                var iconLayer = pool.getLayerById(icon.subtype);
+                                var iconLayer = pool.getLayerById(icon.id);
                                 iconLayer.setZIndex(2);
                             }
                         }
@@ -2016,7 +2016,7 @@ define(function(require, exports, module) {
                         if(this.feature_) {
                             if(this.feature_.constructor == cover.Marker) {
                                 var icon = pool.getIconById(this.feature_.id);
-                                var iconLayer = pool.getLayerById(icon.subtype);
+                                var iconLayer = pool.getLayerById(icon.id);
                                 iconLayer.setZIndex(1);
                                 this.feature_.showName = false;
                             } else if(this.feature_.getGeometry().getType() == "Polygon") {
@@ -2039,6 +2039,8 @@ define(function(require, exports, module) {
                     if(featureType == "Point") {
                         var icon = pool.getIconById(feature.getId());
                         DragMediator.feature_ = icon;
+                    }else {
+                        return
                     }
                     DragMediator.coordinate_ = event.coordinate;
                     DragMediator.startCoordinate_[0] = event.coordinate[0];
@@ -2050,13 +2052,11 @@ define(function(require, exports, module) {
             handleDragEvent: function(event) {
                 var deltaX = event.coordinate[0] - DragMediator.coordinate_[0];
                 var deltaY = event.coordinate[1] - DragMediator.coordinate_[1];
-                if(DragMediator.feature_!= null){
-                    if(DragMediator.feature_.constructor == cover.Marker) {
-                        var geometry = DragMediator.feature_.feature.getGeometry();
-                        geometry.translate(deltaX, deltaY);
-                        DragMediator.coordinate_[0] = geometry.getCoordinates()[0];
-                        DragMediator.coordinate_[1] = geometry.getCoordinates()[1];
-                    }
+                if(DragMediator.feature_&&DragMediator.feature_.constructor == cover.Marker){
+                    var geometry = DragMediator.feature_.feature.getGeometry();
+                    geometry.translate(deltaX, deltaY);
+                    DragMediator.coordinate_[0] = geometry.getCoordinates()[0];
+                    DragMediator.coordinate_[1] = geometry.getCoordinates()[1];
                 }
             },
             handleMoveEvent: function(event) {
@@ -2068,9 +2068,15 @@ define(function(require, exports, module) {
                         });
                     var element = event.map.getTargetElement();
                     if(feature) {
-                        if(element.style.cursor != DragMediator.cursor_) {
-                            DragMediator.previousCursor_ = element.style.cursor;
-                            element.style.cursor = DragMediator.cursor_;
+                        var featureType = feature.getGeometry().getType();
+                        if(featureType == "Point") {
+                            if(element.style.cursor != DragMediator.cursor_) {
+                                DragMediator.previousCursor_ = element.style.cursor;
+                                element.style.cursor = DragMediator.cursor_;
+                            }
+                        }else{
+                            element.style.cursor = DragMediator.previousCursor_;
+                            DragMediator.previousCursor_ = undefined;
                         }
                     } else if(DragMediator.previousCursor_ !== undefined) {
                         element.style.cursor = DragMediator.previousCursor_;

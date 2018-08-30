@@ -37,23 +37,23 @@
                         <div  v-if="!isBatchEdit"  class="alarmContent">
                             <p class="serialNum">
                                 <span>编&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 号：</span>
-                                <el-input type="text" v-model='eventInfo.serialNum' class="inputText" :maxlength="15" :disabled="true"></el-input>
+                                <el-input type="text" v-model='eventInfo.serialNum' class="inputText" :maxlength="50" :disabled="true"></el-input>
                             </p>
                             <p class="type">
                                 <span>指标类型：</span>
-                                <el-input type="text" v-model='eventInfo.rule.alarmTypeName' class="inputText" :maxlength="15" :disabled='true'></el-input>
+                                <el-input type="text" v-model='eventInfo.rule.alarmTypeName' class="inputText" :maxlength="50" :disabled='true'></el-input>
                             </p>
                             <p class="sourceDevice">
                                 <span>来&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 源：</span>
-                                <el-input type="text"  v-model='eventInfo.device.name' class="inputText" :maxlength="15" :disabled='true'></el-input>
+                                <el-input type="text"  v-model='eventInfo.device.name' class="inputText" :maxlength="50" :disabled='true'></el-input>
                             </p>
                             <p class="occurenceTime">
                                 <span>发生时间：</span>
-                                <el-input type="text"  v-model='eventInfo.occurenceTime' class="inputText" :maxlength="15" :disabled='true'></el-input>
+                                <el-input type="text"  v-model='eventInfo.occurenceTime' class="inputText" :maxlength="50" :disabled='true'></el-input>
                             </p>
                             <p class="alarmRule">
                                 <span class="ruleStyle">关联规则：</span>
-                                <!--<el-input type="text" v-model='eventInfo.alarmRuleName' class="inputText" :maxlength="15" :readonly='true'></el-input>-->
+                                <!--<el-input type="text" v-model='eventInfo.alarmRuleName' class="inputText" :maxlength="50" :readonly='true'></el-input>-->
                                 <span class="inputText el-input showRuleDetail ruleStyle" @click="showRuleDetail">{{eventInfo.rule.name}}</span>
                                 <!--<div class="inputText el-input"></div>-->
                             </p>
@@ -87,18 +87,18 @@
 
                             <p v-if="ruleInfo.alarmTypeId == '5'" class="name">
                                 <span>实际时长阈值：</span>
-                                <el-input type="text" v-model='eventInfo.acturalExtendValue' class="inputText" :maxlength="15" :disabled='true'></el-input>
+                                <el-input type="text" v-model='eventInfo.acturalExtendValue' class="inputText" :maxlength="50" :disabled='true'></el-input>
                                 (千米/小时)
                             </p>
                             <p v-if="ruleInfo.alarmTypeId == '5'" class="name">
                                 <span>实际最高速度：</span>
-                                <el-input type="text" v-model='eventInfo.actualValue' class="inputText" :maxlength="15" :disabled='true'></el-input>
+                                <el-input type="text" v-model='eventInfo.actualValue' class="inputText" :maxlength="50" :disabled='true'></el-input>
                                 (千米/小时)
                             </p>
 
                             <p class="tel">
                                 <span>电话号码：</span>
-                                <el-input type="text" v-model="eventInfo.owner.phone" class="inputText" :maxlength="15" :disabled="true"></el-input>
+                                <el-input type="text" v-model="eventInfo.owner.phone" class="inputText" :maxlength="50" :disabled="true"></el-input>
                             </p>
                             <p class="status">
                                 <span>状&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 态:</span>

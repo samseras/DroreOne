@@ -4,7 +4,9 @@
             <el-header  v-show = "isshowHead">
                 <el-row :gutter="10" class="alleye">
                     <el-col :xs="6" :sm="7" :md="6" :lg="5" :xl="4">
-                        <img src="../../../static/img/eye.png"/>全视之眼
+                        <router-link to="/droreone">
+                            <img src="../../../static/img/eye.png"/>全视之眼
+                        </router-link>
                     </el-col>
                     <el-col :xs="3" :sm="3" :md="5" :lg="6" :xl="6" class="control">
                         <div v-for="(item,index) in manage" @click="goModule(item,index)"
@@ -485,9 +487,6 @@
         }
 
         .alleye .el-col:first-child img {
-            margin-top: rem(15);
-            width: rem(60);
-            height: rem(30);
             padding-right: rem(10);
             vertical-align: middle;
         }

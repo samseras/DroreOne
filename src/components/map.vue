@@ -3250,7 +3250,13 @@
                         this.treeShow(this.getTreeShow);
                         let layer =  droreMap.icon.returnLayer(this.getTreeShow.id)
                         this.menulist = layer.data;
-                        this.droreMappopup(layer);
+                        let route = this.$route.path
+                        if(route.includes('controler')){
+                            this.droreMappopup(layer);
+                        }else if(route.includes('facility')){
+                            this.droreMappopup(layer);
+                            this.menuShow()
+                        }
                     }
                 }
             }
