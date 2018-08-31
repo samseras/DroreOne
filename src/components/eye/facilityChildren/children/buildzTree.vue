@@ -122,7 +122,7 @@
                     this.selectAllCheckBox = false
                 }
                 data.checked = checked
-                console.log(data, '这是最后提交的')
+                // console.log(data, '这是最后提交的')
                 this.$store.commit('SHOW_TREE', data)
             },
             treeALL(){
@@ -135,8 +135,8 @@
                 }
             },
             treeShow(data){
-                console.log(data);
                 if(data.isLeaf){
+                    this.$store.commit('TREE_SHOW', [])
                     let checkedKeysId = this.$refs.tree.getCheckedKeys()
                     checkedKeysId.push(data.data.id)
                     this.$refs.tree.setCheckedKeys(checkedKeysId)

@@ -3241,21 +3241,20 @@
                 }
             },
             getTreeShow(){
-                if(this.getTreeShow.typeroad=='road'){
-                    this.roadShow(this.getTreeShow);
-                }else {
-                    if(this.getTreeShow.type =='person'){
-                        this.roadShowID(this.getTreeShow.routeId);
+                if(this.getTreeShow.length!=0){
+                        if(this.getTreeShow.typeroad=='road'){
+                        this.roadShow(this.getTreeShow);
                     }else {
-                        this.treeShow(this.getTreeShow);
-                        let layer =  droreMap.icon.returnLayer(this.getTreeShow.id)
-                        this.menulist = layer.data;
-                        let route = this.$route.path
-                        if(route.includes('controler')){
-                            this.droreMappopup(layer);
-                        }else if(route.includes('facility')){
-                            this.droreMappopup(layer);
-                            this.menuShow()
+                        if(this.getTreeShow.type =='person'){
+                            this.roadShowID(this.getTreeShow.routeId);
+                        }else {
+                            this.treeShow(this.getTreeShow);
+                            let route = this.$route.path
+                            if(route.includes('controler')){
+                                let layer =  droreMap.icon.returnLayer(this.getTreeShow.id)
+                                this.menulist = layer.data;
+                                this.droreMappopup(layer);
+                            }
                         }
                     }
                 }

@@ -44,7 +44,7 @@
                 return data.label.indexOf(value) !== -1;
             },
             getChecked (node,info) {
-                console.log(node);
+                // console.log(node);
                 if (this.regionId.includes(node.data.id)) {
                     return
                 }
@@ -70,7 +70,7 @@
                })
                 this.$refs.tree.setCheckedKeys(checkedKeysId)
 
-                console.log(this.Info);
+                // console.log(this.Info);
                 // this.$store.commit('SHOW_TREE', this.Info)
                 if (checkedKeysId.length == this.lightList.length) {
                     this.selectAllCheckBox = true
@@ -133,8 +133,8 @@
                 }
             },
             treeShow(data){
-                console.log(data);
                 if(data.isLeaf){
+                    this.$store.commit('TREE_SHOW', [])
                     let checkedKeysId = this.$refs.tree.getCheckedKeys()
                     checkedKeysId.push(data.data.id)
                     this.$refs.tree.setCheckedKeys(checkedKeysId)
