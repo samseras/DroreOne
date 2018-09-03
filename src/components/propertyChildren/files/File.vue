@@ -58,7 +58,7 @@
     import FileHeader from '@/components/propertyChildren/files/FileHeader'
     import Document from '@/components/propertyChildren/files/Document'
     import CreatedFileDialog from '@/components/propertyChildren/files/createdFileDialog'
-    import UploadFileDialog from '@/components/propertyChildren/files/uploadFileDialog'
+    import UploadFileDialog from '@/components/propertyChildren/files/UploadFileDialog'
     import MoveFileDialog from '@/components/propertyChildren/files/moveFileDialog'
     import CheckFileDialog from '@/components/propertyChildren/files/checkFileDialog'
     import api from '@/api'
