@@ -49,6 +49,8 @@
                       :visible="cameravisible"
                       @closeInfoDialog ="closeDialog">
         </controlcameraDialog>
+        <ledDialog v-if="ledvisible" :ledvisible="ledvisible"  @closeDialog ="closeDialog">
+        </ledDialog>
     </Scrollcontainer>
 
 </template>
@@ -61,6 +63,7 @@
     import api from '@/api'
     import PersonDetail from '@/components/controlDialog'
     import controlcameraDialog from '@/components/controlcameraDialog'
+    import ledDialog from '@/components/ledDialog'
 
     export default {
         name: "map1",
@@ -88,6 +91,7 @@
                 title:'',
                 width:'1080px',
                 cameravisible:false,
+                ledvisible:false,
                 isDisabled: true,
                 lightCheckout:[],
                 searchFacilityList: [],
@@ -322,6 +326,7 @@
             closeDialog () {
                 this.visible = false
                 this.cameravisible = false
+                this.ledvisible = false
             },
             requestGisMain() {
                 document.getElementById('map').innerHTML = ""
@@ -2236,6 +2241,11 @@
                             });
                         } else if(icon.subtype=="station" || icon.subtype == "landing"){
                             //站点没有点击事件
+                        }else if(icon.subtype.includes("led")){
+                            console.log("aaaaaaaaaa")
+                            icon.onclick(function (e) {
+                                that.ledvisible = true
+                            });
                         }
                         // else if(icon.subtype=="car" || icon.subtype == "boat"){
                         //     //车船有点击事件
@@ -2673,7 +2683,8 @@
         components: {
             Scrollcontainer,
             PersonDetail,
-            controlcameraDialog
+            controlcameraDialog,
+            ledDialog
         },
         watch: {
             getSearchInfo () {
