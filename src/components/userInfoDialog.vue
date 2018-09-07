@@ -12,13 +12,13 @@
                 <div class="userInfo">
                     <p class="userName">
                         <span class="titleText">
-                            用&nbsp;&nbsp;户&nbsp;&nbsp;名：
+                            登&nbsp;&nbsp;录&nbsp;&nbsp;名：
                         </span>
-                        <el-input v-model="info.name" disabled></el-input>
+                        <el-input v-model="info.name"></el-input>
                     </p>
                     <p class="nickName">
                         <span class="titleText">
-                            昵&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称：
+                            姓&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;名：
                         </span>
                         <el-input v-model="info.cnName" placeholder="请输入昵称"></el-input>
                     </p>
@@ -184,7 +184,12 @@
                 }
             },
             async updataUserInfo () {
+                let userReg = /^[a-zA-Z]([-_a-zA-Z0-9]{1,19})+$/
                 let obj = {...this.info}
+                if (!userReg.test(obj.name)) {
+                    this.$message.error('请输入符合要求的登录名')
+                    return
+                }
                 if (this.showFixPsd) {
                     if (!(this.oldPassword.trim()=== '' && this.newPassword.trim()==='' && this.surePassword.trim()==='')) {
                         if (this.oldPassword.trim() === '') {
