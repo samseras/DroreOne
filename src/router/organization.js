@@ -18,8 +18,8 @@ const organization = [
                 redirect: '/person/post',
                 meta: {id: '06'},
                 children: [
-                    { path: '/person/post', name: "PersonPost", component: resolve => require(['@/components/Orginization/personRole'], resolve), meta: {id: '06'}},
-                    { path: '/person/role',name: 'PersonRole', component: resolve => require(['@/components/Orginization/personPost'], resolve), meta: {id: '06'}},
+                    { path: '/person/post', name: "PersonPost", component: resolve => require(['@/components/Orginization/personPost'], resolve), meta: {id: '06'}},
+                    { path: '/person/role',name: 'PersonRole', component: resolve => require(['@/components/Orginization/personRole'], resolve), meta: {id: '06'}},
                     { path: '/person/department',name: 'Department', component: resolve => require(['@/components/Orginization/Department'], resolve), meta: {id: '06'}},
                     { path: '/person/users',name: 'PersonDeploy', component: resolve => require(['@/components/personChildren/personDeploy'], resolve), meta: {id: '06'}},
                 ]

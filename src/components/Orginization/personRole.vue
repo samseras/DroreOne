@@ -181,7 +181,7 @@
             async fixInfo(info) {
                 let permiss = []
                 info.rolesIds.forEach(item => {
-                    permiss.push({id: item})
+                    permiss.push({...item})
                 })
                 let jobObj = {
                     id: info.id,

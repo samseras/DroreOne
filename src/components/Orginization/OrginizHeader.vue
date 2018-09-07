@@ -17,7 +17,7 @@
             <el-button size="mini"plain @click="deleteCard" v-if="getUserRole[0] === 1"><i class="el-icon-delete"></i>删除</el-button>
             <!--<el-button size="mini"plain @click="fixCard" v-if="isShowIcon"><i class="el-icon-edit" ></i>修改</el-button>-->
             <div class="selectDepar" v-if="route.includes('users')">
-                <el-select v-model="department" multiple placeholder="部门名称" @change="selectDepartment">
+                <el-select v-model="department" multiple collapse-tags placeholder="部门名称" @change="selectDepartment">
                     <el-option
                         v-for="item in departmentList"
                         :key="item.id"
@@ -27,7 +27,7 @@
                 </el-select>
             </div>
             <div class="selectDepar" v-if="route.includes('users')">
-                <el-select v-model="postName" multiple placeholder="岗位名称" @change="selectJob">
+                <el-select v-model="postName" multiple collapse-tags placeholder="岗位名称" @change="selectJob">
                     <el-option
                         v-for="item in postList"
                         :key="item.id"

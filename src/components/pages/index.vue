@@ -36,94 +36,55 @@
                     <div id="top" class="entrence-cont">
                         <ul>
                             <li class="one">
-                                <div class="change estate">
-                                    <router-link :to="this.property_management_url">
-                                        {{this.property_management_name}}>><img src="../../../static/img/estate.png"/>
-                                    </router-link>
+                                <div class="change estate invalid">
+                                    <a href="javascript:;" >物业管理>><img src="../../../static/img/estate.png"/></a>
                                 </div>
                                 <div class="list">
-                                    <router-link :to="this.three_applications_url" class="listO change">
-                                        {{this.three_applications_name}}>><img src="../../../static/img/threeSoft.png"/>
-                                    </router-link>
-                                    <router-link :to="this.system_config_url" class="listT change">
-                                        {{this.system_config_name}}>><img src="../../../static/img/settion.png"/>
-                                    </router-link>
+                                    <div  class="listO change invalid"><a href="javascript:;">第三方应用<img src="../../../static/img/threeSoft.png"/></a></div>
+                                    <div  class="listT change" @click="getUserCenter">
+                                        <a  href="javascript:;" >用户中心>><img src="../../../static/img/settion.png" /></a>
+                                    </div>
                                 </div>
                             </li>
                             <li class="two">
                                 <div class="bigData">
-                                    <div class="change dap">
-                                        <a :href="this.dap_url" target="_blank">
-                                            {{this.dap_name}}>><img src="../../../static/img/bagData.png"/>
-                                        </a>
+                                    <div class="change invalid">
+                                        <a href="javascript:;" @click="slsjqProperty">大数据分析>><img src="../../../static/img/bagData.png"/></a>
                                     </div>
                                     <div class="dataCenter change" id="dataCenter">
-                                        <router-link :to="this.data_center_url">
-                                            {{this.data_center_name}}>><img src="../../../static/img/dataCenter.png"/>
-                                        </router-link>
+                                        <a href="javascript:;" @click="slsjq">数据中心>><img src="../../../static/img/dataCenter.png"/></a>
                                     </div>
                                 </div>
                                 <div class="eye">
-                                    <router-link :to="this.eye_url" id="eye" class="change">
-                                        {{this.eye_name}}>><img src="../../../static/img/eye.png"/>
-                                    </router-link>
+                                    <div class="change" id="eye">
+                                        <a href="javascript:;" @click="gqjq">全视之眼>><img src="../../../static/img/eye.png"/></a>
+                                    </div>
                                     <!---->
-                                    <router-link :to="this.analysis_url" class="change analysis">
-                                        {{this.analysis_name}}>><img src="../../../static/img/sentiment.png"/>
-                                    </router-link>
+                                    <div class="change invalid">
+                                        <a href="javascript:;" @click="requestFullScreen" >数据可视化>><img src="../../../static/img/sentiment.png"/></a>
+                                    </div>
                                 </div>
                             </li>
-                            <li class="change" id="bee">
-                                <router-link :to="this.iot_url" >
-                                    {{this.iot_name}}>><img src="../../../static/img/ZigBee.png"/>
-                                </router-link>
-                            </li>
+                            <li class="change invalid" id="bee" @click="qtxgjqProperty"><a>物联网>><img src="../../../static/img/ZigBee.png"/></a></li>
                         </ul>
                     </div>
                     <div id="bottom" class="entrence-cont">
                         <ul>
-                            <li class="change gis">
-                                <router-link :to="gis_url" id="GIS">
-                                    {{this.gis_name}}>><img src="../../../static/img/GIS.png"/>
-                                </router-link>
+                            <li class="change invalid" @click="qtxgjq">
+                                <!--<router-link to="/gisMap">-->
+                                <div id="GIS">
+                                    <a>
+                                    GIS地图<img src="../../../static/img/GIS.png"/>
+                                    </a>
+                                </div>
+                                <!--</router-link>-->
                             </li>
-                            <li class="change official_website">
-                                <router-link :to="this.official_website_url">
-                                    {{this.official_website_name}}>><img src="../../../static/img/home.png"/>
-                                </router-link>
-                            </li>
-                            <li class="change ticket">
-                                <router-link :to="this.ticket_url">
-                                    {{this.ticket_name}}>><img src="../../../static/img/elecTicket.png"/>
-                                </router-link>
-                            </li>
-                            <li class="change business">
-                                <router-link :to="this.business_url">
-                                    {{this.business_name}}>><img src="../../../static/img/elecBusiness.png"/>
-                                </router-link>
-                            </li>
-                            <li class="change wechat_subscription">
-                                <router-link :to="this.wechat_subscription_url">
-                                    {{this.wechat_subscription_name}}>><img src="../../../static/img/weixin.png"/>
-                                </router-link>
-                            </li>
+                            <li class="change invalid"><a>官网门户>><img src="../../../static/img/home.png"/></a></li>
+                            <li class="change invalid"><a>电子票务>><img src="../../../static/img/elecTicket.png"/></a></li>
+                            <li class="change invalid"><a>电子商圈>><img src="../../../static/img/elecBusiness.png"/></a></li>
+                            <li class="change invalid"><a>微信公众号>><img src="../../../static/img/weixin.png"/></a></li>
                         </ul>
                     </div>
-                    <!--<el-row :gutter="10">-->
-                    <!--<el-col :span="8"><div class="grid-content bg-purple"></div></el-col>-->
-                    <!--<el-col :span="4"><div class="grid-content bg-purple"></div></el-col>-->
-                    <!--<el-col :span="8"><div class="grid-content bg-purple"></div></el-col>-->
-                    <!--<el-col :span="4"><div class="grid-content bg-purple"></div></el-col>-->
-                    <!--<el-col :span="4"><div class="grid-content bg-purple"></div></el-col>-->
-                    <!--<el-col :span="4"><div class="grid-content bg-purple"></div></el-col>-->
-                    <!--<el-col :span="8"><div class="grid-content bg-purple"></div></el-col>-->
-                    <!--<el-col :span="4"><div class="grid-content bg-purple"></div></el-col>-->
-                    <!--<el-col :span="8"><div class="grid-content bg-purple"></div></el-col>-->
-                    <!--<el-col :span="4"><div class="grid-content bg-purple"></div></el-col>-->
-                    <!--<el-col :span="4"><div class="grid-content bg-purple"></div></el-col>-->
-                    <!--<el-col :span="4"><div class="grid-content bg-purple"></div></el-col>-->
-                    <!--<el-col :span="4"><div class="grid-content bg-purple"></div></el-col>-->
-                    <!--</el-row>-->
                 </el-carousel-item>
                 <el-carousel-item>
                     <div class="conversion">
@@ -145,11 +106,10 @@
     import moment from 'moment'
     import ScrollContainer from '@/components/ScrollContainer'
     import { mapGetters,mapActions} from 'vuex'
-    import api from '@/api'
-
-    export default {
-        data() {
-            return {
+    import screenfull from 'screenfull'
+	export default {
+		data() {
+	        return {
                 currTime: new Date(),  //当前时间
                 searchContent: '',
                 searchList: [],
@@ -158,7 +118,7 @@
                     {title: '全视之眼', route: '/eye'},
                     {title: '数据中心', route: '/property'},
                     {title: '大数据分析', route: ''},
-                    {title: 'GIS地图', route: ''},
+                    {title: 'GIS地图', route: '/gisMap'},
                     {title: '物业管理', route: ''},
                     {title: '第三方应用', route: ''},
                     {title: '系统配置', route: ''},
@@ -169,35 +129,9 @@
                     {title: '微信公众号', route: ''},
                     {title: '电子商圈', route: ''},
                 ],
-                property_management_name:'物业管理',
-                property_management_url:'',
-                three_applications_name:'第三方应用',
-                three_applications_url:'',
-                system_config_name:'系统配置',
-                system_config_url:'',
-                dap_name:'大数据分析',
-                dap_url:'',
-                data_center_name:'数据中心',
-                data_center_url:'',
-                eye_name:'全视之眼',
-                eye_url:'',
-                analysis_name:'数据可视化',
-                analysis_url:'',
-                iot_name:'物联网',
-                iot_url:'',
-                gis_name:'GIS地图',
-                gis_url:'',
-                official_website_name:'智能音箱',
-                official_website_url:'/boxHome',
-                ticket_name:'电子票务',
-                ticket_url:'',
-                business_name:'电子商圈',
-                business_url:'',
-                wechat_subscription_name:'微信公众号',
-                wechat_subscription_url:'',
                 activeIndex: 0
-            }
-        },
+			}
+	   },
         filters: {
             timeFiler(item) {
                 return moment(item).format('YYYY年MM月DD日')
@@ -223,13 +157,59 @@
                     return url
                 }
             },
+            gqjq(){
+                if (this.getUserRole.includes('01') || this.getUserRole[0] == 1) {
+                    this.$router.push('/eye')
+                }else {
+                    this.$message.error('此模块暂不为您开放，请联系管理员开放权限！')
+                }
+            },
+            qtxgjq(){
+                // if (this.getUserRole[0] == 1) {
+                //     this.$router.push('/gisMap')
+                // }else {
+                //     this.$message.error('此模块暂不为您开放，请联系管理员开放权限！')
+                // }
+            },
+            slsjq(){
+                if (this.getUserRole.includes('04') || this.getUserRole[0] == 1) {
+                    this.$router.push('/Property')
+                }else {
+                    this.$message.error('此模块暂不为您开放，请联系管理员开放权限！')
+                }
+
+            },
+            requestFullScreen(){
+                // if (this.getUserRole.includes('03') || this.getUserRole[0] == 1) {
+                //     this.$router.push('analysis')
+                // } else {
+                //     this.$message.error('此模块暂不为您开放，请联系管理员开放权限！')
+                // }
+            },
+            getUserCenter () {
+                if (this.getUserRole.includes('06') || this.getUserRole[0] == 1) {
+                    this.$router.push('/organization')
+                } else {
+                    this.$message.error('此模块暂不为您开放，请联系管理员开放权限！')
+                }
+            },
+            qtxgjqProperty(){
+                // if (this.getUserRole.includes('05') || this.getUserRole[0] == 1) {
+                //     this.$router.push('/basicStruc')
+                // } else {
+                //     this.$message.error('此模块暂不为您开放，请联系管理员开放权限！')
+                // }
+            },
+            slsjqProperty(){
+            },
+
             isCur(index) {
                 return index === this.activeIndex
             },
             noSearch () {
                 this.searchList = []
             },
-            search (e) {
+		    search (e) {
             },
             analysisHref(){
                 window.open(this.$config.analysisHref);
@@ -283,9 +263,9 @@
                     e.preventDefault()
                     e.stopPropagation()
                     let info = this.searchList.filter((item,index)=> {
-                        if(index === this.activeIndex) {
-                            return item
-                        }
+                       if(index === this.activeIndex) {
+                           return item
+                       }
                     })
                     this.goPage(info[0].route)
                 }
@@ -299,111 +279,18 @@
                     this.$router.push(url)
                 }
             },
-            async getAllportal () { //portal页面
-                await api.portal.getAllportal().then(res => {
-                    this.list=res
-                    this.list.forEach(item => {
-                        item.title = item.name
-                        item.route = item.uri
-                        if (item.key =="property_management")  {
-                            this.property_management_name=item.name
-                            this.property_management_url=item.uri
-                            if(item.uri==''){
-                                $(".estate").addClass("invalid");
-                            }
-                        }else  if(item.key =="3rd_applications")  {
-                            this.three_applications_name=item.name
-                            this.three_applications_url=item.uri
-                            if(item.uri==''){
-                                $(".listO").addClass("invalid");
-                            }
-                        }else  if(item.key =="system_config")  {
-                            this.system_config_name=item.name
-                            this.system_config_url=item.uri
-                            if(item.uri==''){
-                                $(".listT").addClass("invalid");
-                            }
-                        }else  if(item.key =="dap")  {
-                            this.dap_name=item.name
-                            this.dap_url=item.uri
-                            if(item.uri==''){
-                                $(".dap").addClass("invalid");
-                            }
-                        }else if(item.key =="data_center")  {
-                            this.data_center=item.name
-                            this.data_center_url=item.uri
-                            if(item.uri==''){
-                                $(".dataCenter").addClass("invalid");
-                            }
-                        }else  if(item.key =="eye")  {
-                            this.eye_name=item.name
-                            this.eye_url=item.uri
-                            if(item.uri==''){
-                                $("#eye").addClass("invalid");
-                            }
-                        }else  if(item.key =="analysis")  {
-                            this.analysis_name=item.name
-                            this.analysis_url=item.uri
-                            if(item.uri==''){
-                                $(".analysis").addClass("invalid");
-                            }
-                        }else  if(item.key =="iot")  {
-                            this.iot_name=item.name
-                            this.iot_url=item.uri
-                            if(item.uri==''){
-                                $("#bee").addClass("invalid");
-                            }
-                        }else  if(item.key =="gis")  {
-                            this.gis_name=item.name
-                            this.gis_url=item.uri
-                            if(item.uri==''){
-                                $(".gis").addClass("invalid");
-                            }
-                        }else  if(item.key =="official_website")  {
-                            this.official_website_name=item.name
-                            this.official_website_url=item.uri
-                            if(item.uri==''){
-                                $(".official_website").addClass("invalid");
-                            }
-                        }else if(item.key =="ticket")  {
-                            this.ticket_name=item.name
-                            this.ticket_url=item.uri
-                            if(item.uri==''){
-                                $(".ticket").addClass("invalid");
-                            }
-                        }else if(item.key =="business") {
-                            this.business_name = item.name
-                            this.business_url = item.uri
-                            if(item.uri==''){
-                                $(".business").addClass("invalid");
-                            }
-                        } else if(item.key =="wechat_subscription") {
-                            this.wechat_subscription_name = item.name
-                            this.wechat_subscription_url = item.uri
-                            if(item.uri==''){
-                                $(".wechat_subscription").addClass("invalid");
-                            }
-                        }
-                    })
-                }).catch(err => {
-                    console.log(err, '请求失败')
-                })
-            },
-        },
-        mounted() {
-            this.getAllportal();//加载地图
         },
         components: {
             ScrollContainer
         },
         async created () {
-            await this.getUserDetailInfo()
+		    await this.getUserDetailInfo()
         },
         computed: {
-            ...mapGetters(['getUserInfo','getUserDetailMsg'])
+            ...mapGetters(['getUserInfo','getUserDetailMsg','getUserRole'])
         }
 
-    }
+	}
 </script>
 <style>
     .el-row {
