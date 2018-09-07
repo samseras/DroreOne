@@ -52,16 +52,27 @@
                             </el-time-picker>
                         </p>
                         <p class="name">
+                            <span class="dmisTitle">岗&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 位：</span>
+                            <el-select v-model="jobName" size="mini" class="" multiple placeholder="请选择" :disabled='isDisabled' @change="getJobNameList">
+                                <el-option
+                                    v-for="item in jobList"
+                                    :key="item.id"
+                                    :label="item.name"
+                                    :value="item.id">
+                                </el-option>
+                            </el-select>
+                        </p >
+                        <p class="name">
                             <span class="dmisTitle">人&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 员：</span>
                             <el-select v-model="security.securityIds" size="mini" class="" multiple placeholder="请选择" :disabled='isDisabled'>
                                 <el-option
                                     v-for="item in personList"
-                                    :key="item.personBean.id"
-                                    :label="item.personBean.name"
-                                    :value="item.personBean.id">
+                                    :key="item.id"
+                                    :label="item.name"
+                                    :value="item.id">
                                 </el-option>
                             </el-select>
-                        </p>
+                        </p >
                         <!--<p class="idNum">重复调度：-->
                         <!--<el-radio v-model="radio" label="1">是</el-radio>-->
                         <!--<el-radio v-model="radio" label="0">否</el-radio>-->
@@ -239,16 +250,27 @@
                             </el-time-picker>
                         </p>
                         <p class="name">
+                            <span class="dmisTitle">岗&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 位：</span>
+                            <el-select v-model="jobName" size="mini" class="" multiple placeholder="请选择" :disabled='isDisabled' @change="getJobNameList">
+                                <el-option
+                                    v-for="item in jobList"
+                                    :key="item.id"
+                                    :label="item.name"
+                                    :value="item.id">
+                                </el-option>
+                            </el-select>
+                        </p >
+                        <p class="name">
                             <span class="dmisTitle">人&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 员：</span>
                             <el-select v-model="purifier.cleanerIds" size="mini" class="" multiple placeholder="请选择" :disabled='isDisabled'>
                                 <el-option
                                     v-for="item in personList"
-                                    :key="item.personBean.id"
-                                    :label="item.personBean.name"
-                                    :value="item.personBean.id">
+                                    :key="item.id"
+                                    :label="item.name"
+                                    :value="item.id">
                                 </el-option>
                             </el-select>
-                        </p>
+                        </p >
                         <!--<p class="idNum">重复调度：-->
                         <!--<el-radio v-model="radio" label="1">是</el-radio>-->
                         <!--<el-radio v-model="radio" label="0">否</el-radio>-->
@@ -630,6 +652,9 @@
                 personList: [],
                 regionIdList: [],
                 regionId: [],
+                jobList: [],
+                jobName: [],
+                copyPersonList: [],
                 rowNum:0
             }
         },
@@ -1164,30 +1189,33 @@
                 })
             },
             async getSafePerson () {
-                let jobId = 3
-                await api.person.getJobPerson(jobId).then(res => {
+                await api.user.getUserInfo().then(res => {
                     console.log(res, '安保人员')
                     this.personList = res
-                    // this.personList.forEach(item => {
-                    //     item.id = item.personBean.id;
-                    //     item.name = item.personBean.name
-                    // })
+                    this.copyPersonList = this.personList
+
                 }).catch(err => {
                     console.log(err, '请求失败')
                 })
             },
-            async getAllPurifierPerson () {
-                let jobId = 4;
-                await api.person.getJobPerson(jobId).then(res => {
-                    console.log(res, '保洁人员')
-                    this.personList = res
-                    // this.personList.forEach(item => {
-                    //     item.id = item.personBean.id
-                    //     item.name = item.personBean.name
-                    // })
+            async getJobInfo () {
+                await api.user.getUserJobInfo().then(res => {
+                    console.log(res, '岗位列表')
+                    this.jobList = res
                 }).catch(err => {
                     console.log(err, '请求人员失败')
                 })
+            },
+            getJobNameList () {
+                if (this.jobName.length === 0) {
+                    this.personList = this.copyPersonList
+                } else {
+                    this.personList = this.copyPersonList.filter(item => {
+                        if (this.jobName.includes(item.jobId)) {
+                            return item
+                        }
+                    })
+                }
             },
             async getAllRegion () {
               await api.area.getAllRegion().then(res => {
@@ -1273,6 +1301,7 @@
             this.route = this.$route.path
             if (this.route.includes('security')) {
                 this.getSafePerson()
+                this.getJobInfo()
                 this.getAllRouteLine()
                 this.security = this.Info;
                 if (this.security.inspectionSchedule.customizedDays === false) {
@@ -1304,7 +1333,8 @@
                 }
                 this.timeSelect = this.lamppost.lightSchedule.watchTime
             } else if(this.route.includes('purifier')) {
-                this.getAllPurifierPerson()
+                this.getSafePerson()
+                this.getJobInfo()
                 this.getAllRegion()
                 this.purifier = this.Info;
                 this.regionId = this.Info.regionIds
