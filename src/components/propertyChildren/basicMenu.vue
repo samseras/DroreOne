@@ -15,7 +15,7 @@
                             </el-menu-item>
                         </el-submenu>
                     </template>
-                    <template v-if="!item.subs && getUserRole === 'ADMIN'"><!--用户鉴权显示-->
+                    <template v-if="!item.subs"><!--用户鉴权显示-->
                         <el-menu-item :index="item.index">
                             <img :src="item.icon" alt="">{{ item.title }}
                         </el-menu-item>
@@ -173,7 +173,7 @@
             ScrollContainer
         },
         computed: {
-            ...mapGetters(['getUserRole', 'getFacilitTypeMenu'])
+            ...mapGetters([ 'getFacilitTypeMenu'])
         }
     }
 </script>

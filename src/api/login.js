@@ -11,21 +11,17 @@ const login={
         console.log(params, '这是传过来的')
         return axios({
             method:'GET',
-            url: getUrl('/security/login'),
+            url: getUrl('/uc/login'),
             headers:{
                 "Authorization": params,
                 "x-ajax": true
             }
         })
     },
-    userLogout (params) {
+    userLogout () {
         return axios({
             methods: 'GET',
-            url: getUrl('/security/logout'),
-            headers:{
-                "Authorization": params,
-                "x-ajax": true
-            }
+            url: getUrl('/uc/logout')
         })
     },
     getUserRoles (params) {

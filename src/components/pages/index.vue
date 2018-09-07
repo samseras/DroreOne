@@ -4,9 +4,9 @@
             <!--<img src="../../../static/img/tts-logo.png"/>-->
             <p>Drore One 智慧旅游 · 云平台</p>
             <router-link class="indexExit" to="/login" ></router-link>
-            <div class="user"v-if="getUserDetailMsg.nickname">{{getUserDetailMsg.nickname}}</div>
-            <div class="user"v-if="!getUserDetailMsg.nickname">{{getUserDetailMsg.username}}</div>
-            <img class="userAvatar" :src="getUrl(getUserDetailMsg.picturePath)" alt="" @error="imgError">
+            <div class="user" v-if="getUserDetailMsg.cnName">{{getUserDetailMsg.cnName}}</div>
+            <div class="user" v-if="!getUserDetailMsg.cnName">{{getUserDetailMsg.name}}</div>
+            <img class="userAvatar" :src="getUrl(getUserDetailMsg.iconId)" alt="" @error="imgError">
             <div id="getTime">
                 {{currTime | timeFiler}} ({{currTime | weekFiler}})
             </div>
@@ -222,9 +222,7 @@
                 } else {
                     return url
                 }
-                return '../../../static/img/user.png'
             },
-
             isCur(index) {
                 return index === this.activeIndex
             },
@@ -398,8 +396,8 @@
         components: {
             ScrollContainer
         },
-        created () {
-            // this.getUserDetailInfo(this.getUserInfo)
+        async created () {
+            await this.getUserDetailInfo()
         },
         computed: {
             ...mapGetters(['getUserInfo','getUserDetailMsg'])

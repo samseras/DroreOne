@@ -12,8 +12,6 @@
 //设施
 import basic from './basic'
 
-//数据中心-----人员
-import person from './person'
 // 设备
 import hardware from './hardware'
 // 文件
@@ -24,15 +22,13 @@ const property = [
     {
         path: '/property',
         name: 'property',
-        redirect: '/person',
         component: resolve => require(['@/components/property'], resolve),
+        meta: {id: '04'},
         children: [
             // 设施
             ...basic,
             // 设备
             ...hardware,
-            // 人员
-            ...person,
             //    文件
             ...file
         ]

@@ -14,19 +14,19 @@
                         <span class="titleText">
                             用&nbsp;&nbsp;户&nbsp;&nbsp;名：
                         </span>
-                        <el-input v-model="info.username" disabled></el-input>
+                        <el-input v-model="info.name" disabled></el-input>
                     </p>
                     <p class="nickName">
                         <span class="titleText">
                             昵&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称：
                         </span>
-                        <el-input v-model="info.nickname" placeholder="请输入昵称"></el-input>
+                        <el-input v-model="info.cnName" placeholder="请输入昵称"></el-input>
                     </p>
                     <p class="userPhone">
                         <span class="titleText">
                             手&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;机：
                         </span>
-                        <el-input v-model="info.phoneNumber" placeholder="请输入手机号码"></el-input>
+                        <el-input v-model="info.mobileNum" placeholder="请输入手机号码"></el-input>
                     </p>
                     <p class="oldPassword" v-if="showFixPsd">
                         <span class="titleText">
@@ -48,9 +48,8 @@
                     </p>
                     <el-button class='showPsdBtn'type="primary" round v-if="!showFixPsd" @click="fixPsd">修改密码</el-button>
                     <div class="img">
-                        <!--<img :src="getUrl(info.picturePath)" alt="" @error="imgError">-->
                         <label for="avatar">
-                            <img :src="files.length ? files[0].url : getUrl(info.picturePath)"  @error="imgError" class="rounded-circle" />
+                            <img :src="files.length ? files[0].url : getUrl(info.iconId)"  @error="imgError" class="rounded-circle" />
                         </label>
                     </div>
                 </div>
@@ -98,11 +97,10 @@
             return{
                 info:{
                     id: '',
-                    username: this.getUserInfo,
-                    nickname: '',
-                    phoneNumber: '',
-                    picturePath: '',
-                    pictureId: ''
+                    name: '',
+                    cnName: '',
+                    mobileNum: '',
+                    iconId: '',
                 },
                 file: {},
                 src:'',
@@ -127,15 +125,14 @@
                 this.$emit('closeInfoDialog')
             },
             imgError (e) {
-                e.target.src = this.getUrl(null);
+                e.target.src = this.getUrl(null)
             },
             getUrl (url) {
                 if (url === null || url === undefined) {
-                    return './../../static/img/driveCard.png'
+                    return './../../static/img/defult.png'
                 } else {
                     return url
                 }
-                return './../../static/img/driveCard.png'
             },
             editSave() {
                 this.edit = false
@@ -187,12 +184,7 @@
                 }
             },
             async updataUserInfo () {
-                let obj = {
-                    id: this.info.id,
-                    username: this.info.username,
-                    nickname: this.info.nickname,
-                    phoneNumber: this.info.phoneNumber,
-                }
+                let obj = {...this.info}
                 if (this.showFixPsd) {
                     if (!(this.oldPassword.trim()=== '' && this.newPassword.trim()==='' && this.surePassword.trim()==='')) {
                         if (this.oldPassword.trim() === '') {
@@ -211,30 +203,34 @@
                             this.$message.error('确认密码不相等,请重新输入')
                             return
                         }
-                        obj.oldPassword = Base64.encode(this.oldPassword)
-                        obj.password = Base64.encode(this.surePassword)
+                        obj.oldPassword = this.oldPassword
+                        obj.password = this.surePassword
                     }
                 }
                 if (this.src !== '') {
                     await api.person.updataAva(this.src).then(res => {
                         console.log(res, '上传成功')
-                        obj.pictureId = res.id
+                        obj.iconId = res.path
                     }).catch(err => {
                         console.log(err, '上传失败')
                         this.$message.error('上传失败，其请稍后重试')
                         return
                     })
                 }
-                console.log(obj, 'opopoppoppopopopop')
-                if (this.info.pictureId) {
-                    obj.pictureId = this.info.pictureId
+                if (this.info.iconId) {
+                    obj.iconId = this.info.iconId
+                }
+                for (let i in obj) {
+                    if (obj[i] === null || obj[i] === '') {
+                        delete obj[i]
+                    }
                 }
                 await api.lib.updatauserInfo(JSON.stringify(obj)).then(res => {
                     console.log(res, '更新成功')
                     this.$message.success('修改用户信息成功')
-                    if(this.showFixPsd && obj.password) {
-                        localStorage.setItem('token',JSON.stringify(`BASIC ${Base64.encode(obj.username +  ":"+ this.surePassword)}`))
-                    }
+                    // if(this.showFixPsd && obj.password) {
+                    //     localStorage.setItem('token',JSON.stringify(`BASIC ${Base64.encode(obj.username +  ":"+ this.surePassword)}`))
+                    // }
                     this.getUserDetailInfo()
                 }).catch(err => {
                     console.log(err, '请求失败')
@@ -243,15 +239,16 @@
             },
             async getUserDetailInfo () {
                 this.isShowLoading = true
-                await api.lib.getUserInfo(this.getUserInfo).then(res => {
+                await api.lib.getUserInfo().then(res => {
                     this.isShowLoading = false
                     console.log(res, '这是请求回来的用户信息')
-                    this.$store.commit('SET_USER_DETAIL_INFO', res)
+                    // this.$store.commit('SET_USER_DETAIL_INFO', res)
                     this.showFixPsd = false
                     this.oldPassword = ''
                     this.newPassword = ''
                     this.surePassword = ''
-                    this.info = res
+                    this.info = res[0]
+                    console.log(this.info, 'lplplplplplplpplplpkoikojj')
                 }).catch(err => {
                     console.log(err, '请求失败')
                 })

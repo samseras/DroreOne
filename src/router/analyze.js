@@ -8,8 +8,9 @@ const analyze = [
         path: '/analysis',
         name: 'analysis',
         component: resolve => require(['@/components/analysis'], resolve),
+        meta: {id: '02'},
         children: [
-            {path: '/analysis/:id',name: 'Passenger', component: resolve => require(['@/components/analysisSystem/analysis/passengerFlow'], resolve)}
+            {path: '/analysis/:id',name: 'Passenger', component: resolve => require(['@/components/analysisSystem/analysis/passengerFlow'], resolve), meta: {id: '02'}}
         ]
     }
 ]

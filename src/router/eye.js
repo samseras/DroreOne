@@ -19,6 +19,7 @@ const eye = [
         name: 'eye',
         redirect: '/controler',
         component: resolve => require(['@/components/pages/eye'], resolve),
+        meta: {id: '01'},
         children: [
             // 管控
             ...controler,

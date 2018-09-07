@@ -1,20 +1,18 @@
 <template>
     <div class="personDeploy">
-        <div class="title">
-            {{smallTitle}}
-        </div>
         <div class="personContent">
             <div class="funcTitle">
                 <Header @addNewInfo="addNewInfo"
                         @deletInfo="deletInfo"
                         @toggleList="toggleList"
-                        @choseType='choseType'
                         @selectedAll='selectedAll'
                         :choseId="choseInfoId"
                         :listsLength="listLength"
                         :personListFlag="selectFlag"
                         @fixedInfo='fixedInfo'
                         @searchAnything="searchAnything"
+                        @selectDepartment="filterPersonList"
+                        @selectJob="filterPersonList"
                         @nextPage="nextPage"
                         @previousPage="previousPage"
                         @getAllPerson="getAllPerson">
@@ -37,32 +35,36 @@
                             </template>
                         </el-table-column>
                         <el-table-column
-                            prop="personBean.name"
+                            prop="cnName"
                             label="姓名"
                             >
                         </el-table-column>
 
-                        <!--<el-table-column
-                            prop="jobName"
-                            label="人员角色">
-                        </el-table-column>-->
-
                         <el-table-column
-                            prop="personBean.gender"
                             width="120"
                             label="性别">
                             <template slot-scope="scope">
-                                <span>{{scope.row.personBean.gender | sexFilter}}</span>
+                                <span>{{scope.row.gender | sexFilter}}</span>
                             </template>
                         </el-table-column>
+
                         <el-table-column
-                            label="身份证号">
-                            <template slot-scope="scope">
-                                <span>{{scope.row.personBean.idNum | idNumFilter}}</span>
-                            </template>
+                            prop="departmentName"
+                            label="部门">
                         </el-table-column>
+
                         <el-table-column
-                            prop="personBean.phone"
+                            prop="jobName"
+                            label="岗位">
+                        </el-table-column>
+
+                        <el-table-column
+                            prop="roleName"
+                            label="角色">
+                        </el-table-column>
+
+                        <el-table-column
+                            prop="mobileNum"
                             label="电话号码">
                         </el-table-column>
                         <el-table-column
@@ -81,34 +83,35 @@
                             label="操作">
                             <template slot-scope="scope">
                                 <div class="handle">
-                                    <span @click="fixedInfo(scope.row.id )">修改</span>
-                                    <span class="line">|</span>
+                                    <span @click="fixedInfo(scope.row)" v-if="getUserRole[0] === 1">修改</span>
+                                    <span class="line" v-if="getUserRole[0] === 1">|</span>
                                     <span @click="showPersonDetail(scope.row, '人员信息',true)">查看</span>
-                                    <span class="line">|</span>
-                                    <span @click="deletInfo(scope.row.id)">删除</span>
+                                    <span class="line" v-if="getUserRole[0] === 1">|</span>
+                                    <span @click="deletInfo(scope.row.id)" v-if="getUserRole[0] === 1">删除</span>
                                 </div>
                             </template>
                         </el-table-column>
                     </el-table>
                     <div class="personInfo"  v-for="(item,index) in personList" v-if="isShowPersonCard && item.status">
-                        <div class="checkBox">
-                            <el-checkbox v-model="item.checked" @change="checked(item.id)"
-                                         class="checkBtn"></el-checkbox>
-                        </div>
-                        <div class="personType" @click.stop="showPersonDetail(item, '人员信息',true)">
-                            <img :src="getUrl(item.picturePath)" alt="" @error="imgError">
-                            <span class="type">
-                                  {{item.name}}
-                                </span>
+                        <el-checkbox v-model="item.checked" @change="checked(item.id)"
+                                     class="checkBtn"></el-checkbox>
+                        <div class="personType">
+                            <img :src="getUrl(item.iconId)" alt="" @error="imgError">
                         </div>
                         <div class="specificInfo">
-                            <!--<p class="name">
-                                姓&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;名：<span>{{item.name}}</span></p>-->
-                            <p class="sex">性&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;别：<span>{{item.gender | sexFilter}}</span>
+                            <p class="name">
+                                姓名：<span>{{item.cnName}}</span></p>
+                            <p class="sex">性别：<span>{{item.gender | sexFilter}}</span>
                             </p>
-                            <p class="idNum">身份证号：<span>{{item.idNum | idNumFilter}}</span></p>
-                            <p class="phoneNum">电&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;话：<span>{{item.phone}}</span>
-                            </p>
+                            <p class="idNum">部门：<span>{{item.departmentName }}</span></p>
+                            <p class="phoneNum">岗位：<span>{{item.jobName}}</span></p>
+                            <p class="phoneNum">角色：<span>{{item.roleName}}</span></p>
+                            <p class="phoneNum">电话：<span>{{item.mobileNum}}</span></p>
+                        </div>
+                        <div class="operate">
+                            <span @click="fixedInfo(item)" v-if="getUserRole[0] === 1">修改</span>
+                            <span @click="showPersonDetail(item, '人员信息',true)">查看</span>
+                            <span @click="deletInfo(item.id)" v-if="getUserRole[0] === 1">删除</span>
                         </div>
                     </div>
                     <div class="tip" v-if="show">
@@ -131,32 +134,29 @@
 </template>
 <script>
     import ScrollContainer from '@/components/ScrollContainer'
-    import Header from '../propertyChildren/basicDeploy/funHeader'
-    import PersonDetail from '../propertyChildren/basicDeploy/detailDialog'
+    import Header from '@/components/Orginization/OrginizHeader'
+    import PersonDetail from '@/components/Orginization/Orginizadialog'
     import api from '@/api'
     import _ from 'lodash'
+    import {mapGetters} from 'vuex'
 
     export default {
         name: 'person-deploy',
         data() {
             return {
-                smallTitle:'职业',
                 selectFlag:false,
                 tempSelects:[],
                 isShowPersonCard: true,
                 checkList: [],
-                filterList: [],
                 personList: [],
                 visible: false,
                 show: false,
                 personInfo: {},
                 choseInfoId: [],
-                choseList: [],
                 isDisabled: true,
                 title: '',
                 isShowLoading: false,
                 isShowDialogLoading: false,
-                currentNum: 50,
                 listLength: '',
                 pageNum: 1
             }
@@ -166,14 +166,36 @@
                 this.visible = false
                 this.getAllPerson()
             },
+            filterPersonList (jobList, depList) {
+                this.personList = this.checkList.filter(item => {
+                    if (jobList.length === 0 && depList.length === 0) {
+                        return item
+                    } else if (jobList.length === 0) {
+                        if (depList.includes(item.departmentName)) {
+                            return item
+                        }
+                    } else if (depList.length === 0) {
+                        if (jobList.includes(item.jobName)) {
+                            return item
+                        }
+                    } else {
+                        if (jobList.includes(item.jobName) && depList.includes(item.departmentName)) {
+                            return item
+                        }
+                    }
+                })
+            },
             searchAnything (info) {
                 console.log(info, '这是要过滤的')
                 if (info.trim() !== '') {
                     this.personList = this.checkList.filter(item => {
-                        if (item.personBean.name.includes(info)) {
-                            return item
-                        }
-                        if (item.phone.includes(info)) {
+                        if (
+                            item.name.includes(info)
+                            || (item.cnName && item.cnName.includes(info))
+                            || (item.workAddress && item.workAddress.includes(info))
+                            || (item.fixedPhoneNum && item.fixedPhoneNum.includes(info))
+                            || (item.mobileNum && item.mobileNum.includes(info))
+                            || (item.description && item.description.includes(info))) {
                             return item
                         }
                     })
@@ -186,51 +208,7 @@
             },
             getUrl (url) {
                 if (url === null) {
-                    let imgSrc
-                    switch (this.$route.params.id) {
-                        case '1': {
-                            imgSrc = './../../../static/img/driveCard.png';
-                            this.smallTitle='司机';
-                            break
-                        }
-                        case '2': {
-                            imgSrc = './../../../static/img/boatCard.png';
-                            this.smallTitle='船夫';
-                            break
-                        }
-                        case '3': {
-                            imgSrc = './../../../static/img/clearCard.png';
-                            this.smallTitle='安保';
-                            break
-                        }
-                        case '4': {
-                            imgSrc = './../../../static/img/clearCard.png';
-                            this.smallTitle='保洁';
-                            break
-                        }
-                        case '5': {
-                            imgSrc = './../../../static/img/saleTrickCard.png';
-                            this.smallTitle='售票';
-                            break
-                        }
-                        case '6': {
-                            imgSrc = './../../../static/img/trickCard.png';
-                            this.smallTitle='检票';
-                            break
-                        }
-                        case '7': {
-                            imgSrc = './../../../static/img/keepServ.png';
-                            this.smallTitle='维保';
-                            break
-                        }
-                        case '8': {
-                            this.smallTitle='管理者';
-                            break
-                        }
-                        default:{
-                            imgSrc = './../../../static/img/driveCard.png';
-                        }
-                    }
+                    let imgSrc = './../../../static/img/defult.png'
                     return imgSrc
                 } else {
                     return url
@@ -258,20 +236,11 @@
                         cancelButtonText: '取消',
                         type: 'warning'
                     }).then(() => {
-                        api.person.deletePerson(this.choseInfoId).then(res => {
+                        api.user.deleteUserInfo(this.choseInfoId).then(res => {
                             console.log(res, '删除成功')
-                            // for (let i = 0; i < this.choseInfoId.length; i++) {
-                            //     this.personList = this.personList.filter((item, index) => {
-                            //         if (item.id === this.choseInfoId[i]) {
-                            //             this.personList[index].checked = false
-                            //         }
-                            //         return item.id !== this.choseInfoId[i]
-                            //     })
-                            // }
                             this.getAllPerson()
                             this.$message.success('删除成功')
                             this.choseInfoId = []
-                            this.getAllPerson()
                         }).catch(err => {
                             console.log(err)
                             this.$message.error('删除失败，请稍后重试')
@@ -320,25 +289,6 @@
                 }
 
             },
-            choseType(type) {
-                console.log(type)
-                if (type.length === 0) {
-                    this.personList = this.personList.filter((item) => {
-                        item.status = true
-                        return item
-                    })
-                } else {
-                    this.personList = this.personList.filter((item, index) => {
-                        if (type.includes(item.jobName)) {
-                            item.status = true
-                        } else if (!type.includes(item.jobName)) {
-                            item.status = false
-                            console.log(item.type, 'p[p[p[');
-                        }
-                        return item
-                    })
-                }
-            },
             selectedAll(state) {
                 this.personList = this.personList.filter((item) => {
                     if (state === true) {
@@ -355,34 +305,31 @@
                 })
                 this.selectFlag=true
                 console.log(this.choseInfoId, 'opopop')
-
             },
             async fixInfo(info) {
                 console.log(info)
-                let personObj = {
-                    description:info.description,
-                    id: info.id,
-                    name: info.name,
-                    gender: info.gender,
-                    idNum: info.idNum,
-                    phone: info.phone,
-                    jobId: info.jobId
-                }
+                let personObj = {...info}
                 console.log(personObj, 'this is trashObj')
-                if (info.imgUrl !== '') {
+                if (info.imgUrl && info.imgUrl !== '') {
                     await api.person.updataAva(info.imgUrl).then(res => {
                         console.log(res, '上传成功')
-                        personObj.pictureId = res.id
+                        personObj.iconId = res.path
                     }).catch(err => {
                         console.log(err, '上传失败')
                         this.$message.error('上传失败，其请稍后重试')
                         return
                     })
                 } else {
-                    personObj.pictureId = info.pictureId
+                    personObj.iconId = info.iconId
                 }
-                console.log(personObj)
-                await api.person.updatePerson(JSON.stringify(personObj)).then(res => {
+                delete personObj.checked
+                delete personObj.status
+                for (let i in personObj) {
+                    if (personObj[i] === null || personObj[i] === '') {
+                        delete personObj[i]
+                    }
+                }
+                await api.user.updataUserInfo(JSON.stringify(personObj)).then(res => {
                     console.log(res)
                     this.closeDialog()
                     this.$message.success('修改成功')
@@ -398,30 +345,22 @@
             async addNewPerson(info) {
                 this.isShowDialogLoading = true
                 console.log(info, 'opopopopopo')
-                let personObj = {
-                    description:info.description,
-                    name: info.name,
-                    gender: info.gender,
-                    idNum: info.idNum,
-                    phone: info.phone,
-                    jobId: info.jobId
-                }
+                let personObj = {...info}
                 console.log(personObj, 'this is trashObj')
-                if (info.imgUrl !== '') {
+                if (info.imgUrl && info.imgUrl !== '') {
                     await api.person.updataAva(info.imgUrl).then(res => {
                         console.log(res, '上传成功')
-                        personObj.pictureId = res.id
+                        personObj.iconId = res.path
                     }).catch(err => {
                         console.log(err, '上传失败')
                         this.$message.error('上传失败，其请稍后重试')
                         return
                     })
                 }
-                await api.person.createPerson(JSON.stringify(personObj)).then(res => {
+                await api.user.createdUserInfo(JSON.stringify(personObj)).then(res => {
                     this.isShowDialogLoading = false
                     this.closeDialog()
                     this.$message.success('添加成功')
-                    console.log('增加成功')
                     this.getAllPerson()
                 }).catch(err => {
                     console.log(err, '添加失败')
@@ -429,26 +368,9 @@
                     this.$message.error('添加失败，请稍后重试')
                 })
             },
-            fixedInfo(id) {
-                if (id) {
-                    this.choseInfoId = [id]
-                }
-                if (this.choseInfoId.length > 1) {
-                    this.$message.warning('至多选择一个数据修改')
-                    return
-                }
-                if (this.choseInfoId.length > 0) {
-                    this.personList.map((item) => {
-                        if (item.id === this.choseInfoId[0]) {
-                            this.personInfo = item
-                        }
-                    })
-                    this.showPersonDetail(this.personInfo, '修改人员信息', false)
-                    this.isDisabled = false
-                    //this.choseInfoId = []
-                } else {
-                    this.$message.error('请选择要修改的人员')
-                }
+            fixedInfo(item) {
+                this.personInfo = item
+                this.showPersonDetail(this.personInfo, '修改人员信息', false)
             },
             previousPage (page) {
                 console.log(page, '这是传过来的pageNum')
@@ -464,8 +386,7 @@
             async getAllPerson() {
                 this.choseInfoId = []       //人员切换左侧选项卡去掉上项的默认选择
                 this.isShowLoading = true
-                let id = this.$route.params.id
-                await api.person.getJobPerson(id).then(res => {
+                await api.user.getUserInfo().then(res => {
                     console.log(res, '这是请求回来的')
                     if(res.length === 0){
                         this.show = true
@@ -480,20 +401,28 @@
                             return item
                         }
                     })
-                    for (let i = 0; i < this.personList.length; i++) {
-                        this.personList[i].checked = false
-                        this.personList[i].status = true
-                        this.personList[i].jobId = this.$route.params.id
-                        this.personList[i].gender = this.personList[i].personBean.gender
-                        this.personList[i].id = this.personList[i].personBean.id
-                        this.personList[i].idNum = this.personList[i].personBean.idNum
-                        this.personList[i].name = this.personList[i].personBean.name
-                        this.personList[i].phone = this.personList[i].personBean.phone
-                        this.personList[i].description = this.personList[i].personBean.description
-                        this.personList[i].personBean.modifyTime=this.personList[i].personBean.modifyTime.replace("-","/")
-                        this.personList[i].byTime = -(new Date(this.personList[i].personBean.modifyTime)).getTime()
-                    }
                     this.personList = _.sortBy(this.personList,'byTime')
+                    this.personList.forEach(item => {
+                        item.status = true
+                        item.checked = false
+                        if (item.department) {
+                            item.departmentName = item.department.name
+                        } else {
+                            item.departmentName = ''
+                        }
+                        if (item.role) {
+                            item.roleName = item.role.name
+                        } else {
+                            item.roleName = ''
+                        }
+                        if (item.job) {
+                            item.jobName = item.job.name
+                        } else {
+                            item.jobName = ''
+                        }
+                        item.byTime = -(new Date(item.modifyTime).getTime())
+                    })
+                    this.personList = _.sortBy(this.personList, 'byTime')
                     this.checkList = this.personList
                     this.selectFlag=false
                 }).catch(err => {
@@ -505,9 +434,9 @@
         filters: {
             sexFilter(item) {
                 if (item == 0) {
-                    return '男'
-                } else {
                     return '女'
+                } else {
+                    return '男'
                 }
             },
             idNumFilter(id) {
@@ -528,6 +457,9 @@
                 this.personList = []
                 this.getAllPerson()
             }
+        },
+        computed: {
+            ...mapGetters(['getUserRole'])
         },
         components: {
             ScrollContainer,
@@ -565,7 +497,10 @@
     }
     .personDeploy{
         .el-checkbox__input{
-            vertical-align: top;
+            /*vertical-align: top;*/
+        }
+        .el-table__header-wrapper .el-table td,.el-table th {
+            padding: rem(7) 0;
         }
     }
 
@@ -576,94 +511,97 @@
         height: 100%;
         display: flex;
         flex-direction: column;
-        .title{
-            width: 100%;
-            padding: rem(16) 0 rem(17) rem(15);
-            box-sizing: border-box;
-            font-size: rem(16);
-            color: #26bbf0;
-            border-bottom:  1px solid #ccc;
-        }
+        background: #fff;
         .personContent {
-            flex: 1;
             width: 100%;
-            /*background: red;*/
+            height: 100%;
             padding: 0 rem(15);
             box-sizing: border-box;
             display: flex;
             flex-direction: column;
+            padding-top: rem(20);
             .funcTitle {
                 width: 100%;
                 height: rem(30);
-                margin-top: rem(10);
-                border-bottom: 2px solid #e44b4e;
+                border-bottom: 2px solid #ccc;
             }
             .personList {
                 width: 100%;
-                flex: 1;
-                margin-top: rem(20);
+                height: calc(100% - 32px);
+                padding-top: rem(15);
+                box-sizing: border-box;
                 .personInfo {
-                    width: rem(210);
-                    height: rem(140);
+                    width: rem(380);
+                    height: rem(160);
                     border: 1px solid #ccc;
                     font-size: rem(14);
                     display: inline-block;
-                    margin-right: rem(5.5);
+                    margin-right: rem(10);
                     margin-bottom: rem(5);
                     border-radius: rem(5);
-                    .checkBox {
-                        width: 100%;
-                        height: rem(20);
-                        background: #fff;
-                        border-top-left-radius: rem(5);
-                        border-top-right-radius: rem(5);
-                        .checkBtn {
-                            float: right;
-                            margin-right: rem(5);
-                            margin-top: rem(3);
-                            width: rem(15);
-                            height: rem(15);
-                            cursor: pointer;
-                        }
+                    position: relative;
+                    background: #fafafa;
+                    .checkBtn {
+                        width: rem(15);
+                        height: rem(15);
+                        cursor: pointer;
+                        position: absolute;
+                        right: rem(5);
+                        top: rem(3);
                     }
                     .personType {
-                        width: 100%;
-                        height: rem(20);
-                        background: #0086b3;
+                        width: rem(120);
+                        height: 100%;
                         position: relative;
-                        font-size: rem(12);
+                        float: left;
+                        box-shadow: 7px 0px 35px -13px #6a6a6a;
                         img {
-                            width: rem(40);
-                            height: rem(40);
-                            border-radius: 50%;
-                            position: absolute;
-                            left: rem(15);
-                            top: rem(-10);
-                            background: red;
-                        }
-                        span {
+                            width: 100%;
+                            height: 100%;
                             display: inline-block;
-                            width: rem(100);
-                            float: right;
-                            text-align: right;
-                            padding-right: rem(5);
-                            line-height: rem(20);
-                            color: #fff;
-                            overflow: hidden;
-                            text-overflow: ellipsis;
-                            white-space: nowrap;
-                            box-sizing: border-box;
                         }
                     }
                     .specificInfo {
-                        margin-top: rem(5);
-                        font-size: rem(12);
+                        width: rem(200);
+                        height: 100%;
+                        float: left;
+                        padding: rem(10) rem(5) rem(10) rem(10);
+                        box-sizing: border-box;
+                        position: relative;
                         p {
-                            margin-left: rem(10);
-                            line-height: rem(22);
+                            line-height: rem(24);
                             overflow: hidden;
                             text-overflow: ellipsis;
                             white-space: nowrap;
+                        }
+                        &:after{
+                            position: absolute;
+                            content: "";
+                            width: 1px;
+                            height: 70%;
+                            right: rem(10);
+                            top: 50%;
+                            transform: translateY(-50%);
+                            background: #e6e6e6;
+                        }
+                    }
+                    .operate{
+                        width: calc(100% - 320px);
+                        height: 100%;
+                        float: right;
+                        span{
+                            display: block;
+                            border: 1px solid #ccc;
+                            border-radius: rem(50);
+                            background: #fafafa;
+                            cursor: pointer;
+                            margin-top: rem(8);
+                            text-align: center;
+                            margin-right: rem(5);
+                            font-size: rem(14);
+                        }
+                        span:nth-of-type(1) {
+                            margin-top: rem(40);
                         }
                     }
                 }
