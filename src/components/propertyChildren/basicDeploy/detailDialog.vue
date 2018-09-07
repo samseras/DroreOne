@@ -9,49 +9,6 @@
             class="dialog echatDialog"
             center>
             <div class="card">
-                <!--人员-->
-                <div class="personCardContent" v-if="route.includes('person') && $route.params.id">
-                    <p class="name">
-                        <span>姓&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;名：</span>
-                        <el-input v-model="person.name" :disabled="isDisabled" :maxlength="50"></el-input>
-                    </p>
-                    <p class="sex">
-                        <span>性&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;别：</span>
-                        <el-select v-model="sex" placeholder="请选择" :disabled="isDisabled" @change="ad">
-                            <el-option label="男" :value="1"></el-option>
-                            <el-option label="女" :value="0"></el-option>
-                        </el-select>
-                    </p>
-                    <p class="type person-jole">
-                        <span>人员角色：</span>
-                        <el-select v-model="person.jobId" placeholder="请选择" disabled>
-                            <el-option
-                                v-for="item in options"
-                                :key="item.value"
-                                :label="item.name"
-                                :value="item.id">
-                            </el-option>
-                        </el-select>
-                    </p>
-                    <p class="idNum">
-                        <span>身份证号：</span>
-                        <el-input type="text"v-model="person.idNum" :disabled="isDisabled"></el-input>
-                    </p>
-                    <p class="phone">
-                        <span>电话号码：</span>
-                        <el-input type="text"v-model="person.phone" :disabled="isDisabled"></el-input>
-                    </p>
-                    <p class="textarea ms ms-person">
-                        <span class="des-person">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：</span>
-                        <el-input type="textarea"  v-model="person.description" :disabled="isDisabled" ></el-input>
-                    </p>
-                    <div class="img">
-                        <img :src="getUrl(person.picturePath)" alt="" v-if="isDisabled" @error="imgError">
-                        <label for="avatar" v-if="!isDisabled">
-                            <img :src="files.length ? files[0].url : getUrl(person.picturePath)"  @error="imgError" class="rounded-circle" />
-                        </label>
-                    </div>
-                </div>
                 <!--车船-->
                 <div class="personCardContent boatCardContent" v-if="route.includes('boat')">
                     <p class="name wrapstyle">
@@ -653,14 +610,6 @@
                     type:'片区'
                 },
                 sex: '',
-                person: {
-                    description:'',
-                    name:'',
-                    gender:'',
-                    idNum:'',
-                    phone:'',
-                    jobId: this.$route.params.id,
-                },
                 boatCar: {
                     /*driverId: '',*/
                     driverPhone: '',
@@ -935,23 +884,7 @@
                 let  myreg = /^[1][3,4,5,6,7,8][0-9]{9}$/;   //电话号码校验
                 let intreg = /^[1-9]\d*$/; //非零正整数校验
                 let integerreg = /^(0|[1-9][0-9]*)$/; //大于等于0正整数
-                if (this.route.includes('person') && this.$route.params.id) {
-                    this.person.gender = this.sex
-                    newInfo = this.person
-                    let idReg = /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/
-                    if (!(newInfo.name && newInfo.name.trim() !== '') || !(newInfo.hasOwnProperty("gender") && newInfo.gender !== '') || !(newInfo.jobId && newInfo.jobId !== '')) {
-                        this.$message.error('请填写完整信息')
-                        return
-                    }
-                    if (!(newInfo.phone && newInfo.phone !== '') || !myreg.test(newInfo.phone)) {
-                        this.$message.error('请填写正确的电话号码')
-                        return
-                    }
-                   /* if (!(newInfo.idNum && newInfo.idNum !== '') || !idReg.test1(newInfo.idNum)) {
-                        this.$message.error('请填写正确的身份证号码')
-                        return
-                    }*/
-                } else if(this.route.includes('boat')) {
+                if(this.route.includes('boat')) {
                     newInfo = this.boatCar;
                     console.log(newInfo);
                     if(!(newInfo.vehicle.hasOwnProperty("type") && integerreg.test(newInfo.vehicle.type)) ||
@@ -1192,16 +1125,7 @@
             })
             this.route = this.$route.path
             console.log(this.Info,'  opopop')
-            if (this.route.includes('person') && this.$route.params.id) {
-                let jobId = this.$route.params.id
-                api.person.getJob().then(res => {
-                    console.log(res, '所有工种')
-                    this.options = res
-                })
-                this.person = this.Info
-                this.sex = this.person.gender
-                this.person.jobId = jobId
-            } else if(this.route.includes('boat')) {
+            if(this.route.includes('boat')) {
                 this.boatCar = this.Info
             } else if(this.route.includes('trash')) {
                 console.log(this.Info, '909090909090')
