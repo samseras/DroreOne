@@ -15,11 +15,11 @@
                         <el-input v-model="name":maxlength="20"></el-input>
                     </p>
                     <p class="textarea ms ms-person">
-                        <span class="des-person">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：</span>
+                        <span class="des-person floatLrft">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：</span>
                         <el-input type="textarea"  v-model="description" ></el-input>
                     </p>
                     <p class="uploadFileBtn">
-                        <span>附&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;件：</span>
+                        <span class="floatLrft">附&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;件：</span>
                         <span @click="uploadFileClick">上传</span>
                         <input type="file" class="fileInput" ref="uploadFile" @change="uploadFile" style="FILTER: alpha(opacity=0); moz-opacity: 0; opacity: 0;width: 0px;height: 0px;">
                     </p>
@@ -106,7 +106,7 @@
                 }
             },
             closeFile (e) {
-                console.log(e.target.files[0], 'opopopopopo')
+                // console.log(e.target.files[0], 'opopopopopo')
                 this.file = {}
                 this.imgUrl = ''
             }
@@ -198,6 +198,7 @@
                 }
                 .image{
                     margin-left: rem(20);
+                    float: left;
                     span{
                         display: inline-block;
                         padding: rem(12);
@@ -226,6 +227,10 @@
                         }
                     }
                 }
+            }
+            .floatLrft{
+                float: left;
+                margin-left: rem(1);
             }
         }
     }

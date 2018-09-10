@@ -261,9 +261,11 @@
                                 }
                             })
                             this.$store.commit('SELECT_FILE_LIST', this.selectRowsList)
+                            this.$message.success('删除成功')
                             this.getFileList(this.getCrumbsList[this.getCrumbsList.length - 1])
                         }).catch(err => {
                             console.log(err, '删除失败')
+                            this.$message.error('删除失败，请稍后重试')
                         })
 
                     }).catch(() => {
@@ -292,6 +294,23 @@
                 let date = new Date().getTime()
                 rows[date] = new Date().getTime()
                 this.$store.commit('CHECK_FILE_ROW', rows)
+            },
+            selectAll () {
+                if (this.getSelectAllState) {
+                    this.selectList = []
+                    this.selectRowsList = []
+                    this.fileList = this.fileList.filter(item => {
+                        item.checked = this.getSelectAllState.select
+                        return item
+                    })
+                    if (this.getSelectAllState.select) {
+                        this.selectList = this.fileList.map(item => {
+                            return item.id
+                        })
+                        this.selectRowsList = this.fileList
+                    }
+                    this.$store.commit('SELECT_FILE_LIST', this.selectRowsList)
+                }
             }
         },
         components: {
@@ -347,6 +366,9 @@
             },
             getSearchContent () {
                 this.searchFileList()
+            },
+            getSelectAllState () {
+                this.selectAll()
             }
         },
         computed: {
@@ -358,7 +380,8 @@
                 'getUploadSuccessFile',
                 'getMoveSuccessFile',
                 'getFilePageNum',
-                'getSearchContent'
+                'getSearchContent',
+                'getSelectAllState'
             ])
         }
     }
