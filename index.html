@@ -4,10 +4,44 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
     <title>drore</title>
+      <style type="text/css">
+          .icon {
+              width: 20px;
+              height: 20px;
+              vertical-align: -0.15em;
+              fill: currentColor;
+              overflow: hidden;
+          }
+          #loadingWeb{
+              width: 100%;
+              height: 100%;
+              position: absolute;
+              background: rgba(255,255,255,.7);
+              left:0;
+              top:0;
+              z-index: -1;
+          }
+          #loadingWeb .bigCircle{
+              width:256px;
+              height:256px;
+              position: absolute;
+              left: 50%;
+              top: 50%;
+              transform: translate(-50%, -50%);
+          }
+          #loadingWeb img{
+              width: 100%;
+              height: 100%;
+          }
+      </style>
   </head>
   <body>
     <div id="app"></div>
-    <!-- built files will be auto injected -->
-  </body>
+    <div id="loadingWeb">
+        <div class="bigCircle">
+            <img src="/static/img/loadingAnamation.svg">
+        </div>
+    </div>
+    </body>
 </html>
 

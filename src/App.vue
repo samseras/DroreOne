@@ -42,9 +42,9 @@ export default {
     created () {
         this.getTitle()
     },
-    // mounted () {
-    //     this.getTitle()
-    // },
+    mounted () {
+      document.getElementById('loadingWeb').style.display = 'none'
+    },
     watch: {
       '$route'() {
           this.getTitle()
