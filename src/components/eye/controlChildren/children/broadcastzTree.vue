@@ -44,7 +44,7 @@
                 return data.label.indexOf(value) !== -1;
             },
             getChecked (node,info) {
-                // console.log(node);
+                console.log(node);
                 if (this.regionId.includes(node.data.id)) {
                     return
                 }
@@ -70,7 +70,7 @@
                })
                 this.$refs.tree.setCheckedKeys(checkedKeysId)
 
-                // console.log(this.Info);
+                console.log(this.Info);
                 // this.$store.commit('SHOW_TREE', this.Info)
                 if (checkedKeysId.length == this.lightList.length) {
                     this.selectAllCheckBox = true
@@ -107,7 +107,7 @@
                 this.$store.commit('SHOW_TREE', arr)
             },
             handleCheckChange(data,checked) {
-                // console.log(data, 'oooooooooooo')
+                console.log(data, 'oooooooooooo')
                 // console.log(checked, 'iiiiiiiiiiiiiiiiiiii')
                 checked.checkedNodes = checked.checkedNodes.filter(item => {
                     if (!item.children) {
@@ -121,10 +121,12 @@
                 }
                 // console.log(checked.checkedNodes.length,this.lightList.length);
                 data.checked = checked
+                console.log(data, '这是最后提交的')
                 this.$store.commit('SHOW_TREE', data)
             },
             treeALL(){
                 if(this.lightCheckout.length > 0){
+                    console.log(this.lightCheckout, '测试')
                     if (this.lightCheckout.length == this.number) {
                         this.selectAllCheckBox = true
                     } else {
@@ -138,8 +140,11 @@
                     let checkedKeysId = this.$refs.tree.getCheckedKeys()
                     checkedKeysId.push(data.data.id)
                     this.$refs.tree.setCheckedKeys(checkedKeysId)
-                    if (checkedKeysId.length == this.lightList.length) {
+                    let number =this.number+this.Info.length-1
+                    if (checkedKeysId.length >= number) {
                         this.selectAllCheckBox = true
+                    } else {
+                        this.selectAllCheckBox = false
                     }
                     this.$store.commit('TREE_SHOW', data.data)
                 }
@@ -163,14 +168,14 @@
         },
         mounted () {
             let _this = this;
+            console.log(this.Info)
             setTimeout(function() {
                 _this.treeALL();
             }, 300)
             if (this.getSearchInfo.id) {
                 this.$refs.tree.setCheckedKeys([this.getSearchInfo.id])
             }
-        },
-
+        }
     };
 
 </script>

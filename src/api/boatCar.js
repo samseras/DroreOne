@@ -29,8 +29,35 @@ const boat = {
             method: 'GET',
             url: getUrl('/vehicle')
         })
-
     },
+    getAllVehicle(id) {
+        return axios ({
+            method: 'GET',
+            url: getUrl('/vehicle?type='+id)
+        })
+    },
+
+    getAllVehicleGps(){
+        return axios ({
+            method: 'GET',
+            url: getUrl('/vehicle?withgps=true&withdriver=true')
+        })
+    },
+    getAllVehicleGpsById(id){
+        return axios ({
+            method: 'GET',
+            url: getUrl('/vehicle?withgps=true&withdriver=true&id='+id)
+        })
+    },
+
+    getHistoryRoute(param){
+        return axios ({
+            method: 'POST',
+            url: getUrl('/gps/history'),
+            data:JSON.stringify(param)
+        })
+    },
+
     updateBoat  (params) {
         return axios ({
             method: 'PUT',
@@ -54,13 +81,6 @@ const boat = {
                 ids: par
             }
         })
-    },
-    getAllVehicle(id) {
-        return axios ({
-            method: 'GET',
-            url: getUrl('ehicle?type='+id)
-        })
-
     }
 }
 
