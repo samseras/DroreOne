@@ -60,7 +60,7 @@
                                 title: '保洁'
                             },
                             {
-                                icon: './../../static/img/roat.svg',
+                                icon: './../../static/img/security.svg',
                                 index: '/deploy/security-Dmis',
                                 title: '巡检计划'
                             },
