@@ -17,17 +17,18 @@ const controler = [
         name: 'controler',
         redirect: '/controler/broad',
         component: resolve => require(['@/components/controler'], resolve),
+        meta: {id: '0101'},
         children: [
-            {path: '/controler/broad',name: 'Broad', component: resolve => require(['@/components/eye/controlChildren/broadcast'], resolve)},
-            {path: '/controler/person',name: 'Person', component: resolve => require(['@/components/eye/controlChildren/securityperson'], resolve)},
-            {path: '/controler/warn',name: 'Warn', component: resolve => require(['@/components/eye/controlChildren/warningControl'], resolve)},
-            {path: '/controler/wifi',name: 'Wifi', component: resolve => require(['@/components/eye/controlChildren/wifiControl'], resolve)},
-            {path: '/controler/screen',name: 'Screen', component: resolve => require(['@/components/eye/controlChildren/screenControl'], resolve)},
-            {path: '/controler/car',name: 'Car', component: resolve => require(['@/components/eye/controlChildren/carControl'], resolve)},
-            {path: '/controler/camera',name: 'Camera', component: resolve => require(['@/components/eye/controlChildren/cameraControl'], resolve)},
-            {path: '/controler/other',name: 'Other', component: resolve => require(['@/components/eye/controlChildren/otherControl'], resolve)},
-            {path: '/controler/environment',name: 'Environment', component: resolve => require(['@/components/eye/controlChildren/environment'], resolve)},
-            {path: '/controler/light',name: 'Light', component: resolve => require(['@/components/eye/controlChildren/lightControl'], resolve)},
+            {path: '/controler/broad',name: 'Broad', component: resolve => require(['@/components/eye/controlChildren/broadcast'], resolve), meta: {id: '0101'}},
+            {path: '/controler/person',name: 'Person', component: resolve => require(['@/components/eye/controlChildren/securityperson'], resolve), meta: {id: '0101'}},
+            {path: '/controler/warn',name: 'Warn', component: resolve => require(['@/components/eye/controlChildren/warningControl'], resolve), meta: {id: '0101'}},
+            {path: '/controler/wifi',name: 'Wifi', component: resolve => require(['@/components/eye/controlChildren/wifiControl'], resolve), meta: {id: '0101'}},
+            {path: '/controler/screen',name: 'Screen', component: resolve => require(['@/components/eye/controlChildren/screenControl'], resolve), meta: {id: '0101'}},
+            {path: '/controler/car',name: 'Car', component: resolve => require(['@/components/eye/controlChildren/carControl'], resolve), meta: {id: '0101'}},
+            {path: '/controler/camera',name: 'Camera', component: resolve => require(['@/components/eye/controlChildren/cameraControl'], resolve), meta: {id: '0101'}},
+            {path: '/controler/other',name: 'Other', component: resolve => require(['@/components/eye/controlChildren/otherControl'], resolve), meta: {id: '0101'}},
+            {path: '/controler/environment',name: 'Environment', component: resolve => require(['@/components/eye/controlChildren/environment'], resolve), meta: {id: '0101'}},
+            {path: '/controler/light',name: 'Light', component: resolve => require(['@/components/eye/controlChildren/lightControl'], resolve), meta: {id: '0101'}},
         ]
     }
 ]

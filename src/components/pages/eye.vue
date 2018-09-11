@@ -9,8 +9,8 @@
                         </router-link>
                     </el-col>
                     <el-col :xs="3" :sm="3" :md="5" :lg="6" :xl="6" class="control">
-                        <div v-for="(item,index) in manage" @click="goModule(item,index)"
-                             :class="activeIndex === index? 'active':''">{{$t(item)}}
+                        <div v-for="(item,index) in manage" @click="goModule(item.index, index)" v-if="getUserRole.includes(item.id) || getUserRole[0] == 1"
+                             :class="activeIndex === index? 'active':''">{{$t(item.index)}}
                         </div>
                     </el-col>
                     <el-col :xs="5" :sm="5" :md="5" :lg="6" :xl="7" id="getTime">
@@ -48,9 +48,9 @@
                             <el-menu  class="el-menu-demo" mode="horizontal" router>
                                 <el-submenu index="">
                                     <template slot="title">
-                                        <span class="Admin"v-if="getUserDetailMsg.nickname">{{getUserDetailMsg.nickname}}</span>
-                                        <span class="Admin"v-if="!getUserDetailMsg.nickname">{{getUserDetailMsg.username}}</span>
-                                        <img :src="getUrl(getUserDetailMsg.picturePath)" alt="" @error="imgError">
+                                        <span class="Admin"v-if="getUserDetailMsg.cnName">{{getUserDetailMsg.cnName}}</span>
+                                        <span class="Admin"v-if="!getUserDetailMsg.cnName">{{getUserDetailMsg.name}}</span>
+                                        <img :src="getUrl(getUserDetailMsg.iconId)" alt="" @error="imgError">
                                     </template>
                                     <el-menu-item @click='visible = true' index="">个人中心</el-menu-item>
                                     <el-menu-item index="/droreone">返回主页</el-menu-item>
@@ -83,7 +83,16 @@
     export default {
         data() {
             return {
-                manage: [ 'message.control', 'message.facility', 'message.deploy','message.alarm'],
+                manage: [
+                    {id: '0101',
+                        index: 'message.control'
+                    },
+                    {id: '0102',
+                        index:  'message.facility'
+                    },
+                    {id: '0103',
+                        index: 'message.deploy'
+                    }],
                 currTime: new Date(),   //当前时间
                 title: ["&#xe8c0;", "&#xe627;", "&#xe647;"],
                 activeIndex: 1,
@@ -120,17 +129,29 @@
             }
         },
         created () {
+            this.getUserDetailInfo()
+            if (this.getUserRole.includes('0101') || this.getUserRole[0] == 1) {
+                this.$router.push('/controler')
+            } else if (this.getUserRole.includes('0102')) {
+                this.$router.push('/facility')
+            } else if (this.getUserRole.includes('0103')) {
+                this.$router.push('/deploy')
+            } else if (this.getUserRole.includes('0104')) {
+                this.$router.push('/alarm')
+            }
             let route = this.$route.path;
-            if (route.includes('deploy/')){
+            if (route.includes('deploy')){
+                this.activeIndex = 2
+            }
+            if (route.includes('alarm/')){
                 this.activeIndex = 3
             }
-            if (route.includes('controler/')){
+            if (route.includes('controler')){
                 this.activeIndex = 0
             }
-            if (route.includes('facility/')){
+            if (route.includes('facility')){
                 this.activeIndex = 1
             }
-            // this.getUserDetailInfo(this.getUserInfo)
         },
         filters: {
             timeFiler(item) {
@@ -226,7 +247,6 @@
                 } else {
                     return url
                 }
-                return './../../static/img/peopleInfo.svg'
             },
             changeLanguage () {// 语言切换
                 if (this.$i18n.locale === 'CN'){
@@ -249,27 +269,30 @@
                 this.$refs.hitSearch.style.opacity = "1";
             },
             goModule(item, index) {
+                this.visible = false;
                 console.log(item,'opo')
                 this.$store.commit('SHOW_SEARCH', false)
                 this.activeIndex = index;
                 switch (item) {
-                    case 'message.homePage':
-                        this.$router.push({path: '/homePage'});
-                        break;
                     case 'message.control':
-                        this.$router.push({path: '/controler'});
+                        if (this.getUserRole.includes('0101') || this.getUserRole[0] == 1) {
+                            this.$router.push({path: '/controler'});
+                        }
                         break;
                     case 'message.facility':
-                        this.$router.push({path: '/facility'});
+                        if (this.getUserRole.includes('0102') || this.getUserRole[0] == 1) {
+                            this.$router.push({path: '/facility'});
+                        }
                         break;
-                    // case 'message.analyze':
-                    //     this.$router.push({path: '/analyze'});
-                    //     break;
                     case 'message.deploy':
-                        this.$router.push({path: '/deploy'});
+                        if (this.getUserRole.includes('0103') || this.getUserRole[0] == 1) {
+                            this.$router.push({path: '/deploy'});
+                        }
                         break;
                     case 'message.alarm':
-                        this.$router.push({path: '/alarm'});
+                        if (this.getUserRole.includes('0104') || this.getUserRole[0] == 1) {
+                            this.$router.push({path: '/alarm'});
+                        }
                         break;
                 }
             },
@@ -382,7 +405,7 @@
             UserInfoDialog
         },
         computed: {
-            ...mapGetters(['getUserInfo', 'getUserDetailMsg'])
+            ...mapGetters(['getUserInfo', 'getUserDetailMsg', 'getUserRole'])
         }
     }
 </script>

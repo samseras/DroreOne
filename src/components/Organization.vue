@@ -1,30 +1,38 @@
 <template>
-    <div class="property">
+    <div class="originzation">
         <div class="pro_menu">
             <div class="pro_title">
                 <router-link to="/droreone">
-                    <img src="./../../static/img/logo.svg" alt="">云数据中心
+                    <img src="./../../static/img/userlogo.png" alt="">
                 </router-link>
             </div>
             <div class="pro_router">
-                <router-link to="/basic-property" :class="route.includes('basic')? 'active' : ''" v-if="getUserRole.includes('0402') || getUserRole[0] == 1" >设施</router-link>
-                <router-link to="/hard-property" :class="route.includes('hard')? 'active' : ''" v-if="getUserRole.includes('0403') || getUserRole[0] == 1">设备</router-link>
-                <router-link to="/floder" :class="route.includes('file')? 'active' : ''" v-if="getUserRole.includes('0401') || getUserRole[0] == 1">文件</router-link>
-                <!--<router-link to="/building" :class="route.includes('build')? 'active' : ''">建筑</router-link>-->
-                <!--<router-link to="">植物</router-link>-->
                 <div class="func">
                     <el-menu  class="el-menu-demo" mode="horizontal" router>
                         <el-submenu index="">
                             <template slot="title">
-                                <span class="Admin" v-if="getUserDetailMsg.cnName">{{getUserDetailMsg.cnName}}</span>
-                                <span class="Admin" v-if="!getUserDetailMsg.cnName">{{getUserDetailMsg.name}}</span>
                                 <img :src="getUrl(getUserDetailMsg.iconId)" alt="" @error="imgError">
+                                <span class="Admin"v-if="getUserDetailMsg.cnName">{{getUserDetailMsg.cnName}}</span>
+                                <span class="Admin"v-if="!getUserDetailMsg.cnName">{{getUserDetailMsg.name}}</span>
                             </template>
-                            <el-menu-item index="" @click="showUserDialog">个人中心</el-menu-item>
-                            <el-menu-item index="/droreone">返回主页</el-menu-item>
-                            <el-menu-item @click="logout"index="">退出</el-menu-item>
+                            <el-menu-item index="" @click="showUserDialog">
+                                <img src="./../../static/img/myself.png" alt="" class="imageTitlt">
+                                个人中心
+                            </el-menu-item>
+                            <el-menu-item index="/droreone">
+                                <img src="./../../static/img/homepage.png" alt="" class="imageTitlt">
+                                返回主页
+                            </el-menu-item>
+                            <el-menu-item @click="logout"index="">
+                                <img src="./../../static/img/back.png" alt="" class="imageTitlt">
+                                退出
+                            </el-menu-item>
                         </el-submenu>
                     </el-menu>
+                </div>
+                <div class="helps">
+                    <img src="./../../static/img/help.png" alt="">
+                    <span>帮助</span>
                 </div>
             </div>
         </div>
@@ -49,34 +57,26 @@
         data() {
             return {
                 route: '',
-                visible: false
+                visible: false,
             }
         },
-       async created () {
-           this.getUserDetailInfo()
-           if (this.getUserRole.includes('0402') || this.getUserRole[0] == 1) {
-               this.$router.push('/basic-property')
-           } else if (this.getUserRole.includes('0403')) {
-               this.$router.push('/hard-property')
-           } else if (this.getUserRole.includes('0401')) {
-               this.$router.push('/floder')
-           }
-           this.route = this.$route.path
-            await this.getFacilityType()
-           await this.getDeviceType()
-           await this.getFileType()
+        async created () {
+            await this.$store.dispatch('getUserDetailInfo').then(res => {
+                console.log(res, '[][][][][][')
+            })
+            this.route = this.$route.path
         },
         watch: {
-          '$route'(){
-              this.route = this.$route.path
-          }
+            '$route'(){
+                this.route = this.$route.path
+            }
         },
         components: {
             ScrollContainer,
             UserInfoDialog
         },
         methods:{
-            ...mapActions(['logout','getUserDetailInfo','getFacilityType','getDeviceType', 'getFileType']),
+            ...mapActions(['logout','getUserDetailInfo']),
             logout() {
                 let data = JSON.parse(localStorage.getItem('token'))
                 this.$store.dispatch('logout',data).then(() => {
@@ -92,25 +92,40 @@
             },
             getUrl (url) {
                 if (url === null || url === undefined) {
-                    return './../../static/img/peopleInfo.svg'
+                    return './../../static/img/userCenter.png'
                 } else {
                     return url
                 }
             },
         },
         computed: {
-            ...mapGetters(['getUserInfo','getUserDetailMsg', 'getUserRole'])
+            ...mapGetters(['getUserInfo','getUserDetailMsg'])
         }
     }
 </script>
 
 <style lang="scss">
-    .property{
-        .el-menu-demo,.el-menu--horizontal{
+    .originzation{
+        .checkoutMap{
+            width: rem(110);
+            float: right;
+            margin-right: 10px;
+            .el-select{
+                /*margin-left: rem(5);*/
+                .el-input .el-input__inner{
+                    background: #2D3E50;
+                    color: #fff;
+                    border: none;
+                    padding-left: rem(5);
+                    padding-right:rem(20);
+                }
+            }
+        }
+        .el-menu-demo,.el-menu--horizontal,.el-menu{
             background-color: transparent;
         }
         /*.el-menu-demo,.el-menu--horizontal,.el-menu:hover{*/
-            /*background-color: transparent;*/
+        /*background-color: transparent;*/
         /*}*/
         .el-menu--horizontal>.el-submenu .el-submenu__title{
             color: #fff;
@@ -118,14 +133,23 @@
         .el-menu--horizontal>.el-submenu .el-submenu__title:hover{
             background-color: transparent;
         }
+        .func .el-submenu__title span {
+            color: #6E6698;
+        }
         .func .el-submenu__title img{
             display: inline-block;
-            width: rem(30);
-            height: rem(30);
+            width: rem(40);
+            height: rem(40);
             border-radius: 50%;
             vertical-align: middle;
             margin-top: rem(0);
             margin-left: rem(5);
+        }
+        .func .imageTitlt{
+            display: inline-block;
+            width: rem(16);
+            height: rem(16);
+            vertical-align: middle;
         }
         .el-menu--horizontal>.el-submenu.is-active .el-submenu__title{
             border-bottom-color: transparent;
@@ -137,7 +161,7 @@
 
 </style>
 <style lang="scss" type="text/scss" scoped>
-    .property {
+    .originzation {
         width: 100%;
         height: 100%;
         .pro_menu {
@@ -153,7 +177,7 @@
             .pro_title {
                 width: 15%;
                 text-align: center;
-                background: #34495E;
+                background: #35CCB5;
                 font-family: '微软雅黑';
                 a{
                     color: #fff;
@@ -167,9 +191,36 @@
             }
             .pro_router{
                 flex: 1;
-                background: #2D3E50;
+                background: #fff;
                 padding: 0 rem(35);
                 box-sizing: border-box;
+                .helps{
+                    width: rem(100);
+                    height: 100%;
+                    display: inline-block;
+                    float: right;
+                    position: relative;
+                    img{
+                        display: inline-block;
+                        vertical-align: middle;
+                    }
+                    span{
+                        color: #6e6698;
+                        font-size: rem(14);
+                        font-weight: 600;
+                    }
+                    &:after{
+                        content: "";
+                        position: absolute;
+                        width: 1px;
+                        height: 50%;
+                        background: #6f7dbc;
+                        right: rem(10);
+                        top: 50%;
+                        transform: translateY(-50%);
+                        opacity: .4;
+                    }
+                }
                 a{
                     display: inline-block;
                     color: #fff;
@@ -182,7 +233,6 @@
                     display: inline-block;
                     float: right;
                     margin-right: rem(20);
-
                 }
             }
         }

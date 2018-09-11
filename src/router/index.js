@@ -16,6 +16,8 @@ import iot from './iot'
 // 数据分析 (图表)
 import analyze from './analyze'
 
+import organization from './organization'
+
 // import MicServiceManagementSystem from '@/components/pages/MicroService/MicroServiceManagementSystem'
 // import Index from '@/components/pages/index'
 import login from '@/components/pages/login'
@@ -67,7 +69,10 @@ const routes = [
   //   iot
     ...iot,
   //  分析（图表）
-    ...analyze
+    ...analyze,
+
+  //  用户管理
+        ...organization
   ]
 const router = new Router({
     mode: 'history',
@@ -78,10 +83,19 @@ const router = new Router({
 router.beforeEach((to, from, next) => {
     next(true)
     let token = localStorage.getItem('token')
-    console.log(token, 'token')
+    let role = JSON.parse(localStorage.getItem('role') || '[]')
     if (token) {
         if (to.path === '/login') {
             next()
+        }
+        if (role[0] == 1) {
+            next()
+        } else {
+            if (to.meta.id && role.includes(to.meta.id)) {
+                next()
+            } else if (to.meta.id) {
+                next(from.path)
+            }
         }
     } else {
         next('/login')

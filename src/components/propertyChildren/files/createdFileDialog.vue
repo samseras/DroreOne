@@ -14,7 +14,7 @@
                        <span>名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称：</span>
                        <el-input v-model="name":maxlength="20"></el-input>
                    </p>
-                   <p class="textarea ms ms-person">
+                   <p class="textarea ms ms-person name">
                        <span class="des-person">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：</span>
                        <el-input type="textarea"  v-model="description" ></el-input>
                    </p>
@@ -106,6 +106,10 @@
                         display: inline-block;
                     }
                 }
+            }
+            .textarea span {
+                float: left;
+                margin-left: rem(1);
             }
         }
     }

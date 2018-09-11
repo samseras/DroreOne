@@ -20,13 +20,40 @@ const user = {
             }
         },
         getUserRole (state) {
-            return state.userRoles
+            if (state.userDetailInfo) {
+                let info = state.userDetailInfo
+                if (info.id === '1') {
+                    localStorage.setItem('role', JSON.stringify([1]))
+                    return [1]
+                } else {
+                    let role = (info.role === undefined || info.role === null)? []: info.role.permissions
+                    if (role === null || role.length === 0) {
+                        localStorage.setItem('role', JSON.stringify([]))
+                        return []
+                    } else if (role.length > 0) {
+                        let rolesId = role.map(item => {
+                            return item.id
+                        })
+                        rolesId.forEach(item => {
+                            if (item.length > 2) {
+                                rolesId.push(item.substring(0,2))
+                            }
+                        })
+                        rolesId = Array.from(new Set(rolesId))
+                        localStorage.setItem('role', JSON.stringify(rolesId))
+                        return rolesId
+                    }
+                }
+            } else {
+                return []
+            }
         },
         getUserDetailMsg (state) {
             return state.userDetailInfo
         }
     },
     setters: {},
+
     mutations: {
         [types.SET_USER] (state, data) {
             state.user = data
@@ -45,25 +72,17 @@ const user = {
         async logout ({commit},data) {
             commit(types.SET_USER, '')
             localStorage.removeItem('token')
+            localStorage.removeItem('role')
             return await api.login.userLogout(data)
         },
         clearToken ({commit}) {
             commit(types.SET_USER, '')
             localStorage.removeItem('token')
         },
-        async getUserRoles ({commit},userName) {
-            try {
-                let data = await api.login.getUserRoles(userName)
-                commit(types.SET_USER_ROLES, data[0])
-                return data[0]
-            } catch (err) {
-                console.log(err)
-            }
-        },
         async getUserDetailInfo ({commit},username) {
             try {
                 let data = await api.lib.getUserInfo(username)
-                commit(types.SET_USER_DETAIL_INFO,data)
+                commit(types.SET_USER_DETAIL_INFO,data[0])
             } catch (err) {
                 console.log(err)
             }

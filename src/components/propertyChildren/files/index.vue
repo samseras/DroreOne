@@ -1,5 +1,5 @@
 <template>
-    <div class="person">
+    <div class="fileMenu">
         <div class="pro_content">
             <el-menu default-active='/person'router
                      text-color="#fff"
@@ -132,10 +132,10 @@
 </script>
 
 <style lang="scss" type="text/scss">
-    .person .el-submenu .el-menu-item:hover{
+    .fileMenu .el-submenu .el-menu-item:hover{
         background-color:#283446;
     }
-    .person .el-submenu .el-menu-item {
+    .fileMenu .el-submenu .el-menu-item {
         width: 100%;
         height: rem(40);
         line-height: rem(40);
@@ -153,7 +153,7 @@
             margin-top: rem(-4);
         }
     }
-    .person .el-submenu__title{
+    .fileMenu .el-submenu__title{
         background-color:#434e5c;
         border-top: 1px solid #4e5b6b;
         color:#fff;
@@ -165,7 +165,7 @@
             margin-right: rem(10);
         }
     }
-    .person .el-menu-item {
+    .fileMenu .el-menu-item {
         width: 100%;
         height: rem(55);
         line-height: rem(55);
@@ -179,19 +179,19 @@
         }
     }
 
-    .person .el-menu .el-menu--inline {
+    .fileMenu .el-menu .el-menu--inline {
         width: 100%;
         background: #434e5c;
         box-sizing: border-box;
         text-align: left;
         font-size: rem(14);
     }
-    .person .el-menu{
+    .fileMenu .el-menu{
         background-color: #485462;
     }
 </style>
 <style lang="scss" type="text/scss" scoped>
-    .person {
+    .fileMenu {
         width: 100%;
         height: 100%;
         .pro_content{

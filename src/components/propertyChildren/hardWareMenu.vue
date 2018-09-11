@@ -17,7 +17,7 @@
                             </el-menu-item>
                         </el-submenu>
                     </template>
-                    <template v-if="!item.subs && getUserRole === 'ADMIN'">
+                    <template v-if="!item.subs">
                         <el-menu-item :index="item.index">
                             <img :src="item.icon" alt="">{{ item.title }}
                         </el-menu-item>
@@ -227,7 +227,7 @@
             }
         },
         computed: {
-            ...mapGetters(['getUserRole', 'getDeviceTypeMenu'])
+            ...mapGetters([ 'getDeviceTypeMenu'])
         }
 
     }

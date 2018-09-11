@@ -14,14 +14,15 @@ const iot = [
         name: 'BasicStruc',
         path: '/basicStruc',
         component: resolve => require(['@/components/iot/basicStruc'], resolve),
+        meta: {id: '05'},
         redirect: '/basicStruc/iotHome',
         children: [
-            {path: '/basicStruc/iotHome', name: 'IotHome', component: resolve => require(['@/components/iot/iotHome'], resolve)},
-            {path: '/basicStruc/deviceModel/:category', name: 'IotDeviceType', component: resolve => require(['@/components/iot/deviceType'], resolve)},
-            {path: '/basicStruc/deviceList/:category', name: 'IotDeviceList', component: resolve => require(['@/components/iot/deviceList'], resolve)},
-            {path: '/basicStruc/deviceTree/:category', name: 'IotDeviceTree', component: resolve => require(['@/components/iot/deviceTree'], resolve)},
-            {path:'/basicStruc/iotLog/systemLog',name:'IotSystemLog',component: resolve => require(['@/components/iot/iotLog/systemLog'], resolve)},
-            {path:'/basicStruc/iotLog/nowStatus',name:'NowStatus',component: resolve => require(['@/components/iot/iotLog/nowStatus'], resolve)},
+            {path: '/basicStruc/iotHome', name: 'IotHome', component: resolve => require(['@/components/iot/iotHome'], resolve), meta: {id: '05'}},
+            {path: '/basicStruc/deviceModel/:category', name: 'IotDeviceType', component: resolve => require(['@/components/iot/deviceType'], resolve), meta: {id: '05'}},
+            {path: '/basicStruc/deviceList/:category', name: 'IotDeviceList', component: resolve => require(['@/components/iot/deviceList'], resolve), meta: {id: '05'}},
+            {path: '/basicStruc/deviceTree/:category', name: 'IotDeviceTree', component: resolve => require(['@/components/iot/deviceTree'], resolve), meta: {id: '05'}},
+            {path:'/basicStruc/iotLog/systemLog',name:'IotSystemLog',component: resolve => require(['@/components/iot/iotLog/systemLog'], resolve), meta: {id: '05'}},
+            {path:'/basicStruc/iotLog/nowStatus',name:'NowStatus',component: resolve => require(['@/components/iot/iotLog/nowStatus'], resolve), meta: {id: '05'}},
         ]
     },
 ]

@@ -25,7 +25,6 @@
  		</div>
  	</div>
 </template>
-
 <script>
     let Base64 = require('js-base64').Base64;
     import api from "@/api"
@@ -42,7 +41,7 @@
 	   components:{
 		},
 		methods:{
-            ...mapMutations(['SET_USER',]),
+            ...mapMutations(['SET_USER_DETAIL_INFO',]),
             ...mapActions(['getUserDetailInfo']),
 			regForm () {
 				let s = $('#checkCode').val().toLowerCase();
@@ -93,34 +92,23 @@
                     this.$message.error('请输入密码')
                     return
                 }
-				// if(this.checkCode !== "" && this.checkCode == $("#Code").val().toLowerCase()){
-                    let obj = `BASIC ${Base64.encode(this.username +  ":"+ this.password)}`
-                    localStorage.setItem('userName',this.username)
-                    localStorage.setItem('token', JSON.stringify(obj))
-                    this.$store.commit('SET_USER', this.username)
-                    this.$router.push('droreone')
-                    await api.login.userLogin(obj).then(res => {
-                        localStorage.setItem('userName',this.username)
-                        localStorage.setItem('token', JSON.stringify(obj))
-                        this.$store.commit('SET_USER', this.username)
-                        this.getUserDetailInfo(this.username)
-                        // if(res != []){
-                        //      this.$router.push('droreone')
-                        // }
-                    }).catch(err => {
-                        console.log(err, '登录失败')
-                        // this.$message.info('用户名或密码错误')
-                        this.checkCode = ''
-                    })
-                // }else{
-                //     this.changeCheckCode();
-                //     this.$refs.checkCode.style.border="1px solid red";
-                //     this.$refs.userpass.style.border="none";
-                //     this.$refs.userid.style.border="none";
-                //     this.changeCheckCode();
-                //     this.$message.info('验证码不能为空或错误')
-                // }
-			}
+                let obj = `BASIC ${Base64.encode(this.username +  ":"+ this.password)}`
+                await api.login.userLogin(obj).then(res => {
+                    console.log(res, 'this is new login api respones')
+                    let aid = 'request-token'
+                    localStorage.setItem('token', JSON.stringify(res[aid]))
+                    if (res[aid] !== '') {
+                        this.$router.push('droreone')
+                    }
+                    this.$message.success("登录成功，欢迎使用 Drore 智慧旅游云平台")
+                    this.$store.commit('SET_USER_DETAIL_INFO', res)
+                    // this.getUserDetailInfo(this.username)
+                }).catch(err => {
+                    console.log(err, '登录失败')
+                    this.$message.info('用户名或密码错误')
+                    this.checkCode = ''
+                })
+            }
 		},
 		mounted(){
 		    this.enter()
@@ -157,11 +145,9 @@
                 margin: 0 auto;
                 padding-top: rem(20);
                 img{
-                    width: rem(120);
                     height:rem(55);
                     vertical-align: middle;
                     margin-top: rem(-10);
-                    margin-right: rem(-8);
                 }
                 span{
                     display: block;
@@ -193,8 +179,9 @@
                 .login-right{
                     float: left;
                     width: 50%;
-                    height: 72%;
+                    height: 50%;
                     background: none;
+                    margin-top: rem(60);
                     p{
                         width: 100%;
                         color: #93d2cc;
@@ -203,7 +190,7 @@
                         margin-top: rem(50);
                     }
                     form{
-                        margin-top: rem(15);
+                        margin-top: rem(30);
                         margin-left: rem(30);
                         position: relative;
                         margin-right: rem(50);

@@ -16,16 +16,17 @@ const facility = [
         name: 'facility',
         redirect: '/facility/build',
         component: resolve => require(['@/components/facility'], resolve),
+        meta: {id: '0102'},
         children: [
-            {path: '/facility/toilet',name: 'Toilet', component: resolve => require(['@/components/eye/facilityChildren/toiletFacility'], resolve)},
-            {path: '/facility/park',name: 'Park', component: resolve => require(['@/components/eye/facilityChildren/parkFacility'], resolve)},
-            {path: '/facility/shop',name: 'Shop', component: resolve => require(['@/components/eye/facilityChildren/shopFacility'], resolve)},
-            {path: '/facility/road',name: 'Road', component: resolve => require(['@/components/eye/facilityChildren/roadFacility'], resolve)},
-            {path: '/facility/scenic',name: 'ScenicName', component: resolve => require(['@/components/eye/facilityChildren/scenicNameFacility'], resolve)},
-            {path: '/facility/build',name: 'Build', component: resolve => require(['@/components/eye/facilityChildren/buildFacility'], resolve)},
-            {path: '/facility/plant',name: 'Plant', component: resolve => require(['@/components/eye/facilityChildren/plantFacility'], resolve)},
-            {path: '/facility/indicator',name: 'Indicator', component: resolve => require(['@/components/eye/facilityChildren/indicatorFacility'], resolve)},
-            {path: '/facility/trash',name: 'Trash', component: resolve => require(['@/components/eye/facilityChildren/trashFacility'], resolve)}
+            {path: '/facility/toilet',name: 'Toilet', component: resolve => require(['@/components/eye/facilityChildren/toiletFacility'], resolve), meta: {id: '0102'}},
+            {path: '/facility/park',name: 'Park', component: resolve => require(['@/components/eye/facilityChildren/parkFacility'], resolve), meta: {id: '0102'}},
+            {path: '/facility/shop',name: 'Shop', component: resolve => require(['@/components/eye/facilityChildren/shopFacility'], resolve), meta: {id: '0102'}},
+            {path: '/facility/road',name: 'Road', component: resolve => require(['@/components/eye/facilityChildren/roadFacility'], resolve), meta: {id: '0102'}},
+            {path: '/facility/scenic',name: 'ScenicName', component: resolve => require(['@/components/eye/facilityChildren/scenicNameFacility'], resolve), meta: {id: '0102'}},
+            {path: '/facility/build',name: 'Build', component: resolve => require(['@/components/eye/facilityChildren/buildFacility'], resolve), meta: {id: '0102'}},
+            {path: '/facility/plant',name: 'Plant', component: resolve => require(['@/components/eye/facilityChildren/plantFacility'], resolve), meta: {id: '0102'}},
+            {path: '/facility/indicator',name: 'Indicator', component: resolve => require(['@/components/eye/facilityChildren/indicatorFacility'], resolve), meta: {id: '0102'}},
+            {path: '/facility/trash',name: 'Trash', component: resolve => require(['@/components/eye/facilityChildren/trashFacility'], resolve), meta: {id: '0102'}}
         ]
     }
 ]

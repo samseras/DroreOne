@@ -41,14 +41,14 @@ const lib = {
     updatauserInfo  (params) {
         return axios ({
             method: 'PUT',
-            url: getUrl('/security/userinfo'),
+            url: getUrl('/uc/currentuser'),
             data:params
         })
     },
-    getUserInfo  (params) {
+    getUserInfo  () {
         return axios ({
             method: 'GET',
-            url: getUrl(`/security/userinfo/${params}`),
+            url: getUrl(`/uc/currentuser`),
         })
     },
 

@@ -42,6 +42,7 @@ import file from './file'
 import portal from './portal'
 import transport from "./transport"
 import station from './station'
+import user from './user'
 
 
 export default {
@@ -85,5 +86,6 @@ export default {
     file,
     portal,
     transport,
-    station
+    station,
+    user
 }

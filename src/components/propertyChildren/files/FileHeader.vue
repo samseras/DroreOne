@@ -1,17 +1,18 @@
 <template>
-    <div class="funHeader">
+    <div class="fileHeader">
         <div class="searchInfo">
-            <input type="text" placeholder="请输入搜索内容" v-model="searchContent">
+            <input type="text" placeholder="请输入搜索内容" v-model="searchContent" @keyup="startSearch">
             <i class="el-icon-search" @click="startSearch"></i>
         </div>
         <div class="funcBtn">
             <el-button size="mini"plain @click="uploadFile" v-if="(!(getSelectFileList.length > 0)) && getCrumbsList.length > 1"><img src="./../../../../static/img/uploadFiles.svg" alt="">上传文件</el-button>
             <el-button size="mini"plain @click="$refs.batchUpload.click()" v-if="(!(getSelectFileList.length > 0)) && getCrumbsList.length > 1"><img src="./../../../../static/img/uploadFiles.svg" alt="">批量上传</el-button>
             <el-button size="mini"plain @click="createdFloder" v-if="!(getSelectFileList.length > 0)"><img src="./../../../../static/img/newfile.svg" alt="">新建文件夹</el-button>
+            <el-checkbox v-model="isSelected" @change="selectedAll" class="selectedAll">全选</el-checkbox>
             <el-button size="mini"plain @click="fixFile" v-if="getSelectFileList.length === 1"><img src="./../../../../static/img/fixfile.svg" alt="">编辑</el-button>
             <el-button size="mini"plain @click="downloadFile" v-if="isShowDownlodFile"><img src="./../../../../static/img/downloadfile.svg" alt="">下载</el-button>
-            <el-button size="mini"plain @click="moveFileHandler"  v-if="getSelectFileList.length > 0"><img src="./../../../../static/img/moveFile.svg" alt="">移动</el-button>
-            <el-button size="mini"plain @click="deleteFile"  v-if="getSelectFileList.length > 0"><i class="el-icon-delete"></i>删除</el-button>
+            <el-button size="mini"plain class="moveFile" @click="moveFileHandler"  v-if="getSelectFileList.length > 0"><img src="./../../../../static/img/moveFile.svg" alt="">移动</el-button>
+            <el-button size="mini"plain  class="deleteFile" @click="deleteFile"  v-if="getSelectFileList.length > 0"><i class="el-icon-delete"></i>删除</el-button>
             <input type="file" class="fileInput" ref="batchUpload" @change="uploadFileHandler" style="FILTER: alpha(opacity=0); moz-opacity: 0; opacity: 0;width: 0px;height: 0px;" multiple>
         </div>
         <div class="page">
@@ -32,11 +33,12 @@
                 index: 0,
                 pageAllNum: 1,
                 currentPageNum: 1,
-                searchContent: ''
+                searchContent: '',
+                isSelected: false
             }
         },
         methods: {
-            ...mapMutations(['DELET_FILE_LIST', 'GET_FILE_PAGE_NUMBER', 'SEARCH_FILE_LIST']),
+            ...mapMutations(['DELET_FILE_LIST', 'GET_FILE_PAGE_NUMBER', 'SEARCH_FILE_LIST', 'SELECT_ALL']),
             createdFloder () {
                 this.$emit('createdFloder')
             },
@@ -57,6 +59,15 @@
                     form.append(`f${index}`, item)
                 })
                 this.$emit('batchFile', form)
+            },
+            selectedAll() {
+                let rows = {
+                    select: this.isSelected,
+                }
+                let date = new Date().getTime()
+                rows[date] = new Date().getTime()
+                console.log(rows, 'lplpl')
+                this.$store.commit('SELECT_ALL', rows)
             },
             fixFile () {
                 this.$emit('fixFile')
@@ -148,8 +159,12 @@
                             this.isShowDownlodFile = true
                         }
                     })
+                    if (this.getFileListLength && this.getFileListLength.length > 0) {
+                        this.isSelected = this.getFileListLength.length === this.getSelectFileList.length ? true : false
+                    }
                 } else {
                     this.isShowDownlodFile = false
+                    this.isSelected = false
                 }
             },
             getFileListLength () {
@@ -166,6 +181,7 @@
                 this.pageAllNum = 1
                 this.currentPageNum = 1
                 this.searchContent = ''
+                this.isSelected = false
             }
         },
         created() {
@@ -177,7 +193,7 @@
 </script>
 
 <style lang="scss" type="text/scss">
-    .funHeader{
+    .fileHeader{
         .el-checkbox__label{
             padding-left: rem(5);
             font-size: rem(12);
@@ -194,7 +210,7 @@
     }
 </style>
 <style lang="scss" scoped type="text/scss">
-    .funHeader{
+    .fileHeader{
         width: 100%;
         height: 100%;
         div{
@@ -216,10 +232,12 @@
         }
         .funcBtn{
             margin-left: rem(20);
-            margin-top: rem(3);
+            margin-top: rem(0);
+            display: inline-block;
             button{
                 border: none;
                 font-weight: 500;
+                float: left;
                 img{
                     display: inline-block;
                     width: rem(16);
@@ -230,12 +248,15 @@
                     margin-right: rem(3);
                 }
             }
-            .el-button.selectedAll{
-                padding-bottom: rem(0);
-            }
             .el-button {
                 padding: rem(5) rem(5);
-                margin: 0;
+                margin-top: rem(3);
+            }
+            .el-button.deleteFile{
+                margin-top: rem(7);
+            }
+            .el-button.moveFile{
+                margin-top: rem(4);
             }
         }
         .page{
@@ -257,6 +278,11 @@
                     color: #e44b4e;
                 }
             }
+        }
+        .selectedAll {
+            float: left;
+            margin-top: rem(7);
+            margin-left: rem(3);
         }
     }
 </style>

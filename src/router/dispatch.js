@@ -12,14 +12,15 @@ const dispatch = [
         name: 'deploy',
         redirect: '/deploy/broadcast-Dmis',
         component: resolve => require(['@/components/deploy'], resolve),
+        meta: {id: '0103'},
         children:[
-            {path:'/deploy/broadcast-Dmis',name:'boatcartDmis',component: resolve => require(['@/components/eye/deployChildren/dispatchDeploy/broadcastDmis'], resolve)},
-            {path:'/deploy/lamppost-Dmis',name:'lamppostDmis',component: resolve => require(['@/components/eye/deployChildren/dispatchDeploy/lamppostDmis'], resolve)},
-            {path:'/deploy/screen-Dmis',name:'screenDmis',component: resolve => require(['@/components/eye/deployChildren/dispatchDeploy/screenDmis'], resolve)},
-            {path:'/deploy/security-Dmis',name:'securityDmis',component: resolve => require(['@/components/eye/deployChildren/dispatchDeploy/securityDmis'], resolve)},
-            {path:'/deploy/purifier-Dmis',name:'purifierDmis',component: resolve => require(['@/components/eye/deployChildren/dispatchDeploy/purifierDmis'], resolve)},
-            {path:'/deploy/transport-Dmis',name:'transportDmis',component: resolve => require(['@/components/eye/deployChildren/dispatchDeploy/transportDmis'], resolve)},
-            {path:'/deploy/dispatch-Record',name:'dispatchRecord',component: resolve => require(['@/components/eye/deployChildren/recordDeploy/dispatchRecord'], resolve)}
+            {path:'/deploy/broadcast-Dmis',name:'boatcartDmis',component: resolve => require(['@/components/eye/deployChildren/dispatchDeploy/broadcastDmis'], resolve), meta: {id: '0103'}},
+            {path:'/deploy/lamppost-Dmis',name:'lamppostDmis',component: resolve => require(['@/components/eye/deployChildren/dispatchDeploy/lamppostDmis'], resolve), meta: {id: '0103'}},
+            {path:'/deploy/screen-Dmis',name:'screenDmis',component: resolve => require(['@/components/eye/deployChildren/dispatchDeploy/screenDmis'], resolve), meta: {id: '0103'}},
+            {path:'/deploy/security-Dmis',name:'securityDmis',component: resolve => require(['@/components/eye/deployChildren/dispatchDeploy/securityDmis'], resolve), meta: {id: '0103'}},
+            {path:'/deploy/purifier-Dmis',name:'purifierDmis',component: resolve => require(['@/components/eye/deployChildren/dispatchDeploy/purifierDmis'], resolve), meta: {id: '0103'}},
+            {path:'/deploy/transport-Dmis',name:'transportDmis',component: resolve => require(['@/components/eye/deployChildren/dispatchDeploy/transportDmis'], resolve), meta: {id: '0103'}},
+            {path:'/deploy/dispatch-Record',name:'dispatchRecord',component: resolve => require(['@/components/eye/deployChildren/recordDeploy/dispatchRecord'], resolve), meta: {id: '0103'}},
         ]
     }
 ]
