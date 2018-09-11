@@ -60,9 +60,9 @@
                                 title: '保洁'
                             },
                             {
-                                icon: './../../static/img/roat.svg',
+                                icon: './../../static/img/security.svg',
                                 index: '/deploy/security-Dmis',
-                                title: '巡更路线'
+                                title: '巡检计划'
                             },
                             {
                                 icon: './../../static/img/boatCar.svg',

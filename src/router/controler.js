@@ -29,6 +29,7 @@ const controler = [
             {path: '/controler/other',name: 'Other', component: resolve => require(['@/components/eye/controlChildren/otherControl'], resolve), meta: {id: '0101'}},
             {path: '/controler/environment',name: 'Environment', component: resolve => require(['@/components/eye/controlChildren/environment'], resolve), meta: {id: '0101'}},
             {path: '/controler/light',name: 'Light', component: resolve => require(['@/components/eye/controlChildren/lightControl'], resolve), meta: {id: '0101'}},
+            {path: '/controler/security',name: 'SecuritySchedule', component:resolve => require(['@/components/eye/controlChildren/securityControl'], resolve), meta: {id : '0101'}},
         ]
     }
 ]
