@@ -60,7 +60,7 @@
                                         <a href="javascript:;" @click="gqjq">全视之眼>><img src="../../../static/img/eye.png"/></a>
                                     </div>
                                     <!---->
-                                    <div class="change invalid">
+                                    <div class="change">
                                         <a href="javascript:;" @click="requestFullScreen" >数据可视化>><img src="../../../static/img/sentiment.png"/></a>
                                     </div>
                                 </div>
@@ -112,6 +112,7 @@
 	        return {
                 currTime: new Date(),  //当前时间
                 searchContent: '',
+                isFullscreen:false,
                 searchList: [],
                 routeList: [],
                 list: [
@@ -179,12 +180,29 @@
                 }
 
             },
+            // requestFullScreen(){
+            //
+            //     // if (this.getUserRole.includes('03') || this.getUserRole[0] == 1) {
+            //     //     this.$router.push('analysis')
+            //     // } else {
+            //     //     this.$message.error('此模块暂不为您开放，请联系管理员开放权限！')
+            //     // }
+            // },
             requestFullScreen(){
-                // if (this.getUserRole.includes('03') || this.getUserRole[0] == 1) {
-                //     this.$router.push('analysis')
-                // } else {
-                //     this.$message.error('此模块暂不为您开放，请联系管理员开放权限！')
-                // }
+                if (this.getUserRole.includes('03') || this.getUserRole[0] == 1) {
+                    this.isFullscreen = true;
+                    if (!screenfull.enabled) {// 如果不允许进入全屏，发出不允许提示
+                        this.$message({
+                            message: '不支持全屏',
+                            type: 'warning'
+                        })
+                        return false
+                    }
+                    screenfull.request()
+                    this.$router.push('dataVisualization')
+                } else {
+                    this.$message.error('此模块暂不为您开放，请联系管理员开放权限！')
+                }
             },
             getUserCenter () {
                 if (this.getUserRole.includes('06') || this.getUserRole[0] == 1) {
