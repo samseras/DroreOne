@@ -107,7 +107,7 @@
         name: "passenger-flow",
         data(){
             return{
-                realTimeFlowNum:0,
+                realTimeFlowNum:784511,
                 pickerOptions2: {
                     shortcuts: [{
                         text: '当天',
@@ -190,7 +190,7 @@
                 tripFlowData:{
                     lastWeek:[900,500,1300,1450,1400,1150,1350,900,500,1050,1050,600,300,1200],
                     currWeek:[750,500,1000,600.1150,600,1200,600,700,1400,1200,600,1450],
-                    legent:["石岩山","东方文化园","老虎洞游客中心","金融小镇","城山广场","窑里坞","跨湖楼","古越人家","海洋极地公园","狮子山"],
+                    legent:["西湖","断桥","岳王庙","黄龙洞","宝石山","鼓楼","三公园","胡雪岩故居","湖滨公园","三潭印月"],
                 },
                 carData:{
                     carTime:['06-01', '06-02', '06-03', '06-04', '06-05', '06-06', '06-07', '06-08', '06-09', '06-10', '06-11', '06-12', '06-13', '06-14', '06-15'],
@@ -275,25 +275,36 @@
                 this.tripFlow()
             },
            async realTimeFlow(){
-                await api.passFlowAnalysis.realPassFlow().then(res=>{
-                    let count = 0;
-                     for(let i=0;i<res.total.length;i++){
-                         count += res.total[i].stayCount;
-                     }
-                    this.realTimeFlowNum = count;
-                    let arr = this.realTimeFlowNum.toString().split('').reverse();
-                    let currArr = [];
-                    for(let i=0;i<arr.length;i++){
-                        if((i == 3 || i == 6 || i == 9) && i<arr.length-1){
-                            currArr.push('、')
-                        }
-                        currArr.push(arr[i])
-                    }
-                    currArr = currArr.reverse();
-                    this.realTimeFlowNum = currArr.join('');
-                    console.log(res,"实时客流量")
-                    console.log(count,"实时客流量")
-                })
+                // await api.passFlowAnalysis.realPassFlow().then(res=>{
+                //     let count = 0;
+                //      for(let i=0;i<res.total.length;i++){
+                //          count += res.total[i].stayCount;
+                //      }
+                //     this.realTimeFlowNum = count;
+                //     let arr = this.realTimeFlowNum.toString().split('').reverse();
+                //     let currArr = [];
+                //     for(let i=0;i<arr.length;i++){
+                //         if((i == 3 || i == 6 || i == 9) && i<arr.length-1){
+                //             currArr.push('、')
+                //         }
+                //         currArr.push(arr[i])
+                //     }
+                //     currArr = currArr.reverse();
+                //     this.realTimeFlowNum = currArr.join('');
+                //     console.log(res,"实时客流量")
+                //     console.log(count,"实时客流量")
+                // })
+               this.realTimeFlowNum = 784511;
+               let arr = this.realTimeFlowNum.toString().split('').reverse();
+               let currArr = [];
+               for(let i=0;i<arr.length;i++){
+                   if((i == 3 || i == 6 || i == 9) && i<arr.length-1){
+                       currArr.push('、')
+                   }
+                   currArr.push(arr[i])
+               }
+               currArr = currArr.reverse();
+               this.realTimeFlowNum = currArr.join('');
                setTimeout(() => {
                    let route = this.$route.path
                    if (route.includes('passengerFlow')) {

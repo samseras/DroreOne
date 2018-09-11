@@ -178,12 +178,12 @@
                 ],
                 totalFlowData:{
                     data:['9000','17630','13522','14555','11000','16000','8000','12000','20000','10800'],
-                    legent:["定山广场","金沙戏水","狮子山","海洋极地公园","窑里坞","老虎洞","东方文化园","石岩山","跨湖楼","下孙文化村"],
+                    legent:["西湖","断桥","岳王庙","黄龙洞","宝石山","鼓楼","三公园","胡雪岩故居","湖滨公园","三潭印月"],
                 },
                 tableData:[
-                    {name:'刘瑜',gender:'男',age:'26',IDNum:'610522199205430025',TicketType:'成人票',TicketPrice:'80',TheTicketDate:'2018-09-01',scenicSpot:'湘湖景点',fountain:'陕西西安'},
-                    {name:'张大大',gender:'男',age:'29',IDNum:'610422198909610135',TicketType:'成人票',TicketPrice:'120',TheTicketDate:'2018-09-01',scenicSpot:'湘湖景点1',fountain:'陕西咸阳'},
-                    {name:'李小小',gender:'女',age:'22',IDNum:'610522199705621158',TicketType:'成人票',TicketPrice:'95',TheTicketDate:'2018-09-01',scenicSpot:'湘湖景点3',fountain:'陕西咸阳'},
+                    {name:'刘瑜',gender:'男',age:'26',IDNum:'610522199205430025',TicketType:'成人票',TicketPrice:'80',TheTicketDate:'2018-09-01',scenicSpot:'运河景点',fountain:'陕西西安'},
+                    {name:'张大大',gender:'男',age:'29',IDNum:'610422198909610135',TicketType:'成人票',TicketPrice:'120',TheTicketDate:'2018-09-01',scenicSpot:'运河景点1',fountain:'陕西咸阳'},
+                    {name:'李小小',gender:'女',age:'22',IDNum:'610522199705621158',TicketType:'成人票',TicketPrice:'95',TheTicketDate:'2018-09-01',scenicSpot:'运河景点3',fountain:'陕西咸阳'},
                 ]
             }
         },

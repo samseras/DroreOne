@@ -139,18 +139,18 @@
                     {value: '4', label: '每日'}
                 ],
                 tableData:[
-                    {type:'轿车',busNum:'陕Au23b7',provinces:'陕西',goTime:'14:20',outTime:'17:00',rest:'34',money:'10',scenic:'湘湖'},
-                    {type:'轿车',busNum:'陕B453b7',provinces:'陕西',goTime:'12:12',outTime:'17:00',rest:'12',money:'20',scenic:'湘湖'},
-                    {type:'轿车',busNum:'浙Au23b7',provinces:'浙江',goTime:'16:00',outTime:'17:00',rest:'45',money:'40',scenic:'湘湖'},
-                    {type:'轿车',busNum:'陕Au23b7',provinces:'陕西',goTime:'16:00',outTime:'17:00',rest:'123',money:'60',scenic:'湘湖'},
-                    {type:'客车',busNum:'陕Au23b7',provinces:'陕西',goTime:'18:34',outTime:'17:00',rest:'40',money:'11',scenic:'湘湖'},
-                    {type:'轿车',busNum:'陕Au23b7',provinces:'陕西',goTime:'16:00',outTime:'17:00',rest:'30',money:'23',scenic:'湘湖'},
-                    {type:'客车',busNum:'粤B35347',provinces:'广东',goTime:'09:38',outTime:'17:00',rest:'17',money:'34',scenic:'湘湖'},
-                    {type:'轿车',busNum:'陕Au23b7',provinces:'陕西',goTime:'16:00',outTime:'17:00',rest:'123',money:'60',scenic:'湘湖'},
-                    {type:'客车',busNum:'陕Au23b7',provinces:'陕西',goTime:'18:34',outTime:'17:00',rest:'40',money:'11',scenic:'湘湖'},
-                    {type:'轿车',busNum:'陕Au23b7',provinces:'陕西',goTime:'16:00',outTime:'17:00',rest:'30',money:'23',scenic:'湘湖'},
-                    {type:'客车',busNum:'粤B35347',provinces:'广东',goTime:'09:38',outTime:'17:00',rest:'17',money:'34',scenic:'湘湖'},
-                    {type:'轿车',busNum:'陕C343b7',provinces:'陕西',goTime:'11:00',outTime:'17:00',rest:'7',money:'15',scenic:'湘湖'}
+                    {type:'轿车',busNum:'陕Au23b7',provinces:'陕西',goTime:'14:20',outTime:'17:00',rest:'34',money:'10',scenic:'运河'},
+                    {type:'轿车',busNum:'陕B453b7',provinces:'陕西',goTime:'12:12',outTime:'17:00',rest:'12',money:'20',scenic:'运河'},
+                    {type:'轿车',busNum:'浙Au23b7',provinces:'浙江',goTime:'16:00',outTime:'17:00',rest:'45',money:'40',scenic:'运河'},
+                    {type:'轿车',busNum:'陕Au23b7',provinces:'陕西',goTime:'16:00',outTime:'17:00',rest:'123',money:'60',scenic:'运河'},
+                    {type:'客车',busNum:'陕Au23b7',provinces:'陕西',goTime:'18:34',outTime:'17:00',rest:'40',money:'11',scenic:'运河'},
+                    {type:'轿车',busNum:'陕Au23b7',provinces:'陕西',goTime:'16:00',outTime:'17:00',rest:'30',money:'23',scenic:'运河'},
+                    {type:'客车',busNum:'粤B35347',provinces:'广东',goTime:'09:38',outTime:'17:00',rest:'17',money:'34',scenic:'运河'},
+                    {type:'轿车',busNum:'陕Au23b7',provinces:'陕西',goTime:'16:00',outTime:'17:00',rest:'123',money:'60',scenic:'运河'},
+                    {type:'客车',busNum:'陕Au23b7',provinces:'陕西',goTime:'18:34',outTime:'17:00',rest:'40',money:'11',scenic:'运河'},
+                    {type:'轿车',busNum:'陕Au23b7',provinces:'陕西',goTime:'16:00',outTime:'17:00',rest:'30',money:'23',scenic:'运河'},
+                    {type:'客车',busNum:'粤B35347',provinces:'广东',goTime:'09:38',outTime:'17:00',rest:'17',money:'34',scenic:'运河'},
+                    {type:'轿车',busNum:'陕C343b7',provinces:'陕西',goTime:'11:00',outTime:'17:00',rest:'7',money:'15',scenic:'运河'}
                 ]
             }
         },
