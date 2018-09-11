@@ -146,7 +146,7 @@
                 }
             },
             checked(id) {
-                this.jobList = this.jobList.filter(item => {
+                this.personPostList = this.personPostList.filter(item => {
                     if (item.id === id) {
                         item.checked = item.checked
                     }
@@ -161,7 +161,7 @@
                 }
             },
             selectedAll(state) {
-                this.jobList = this.jobList.filter((item) => {
+                this.personPostList = this.personPostList.filter((item) => {
                     if (state === true) {
                         item.checked = true
                         this.choseInfoId.push(item.id)

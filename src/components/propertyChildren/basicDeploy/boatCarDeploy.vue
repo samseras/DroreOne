@@ -94,7 +94,7 @@
                             <el-checkbox v-model="item.checked" @change="getChecked(item.id)" class="checkBtn"></el-checkbox>
                         </div>
                         <div class="personType" :class="item.type === '车辆'? 'carInfo':''" @click.stop="showPersonDetail(item ,'车船信息',true)">
-                            <img :src="getUrl(item.picturePath)" alt="" @error="imgError">
+                            <img :src="getUrl(item.picturePath,item.vehicle.type)" alt="" @error="imgError">
                             <span class="type">
                                   {{item.vehicle.serialNum}}
                             </span>
@@ -157,11 +157,15 @@
         },
         methods: {
             imgError (e) {
-                e.target.src = this.getUrl(null);
+                e.target.src = this.getUrl(null,0);
             },
-            getUrl (url) {
+            getUrl (url,type) {
                 if (url === null) {
-                    return '../../../../static/img/boatCartCard.png'
+                    if(type == 1){
+                        return '../../../../static/img/boatPic.png'
+                    }else{
+                        return '../../../../static/img/carPic.png'
+                    }
                 } else {
                     return url
                 }
@@ -326,7 +330,8 @@
                     //driverId: info.driverId,
                     maintenanceStatus: info.vehicle.maintenanceStatus,
                     maintenanceDate: info.vehicle.maintenanceDate,
-                    purchaseDate: info.vehicle.purchaseDate
+                    purchaseDate: info.vehicle.purchaseDate,
+                    gpsDeviceId:info.vehicle.gpsDeviceId
                 }
                 if (info.imgUrl !== '') {
                     await api.person.updataAva(info.imgUrl).then(res => {
@@ -361,7 +366,8 @@
                     //driverId: info.driverId,
                     maintenanceStatus: info.vehicle.maintenanceStatus,
                     maintenanceDate: info.vehicle.maintenanceDate,
-                    purchaseDate: info.vehicle.purchaseDate
+                    purchaseDate: info.vehicle.purchaseDate,
+                    gpsDeviceId:info.vehicle.gpsDeviceId
                 }
                 if (info.imgUrl !== '') {
                     await api.person.updataAva(info.imgUrl).then(res => {
@@ -490,11 +496,6 @@
     .boatCars .el-table__body-wrapper,.boatCars .is-scrolling-none{
         font-size: rem(14);
     }
-    .boatCars{
-        .el-checkbox__input{
-            vertical-align: top;
-        }
-    }
     .boatCars {
         .el-table__header-wrapper .has-gutter {
             background-color: #f3f3f3;
@@ -552,11 +553,10 @@
                         background: #fff;
                         border-top-left-radius: rem(5);
                         border-top-right-radius: rem(5);
-                        position: relative;
-                        .checkBtn{
+                        .checkBtn {
                             float: right;
                             margin-right: rem(5);
-                            margin-top: rem(3);
+                            /*margin-top: rem(3);*/
                             width: rem(15);
                             height: rem(15);
                             cursor: pointer;
@@ -591,10 +591,7 @@
                             box-sizing: border-box;
                         }
                     }
-                    .carInfo{
-                        background: #cc9755;
-                    }
-                    .specificInfo{
+                    .specificInfo {
                         margin-top: rem(10);
                         font-size: rem(12);
                         p{

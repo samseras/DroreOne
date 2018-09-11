@@ -20,7 +20,7 @@
                     </p>
                     <p class="sex">
                         <span>名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称：</span>
-                        <el-input type="text"v-model="boatCar.vehicle.serialNum" :maxlength="50" :disabled="isDisabled"></el-input>
+                        <el-input type="text"v-model="boatCar.vehicle.serialNum" :maxlength="15" :disabled="isDisabled"></el-input>
                     </p>
                     <p class="type wrapstyle">
                         <span>维护状态：</span>
@@ -70,6 +70,16 @@
                     <p class="phoneNm">
                         <span>序列号码：</span>
                         <el-input type="text"v-model="boatCar.vehicle.model" :disabled="isDisabled"></el-input>
+                    </p>
+                    <p class="gps wrapstyle">关联GPS：
+                        <el-select v-model="boatCar.vehicle.gpsDeviceId" placeholder="请选择" :disabled="isDisabled">
+                            <el-option
+                                v-for="item in gpsOption"
+                                :key="item.id"
+                                :label="item.name"
+                                :value="item.id">
+                            </el-option>
+                        </el-select>
                     </p>
                     <p class="textarea ms">
                         <span class="des">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：</span>
@@ -517,7 +527,6 @@
                     </div>
                 </div>
 
-                <!--站点码头-->
                 <!--站点-->
                 <div class="personCardContent boatCardContent" v-if="route.includes('station')">
                     <p class="type">
@@ -729,19 +738,19 @@
                     regionId: ''
                 },
                 station: {
+                    typeId:'1',
                     name: '',
                     description: '',
                     location:'',
                     regionId: '',
-                    typeId:'1'
                 },
                 siteType:[
                     {
-                        id:'1',
+                        id:'0',
                         name:'车站'
                     },
                     {
-                        id:'2',
+                        id:'1',
                         name:'码头'
                     }
                 ],
@@ -750,6 +759,7 @@
                     name: ''
                 },
                 options: [],
+                gpsOption:[],
                 route: '',
                 file: {},
                 src:'',
@@ -827,7 +837,11 @@
                        }else if (route.includes('construction')) {//建筑
                            imgSrc = './../../../../static/img/bulidCard.png'
                        } else if (route.includes('boat')) {//车船
-                           imgSrc = './../../../../static/img/boatCartCard.png'
+                           if(this.boatCar.vehicle.type == 0){
+                               imgSrc = './../../../static/img/carPic.png';
+                           }else{
+                               imgSrc = './../../../static/img/boatPic.png';
+                           }
                        } else if (route.includes('station')) {// 站点码头
                            imgSrc = './../../../../static/img/boatCartCard.png'
                        }
@@ -1116,6 +1130,14 @@
                 }).catch(err => {
                     console.log(err, '失败')
                 })
+            },
+            async getGpsOption(){
+                await api.gps.getAllGps().then((res)=>{
+                    console.log(res,'这是GPS')
+                    this.gpsOption=res.devices
+                }).catch((err)=>{
+                    console.log(err)
+                })
             }
         },
         created () {
@@ -1125,7 +1147,17 @@
             })
             this.route = this.$route.path
             console.log(this.Info,'  opopop')
-            if(this.route.includes('boat')) {
+            if (this.route.includes('person') && this.$route.params.id) {
+                let jobId = this.$route.params.id
+                api.person.getJob().then(res => {
+                    console.log(res, '所有工种')
+                    this.options = res
+                })
+                this.person = this.Info
+                this.sex = this.person.gender
+                this.person.jobId = jobId
+            } else if(this.route.includes('boat')) {
+                this.getGpsOption()
                 this.boatCar = this.Info
             } else if(this.route.includes('trash')) {
                 console.log(this.Info, '909090909090')

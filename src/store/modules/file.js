@@ -18,7 +18,8 @@ const file = {
         fileListLength: {},
         filePageNum: {},
         searchContent: {},
-        checkFileRow: {}
+        checkFileRow: {},
+        selectAllState: {}
     },
     getters: {
         getCreatedState (state) {
@@ -60,6 +61,9 @@ const file = {
         getCheckFileRow (state) {
             console.log()
             return state.checkFileRow
+        },
+        getSelectAllState (state) {
+            return state.selectAllState
         }
     },
     setters: {},
@@ -103,6 +107,9 @@ const file = {
         [types.CHECK_FILE_ROW] (state, data) {
             Vue.set(state, 'checkFileRow', {})
             Vue.set(state, 'checkFileRow', data)
+        },
+        [types.SELECT_ALL] (state, data) {
+            state.selectAllState = data
         }
     },
     actions: {

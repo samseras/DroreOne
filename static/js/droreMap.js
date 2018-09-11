@@ -29,7 +29,7 @@ define(function(require, exports, module) {
             _baseMap: {},
             _mapView: {},
             InitData: {},
-            addBaseMap: function(source, centerX, centerY, curZoom, minZoom, maxZoom, projection) {
+            addBaseMap: function(source, centerX, centerY, curZoom, minZoom, maxZoom, projection,mapID) {
                 var select = new ol.interaction.Select({
                     condition: ol.events.condition.click
                 });
@@ -184,7 +184,7 @@ define(function(require, exports, module) {
                     }),
                     //				controls:[overviewMapControl],
                     logo: false,
-                    target: 'map'
+                    target: mapID,
                 });
 
                 return map;
@@ -203,7 +203,7 @@ define(function(require, exports, module) {
                 });
                 return source;
             },
-            initMap: function(option) {
+            initMap: function(option,mapID) {
                 var attribution = new ol.Attribution({
                     html: 'Copyright:© 2016 Rico'
                 });
@@ -212,12 +212,12 @@ define(function(require, exports, module) {
                 var baseMapSource = this.setSource(option.minZoom, option.olTileX, option.olTileY, projection, urlTemplate, attribution); //19, 413000, 214585
                 var centerX = option.centerX;
                 var centerY = option.centerY;
-
+                var mapID = mapID
                 var curZoom = option.curZoom;
                 var minZoom = option.minZoom;
                 var maxZoom = option.maxZoom;
                 //添加底图
-                this._baseMap = this.addBaseMap(baseMapSource, centerX, centerY, curZoom, minZoom, maxZoom, projection);
+                this._baseMap = this.addBaseMap(baseMapSource, centerX, centerY, curZoom, minZoom, maxZoom, projection,mapID);
                 this._baseMap.renderSync();
                 this._mapView = this._baseMap.getView();
                 this._mapView.changed();
@@ -1942,7 +1942,7 @@ define(function(require, exports, module) {
                     if(icon) {
                         this.feature_ = icon;
                         icon.showName = true;
-                        var iconLayer = pool.getLayerById(icon.subtype);
+                        var iconLayer = pool.getLayerById(icon.id);
                         iconLayer.setZIndex(2);
                         CustomEvent.fireEvent("iconOver", {
                             icon: icon,
@@ -1970,7 +1970,7 @@ define(function(require, exports, module) {
                 CustomEvent.fireEvent("click", {
                     feature: fea,
                 })
-            },
+            }
         });
         Mediator.prototype.moveInteraction = new ol.interaction.Pointer({ //TODO
             handleMoveEvent: function(event) {
@@ -2068,15 +2068,9 @@ define(function(require, exports, module) {
                         });
                     var element = event.map.getTargetElement();
                     if(feature) {
-                        var featureType = feature.getGeometry().getType();
-                        if(featureType == "Point") {
-                            if(element.style.cursor != DragMediator.cursor_) {
-                                DragMediator.previousCursor_ = element.style.cursor;
-                                element.style.cursor = DragMediator.cursor_;
-                            }
-                        }else{
-                            element.style.cursor = DragMediator.previousCursor_;
-                            DragMediator.previousCursor_ = undefined;
+                        if(element.style.cursor != DragMediator.cursor_) {
+                            DragMediator.previousCursor_ = element.style.cursor;
+                            element.style.cursor = DragMediator.cursor_;
                         }
                     } else if(DragMediator.previousCursor_ !== undefined) {
                         element.style.cursor = DragMediator.previousCursor_;
@@ -2574,6 +2568,17 @@ define(function(require, exports, module) {
                     }
                 }
             },
+            PopupEvtList: {}, //Popup路网对象数组
+            setSeedPopup: function(id, marker) {
+                this.PopupEvtList[id] = marker;
+            },
+            getPopupById: function(id) {
+                for(var p in this.PopupEvtList) {
+                    if(p == id) {
+                        return this.PopupEvtList[p];
+                    }
+                }
+            },
         };
         /**
          * 自定义事件对象
@@ -2701,7 +2706,7 @@ define(function(require, exports, module) {
         };
 
         return { //返回一个对象
-            init: function(opt, rectifyData) {
+            init: function(opt, rectifyData,mapID) {
                 var defaultData = {
                     "olTileX": 54874,
                     "olTileY": 27040,
@@ -2715,7 +2720,7 @@ define(function(require, exports, module) {
                 }
                 var option = $.extend(true, defaultData, opt);
                 //opt和default要深拷贝后合并一次
-                mapData.initMap(option);
+                mapData.initMap(option,mapID);
                 mapData.initRectify(rectifyData);
                 CustomEvent.removeEvent("click");
                 CustomEvent.removeEvent("dragup");
@@ -3174,6 +3179,14 @@ define(function(require, exports, module) {
                     var layer = pool.getIconById(id);
                     return layer
                 },
+                setcarIcon: function(id, geo) {
+                    var layer = pool.getLayerById(id);
+                    if(!(geo instanceof Array)) {
+                        throw new Error("the type of parameter is wrong!")
+                        return;
+                    }
+                    layer.setGeometry(new ol.geom.Point(geo));
+                },
                 getIconDataByEvt: function(evt) {
                     var data = mapData._baseMap.forEachFeatureAtPixel(evt.pixel, function(feature, layer) {
                         var feature = mapData._baseMap.forEachFeatureAtPixel(evt.pixel, function(feature) {
@@ -3391,16 +3404,21 @@ define(function(require, exports, module) {
             },
             pop: {
                 Popup: cover.Popup,
-                addChild: function(lay) {
+                addChild: function(lay,id) {
                     if(lay.constructor === cover.Popup) {
                         cover.popList.push(lay);
                         mapData._baseMap.addOverlay(lay.overlay);
+                        pool.setSeedPopup(id, lay);
                     }
                 },
                 removeChild: function(lay) {
                     if(lay.constructor === cover.Popup) {
                         mapData._baseMap.removeOverlay(lay.overlay);
                     }
+                },
+                returnPopup: function(id) {
+                    var Popup = pool.getPopupById(id);
+                    return Popup
                 },
                 addPopup: function(obj) {
                     var pop = new cover.PopupNew(obj);

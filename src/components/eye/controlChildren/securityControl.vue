@@ -1,46 +1,44 @@
 <template>
-    <div class="car">
+    <div class="security">
         <div class="reveal">
-            <!--顶部-->
-            <div class="top">
-                <h5>车船调度</h5>
-                <ul>
-                    <!--<li>-->
-                    <!--<el-switch-->
-                    <!--v-model="open"-->
-                    <!--active-color="#53b6a7"-->
-                    <!--inactive-color="#808080">-->
-                    <!--</el-switch>-->
-                    <!--</li>-->
-                    <!--<li><img src="../../../../static/img/search.png" class="search" alt=""/></li>-->
-                    <li>
-                        <el-tooltip class="item" effect="dark" content="车载视频控件下载" placement="left">
-                            <img src="../../../../static/img/down.svg" class="multiwindow" @click="cmsocxDown"  alt=""/>
-                        </el-tooltip>
-                    </li>
-                </ul>
-            </div>
-            <div class="middle">
-                <div class="boottom" id="ztree">
-                    <ScrollContainer>
-                        <broadcast-ztree
-                            :title="title"
-                            :Info="transportInfo"
-                            :lightCheckout="transportCheckout"
-                            :regionId="regionId"
-                            :lightList="carlist"
-                            :number="number"
-                            :fault="fault">
-                        </broadcast-ztree>
-                    </ScrollContainer>
-                </div>
-            </div>
-            <!--<div class="last">-->
-                <!--<h5>设备故障率</h5>-->
-                <!--<div>-->
-                    <!--<div id="pie"></div>-->
+            <el-tabs v-model="activeName" @tab-click="tabClick" stretch>
+                <el-tab-pane label="人员调度" name="securityPerson">
+
+                    <div class="middle">
+                        <div class="boottom" id="ztree">
+                            <ScrollContainer>
+                                <broadcast-ztree
+                                    :title="title"
+                                    :Info="securityPersonInfo"
+                                    :lightCheckout="transportCheckout"
+                                    :regionId="regionId"
+                                    :lightList="securityPersonlist"
+                                    :number="number"
+                                    :fault="fault">
+                                </broadcast-ztree>
+                            </ScrollContainer>
+                        </div>
+                    </div>
+                </el-tab-pane>
+                <el-tab-pane label="巡检计划调度" name="securitySchedule">配置管理</el-tab-pane>
+            </el-tabs>
+
+            <!--<div class="middle">-->
+                <!--<div class="boottom" id="ztree">-->
+                    <!--<ScrollContainer>-->
+                        <!--<broadcast-ztree-->
+                            <!--:title="title"-->
+                            <!--:Info="transportInfo"-->
+                            <!--:lightCheckout="transportCheckout"-->
+                            <!--:regionId="regionId"-->
+                            <!--:lightList="carlist"-->
+                            <!--:number="number"-->
+                            <!--:fault="fault">-->
+                        <!--</broadcast-ztree>-->
+                    <!--</ScrollContainer>-->
                 <!--</div>-->
             <!--</div>-->
+
         </div>
     </div>
 </template>
@@ -52,7 +50,7 @@
     import {mapGetters} from 'vuex'
 
     export default {
-        name:'car',
+        name:'security',
         data() {
             return {
                 open:false,
@@ -64,17 +62,19 @@
                 fault: '0',
                 optionMisic: [],
                 isShowBroadCard: false,
-                transportInfo: [],
-                carlist:[],
+                securityPersonInfo:[],
+                securityScheduleInfo:[],
+                securityPersonlist:[],
+                securitySchedulelist:[],
                 transportCheckout:[],
                 regionId:[],
-                transportList:[],
                 selectAll:[],
                 title:'车船',
                 online: '0',
                 faultlist:[],
                 drivers:[],
-                crew:[]
+                crew:[],
+                activeName:'securityPerson'
             }
         },
         components: {
@@ -82,6 +82,14 @@
             ScrollContainer
         },
         methods: {
+            tabClick(tab,event){
+               console.log(tab,event)
+                if(tab.name == 'securitySchedule'){
+                   // this.initsecuritySchedule()
+                }else if(tab.name == 'securityPerson'){
+                   this.initPersonData()
+                }
+            },
             treeShow(){
                 console.log(this.getcontroTransport,'1');
                 if(this.getcontroTransport){
@@ -145,7 +153,7 @@
                     color: ['#26bbf0', '#f36a5a']
                 });
             },
-            async initData(){
+            async initPersonData(){
                 Promise.all([this.getAllVehicle()]).then(result=>{
                     let vehicles = result[0]
                     // let vehicles = [
@@ -205,81 +213,162 @@
                     //         }
                     //     }
                     // ]
-                    this.carlist = vehicles
-                    this.number=this.carlist.length
-                    this.transportInfo=[]
-                    let carObj = {
-                        label:'车辆',
-                        id:100010,
-                        children:[]
-                    }
-                    let boatObj = {
-                        label:'船只',
-                        id:100011,
-                        children:[]
-                    }
-                    vehicles.forEach(veObj=>{
-                        let childObj;
-                        if(veObj.vehicle.type == 0){
-                            childObj = {
-                                label:veObj.vehicle.serialNum,
-                                id:veObj.vehicle.id,
-                                url:'/static/img/icon/bus_small.png',
-                                type:'transport',
-                                subtype:'car',
-                                icon:veObj.gpsData ? '../../../static/img/car_icon.svg' : '../../../static/img/car_gray.svg' ,
-                                status:veObj.gpsData ? "ONLINE" : "OFFLINE",
-                                longitude:veObj.gpsData ? veObj.gpsData.longitude : '',
-                                latitude:veObj.gpsData ? veObj.gpsData.latitude : '',
-                                gpsDeviceId:veObj.gpsDeviceId
-                            }
-                            carObj.children.push(childObj)
-                        }else if(veObj.vehicle.type == 1){
-                            // let arr = ['../../../static/img/boat_icon.svg','../../../static/img/boat_gray.svg'];
-                            // let icon = arr[Math.floor(Math.random()*arr.length)];
-                            childObj = {
-                                label:veObj.vehicle.serialNum,
-                                id:veObj.vehicle.id,
-                                url:'/static/img/icon/boat_small.png',
-                                type:'transport',
-                                subtype:'boat',
-                                // icon:icon,
-                                icon:veObj.gpsData ? '../../../static/img/boat_icon.svg' : '../../../static/img/boat_gray.svg',
-                                status:veObj.gpsData ? "ONLINE" : "OFFLINE",
-                                longitude:veObj.gpsData ? veObj.gpsData.longitude : '',
-                                latitude:veObj.gpsData ? veObj.gpsData.latitude : '',
-                                gpsDeviceId:veObj.gpsDeviceId
-                            }
-                            boatObj.children.push(childObj)
+                    this.securityPersonList = vehicles
+                    this.number=this.securityPersonList.length
+                    this.securityPersonInfo=[]
+
+                    let  personObj = {
+                            label:veObj.vehicle.serialNum,
+                            id:veObj.vehicle.id,
+                            url:'/static/img/icon/people_small.png',
+                            type:'security',
+                            subtype:'securityPerson',
+                            icon:'../../../static/img/people_open.svg',
+                            longitude:'',
+                            latitude:'',
+                            gpsDeviceId:veObj.gpsDeviceId
                         }
-                    })
-                    this.transportInfo.push(carObj)
-                    this.transportInfo.push(boatObj)
+                    this.securityPersonInfo.push(personObj)
                     this.fault=0
                     this.online= this.number - this.fault
-                    // this.drawLine();
-                    console.log(this.transportInfo)
+                    console.log(this.securityPersonInfo)
                 })
-                setTimeout(() => {
-                    let route = this.$route.path
-                    if (route.includes('controler/car')) {
-                        this.initData();//长轮询
-                        this.treeShow();
-                    }
-                },5000)
+                // setTimeout(() => {
+                //     let route = this.$route.path
+                //     if (route.includes('controler/car')) {
+                //         this.initData();//长轮询
+                //         this.treeShow();
+                //     }
+                // },5000)
             },
-            async getAllTransport(){
-                return api.transport.getTransport()
-            },
+            // async initScheduleData(){
+            //     Promise.all([this.getAllVehicle()]).then(result=>{
+            //         let vehicles = result[0]
+            //         // let vehicles = [
+            //         //     {
+            //         //         "vehicle": {
+            //         //             "id": "30c87807-a8cc-45e2-b6fe-8e9e7a29c790",
+            //         //             "createTime": null,
+            //         //             "creator": null,
+            //         //             "modifyTime": "2018-08-30 16:04:37",
+            //         //             "modifier": "anonymous",
+            //         //             "serialNum": "湘湖605",
+            //         //             "capacity": 0,
+            //         //             "type": 1,
+            //         //             "model": "001144",
+            //         //             "gpsDeviceId": "b0849754-7b4d-428b-b4de-d96f28eb7eb9",
+            //         //             "pictureId": null,
+            //         //             "maintenanceStatus": 0,
+            //         //             "maintenanceDate": null,
+            //         //             "purchaseDate": null,
+            //         //             "description": null,
+            //         //             "scenicAreaId": null,
+            //         //             "deleted": false
+            //         //         },
+            //         //         "gpsDeviceId": "b0849754-7b4d-428b-b4de-d96f28eb7eb9",
+            //         //         "gpsDeviceName": "船605",
+            //         //         "pictureId": null,
+            //         //         "picturePath": null,
+            //         //         "gpsData":
+            //         //             // null,
+            //         //             {
+            //         //             "deviceId": "b0849754-7b4d-428b-b4de-d96f28eb7eb9",
+            //         //             "ioTDeviceId": null,
+            //         //             "createTime": "2017-12-31 12:21:39",
+            //         //             "longitude": 120.21455,
+            //         //             "latitude": 30.1379,
+            //         //             "altitude": null,
+            //         //             "direction": null,
+            //         //             "speed": 4,
+            //         //             "telephone": null,
+            //         //             "deviceNum": null,
+            //         //             "coordinate": null
+            //         //         },
+            //         //         "driver": {
+            //         //             "id": "5b27d86e-af2e-4de9-8d99-3f6b0f2e0f27",
+            //         //             "createTime": "2018-08-31 11:41:32",
+            //         //             "creator": "anonymous",
+            //         //             "modifyTime": "2018-08-31 11:41:32",
+            //         //             "modifier": "anonymous",
+            //         //             "name": "test李四",
+            //         //             "gender": 1,
+            //         //             "idNum": null,
+            //         //             "phone": "18602987796",
+            //         //             "pictureId": null,
+            //         //             "description": "just a test",
+            //         //             "scenicAreaId": null,
+            //         //             "deleted": false
+            //         //         }
+            //         //     }
+            //         // ]
+            //         this.carlist = vehicles
+            //         this.number=this.carlist.length
+            //         this.transportInfo=[]
+            //         let carObj = {
+            //             label:'车辆',
+            //             id:100010,
+            //             children:[]
+            //         }
+            //         let boatObj = {
+            //             label:'船只',
+            //             id:100011,
+            //             children:[]
+            //         }
+            //         vehicles.forEach(veObj=>{
+            //             let childObj;
+            //             if(veObj.vehicle.type == 0){
+            //                 childObj = {
+            //                     label:veObj.vehicle.serialNum,
+            //                     id:veObj.vehicle.id,
+            //                     url:'/static/img/icon/bus_small.png',
+            //                     type:'transport',
+            //                     subtype:'car',
+            //                     icon:veObj.gpsData ? '../../../static/img/car_icon.svg' : '../../../static/img/car_gray.svg' ,
+            //                     status:veObj.gpsData ? "ONLINE" : "OFFLINE",
+            //                     longitude:veObj.gpsData ? veObj.gpsData.longitude : '',
+            //                     latitude:veObj.gpsData ? veObj.gpsData.latitude : '',
+            //                     gpsDeviceId:veObj.gpsDeviceId
+            //                 }
+            //                 carObj.children.push(childObj)
+            //             }else if(veObj.vehicle.type == 1){
+            //                 // let arr = ['../../../static/img/boat_icon.svg','../../../static/img/boat_gray.svg'];
+            //                 // let icon = arr[Math.floor(Math.random()*arr.length)];
+            //                 childObj = {
+            //                     label:veObj.vehicle.serialNum,
+            //                     id:veObj.vehicle.id,
+            //                     url:'/static/img/icon/boat_small.png',
+            //                     type:'transport',
+            //                     subtype:'boat',
+            //                     // icon:icon,
+            //                     icon:veObj.gpsData ? '../../../static/img/boat_icon.svg' : '../../../static/img/boat_gray.svg',
+            //                     status:veObj.gpsData ? "ONLINE" : "OFFLINE",
+            //                     longitude:veObj.gpsData ? veObj.gpsData.longitude : '',
+            //                     latitude:veObj.gpsData ? veObj.gpsData.latitude : '',
+            //                     gpsDeviceId:veObj.gpsDeviceId
+            //                 }
+            //                 boatObj.children.push(childObj)
+            //             }
+            //         })
+            //         this.transportInfo.push(carObj)
+            //         this.transportInfo.push(boatObj)
+            //         this.fault=0
+            //         this.online= this.number - this.fault
+            //         // this.drawLine();
+            //         console.log(this.transportInfo)
+            //     })
+            //     setTimeout(() => {
+            //         let route = this.$route.path
+            //         if (route.includes('controler/car')) {
+            //             this.initData();//长轮询
+            //             this.treeShow();
+            //         }
+            //     },5000)
+            // },
+
             async getAllVehicle(){
                 return await api.boat.getAllVehicleGps()
-            },
-            async getAllDriver(id){
-                return await api.person.getJobPerson(id)
-            },
-            cmsocxDown(){
-                window.open('http://112.17.128.126:89/download/OCX.exe');
-            },
+            }
+
         },
         watch:{
 
@@ -288,11 +377,8 @@
             this.treeShow();
         },
         mounted() {
-            // setInterval(()=>{
-            //     this.transportInfo = []
-            //     this.initData();
-            // },5000)
-            this.initData();
+
+            this.initPersonData();
         },
         computed: {
             ...mapGetters(['getcontroTransport'])
@@ -301,7 +387,7 @@
 </script>
 
 <style lang="scss" scoped>
-    .car {
+    .security {
         width: 100%;
         height: 100%;
         .reveal {
@@ -309,7 +395,6 @@
             height: 100%;
             display: flex;
             flex-direction: column;
-            background: #f2f2f2;
             .top {
                 width: 100%;
                 height: 40px;

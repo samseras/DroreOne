@@ -46,11 +46,10 @@
         <controlcameraDialog v-if="cameravisible"
                       :Info="buildInfo"
                       :title="title"
+                      :width="width"
                       :visible="cameravisible"
                       @closeInfoDialog ="closeDialog">
         </controlcameraDialog>
-        <ledDialog v-if="ledvisible" :ledvisible="ledvisible"  @closeDialog ="closeDialog">
-        </ledDialog>
     </Scrollcontainer>
 
 </template>
@@ -63,12 +62,20 @@
     import api from '@/api'
     import PersonDetail from '@/components/controlDialog'
     import controlcameraDialog from '@/components/controlcameraDialog'
-    import ledDialog from '@/components/ledDialog'
-
     export default {
         name: "map1",
         data () {
             return {
+                heatEmShow:false,
+                AlarmDetailShow:false,
+                warningEventInfo: [],
+                choseInfos: [],
+                choseInfoId:[],
+                readOnly: true,
+                title:'',
+                selection:[],
+                loading: false,
+                isBatchEdit:false,
                 open:false,
                 menulist: {},
                 controleLightList:[],
@@ -77,6 +84,7 @@
                 controleBroadList:[],
                 controleCameraList:[],
                 controleLedList:[],
+                controleTransportList:[],
                 facilityPark:[],
                 facilityToilet:[],
                 facilityShop:[],
@@ -91,11 +99,24 @@
                 title:'',
                 width:'1080px',
                 cameravisible:false,
-                ledvisible:false,
                 isDisabled: true,
                 lightCheckout:[],
-                searchFacilityList: [],
-                controleTransportList: [],
+                searchFacilityList:[],
+                jsonAttrList:[],
+                menuBroadvolume:false,
+                heatShow:true,
+                heatEmTime:'',
+                heatEmNameOne:'',
+                heatEmNameTwo:'0℃',
+                heatEmNameThree:'0℃',
+                heatEmNameFour:'——',
+                heatEmNameFive:'0',
+                heatEmNameSix:'0',
+                heatEmNameSeven:'',
+                heatEmNameEight:'——',
+                heatEmNameNine:'0',
+                carcameravisible:false,
+
             }
         },
         created () {
@@ -131,11 +152,14 @@
                 this.getAllBroadcast();//广播现有标注
                 this.getAllCamera();//摄像头现有标注
                 this.overView();//鹰眼
-                this.rangeSearch();// 范围查找
+                // this.rangeSearch();// 范围查找
                 this.getAllRoute();//调度路线
-                this.getAllAlarmEvent();//告警事件现有标注
-                this.getAllTransportRoute();// 车船调度路线输出
-                this.getAllStation();
+                // this.getAllAlarmEvent();//告警事件现有标注
+                //this.getAllTransportRoute();// 车船调度路线输出
+                //this.getAllStation();
+                // this.getAllVehicle();// 车船信息
+                // this.heatEmShow=true
+                // this.heatEm();//环境数据
             } else if (route.includes('area-deploy')) {
                 if(!this.getLocationId){
                     this.getAllArea();// 片区输出
@@ -152,10 +176,10 @@
                 }
             }else if (route.includes('security-Dmis')) {
                 if(!this.getLocationId){
-                    this.getAllRoute();// 调度路线输出
+                    this.getSecurityRoute();// 调度路线输出
                     this.road(); // 路线打点
                 }else {
-                    this.getAllRouteedit();//修改路线调度
+                    this.getSecurityRouteEdit();//修改路线调度
                 }
             } else if (route.includes('indicator-deploy'))  {
                 this.getAllArea();// 片区输出
@@ -164,6 +188,24 @@
                     this.labelDot();// 指示牌打点
                 }else {
                     this.getAllIndicatorEdit();// 指示牌修改
+                }
+            }else if (route.includes('station-deploy'))  {
+                this.getAllArea();// 片区输出
+                if(!this.getLocationId) {
+                    this.getStation();//站点现有标注
+                    this.labelDot();// 站点打点
+                }else {
+                    this.getAllStationEdit();// 站点修改
+                }
+            } else if (route.includes('transport-Dmis')) {
+                if(!this.getLocationId){
+                    this.getTransportRoute(); //车船调度路线输出
+                    this.getStation(); //站点现有标注
+                    this.road(); // 路线打点
+                }else {
+                    this.getStation();
+                    this.getAllTransportRouteEdit();//修改车船路线调度
+                    this.road();
                 }
             } else if (route.includes('trash-deploy'))  {
                 this.getAllArea();// 片区输出
@@ -197,24 +239,7 @@
                 }else {
                     this.getAllParkEdit();// 停车场修改
                 }
-            }else if (route.includes('station-deploy'))  {
-                this.getAllArea();// 片区输出
-                if(!this.getLocationId) {
-                    this.getStation();//站点现有标注
-                    this.labelDot();// 站点打点
-                }else {
-                    this.getAllStationEdit();// 站点修改
-                }
-            } else if (route.includes('transport-Dmis')) {
-                if(!this.getLocationId){
-                    this.getTransportRoute();// 车船调度路线输出
-                    this.getStation(); //站点现有标注
-                    this.road(); // 路线打点
-                }else {
-                    this.getStation();
-                    this.getAllTransportRouteEdit();//修改车船路线调度
-                }
-            } else if (route.includes('toilet-deploy'))  {
+            }else if (route.includes('toilet-deploy'))  {
                 this.getAllArea();// 片区输出
                 if(!this.getLocationId) {
                     this.getAllToilet();//卫生间现有标注
@@ -302,14 +327,6 @@
                 }else {
                     this.getAllBuildEdit();// 建筑修改
                 }
-            }else if (route.includes('wharf'))  {
-                this.getAllArea();// 片区输出
-                if(!this.getLocationId) {
-                    this.getAllWhrash();//站点现有标注
-                    this.labelDot();// 站点打点
-                }else {
-                    this.getAllWhrashEdit();// 站点修改
-                }
             }
             if(this.getSearchInfo.id){
                 this.searchShow();
@@ -326,7 +343,19 @@
             closeDialog () {
                 this.visible = false
                 this.cameravisible = false
-                this.ledvisible = false
+                this.AlarmDetailShow = false
+                this.carcameravisible=false
+                let route = this.$route.path
+                if (route.includes('facility')) {
+                    $("#contextmenu_container").hide();
+                }
+            },
+            saveEditInfo(param){ //编辑保存
+                if(this.isBatchEdit){
+                    this.updateAlarmEvent(param.data)
+                }else{
+                    this.addUpload(param)
+                }
             },
             requestGisMain() {
                 document.getElementById('map').innerHTML = ""
@@ -347,7 +376,7 @@
                             "minZoom": obj.scefit,
                             "maxZoom": obj.scefit + obj.zoom - 1
                         }
-                        droreMap.init(mapdata, data.data);
+                        droreMap.init(mapdata, data.data,'map');
                         let Circle = new droreMap.geom.Circle()
                         Circle.setCenter([0,0],0);
                     },
@@ -380,10 +409,116 @@
                     }
                 })
             },
+
+            async getAllVehicleGps(){
+                return await api.boat.getAllVehicleGps()
+            },
+            async getAllVehicle(){ //车船
+                //具体的车船信息，包括关联的人员信息
+                Promise.all([this.getAllVehicleGps()]).then(result=>{
+                    let vehicles = result[0]
+                    if(vehicles.length > 0){
+                        vehicles.forEach(obj=>{
+                            let latitude = ''
+                            let longitude = ''
+                            if(obj.gpsData){
+                                latitude = obj.gpsData.latitude,
+                                longitude = obj.gpsData.longitude
+                            }
+                            obj.status=obj.gpsData ? "ONLINE" : "OFFLINE";
+                            obj.location=[longitude,latitude];
+                            var icon = new droreMap.icon.Marker({
+                                coordinate: droreMap.trans.transFromWgsToLayer(obj.location),
+                                name:obj.vehicle.serialNum,
+                                subtype:obj.vehicle.type == 0 ? 'car':'boat',
+                                id:obj.vehicle.id,
+                                url:obj.vehicle.type == 0 ?'/static/img/icon/bus_small.png':'/static/img/icon/boat_small.png',
+                                type:'transport',
+                                status:obj.gpsData ? "ONLINE" : "OFFLINE",
+                                description:obj.vehicle.description,
+                                driver:obj.driver,
+                                gpsData:obj.gpsData,
+                                vehicle:obj.vehicle,
+                                data:obj,
+                            });
+                            droreMap.icon.addChild(icon);
+                            icon.showName=true
+                            droreMap.icon.showLayer(icon.id,false);
+                            let that = this;
+                            icon.onclick(function (e) {
+                                that.menulist = e.data;
+                                var div = document.getElementById('contextmenu_container')
+                                var popup = new  droreMap.pop.Popup(div,droreMap.trans.transFromWgsToLayer([longitude,latitude]),"contextmenu_container")
+                                droreMap.pop.addChild(popup,e.data.id);
+                                $("#contextmenu_container").attr("class","contextmenu "+e.subtype);
+                                if(e.data.status =="FAULT"){
+                                    that.open=false
+                                }else if(e.data.status =="OFFLINE"){
+                                    that.open=false
+                                }else {
+                                    that.open= true
+                                }
+                                $("#contextmenu_container").show();
+                            });
+                        })
+                    }
+                })
+                setTimeout(() => {
+                    this.getAllLangVehicle();//长轮询
+                },500)
+            },
+            async getAllLangVehicle(){ //车船轮询
+                //具体的车船信息，包括关联的人员信息
+                Promise.all([this.getAllVehicleGps()]).then(result=>{
+                    let vehicles = result[0]
+                    if(vehicles.length > 0){
+                        vehicles.forEach(obj=>{
+                            // var latitude = 30.121381873225815+Math.random()*0.01
+                            // var longitude = 120.20690542885497+Math.random()*0.01
+                            let latitude = ''
+                            let longitude = ''
+                            if(obj.gpsData){
+                                latitude = obj.gpsData.latitude,
+                                longitude = obj.gpsData.longitude
+                            }
+                            obj.location=[longitude,latitude];
+                            let layer = droreMap.icon.returnLayer(obj.vehicle.id)
+                            layer.setPosition(droreMap.trans.transFromWgsToLayer(obj.location))
+                            if(this.menulist.id == obj.vehicle.id){
+                                let Popup = droreMap.pop.returnPopup(obj.vehicle.id)
+                                if(Popup!=undefined){
+                                    Popup.setPosition(droreMap.trans.transFromWgsToLayer(obj.location))
+                                }
+
+                            }
+                            let that = this;
+                            layer.onclick(function (e) {
+                                that.menulist = e.data;
+                                var div = document.getElementById('contextmenu_container')
+                                var popup = new  droreMap.pop.Popup(div,droreMap.trans.transFromWgsToLayer([longitude,latitude]),"contextmenu_container")
+                                droreMap.pop.addChild(popup,e.data.id);
+                                $("#contextmenu_container").attr("class","contextmenu "+e.subtype);
+                                if(e.data.status =="FAULT"){
+                                    that.open=false
+                                }else if(e.data.status =="OFFLINE"){
+                                    that.open=false
+                                }else {
+                                    that.open= true
+                                }
+                                $("#contextmenu_container").show();
+                            });
+                        })
+                    }
+                })
+                setTimeout(() => {
+                    let route = this.$route.path
+                    if (route.includes('controler')) {
+                        this.getAllLangVehicle();//长轮询
+                    }
+                },5000)
+            },
             async getStation(){ //站点
                 await api.station.getAllStation().then(res=>{
-                    console.log(this.getTransportType)
-
                     if(this.getTransportType == '0'){
                         this.iconList=res.filter(item=>{
                             if(item.type == '0'){
@@ -421,18 +556,18 @@
                     for (let i=0;i<this.iconList.length;i++){
                         this.iconList[i].location = [this.iconList[i].longitude,this.iconList[i].latitude]
                         if(this.iconList[i].type == "0"){
-                            //假数据
-                            this.iconList[i].type == "transport"
-                            this.iconList[i].subtype = "car"
-                            // this.iconList[i].type == "车站"
-                            // this.iconList[i].subtype = "station"
+                            // //假数据
+                            // this.iconList[i].type == "transport"
+                            // this.iconList[i].subtype = "car"
+                            this.iconList[i].type ="车站"
+                            this.iconList[i].subtype = "station"
                             this.iconList[i].url="/static/img/icon/station_check.png"
                         }else if(this.iconList[i].type == "1"){
-                            //假数据
-                            this.iconList[i].type == "transport"
-                            this.iconList[i].subtype = "boat"
-                            // this.iconList[i].type == "码头"
-                            // this.iconList[i].subtype = "landing"
+                            // //假数据
+                            // this.iconList[i].type == "transport"
+                            // this.iconList[i].subtype = "boat"
+                            this.iconList[i].type = "码头"
+                            this.iconList[i].subtype = "landing"
                             this.iconList[i].url="/static/img/icon/landing_check.png"
                         }
                     }
@@ -610,68 +745,6 @@
                     })
                 }).catch(err => {
                     console.log(err, '请求失败')
-                })
-            },
-            async getAllWhrash () { //站点现有标注
-                await api.wharf.getAllWharf().then(res => {
-                    this.iconList=res
-                    for (let i=0;i<this.iconList.length;i++){
-                        this.iconList[i].type="站点"
-                        this.iconList[i].id=this.iconList[i].id
-                        this.iconList[i].name =this.iconList[i].name
-                        this.iconList[i].location = [this.iconList[i].longitude,this.iconList[i].latitude]
-                        this.iconList[i].url="/static/img/icon/trash.png"
-                        this.iconList[i].subtype='whraf'
-                    }
-                    this.iconShow();
-                }).catch(err => {
-                    console.log(err)
-                    this.isShowLoading = false
-                })
-            },
-            async getAllWhrashEdit () { //垃圾桶现有标注修改
-                await api.wharf.getAllWharf().then(res => {
-                    this.trashList = res
-                    for (let i = 0; i < this.trashList.length; i++) {
-                        if(this.trashList[i].id === this.getLocationId){
-                            this.trashList[i].location = [this.trashList[i].longitude,this.trashList[i].latitude]
-                            var iconedit = new droreMap.icon.Marker({
-                                coordinate: droreMap.trans.transFromWgsToLayer(this.trashList[i].location),
-                                name: this.trashList[i].name,
-                                subtype: "wharf",
-                                id: this.trashList[i].id,
-                                url: "/static/img/icon/trash_on.png"
-                            });
-                            droreMap.icon.addChild(iconedit);
-                            droreMap.interaction.ifDrag = true;
-                            let that =this
-                            droreMap.event.addMouseEvent(Event.SINGLECLICK_EVENT, "single", function(evt){
-                                iconedit.setPosition(evt.coordinate)
-                                console.log(evt.coordinate)
-                                that.$store.commit('MAP_LOCATION', droreMap.trans.transLayerToWgs(evt.coordinate))
-                            })
-                            droreMap.event.DragEvent(function(tabInfor) {
-                                var data = tabInfor.data
-                                if(data.data.id === that.getLocationId){
-                                    console.log(droreMap.trans.transLayerToWgs(data.end));
-                                    that.$store.commit('MAP_LOCATION', droreMap.trans.transLayerToWgs(data.end))
-                                }
-                            })
-                        }else{
-                            this.trashList[i].location = [this.trashList[i].longitude,this.trashList[i].latitude]
-                            var icon1 = new droreMap.icon.Marker({
-                                coordinate: droreMap.trans.transFromWgsToLayer(this.trashList[i].location),
-                                name: this.trashList[i].name,
-                                subtype: "wharf",
-                                id: this.trashList[i].id,
-                                url: "/static/img/icon/trash.png"
-                            });
-                            droreMap.icon.addChild(icon1);
-                        }
-                    }
-                }).catch(err => {
-                    console.log(err)
-                    this.isShowLoading = false
                 })
             },
             async getAllIndicator () {//指示牌
@@ -1767,7 +1840,7 @@
                         areaEvets.addArea(area,data)
                         droreMap.area.addChild(areaEvets, this.areaList[i].id)
                         let route = this.$route.path
-                        if(route.includes('facility')){
+                        if (route.includes('controler') || route.includes('facility')) {
                             droreMap.area.removeStyleById(this.areaList[i].id, false)
                         }
                         areaEvets.ifDraw = false;
@@ -1904,7 +1977,7 @@
                         areaEvtList.addRoad(area, data)
                         droreMap.road.addRoadLayer(areaEvtList,res[i].id)
                         let route = this.$route.path
-                        if(route.includes('facility')){
+                        if (route.includes('controler') || route.includes('facility')) {
                             droreMap.road.removeStyleById(res[i].id,false)
                         }
                     }
@@ -2100,6 +2173,88 @@
                     console.log(err, '请求失败')
                 })
             },
+            async getSecurityRoute(){  //巡检路线
+                await api.roat.getTransportRoat(1).then(res => {
+                    for (var i = 0; i < res.length; i++) {
+                        var areaEvtList =new droreMap.road.RoadLayer('ROUTE_list', '#fb9000', 'blue')
+                        let geo =JSON.parse(res[i].geo);
+                        let area = [];
+                        for(var j = 0; j < geo.length; j++) {
+                            let wgs=droreMap.trans.transFromWgsToLayer(geo[j])
+                            area.push(wgs);
+                        }
+                        var data = {"id": res[i].id, "name": res[i].name,"constructor":''}
+                        areaEvtList.addRoad(area, data)
+                        droreMap.road.addRoadLayer(areaEvtList, res[i].id)
+                        let route = this.$route.path
+                        if(route.includes('controler')){
+                            droreMap.road.removeStyleById(res[i].id,false)
+                        }
+                    }
+                    let route = this.$route.path
+                    if(route.includes('controler')) {
+                        if (this.getfacilityRoad.length > 0) {
+                            for (let i = 0; i < this.getfacilityRoad.length; i++) {
+                                this.roadShowID(this.getfacilityRoad[i]);
+                            }
+                        }
+                    }
+                }).catch(err => {
+                    console.log(err, '请求失败')
+                })
+            },
+            async getSecurityRouteEdit(){
+                await api.roat.getTransportRoat(1).then(res => {
+                    for (var i = 0; i < res.length; i++) {
+                        if(res[i].id === this.getLocationId){
+                            var areaEvts =new droreMap.road.RoadLayer('ROUTE_show', 'red', 'red')
+                            let geo =JSON.parse(res[i].geo);
+                            let area = [];
+                            for(var j = 0; j < geo.length; j++) {
+                                let wgs=droreMap.trans.transFromWgsToLayer(geo[j])
+                                area.push(wgs);
+                            }
+                            var data = {"id": res[i].id, "name": res[i].name,"constructor":''}
+                            areaEvts.addRoad(area, data)
+                            droreMap.road.addRoadLayer(areaEvts,res[i].id)
+                        }else{
+                            var areaEvtList =new droreMap.road.RoadLayer('ROUTE_list', '#fb9000', 'blue')
+                            let geo =JSON.parse(res[i].geo);
+                            let area = [];
+                            for(var j = 0; j < geo.length; j++) {
+                                let wgs=droreMap.trans.transFromWgsToLayer(geo[j])
+                                area.push(wgs);
+                            }
+                            var data = {"id": res[i].id, "name": res[i].name,"constructor":''}
+                            areaEvtList.addRoad(area, data)
+                            droreMap.road.addRoadLayer(areaEvtList,res[i].id)
+                        }
+                    }
+                    let that =this
+                    areaEvts.ifModify = true;
+                    areaEvts.ifSelect = true;
+                    areaEvts.addEventListener('select', "select", function(e) {
+                        if(e.select){
+                            that.$store.commit('ROAT_LOCATION_STATE', false)
+                            if(e.select.type == 'Point') {
+                                //点击路网中的点，出现面板，包括延长、拆分和关键点
+                                alert('请点击路网进行拖拽编辑！')
+                            }
+                        }else if(e.unSelect){
+                            let arrayObj = new Array();
+                            for (var i = 0; i < e.unSelect.area.length; i++) {
+                                let wgs = droreMap.trans.transLayerToWgs(e.unSelect.area[i])
+                                arrayObj.push(wgs);
+                            }
+                            console.log(arrayObj);
+                            that.$store.commit('MAP_ROAT_LOCATION', arrayObj)
+                            that.$store.commit('ROAT_LOCATION_STATE', true)
+                        }
+                    })
+                }).catch(err => {
+                    console.log(err, '请求失败')
+                })
+            },
             async getAllAlarmEvent () {
                 await api.alarm.getAllAlarmEvent().then(res => {
                     for (let i=0;i<res.length;i++) {
@@ -2239,13 +2394,9 @@
                                 that.droreMappopup(that.menulist);
                                 that.menuShow()
                             });
-                        } else if(icon.subtype=="station" || icon.subtype == "landing"){
+                        }
+                        else if(icon.subtype=="station" || icon.subtype == "landing"){
                             //站点没有点击事件
-                        }else if(icon.subtype.includes("led")){
-                            console.log("aaaaaaaaaa")
-                            icon.onclick(function (e) {
-                                that.ledvisible = true
-                            });
                         }
                         // else if(icon.subtype=="car" || icon.subtype == "boat"){
                         //     //车船有点击事件
@@ -2254,7 +2405,6 @@
                             icon.onclick(function (e) {
                                 that.menulist = e.data;
                                 that.droreMappopup(that.menulist);
-                                console.log(e);
                             });
                         }
                         this.controler();//之前打的点
@@ -2281,10 +2431,29 @@
                 overView.setRect('270px','150px')
             },
             interaction(){//初始化辅助显示
+                this.requestGisMain();//加载地图
                 droreMap.object.getMap().getLayers().getArray()[1].setVisible(false)
                 droreMap.interaction.enableMapClick = true
                 droreMap.interaction.showMove()
+                droreMap.interaction.enableMapClick = true
+                // droreMap.interaction.showMove()
+                this.getAllLight();//路灯现有标注
+                this.getAllGate();//闸机现有标注
+                this.getAllWifi();//wifi现有标注
+                this.getAllLed();//Led现有标注
+                this.getAllPolice();//报警柱现有标注
+                this.getAllMonitor();//传感器现有标注
+                this.getAllBroadcast();//广播现有标注
+                this.getAllCamera();//摄像头现有标注
                 this.overView();//鹰眼
+                // this.rangeSearch();// 范围查找
+                this.getAllRoute();//调度路线
+                // this.getAllAlarmEvent();//告警事件现有标注
+                //this.getAllTransportRoute();// 车船调度路线输出
+                //this.getAllStation();
+                this.getAllVehicle();// 车船信息
+                this.heatEmShow=true
+                this.heatEm();//环境数据
             },
             searchShow() {//搜索
                 console.log(this.getSearchInfo,'123123');
@@ -2301,16 +2470,20 @@
             droreMappopup(e){
                 var div = document.getElementById('contextmenu_container')
                 var popup = new  droreMap.pop.Popup(div,e.coordinate,"contextmenu_container")
-                droreMap.pop.addChild(popup);
+                droreMap.pop.addChild(popup,e.data.id);
                 $("#contextmenu_container").attr("class","contextmenu "+e.subtype);
-                if(e.data.status =="ONLINE"){
-                    this.open=true
-                }else{
+                if(e.data.status =="FAULT"){
                     this.open=false
+                }else if(e.data.status =="OFFLINE"){
+                    this.open=false
+                }else {
+                    this.open= true
                 }
                 $("#contextmenu_container").show();
+                this.menuBroadvolume=false;
             },
             mapSwitch(){
+                this.menuBroadvolume=false;
                 if(this.menulist.data.status =="FAULT"){
                     this.open=false
                     this.$message.error("设备故障，id是"+this.menulist.id)
@@ -2342,12 +2515,13 @@
             },
             menuShow(){
                 console.log(this.menulist)
+                this.menuBroadvolume=false;
                 if(this.menulist.type=="warn"){
                     this.buildInfo = this.menulist.data
                     this.visible = true
                     this.title = '告警事件查看'
                 }else if(this.menulist.type=="transport"){
-                    this.buildInfo = this.menulist.data
+                    this.buildInfo = this.menulist
                     this.visible = true
                     this.title = this.menulist.subtype == 'car'?'车辆':'船只'
                 } else {
@@ -2492,6 +2666,10 @@
             },
             menuDelete(){
                 $("#contextmenu_container").hide();
+                this.menuBroadvolume=false;
+                if(this.menulist.type=="warn"){
+                    this.escFun();
+                }
             },
             treeShow(data){
                 if(data.longitude&&data.latitude){
@@ -2596,6 +2774,11 @@
                         this.treeShowID(this.getfacilityTrash[i]);
                     }
                 }
+                if(this.getfacilityStation.length > 0){
+                    for (let i=0;i<this.getfacilityStation.length;i++) {
+                        this.treeShowID(this.getfacilityStation[i]);
+                    }
+                }
                 if(this.getfacilityPlant.length > 0){
                     for (let i=0;i<this.getfacilityPlant.length;i++) {
                         this.treeShowID(this.getfacilityPlant[i]);
@@ -2683,14 +2866,19 @@
         components: {
             Scrollcontainer,
             PersonDetail,
-            controlcameraDialog,
-            ledDialog
+            controlcameraDialog
         },
         watch: {
             getSearchInfo () {
                 this.searchShow(this.getSearchInfo);
             },
             getTreeState(){
+
+
+                console.log('213123')
+
+
+                console.log(this.getTreeState,'213123')
                 if(this.getTreeState.length>1) {
                     // console.log(this.getTreeState,'ioioioiooioioiooi')
                     //    这边是全选
@@ -2832,7 +3020,11 @@
                             for (let i = 0; i < data.length; i++) {
                                 if(data[i].typeroad=='road'){
                                     this.roadShow(data[i]);
-                                }else {
+                                }else if(data[i].type =='transport'){
+                                    if(data[i].status == "ONLINE"){
+                                        this.treeShow(data[i]);
+                                    }
+                                } else {
                                     if(data[i].type =='person'){
                                         this.roadShowID(data[i].routeId)
                                     }else if(data[i].type =='warn'){
@@ -2914,7 +3106,9 @@
                                 // console.log(this.getTreeState[0].children)
                                 if(this.getTreeState[0].children[i].typeroad=='road'){
                                     this.roadHide(this.getTreeState[0].children[i]);
-                                }else {
+                                }else if(this.getTreeState[0].children[i].type =='transport'){
+                                    this.treeHide(this.getTreeState[0].children[i]);
+                                } else {
                                     if(this.getTreeState[0].children[i].type =='person'){
                                         this.roadHideID(this.getTreeState[0].children[i].routeId)
                                     }else if(this.getTreeState[0].children[i].type =='warn'){
@@ -3013,6 +3207,12 @@
                                         this.facilityIndicator.splice(index, 1);
                                     }
                                     this.$store.commit('FACILITY_INDICATOR', this.facilityIndicator)
+                                }else if(this.getTreeState[0].children[i].type =='station'){
+                                    let index = this.facilityStation.indexOf(this.getTreeState[0].children[i].id);
+                                    if (index > -1) {
+                                        this.facilityStation.splice(index, 1);
+                                    }
+                                    this.$store.commit('FACILITY_STATION', this.facilityStation)
                                 }
                                 if(this.getTreeState[0].children[i].typeroad=='road'){
                                     let index = this.facilityRoad.indexOf(this.getTreeState[0].children[i].id);
@@ -3033,23 +3233,9 @@
                                 }else if(this.getTreeState[0].type =='warn'){
                                     this.treeShow(this.getTreeState[0]);
                                 }else if(this.getTreeState[0].type =='transport'){
-
-                                    this.roadShowID(this.getTreeState[0].transportObj.routeId)
-                                    var stationArray = this.getTreeState[0].transportObj.stations
-                                    if(stationArray instanceof  Array && stationArray.length > 0){
-                                        stationArray.forEach(item=>{
-                                            this.treeShow(item);
-                                        })
+                                    if(this.getTreeState[0].status == "ONLINE"){
+                                        this.treeShow(this.getTreeState[0]);
                                     }
-                                    if(this.getTreeState[0].transportObj.carObjs || this.getTreeState[0].transportObj.carObjs.length>0){
-                                        var carObjs = this.getTreeState[0].transportObj.carObjs
-                                        if(carObjs instanceof  Array && carObjs.length > 0){
-                                            carObjs.forEach(item=>{
-                                                this.treeShow(item);
-                                            })
-                                        }
-                                    }
-
                                 }else {
                                     this.treeShow(this.getTreeState[0]);
                                 }
@@ -3129,20 +3315,9 @@
                                 }else if(this.getTreeState[0].type =='warn'){
                                     this.treeHide(this.getTreeState[0]);
                                 }else if(this.getTreeState[0].type =='transport'){
-                                    this.roadHideID(this.getTreeState[0].transportObj.routeId)
-                                    let stationArray = this.getTreeState[0].transportObj.stations
-                                    if(stationArray instanceof  Array && stationArray.length > 0){
-                                        stationArray.forEach(item=>{
-                                            this.treeHide(item)
-                                        })
-                                    }
-                                    if(this.getTreeState[0].transportObj.carObjs || this.getTreeState[0].transportObj.carObjs.length>0){
-                                        var carObjs = this.getTreeState[0].transportObj.carObjs
-                                        if(carObjs instanceof  Array && carObjs.length > 0){
-                                            carObjs.forEach(item=>{
-                                                this.treeHide(item);
-                                            })
-                                        }
+
+                                    if(this.getTreeState[0].status == "ONLINE"){
+                                        this.treeHide(this.getTreeState[0]);
                                     }
                                 }
                                 else {
@@ -3239,6 +3414,12 @@
                                     this.facilityIndicator.splice(index, 1);
                                 }
                                 this.$store.commit('FACILITY_INDICATOR', this.facilityIndicator)
+                            }else if(this.getTreeState[0].type  =='station'){
+                                let index = this.facilityStation.indexOf(this.getTreeState[0].id);
+                                if (index > -1) {
+                                    this.facilityStation.splice(index, 1);
+                                }
+                                this.$store.commit('FACILITY_STATION', this.facilityStation)
                             }
                             if(this.getTreeState[0].typeroad=='road'){
                                 let index = this.facilityRoad.indexOf(this.getTreeState[0].id);
@@ -3253,12 +3434,31 @@
             },
             getTreeShow(){
                 if(this.getTreeShow.length!=0){
-                        if(this.getTreeShow.typeroad=='road'){
+                    if(this.getTreeShow.typeroad=='road'){
                         this.roadShow(this.getTreeShow);
                     }else {
                         if(this.getTreeShow.type =='person'){
                             this.roadShowID(this.getTreeShow.routeId);
-                        }else {
+                        }else if(this.getTreeShow.type == "transport") {
+                            console.log(this.getTreeShow,'1')
+                            if(this.getTreeShow.status == "ONLINE"){
+                                this.treeShow(this.getTreeShow);
+                                let layer = droreMap.icon.returnLayer(this.getTreeShow.id)
+                                this.menulist = layer.data;
+                                let route = this.$route.path
+                                if (route.includes('controler')) {
+                                    this.droreMappopup(layer);
+                                }
+                            }else{
+                                let layer = droreMap.icon.returnLayer(this.getTreeShow.id)
+                                this.menulist = layer.data;
+                                let route = this.$route.path
+                                if (route.includes('controler')) {
+                                    this.menuShow()
+                                    $("#contextmenu_container").hide();
+                                }
+                            }
+                        } else {
                             this.treeShow(this.getTreeShow);
                             let route = this.$route.path
                             if(route.includes('controler')){
@@ -3273,6 +3473,7 @@
         },
         computed: {
             ...mapGetters([
+                'getTransportType',
                 'getLocationId',
                 'getSearchInfo',
                 'getTreeState',
@@ -3282,6 +3483,7 @@
                 'getcontroBroad',
                 'getcontroCamera',
                 'getcontroLed',
+                'getcontroTransport',
                 'getfacilityPark',
                 'getfacilityToilet',
                 'getfacilityShop',
@@ -3292,6 +3494,7 @@
                 'getfacilityIndicator',
                 'getfacilityRoad',
                 'getTransportType',
+                'getfacilityStation',
                 'getTreeShow'
             ])
         }
@@ -3507,8 +3710,7 @@
         border:1px solid #7b98bc;
         height:144px;
         margin:2px;
-        width:264px;
-        background-color: #000;
+        width:264px
     }
     .ol-overviewmap:not(.ol-collapsed) button {
         bottom:1px;
@@ -3623,6 +3825,13 @@
             top:rem(15);
             display: none;
         }
+        button.menuCarCamera{
+            background: url("/static/img/menuCamera.svg");
+            background-size: cover;
+            right:rem(30);
+            top:rem(15);
+            display: none;
+        }
         button.menuPhone{
             background: url("/static/img/menuPhone.svg");
             background-size: cover;
@@ -3704,6 +3913,40 @@
     }
     .contextmenu.Broadcast i{
         background: url("/static/img/icon/guangboshebei_big.png") no-repeat;
+    }
+
+    .contextmenu.car i{
+        background: url("/static/img/icon/bus_big.png") no-repeat;
+    }
+    .contextmenu.car_damage i{
+        background: url("/static/img/icon/bus_damage_big.png") no-repeat;
+    }
+
+    .contextmenu.boat i{
+        background: url("/static/img/icon/boat_big.png") no-repeat;
+    }
+
+    .contextmenu.boat_damage i{
+        background: url("/static/img/icon/boat_damage_big.png") no-repeat;
+    }
+
+    .contextmenu.car,.contextmenu.car_damage,.contextmenu.boat,.contextmenu.boat_damage{
+        .mapSwitch{
+            display: none;
+        }
+        button.warnCamera,button.menuBroad{
+            display: none;
+        }
+        button.menuShow,button.menuOperation,button.menuBroadcast,button.menuCarCamera{
+            display: block;
+        }
+        button.menuShow{
+            left:rem(30);
+            top:rem(15);
+        }
+        button.menuCamera{
+            display: block;
+        }
     }
     .contextmenu.camera,.contextmenu.camera_close,.contextmenu.camera_damage
     {
@@ -3827,7 +4070,7 @@
         background: url("/static/img/icon/conditionRule_three_big.png") no-repeat;
     }
 
-    .contextmenu.gate,.contextmenu.police,.contextmenu.trash,.contextmenu.scenic,.contextmenu.construction,.contextmenu.plant,.contextmenu.park,.contextmenu.toilet,.contextmenu.indicator,.contextmenu.shop{
+    .contextmenu.gate,.contextmenu.police,.contextmenu.trash,.contextmenu.scenic,.contextmenu.construction,.contextmenu.plant,.contextmenu.park,.contextmenu.toilet,.contextmenu.indicator,.contextmenu.shop,.contextmenu.station{
         background: none;
         width: 0;
         height: 0;
@@ -3837,6 +4080,9 @@
     }
     .contextmenu.gate i,.contextmenu.police i{
         display: none;
+    }
+    .contextmenu.station i{
+        background: url("/static/img/icon/station_big.png") no-repeat;
     }
     .contextmenu.trash i{
         background: url("/static/img/icon/trash_big.png") no-repeat;
