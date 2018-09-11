@@ -62,7 +62,7 @@
                             {
                                 icon: './../../static/img/roat.svg',
                                 index: '/deploy/security-Dmis',
-                                title: '巡更路线'
+                                title: '巡检计划'
                             },
                             {
                                 icon: './../../static/img/boatCar.svg',

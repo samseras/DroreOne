@@ -24,6 +24,7 @@
                         :data="transportList"
                         tooltip-effect="dark"
                         style="width: 100%"
+                        height="98%"
                         @selection-change="handleSelectionChange">
                         <el-table-column
                             width="50">
@@ -338,7 +339,7 @@
                     modifier:info.modifier,
                     modifyTime:info.modifyTime,
                     scenicAreaId:info.scenicAreaId,
-                    vDriverMaps:info.vDriverMaps
+                    svDriverMaps:info.svDriverMaps
                 }
                 if (info.customizedDays) {
                     obj.startDate = moment(info.time[0]).format('YYYY-MM-DD')
@@ -365,7 +366,7 @@
                     description: info.description,
                     routeId:info.routeId,
                     type:info.type,
-                    vDriverMaps:info.vDriverMaps
+                    svDriverMaps:info.svDriverMaps
                 }
                 if (info.customizedDays) {
                     obj.startDate = moment(info.time[0]).format('YYYY-MM-DD')
@@ -414,7 +415,7 @@
             choseType (type) {
                 console.log(type, '这是传过来的')
                 type = type.map(item => {
-                    if (item === '停用') {
+                    if (item === '启用') {
                         return true
                     } else{
                         return false
