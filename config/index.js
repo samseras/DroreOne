@@ -36,7 +36,7 @@ module.exports = {
             changeOrigin: true
         },
         '/info':{
-            target:'http://192.168.0.150:8050/',
+            target:'http://10.2.1.6:8050/',
             changeOrigin: true
             },
         '/analysis': {

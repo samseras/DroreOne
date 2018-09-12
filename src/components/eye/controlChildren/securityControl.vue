@@ -5,7 +5,7 @@
                 <el-tab-pane label="人员调度" name="securityPerson">
 
                     <div class="middle">
-                        <div class="boottom" id="ztree">
+                        <div class="boottom">
                             <ScrollContainer>
                                 <broadcast-ztree
                                     :title="title"
@@ -20,7 +20,24 @@
                         </div>
                     </div>
                 </el-tab-pane>
-                <el-tab-pane label="巡检计划调度" name="securitySchedule">配置管理</el-tab-pane>
+                <el-tab-pane label="巡检计划调度" name="securitySchedule">
+                    <div class="middle">
+                        <div class="boottom">
+                            <ScrollContainer>
+                                <broadcast-ztree
+                                    :title="title"
+                                    :Info="securityPersonInfo"
+                                    :lightCheckout="transportCheckout"
+                                    :regionId="regionId"
+                                    :lightList="securityPersonlist"
+                                    :number="number"
+                                    :fault="fault">
+                                </broadcast-ztree>
+                            </ScrollContainer>
+                        </div>
+                    </div>
+
+                </el-tab-pane>
             </el-tabs>
 
             <!--<div class="middle">-->
@@ -69,7 +86,7 @@
                 transportCheckout:[],
                 regionId:[],
                 selectAll:[],
-                title:'车船',
+                title:'人员',
                 online: '0',
                 faultlist:[],
                 drivers:[],
@@ -86,8 +103,10 @@
                console.log(tab,event)
                 if(tab.name == 'securitySchedule'){
                    // this.initsecuritySchedule()
+                    this.title = '巡检计划'
                 }else if(tab.name == 'securityPerson'){
                    this.initPersonData()
+                    this.title = '人员'
                 }
             },
             treeShow(){
@@ -154,8 +173,9 @@
                 });
             },
             async initPersonData(){
-                Promise.all([this.getAllVehicle()]).then(result=>{
-                    let vehicles = result[0]
+                Promise.all([this.getAllUser()]).then(result=>{
+                    console.log(result,'00000')
+                    let users = result[0]
                     // let vehicles = [
                     //     {
                     //         "vehicle": {
@@ -213,7 +233,7 @@
                     //         }
                     //     }
                     // ]
-                    this.securityPersonList = vehicles
+                    this.securityPersonList = users
                     this.number=this.securityPersonList.length
                     this.securityPersonInfo=[]
 
@@ -365,8 +385,8 @@
             //     },5000)
             // },
 
-            async getAllVehicle(){
-                return await api.boat.getAllVehicleGps()
+            async getAllUser(){
+                return await api.user.getUserGPSInfo()
             }
 
         },

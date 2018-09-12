@@ -157,6 +157,11 @@
                         index: '/hard-property/lampLight-Hware',
                         title: '路灯'
                     },
+                    {
+                        icon:'./../../../static/img/gps.svg',
+                        index:'/hard-property/gps-Hware',
+                        title:'GPS'
+                    }
                 ],
             }
         },

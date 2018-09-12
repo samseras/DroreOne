@@ -91,11 +91,11 @@
                             <el-checkbox v-model="item.checked" @change="checked(item.id)" class="checkBtn"></el-checkbox>
                         </div>
                         <div class="personType" @click.stop="showStationDetail(item, '站点信息',true)">
-                            <img src="../../../../static/img/parkCard.png" alt="">
-                            <!--<img :src="getUrl(item.picturePath)" alt="" @error="imgError">-->
+                            <!--<img src="../../../../static/img/station_deploy.png" alt="">-->
+                            <img :src="getUrl(item.picturePath,item.type)" alt="" @error="imgError">
                             <span class="type">
                                   {{item.name}}
-                                </span>
+                            </span>
                         </div>
                         <div class="specificInfo">
                             <p class="name">所属区域：<span>{{item.regionName}}</span></p>
@@ -161,11 +161,16 @@
         },
         methods: {
             imgError (e) {
-                e.target.src = this.getUrl(null);
+                e.target.src = this.getUrl(null,0);
             },
-            getUrl (url) {
-                if (url === null) {
-                    return '../../../../static/img/parkCard.png'
+            getUrl (url,type) {
+                console.log(type,'这是type')
+                if (url === null || !url) {
+                    if(type == 1){
+                        return  '../../../../static/img/landingCard.png'
+                    }else{
+                            return '../../ ../../static/img/stationCard.png'
+                    }
                 } else {
                     return url
                 }
@@ -201,7 +206,7 @@
                 this.title = title
             },
             addNewInfo () {
-                this.showStationDetail({parkingBean:{}},'添加站点信息',false)
+                this.showStationDetail({},'添加站点信息',false)
                 this.isDisabled = false
             },
             deletInfo (id) {

@@ -85,6 +85,7 @@
                 controleCameraList:[],
                 controleLedList:[],
                 controleTransportList:[],
+                controleSecurityPersonList:[],
                 facilityPark:[],
                 facilityToilet:[],
                 facilityShop:[],
@@ -157,9 +158,10 @@
                 // this.getAllAlarmEvent();//告警事件现有标注
                 //this.getAllTransportRoute();// 车船调度路线输出
                 //this.getAllStation();
-                // this.getAllVehicle();// 车船信息
+                this.getAllVehicle();// 车船信息
                 // this.heatEmShow=true
                 // this.heatEm();//环境数据
+                this.getAllPerson();
             } else if (route.includes('area-deploy')) {
                 if(!this.getLocationId){
                     this.getAllArea();// 片区输出
@@ -416,7 +418,69 @@
             async getAllVehicle(){ //车船
                 //具体的车船信息，包括关联的人员信息
                 Promise.all([this.getAllVehicleGps()]).then(result=>{
-                    let vehicles = result[0]
+                    // let vehicles = result[0]
+                    let vehicles =  [
+                        {
+                            "vehicle": {
+                                "id": "05579c25-8abb-4bfa-83ae-2a1e50a071ee",
+                                "createTime": null,
+                                "creator": null,
+                                "modifyTime": "2018-09-11 17:32:51",
+                                "modifier": "admin",
+                                "serialNum": "船001",
+                                "capacity": 33,
+                                "type": 1,
+                                "model": "363",
+                                "gpsDeviceId": "21a435fd-f067-4cb5-841e-0482bbe1c230",
+                                "pictureId": null,
+                                "maintenanceStatus": 0,
+                                "maintenanceDate": "2018-08-07",
+                                "purchaseDate": "2010-03-23",
+                                "description": "反感和的",
+                                "scenicAreaId": null,
+                                "deleted": false
+                            },
+                            "gpsDeviceId": "21a435fd-f067-4cb5-841e-0482bbe1c230",
+                            "gpsDeviceName": "gps1",
+                            "pictureId": null,
+                            "picturePath": null,
+                            "gpsData":
+                            //null,
+                                {
+                                    "deviceId": "21a435fd-f067-4cb5-841e-0482bbe1c230",
+                                    "ioTDeviceId": null,
+                                    "createTime": "2017-12-31 12:21:39",
+                                    "longitude": 120.13310087077178,
+                                    "latitude": 30.30729423238902,
+                                    "altitude": null,
+                                    "direction": null,
+                                    "speed": 4,
+                                    "telephone": null,
+                                    "deviceNum": null,
+                                    "coordinate": null
+                                },
+                            "driver": {
+                                "id": "1",
+                                "creator": null,
+                                "createTime": null,
+                                "modifier": "admin",
+                                "modifyTime": "2018-09-11 18:00:00",
+                                "name": "admin",
+                                "cnName": " 系统管理员",
+                                "gender": 0,
+                                "iconId": null,
+                                "mobileNum": "18800000000",
+                                "fixedPhoneNum": null,
+                                "idCardNum": null,
+                                "email": null,
+                                "workAddress": null,
+                                "description": null,
+                                "departmentId": null,
+                                "jobId": null,
+                                "roleId": "1"
+                            }
+                        }
+                    ]
                     if(vehicles.length > 0){
                         vehicles.forEach(obj=>{
                             let latitude = ''
@@ -2255,6 +2319,116 @@
                     console.log(err, '请求失败')
                 })
             },
+            async getAllUser(){
+                return await api.user.getUserGPSInfo()
+            },
+            async getAllPerson(){
+                Promise.all([this.getAllUser()]).then(result=>{
+                    console.log(result,'00000')
+                    let users = result[0]
+                    // let vehicles = [
+                    //     {
+                    //         "vehicle": {
+                    //             "id": "30c87807-a8cc-45e2-b6fe-8e9e7a29c790",
+                    //             "createTime": null,
+                    //             "creator": null,
+                    //             "modifyTime": "2018-08-30 16:04:37",
+                    //             "modifier": "anonymous",
+                    //             "serialNum": "湘湖605",
+                    //             "capacity": 0,
+                    //             "type": 1,
+                    //             "model": "001144",
+                    //             "gpsDeviceId": "b0849754-7b4d-428b-b4de-d96f28eb7eb9",
+                    //             "pictureId": null,
+                    //             "maintenanceStatus": 0,
+                    //             "maintenanceDate": null,
+                    //             "purchaseDate": null,
+                    //             "description": null,
+                    //             "scenicAreaId": null,
+                    //             "deleted": false
+                    //         },
+                    //         "gpsDeviceId": "b0849754-7b4d-428b-b4de-d96f28eb7eb9",
+                    //         "gpsDeviceName": "船605",
+                    //         "pictureId": null,
+                    //         "picturePath": null,
+                    //         "gpsData":
+                    //             // null,
+                    //             {
+                    //             "deviceId": "b0849754-7b4d-428b-b4de-d96f28eb7eb9",
+                    //             "ioTDeviceId": null,
+                    //             "createTime": "2017-12-31 12:21:39",
+                    //             "longitude": 120.21455,
+                    //             "latitude": 30.1379,
+                    //             "altitude": null,
+                    //             "direction": null,
+                    //             "speed": 4,
+                    //             "telephone": null,
+                    //             "deviceNum": null,
+                    //             "coordinate": null
+                    //         },
+                    //         "driver": {
+                    //             "id": "5b27d86e-af2e-4de9-8d99-3f6b0f2e0f27",
+                    //             "createTime": "2018-08-31 11:41:32",
+                    //             "creator": "anonymous",
+                    //             "modifyTime": "2018-08-31 11:41:32",
+                    //             "modifier": "anonymous",
+                    //             "name": "test李四",
+                    //             "gender": 1,
+                    //             "idNum": null,
+                    //             "phone": "18602987796",
+                    //             "pictureId": null,
+                    //             "description": "just a test",
+                    //             "scenicAreaId": null,
+                    //             "deleted": false
+                    //         }
+                    //     }
+                    // ]
+                    users.forEach(obj=>{
+                        let latitude = ''
+                        let longitude = ''
+                        if(obj.gpsData){
+                            latitude = obj.gpsData.latitude,
+                            longitude = obj.gpsData.longitude
+                        }
+                        obj.status=obj.gpsData ? "ONLINE" : "OFFLINE";
+                        obj.location=[longitude,latitude];
+                        var icon = new droreMap.icon.Marker({
+                            coordinate: droreMap.trans.transFromWgsToLayer(obj.location),
+                            name:obj.vehicle.serialNum,
+                            subtype:'securityPerson',
+                            id:obj.vehicle.id,
+                            url:'/static/img/icon/people_small.png',
+                            type:'security',
+                            status:obj.gpsData ? "ONLINE" : "OFFLINE",
+                            description:obj.vehicle.description,
+                            driver:obj.driver,
+                            gpsData:obj.gpsData,
+                            vehicle:obj.vehicle,
+                            data:obj,
+                        });
+                        droreMap.icon.addChild(icon);
+                        icon.showName=true
+                        droreMap.icon.showLayer(icon.id,false);
+                        let that = this;
+                        icon.onclick(function (e) {
+                            that.menulist = e.data;
+                            var div = document.getElementById('contextmenu_container')
+                            var popup = new  droreMap.pop.Popup(div,droreMap.trans.transFromWgsToLayer([longitude,latitude]),"contextmenu_container")
+                            droreMap.pop.addChild(popup,e.data.id);
+                            $("#contextmenu_container").attr("class","contextmenu "+e.subtype);
+                            if(e.data.status =="FAULT"){
+                                that.open=false
+                            }else if(e.data.status =="OFFLINE"){
+                                that.open=false
+                            }else {
+                                that.open= true
+                            }
+                            $("#contextmenu_container").show();
+                        });
+                    })
+
+                })
+            },
             async getAllAlarmEvent () {
                 await api.alarm.getAllAlarmEvent().then(res => {
                     for (let i=0;i<res.length;i++) {
@@ -2874,10 +3048,6 @@
             },
             getTreeState(){
 
-
-                console.log('213123')
-
-
                 console.log(this.getTreeState,'213123')
                 if(this.getTreeState.length>1) {
                     // console.log(this.getTreeState,'ioioioiooioioiooi')
@@ -2941,6 +3111,9 @@
                                 } else if(item1.type =='indicator'){
                                     this.facilityIndicator.push(item1.id);
                                     this.$store.commit('FACILITY_INDICATOR', this.facilityIndicator)
+                                }else if(item1.type =='station'){
+                                    this.facilityStation.push(item1.id);
+                                    this.$store.commit('FACILITY_STATION', this.facilityStation)
                                 }
                                 if(item1.typeroad=='road'){
                                     this.facilityRoad.push(item1.id);
@@ -3006,6 +3179,9 @@
                             } else if(item.type =='indicator'){
                                 this.facilityIndicator=[];
                                 this.$store.commit('FACILITY_INDICATOR', this.facilityIndicator)
+                            }else if(item.type =='station'){
+                                this.facilityStation=[];
+                                this.$store.commit('FACILITY_STATION', this.facilityStation)
                             }
                             if(item.typeroad=='road'){
                                 this.facilityRoad=[];
@@ -3094,6 +3270,10 @@
                                     this.facilityIndicator.push(data[i].id);
                                     this.facilityIndicator=[...new Set(this.facilityIndicator)];
                                     this.$store.commit('FACILITY_INDICATOR', this.facilityIndicator)
+                                }else if(data[i].type =='station'){
+                                    this.facilityStation.push(data[i].id);
+                                    this.facilityStation=[...new Set(this.facilityStation)];
+                                    this.$store.commit('FACILITY_STATION', this.facilityStation)
                                 }
                                 if(data[i].typeroad=='road'){
                                     this.facilityRoad.push(data[i].id);
@@ -3300,6 +3480,10 @@
                                 this.facilityIndicator.push(this.getTreeState[0].id);
                                 this.facilityIndicator=[...new Set(this.facilityIndicator)];
                                 this.$store.commit('FACILITY_INDICATOR', this.facilityIndicator)
+                            }else if(this.getTreeState[0].type  =='station'){
+                                this.facilityStation.push(this.getTreeState[0].id);
+                                this.facilityStation=[...new Set(this.facilityStation)];
+                                this.$store.commit('FACILITY_STATION', this.facilityStation)
                             }
                             if(this.getTreeState[0].typeroad=='road'){
                                 this.facilityRoad.push(this.getTreeState[0].id);
@@ -3484,6 +3668,7 @@
                 'getcontroCamera',
                 'getcontroLed',
                 'getcontroTransport',
+                'getcontrolSecurityPerson',
                 'getfacilityPark',
                 'getfacilityToilet',
                 'getfacilityShop',
@@ -3493,7 +3678,6 @@
                 'getfacilityPlant',
                 'getfacilityIndicator',
                 'getfacilityRoad',
-                'getTransportType',
                 'getfacilityStation',
                 'getTreeShow'
             ])
@@ -4070,7 +4254,8 @@
         background: url("/static/img/icon/conditionRule_three_big.png") no-repeat;
     }
 
-    .contextmenu.gate,.contextmenu.police,.contextmenu.trash,.contextmenu.scenic,.contextmenu.construction,.contextmenu.plant,.contextmenu.park,.contextmenu.toilet,.contextmenu.indicator,.contextmenu.shop,.contextmenu.station{
+    .contextmenu.gate,.contextmenu.police,.contextmenu.trash,.contextmenu.scenic,.contextmenu.construction,.contextmenu.plant,.contextmenu.park,.contextmenu.toilet,.contextmenu.indicator,.contextmenu.shop,
+    .contextmenu.station,.contextmenu.landing{
         background: none;
         width: 0;
         height: 0;
@@ -4083,6 +4268,9 @@
     }
     .contextmenu.station i{
         background: url("/static/img/icon/station_big.png") no-repeat;
+    }
+    .contextmenu.landing i{
+        background: url("/static/img/icon/landing_big.png") no-repeat;
     }
     .contextmenu.trash i{
         background: url("/static/img/icon/trash_big.png") no-repeat;
