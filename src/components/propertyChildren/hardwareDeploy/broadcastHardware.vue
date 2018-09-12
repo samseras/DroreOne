@@ -15,6 +15,7 @@
                         @nextPage="nextPage"
                         @previousPage="previousPage"
                         @getAllBroadcast="getAllBroadcast"
+                        @allDotInfo = 'allDotInfo'
                         :listsLength = "listLength"
                         :personListFlag="selectFlag"
                         :choseId="choseInfoId">
@@ -120,6 +121,14 @@
                           @addNewInfo="addBroad"
                           @fixInfo="fixInfo">
                 </HardWare>
+                <allDotMap v-if="allDotvisible"
+                           :visible="allDotvisible"
+                           :Info="allDotList"
+                           :title="title"
+                           @iconfixInfo="iconfixInfo"
+                           @iconListfixInfo="iconListfixInfo"
+                           @closeInfoDialog ="closeDialog">
+                </allDotMap>
             </div>
         </div>
     </div>
@@ -127,6 +136,7 @@
 
 <script>
     import ScrollContainer from '@/components/ScrollContainer'
+    import allDotMap from '@/components/allDotMap'
     import Header from './camera.vue'
     import HardWare from './hardwareDialog.vue'
     import api from '@/api'
@@ -155,7 +165,12 @@
                 isShowLoading:false,
                 currentNum: 50,
                 listLength: '',
-                pageNum: 1
+                pageNum: 1,
+                allDotvisible:false,
+                allDotList:{
+                    close:[],
+                    open:[]
+                }
             }
         },
         methods:{
@@ -172,7 +187,37 @@
             },
             closeDialog () {
                 this.visible = false
+                this.allDotvisible=false
                 this.getAllBroadcast()
+            },
+            allDotInfo(){
+                this.allDotvisible = true
+                this.title = '广播批量打点'
+            },
+            iconListfixInfo(infoList){
+                infoList.forEach(obj=>{
+                    obj.location=[obj.longitude,obj.latitude]
+                    this.iconfixInfo(obj,obj.location)
+                })
+            },
+            async iconfixInfo(info,index){
+                let scenicObj = [{
+                    typeId: 1,
+                    id:info.id,
+                    positionType:info.positionType,
+                    name:info.name,
+                    model:info.model,
+                    ip:info.ip,
+                    port:info.port,
+                    regionId:info.regionId,
+                    description:info.description,
+                    latitude: index[1],
+                    longitude: index[0],
+                    pictureId:info.pictureId
+                }]
+                await api.broadcast.updateBroadcast(scenicObj).then(res => {
+                    console.log('修改成功')
+                })
             },
             handleSelectionChange(val) {
                 this.multipleSelection = val;
@@ -452,6 +497,20 @@
                             return item
                         }
                     })
+                    this.allDotList.close=[]
+                    this.allDotList.open=[]
+                    let resDevices=res.devices
+                    for (let i = 0; i < resDevices.length; i++) {
+                        resDevices[i].iconName = resDevices[i].name
+                        resDevices[i].iconSubtype = 'broadcast'
+                        resDevices[i].iconUrl = '/static/img/icon/broadcast.png'
+                        resDevices[i].iconType = '广播'
+                        if(resDevices[i].longitude==null&&resDevices[i].latitude==null){
+                            this.allDotList.close.push(resDevices[i])
+                        }else {
+                            this.allDotList.open.push(resDevices[i])
+                        }
+                    }
                     for (let i=0;i<this.broadList.length;i++) {
                         this.broadList[i].checked = false
                         this.broadList[i].status = true
@@ -489,8 +548,8 @@
         components:{
             ScrollContainer,
             Header,
-            HardWare
-
+            HardWare,
+            allDotMap
         }
     }
 

@@ -15,6 +15,7 @@
                         :personListFlag="selectFlag"
                         @choseType="choseType"
                         @toggleList="toggleList"
+                        @allDotInfo = 'allDotInfo'
                         @getAllPolice="getAllPolice">
                 </Header>
             </div>
@@ -116,6 +117,14 @@
                           @fixInfo="fixInfo">
 
                 </HardWare>
+                <allDotMap v-if="allDotvisible"
+                           :visible="allDotvisible"
+                           :Info="allDotList"
+                           :title="title"
+                           @iconfixInfo="iconfixInfo"
+                           @iconListfixInfo="iconListfixInfo"
+                           @closeInfoDialog ="closeDialog">
+                </allDotMap>
             </div>
         </div>
     </div>
@@ -123,6 +132,7 @@
 
 <script>
     import ScrollContainer from '@/components/ScrollContainer'
+    import allDotMap from '@/components/allDotMap'
     import Header from './camera.vue'
     import HardWare from './hardwareDialog.vue'
     import api from '@/api'
@@ -150,7 +160,12 @@
                 isShowLoading:false,
                 currentNum: 50,
                 listLength: '',
-                pageNum: 1
+                pageNum: 1,
+                allDotvisible:false,
+                allDotList:{
+                    close:[],
+                    open:[]
+                }
             }
         },
         methods:{
@@ -167,7 +182,39 @@
             },
             closeDialog () {
                 this.visible = false
+                this.allDotvisible=false
                 this.getAllPolice()
+            },
+            allDotInfo(){
+                this.allDotvisible = true
+                this.title = '报警柱批量打点'
+            },
+            iconListfixInfo(infoList){
+                infoList.forEach(obj=>{
+                    obj.location=[obj.longitude,obj.latitude]
+                    this.iconfixInfo(obj,obj.location)
+                })
+            },
+            async iconfixInfo(info,index){
+                let scenicObj = [{
+                    typeId: 8,
+                    mac:info.mac,
+                    id:info.id,
+                    sensorType:info.sensorType,
+                    name:info.name,
+                    model:info.model,
+                    serialNum:info.serialNum,
+                    ip:info.ip,
+                    port:info.port,
+                    regionId:info.regionId,
+                    description:info.description,
+                    latitude: index[1],
+                    longitude: index[0],
+                    pictureId:info.pictureId
+                }]
+                await api.police.updatePolice(scenicObj).then(res => {
+                    console.log('修改成功')
+                })
             },
             searchAnything (info) {
                 console.log(info, '这是要过滤的')
@@ -440,7 +487,20 @@
                             return item
                         }
                     })
-
+                    this.allDotList.close=[]
+                    this.allDotList.open=[]
+                    let resDevices=res.devices
+                    for (let i = 0; i < resDevices.length; i++) {
+                        resDevices[i].iconName = resDevices[i].name
+                        resDevices[i].iconSubtype = 'police'
+                        resDevices[i].iconUrl = '/static/img/icon/police.png'
+                        resDevices[i].iconType = '报警柱'
+                        if(resDevices[i].longitude==null&&resDevices[i].latitude==null){
+                            this.allDotList.close.push(resDevices[i])
+                        }else {
+                            this.allDotList.open.push(resDevices[i])
+                        }
+                    }
                     for (let i=0;i<this.policeList.length;i++){
                         this.policeList[i].checked=false
                         this.policeList[i].status=true
@@ -476,7 +536,8 @@
         components:{
             ScrollContainer,
             Header,
-            HardWare
+            HardWare,
+            allDotMap
 
         }
     }
