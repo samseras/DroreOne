@@ -129,20 +129,11 @@
                             <span>{{this.Info.vehicle_ship_id}}</span>
                         </p>
                     </div>
-                    <!--<div v-if="subtype='boat'" class="car">-->
-                        <!--<p class="name">当前速度：-->
-                            <!--<span>{{this.duty}}Km/h</span>-->
-                        <!--</p>-->
-                        <!--<p class="name">司&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;机：-->
-                            <!--<span>{{this.Info.driver}}</span>-->
-                        <!--</p>-->
-                        <!--<p class="name">手机号码：-->
-                            <!--<span>{{this.Info.telephone}}</span>-->
-                        <!--</p>-->
-                        <!--<p class="name">车牌号码：-->
-                            <!--<span>{{this.Info.vehicle_ship_id}}</span>-->
-                        <!--</p>-->
-                    <!--</div>-->
+                    <div v-if="sercurityPerson" class="sercurityPerson">
+                        <p class="name">手机号码：
+                            <span>{{this.Info.telephone}}</span>
+                        </p>
+                    </div>
                     <p class="name" v-if="facility">厂&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;家：
                         {{this.Info.modelName}}
                     </p>
@@ -222,6 +213,7 @@
                 car:false,
                 duty:'',
                 warnShowList:'',
+                sercurityPerson:false,
                 dateRange:'',
                 pickerOptions: {
                     shortcuts: [{
@@ -394,6 +386,11 @@
             if(this.Info.type == "transport"){
                 this.Info.description=this.Info.transport.description
                 this.facility=false
+            }
+            if(this.Info.type == "security"){
+                this.Info.description=this.Info.security.description
+                this.facility=false
+                this.sercurityPerson = true
             }
         },
         computed: {

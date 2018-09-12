@@ -534,17 +534,79 @@
             async getAllLangVehicle(){ //车船轮询
                 //具体的车船信息，包括关联的人员信息
                 Promise.all([this.getAllVehicleGps()]).then(result=>{
-                    let vehicles = result[0]
+                    // let vehicles = result[0]
+                    let vehicles =  [
+                        {
+                            "vehicle": {
+                                "id": "05579c25-8abb-4bfa-83ae-2a1e50a071ee",
+                                "createTime": null,
+                                "creator": null,
+                                "modifyTime": "2018-09-11 17:32:51",
+                                "modifier": "admin",
+                                "serialNum": "船001",
+                                "capacity": 33,
+                                "type": 1,
+                                "model": "363",
+                                "gpsDeviceId": "21a435fd-f067-4cb5-841e-0482bbe1c230",
+                                "pictureId": null,
+                                "maintenanceStatus": 0,
+                                "maintenanceDate": "2018-08-07",
+                                "purchaseDate": "2010-03-23",
+                                "description": "反感和的",
+                                "scenicAreaId": null,
+                                "deleted": false
+                            },
+                            "gpsDeviceId": "21a435fd-f067-4cb5-841e-0482bbe1c230",
+                            "gpsDeviceName": "gps1",
+                            "pictureId": null,
+                            "picturePath": null,
+                            "gpsData":
+                            //null,
+                                {
+                                    "deviceId": "21a435fd-f067-4cb5-841e-0482bbe1c230",
+                                    "ioTDeviceId": null,
+                                    "createTime": "2017-12-31 12:21:39",
+                                    "longitude": 120.13310087077178,
+                                    "latitude": 30.30729423238902,
+                                    "altitude": null,
+                                    "direction": null,
+                                    "speed": 4,
+                                    "telephone": null,
+                                    "deviceNum": null,
+                                    "coordinate": null
+                                },
+                            "driver": {
+                                "id": "1",
+                                "creator": null,
+                                "createTime": null,
+                                "modifier": "admin",
+                                "modifyTime": "2018-09-11 18:00:00",
+                                "name": "admin",
+                                "cnName": " 系统管理员",
+                                "gender": 0,
+                                "iconId": null,
+                                "mobileNum": "18800000000",
+                                "fixedPhoneNum": null,
+                                "idCardNum": null,
+                                "email": null,
+                                "workAddress": null,
+                                "description": null,
+                                "departmentId": null,
+                                "jobId": null,
+                                "roleId": "1"
+                            }
+                        }
+                    ]
                     if(vehicles.length > 0){
                         vehicles.forEach(obj=>{
-                            // var latitude = 30.121381873225815+Math.random()*0.01
-                            // var longitude = 120.20690542885497+Math.random()*0.01
-                            let latitude = ''
-                            let longitude = ''
-                            if(obj.gpsData){
-                                latitude = obj.gpsData.latitude,
-                                longitude = obj.gpsData.longitude
-                            }
+                            var latitude = obj.gpsData.latitude+Math.random()*0.01
+                            var longitude = obj.gpsData.longitude+Math.random()*0.01
+                            // let latitude = ''
+                            // let longitude = ''
+                            // if(obj.gpsData){
+                            //     latitude = obj.gpsData.latitude,
+                            //     longitude = obj.gpsData.longitude
+                            // }
                             obj.location=[longitude,latitude];
                             let layer = droreMap.icon.returnLayer(obj.vehicle.id)
                             layer.setPosition(droreMap.trans.transFromWgsToLayer(obj.location))
@@ -553,7 +615,6 @@
                                 if(Popup!=undefined){
                                     Popup.setPosition(droreMap.trans.transFromWgsToLayer(obj.location))
                                 }
-
                             }
                             let that = this;
                             layer.onclick(function (e) {
@@ -2322,73 +2383,77 @@
             async getAllUser(){
                 return await api.user.getUserGPSInfo()
             },
-            async getAllPerson(){
-                Promise.all([this.getAllUser()]).then(result=>{
-                    console.log(result,'00000')
-                    let users = result[0]
-                    // let vehicles = [
-                    //     {
-                    //         "vehicle": {
-                    //             "id": "30c87807-a8cc-45e2-b6fe-8e9e7a29c790",
-                    //             "createTime": null,
-                    //             "creator": null,
-                    //             "modifyTime": "2018-08-30 16:04:37",
-                    //             "modifier": "anonymous",
-                    //             "serialNum": "湘湖605",
-                    //             "capacity": 0,
-                    //             "type": 1,
-                    //             "model": "001144",
-                    //             "gpsDeviceId": "b0849754-7b4d-428b-b4de-d96f28eb7eb9",
-                    //             "pictureId": null,
-                    //             "maintenanceStatus": 0,
-                    //             "maintenanceDate": null,
-                    //             "purchaseDate": null,
-                    //             "description": null,
-                    //             "scenicAreaId": null,
-                    //             "deleted": false
-                    //         },
-                    //         "gpsDeviceId": "b0849754-7b4d-428b-b4de-d96f28eb7eb9",
-                    //         "gpsDeviceName": "船605",
-                    //         "pictureId": null,
-                    //         "picturePath": null,
-                    //         "gpsData":
-                    //             // null,
-                    //             {
-                    //             "deviceId": "b0849754-7b4d-428b-b4de-d96f28eb7eb9",
-                    //             "ioTDeviceId": null,
-                    //             "createTime": "2017-12-31 12:21:39",
-                    //             "longitude": 120.21455,
-                    //             "latitude": 30.1379,
-                    //             "altitude": null,
-                    //             "direction": null,
-                    //             "speed": 4,
-                    //             "telephone": null,
-                    //             "deviceNum": null,
-                    //             "coordinate": null
-                    //         },
-                    //         "driver": {
-                    //             "id": "5b27d86e-af2e-4de9-8d99-3f6b0f2e0f27",
-                    //             "createTime": "2018-08-31 11:41:32",
-                    //             "creator": "anonymous",
-                    //             "modifyTime": "2018-08-31 11:41:32",
-                    //             "modifier": "anonymous",
-                    //             "name": "test李四",
-                    //             "gender": 1,
-                    //             "idNum": null,
-                    //             "phone": "18602987796",
-                    //             "pictureId": null,
-                    //             "description": "just a test",
-                    //             "scenicAreaId": null,
-                    //             "deleted": false
-                    //         }
-                    //     }
-                    // ]
+            getAllPerson(){
+                let users =  [
+                    {
+                        "vehicle": {
+                            "id": "05579c25-8abb-4bfa-83ae-2a1e50a071ee",
+                            "createTime": null,
+                            "creator": null,
+                            "modifyTime": "2018-09-11 17:32:51",
+                            "modifier": "admin",
+                            "serialNum": "船001",
+                            "capacity": 33,
+                            "type": 1,
+                            "model": "363",
+                            "gpsDeviceId": "21a435fd-f067-4cb5-841e-0482bbe1c230",
+                            "pictureId": null,
+                            "maintenanceStatus": 0,
+                            "maintenanceDate": "2018-08-07",
+                            "purchaseDate": "2010-03-23",
+                            "description": "反感和的",
+                            "scenicAreaId": null,
+                            "deleted": false
+                        },
+                        "gpsDeviceId": "21a435fd-f067-4cb5-841e-0482bbe1c230",
+                        "gpsDeviceName": "gps1",
+                        "pictureId": null,
+                        "picturePath": null,
+                        "gpsData":
+                        //null,
+                            {
+                                "deviceId": "21a435fd-f067-4cb5-841e-0482bbe1c230",
+                                "ioTDeviceId": null,
+                                "createTime": "2017-12-31 12:21:39",
+                                "longitude": 120.13310087077178,
+                                "latitude": 30.30729423238902,
+                                "altitude": null,
+                                "direction": null,
+                                "speed": 4,
+                                "telephone": null,
+                                "deviceNum": null,
+                                "coordinate": null
+                            },
+                        "driver": {
+                            "id": "1",
+                            "creator": null,
+                            "createTime": null,
+                            "modifier": "admin",
+                            "modifyTime": "2018-09-11 18:00:00",
+                            "name": "admin",
+                            "cnName": " 系统管理员",
+                            "gender": 0,
+                            "iconId": null,
+                            "mobileNum": "18800000000",
+                            "fixedPhoneNum": null,
+                            "idCardNum": null,
+                            "email": null,
+                            "workAddress": null,
+                            "description": null,
+                            "departmentId": null,
+                            "jobId": null,
+                            "roleId": "1"
+                        }
+                    }
+                ]
+
+                if(users.length > 0){
                     users.forEach(obj=>{
                         let latitude = ''
                         let longitude = ''
                         if(obj.gpsData){
                             latitude = obj.gpsData.latitude,
-                            longitude = obj.gpsData.longitude
+                                longitude = obj.gpsData.longitude
                         }
                         obj.status=obj.gpsData ? "ONLINE" : "OFFLINE";
                         obj.location=[longitude,latitude];
@@ -2397,7 +2462,7 @@
                             name:obj.vehicle.serialNum,
                             subtype:'securityPerson',
                             id:obj.vehicle.id,
-                            url:'/static/img/icon/people_small.png',
+                            url:'/static/img/icon/people_small.svg',
                             type:'security',
                             status:obj.gpsData ? "ONLINE" : "OFFLINE",
                             description:obj.vehicle.description,
@@ -2426,8 +2491,122 @@
                             $("#contextmenu_container").show();
                         });
                     })
+                }
 
-                })
+                // Promise.all([this.getAllUser()]).then(result=>{
+                //     console.log(result,'00000')
+                //     // let users = result[0]
+                //     let users =  [
+                //         {
+                //             "vehicle": {
+                //                 "id": "05579c25-8abb-4bfa-83ae-2a1e50a071ee",
+                //                 "createTime": null,
+                //                 "creator": null,
+                //                 "modifyTime": "2018-09-11 17:32:51",
+                //                 "modifier": "admin",
+                //                 "serialNum": "船001",
+                //                 "capacity": 33,
+                //                 "type": 1,
+                //                 "model": "363",
+                //                 "gpsDeviceId": "21a435fd-f067-4cb5-841e-0482bbe1c230",
+                //                 "pictureId": null,
+                //                 "maintenanceStatus": 0,
+                //                 "maintenanceDate": "2018-08-07",
+                //                 "purchaseDate": "2010-03-23",
+                //                 "description": "反感和的",
+                //                 "scenicAreaId": null,
+                //                 "deleted": false
+                //             },
+                //             "gpsDeviceId": "21a435fd-f067-4cb5-841e-0482bbe1c230",
+                //             "gpsDeviceName": "gps1",
+                //             "pictureId": null,
+                //             "picturePath": null,
+                //             "gpsData":
+                //             //null,
+                //                 {
+                //                     "deviceId": "21a435fd-f067-4cb5-841e-0482bbe1c230",
+                //                     "ioTDeviceId": null,
+                //                     "createTime": "2017-12-31 12:21:39",
+                //                     "longitude": 120.13310087077178,
+                //                     "latitude": 30.30729423238902,
+                //                     "altitude": null,
+                //                     "direction": null,
+                //                     "speed": 4,
+                //                     "telephone": null,
+                //                     "deviceNum": null,
+                //                     "coordinate": null
+                //                 },
+                //             "driver": {
+                //                 "id": "1",
+                //                 "creator": null,
+                //                 "createTime": null,
+                //                 "modifier": "admin",
+                //                 "modifyTime": "2018-09-11 18:00:00",
+                //                 "name": "admin",
+                //                 "cnName": " 系统管理员",
+                //                 "gender": 0,
+                //                 "iconId": null,
+                //                 "mobileNum": "18800000000",
+                //                 "fixedPhoneNum": null,
+                //                 "idCardNum": null,
+                //                 "email": null,
+                //                 "workAddress": null,
+                //                 "description": null,
+                //                 "departmentId": null,
+                //                 "jobId": null,
+                //                 "roleId": "1"
+                //             }
+                //         }
+                //     ]
+                //
+                //     if(users.length > 0){
+                //         users.forEach(obj=>{
+                //             let latitude = ''
+                //             let longitude = ''
+                //             if(obj.gpsData){
+                //                 latitude = obj.gpsData.latitude,
+                //                     longitude = obj.gpsData.longitude
+                //             }
+                //             obj.status=obj.gpsData ? "ONLINE" : "OFFLINE";
+                //             obj.location=[longitude,latitude];
+                //             var icon = new droreMap.icon.Marker({
+                //                 coordinate: droreMap.trans.transFromWgsToLayer(obj.location),
+                //                 name:obj.vehicle.serialNum,
+                //                 subtype:'securityPerson',
+                //                 id:obj.vehicle.id,
+                //                 url:'/static/img/icon/people_small.png',
+                //                 type:'security',
+                //                 status:obj.gpsData ? "ONLINE" : "OFFLINE",
+                //                 description:obj.vehicle.description,
+                //                 driver:obj.driver,
+                //                 gpsData:obj.gpsData,
+                //                 vehicle:obj.vehicle,
+                //                 data:obj,
+                //             });
+                //             droreMap.icon.addChild(icon);
+                //             icon.showName=true
+                //             droreMap.icon.showLayer(icon.id,false);
+                //             let that = this;
+                //             icon.onclick(function (e) {
+                //                 that.menulist = e.data;
+                //                 var div = document.getElementById('contextmenu_container')
+                //                 var popup = new  droreMap.pop.Popup(div,droreMap.trans.transFromWgsToLayer([longitude,latitude]),"contextmenu_container")
+                //                 droreMap.pop.addChild(popup,e.data.id);
+                //                 $("#contextmenu_container").attr("class","contextmenu "+e.subtype);
+                //                 if(e.data.status =="FAULT"){
+                //                     that.open=false
+                //                 }else if(e.data.status =="OFFLINE"){
+                //                     that.open=false
+                //                 }else {
+                //                     that.open= true
+                //                 }
+                //                 $("#contextmenu_container").show();
+                //             });
+                //         })
+                //     }
+                //
+                //
+                // })
             },
             async getAllAlarmEvent () {
                 await api.alarm.getAllAlarmEvent().then(res => {
@@ -2846,6 +3025,7 @@
                 }
             },
             treeShow(data){
+                console.log(data,'23123123')
                 if(data.longitude&&data.latitude){
                     data.location = [data.longitude,data.latitude]
                     droreMap.map.panToCoord(droreMap.trans.transFromWgsToLayer(data.location));
@@ -3087,6 +3267,9 @@
                                 } else if(item1.type =='transport'){
                                     this.controleTransportList.push(item1.id);
                                     this.$store.commit('CONTROLER_TRANSPORT', this.controleTransportList)
+                                } else if(item1.type =='security'){
+                                    this.controleSecurityPersonList.push(item1.id);
+                                    this.$store.commit('CONTROLER_SECURITY_PERSON', this.controleSecurityPersonList)
                                 } else if(item1.type =='park'){
                                     this.facilityPark.push(item1.id);
                                     this.$store.commit('FACILITY_PARK', this.facilityPark)
@@ -3155,7 +3338,10 @@
                             }else if(item.type=='transport'){
                                 this.controleTransportList=[];
                                 this.$store.commit('CONTROLER_TRANSPORT', this.controleTransportList)
-                            } else if(item.type =='park'){
+                            } else if(item.type =='security'){
+                                this.controleSecurityPersonList=[];
+                                this.$store.commit('CONTROLER_SECURITY_PERSON', this.controleSecurityPersonList)
+                            }else if(item.type =='park'){
                                 this.facilityPark=[];
                                 this.$store.commit('FACILITY_PARK', this.facilityPark)
                             } else if(item.type =='toilet'){
@@ -3196,7 +3382,7 @@
                             for (let i = 0; i < data.length; i++) {
                                 if(data[i].typeroad=='road'){
                                     this.roadShow(data[i]);
-                                }else if(data[i].type =='transport'){
+                                }else if(data[i].type =='transport' || data[i].type =='security'){
                                     if(data[i].status == "ONLINE"){
                                         this.treeShow(data[i]);
                                     }
@@ -3238,7 +3424,11 @@
                                     this.controleTransportList.push(data[i].id);
                                     this.controleTransportList=[...new Set(this.controleTransportList)];
                                     this.$store.commit('CONTROLER_TRANSPORT', this.controleTransportList)
-                                } else if(data[i].type =='park'){
+                                } else if(data[i].type =='security'){
+                                    this.controleSecurityPersonList.push(data[i].id);
+                                    this.controleSecurityPersonList=[...new Set(this.controleSecurityPersonList)];
+                                    this.$store.commit('CONTROLER_SECURITY_PERSON', this.controleSecurityPersonList)
+                                }else if(data[i].type =='park'){
                                     this.facilityPark.push(data[i].id);
                                     this.facilityPark=[...new Set(this.facilityPark)];
                                     this.$store.commit('FACILITY_PARK', this.facilityPark)
@@ -3286,7 +3476,7 @@
                                 // console.log(this.getTreeState[0].children)
                                 if(this.getTreeState[0].children[i].typeroad=='road'){
                                     this.roadHide(this.getTreeState[0].children[i]);
-                                }else if(this.getTreeState[0].children[i].type =='transport'){
+                                }else if(this.getTreeState[0].children[i].type =='transport' || this.getTreeState[0].children[i].type =='security'){
                                     this.treeHide(this.getTreeState[0].children[i]);
                                 } else {
                                     if(this.getTreeState[0].children[i].type =='person'){
@@ -3339,7 +3529,13 @@
                                         this.controleTransportList.splice(index, 1);
                                     }
                                     this.$store.commit('CONTROLER_TRANSPORT', this.controleTransportList)
-                                }else if(this.getTreeState[0].children[i].type=='park'){
+                                }else if(this.getTreeState[0].children[i].type=='security'){
+                                    let index = this.controleSecurityPersonList.indexOf(this.getTreeState[0].children[i].id);
+                                    if (index > -1) {
+                                        this.controleSecurityPersonList.splice(index, 1);
+                                    }
+                                    this.$store.commit('CONTROLER_SECURITY_PERSON', this.controleTransportList)
+                                } else if(this.getTreeState[0].children[i].type=='park'){
                                     let index = this.facilityPark.indexOf(this.getTreeState[0].children[i].id);
                                     if (index > -1) {
                                         this.facilityPark.splice(index, 1);
@@ -3412,7 +3608,7 @@
                                     this.roadShowID(this.getTreeState[0].routeId)
                                 }else if(this.getTreeState[0].type =='warn'){
                                     this.treeShow(this.getTreeState[0]);
-                                }else if(this.getTreeState[0].type =='transport'){
+                                }else if(this.getTreeState[0].type =='transport' || this.getTreeState[0].type =='security'){
                                     if(this.getTreeState[0].status == "ONLINE"){
                                         this.treeShow(this.getTreeState[0]);
                                     }
@@ -3448,6 +3644,10 @@
                                 this.controleTransportList.push(this.getTreeState[0].id);
                                 this.controleTransportList=[...new Set(this.controleTransportList)];
                                 this.$store.commit('CONTROLER_TRANSPORT', this.controleTransportList)
+                            }else if(this.getTreeState[0].type=='security'){
+                                this.controleSecurityPersonList.push(this.getTreeState[0].id);
+                                this.controleSecurityPersonList=[...new Set(this.controleSecurityPersonList)];
+                                this.$store.commit('CONTROLER_SECURITY_PERSON', this.controleSecurityPersonList)
                             }else if(this.getTreeState[0].type=='park'){
                                 this.facilityPark.push(this.getTreeState[0].id);
                                 this.facilityPark=[...new Set(this.facilityPark)];
@@ -3498,7 +3698,7 @@
                                     this.roadHideID(this.getTreeState[0].routeId)
                                 }else if(this.getTreeState[0].type =='warn'){
                                     this.treeHide(this.getTreeState[0]);
-                                }else if(this.getTreeState[0].type =='transport'){
+                                }else if(this.getTreeState[0].type =='transport' || this.getTreeState[0].type =='security'){
 
                                     if(this.getTreeState[0].status == "ONLINE"){
                                         this.treeHide(this.getTreeState[0]);
@@ -3550,6 +3750,12 @@
                                     this.controleTransportList.splice(index, 1);
                                 }
                                 this.$store.commit('CONTROLER_TRANSPORT', this.controleTransportList)
+                            }else if(this.getTreeState[0].type=='security'){
+                                let index = this.controleSecurityPersonList.indexOf(this.getTreeState[0].id);
+                                if (index > -1) {
+                                    this.controleSecurityPersonList.splice(index, 1);
+                                }
+                                this.$store.commit('CONTROLER_SECURITY_PERSON', this.controleSecurityPersonList)
                             }else if(this.getTreeState[0].type=='park'){
                                 let index = this.facilityPark.indexOf(this.getTreeState[0].id);
                                 if (index > -1) {
@@ -3624,6 +3830,25 @@
                         if(this.getTreeShow.type =='person'){
                             this.roadShowID(this.getTreeShow.routeId);
                         }else if(this.getTreeShow.type == "transport") {
+                            console.log(this.getTreeShow,'1')
+                            if(this.getTreeShow.status == "ONLINE"){
+                                this.treeShow(this.getTreeShow);
+                                let layer = droreMap.icon.returnLayer(this.getTreeShow.id)
+                                this.menulist = layer.data;
+                                let route = this.$route.path
+                                if (route.includes('controler')) {
+                                    this.droreMappopup(layer);
+                                }
+                            }else{
+                                let layer = droreMap.icon.returnLayer(this.getTreeShow.id)
+                                this.menulist = layer.data;
+                                let route = this.$route.path
+                                if (route.includes('controler')) {
+                                    this.menuShow()
+                                    $("#contextmenu_container").hide();
+                                }
+                            }
+                        }else if(this.getTreeShow.type == "security") {
                             console.log(this.getTreeShow,'1')
                             if(this.getTreeShow.status == "ONLINE"){
                                 this.treeShow(this.getTreeShow);
@@ -4113,6 +4338,9 @@
     .contextmenu.boat_damage i{
         background: url("/static/img/icon/boat_damage_big.png") no-repeat;
     }
+    .contextmenu.securityPerson i{
+        background: url("/static/img/icon/people_big.png") no-repeat;
+    }
 
     .contextmenu.car,.contextmenu.car_damage,.contextmenu.boat,.contextmenu.boat_damage{
         .mapSwitch{
@@ -4296,4 +4524,5 @@
     .contextmenu.shop i{
         background: url("/static/img/icon/shop_big.png") no-repeat;
     }
+
 </style>
