@@ -115,18 +115,31 @@
                             <span>{{this.Info.remainParking}}</span>
                         </p>
                     </div>
-                    <div v-if="car" class="car">
+                    <div v-if="transport" class="car">
                         <p class="name">当前速度：
-                            <span>{{this.duty}}Km/h</span>
+                        <span>{{this.speed}}Km/h</span>
                         </p>
                         <p class="name">司&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;机：
-                            <span>{{this.Info.driver}}</span>
+                            <span>{{this.deviceName}}</span>
                         </p>
                         <p class="name">手机号码：
-                            <span>{{this.Info.telephone}}</span>
+                            <span>{{this.deviceNum}}</span>
                         </p>
                         <p class="name">车牌号码：
-                            <span>{{this.Info.vehicle_ship_id}}</span>
+                            <span>{{this.Info.name}}</span>
+                        </p>
+                        <p class="name">
+                            <span style="display: inline-block">时间查询：</span>
+                            <el-date-picker
+                                v-model="dateRange"
+                                type="datetimerange"
+                                :picker-options="pickerOptions"
+                                range-separator="至"
+                                start-placeholder="开始日期"
+                                end-placeholder="结束日期"
+                                align="right"
+                                value-format="yyyy-MM-dd HH:mm:ss">
+                            </el-date-picker>
                         </p>
                     </div>
                     <div v-if="sercurityPerson" class="sercurityPerson">
@@ -141,21 +154,37 @@
                         {{this.Info.description}}
                     </p>
                 </div>
+                <div v-if="transport" class=""slot="footer" class="dialog-footer cardFooter">
+                    <el-button size="mini" class="hold" @click='findHistory'>查找</el-button>
+                    <el-button size="mini" @click = 'closeDialog'>取消</el-button>
+                </div>
+
             </div>
         </el-dialog>
+        <HistoryMap v-if="historyvisible"
+                    :visible="historyvisible"
+                    @closeHistoryDialog = "closeHistoryDialog"
+                    :historyData="historyData">
+        </HistoryMap>
     </div>
 </template>
 
 <script>
+    import api from '@/api'
+    import HistoryMap from '@/components/historyMap'
     export default {
         name: "control-dialog",
         props: ['visible', 'Info','title'],
         data () {
             return {
+                historyvisible:false,
+                historyData:[],
+                wifiInfo:{},
                 route:'',
                 wifiShow:false,
                 facility:true,
                 park:false,
+                transport:false,
                 parking:[
                     {
                         "id": "4e98470b8c574b71b17c060ca91e7b0b",
@@ -249,13 +278,106 @@
                             picker.$emit('pick', [start, end]);
                         }
                     }]
-                }
+                },
+                speed:'0',
+                deviceName:'',
+                deviceNum:'',
             }
         },
+        components: {
+            HistoryMap
+        },
         methods: {
+            closeHistoryDialog(){
+                this.historyvisible = false
+            },
             closeDialog () {
                 this.$emit('closeInfoDialog')
             },
+            findHistory(){
+                // console.log(this.Info.gpsData)
+                if(this.dateRange==''){
+                    this.$message.error('请输入查询时间！')
+                    return
+                }
+                var param = {
+                    id:this.Info.vehicle.gpsDeviceId,
+                    from:this.dateRange[0],
+                    to:this.dateRange[1]
+                }
+                // console.log(param)
+                Promise.all([this.getHistoryRoute(param)]).then(res=>{
+                    // console.log(res,'历史轨迹数据')
+                        this.historyData = res[0]
+                        this.historyvisible = true
+                })
+                // this.historyData =[
+                //     {
+                //         "deviceId": "c5aec75d-5dc3-48ca-9afe-127131a59a33",
+                //         "ioTDeviceId": null,
+                //         "deviceName": "船602",
+                //         "createTime": "2018-08-31 15:16:17",
+                //         "longitude": 120.21455,
+                //         "latitude": 30.1379,
+                //         "altitude": null,
+                //         "direction": null,
+                //         "speed": 0,
+                //         "telephone": null,
+                //         "deviceNum": null,
+                //         "coordinate": null
+                //     },
+                //     {
+                //         "deviceId": "c5aec75d-5dc3-48ca-9afe-127131a59a33",
+                //         "ioTDeviceId": null,
+                //         "deviceName": "船602",
+                //         "createTime": "2018-08-31 15:18:19",
+                //         "longitude": 120.21468,
+                //         "latitude": 30.1456,
+                //         "altitude": null,
+                //         "direction": null,
+                //         "speed": 0,
+                //         "telephone": null,
+                //         "deviceNum": null,
+                //         "coordinate": null
+                //     },
+                // ]
+
+                // this.historyvisible = true
+
+
+            },
+            async getHistoryRoute(param){
+                return await api.boat.getHistoryRoute(param)
+            },
+            async getWifiById(){
+                await api.wifi.getDeviceById(this.Info.id).then(res=>{
+                    this.Info.currentConnections = res.currentConnections
+                    this.Info.currentConnections = res.currentConnections
+                    this.Info.upRate = res.upRate
+                    this.Info.downRate = res.downRate
+                    this.Info.modelName = res.modelName
+                    this.Info.description = res.description
+
+
+                    setTimeout(()=>{
+                        let route = this.$route.path
+                        if (route.includes('controler')) {
+                            this.getWifiById()
+                        }
+                    },60000)
+                })
+            },
+            async getTransportById(){
+                await api.boat.getAllVehicleGpsById(this.Info.id).then(res=>{
+                    this.speed = res[0].gpsData ? res[0].gpsData.speed :'0'
+                    setTimeout(()=>{
+                        let route = this.$route.path
+                        if (route.includes('controler')) {
+                            this.getTransportById()
+                        }
+                    },5000)
+                })
+            }
         },
         mounted () {
 
@@ -339,16 +461,6 @@
                 this.park=true
                 this.facility=false
             }
-            if(this.Info.type==="车辆"){
-                console.log(this.Info);
-                this.car=true
-                this.facility=false
-                if(this.Info.gpsData.duty!=null){
-                    this.duty=this.Info.gpsData.duty
-                }else {
-                    this.duty='0'
-                }
-            }
             if(this.Info.type==="建筑"){
                 this.Info.description=this.Info.building.description
                 this.facility=false
@@ -374,8 +486,8 @@
                 this.facility=false
             }
 
-            if(this.Info.regionName==null){
-                this.Info.regionName=this.$config.regionName
+            if(!this.Info.regionName || this.Info.regionName==null){
+                this.Info.regionName='未知片区设备'
             }
             if(this.Info.type==="warn"){
                 this.facility=false
@@ -384,13 +496,22 @@
             }
 
             if(this.Info.type == "transport"){
-                this.Info.description=this.Info.transport.description
+                if(this.Info.driver==null){
+                    this.deviceName=''
+                    this.deviceNum=''
+                }else {
+                    this.deviceName=this.Info.driver.name
+                    this.deviceNum=this.Info.driver.phone
+                }
+                if(this.Info.gpsData==null){
+                    this.speed='0'
+                }else {
+                    this.speed=this.Info.gpsData.speed
+                }
                 this.facility=false
-            }
-            if(this.Info.type == "security"){
-                this.Info.description=this.Info.security.description
-                this.facility=false
-                this.sercurityPerson = true
+                this.transport = true
+
+                this.getTransportById()
             }
         },
         computed: {
@@ -466,6 +587,7 @@
             font-size: rem(12);
             padding: 0;
             padding-left: rem(10);
+            width:80%;
         }
         .el-input{
             width: rem(160);
