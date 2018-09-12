@@ -24,7 +24,7 @@ const hardware = [
     {
         path: '/hard-property',
         name: 'HardWareMenu',
-        // redirect: '/hard-property/camera-Hware',
+        redirect: '/hard-property/camera-Hware',
         component: resolve => require(['@/components/propertyChildren/hardWareMenu'], resolve),
         meta: {id : '0403'},
         children: [

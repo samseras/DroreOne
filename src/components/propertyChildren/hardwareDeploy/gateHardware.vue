@@ -16,6 +16,7 @@ s't<template>
                         @nextPage="nextPage"
                         @previousPage="previousPage"
                         @choseType="choseType"
+                        @allDotInfo = 'allDotInfo'
                         @toggleList="toggleList"
                         @getAllGate="getAllGate">
                 </Header>
@@ -118,6 +119,14 @@ s't<template>
                           @fixInfo="fixInfo">
 
                 </HardWare>
+                <allDotMap v-if="allDotvisible"
+                           :visible="allDotvisible"
+                           :Info="allDotList"
+                           :title="title"
+                           @iconfixInfo="iconfixInfo"
+                           @iconListfixInfo="iconListfixInfo"
+                           @closeInfoDialog ="closeDialog">
+                </allDotMap>
             </div>
         </div>
     </div>
@@ -125,6 +134,7 @@ s't<template>
 
 <script>
     import ScrollContainer from '@/components/ScrollContainer'
+    import allDotMap from '@/components/allDotMap'
     import Header from './camera.vue'
     import HardWare from './hardwareDialog.vue'
     import api from '@/api'
@@ -154,7 +164,12 @@ s't<template>
                 isShowLoading:false,
                 currentNum: 50,
                 listLength: '',
-                pageNum: 1
+                pageNum: 1,
+                allDotvisible:false,
+                allDotList:{
+                    close:[],
+                    open:[]
+                }
             }
         },
         methods:{
@@ -171,7 +186,39 @@ s't<template>
             },
             closeDialog () {
                 this.visible = false
+                this.allDotvisible=false
                 this.getAllGate()
+            },
+            allDotInfo(){
+                this.allDotvisible = true
+                this.title = '闸机批量打点'
+            },
+            iconListfixInfo(infoList){
+                infoList.forEach(obj=>{
+                    obj.location=[obj.longitude,obj.latitude]
+                    this.iconfixInfo(obj,obj.location)
+                })
+            },
+            async iconfixInfo(info,index){
+                let scenicObj = [{
+                    typeId:3,
+                    mac:info.mac,
+                    id:info.id,
+                    gateType:info.gateType,
+                    name:info.name,
+                    model:info.model,
+                    ip:info.ip,
+                    serialNum:info.serialNum,
+                    port:info.port,
+                    regionId:info.regionId,
+                    description:info.description,
+                    latitude: index[1],
+                    longitude: index[0],
+                    pictureId:info.pictureId
+                }]
+                await api.gate.updateGate(scenicObj).then(res => {
+                    console.log('修改成功')
+                })
             },
             searchAnything (info) {
                 console.log(info, '这是要过滤的')
@@ -452,6 +499,20 @@ s't<template>
                             return item
                         }
                     })
+                    this.allDotList.close=[]
+                    this.allDotList.open=[]
+                    let resDevices=res.devices
+                    for (let i = 0; i < resDevices.length; i++) {
+                        resDevices[i].iconName = resDevices[i].name
+                        resDevices[i].iconSubtype = 'gate'
+                        resDevices[i].iconUrl = '/static/img/icon/gate.png'
+                        resDevices[i].iconType = '闸机'
+                        if(resDevices[i].longitude==null&&resDevices[i].latitude==null){
+                            this.allDotList.close.push(resDevices[i])
+                        }else {
+                            this.allDotList.open.push(resDevices[i])
+                        }
+                    }
 
                     for (let i=0;i<this.gateList.length;i++){
                         this.gateList[i].checked=false
@@ -491,7 +552,8 @@ s't<template>
         components:{
             ScrollContainer,
             Header,
-            HardWare
+            HardWare,
+            allDotMap
 
         }
     }

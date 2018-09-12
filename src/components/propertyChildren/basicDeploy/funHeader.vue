@@ -18,6 +18,9 @@
             <el-button size="mini"plain @click="exportTemplate" v-if="isShowHeader"><i class="el-icon-download"></i>下载模板</el-button>
             <el-button size="mini"plain @click="deleteCard"><i class="el-icon-delete"></i>删除</el-button>
             <el-button size="mini"plain @click="fixCard" v-if="isShowIcon"><i class="el-icon-edit" ></i>修改</el-button>
+            <div class="el-upload" v-if="allDotisShowHeader">
+                <el-button size="mini"plain @click="allDot"><i class="el-icon-location-outline" ></i>批量打点</el-button>
+            </div>
         </div>
         <!--<div class="filite" v-if="route.includes('person')">-->
             <!--<el-checkbox-group v-model="filterList" @change="choseType">-->
@@ -85,7 +88,8 @@
                 searchContent: '',
                 isShowIcon: true,
                 pageAllNum: 1,
-                currentPageNum: 1
+                currentPageNum: 1,
+                allDotisShowHeader:true
             }
         },
         methods: {
@@ -617,6 +621,9 @@
             fixCard() {
                 this.$emit('fixedInfo')
             },
+            allDot() {
+                this.$emit('allDotInfo')
+            },
             async showType() {
                 this.route = this.$route.path
                 if (this.route.includes('shop')) {
@@ -637,10 +644,17 @@
                 let route = this.$route.path
                 if (route.includes('roat')) {
                     this.isShowHeader = false
+                    this.allDotisShowHeader = false
                 } else if (route.includes('area')) {
                     this.isShowHeader = false
-                } else {
+                    this.allDotisShowHeader = false
+                } else if (route.includes('person')) {
+                    this.allDotisShowHeader = false
+                }else if (route.includes('boat-deploy')) {
+                    this.allDotisShowHeader = false
+                }else  {
                     this.isShowHeader = true
+                    this.allDotisShowHeader = true
                 }
             },
             previousPage() {//上一页
@@ -705,6 +719,9 @@
 
 <style lang="scss" type="text/scss">
     .funHeader{
+        .el-checkbox__input{
+            vertical-align: sub;
+        }
         .el-checkbox__label{
             padding-left: rem(5);
             font-size: rem(12);

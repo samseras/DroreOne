@@ -15,6 +15,7 @@
                         :personListFlag="selectFlag"
                         @nextPage="nextPage"
                         @previousPage="previousPage"
+                        @allDotInfo = 'allDotInfo'
                         @searchAnything="searchAnything"
                         @getAllStation="getAllStation">
                 </Header>
@@ -116,6 +117,14 @@
                               @fixInfo = "fixInfo"
                               @addNewInfo="addNewStation">
                 </PersonDetail>
+                <allDotMap v-if="allDotvisible"
+                           :visible="allDotvisible"
+                           :Info="allDotList"
+                           :title="title"
+                           @iconfixInfo="iconfixInfo"
+                           @iconListfixInfo="iconListfixInfo"
+                           @closeInfoDialog ="closeDialog">
+                </allDotMap>
             </div>
         </div>
     </div>
@@ -123,6 +132,7 @@
 
 <script>
     import ScrollContainer from '@/components/ScrollContainer'
+    import allDotMap from '@/components/allDotMap'
     import Header from './funHeader'
     import PersonDetail from './detailDialog'
     import api from '@/api'
@@ -156,6 +166,11 @@
                 stationTypeName2Id:{
                     '车站': '0',
                     '码头': '1'
+                },
+                allDotvisible:false,
+                allDotList:{
+                    close:[],
+                    open:[]
                 }
             }
         },
@@ -177,7 +192,30 @@
             },
             closeDialog () {
                 this.visible = false
+                this.allDotvisible=false
                 this.getAllStation()
+            },
+            iconListfixInfo(infoList){
+                infoList.forEach(obj=>{
+                    obj.location=[obj.longitude,obj.latitude]
+                    this.iconfixInfo(obj,obj.location)
+                })
+            },
+            async iconfixInfo(info,index){
+                let scenicObj = {
+                    description:info.description,
+                    id: info.id,
+                    name: info.name,
+                    type:info.type,
+                    capacity: info.capacity,
+                    regionId: info.regionId,
+                    latitude: index[1],
+                    longitude: index[0],
+                    pictureId:info.pictureId
+                }
+                await api.station.updateStation(JSON.stringify(scenicObj)).then(res => {
+                    console.log('修改成功')
+                })
             },
             searchAnything (info) {
                 console.log(info, '这是要过滤的')
@@ -204,6 +242,11 @@
                 this.visible = true
                 this.isDisabled = state
                 this.title = title
+            },
+            allDotInfo(){
+                this.allDotvisible = true
+                this.title = '站点批量打点'
+                // console.log(this.allDotvisible,this.allDotList, this.title)
             },
             addNewInfo () {
                 this.showStationDetail({},'添加站点信息',false)
@@ -293,6 +336,7 @@
                 let latitude = info.location.substring(index + 1)
                 let stationObj = {
                     description:info.description,
+                    type:info.type,
                     id: info.id,
                     name: info.name,
                     capacity: info.capacity,
@@ -402,6 +446,28 @@
                             return item
                         }
                     })
+                    this.allDotList.close=[]
+                    this.allDotList.open=[]
+                    for (let i = 0; i < res.length; i++) {
+                        res[i].id = res[i].id
+                        res[i].iconName = res[i].name
+                        if(res[i].type == "0"){
+                            //假数据
+                            res[i].iconType == "transport"
+                            res[i].iconSubtype = "car"
+                            res[i].iconUrl="/static/img/icon/station_check.png"
+                        }else{
+                            //假数据
+                            res[i].iconType == "transport"
+                            res[i].iconSubtype = "boat"
+                            res[i].iconUrl="/static/img/icon/landing_check.png"
+                        }
+                        if(res[i].longitude==null&&res[i].latitude==null){
+                            this.allDotList.close.push(res[i])
+                        }else {
+                            this.allDotList.open.push(res[i])
+                        }
+                    }
                     for (let i = 0; i < this.stationList.length; i++) {
                         this.stationList[i].checked = false
                         this.stationList[i].status = true
@@ -435,7 +501,8 @@
         components: {
             ScrollContainer,
             Header,
-            PersonDetail
+            PersonDetail,
+            allDotMap
         }
     }
 </script>

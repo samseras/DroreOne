@@ -15,6 +15,7 @@
                         :listsLength="listLength"
                         :personListFlag="selectFlag"
                         @nextPage="nextPage"
+                        @allDotInfo = 'allDotInfo'
                         @previousPage="previousPage"
                         @searchAnything="searchAnything"
                         @getAllPark="getAllPark">
@@ -121,6 +122,14 @@
                               @fixInfo = "fixInfo"
                               @addNewInfo="addNewPark">
                 </PersonDetail>
+                <allDotMap v-if="allDotvisible"
+                           :visible="allDotvisible"
+                           :Info="allDotList"
+                           :title="title"
+                           @iconfixInfo="iconfixInfo"
+                           @iconListfixInfo="iconListfixInfo"
+                           @closeInfoDialog ="closeDialog">
+                </allDotMap>
             </div>
         </div>
     </div>
@@ -128,6 +137,7 @@
 
 <script>
     import ScrollContainer from '@/components/ScrollContainer'
+    import allDotMap from '@/components/allDotMap'
     import Header from './funHeader'
     import PersonDetail from './detailDialog'
     import api from '@/api'
@@ -153,7 +163,12 @@
                 isShowLoading: false,
                 currentNum: 50,
                 listLength: '',
-                pageNum: 1
+                pageNum: 1,
+                allDotvisible:false,
+                allDotList:{
+                    close:[],
+                    open:[]
+                }
             }
         },
         methods: {
@@ -167,8 +182,30 @@
                     return url
                 }
             },
+            iconListfixInfo(infoList){
+                infoList.forEach(obj=>{
+                    obj.location=[obj.longitude,obj.latitude]
+                    this.iconfixInfo(obj,obj.location)
+                })
+            },
+            async iconfixInfo(info,index){
+                let scenicObj = {
+                    description:info.description,
+                    id: info.parkingBean.id,
+                    name: info.parkingBean.name,
+                    type: info.parkingBean.type,
+                    regionId: info.regionId,
+                    latitude: index[1],
+                    longitude: index[0],
+                    pictureId:info.pictureId
+                }
+                await api.park.updatePark(JSON.stringify(scenicObj)).then(res => {
+                    console.log('修改成功')
+                })
+            },
             closeDialog () {
                 this.visible = false
+                this.allDotvisible=false
                 this.getAllPark()
             },
             searchAnything (info) {
@@ -195,6 +232,10 @@
                 this.visible = true
                 this.isDisabled = state
                 this.title = title
+            },
+            allDotInfo(){
+                this.allDotvisible = true
+                this.title = '停车场批量打点'
             },
             addNewInfo () {
                 this.showParkDetail({parkingBean:{}},'添加停车场信息',false)
@@ -428,7 +469,20 @@
                             return item
                         }
                     })
-
+                    this.allDotList.close=[]
+                    this.allDotList.open=[]
+                    for (let i = 0; i < res.length; i++) {
+                        res[i].id = res[i].parkingBean.id
+                        res[i].iconName = res[i].parkingBean.name
+                        res[i].iconSubtype = 'park'
+                        res[i].iconUrl = '/static/img/icon/park.png'
+                        res[i].iconType = '停车场'
+                        if(res[i].longitude==null&&res[i].latitude==null){
+                            this.allDotList.close.push(res[i])
+                        }else {
+                            this.allDotList.open.push(res[i])
+                        }
+                    }
 
                     for (let i = 0; i < this.parkList.length; i++) {
                         this.parkList[i].checked = false
@@ -480,7 +534,8 @@
         components: {
             ScrollContainer,
             Header,
-            PersonDetail
+            PersonDetail,
+            allDotMap
         }
     }
 </script>

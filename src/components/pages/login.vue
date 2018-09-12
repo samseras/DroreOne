@@ -12,7 +12,7 @@
  	    			 <img src="../../../static/img/20180125143202.png"/>
  	    		</aside>
  	    		<aside class="login-right">
- 	    			<p>登录Cloud账号</p>
+ 	    			<!--<p>登录Cloud账号</p>-->
  	    			<form>
  	    				<input type="text" v-model="username" id="userid" placeholder="请输入用户名" ref="userid"/>
  	    				<input type="password" v-model="password" id="userpass" placeholder="请输入密码" ref="userpass"/>
@@ -79,14 +79,14 @@
             },
             async loginOn(){
                 if (this.username.trim() === '') {
-                    this.$refs.checkCode.style.border="none";
+                    // this.$refs.checkCode.style.border="none";
                     this.$refs.userpass.style.border="none";
                     this.$refs.userid.style.border="1px solid red";
                     this.$message.error('请输入用户名')
                     return
                 }
                 if (this.password.trim() === '') {
-                    this.$refs.checkCode.style.border="none";
+                    // this.$refs.checkCode.style.border="none";
                     this.$refs.userpass.style.border="1px solid red";
                     this.$refs.userid.style.border="none";
                     this.$message.error('请输入密码')

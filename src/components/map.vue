@@ -2626,8 +2626,8 @@
                 //this.getAllTransportRoute();// 车船调度路线输出
                 //this.getAllStation();
                 this.getAllVehicle();// 车船信息
-                this.heatEmShow=true
-                this.heatEm();//环境数据
+                    // this.heatEmShow=true
+                    // this.heatEm();//环境数据
             },
             searchShow() {//搜索
                 console.log(this.getSearchInfo,'123123');
@@ -3894,7 +3894,8 @@
         border:1px solid #7b98bc;
         height:144px;
         margin:2px;
-        width:264px
+        width:264px;
+        background: #000;
     }
     .ol-overviewmap:not(.ol-collapsed) button {
         bottom:1px;

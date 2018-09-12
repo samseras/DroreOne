@@ -16,6 +16,7 @@
                         @previousPage="previousPage"
                         @selectedAll = 'selectedAll'
                         @fixedInfo = 'fixedInfo'
+                        @allDotInfo = 'allDotInfo'
                         @searchAnything="searchAnything"
                         @getAllIndicator="getAllIndicator">
                 </Header>
@@ -95,6 +96,14 @@
                               @fixInfo = "fixInfo"
                               @addNewInfo="addNewIndicator">
                 </DetailDialog>
+                <allDotMap v-if="allDotvisible"
+                           :visible="allDotvisible"
+                           :Info="allDotList"
+                           :title="title"
+                           @iconfixInfo="iconfixInfo"
+                           @iconListfixInfo="iconListfixInfo"
+                           @closeInfoDialog ="closeDialog">
+                </allDotMap>
             </div>
         </div>
     </div>
@@ -102,6 +111,7 @@
 
 <script>
     import ScrollContainer from '@/components/ScrollContainer'
+    import allDotMap from '@/components/allDotMap'
     import Header from './funHeader'
     import DetailDialog from './detailDialog'
     import api from '@/api'
@@ -127,7 +137,12 @@
                 isShowLoading: false,
                 currentNum: 50,
                 listLength: '',
-                pageNum: 1
+                pageNum: 1,
+                allDotvisible:false,
+                allDotList:{
+                    close:[],
+                    open:[]
+                }
 
             }
         },
@@ -144,7 +159,28 @@
             },
             closeDialog () {
                 this.visible = false
+                this.allDotvisible=false
                 this.getAllIndicator()
+            },
+            iconListfixInfo(infoList){
+                infoList.forEach(obj=>{
+                    obj.location=[obj.longitude,obj.latitude]
+                    this.iconfixInfo(obj,obj.location)
+                })
+            },
+            async iconfixInfo(info,index){
+                let scenicObj = {
+                    description:info.description,
+                    id: info.signboardBean.id,
+                    type: info.signboardBean.type,
+                    regionId: info.regionId,
+                    latitude: index[1],
+                    longitude: index[0],
+                    pictureId:info.pictureId
+                }
+                await api.indicator.updateIndicator(JSON.stringify(scenicObj)).then(res => {
+                    console.log('修改成功')
+                })
             },
             searchAnything (info) {
                 console.log(info, '这是要过滤的')
@@ -175,6 +211,11 @@
                 this.visible = true
                 this.isDisabled = state
                 this.title = title
+            },
+            allDotInfo(){
+                this.allDotvisible = true
+                this.title = '指示牌批量打点'
+                // console.log(this.allDotvisible,this.allDotList, this.title)
             },
             addNewInfo () {
                 this.showPersonDetail({signboardBean:{}}, '添加指示牌信息', false)
@@ -406,6 +447,26 @@
                             return item
                         }
                     })
+                    this.allDotList.close=[]
+                    this.allDotList.open=[]
+                    for (let i = 0; i < res.length; i++) {
+                        res[i].id = res[i].signboardBean.id
+                        if(res[i].signboardBean.type=='0'){
+                            res[i].iconName='标语';
+                        }else if(res[i].signboardBean.type=='1'){
+                            res[i].iconName='路线';
+                        }else {
+                            res[i].iconName='设施';
+                        }
+                        res[i].iconSubtype = 'indicator'
+                        res[i].iconUrl = '/static/img/icon/indicator.png'
+                        res[i].iconType = '指示牌'
+                        if(res[i].longitude==null&&res[i].latitude==null){
+                            this.allDotList.close.push(res[i])
+                        }else {
+                            this.allDotList.open.push(res[i])
+                        }
+                    }
                     for (let i = 0; i < this.indicatorList.length; i++) {
                         this.indicatorList[i].checked = false
                         this.indicatorList[i].status = true
@@ -444,7 +505,8 @@
         components: {
             ScrollContainer,
             Header,
-            DetailDialog
+            DetailDialog,
+            allDotMap
         }
     }
 </script>

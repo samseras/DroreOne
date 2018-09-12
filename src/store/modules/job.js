@@ -5,8 +5,8 @@ import api from '@/api'
 const job = {
     state: {
       jobType: [],
-        basicIcon: 'card',
-        hardWareIcon: 'card'
+        basicIcon: 'list',
+        hardWareIcon: 'list'
     },
     getters: {
         getJobTypeList (state) {

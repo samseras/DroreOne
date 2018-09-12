@@ -16,6 +16,7 @@
                         @nextPage="nextPage"
                         @previousPage="previousPage"
                         @fixedInfo = 'fixedInfo'
+                        @allDotInfo = 'allDotInfo'
                         @searchAnything="searchAnything"
                         @getAllBuild="getAllBuild">
                 </Header>
@@ -112,6 +113,14 @@
                               @fixInfo = "fixInfo"
                               @addNewInfo="addNewToilet">
                 </PersonDetail>
+                <allDotMap v-if="allDotvisible"
+                           :visible="allDotvisible"
+                           :Info="allDotList"
+                           :title="title"
+                           @iconfixInfo="iconfixInfo"
+                           @iconListfixInfo="iconListfixInfo"
+                           @closeInfoDialog ="closeDialog">
+                </allDotMap>
             </div>
         </div>
     </div>
@@ -119,6 +128,7 @@
 
 <script>
     import ScrollContainer from '@/components/ScrollContainer'
+    import allDotMap from '@/components/allDotMap'
     import Header from './funHeader'
     import PersonDetail from './detailDialog'
     import api from '@/api'
@@ -145,7 +155,12 @@
                 isShowLoading: false,
                 currentNum: 50,
                 listLength: '',
-                pageNum: 1
+                pageNum: 1,
+                allDotvisible:false,
+                allDotList:{
+                    close:[],
+                    open:[]
+                }
             }
         },
         methods: {
@@ -161,7 +176,31 @@
             },
             closeDialog () {
                 this.visible = false
+                this.allDotvisible=false
                 this.getAllBuild()
+            },
+            iconListfixInfo(infoList){
+                infoList.forEach(obj=>{
+                    obj.location=[obj.longitude,obj.latitude]
+                    this.iconfixInfo(obj,obj.location)
+                })
+            },
+            async iconfixInfo(info,index){
+                let scenicObj = {
+                    id: info.building.id,
+                    name: info.building.name,
+                    regionId: info.regionId,
+                    latitude: index[1],
+                    longitude: index[0],
+                    buildYear: info.building.buildYear,
+                    height: info.building.height,
+                    description: info.building.description,
+                    layers: info.building.layers,
+                    pictureId:info.pictureId
+                }
+                await api.build.updateBuild(JSON.stringify(scenicObj)).then(res => {
+                    console.log('修改成功')
+                })
             },
             searchAnything (info) {
                 console.log(info, '这是要过滤的')
@@ -191,6 +230,11 @@
                 this.visible = true
                 this.isDisabled = state
                 this.title = title
+            },
+            allDotInfo(){
+                this.allDotvisible = true
+                this.title = '建筑批量打点'
+                // console.log(this.allDotvisible,this.allDotList, this.title)
             },
             addNewInfo () {
                 this.showPersonDetail({building:{}}, '添加建筑信息', false)
@@ -427,7 +471,20 @@
                             return item
                         }
                     })
-
+                    this.allDotList.close=[]
+                    this.allDotList.open=[]
+                    for (let i = 0; i < res.length; i++) {
+                        res[i].id = res[i].building.id
+                        res[i].iconName = res[i].building.name
+                        res[i].iconSubtype = 'construction'
+                        res[i].iconUrl = '/static/img/icon/construction.png'
+                        res[i].iconType = '建筑'
+                        if(res[i].longitude==null&&res[i].latitude==null){
+                            this.allDotList.close.push(res[i])
+                        }else {
+                            this.allDotList.open.push(res[i])
+                        }
+                    }
                     for (let i = 0; i < this.buildList.length; i++) {
                         this.buildList[i].checked = false
                         this.buildList[i].status = true
@@ -460,7 +517,8 @@
         components: {
             ScrollContainer,
             Header,
-            PersonDetail
+            PersonDetail,
+            allDotMap
         }
     }
 </script>

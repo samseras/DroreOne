@@ -17,6 +17,9 @@
             </div>
             <el-button size="mini" plain @click="downloadFile"><i class="el-icon-download"></i>导出</el-button>
             <el-button size="mini" plain @click="downloadTemplate"><i class="el-icon-download"></i>下载模板</el-button>
+            <div class="el-upload" v-if="allDotisShowHeader">
+                <el-button size="mini"plain @click="allDot"><i class="el-icon-location-outline" ></i>批量打点</el-button>
+            </div>
 
         </div>
         <div class="titleCheck" v-if="route.includes('camera')" >
@@ -96,7 +99,10 @@
                 searchContent:'',
                 isShowIcon: true,
                 pageAllNum: 1,
-                currentPageNum: 1
+                currentPageNum: 1,
+                icondata:'',
+                iconindex:[],
+                allDotisShowHeader:true
             }
         },
         methods:{
@@ -473,8 +479,19 @@
             fixCard(){
                 this.$emit('fixedInfo')
             },
+            allDot() {
+                this.$emit('allDotInfo')
+            },
             showPersonJob(){
                 this.route=this.$route.path
+            },
+            showHeader() {
+                let route = this.$route.path
+                if (route.includes('gps-Hware')) {
+                    this.allDotisShowHeader = false
+                }else  {
+                    this.allDotisShowHeader = true
+                }
             },
             previousPage () {//上一页
                 this.currentPageNum--
@@ -496,6 +513,7 @@
         watch:{
             '$route' (){
                 this.showPersonJob()
+                this.showHeader()
             },
             personListFlag(n,o){
                 console.log(n);
@@ -517,6 +535,7 @@
         },
         created(){
             this.showPersonJob()
+            this.showHeader()
             this.toggleList(this.getHardWareIcon)
             if (this.getDataLength && this.getDataLength.listLength > 0) {
                 this.listsLength = this.getDataLength.listLength
