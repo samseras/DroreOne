@@ -60,6 +60,8 @@
                      :isBatchEdit="isBatchEdit"
                      :choseInfos = 'choseInfos'>
         </AlarmDetail>
+        <ledDialog v-if="ledvisible" :ledvisible="ledvisible"  @closeDialog ="closeDialog">
+        </ledDialog>
     </Scrollcontainer>
 
 </template>
@@ -73,6 +75,7 @@
     import PersonDetail from '@/components/controlDialog'
     import controlcameraDialog from '@/components/controlcameraDialog'
     import AlarmDetail from '@/components/eye/alarm/alarmEvent/alarmEventDialog'
+    import ledDialog from '@/components/ledDialog'
 
     export default {
         name: "map1",
@@ -90,6 +93,7 @@
                 isBatchEdit:false,
                 open:false,
                 menulist: {},
+                ledvisible:false,
                 controleLightList:[],
                 controleEnvironmentList:[],
                 controleWifiList:[],
@@ -357,6 +361,7 @@
             closeDialog () {
                 this.visible = false
                 this.cameravisible = false
+                this.ledvisible = false
                 this.AlarmDetailShow = false
                 this.carcameravisible=false
                 let route = this.$route.path
@@ -2809,9 +2814,13 @@
                                 that.droreMappopup(that.menulist);
                                 that.menuShow()
                             });
-                        }
-                        else if(icon.subtype=="station" || icon.subtype == "landing"){
+                        } else if(icon.subtype=="station" || icon.subtype == "landing"){
                             //站点没有点击事件
+                        }else if(icon.subtype.includes("led")){
+                            console.log("aaaaaaaaaa")
+                            icon.onclick(function (e) {
+                                that.ledvisible = true
+                            });
                         }
                         // else if(icon.subtype=="car" || icon.subtype == "boat"){
                         //     //车船有点击事件
@@ -3284,7 +3293,8 @@
             Scrollcontainer,
             PersonDetail,
             controlcameraDialog,
-            AlarmDetail
+            AlarmDetail,
+            ledDialog
         },
         watch: {
             getSearchInfo () {
@@ -3931,7 +3941,27 @@
                                     $("#contextmenu_container").hide();
                                 }
                             }
-                        } else {
+                        } else if(this.getTreeShow.type == "led") {
+                            console.log(this.getTreeShow,'1')
+                            if(this.getTreeShow.status == "ONLINE"){
+                                this.treeShow(this.getTreeShow);
+                                // let layer = droreMap.icon.returnLayer(this.getTreeShow.id)
+                                // this.menulist = layer.data;
+                                // let route = this.$route.path
+                                // if (route.includes('controler')) {
+                                //     this.droreMappopup(layer);
+                                // }
+                            }else{
+                                this.treeShow(this.getTreeShow);
+                                // let layer = droreMap.icon.returnLayer(this.getTreeShow.id)
+                                // this.menulist = layer.data;
+                                // let route = this.$route.path
+                                // if (route.includes('controler')) {
+                                //     this.menuShow()
+                                //     $("#contextmenu_container").hide();
+                                // }
+                            }
+                        }else {
                             this.treeShow(this.getTreeShow);
                             let route = this.$route.path
                             if(route.includes('controler')){
