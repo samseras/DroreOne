@@ -49,7 +49,7 @@
                 isSearch: false,
                 controler:[
                     {enable: true,names:'CAR',route: '/controler/car', img: '../../../static/img/boatCar.svg', desc: "车船调度",controlShow:true},
-                    {enable: false,names:'WARN',route: '/controler/warn', img: '../../../static/img/warn.svg', desc: "告警",controlShow:true},
+                    {enable: true,names:'WARN',route: '/controler/warn', img: '../../../static/img/warn.svg', desc: "告警",controlShow:true},
                     {enable: true,names:'PERSON',route: '/controler/person', img: '../../../static/img/dmis.svg', desc: "个人定位",controlShow:true},
                     {enable: true,names:'SECURITY',route: '/controler/security', img: '../../../static/img/security.svg', desc: "巡检计划",controlShow:true},
 

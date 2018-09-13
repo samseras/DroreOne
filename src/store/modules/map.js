@@ -19,6 +19,8 @@ const map = {
         controbroad:[],
         controcamera:[],
         controled:[],
+        controtransport:[],
+        controlSecurityPerson:[],
         facilitypark:[],
         facilitytoilet:[],
         facilityshop:[],
@@ -28,12 +30,13 @@ const map = {
         facilityplant:[],
         facilityindicator:[],
         facilityroad:[],
-        controtransport:[],
         transportType:'0',
         treeShow:[],
-
     },
     getters: {
+        getTransportType(state){
+            return state.transportType
+        },
         getLocation (state) {
             return state.location
         },
@@ -73,6 +76,9 @@ const map = {
         getcontroBroad(state) {
             return state.controbroad
         },
+        getcontroTransport(state){
+            return state.controtransport
+        },
         getcontroCamera(state) {
             return state.controcamera
         },
@@ -106,11 +112,17 @@ const map = {
         getfacilityRoad(state) {
             return state.facilityroad
         },
+        getfacilityStation(state){
+            return state.facilityStation
+        },
         getcontroTransport(state){
             return state.controtransport
         },
         getTransportType(state){
             return state.transportType
+        },
+        getcontrolSecurityPerson(state){
+           return state.controlSecurityPerson
         },
         getTreeShow(state){
             return state.treeShow
@@ -119,6 +131,9 @@ const map = {
     setters: {},
 
     mutations: {
+        [types.TRANSPORT_TYPE](state,data){
+          state.transportType = data
+        },
         [types.MAP_LOCATION] (state, data) {
             state.location = data
             console.log(state.location, '909090909090909090909')
@@ -220,8 +235,14 @@ const map = {
         [types.CONTROLER_TRANSPORT] (state, data) {
             state.controtransport = data
         },
+        [types.CONTROLER_SECURITY_PERSON](state,data){
+            state.controlSecurityPerson = data
+        },
         [types.TRANSPORT_TYPE](state,data){
             state.transportType = data
+        },
+        [types.FACILITY_STATION] (state, data) {
+            state.getfacilityStation= data
         }
     },
     actions: {

@@ -104,6 +104,12 @@ const user = {
             url: getUrl(`/uc/user`)
         })
     },
+    getUserGPSInfo () {
+        return axios({
+            method: 'GET',
+            url: getUrl(`/uc/user?withgps=true`)
+        })
+    },
     deleteUserInfo (id) {
         return axios({
             method: 'DELETE',

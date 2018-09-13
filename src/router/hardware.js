@@ -24,7 +24,7 @@ const hardware = [
     {
         path: '/hard-property',
         name: 'HardWareMenu',
-        // redirect: '/hard-property/camera-Hware',
+        redirect: '/hard-property/camera-Hware',
         component: resolve => require(['@/components/propertyChildren/hardWareMenu'], resolve),
         meta: {id : '0403'},
         children: [
@@ -38,6 +38,7 @@ const hardware = [
             {path: '/hard-property/lightType', name: 'lightType', component: resolve => require(['@/components/propertyChildren/hardwareDeploy/lightType'], resolve), meta: {id : '0403'}},
             {path: '/hard-property/policeType', name: 'policeType', component: resolve => require(['@/components/propertyChildren/hardwareDeploy/policeType'], resolve), meta: {id : '0403'}},
             {path: '/hard-property/gpsType', name: 'gpsType', component: resolve => require(['@/components/propertyChildren/hardwareDeploy/gpsType'], resolve), meta: {id : '0403'}},
+
             {path: '/hard-property/camera-Hware', name: 'CameraHware', component: resolve => require(['@/components/propertyChildren/hardwareDeploy/cameraHardware'], resolve), meta: {id : '0403'}},
             {path: '/hard-property/broadcast-Hware', name: 'BroadcastHware', component: resolve => require(['@/components/propertyChildren/hardwareDeploy/broadcastHardware'], resolve), meta: {id : '0403'}},
             {path: '/hard-property/gate-Hware', name: 'GateHware', component: resolve => require(['@/components/propertyChildren/hardwareDeploy/gateHardware'], resolve), meta: {id : '0403'}},
@@ -47,6 +48,7 @@ const hardware = [
             {path: '/hard-property/voice-Hware', name: 'VoiceHware', component: resolve => require(['@/components/propertyChildren/hardwareDeploy/voiceHardware'], resolve), meta: {id : '0403'}},
             {path: '/hard-property/police-Hware', name: 'PoliceHware', component: resolve => require(['@/components/propertyChildren/hardwareDeploy/policeHardware'], resolve), meta: {id : '0403'}},
             {path: '/hard-property/monitors-Hware', name: 'MonitorsHware', component: resolve => require(['@/components/propertyChildren/hardwareDeploy/monitorsHardware'], resolve), meta: {id : '0403'}},
+            {path: '/hard-property/gps-Hware', name: 'GpsHware', component: resolve => require(['@/components/propertyChildren/hardwareDeploy/gpsHardware'], resolve), meta: {id : '0403'}},
         ]
     },
 ]

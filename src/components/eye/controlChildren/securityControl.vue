@@ -5,7 +5,7 @@
                 <el-tab-pane label="人员调度" name="securityPerson">
 
                     <div class="middle">
-                        <div class="boottom" id="ztree">
+                        <div class="boottom">
                             <ScrollContainer>
                                 <broadcast-ztree
                                     :title="title"
@@ -20,25 +20,25 @@
                         </div>
                     </div>
                 </el-tab-pane>
-                <el-tab-pane label="巡检计划调度" name="securitySchedule">配置管理</el-tab-pane>
+                <el-tab-pane label="巡检计划调度" name="securitySchedule">
+                    <div class="middle">
+                        <div class="boottom">
+                            <ScrollContainer>
+                                <broadcast-ztree
+                                    :title="title"
+                                    :Info="securityPersonInfo"
+                                    :lightCheckout="transportCheckout"
+                                    :regionId="regionId"
+                                    :lightList="securityPersonlist"
+                                    :number="number"
+                                    :fault="fault">
+                                </broadcast-ztree>
+                            </ScrollContainer>
+                        </div>
+                    </div>
+
+                </el-tab-pane>
             </el-tabs>
-
-            <!--<div class="middle">-->
-                <!--<div class="boottom" id="ztree">-->
-                    <!--<ScrollContainer>-->
-                        <!--<broadcast-ztree-->
-                            <!--:title="title"-->
-                            <!--:Info="transportInfo"-->
-                            <!--:lightCheckout="transportCheckout"-->
-                            <!--:regionId="regionId"-->
-                            <!--:lightList="carlist"-->
-                            <!--:number="number"-->
-                            <!--:fault="fault">-->
-                        <!--</broadcast-ztree>-->
-                    <!--</ScrollContainer>-->
-                <!--</div>-->
-            <!--</div>-->
-
         </div>
     </div>
 </template>
@@ -69,7 +69,7 @@
                 transportCheckout:[],
                 regionId:[],
                 selectAll:[],
-                title:'车船',
+                title:'人员',
                 online: '0',
                 faultlist:[],
                 drivers:[],
@@ -86,8 +86,10 @@
                console.log(tab,event)
                 if(tab.name == 'securitySchedule'){
                    // this.initsecuritySchedule()
+                    this.title = '巡检计划'
                 }else if(tab.name == 'securityPerson'){
                    this.initPersonData()
+                    this.title = '人员'
                 }
             },
             treeShow(){
@@ -154,89 +156,176 @@
                 });
             },
             async initPersonData(){
-                Promise.all([this.getAllVehicle()]).then(result=>{
-                    let vehicles = result[0]
-                    // let vehicles = [
-                    //     {
-                    //         "vehicle": {
-                    //             "id": "30c87807-a8cc-45e2-b6fe-8e9e7a29c790",
-                    //             "createTime": null,
-                    //             "creator": null,
-                    //             "modifyTime": "2018-08-30 16:04:37",
-                    //             "modifier": "anonymous",
-                    //             "serialNum": "湘湖605",
-                    //             "capacity": 0,
-                    //             "type": 1,
-                    //             "model": "001144",
-                    //             "gpsDeviceId": "b0849754-7b4d-428b-b4de-d96f28eb7eb9",
-                    //             "pictureId": null,
-                    //             "maintenanceStatus": 0,
-                    //             "maintenanceDate": null,
-                    //             "purchaseDate": null,
-                    //             "description": null,
-                    //             "scenicAreaId": null,
-                    //             "deleted": false
-                    //         },
-                    //         "gpsDeviceId": "b0849754-7b4d-428b-b4de-d96f28eb7eb9",
-                    //         "gpsDeviceName": "船605",
-                    //         "pictureId": null,
-                    //         "picturePath": null,
-                    //         "gpsData":
-                    //             // null,
-                    //             {
-                    //             "deviceId": "b0849754-7b4d-428b-b4de-d96f28eb7eb9",
-                    //             "ioTDeviceId": null,
-                    //             "createTime": "2017-12-31 12:21:39",
-                    //             "longitude": 120.21455,
-                    //             "latitude": 30.1379,
-                    //             "altitude": null,
-                    //             "direction": null,
-                    //             "speed": 4,
-                    //             "telephone": null,
-                    //             "deviceNum": null,
-                    //             "coordinate": null
-                    //         },
-                    //         "driver": {
-                    //             "id": "5b27d86e-af2e-4de9-8d99-3f6b0f2e0f27",
-                    //             "createTime": "2018-08-31 11:41:32",
-                    //             "creator": "anonymous",
-                    //             "modifyTime": "2018-08-31 11:41:32",
-                    //             "modifier": "anonymous",
-                    //             "name": "test李四",
-                    //             "gender": 1,
-                    //             "idNum": null,
-                    //             "phone": "18602987796",
-                    //             "pictureId": null,
-                    //             "description": "just a test",
-                    //             "scenicAreaId": null,
-                    //             "deleted": false
-                    //         }
-                    //     }
-                    // ]
-                    this.securityPersonList = vehicles
-                    this.number=this.securityPersonList.length
-                    this.securityPersonInfo=[]
 
-                    let  personObj = {
-                            label:veObj.vehicle.serialNum,
-                            id:veObj.vehicle.id,
+                let users =
+                    [
+                        {
+                            "id": "1",
+                            "creator": null,
+                            "createTime": null,
+                            "modifier": "admin",
+                            "modifyTime": "2018-09-11 18:00:00",
+                            "name": "admin",
+                            "cnName": " 系统管理员",
+                            "gender": 0,
+                            "iconId": null,
+                            "mobileNum": "18800000000",
+                            "fixedPhoneNum": null,
+                            "idCardNum": null,
+                            "email": null,
+                            "workAddress": null,
+                            "description": null,
+                            "departmentId": null,
+                            "jobId": null,
+                            "roleId": "1",
+                            "role": {
+                                "id": "1",
+                                "creator": null,
+                                "createTime": null,
+                                "modifier": null,
+                                "modifyTime": null,
+                                "name": "admin",
+                                "description": "",
+                                "permissions": null
+                            },
+                            "job": null,
+                            "department": null,
+                            "gpsId": "21a435fd-f067-4cb5-841e-0482bbe1c230",
+                            "gpsData":  {
+                                "deviceId": "21a435fd-f067-4cb5-841e-0482bbe1c230",
+                                "ioTDeviceId": null,
+                                "createTime": "2017-12-31 12:21:39",
+                                "longitude": 120.13310087077178,
+                                "latitude": 30.30729423238902,
+                                "altitude": null,
+                                "direction": null,
+                                "speed": 4,
+                                "telephone": null,
+                                "deviceNum": null,
+                                "coordinate": null
+                            }
+                        }
+                    ]
+
+                this.securityPersonList = users
+                this.number=this.securityPersonList.length
+                this.securityPersonInfo=[]
+
+                let personObj = {
+                    label:'人员',
+                    id:100010,
+                    children:[]
+                }
+                if(users.length >0){
+                    users.forEach(userObj=>{
+                        personObj.children.push({
+                            label:userObj.name,
+                            id:userObj.id,
                             url:'/static/img/icon/people_small.png',
                             type:'security',
                             subtype:'securityPerson',
-                            icon:'../../../static/img/people_open.svg',
-                            longitude:'',
-                            latitude:'',
-                            gpsDeviceId:veObj.gpsDeviceId
-                        }
-                    this.securityPersonInfo.push(personObj)
-                    this.fault=0
-                    this.online= this.number - this.fault
-                    console.log(this.securityPersonInfo)
-                })
+                            status:userObj.gpsData ? "ONLINE" : "OFFLINE",
+                            icon:userObj.gpsData ? '../../../static/img/people_open.svg' : '../../../static/img/people_gray.svg' ,
+                            longitude:userObj.gpsData ? userObj.gpsData.longitude : '',
+                            latitude:userObj.gpsData ? userObj.gpsData.latitude : '',
+                            gpsDeviceId:userObj.gpsId
+                        })
+                    })
+                }
+
+                this.securityPersonInfo.push(personObj)
+                this.fault=0
+                this.online= this.number - this.fault
+                console.log(this.securityPersonInfo)
+
+                // Promise.all([this.getAllUser()]).then(result=>{
+                //     console.log(result,'00000')
+                //     // let users = result[0]
+                //     let users =
+                //         [
+                //             {
+                //                 "id": "1",
+                //                 "creator": null,
+                //                 "createTime": null,
+                //                 "modifier": "admin",
+                //                 "modifyTime": "2018-09-11 18:00:00",
+                //                 "name": "admin",
+                //                 "cnName": " 系统管理员",
+                //                 "gender": 0,
+                //                 "iconId": null,
+                //                 "mobileNum": "18800000000",
+                //                 "fixedPhoneNum": null,
+                //                 "idCardNum": null,
+                //                 "email": null,
+                //                 "workAddress": null,
+                //                 "description": null,
+                //                 "departmentId": null,
+                //                 "jobId": null,
+                //                 "roleId": "1",
+                //                 "role": {
+                //                     "id": "1",
+                //                     "creator": null,
+                //                     "createTime": null,
+                //                     "modifier": null,
+                //                     "modifyTime": null,
+                //                     "name": "admin",
+                //                     "description": "",
+                //                     "permissions": null
+                //                 },
+                //                 "job": null,
+                //                 "department": null,
+                //                 "gpsId": "21a435fd-f067-4cb5-841e-0482bbe1c230",
+                //                 "gpsData":  {
+                //                     "deviceId": "21a435fd-f067-4cb5-841e-0482bbe1c230",
+                //                     "ioTDeviceId": null,
+                //                     "createTime": "2017-12-31 12:21:39",
+                //                     "longitude": 120.13310087077178,
+                //                     "latitude": 30.30729423238902,
+                //                     "altitude": null,
+                //                     "direction": null,
+                //                     "speed": 4,
+                //                     "telephone": null,
+                //                     "deviceNum": null,
+                //                     "coordinate": null
+                //                 }
+                //             }
+                //         ]
+                //
+                //     this.securityPersonList = users
+                //     this.number=this.securityPersonList.length
+                //     this.securityPersonInfo=[]
+                //
+                //     let personObj = {
+                //         label:'人员',
+                //         id:100010,
+                //         children:[]
+                //     }
+                //     if(users.length >0){
+                //         users.forEach(userObj=>{
+                //             personObj.children.push({
+                //                 label:userObj.name,
+                //                 id:userObj.id,
+                //                 url:'/static/img/icon/people_small.png',
+                //                 type:'security',
+                //                 subtype:'securityPerson',
+                //                 icon:userObj.gpsData ? '../../../static/img/people_open.svg' : '../../../static/img/people_gray.svg' ,
+                //                 longitude:userObj.gpsData ? userObj.gpsData.longitude : '',
+                //                 latitude:userObj.gpsData ? userObj.gpsData.latitude : '',
+                //                 gpsDeviceId:userObj.gpsId
+                //             })
+                //         })
+                //     }
+                //
+                //     this.securityPersonInfo.push(personObj)
+                //     this.fault=0
+                //     this.online= this.number - this.fault
+                //     console.log(this.securityPersonInfo)
+                // })
+
                 // setTimeout(() => {
                 //     let route = this.$route.path
-                //     if (route.includes('controler/car')) {
-                //         this.initData();//长轮询
+                //     if (route.includes('controler/security')) {
+                //         this.initPersonData();//长轮询
                 //         this.treeShow();
                 //     }
                 // },5000)
@@ -365,8 +454,8 @@
             //     },5000)
             // },
 
-            async getAllVehicle(){
-                return await api.boat.getAllVehicleGps()
+            async getAllUser(){
+                return await api.user.getUserGPSInfo()
             }
 
         },

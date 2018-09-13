@@ -16,6 +16,7 @@
                         @previousPage="previousPage"
                         @selectedAll = 'selectedAll'
                         @fixedInfo = 'fixedInfo'
+                        @allDotInfo = 'allDotInfo'
                         @searchAnything="searchAnything"
                         @getAllShop="getAllShop">
                 </Header>
@@ -120,6 +121,14 @@
                               @fixInfo = "fixInfo"
                               @addNewInfo="addNewPerson">
                 </PersonDetail>
+                <allDotMap v-if="allDotvisible"
+                           :visible="allDotvisible"
+                           :Info="allDotList"
+                           :title="title"
+                           @iconfixInfo="iconfixInfo"
+                           @iconListfixInfo="iconListfixInfo"
+                           @closeInfoDialog ="closeDialog">
+                </allDotMap>
             </div>
         </div>
     </div>
@@ -127,6 +136,7 @@
 
 <script>
     import ScrollContainer from '@/components/ScrollContainer'
+    import allDotMap from '@/components/allDotMap'
     import Header from './funHeader'
     import PersonDetail from './detailDialog'
     import api from '@/api'
@@ -152,7 +162,12 @@
                 isShowLoading: false,
                 currentNum: 50,
                 listLength: '',
-                pageNum: 1
+                pageNum: 1,
+                allDotvisible:false,
+                allDotList:{
+                    close:[],
+                    open:[]
+                }
             }
         },
         methods: {
@@ -168,7 +183,30 @@
             },
             closeDialog () {
                 this.visible = false
+                this.allDotvisible=false
                 this.getAllShop()
+            },
+            iconListfixInfo(infoList){
+                infoList.forEach(obj=>{
+                    obj.location=[obj.longitude,obj.latitude]
+                    this.iconfixInfo(obj,obj.location)
+                })
+            },
+            async iconfixInfo(info,index){
+                let scenicObj = {
+                    description:info.description,
+                    id: info.businessBean.id,
+                    name: info.businessBean.name,
+                    capacity: info.businessBean.capacity,
+                    regionId: info.regionId,
+                    businessTypeId: info.businessBean.businessTypeId,
+                    latitude: index[1],
+                    longitude: index[0],
+                    pictureId:info.pictureId
+                }
+                await api.shop.updateShop(JSON.stringify(scenicObj)).then(res => {
+                    console.log('修改成功')
+                })
             },
             searchAnything (info) {
                 console.log(info, '这是要过滤的')
@@ -225,6 +263,10 @@
                 this.visible = true
                 this.isDisabled = state
                 this.title = title
+            },
+            allDotInfo(){
+                this.allDotvisible = true
+                this.title = '商圈批量打点'
             },
             addNewInfo () {
                 this.showPersonDetail({businessBean:{}}, '添加商圈信息', false)
@@ -457,6 +499,44 @@
                         }
                     })
 
+                    this.allDotList.close=[]
+                    this.allDotList.open=[]
+                    for (let i = 0; i < res.length; i++) {
+                        res[i].id = res[i].businessBean.id
+                        res[i].iconName = res[i].businessBean.name
+                        res[i].iconType = '植物'
+                        if(res[i].businessBean.businessTypeId == "1"){
+                            res[i].iconUrl="/static/img/icon/shop_small.png"
+                            res[i].iconSubtype='shop'
+                        }else if(res[i].businessBean.businessTypeId == "2"){
+                            res[i].iconUrl="/static/img/icon/supermarket_small.png"
+                            res[i].iconSubtype='supermarket'
+                        }else if(res[i].businessBean.businessTypeId == "3"){
+                            res[i].iconUrl="/static/img/icon/restaurant_small.png"
+                            res[i].iconSubtype='restaurant'
+                        }else if(res[i].businessBean.businessTypeId == "4"){
+                            res[i].iconUrl="/static/img/icon/hotel_small.png"
+                            res[i].iconSubtype='hotel'
+                        }else if(res[i].businessBean.businessTypeId == "5"){
+                            res[i].iconUrl="/static/img/icon/kursaal_small.png"
+                            res[i].iconSubtype='kursaal'
+                        }else if(res[i].businessBean.businessTypeId == "6"){
+                            res[i].iconUrl="/static/img/icon/cafe_small.png"
+                            res[i].iconSubtype='cafe'
+                        }else if(res[i].businessBean.businessTypeId == "7"){
+                            res[i].iconUrl="/static/img/icon/teahouse_small.png"
+                            res[i].iconSubtype='teahouse'
+                        }else {
+                            res[i].iconUrl="/static/img/icon/shop.png"
+                            res[i].iconSubtype='shop'
+                        }
+                        if(res[i].longitude==null&&res[i].latitude==null){
+                            this.allDotList.close.push(res[i])
+                        }else {
+                            this.allDotList.open.push(res[i])
+                        }
+                    }
+
                     for (let i = 0; i < this.shopList.length; i++) {
                         this.shopList[i].checked = false
                         this.shopList[i].status = true
@@ -495,7 +575,8 @@
         components: {
             ScrollContainer,
             Header,
-            PersonDetail
+            PersonDetail,
+            allDotMap
         }
 
     }

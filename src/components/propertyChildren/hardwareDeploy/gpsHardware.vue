@@ -1,33 +1,32 @@
 <template>
-    <div class="lightList">
+    <div class="gpsHard">
         <div class="title">
-            路灯信息
+            GPS
         </div>
-        <div class="cameraContent">
+        <div class="gpsContent">
             <div class="conTitle">
                 <Header @addNewInfo="addNewInfo"
                         @deletInfo="deletInfo"
                         @selectedAll="selectedAll"
                         @fixedInfo="fixedInfo"
-                        @searchAnything="searchAnything"
-                        :listsLength = "listLength"
                         :choseId="choseInfoId"
+                        :listsLength = "listLength"
+                        @searchAnything="searchAnything"
                         :personListFlag="selectFlag"
                         @nextPage="nextPage"
                         @previousPage="previousPage"
-                        @allDotInfo = 'allDotInfo'
                         @choseType="choseType"
                         @toggleList="toggleList"
-                        @getAllLight="getAllLight">
+                        @getAllGps="getAllGps">
                 </Header>
             </div>
 
-            <div class="cameraList" v-loading="isShowLoading">
+            <div class="gpsList" v-loading="isShowLoading">
                 <ScrollContainer>
                     <el-table
-                        v-if="!isShowLightDetail && !show"
+                        v-if="!isShowGpsCard && !show"
                         ref="multipleTable"
-                        :data="lightList"
+                        :data="gpsList"
                         tooltip-effect="dark"
                         style="width: 100%"
                         @selection-change="handleSelectionChange">
@@ -38,31 +37,25 @@
                             </template>
                         </el-table-column>
 
+
                         <el-table-column
                             prop="name"
                             label="名称">
                         </el-table-column>
 
                         <el-table-column
-                            prop="lightStatus"
-                            label="状态">
-                            <template slot-scope="scope">
-                                <span>
-                                    {{scope.row.lightStatus  |changeFilter }}
-                                </span>
-                            </template>
-
-                        </el-table-column>
-
-                        <el-table-column
                             prop="serialNum"
-                            label="路灯型号">
+                            label="设备编号">
+                        </el-table-column>
+                        <el-table-column
+                            prop="ip"
+                            label="设备IP">
+                        </el-table-column>
+                        <el-table-column
+                            prop="model"
+                            label="型号">
                         </el-table-column>
 
-                        <el-table-column
-                            prop="regionName"
-                            label="所属片区">
-                        </el-table-column>
                         <el-table-column
                             label="描述">
                             <template slot-scope="scope">
@@ -75,12 +68,13 @@
                                 </div>
                             </template>
                         </el-table-column>
+
                         <el-table-column
                             label="操作"
                             width="150">
                             <template slot-scope="scope">
                                 <div class="handle">
-                                    <span @click="showLightDetail(scope.row, '路灯信息',true)">查看</span>
+                                    <span @click="showGpsDetail(scope.row, 'GPS信息',true)">查看</span>
                                     <span class="line">|</span>
                                     <span @click="fixedInfo(scope.row.id )">修改</span>
                                     <span class="line">|</span>
@@ -90,22 +84,20 @@
                         </el-table-column>
                     </el-table>
 
-                    <div class="personInfo" v-for="(item,index) in lightList" v-if="isShowLightDetail && item.status">
+                    <div class="personInfo" v-for="item in gpsList" v-if="isShowGpsCard && item.status">
                         <div class="checkBox">
+                            <!--<input type="checkbox" :checked="item.checked" class="checkBtn" @change="checked(item.id)">-->
                             <el-checkbox v-model="item.checked" @change="checked(item.id)" class="checkBtn"></el-checkbox>
+
                         </div>
-                        <div class="personType" @click.stop="showLightDetail(item,'路灯信息',true)">
-                            <!--<img src="../../../../static/img/lightCard.png" alt="">-->
+                        <div class="personType" @click.stop="showGpsDetail(item,'GPS信息',true)">
                             <img :src="getUrl(item.picturePath)" alt="" @error="imgError">
                             <span class="type">
                                   {{item.name}}
-                                </span>
+                            </span>
                         </div>
                         <div class="specificInfo" >
-                            <p class="area">所属区域：<span>{{item.regionName}}</span></p>
-                            <p class="type">状&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;态：<span>{{item.lightStatus | changeFilter}}</span></p>
                             <p class="sex text">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：<span>{{item.description}}</span></p>
-
                         </div>
                     </div>
                     <div class="tip" v-if="show">
@@ -114,21 +106,14 @@
                 </ScrollContainer>
                 <HardWare v-if="visible"
                           :visible="visible"
-                          :Info="lightInfo"
+                          :Info="gpsInfo"
                           :title="title"
                           :isDisabled="isDisabled"
                           @closeInfoDialog="closeDialog"
-                          @addNewInfo="addLight"
+                          @addNewInfo="addGps"
                           @fixInfo="fixInfo">
+
                 </HardWare>
-                <allDotMap v-if="allDotvisible"
-                           :visible="allDotvisible"
-                           :Info="allDotList"
-                           :title="title"
-                           @iconfixInfo="iconfixInfo"
-                           @iconListfixInfo="iconListfixInfo"
-                           @closeInfoDialog ="closeDialog">
-                </allDotMap>
             </div>
         </div>
     </div>
@@ -136,24 +121,24 @@
 
 <script>
     import ScrollContainer from '@/components/ScrollContainer'
-    import allDotMap from '@/components/allDotMap'
     import Header from './camera.vue'
     import HardWare from './hardwareDialog.vue'
     import api from '@/api'
     import _ from 'lodash'
-    import {mapMutations} from 'vuex'
 
     export default{
         data(){
             return{
                 selectFlag:false,
                 tempSelects:[],
-                isShowLightDetail:true,
+                isShowGpsCard:true,
                 visible:false,
-                lightList:[ ],
+                gpsList:[
+
+                ],
                 checkList:[],
                 isSelected:false,
-                lightInfo:{},
+                gpsInfo:{},
                 choseInfoId:[],
                 choseList:[],
                 isDisabled:true,
@@ -163,65 +148,33 @@
                 isShowLoading:false,
                 currentNum: 50,
                 listLength: '',
-                pageNum: 1,
-                allDotvisible:false,
-                allDotList:{
-                    close:[],
-                    open:[]
-                }
+                pageNum: 1
             }
         },
         methods:{
-            ...mapMutations(['DATA_LENGTH']),
             imgError (e) {
                 e.target.src = this.getUrl(null);
             },
             getUrl (url) {
                 if (url === null) {
-                    return '../../../../static/img/botanyCard.png'
+                    return '../../../../static/img/gpsCard.png'
+
                 } else {
                     return url
                 }
             },
             closeDialog () {
                 this.visible = false
-                this.allDotvisible=false
-                this.getAllLight()
-            },
-            allDotInfo(){
-                this.allDotvisible = true
-                this.title = '路灯批量打点'
-            },
-            iconListfixInfo(infoList){
-                infoList.forEach(obj=>{
-                    obj.location=[obj.longitude,obj.latitude]
-                    this.iconfixInfo(obj,obj.location)
-                })
-            },
-            async iconfixInfo(info,index){
-                let scenicObj = [{
-                    typeId: 5,
-                    id:info.id,
-                    lightStatus:info.lightStatus,
-                    name:info.name,
-                    serialNum:info.serialNum,
-                    model:info.model,
-                    port:info.port,
-                    regionId:info.regionId,
-                    description:info.description,
-                    latitude: index[1],
-                    longitude: index[0],
-                    pictureId:info.pictureId
-                }]
-                await api.light.updateLight(scenicObj).then(res => {
-                    console.log('修改成功')
-                })
+                this.getAllGps()
             },
             searchAnything (info) {
                 console.log(info, '这是要过滤的')
                 if (info.trim() !== '') {
-                    this.lightList = this.checkList.filter(item => {
-                        if (item.regionName && item.regionName.includes(info)) {
+                    this.gpsList = this.checkList.filter(item => {
+                        if (item.regionName.includes(info)) {
+                            return item
+                        }
+                        if (item.ip && item.ip.includes(info)) {
                             return item
                         }
                         if (item.name.includes(info)) {
@@ -235,79 +188,62 @@
                         }
                     })
                 } else {
-                    this.getAllLight()
+                    this.getAllGps()
                 }
             },
             handleSelectionChange(val){
                 this.multipleSelection = val;
             },
             addNewInfo(){
-                this.showLightDetail({},'添加路灯信息',false)
+                this.showGpsDetail({},'添加GPS信息',false)
                 this.isDisabled=false
             },
-            showLightDetail(info,title,state){
-                this.lightInfo=info
+            showGpsDetail(info,title,state){
+                this.gpsInfo=info
                 this.visible=true
                 this.isDisabled = state
                 this.title=title
 
             },
             async fixInfo(info){
-                let index = info.location.includes(',')?info.location.indexOf(','):info.location.indexOf('，')
-                let longitude = info.location.substring(0, index)
-                let latitude = info.location.substring(index + 1)
-                let lightObj=[{
-                    typeId: 5,
+                let gpsObj =[{
+                    typeId: 9,
                     id:info.id,
-                    lightStatus:info.lightStatus,
                     name:info.name,
-                    serialNum:info.serialNum,
                     model:info.model,
+                    ip:info.ip,
+                    mac:info.mac,
                     port:info.port,
-                    regionId:info.regionId,
-                    description:info.description,
-                    latitude:latitude,
-                    longitude:longitude
+                    serialNum:info.serialNum,
+                    description:info.description
                 }]
-                if (info.imgUrl !== '') {
-                    await api.person.updataAva(info.imgUrl).then(res => {
-                        console.log(res, '上传成功')
-                        lightObj[0].pictureId = res.id
-                    }).catch(err => {
-                        console.log(err, '上传失败')
-                        this.$message.error('上传失败，其请稍后重试')
-                        return
-                    })
-                } else {
-                    lightObj[0].pictureId = info.pictureId
-                }
-                await api.light.updateLight(lightObj).then(res =>{
+                await api.gps.updateGps(gpsObj).then(res =>{
                     this.closeDialog()
                     this.$message.success('修改成功')
                     this.choseInfoId=[]
-                    this.getAllLight()
+                    this.getAllGps()
                 }).catch(err =>{
-                    this.$message.error('修改失败，请稍后再试')
+                    this.$message.error('修改失败,请稍后再试')
                 })
             },
             fixedInfo(id){
-                if (id) {
+                if(id){
                     this.choseInfoId = [id]
                 }
-                if(this.choseInfoId.length > 1) {
+                if(this.choseInfoId.length>1){
                     this.$message.warning('至多选择一条数据')
                     return
                 }
                 if(this.choseInfoId.length>0){
-                    this.lightList.map((item)=>{
+                    this.gpsList.map((item)=>{
                         if(item.id === this.choseInfoId[0]){
-                            this.lightInfo=item
+                            this.gpsInfo=item
                         }
                     })
-                    this.showLightDetail(this.lightInfo,'修改路灯信息',false)
+                    this.showGpsDetail(this.gpsInfo,'修改GPS信息',false)
                     this.isDisabled=false
                 }else{
-                    this.$message.error('请选择要修改的路灯')
+                    this.$message.error('请选择要修改的GPS')
                 }
             },
             deletInfo(id){
@@ -320,20 +256,20 @@
                         cancelButtonText: '取消',
                         type: 'warning'
                     }).then(() => {
-                        api.light.deleteLight(this.choseInfoId).then(res =>{
+                        api.gps.deleteGps(this.choseInfoId).then(res=>{
                             // for(let i=0;i<this.choseInfoId.length;i++){
-                            //     this.lightList=this.lightList.filter((item,index) =>{
-                            //         if(item.id===this.choseInfoId[i]){
-                            //             this.lightList[index].checked=false
+                            //     this.gpsList=this.gpsList.filter((item,index)=>{
+                            //         if(item.id === this.choseInfoId[i]){
+                            //             this.gpsList[index].checked=false
                             //         }
-                            //         return item.id !== this.choseInfoId[i]
+                            //         return item.id!==this.choseInfoId[i]
                             //     })
                             // }
-                            this.getAllLight()
+                            this.getAllGps()
                             this.$message.success('删除成功')
-                            this.choseInfoId=[]
+                            this.choseInfoId = []
                         }).catch(err =>{
-                            this.$message.error('删除失败')
+                            this.$message.error('删除失败,请稍后重试')
                         })
                     }).catch(() => {
                         this.$message.info('取消删除')
@@ -343,55 +279,35 @@
                 }
 
             },
-
-            async addLight(info){
-                let longitude = ''
-                let latitude = ''
-                if (info.location) {
-                    let index = info.location.includes(',')?info.location.indexOf(','):info.location.indexOf('，')
-                    longitude  = info.location.substring(0, index)
-                    latitude = info.location.substring(index + 1)
-                }
-                let lightObj=[{
-                    typeId: 5,
-                    lightStatus:info.lightStatus,
+            async addGps(info){
+                let gpsObj =[{
+                    typeId: 9,
                     name:info.name,
-                    serialNum:info.serialNum,
                     model:info.model,
+                    ip:info.ip,
+                    mac:info.mac,
                     port:info.port,
-                    regionId:info.regionId,
-                    description:info.description,
-                    latitude:latitude,
-                    longitude:longitude
+                    serialNum:info.serialNum,
+                    description:info.description
                 }]
-                if (info.imgUrl !== '') {
-                    await api.person.updataAva(info.imgUrl).then(res => {
-                        console.log(res, '上传成功')
-                        lightObj[0].pictureId = res.id
-                    }).catch(err => {
-                        console.log(err, '上传失败')
-                        this.$message.error('上传失败，其请稍后重试')
-                        return
-                    })
-                }
-                await api.light.createLight(lightObj).then(res =>{
+                await api.gps.createGps(gpsObj).then(res =>{
                     this.closeDialog()
                     this.$message.success('添加成功')
-                    this.getAllLight()
+                    this.getAllGps()
                 }).catch(err =>{
-                    this.$message.error('添加失败，请稍后重试')
+                    this.$message.error('添加失败,请稍后再试')
                 })
             },
             toggleList (type){
                 if(type==='list'){
-                    this.isShowLightDetail=false
+                    this.isShowGpsCard=false
                 }else{
-                    this.isShowLightDetail=true
+                    this.isShowGpsCard=true
                 }
             },
             checked(id){
                 this.tempSelects=[];
-                this.lightList = this.lightList.filter(item => {
+                this.gpsList = this.gpsList.filter(item => {
                     if (item.id === id) {
                         item.checked = item.checked
                     }
@@ -406,11 +322,11 @@
                     this.choseInfoId.push(id)
                 }
                 let that=this;
-                this.lightList.forEach(function(item,i){
+                this.gpsList.forEach(function(item,i){
                     (item.checked)&&(that.tempSelects.push(item))
                 })
                 console.log(this.tempSelects)
-                if(this.tempSelects.length===this.lightList.length){
+                if(this.tempSelects.length===this.gpsList.length){
                     this.selectFlag=true
                 }else{
                     this.selectFlag=false
@@ -419,12 +335,12 @@
             choseType(type){
                 console.log(type)
                 if(type.length===0){
-                    this.choseList=this.checkList.filter((item)=>{
+                    this.gpsList=this.checkList.filter((item)=>{
                         item.status=true
                         return item.status === true
                     })
                 }else{
-                    this.choseList=this.checkList.filter((item,index)=>{
+                    this.gpsList=this.checkList.filter((item,index)=>{
                         if(type.includes(item.type)){
                             item.status=true
                         }else {
@@ -436,7 +352,7 @@
                 }
             },
             selectedAll(state){
-                this.lightList=this.lightList.filter((item)=>{
+                this.gpsList=this.gpsList.filter((item)=>{
                     if(state==true){
                         item.checked=true
                         this.choseInfoId.push(item.id)
@@ -448,67 +364,46 @@
                         return item.checked == false
                     }
                 })
-                console.log(this.choseInfoId)
                 this.selectFlag=true
+                console.log(this.choseInfoId)
             },
             previousPage (page) {
                 console.log(page, '这是传过来的pageNum')
                 this.pageNum = page
-                this.getAllLight()
+                this.getAllGps()
             },
             nextPage (page) {
                 console.log(page, '这个是下一页的pageNUM')
                 this.pageNum = page
-                this.getAllLight()
+                this.getAllGps()
             },
-            async getAllLight(){
-                this.choseInfoId=[];
+            async getAllGps(){
+                this.choseInfoId=[];//
                 this.isShowLoading=true
-                await api.light.getAllLight().then((res)=>{
-                    console.log(res,'这是请求的数据')
+                await api.gps.getAllGps().then((res)=>{
+                    console.log(res,'这是请求')
                     if(res.devices.length === 0){
                         this.show = true
                     }else{
                         this.show = false
                     }
-                    this.isShowLoading=false
                     this.listLength = res.devices.length
-                    let obj = {
-                        listLength: res.devices.length
-                    }
-                    obj[new Date().getTime()] = new Date().getTime()
-                    this.$store.commit('DATA_LENGTH', obj)
-                    this.lightList=res.devices
-                    this.lightList = this.lightList.filter((item,index) => {
+                    this.isShowLoading=false
+                    this.gpsList=res.devices
+                    this.gpsList = this.gpsList.filter((item,index) => {
                         if (index < (this.pageNum * 35 ) && index > ((this.pageNum -1) * 35 ) - 1 ) {
                             return item
                         }
                     })
-                    this.allDotList.close=[]
-                    this.allDotList.open=[]
-                    let resDevices=res.devices
-                    for (let i = 0; i < resDevices.length; i++) {
-                        resDevices[i].iconName = resDevices[i].name
-                        resDevices[i].iconSubtype = 'Light'
-                        resDevices[i].iconUrl = '/static/img/icon/Light.png'
-                        resDevices[i].iconType = '路灯'
-                        if(resDevices[i].longitude==null&&resDevices[i].latitude==null){
-                            this.allDotList.close.push(resDevices[i])
-                        }else {
-                            this.allDotList.open.push(resDevices[i])
-                        }
-                    }
-                    for (let i=0;i<this.lightList.length;i++){
 
-                        this.lightList[i].checked=false
-                        this.lightList[i].status=true
-
-                        this.lightList[i].location=`${this.lightList[i].longitude},${this.lightList[i].latitude}`
-                        this.lightList[i].modifyTime=this.lightList[i].modifyTime.replace("-","/")
-                        this.lightList[i].byTime = -(new Date(this.lightList[i].modifyTime)).getTime()
+                    for (let i=0;i<this.gpsList.length;i++){
+                        this.gpsList[i].checked=false
+                        this.gpsList[i].status=true
+                        this.gpsList[i].modifyTime=this.gpsList[i].modifyTime.replace("-","/")
+                        this.gpsList[i].byTime = -(new Date(this.gpsList[i].modifyTime)).getTime()
                     }
-                    this.lightList = _.sortBy(this.lightList,'byTime')
-                    this.checkList = this.lightList
+                    this.gpsList = _.sortBy(this.gpsList,'byTime')
+                    this.checkList = this.gpsList
 
                     this.selectFlag=false
 
@@ -518,24 +413,12 @@
             }
         },
         created (){
-            this.getAllLight()
-
-       },
-       filters:{
-            changeFilter(item){
-                  if(item){
-                      return '通电'
-                  }else{
-                      return '断电'
-                  }
-            }
-
-       },
+            this.getAllGps()
+        },
         components:{
             ScrollContainer,
             Header,
-            HardWare,
-            allDotMap
+            HardWare
 
         }
     }
@@ -543,21 +426,14 @@
 </script>
 
 <style lang="scss" type="text/scss">
-    .lightList{
-        .el-checkbox__label{
-            padding-left:rem(5);
-            font-size:rem(13);
-        }
-        .el-checkbox__inner{
-            margin-top:rem(5);
-        }
-        .cameraList .box .el-tooltip{
+    .gpsHard{
+        .gpsList .box .el-tooltip{
             background: transparent;
             text-align: left;
             border: none;
             padding: 0;
         }
-        .cameraList .box .el-button span{
+        .gpsList .box .el-button span{
             display:inline-block;
             width: 150px;
             white-space: nowrap;
@@ -571,10 +447,11 @@
             background-color: transparent !important;
         }
     }
+
 </style>
 
 <style lang="scss" type="text/scss" scoped>
-    .lightList{
+    .gpsHard{
         width:100%;
         height:100%;
         display:flex;
@@ -587,7 +464,7 @@
             color: #26bbf0;
             border-bottom:  1px solid #ccc;
         }
-        .cameraContent{
+        .gpsContent{
             flex:1;
             width:100%;
             padding:0 rem(15);
@@ -600,83 +477,72 @@
                 margin-top:rem(10);
                 border-bottom: 2px solid #e44b4e;
             }
-            .cameraList{
+            .gpsList{
                 width:100%;
                 flex:1;
                 margin-top:rem(20);
-                .personInfo{
-                    width:rem(210);
-                    height:rem(140);
-                    border:1px solid #ccc;
+                .personInfo {
+                    width: rem(210);
+                    height: rem(140);
+                    border: 1px solid #ccc;
                     font-size: rem(14);
                     display: inline-block;
                     margin-right: rem(5.5);
                     margin-bottom: rem(5);
                     border-radius: rem(5);
-                    .checkBox{
-                        width:100%;
-                        height:rem(20);
-                        background:#fff;
-                        border-top-left-radius:rem(5);
-                        border-top-right-radius:rem(5);
-                        position:relative;
-                        .checkBtn{
-                            position:absolute;
-                            right:rem(5);
-                            top:rem(-2);
-                            cursor:pointer;
+                    .checkBox {
+                        width: 100%;
+                        height: rem(20);
+                        background: #fff;
+                        border-top-left-radius: rem(5);
+                        border-top-right-radius: rem(5);
+                        .checkBtn {
+                            float: right;
+                            margin-right: rem(5);
+                            /*margin-top: rem(3);*/
+                            width: rem(15);
+                            height: rem(15);
+                            cursor: pointer;
                         }
                     }
-                    .personType{
-                        /*margin-top:rem(20);*/
-                        width:100%;
-                        height:rem(25);
-                        background:#0086b3;
-                        position:relative;
-                        font-size:rem(12);
-                        img{
-                            width:rem(40);
-                            height:rem(40);
-
+                    .personType {
+                        width: 100%;
+                        height: rem(20);
+                        background: #0086b3;
+                        position: relative;
+                        font-size: rem(12);
+                        img {
+                            width: rem(40);
+                            height: rem(40);
                             border-radius: 50%;
-                            position:absolute;
-                            left:rem(15);
-                            top:rem(-10);
+                            position: absolute;
+                            left: rem(15);
+                            top: rem(-10);
+                            background: red;
                         }
-                        span{
-                            float:right;
-                            margin-right:rem(20);
-                            line-height: rem(25);
-                            color:#fff;
-                        }
-                    }
-                    .specificInfo{
-                        margin-top:rem(10);
-                        font-size: rem(14);
-                        padding:0 rem(10);
-                        box-sizing: border-box;
-                        p{
-                            /*margin-left: rem(15);*/
-                            line-height: rem(22);
-                            font-size: rem(14);
+                        span {
+                            display: inline-block;
+                            width: rem(100);
+                            float: right;
+                            text-align: right;
+                            padding-right: rem(5);
+                            line-height: rem(20);
+                            color: #fff;
                             overflow: hidden;
                             text-overflow: ellipsis;
                             white-space: nowrap;
-                            span{
-                                font-size:rem(13)
-                            }
+                            box-sizing: border-box;
                         }
-                        .text{
+                    }
+                    .specificInfo {
+                        margin-top: rem(10);
+                        font-size: rem(12);
+                        p {
+                            margin-left: rem(10);
                             line-height: rem(22);
-                            display: inline-block;
-                            width: 100%;
-                            height: rem(40);
-                            white-space: pre-wrap;
-                            overflow:hidden;
-                            text-overflow:ellipsis;
-                            display:-webkit-box;
-                            -webkit-box-orient:vertical;
-                            -webkit-line-clamp:2;
+                            overflow: hidden;
+                            text-overflow: ellipsis;
+                            white-space: nowrap;
                         }
                     }
                 }
@@ -696,4 +562,5 @@
         }
     }
 </style>
+
 

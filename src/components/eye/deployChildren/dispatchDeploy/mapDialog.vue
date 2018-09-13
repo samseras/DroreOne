@@ -29,7 +29,7 @@
         name: "map-dialog",
         data () {
             return{
-                name: ''
+                name:''
             }
         },
         methods: {
@@ -42,7 +42,8 @@
                     geo: {
                         type:"LineString",
                         coordinates: this.getRoatLocation
-                    }
+                    },
+                    type:1
                 }
                 api.roat.createRoat(JSON.stringify(roatObj)).then(res => {
                     console.log(res, '创建成功')

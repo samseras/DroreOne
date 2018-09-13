@@ -13,11 +13,12 @@
                     <!--</el-switch>-->
                     <!--</li>-->
                     <!--<li><img src="../../../../static/img/search.png" class="search" alt=""/></li>-->
-                    <li>
-                        <el-tooltip class="item" effect="dark" content="车载视频控件下载" placement="left">
-                            <img src="../../../../static/img/down.svg" class="multiwindow" @click="cmsocxDown"  alt=""/>
-                        </el-tooltip>
-                    </li>
+
+                    <!--<li>-->
+                        <!--<el-tooltip class="item" effect="dark" content="车载视频控件下载" placement="left">-->
+                            <!--<img src="../../../../static/img/down.svg" class="multiwindow" @click="cmsocxDown"  alt=""/>-->
+                        <!--</el-tooltip>-->
+                    <!--</li>-->
                 </ul>
             </div>
             <div class="middle">
@@ -148,39 +149,39 @@
             async initData(){
                 Promise.all([this.getAllVehicle()]).then(result=>{
                     let vehicles = result[0]
-                    // let vehicles = [
+                    // let vehicles =  [
                     //     {
                     //         "vehicle": {
-                    //             "id": "30c87807-a8cc-45e2-b6fe-8e9e7a29c790",
+                    //             "id": "05579c25-8abb-4bfa-83ae-2a1e50a071ee",
                     //             "createTime": null,
                     //             "creator": null,
-                    //             "modifyTime": "2018-08-30 16:04:37",
-                    //             "modifier": "anonymous",
-                    //             "serialNum": "湘湖605",
-                    //             "capacity": 0,
+                    //             "modifyTime": "2018-09-11 17:32:51",
+                    //             "modifier": "admin",
+                    //             "serialNum": "船001",
+                    //             "capacity": 33,
                     //             "type": 1,
-                    //             "model": "001144",
-                    //             "gpsDeviceId": "b0849754-7b4d-428b-b4de-d96f28eb7eb9",
+                    //             "model": "363",
+                    //             "gpsDeviceId": "21a435fd-f067-4cb5-841e-0482bbe1c230",
                     //             "pictureId": null,
                     //             "maintenanceStatus": 0,
-                    //             "maintenanceDate": null,
-                    //             "purchaseDate": null,
-                    //             "description": null,
+                    //             "maintenanceDate": "2018-08-07",
+                    //             "purchaseDate": "2010-03-23",
+                    //             "description": "反感和的",
                     //             "scenicAreaId": null,
                     //             "deleted": false
                     //         },
-                    //         "gpsDeviceId": "b0849754-7b4d-428b-b4de-d96f28eb7eb9",
-                    //         "gpsDeviceName": "船605",
+                    //         "gpsDeviceId": "21a435fd-f067-4cb5-841e-0482bbe1c230",
+                    //         "gpsDeviceName": "gps1",
                     //         "pictureId": null,
                     //         "picturePath": null,
                     //         "gpsData":
-                    //             // null,
+                    //             //null,
                     //             {
-                    //             "deviceId": "b0849754-7b4d-428b-b4de-d96f28eb7eb9",
+                    //             "deviceId": "21a435fd-f067-4cb5-841e-0482bbe1c230",
                     //             "ioTDeviceId": null,
                     //             "createTime": "2017-12-31 12:21:39",
-                    //             "longitude": 120.21455,
-                    //             "latitude": 30.1379,
+                    //             "longitude": 120.13310087077178,
+                    //             "latitude": 30.30729423238902,
                     //             "altitude": null,
                     //             "direction": null,
                     //             "speed": 4,
@@ -189,22 +190,27 @@
                     //             "coordinate": null
                     //         },
                     //         "driver": {
-                    //             "id": "5b27d86e-af2e-4de9-8d99-3f6b0f2e0f27",
-                    //             "createTime": "2018-08-31 11:41:32",
-                    //             "creator": "anonymous",
-                    //             "modifyTime": "2018-08-31 11:41:32",
-                    //             "modifier": "anonymous",
-                    //             "name": "test李四",
-                    //             "gender": 1,
-                    //             "idNum": null,
-                    //             "phone": "18602987796",
-                    //             "pictureId": null,
-                    //             "description": "just a test",
-                    //             "scenicAreaId": null,
-                    //             "deleted": false
+                    //             "id": "1",
+                    //             "creator": null,
+                    //             "createTime": null,
+                    //             "modifier": "admin",
+                    //             "modifyTime": "2018-09-11 18:00:00",
+                    //             "name": "admin",
+                    //             "cnName": " 系统管理员",
+                    //             "gender": 0,
+                    //             "iconId": null,
+                    //             "mobileNum": "18800000000",
+                    //             "fixedPhoneNum": null,
+                    //             "idCardNum": null,
+                    //             "email": null,
+                    //             "workAddress": null,
+                    //             "description": null,
+                    //             "departmentId": null,
+                    //             "jobId": null,
+                    //             "roleId": "1"
                     //         }
                     //     }
-                    // ]
+                    //     ]
                     this.carlist = vehicles
                     this.number=this.carlist.length
                     this.transportInfo=[]
@@ -229,8 +235,8 @@
                                 subtype:'car',
                                 icon:veObj.gpsData ? '../../../static/img/car_icon.svg' : '../../../static/img/car_gray.svg' ,
                                 status:veObj.gpsData ? "ONLINE" : "OFFLINE",
-                                longitude:veObj.gpsData ? veObj.gpsData.longitude : '',
-                                latitude:veObj.gpsData ? veObj.gpsData.latitude : '',
+                                longitude:veObj.gpsData ? veObj.gpsData.longitude+0.451536705535+0.0048011541 : '',
+                                latitude:veObj.gpsData ? veObj.gpsData.latitude+0.49693734262853-0.0025647127: '',
                                 gpsDeviceId:veObj.gpsDeviceId
                             }
                             carObj.children.push(childObj)
@@ -243,11 +249,10 @@
                                 url:'/static/img/icon/boat_small.png',
                                 type:'transport',
                                 subtype:'boat',
-                                // icon:icon,
                                 icon:veObj.gpsData ? '../../../static/img/boat_icon.svg' : '../../../static/img/boat_gray.svg',
                                 status:veObj.gpsData ? "ONLINE" : "OFFLINE",
-                                longitude:veObj.gpsData ? veObj.gpsData.longitude : '',
-                                latitude:veObj.gpsData ? veObj.gpsData.latitude : '',
+                                longitude:veObj.gpsData ? veObj.gpsData.longitude+0.451536705535+0.0048011541 : '',
+                                latitude:veObj.gpsData ? veObj.gpsData.latitude +0.49693734262853-0.0025647127: '',
                                 gpsDeviceId:veObj.gpsDeviceId
                             }
                             boatObj.children.push(childObj)

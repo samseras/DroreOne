@@ -139,7 +139,7 @@
                     <!--广播-->
                     <div class="personCardContent" v-if="route.includes('broadcast')">
                         <p class="sex"><span class="dmisTitle"> 名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 称：</span>
-                            <el-input type="text"v-model="broadList.broadcastSchedule.name" class="inputText" :maxlength="50" :disabled='isDisabled'></el-input>
+                            <el-input type="text"v-model="broadList.broadcastSchedule.name" class="inputText" :maxlength="15" :disabled='isDisabled'></el-input>
                         </p>
                         <p class="time">
                             <span class="dmisTitle">时&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 间：</span>
@@ -332,7 +332,7 @@
                     <div class="personCardContent" v-if="route.includes('screen')">
                         <p class="sex">
                             <span class="dmisTitle">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 称：</span>
-                            <el-input type="text"v-model="screen.ledSchedule.name" class="inputText" :disabled="isDisabled" :maxlength="50"></el-input>
+                            <el-input type="text"v-model="screen.ledSchedule.name" class="inputText" :disabled="isDisabled" :maxlength="15"></el-input>
                         </p>
                         <p class="time">
                             <span class="dmisTitle">时&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 间：</span>
@@ -839,8 +839,7 @@
                 await this.getTransportRoat()
                 await this.getAllVehicle(0);  //车辆数据
                 await this.getAllVehicle(1);  //船数据
-                await this.getAllDriver(1);  //司机数据
-                await this.getAllDriver(2); //船夫数据
+                await this.getSafePerson(); //人员
             },
             selectDays () {
                 let route = this.$route.path
@@ -1374,6 +1373,13 @@
                 } else {
                     this.timeSelect = this.security.inspectionSchedule.classTime
                 }
+
+                if (this.Info.id) {
+                    this.$store.commit('LOCATION_ID', this.Info.id)
+                }else {
+                    this.$store.commit('LOCATION_ID', '')
+                }
+
             } else if(this.route.includes('broadcast')) {
                 this.getAllBroadcast()
                 this.broadList = this.Info;

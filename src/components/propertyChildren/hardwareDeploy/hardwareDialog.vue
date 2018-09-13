@@ -541,7 +541,51 @@
                         </label>
                     </div>
                 </div>
+                <!--GPS-->
+                <div class="cameraCard popCard" v-if="route.includes('gps')">
+                    <p class="name">
+                        <span>名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称：</span>
+                        <el-input type="text" v-model="gps.name" :disabled="isDisabled" :maxlength="15"></el-input>
+                    </p>
+                    <p class="version wrapstyle selectstyle">
+                        <span>型&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;号：</span>
+                        <el-select name="" v-model="gps.model" :disabled="isDisabled">
+                            <el-option v-for="item in modelType"
+                                       :key="item.id"
+                                       :value="item.id"
+                                       :label="item.name">
 
+                            </el-option>
+                        </el-select>
+                    </p>
+                    <p class="host">
+                        <span>设备编号：</span>
+                        <el-input type="text" v-model="gps.serialNum" :disabled="isDisabled"></el-input>
+                    </p>
+                    <p class="IP">设&nbsp;&nbsp;备&nbsp;&nbsp;IP:
+                        <el-input type="text" v-model="gps.ip" :disabled="isDisabled"></el-input>
+                    </p>
+
+                    <p class="IP">
+                        <span>设备端口：</span>
+                        <el-input type="text" v-model="gps.port" :disabled="isDisabled"></el-input>
+                    </p>
+                    <p class="mac">
+                        <span>M&nbsp;&nbsp;&nbsp;A&nbsp;&nbsp;&nbsp;C：</span>
+                        <el-input type="text" v-model="gps.mac" :disabled="isDisabled"></el-input>
+                    </p>
+                    <p class="describe ms">
+                        <span class="des">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：</span>
+
+                        <el-input type="textarea" :rows="5" v-model="gps.description" :disabled="isDisabled" :maxlength="140"></el-input>
+                    </p>
+                    <div class="img">
+                        <img :src="getUrl(gps.picturePath)" alt="" v-if="isDisabled" @error="imgError">
+                        <label for="avatar" v-if="!isDisabled">
+                            <img :src="files.length ? files[0].url : getUrl(gps.picturePath)"  @error="imgError" class="rounded-circle" />
+                        </label>
+                    </div>
+                </div>
             </div>
             <div class="text-center p-2">
                 <file-upload
@@ -685,6 +729,16 @@
                    description:'',
                    port:''
                },
+               gps:{
+                   name:'',
+                   model:'',
+                   ip:'',
+                   mac:'',
+                   port:'',
+                   serialNum:'',
+                   regionId:'',
+                   description:''
+               },
                hardwaretype: {
                    hardName: '',
                    tradeName: '',
@@ -729,6 +783,8 @@
                            imgSrc = './../../../../static/img/gateCard.png'
                        }else if (route.includes('lampLight')) {//灯光
                            imgSrc = './../../../../static/img/botanyCard.png'
+                       }else if (route.includes('gps')) {//GPS
+                           imgSrc = './../../../../static/img/gpsCard.png'
                        }
                    console.log(imgSrc, 'opopopopopopopo')
                    return imgSrc
@@ -1008,6 +1064,26 @@
                        this.$message.error('编号只能输入数字！')
                        return
                    }*/
+               }else if(this.route.includes('gps')) {
+                   newInfo = this.gps
+                   if(!(newInfo.name && newInfo.name !=='')){
+                       this.$message.error('名称不能为空')
+                       return
+                   }
+
+                   if (newInfo.ip && newInfo.ip !== '') {
+                       if(!myip.test(newInfo.ip)){
+                           this.$message.error('请输入有效ip地址')
+                           return
+                       }
+                   }
+
+                   if (newInfo.port && newInfo.port !== '') {
+                       if(!myport.test(newInfo.port)){
+                           this.$message.error('请输入正确端口号')
+                           return
+                       }
+                   }
                }
                newInfo.jsonAttr = JSON.stringify(this.obj)
                newInfo.status=true
@@ -1140,6 +1216,12 @@
                    this.police.model = Number(this.police.model)
                }
                typeId =8
+           }else if(this.route.includes('gps')){
+               this.gps=this.Info
+               if(this.gps.model){
+                   this.gps.model = Number(this.gps.model)
+               }
+               typeId =9
            }
 
            api.types.getAllmodelType(typeId).then(res =>{

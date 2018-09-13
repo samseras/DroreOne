@@ -118,7 +118,7 @@
                         title: '建筑'
                     },
                     {
-                        icon: './../../../static/imgild.svg',
+                        icon: './../../../static/img/station_menu.svg',
                         index: '/basic-property/station-deploy',
                         title: '站点'
                     }
