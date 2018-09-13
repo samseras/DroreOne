@@ -3,6 +3,26 @@
         <div id="map" class="map">
 
         </div>
+        <div class="heatEmposition" v-if='heatEmShow'>
+            <button @click="heatShowButton" class="heatEmButton">
+                <span>»</span>
+            </button>
+            <div class="heatEm" v-show="heatShow">
+                <div class="heatEmlist">
+                    <h4>水位监测数据</h4>
+                    <ul>
+                        <li>
+                            <label>德胜坝：</label>
+                            3.45（米）
+                        </li>
+                        <li>
+                            <label>拱宸桥：</label>
+                            1.65（米）
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
         <div id="contextmenu_container" class="contextmenu">
             <i @click="menuDelete"></i>
             <el-tooltip class="item" effect="dark" content="启停" placement="top">
@@ -167,6 +187,8 @@
                 this.overView();//鹰眼
                 this.getAllRoat();// 路线输出
                 this.getAllArea();// 片区输出
+                this.heatEmShow=true
+                this.heatEm();//环境数据
             }else if (route.includes('controler')) {
                 droreMap.interaction.enableMapClick = true
                 // droreMap.interaction.showMove()
@@ -185,8 +207,8 @@
                 //this.getAllTransportRoute();// 车船调度路线输出
                 //this.getAllStation();
                 this.getAllVehicle();// 车船信息
-                // this.heatEmShow=true
-                // this.heatEm();//环境数据
+                this.heatEmShow=true
+                this.heatEm();//环境数据
                 this.getAllPerson();
             } else if (route.includes('area-deploy')) {
                 if(!this.getLocationId){
@@ -3304,6 +3326,22 @@
                     this.$message.error('查询失败')
                 })
             },
+            heatEm(){
+                // setTimeout(() => {
+                //     let route = this.$route.path
+                //     if (route.includes('controler') || route.includes('facility')) {
+                //         this.heatEm();//长轮询
+                //     }
+                // },3600000)
+            },
+            heatShowButton(){
+                if(this.heatShow){
+                    $(".heatEmButton span").text("«");
+                }else {
+                    $(".heatEmButton span").text("»");
+                }
+                this.heatShow=!this.heatShow
+            }
         },
         components: {
             Scrollcontainer,
@@ -4281,6 +4319,110 @@
     #map{
         width: 100%;
         height: 100%;
+    }
+    .heatEmposition{
+        position: absolute;
+        left: rem(50);
+        top:rem(70);
+        .heatEmButton{
+            display:block;
+            margin:1px;
+            padding:0;
+            color:#fff;
+            font-size:1.14em;
+            font-weight:700;
+            text-decoration:none;
+            text-align:center;
+            height:rem(30);
+            width:rem(30);
+            line-height:.4em;
+            background-color:rgba(0,60,136,.5);
+            border:2px solid #999;
+            border-radius:2px;
+            top: 2px;
+            left: 2px;
+            position: absolute;
+            z-index: 2;
+            cursor: pointer;
+            outline:none;
+        }
+        .heatEm{
+            position: relative;
+            -moz-border-radius: 5px;
+            -webkit-border-radius: 5px;
+            border-radius: 5px;
+            color: #fff;
+            z-index: 1;
+            -moz-border-radius: 5px;
+            -webkit-border-radius: 5px;
+            border-radius: 5px;
+            background-color:rgba(0,0,0,.4);
+            .heatEmlist{
+                position: relative;
+                z-index: 1;
+                padding:rem(10) rem(20);
+                h4{
+                    font-size: 14px;
+                    line-height: rem(24);
+                    margin-left: rem(30);
+                }
+                .heatAqi{
+                    margin: rem(10) 0 0;
+                    .heatAqiLeft{
+                        width: rem(200);
+                        display: inline-block;
+                        float: left;
+                        label{
+                            font-size: rem(60);
+                            line-height: rem(60);
+                            display: inline-block;
+                            width: rem(120);
+                            text-align: center;
+                            float: left;
+                        }
+                    }
+                    p{
+                        line-height: rem(60);
+                        margin-left: rem(5);
+                        font-size:rem(14);
+                    }
+                }
+                .heatBged{
+                    i{
+                        height: rem(5);
+                        width: rem(50);
+                        margin: rem(20) rem(2);
+                        background: #31d80f;
+                        float: left;
+                    }
+                    i:nth-child(2){
+                        background: #ffcc00;
+                    }
+                    i:nth-child(3){
+                        background: #f8692e;
+                    }
+                    i:nth-child(4){
+                        background: #d50a6f;
+                    }
+                    i:nth-child(5){
+                        background: #cd262d;
+                    }
+                    i:nth-child(6){
+                        background: #93041a;
+                    }
+                }
+                ul li{
+                    font-size: 14px;
+                    line-height: rem(36);
+                    label{
+                        width: rem(90);
+                        text-align: right;
+                        margin-right: rem(2);
+                        display: inline-block;
+                    }
+                }
+            }
+        }
     }
     .contextmenu{
         background: url("/static/img/icon_bg.png") no-repeat;
