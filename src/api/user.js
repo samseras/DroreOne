@@ -110,6 +110,14 @@ const user = {
             url: getUrl(`/uc/user?withgps=true`)
         })
     },
+
+    getUserHistoryRoute(param){
+        return axios ({
+            method: 'POST',
+            url: getUrl('/user/history'),
+            data:JSON.stringify(param)
+        })
+    },
     deleteUserInfo (id) {
         return axios({
             method: 'DELETE',
