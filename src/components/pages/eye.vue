@@ -37,11 +37,22 @@
                         <button @click="showSearch" class="hitSearch" ref="hitSearch">
                             <i class="el-icon-search showSearch"></i>
                         </button>
-                        <div v-for="item in title">
-                            <a href="#">
-                                <i v-html="item"></i>
-                            </a>
-                        </div>
+                        <el-badge :value="badge" :max="99" class="item alarmBadge">
+                            <button @click="warnListShow=!warnListShow" class="alarmBadgebuttom">
+                                <i>&#xe8c0</i>
+                            </button>
+                        </el-badge>
+                        <button>
+                            <i>&#xe627</i>
+                        </button>
+                        <button>
+                            <i>&#xe647</i>
+                        </button>
+                        <!--<div v-for="item in title">-->
+                            <!--<a href="#">-->
+                                <!--<i v-html="item"></i>-->
+                            <!--</a>-->
+                        <!--</div>-->
                     </el-col>
                     <el-col :xs="3" :sm="3" :md="3" :lg="3" :xl="3" class="control">
                         <div class="func">
@@ -64,6 +75,14 @@
             <el-main>
                 <router-view @hideHead = "hideData"/>
             </el-main>
+            <div v-if="warnListShow" class="warnListShow">
+                <div class="warnli">
+                    <div v-for="(item) in warnList" @click="warnShow(item)" class="warnListShowimg">
+                        <img :src="item.icon" alt=""><label>{{item.serialNum}}</label>
+                    </div>
+                </div>
+                <button @click="alarmBadge">更多告警</button>
+            </div>
         </el-container>
         <UserInfoDialog
             v-if="visible"
@@ -92,6 +111,9 @@
                     },
                     {id: '0103',
                         index: 'message.deploy'
+                    },
+                    {id: '0104',
+                        index: 'message.alarm'
                     }],
                 currTime: new Date(),   //当前时间
                 title: ["&#xe8c0;", "&#xe627;", "&#xe647;"],
@@ -125,7 +147,12 @@
                     {type: 7,route: '/controler/person'},//人
                     {type: 11,route: '/controler/car'},//车船
                 ],
-                visible: false
+                visible: false,
+                checkoutMapShow:true,
+                badge:'0',
+                alarmList:[],
+                warnListShow:false,
+                warnList:[],
             }
         },
         created () {
@@ -396,6 +423,90 @@
                     this.$message.success('登出成功')
                     location.reload()
                 })
+            },
+            async getAllAlarmEventbadge () {
+                await api.alarm.getAllAlarmEventundone().then(res => {
+                    this.alarmList=res
+                    let alarmList = []
+                    this.warnList=[]
+                    this.alarmList.forEach(item => {
+                        if(item.status.id=="1"){
+                            if (!alarmList.includes(item.id)) {
+                                alarmList.push(item.id)
+                            }
+                            if(item.rule.alarmTypeId =="2") {
+                                item.longitude=item.longitude-0.004567198366942193
+                                item.latitude=item.latitude+0.0031051178912733235
+                            }
+                            if(this.warnList.length<6){
+                                if(item.rule!=null){
+                                    if(item.rule.alarmTypeId =="1"){
+                                        if(item.device.typeId =="1"){
+                                            item.icon = '../../../static/img/broadcast_danage.svg'
+                                        }else if(item.device.typeId =="2"){
+                                            item.icon = '../../../static/img/camera_danage.svg'
+                                        }else  if(item.device.typeId =="3") {
+                                            item.icon = '../../../static/img/machine_danage.svg'
+                                        }else  if(item.device.typeId =="4") {
+                                            item.icon = '../../../static/img/led_danage.svg'
+                                        }else  if(item.device.typeId =="5") {
+                                            item.icon = '../../../static/img/light_danage.svg'
+                                        }else  if(item.device.typeId =="6") {
+                                            item.icon = '../../../static/img/detection_danage.svg'
+                                        }else  if(item.device.typeId =="7") {
+                                            item.icon = '../../../static/img/wifi_danage.svg'
+                                        }else  if(item.device.typeId =="8") {
+                                            item.icon = '../../../static/img/wring_danage.svg'
+                                        }else  if(item.device.typeId =="9") {
+                                            item.icon = '../../../static/img/gps_danage.svg'
+                                        }
+                                    }else if(item.rule.alarmTypeId =="2") {
+                                        item.icon = '../../../static/img/alarm/alarmcolumnRule_one.svg'
+                                    }else if(item.rule.alarmTypeId =="3") {
+                                        item.icon = '../../../static/img/alarm/firefightingRule_one.svg'
+                                    }else if(item.rule.alarmTypeId =="4") {
+                                        item.icon = '../../../static/img/alarm/crossborderRule_one.svg'
+                                    }else if(item.rule.alarmTypeId =="5") {
+                                        item.icon = '../../../static/img/alarm/speedingRule_one.svg'
+                                    }else if(item.rule.alarmTypeId =="6") {
+                                        item.icon = '../../../static/img/alarm/offtrackRule_one.svg'
+                                    }else if(item.rule.alarmTypeId =="7") {
+                                        item.icon = '../../../static/img/alarm/overlimitRule_one.svg'
+                                    }else if(item.rule.alarmTypeId =="8") {
+                                        item.icon = '../../../static/img/alarm/waterlevelRule_one.svg'
+                                    }else if(item.rule.alarmTypeId =="9") {
+                                        item.icon = '../../../static/img/alarm/conditionRule_one.svg'
+                                    }
+                                } else {
+                                    item.icon = '../../../static/img/alarm/speedingRule_one.svg'
+                                }
+                                this.warnList.push(item)
+                            }
+                        }
+                    })
+                    this.badge=alarmList.length
+                    setTimeout(() => {
+                        let route = this.$route.path
+                        if (route.includes('controler')||route.includes('facility')||route.includes('deploy')||route.includes('alarm')) {
+                            this.getAllAlarmEventbadge();//长轮询
+                        }
+                    },10000)
+                }).catch(err =>{
+                    console.log(err)
+                })
+            },
+            alarmBadge(){
+                this.warnListShow=false
+                this.activeIndex = 0
+                this.$store.commit('SHOW_SEARCH', true)
+                this.$router.push('/controler/warn')
+            },
+            warnShow(index){
+                this.warnListShow=false
+                this.activeIndex = 0
+                this.$router.push('/controler/warn')
+                this.$store.commit('SEARCH_INFO',index)
+                this.$store.commit('SHOW_SEARCH', true)
             }
         },
         mounted(){
@@ -465,12 +576,73 @@
         .el-submenu.is-active .el-submenu__title{
             border-bottom-color: transparent;
         }
+        .alarmBadge{
+            button{
+                cursor: pointer;
+                height: rem(60);
+            }
+            .el-badge__content.is-fixed{
+                right:rem(38);
+                top:rem(17);
+                background: #f00;
+            }
+        }
     }
 </style>
 <style lang="scss" scoped>
     .eye{
         width: 100%;
         height: 100%;
+        .warnListShow{
+            position: fixed;
+            top:rem(60);
+            right: rem(320);
+            z-index: 10;
+            background: #fff;
+            border-top:none;
+            border: 1px solid #eee;
+            .warnli{
+                padding: 0px 5px;
+                width:rem(200);
+                .warnListShowimg{
+                    line-height: rem(34);
+                    height: rem(34);
+                    margin-left: 5px;
+                    border-bottom: 1px solid #eee;
+                    width:rem(190);
+                    overflow: hidden;
+                    font-size: 14px;
+                    color: #666;
+                    cursor: pointer;
+                    img{
+                        width:rem(18);
+                        vertical-align: top;
+                        margin-right: rem(5);
+                        margin-top: rem(8);
+                        display: inline-block;
+                    }
+                    label{
+                        line-height: rem(34);
+                        height: rem(34);
+                        overflow: hidden;
+                        display: inline-block;
+                        width: rem(165);
+                        cursor: pointer;
+                    }
+                }
+            }
+            button{
+                background: #eee;
+                width:rem(210);
+                border: none;
+                line-height: rem(34);
+                text-align: center;
+                font-size: 16px;
+                color: #333;
+                cursor: pointer;
+                outline:none
+            }
+        }
         i {
             font-family: iconfont;
             font-style: normal;

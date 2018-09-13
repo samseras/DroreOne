@@ -488,8 +488,8 @@
                             // var latitude = 30.121381873225815+Math.random()*0.01
                             // var longitude = 120.20690542885497+Math.random()*0.01
                             if(obj.gpsData){
-                                latitude = obj.gpsData.latitude-0.0025647127,
-                                longitude = obj.gpsData.longitude+0.0048011541
+                                latitude = obj.gpsData.latitude+0.49693734262853-0.0025647127,
+                                longitude = obj.gpsData.longitude+0.451536705535+0.0048011541
                             }
                             obj.status=obj.gpsData ? "ONLINE" : "OFFLINE";
                             obj.location=[longitude,latitude];
@@ -539,68 +539,6 @@
                 //具体的车船信息，包括关联的人员信息
                 Promise.all([this.getAllVehicleGps()]).then(result=>{
                     let vehicles = result[0]
-                    // let vehicles =  [
-                    //     {
-                    //         "vehicle": {
-                    //             "id": "05579c25-8abb-4bfa-83ae-2a1e50a071ee",
-                    //             "createTime": null,
-                    //             "creator": null,
-                    //             "modifyTime": "2018-09-11 17:32:51",
-                    //             "modifier": "admin",
-                    //             "serialNum": "船001",
-                    //             "capacity": 33,
-                    //             "type": 1,
-                    //             "model": "363",
-                    //             "gpsDeviceId": "21a435fd-f067-4cb5-841e-0482bbe1c230",
-                    //             "pictureId": null,
-                    //             "maintenanceStatus": 0,
-                    //             "maintenanceDate": "2018-08-07",
-                    //             "purchaseDate": "2010-03-23",
-                    //             "description": "反感和的",
-                    //             "scenicAreaId": null,
-                    //             "deleted": false
-                    //         },
-                    //         "gpsDeviceId": "21a435fd-f067-4cb5-841e-0482bbe1c230",
-                    //         "gpsDeviceName": "gps1",
-                    //         "pictureId": null,
-                    //         "picturePath": null,
-                    //         "gpsData":
-                    //         //null,
-                    //             {
-                    //                 "deviceId": "21a435fd-f067-4cb5-841e-0482bbe1c230",
-                    //                 "ioTDeviceId": null,
-                    //                 "createTime": "2017-12-31 12:21:39",
-                    //                 "longitude": 120.13310087077178,
-                    //                 "latitude": 30.30729423238902,
-                    //                 "altitude": null,
-                    //                 "direction": null,
-                    //                 "speed": 4,
-                    //                 "telephone": null,
-                    //                 "deviceNum": null,
-                    //                 "coordinate": null
-                    //             },
-                    //         "driver": {
-                    //             "id": "1",
-                    //             "creator": null,
-                    //             "createTime": null,
-                    //             "modifier": "admin",
-                    //             "modifyTime": "2018-09-11 18:00:00",
-                    //             "name": "admin",
-                    //             "cnName": " 系统管理员",
-                    //             "gender": 0,
-                    //             "iconId": null,
-                    //             "mobileNum": "18800000000",
-                    //             "fixedPhoneNum": null,
-                    //             "idCardNum": null,
-                    //             "email": null,
-                    //             "workAddress": null,
-                    //             "description": null,
-                    //             "departmentId": null,
-                    //             "jobId": null,
-                    //             "roleId": "1"
-                    //         }
-                    //     }
-                    // ]
                     if(vehicles.length > 0){
                         vehicles.forEach(obj=>{
                             // var latitude = obj.gpsData.latitude+Math.random()*0.01
@@ -608,8 +546,8 @@
                             let latitude = ''
                             let longitude = ''
                             if(obj.gpsData){
-                                latitude = obj.gpsData.latitude-0.0025647127,
-                                longitude = obj.gpsData.longitude+0.0048011541
+                                latitude = obj.gpsData.latitude+0.49693734262853-0.0025647127,
+                                longitude = obj.gpsData.longitude+0.451536705535+0.0048011541
                             }
                             obj.location=[longitude,latitude];
                             let layer = droreMap.icon.returnLayer(obj.vehicle.id)
@@ -2481,7 +2419,9 @@
                         });
                     })
                 }
-
+                // setTimeout(() => {
+                //     this.getAllLangPerson();//长轮询
+                // },5000)
                 // Promise.all([this.getAllUser()]).then(result=>{
                 //     console.log(result,'00000')
                 //     // let users = result[0]
@@ -2596,6 +2536,61 @@
                 //
                 //
                 // })
+            },
+            async getAllLangPerson(){
+                Promise.all([this.getAllUser()]).then(result=>{
+                    let users = result[0]
+
+                    if(users.length > 0){
+                        users.forEach(obj=>{
+                            let latitude = ''
+                            let longitude = ''
+                            if(obj.gpsData){
+                                latitude = obj.gpsData.latitude,
+                                    longitude = obj.gpsData.longitude
+                            }
+                            obj.status=obj.gpsData ? "ONLINE" : "OFFLINE";
+                            obj.location=[longitude,latitude];
+                            var icon = new droreMap.icon.Marker({
+                                coordinate: droreMap.trans.transFromWgsToLayer(obj.location),
+                                name:obj.name,
+                                subtype:'securityPerson',
+                                id:obj.id,
+                                url:'/static/img/icon/people_small.svg',
+                                type:'security',
+                                status:obj.gpsData ? "ONLINE" : "OFFLINE",
+                                description:obj.description,
+                                gpsData:obj.gpsData,
+                                data:obj,
+                            });
+                            droreMap.icon.addChild(icon);
+                            icon.showName=true
+                            droreMap.icon.showLayer(icon.id,false);
+                            let that = this;
+                            icon.onclick(function (e) {
+                                that.menulist = e.data;
+                                var div = document.getElementById('contextmenu_container')
+                                var popup = new  droreMap.pop.Popup(div,droreMap.trans.transFromWgsToLayer([longitude,latitude]),"contextmenu_container")
+                                droreMap.pop.addChild(popup,e.data.id);
+                                $("#contextmenu_container").attr("class","contextmenu "+e.subtype);
+                                if(e.data.status =="FAULT"){
+                                    that.open=false
+                                }else if(e.data.status =="OFFLINE"){
+                                    that.open=false
+                                }else {
+                                    that.open= true
+                                }
+                                $("#contextmenu_container").show();
+                            });
+                        })
+                    }
+                })
+                setTimeout(() => {
+                    let route = this.$route.path
+                    if (route.includes('controler')) {
+                        this.getAllLangPerson();//长轮询
+                    }
+                },5000)
             },
             async getAllAlarmEvent () {
                 await api.alarm.getAllAlarmEvent().then(res => {
