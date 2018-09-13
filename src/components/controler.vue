@@ -38,7 +38,7 @@
                     {names:'MONITORS',route: '/controler/environment', img: '../../../static/img/detection.svg', desc: "环境检测传感器",controlShow:false},
                     {enable: true,names:'WARN',route: '/controler/warn', img: '../../../static/img/warn.svg', desc: "告警",controlShow:true},
                     {names:'LED',route: '/controler/screen', img: '../../../static/img/led.svg', desc: "LED大屏",controlShow:false},
-                    {enable: true,names:'PERSON',route: '/controler/person', img: '../../../static/img/dmis.svg', desc: "个人定位",controlShow:true},
+                    // {enable: true,names:'PERSON',route: '/controler/person', img: '../../../static/img/dmis.svg', desc: "个人定位",controlShow:true},
                     {names:'LIGHT',route: '/controler/light', img: '../../../static/img/light.svg', desc: "路灯",controlShow:false},
                     {names:'SECURITY',route: '/controler/security', img: '../../../static/img/security.svg', desc: "巡检计划",controlShow:false},
                     // {route: '/controler/other', img: '../../../static/img/else.png', desc: "其他"}
@@ -50,7 +50,7 @@
                 controler:[
                     {enable: true,names:'CAR',route: '/controler/car', img: '../../../static/img/boatCar.svg', desc: "车船调度",controlShow:true},
                     {enable: true,names:'WARN',route: '/controler/warn', img: '../../../static/img/warn.svg', desc: "告警",controlShow:true},
-                    {enable: true,names:'PERSON',route: '/controler/person', img: '../../../static/img/dmis.svg', desc: "个人定位",controlShow:true},
+                    {enable: false,names:'PERSON',route: '/controler/person', img: '../../../static/img/dmis.svg', desc: "个人定位",controlShow:true},
                     {enable: true,names:'SECURITY',route: '/controler/security', img: '../../../static/img/security.svg', desc: "巡检计划",controlShow:true},
 
                 ],

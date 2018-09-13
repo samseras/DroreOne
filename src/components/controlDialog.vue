@@ -332,7 +332,17 @@
                     })
                 }else if(this.sercurityPerson){
                     //人员历史轨迹
-
+                    var param = {
+                        id:this.Info.id,
+                        from:this.dateRange[0],
+                        to:this.dateRange[1]
+                    }
+                    // console.log(param)
+                    Promise.all([this.getPersonHistory(param)]).then(res=>{
+                        // console.log(res,'历史轨迹数据')
+                        this.historyData = res[0]
+                        this.historyvisible = true
+                    })
                 }
 
                 // this.historyData =[
@@ -369,6 +379,9 @@
                 // this.historyvisible = true
 
 
+            },
+            async getPersonHistory(param){
+                return await api.user.getUserHistoryRoute(param)
             },
             async getHistoryRoute(param){
                 return await api.boat.getHistoryRouteByVehicle(param)
