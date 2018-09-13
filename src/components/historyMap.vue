@@ -66,7 +66,7 @@
                      return
                  }
                 this.historyData.forEach(item=>{
-                    geo.push([item.longitude,item.latitude])
+                    geo.push([item.longitude+0.0048011541,item.latitude-0.0025647127])
                 })
                 var areaEvtList =new historyMap.road.RoadLayer('ROUTE_list', '#fb9000', 'blue')
                 let area = [];
@@ -77,7 +77,8 @@
                 var data = {"id": this.historyData[0].deviceId, "name": this.historyData[0].deviceName,"constructor":''}
                 areaEvtList.addRoad(area, data)
                 historyMap.road.addRoadLayer(areaEvtList, this.historyData[0].id)
-                historyMap.map.panToCoord(historyMap.trans.transFromWgsToLayer([this.historyData[0].longitude,this.historyData[0].latitude]));
+                console.log()
+                historyMap.map.panToCoord(historyMap.trans.transFromWgsToLayer([this.historyData[0].longitude+0.0048011541,this.historyData[0].latitude-0.0025647127]));
             }
         },
         mounted() {

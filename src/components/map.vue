@@ -485,9 +485,11 @@
                         vehicles.forEach(obj=>{
                             let latitude = ''
                             let longitude = ''
+                            // var latitude = 30.121381873225815+Math.random()*0.01
+                            // var longitude = 120.20690542885497+Math.random()*0.01
                             if(obj.gpsData){
-                                latitude = obj.gpsData.latitude+0.49693734262853,
-                                longitude = obj.gpsData.longitude+0.451536705535
+                                latitude = obj.gpsData.latitude-0.0025647127,
+                                longitude = obj.gpsData.longitude+0.0048011541
                             }
                             obj.status=obj.gpsData ? "ONLINE" : "OFFLINE";
                             obj.location=[longitude,latitude];
@@ -531,7 +533,7 @@
                 })
                 setTimeout(() => {
                     this.getAllLangVehicle();//长轮询
-                },500)
+                },5000)
             },
             async getAllLangVehicle(){ //车船轮询
                 //具体的车船信息，包括关联的人员信息
@@ -606,8 +608,8 @@
                             let latitude = ''
                             let longitude = ''
                             if(obj.gpsData){
-                                latitude = obj.gpsData.latitude+0.49693734262853,
-                                longitude = obj.gpsData.longitude+0.451536705535
+                                latitude = obj.gpsData.latitude-0.0025647127,
+                                longitude = obj.gpsData.longitude+0.0048011541
                             }
                             obj.location=[longitude,latitude];
                             let layer = droreMap.icon.returnLayer(obj.vehicle.id)
@@ -2386,47 +2388,10 @@
                 return await api.user.getUserGPSInfo()
             },
             getAllPerson(){
-                let users =  [
-                    {
-                        "vehicle": {
-                            "id": "05579c25-8abb-4bfa-83ae-2a1e50a071ee",
-                            "createTime": null,
-                            "creator": null,
-                            "modifyTime": "2018-09-11 17:32:51",
-                            "modifier": "admin",
-                            "serialNum": "船001",
-                            "capacity": 33,
-                            "type": 1,
-                            "model": "363",
-                            "gpsDeviceId": "21a435fd-f067-4cb5-841e-0482bbe1c230",
-                            "pictureId": null,
-                            "maintenanceStatus": 0,
-                            "maintenanceDate": "2018-08-07",
-                            "purchaseDate": "2010-03-23",
-                            "description": "反感和的",
-                            "scenicAreaId": null,
-                            "deleted": false
-                        },
-                        "gpsDeviceId": "21a435fd-f067-4cb5-841e-0482bbe1c230",
-                        "gpsDeviceName": "gps1",
-                        "pictureId": null,
-                        "picturePath": null,
-                        "gpsData":
-                        //null,
-                            {
-                                "deviceId": "21a435fd-f067-4cb5-841e-0482bbe1c230",
-                                "ioTDeviceId": null,
-                                "createTime": "2017-12-31 12:21:39",
-                                "longitude": 120.13310087077178,
-                                "latitude": 30.30729423238902,
-                                "altitude": null,
-                                "direction": null,
-                                "speed": 4,
-                                "telephone": null,
-                                "deviceNum": null,
-                                "coordinate": null
-                            },
-                        "driver": {
+
+                let users =
+                    [
+                        {
                             "id": "1",
                             "creator": null,
                             "createTime": null,
@@ -2444,11 +2409,35 @@
                             "description": null,
                             "departmentId": null,
                             "jobId": null,
-                            "roleId": "1"
+                            "roleId": "1",
+                            "role": {
+                                "id": "1",
+                                "creator": null,
+                                "createTime": null,
+                                "modifier": null,
+                                "modifyTime": null,
+                                "name": "admin",
+                                "description": "",
+                                "permissions": null
+                            },
+                            "job": null,
+                            "department": null,
+                            "gpsId": "21a435fd-f067-4cb5-841e-0482bbe1c230",
+                            "gpsData":  {
+                                "deviceId": "21a435fd-f067-4cb5-841e-0482bbe1c230",
+                                "ioTDeviceId": null,
+                                "createTime": "2017-12-31 12:21:39",
+                                "longitude": 120.13310087077178,
+                                "latitude": 30.30729423238902,
+                                "altitude": null,
+                                "direction": null,
+                                "speed": 4,
+                                "telephone": null,
+                                "deviceNum": null,
+                                "coordinate": null
+                            }
                         }
-                    }
-                ]
-
+                    ]
                 if(users.length > 0){
                     users.forEach(obj=>{
                         let latitude = ''
@@ -2461,16 +2450,14 @@
                         obj.location=[longitude,latitude];
                         var icon = new droreMap.icon.Marker({
                             coordinate: droreMap.trans.transFromWgsToLayer(obj.location),
-                            name:obj.vehicle.serialNum,
+                            name:obj.name,
                             subtype:'securityPerson',
-                            id:obj.vehicle.id,
+                            id:obj.id,
                             url:'/static/img/icon/people_small.svg',
                             type:'security',
                             status:obj.gpsData ? "ONLINE" : "OFFLINE",
-                            description:obj.vehicle.description,
-                            driver:obj.driver,
+                            description:obj.description,
                             gpsData:obj.gpsData,
-                            vehicle:obj.vehicle,
                             data:obj,
                         });
                         droreMap.icon.addChild(icon);
@@ -2879,6 +2866,10 @@
                     this.buildInfo = this.menulist
                     this.visible = true
                     this.title = this.menulist.subtype == 'car'?'车辆':'船只'
+                } else if(this.menulist.type=="security"){
+                    this.buildInfo = this.menulist
+                    this.visible = true
+                    this.title = this.menulist.subtype == 'securityPerson'?'人员':'巡检计划'
                 } else {
                     this.buildInfo = this.menulist.data
                     this.visible = true
@@ -4342,7 +4333,7 @@
         background: url("/static/img/icon/boat_damage_big.png") no-repeat;
     }
     .contextmenu.securityPerson i{
-        background: url("/static/img/icon/people_big.png") no-repeat;
+        background: url("/static/img/icon/people_big.svg") no-repeat;
     }
 
     .contextmenu.car,.contextmenu.car_damage,.contextmenu.boat,.contextmenu.boat_damage{
@@ -4353,13 +4344,6 @@
             display: none;
         }
         button.menuShow,button.menuOperation,button.menuBroadcast,button.menuCarCamera{
-            display: block;
-        }
-        button.menuShow{
-            left:rem(30);
-            top:rem(15);
-        }
-        button.menuCamera{
             display: block;
         }
     }

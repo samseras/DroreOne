@@ -13,11 +13,12 @@
                     <!--</el-switch>-->
                     <!--</li>-->
                     <!--<li><img src="../../../../static/img/search.png" class="search" alt=""/></li>-->
-                    <li>
-                        <el-tooltip class="item" effect="dark" content="车载视频控件下载" placement="left">
-                            <img src="../../../../static/img/down.svg" class="multiwindow" @click="cmsocxDown"  alt=""/>
-                        </el-tooltip>
-                    </li>
+
+                    <!--<li>-->
+                        <!--<el-tooltip class="item" effect="dark" content="车载视频控件下载" placement="left">-->
+                            <!--<img src="../../../../static/img/down.svg" class="multiwindow" @click="cmsocxDown"  alt=""/>-->
+                        <!--</el-tooltip>-->
+                    <!--</li>-->
                 </ul>
             </div>
             <div class="middle">
@@ -234,8 +235,8 @@
                                 subtype:'car',
                                 icon:veObj.gpsData ? '../../../static/img/car_icon.svg' : '../../../static/img/car_gray.svg' ,
                                 status:veObj.gpsData ? "ONLINE" : "OFFLINE",
-                                longitude:veObj.gpsData ? veObj.gpsData.longitude+0.451536705535 : '',
-                                latitude:veObj.gpsData ? veObj.gpsData.latitude +0.49693734262853: '',
+                                longitude:veObj.gpsData ? veObj.gpsData.longitude+0.0048011541 : '',
+                                latitude:veObj.gpsData ? veObj.gpsData.latitude-0.0025647127: '',
                                 gpsDeviceId:veObj.gpsDeviceId
                             }
                             carObj.children.push(childObj)
@@ -248,11 +249,10 @@
                                 url:'/static/img/icon/boat_small.png',
                                 type:'transport',
                                 subtype:'boat',
-                                // icon:icon,
                                 icon:veObj.gpsData ? '../../../static/img/boat_icon.svg' : '../../../static/img/boat_gray.svg',
                                 status:veObj.gpsData ? "ONLINE" : "OFFLINE",
-                                longitude:veObj.gpsData ? veObj.gpsData.longitude+0.451536705535 : '',
-                                latitude:veObj.gpsData ? veObj.gpsData.latitude+0.49693734262853 : '',
+                                longitude:veObj.gpsData ? veObj.gpsData.longitude+0.0048011541 : '',
+                                latitude:veObj.gpsData ? veObj.gpsData.latitude-0.0025647127 : '',
                                 gpsDeviceId:veObj.gpsDeviceId
                             }
                             boatObj.children.push(childObj)

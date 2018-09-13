@@ -144,7 +144,23 @@
                     </div>
                     <div v-if="sercurityPerson" class="sercurityPerson">
                         <p class="name">手机号码：
-                            <span>{{this.Info.telephone}}</span>
+                            <span>{{this.mobileNum}}</span>
+                        </p>
+                        <p class="name">当前速度：
+                            <span>{{this.speed}}Km/h</span>
+                        </p>
+                        <p class="name">
+                            <span style="display: inline-block">时间查询：</span>
+                            <el-date-picker
+                                v-model="dateRange"
+                                type="datetimerange"
+                                :picker-options="pickerOptions"
+                                range-separator="至"
+                                start-placeholder="开始日期"
+                                end-placeholder="结束日期"
+                                align="right"
+                                value-format="yyyy-MM-dd HH:mm:ss">
+                            </el-date-picker>
                         </p>
                     </div>
                     <p class="name" v-if="facility">厂&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;家：
@@ -154,7 +170,7 @@
                         {{this.Info.description}}
                     </p>
                 </div>
-                <div v-if="transport" class=""slot="footer" class="dialog-footer cardFooter">
+                <div v-if="transport || sercurityPerson" class=""slot="footer" class="dialog-footer cardFooter">
                     <el-button size="mini" class="hold" @click='findHistory'>查找</el-button>
                     <el-button size="mini" @click = 'closeDialog'>取消</el-button>
                 </div>
@@ -282,6 +298,7 @@
                 speed:'0',
                 deviceName:'',
                 deviceNum:'',
+                mobileNum:''
             }
         },
         components: {
@@ -300,17 +317,24 @@
                     this.$message.error('请输入查询时间！')
                     return
                 }
-                var param = {
-                    id:this.Info.vehicle.gpsDeviceId,
-                    from:this.dateRange[0],
-                    to:this.dateRange[1]
-                }
-                // console.log(param)
-                Promise.all([this.getHistoryRoute(param)]).then(res=>{
-                    // console.log(res,'历史轨迹数据')
+
+                if(this.transport){
+                    var param = {
+                        id:this.Info.vehicle.id,
+                        from:this.dateRange[0],
+                        to:this.dateRange[1]
+                    }
+                    // console.log(param)
+                    Promise.all([this.getHistoryRoute(param)]).then(res=>{
+                        // console.log(res,'历史轨迹数据')
                         this.historyData = res[0]
                         this.historyvisible = true
-                })
+                    })
+                }else if(this.sercurityPerson){
+                    //人员历史轨迹
+
+                }
+
                 // this.historyData =[
                 //     {
                 //         "deviceId": "c5aec75d-5dc3-48ca-9afe-127131a59a33",
@@ -347,7 +371,7 @@
 
             },
             async getHistoryRoute(param){
-                return await api.boat.getHistoryRoute(param)
+                return await api.boat.getHistoryRouteByVehicle(param)
             },
             async getWifiById(){
                 await api.wifi.getDeviceById(this.Info.id).then(res=>{
@@ -513,6 +537,20 @@
 
                 this.getTransportById()
             }
+            if(this.Info.type == "security"){
+
+                if(this.Info.gpsData==null){
+                    this.speed='0'
+                }else {
+                    this.speed=this.Info.gpsData.speed
+                }
+                this.mobileNum = this.Info.data.mobileNum
+                this.facility=false
+                this.sercurityPerson = true
+
+                // this.getTransportById()
+            }
+
         },
         computed: {
 

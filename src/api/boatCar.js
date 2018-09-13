@@ -58,6 +58,13 @@ const boat = {
         })
     },
 
+    getHistoryRouteByVehicle(param){
+        return axios ({
+            method: 'POST',
+            url: getUrl('/vehicle/history'),
+            data:JSON.stringify(param)
+        })
+    },
     updateBoat  (params) {
         return axios ({
             method: 'PUT',
