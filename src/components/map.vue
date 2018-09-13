@@ -3310,7 +3310,7 @@
             PersonDetail,
             controlcameraDialog,
 
-            musicedit
+            musicedit,
 
             AlarmDetail,
             ledDialog
