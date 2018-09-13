@@ -3,7 +3,7 @@
         <el-dialog
             :visible="visible"
             :close-on-click-modal = false
-            title="告警事件处理"
+            :title="title"
             :before-close="closeEventDialog"
             width="580px"
             :class="isBatchEdit ? 'batchHeight' : 'normalHeight'"
@@ -11,7 +11,7 @@
                 <div class="alarmEventContent">
                     <!--批量编辑-->
                     <ScrollContainer>
-                        <div class="alarmContent" v-if="isBatchEdit">
+                        <div class="alarmContent" v-if="!isAddEvent && isBatchEdit">
                             <p class="level">严重等级：
                             <el-select  v-model="batchlevel" size="mini" class="" placeholder="请选择">
                                 <el-option
@@ -34,7 +34,7 @@
                             </p>
                         </div>
 
-                        <div  v-if="!isBatchEdit"  class="alarmContent">
+                        <div  v-if="!isAddEvent && !isBatchEdit"  class="alarmContent">
                             <p class="serialNum">
                                 <span>编&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 号：</span>
                                 <el-input type="text" v-model='eventInfo.serialNum' class="inputText" :maxlength="15" :disabled="true"></el-input>
@@ -145,6 +145,100 @@
                                 </div>
                             </div>
                         </div>
+
+                        <div  v-if="isAddEvent"  class="alarmContent">
+                            <p class="serialNum">
+                                <span>事件编号：</span>
+                                <el-input type="text" v-model='eventInfo.serialNum' class="inputText" :maxlength="15" :disabled="true"></el-input>
+                            </p>
+                            <p class="type">
+                                <span>故障设备类型：</span>
+                                <el-input type="text" v-model='eventInfo.rule.alarmTypeName' class="inputText" :maxlength="15" :disabled='true'></el-input>
+                            </p>
+                            <p class="sourceDevice">
+                                <span>故障设备：</span>
+                                <el-input type="text"  v-model='eventInfo.device.name' class="inputText" :maxlength="15" :disabled='true'></el-input>
+                            </p>
+                            <p class="level">
+                                <span>严重等级：</span>
+                                <el-select  v-model="eventInfo.severity.id" size="mini" class="" placeholder="请选择" :disabled="readOnly">
+                                    <el-option
+                                        v-for="item in levelInfo"
+                                        :key="item.id"
+                                        :label="item.name"
+                                        :value="item.id">
+                                    </el-option>
+                                </el-select>
+                            </p>
+                            <p class="owner">
+                                <span>负责人员：</span>
+                                <el-select  v-model="eventInfo.owner.id" @change="ownerChange" size="mini" class="" placeholder="请选择" :disabled="readOnly">
+                                    <el-option-group
+                                        v-for="group in personInfo"
+                                        :key="group.label"
+                                        :label="group.label">
+                                        <el-option
+                                            v-for="item in group.options"
+                                            :key="item.id"
+                                            :label="item.name"
+                                            :value="item.id">
+                                        </el-option>
+                                    </el-option-group>
+                                </el-select>
+                            </p>
+
+                            <p class="tel">
+                                <span>电话号码：</span>
+                                <el-input type="text" v-model="eventInfo.owner.phone" class="inputText" :maxlength="15" :disabled="true"></el-input>
+                            </p>
+                            <p>
+                                <span>发生位置：</span>
+                            </p>
+                            <p class="status">
+                                <span>状&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 态:</span>
+                                <el-select  v-model="eventInfo.status.id" size="mini" class="" placeholder="请选择" :disabled="readOnly">
+                                    <el-option
+                                        v-for="item in statusInfo"
+                                        :key="item.id"
+                                        :label="item.name"
+                                        :value="item.id">
+                                    </el-option>
+                                </el-select>
+                            </p>
+                            <p class="description textArea">
+                                <span>处理备注：</span>
+                                <el-input type="textarea" :rows='5' :cols="30" placeholder="请输入描述信息" v-model="handleDescription" :disabled="readOnly" :maxlength="140"></el-input>
+                            </p>
+                            <div class="attachment">
+                                <span>附&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;件：</span>
+                                <div class="showFilelist" >
+                                    <div class="uploadlist" v-for="item in fileList">
+                                        <el-checkbox v-model="item.checked" class="checkBoxBtn"></el-checkbox>
+                                        <span v-if="item.path" class="downloadThis" @click="downloadFile(item)">{{item.title}}</span>
+                                        <span v-else>{{item.title}}</span>
+                                    </div>
+                                </div>
+                                <div class="uploadContent">
+                                    <el-button size="mini" class="hold" @click="$refs.uploadFile.click()" :disabled="readOnly">上传附件</el-button>
+                                    <el-button size="mini" class="hold" @click="deleteFile" :disabled="readOnly || emptyFile">删除文件</el-button>
+                                    <input type="file" ref="uploadFile" class="multiFile"  multiple="multiple" @change="selectFile">
+                                </div>
+                            </div>
+
+                            <div class="processLog">
+                                <span>处理记录：</span>
+                                <div class="processDiv" v-for="(item, index) in orderByTime">
+                                    <div class="processTime">{{item.submitTime}}</div>
+                                    <img :src="getStatusPng(item.alarmStatusId,index)" alt="">
+                                    <div class="processContent">
+                                        编辑人：{{item.submitter}}<br>
+                                        <div>{{item.modifiedFields}}
+                                        </div>
+                                        {{item.handleDescription}}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </ScrollContainer>
 
                     <div slot="footer" v-if="!readOnly || isBatchEdit" class="dialog-footer cardFooter">
@@ -168,10 +262,30 @@
      import api from '@/api'
      import AlarmDetail from '@/components/eye/alarm/alarmRule/alarmRuleDialog'
     export default {
-        props: ['visible','readOnly','isBatchEdit','choseInfoId','Info','choseInfos'],
+        props: ['title','visible','readOnly','isBatchEdit','choseInfoId','Info','choseInfos'],
         data () {
             return{
-                eventInfo:{},
+                eventInfo:{
+                    severity:{
+                      id:''
+                    },
+                    status:{
+                        id:''
+                    },
+                    owner:{
+                        id:'',
+                        phone:''
+                    },
+                    serialNum:'',
+                    rule:{
+                        name:'',
+                        alarmTypeName:''
+                    },
+                    device:{
+                        name:''
+                    },
+                    occurenceTime:''
+                },
                 batchlevel:'',
                 batchstatus:'',
                 levelInfo:[],
@@ -187,7 +301,8 @@
                 modifiedFields:'',
                 handleDescription:'',
                 isReadonly:false,
-                ruleInfo:{}
+                ruleInfo:{},
+                isAddEvent:false
             }
         },
         computed:{
@@ -505,14 +620,22 @@
         async created () {
             this.init();
             console.log(this.Info);
-            if(this.Info.fileList && this.Info.fileList instanceof Array && this.Info.fileList.length > 0){
-                this.initFileList = JSON.parse(JSON.stringify(this.Info.fileList))
-                this.fileList = JSON.parse(JSON.stringify(this.Info.fileList));
+            if(Object.keys(this.Info).length == 0){
+               console.log("空空")
+                this.isAddEvent = true
+            }else{
+                this.isAddEvent = false
+                if(this.Info.fileList && this.Info.fileList instanceof Array && this.Info.fileList.length > 0){
+                    this.initFileList = JSON.parse(JSON.stringify(this.Info.fileList))
+                    this.fileList = JSON.parse(JSON.stringify(this.Info.fileList));
+                }
+                this.eventInfo = JSON.parse(JSON.stringify(this.Info));
+                if(this.eventInfo.rule && this.eventInfo.rule.id){
+                    this.getAlarmRuleById(this.eventInfo.rule.id)
+                }
             }
-            this.eventInfo = JSON.parse(JSON.stringify(this.Info));
-            if(this.eventInfo.rule && this.eventInfo.rule.id){
-                this.getAlarmRuleById(this.eventInfo.rule.id)
-            }
+
+
 
         },
         components : {
