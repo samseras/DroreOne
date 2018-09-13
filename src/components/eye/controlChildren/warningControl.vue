@@ -368,6 +368,13 @@
                     this.fault=this.faultlist.length
                     this.stocks=this.stockslist.length
                     this.drawLine();
+                    setTimeout(() => {
+                        let route = this.$route.path
+                        if (route.includes('controler/warn')) {
+                            this.getAllAlarmEvent();//长轮询
+                            this.treeShow();
+                        }
+                    },5000)
                 }).catch(err =>{
                     console.log(err)
                 })

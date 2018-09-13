@@ -434,10 +434,10 @@
                             if (!alarmList.includes(item.id)) {
                                 alarmList.push(item.id)
                             }
-                            if(item.rule.alarmTypeId =="2") {
-                                item.longitude=item.longitude-0.004567198366942193
-                                item.latitude=item.latitude+0.0031051178912733235
-                            }
+                            // if(item.rule.alarmTypeId =="2") {
+                            //     item.longitude=item.longitude-0.004567198366942193
+                            //     item.latitude=item.latitude+0.0031051178912733235
+                            // }
                             if(this.warnList.length<6){
                                 if(item.rule!=null){
                                     if(item.rule.alarmTypeId =="1"){
@@ -510,7 +510,7 @@
             }
         },
         mounted(){
-
+            this.getAllAlarmEventbadge();//告警事件列表
         },
         components: {
             UserInfoDialog
