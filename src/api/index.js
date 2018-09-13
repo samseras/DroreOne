@@ -43,6 +43,7 @@ import portal from './portal'
 import transport from "./transport"
 import station from './station'
 import user from './user'
+import intelligentBox from './intelligentBox'
 
 
 export default {
@@ -87,5 +88,6 @@ export default {
     portal,
     transport,
     station,
-    user
+    user,
+    intelligentBox
 }

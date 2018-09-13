@@ -18,6 +18,10 @@
             <el-tooltip class="item" effect="dark" content="查看" placement="top">
                 <button @click="menuShow" class="menuShow"></button>
             </el-tooltip>
+            <el-tooltip class="item" effect="dark" content="喊话" placement="top">
+                <button @click="showCast" class="showCast"></button>
+            </el-tooltip>
+            <musicedit :dialogisshow="dialogVisible" :selectedCast="selectedCast" @closeDialog="closeMusicEdit"></musicedit>
             <el-tooltip class="item" effect="dark" content="操作" placement="top">
                  <button @click="menuOperation" class="menuOperation"></button>
             </el-tooltip>
@@ -62,6 +66,7 @@
     import api from '@/api'
     import PersonDetail from '@/components/controlDialog'
     import controlcameraDialog from '@/components/controlcameraDialog'
+    import musicedit from '@/components/intelligentBox/musicedit'
     export default {
         name: "map1",
         data () {
@@ -116,6 +121,8 @@
                 heatEmNameEight:'——',
                 heatEmNameNine:'0',
                 carcameravisible:false,
+                dialogVisible:false,
+                selectedCast:[]
 
             }
         },
@@ -2530,6 +2537,12 @@
                     this.title = this.menulist.type
                 }
             },
+            showCast(){
+                this.dialogVisible=true;
+            },
+            closeMusicEdit(){
+                this.dialogVisible=false;
+            },
             menuOperation(){
                 if(this.menulist.data.status =="FAULT"){
                     alert("操作当前内容"+this.menulist.id);
@@ -2866,7 +2879,8 @@
         components: {
             Scrollcontainer,
             PersonDetail,
-            controlcameraDialog
+            controlcameraDialog,
+            musicedit
         },
         watch: {
             getSearchInfo () {
@@ -2878,7 +2892,8 @@
                 console.log('213123')
 
 
-                console.log(this.getTreeState,'213123')
+                console.log(this.getTreeState,'选择树的内容')
+                this.selectedCast=(((this.getTreeState)[0]).checked).checkedNodes;
                 if(this.getTreeState.length>1) {
                     // console.log(this.getTreeState,'ioioioiooioioiooi')
                     //    这边是全选
@@ -3794,6 +3809,7 @@
             width: rem(24);
             height: rem(24);
         }
+
         button.menuOperation{
             background: url("/static/img/menuOperation.svg");
             background-size: cover;
@@ -3855,6 +3871,23 @@
             right:rem(30);
             top:rem(15);
             display: none;
+        }
+        button.showCast{
+            background: url("/static/img/broadcast.svg");
+            background-size: cover;
+            top:rem(8);
+            left: rem(70);
+            width: rem(24);
+            height: rem(24);
+            display:none;
+        }
+    }
+    .broadcast_close{
+        button.showCast{
+            display: block;
+        }
+        button.menuShow{
+            left:rem(30)
         }
     }
     .contextmenu.Light i{
@@ -3967,6 +4000,7 @@
         button.menuBroad{
             display: block;
         }
+
     }
     .contextmenu.alarmcolumnRule_one,.contextmenu.alarmcolumnRule_two,.contextmenu.alarmcolumnRule_three,
     .contextmenu.firefightingRule_one,.contextmenu.firefightingRule_two,.contextmenu.firefightingRule_three,
