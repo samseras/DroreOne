@@ -47,8 +47,16 @@
                         </el-table-column>
                         <el-table-column
                             sortable
+                            :filters="[{ text: '新告警', value: '1' }, { text: '处理中', value: '2' },{ text: '已处理', value: '3' }]"
+                            :filter-method="filterStatus"
+                            filter-multiple
                             prop="status.name"
                             label="状态">
+                            <template slot-scope="scope">
+                                <el-tag
+                                    :color = "scope.row.status.id == '1' ? '#f36a5a' :(scope.row.status.id == '2' ? '#f39943':'#4db3a4')"
+                                    disable-transitions>{{scope.row.status.name}}</el-tag>
+                            </template>
                         </el-table-column>
                         <el-table-column
                             prop="occurenceTime"
@@ -74,6 +82,7 @@
                                 <span @click="editInfo(scope.row,false,'编辑告警事件')" class="edit">处理</span> |
                                 <span @click="showDetail(scope.row,true,'查看告警事件')">查看</span> |
                                 <span @click="deletInfo(scope.row.id)">删除</span>
+                                <span @click="warnInfo(scope.row)"><img v-if="scope.row.status.id==1 || scope.row.status.id==2" :src="scope.row.status.id == '1' ?'../../../../../static/img/alarm/newalarm.png':'../../../../../static/img/alarm/processing.png'"></span>
                             </template>
                         </el-table-column>
                     </el-table>
@@ -121,6 +130,11 @@
             }
         },
         methods: {
+            filterStatus(value,row){
+                console.log(value,'value')
+                console.log(row,'row')
+                return row.status.id === value
+            },
             searchAnything (info) {
                 console.log(info, '这是要过滤的')
                 if (info.trim() !== '') {
@@ -227,6 +241,11 @@
                     return
                 }
             },
+            warnInfo(index){
+                this.$router.push('/controler/warn')
+                this.$store.commit('SEARCH_INFO',index)
+                this.$store.commit('SHOW_SEARCH', true)
+            },
             checked (row) {
                 this.warningEventList = this.warningEventList.filter(item => {
                     if (item.id === row.id) {
@@ -275,11 +294,22 @@
                     return
                 }
             },
+            previousPage (page) {
+                console.log(page, '这是传过来的pageNum')
+                this.pageNum = page
+                this.getAllAlarmEvent ()
+            },
+            nextPage (page) {
+                console.log(page, '这个是下一页的pageNUM')
+                this.pageNum = page
+                this.getAllAlarmEvent ()
+            },
             saveEditInfo(param){ //编辑保存
-                if(this.isBatchEdit){
-                    this.updateAlarmEvent(param.data)
+                let that=this
+                if(that.isBatchEdit){
+                    that.updateAlarmEvent(param.data)
                 }else{
-                    this.addUpload(param)
+                    that.addUpload(param)
                 }
             },
             addUpload(param){
@@ -305,8 +335,6 @@
                 }else{
                     this.updateAlarmEvent(objArray)
                 }
-
-
             },
             uploadFile (data) {
                 return new Promise((resolve, reject) => {
@@ -318,16 +346,6 @@
                         console.log(err, '上传失败')
                     })
                 })
-            },
-            previousPage (page) {
-                console.log(page, '这是传过来的pageNum')
-                this.pageNum = page
-                this.getAllAlarmEvent ()
-            },
-            nextPage (page) {
-                console.log(page, '这个是下一页的pageNUM')
-                this.pageNum = page
-                this.getAllAlarmEvent ()
             },
             async updateAlarmEvent(objArray){
                 await api.alarm.updateAlarmEvent(objArray).then(res => {
@@ -350,7 +368,31 @@
                                 this.warningEventList = JSON.parse(JSON.stringify(res))
                                 this.warningEventList.forEach(item => {
                                     item.checked = false;
-                                    item.rule.alarmTypeName = this.getAlarmTypeNameById(item.rule.alarmTypeId)
+                                    if(item.rule && item.rule.alarmTypeId){
+                                        item.rule.alarmTypeName = this.getAlarmTypeNameById(item.rule.alarmTypeId)
+                                    }else{
+                                        item.rule.alarmTypeName = ''
+                                    }
+
+                                    if(!item.rule || !item.rule.name){
+                                        item.rule = {
+                                            name : ""
+                                        }
+                                    }
+                                    item.device = !item.device ? "" : item.device
+                                    item.acturalExtendValue = !item.acturalExtendValue ? "" : item.acturalExtendValue
+                                    if(!item.owner || !item.owner.id){
+                                        item.owner = {
+                                            id : ""
+                                        }
+                                    }
+                                    if(!item.owner || !item.owner.phone){
+                                        item.owner = {
+                                            phone : ""
+                                        }
+                                    }
+                                    item.actualValue = !item.actualValue ? "" : item.actualValue
+
                                     if(item.attachments && item.attachments.length > 0){
                                         let fileList = []
                                         item.attachments.forEach((obj)=>{
@@ -412,6 +454,11 @@
 
 <style lang="scss" scoped type="text/scss">
     .warningEvent{
+        .el-tag{
+            color: #fff;
+            width: 80%;
+            text-align: center;
+        }
         width: 100%;
         height: 100%;
         display: flex;

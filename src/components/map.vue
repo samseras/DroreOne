@@ -50,6 +50,16 @@
                       :visible="cameravisible"
                       @closeInfoDialog ="closeDialog">
         </controlcameraDialog>
+        <AlarmDetail v-if="AlarmDetailShow"
+                     :visible="AlarmDetailShow"
+                     :Info="warningEventInfo"
+                     :readOnly="readOnly"
+                     @closeDialog ="closeDialog"
+                     :title = "title"
+                     @saveEditInfo="saveEditInfo"
+                     :isBatchEdit="isBatchEdit"
+                     :choseInfos = 'choseInfos'>
+        </AlarmDetail>
     </Scrollcontainer>
 
 </template>
@@ -62,6 +72,8 @@
     import api from '@/api'
     import PersonDetail from '@/components/controlDialog'
     import controlcameraDialog from '@/components/controlcameraDialog'
+    import AlarmDetail from '@/components/eye/alarm/alarmEvent/alarmEventDialog'
+
     export default {
         name: "map1",
         data () {
@@ -155,7 +167,7 @@
                 this.overView();//鹰眼
                 // this.rangeSearch();// 范围查找
                 this.getAllRoute();//调度路线
-                // this.getAllAlarmEvent();//告警事件现有标注
+                this.getAllAlarmEvent();//告警事件现有标注
                 //this.getAllTransportRoute();// 车船调度路线输出
                 //this.getAllStation();
                 this.getAllVehicle();// 车船信息
@@ -359,6 +371,43 @@
                     this.addUpload(param)
                 }
             },
+            addUpload(param){
+                let objArray = param.data
+                let fileAddList = param.fileAddList
+                let params = []
+                if(fileAddList.length > 0){
+                    fileAddList.forEach((item)=>{
+                        var data = new FormData();
+                        data.append('f1',item);
+                        params.push(this.uploadFile(data));
+
+                    })
+                    console.log(params)
+                    Promise.all(params).then((result)=>{
+                        console.log(result)
+                        objArray[0].attachmentIds = objArray[0].attachmentIds.concat(result.map(item=>item.id))
+                        this.updateParams = objArray
+
+                    }).then(objArray=>{
+                        this.updateAlarmEvent(this.updateParams)
+                    })
+                }else{
+                    this.updateAlarmEvent(objArray)
+                }
+            },
+            async updateAlarmEvent(objArray){
+                await api.alarm.updateAlarmEvent(objArray).then(res => {
+                    console.log(res, '修改成功')
+                    this.$message.success('修改成功')
+                    this.choseInfos = []
+                    this.AlarmDetailShow = false
+                    this.getAllAlarmEvent();
+                }).catch(err => {
+                    this.$message.error('修改失败，请稍后重试')
+                    console.log(err)
+                    this.choseInfos = []
+                })
+            },
             requestGisMain() {
                 document.getElementById('map').innerHTML = ""
                 $.ajax({
@@ -507,7 +556,6 @@
                                 vehicle:obj.vehicle,
                                 data:obj,
                             });
-                            console.log(longitude,latitude)
                             droreMap.icon.addChild(icon);
                             icon.showName=true
                             droreMap.icon.showLayer(icon.id,false);
@@ -2593,9 +2641,28 @@
                 },5000)
             },
             async getAllAlarmEvent () {
-                await api.alarm.getAllAlarmEvent().then(res => {
+                await api.alarm.getAllAlarmEventundone().then(res => {
                     for (let i=0;i<res.length;i++) {
                         res[i].location = [res[i].longitude,res[i].latitude]
+                        if(!res[i].rule || !res[i].rule.name){
+                            res[i].rule = {
+                                name : ""
+                            }
+                        }
+                        res[i].device = !res[i].device ? "" : res[i].device
+                        res[i].acturalExtendValue = !res[i].acturalExtendValue ? "" : res[i].acturalExtendValue
+                        if(!res[i].owner || !res[i].owner.id){
+                            res[i].owner = {
+                                id : ""
+                            }
+                        }
+                        if(!res[i].owner || !res[i].owner.phone){
+                            res[i].owner = {
+                                phone : ""
+                            }
+                        }
+                        res[i].actualValue = !res[i].actualValue ? "" : res[i].actualValue
+                        res[i].type="warn"
                         if(res[i].rule.alarmTypeId =="2") {
                             if (res[i].status.id =="1")  {
                                 res[i].url = '/static/img/icon/alarmcolumnRule_one.png'
@@ -2701,8 +2768,19 @@
                         icon.onclick(function (e) {
                             that.menulist = e.data;
                             that.droreMappopup(that.menulist);
+                            // that.warnListShow(e);
                         });
                     }
+                    let route = this.$route.path
+                    if (route.includes('controler')) {
+                        this.treeShow(this.getSearchInfo);
+                    }
+                    // setTimeout(() => {
+                    //     let route = this.$route.path
+                    //     if (route.includes('controler')) {
+                    //         this.getAllAlarmEvent();//长轮询
+                    //     }
+                    // },10000)
                 }).catch(err => {
                     console.log(err, '请求失败')
                 })
@@ -2758,9 +2836,6 @@
                     }
                 }
             },
-
-
-
             overView() {//鹰眼图
                 var overView = new droreMap.control.OverviewMap({'url': '/static/img/jhdyh.png'});
                 droreMap.control.addControl(overView);
@@ -2785,7 +2860,7 @@
                 this.overView();//鹰眼
                 // this.rangeSearch();// 范围查找
                 this.getAllRoute();//调度路线
-                // this.getAllAlarmEvent();//告警事件现有标注
+                this.getAllAlarmEvent();//告警事件现有标注
                 //this.getAllTransportRoute();// 车船调度路线输出
                 //this.getAllStation();
                 this.getAllVehicle();// 车船信息
@@ -2818,6 +2893,13 @@
                 }
                 $("#contextmenu_container").show();
                 this.menuBroadvolume=false;
+                let that =this
+                $(document).keyup(function(event){
+                    switch(event.keyCode) {
+                        case 27:
+                            that.escFun();
+                    }
+                });
             },
             mapSwitch(){
                 this.menuBroadvolume=false;
@@ -2872,13 +2954,19 @@
                 }
             },
             menuOperation(){
+                this.menuBroadvolume=false;
                 if(this.menulist.data.status =="FAULT"){
                     alert("操作当前内容"+this.menulist.id);
                 }else {
                     if(this.menulist.type=="warn"){
-                        this.$message.warning(this.menulist.name+'使用正常')
+                        console.log(this.menulist.data)
+                        this.warningEventInfo = this.menulist.data;
+                        this.AlarmDetailShow = true;
+                        this.isBatchEdit = false;
+                        this.readOnly = false;
+                        this.title = '编辑告警事件';
                     }else {
-                        this.$message.warning(this.menulist.name+'使用正常')
+                        this.$message.success(this.menulist.name+'使用正常')
                     }
                 }
             },
@@ -2902,16 +2990,6 @@
                 this.menuBroadvolume=false;
                 var explorer = window.navigator.userAgent;
                 if (explorer.indexOf("MSIE") >= 0 || (!!window.ActiveXObject || "ActiveXObject" in window)) {
-                    // if (!this.Info.id) {
-                    //     this.$message.error("该设备ID为空！");
-                    // } else if (!this.Info.serialNum) {
-                    //     this.$message.error("该设备serialNum未设置！");
-                    // } else {
-                    //     this.buildInfo = this.menulist.data
-                    //     this.cameravisible = true
-                    //     this.title = this.menulist.type+' :  '+this.menulist.name
-                    // }
-
                     this.buildInfo = data
                     this.cameravisible = true
                     this.title = '摄像头 : '+ data.name
@@ -2940,7 +3018,7 @@
                     types:types
                 }
                 this.getSearchFacility(SearchFacility)
-                Circle.setCenter(this.menulist.coordinate,radius);
+                Circle.setCenter(this.menulist.coordinate,radius+80);
             },
             warnListShow(data){
                 this.menuBroadvolume=false;
@@ -2965,13 +3043,13 @@
                 Circle.setCenter(this.menulist.coordinate,radius);
             },
             menuBroad(){
-                // this.jsonAttrList=JSON.parse(this.menulist.data.jsonAttr)
-                // this.menuBroadvolumeNumber=this.jsonAttrList.status.volume
-                // if(this.menuBroadvolume){
-                //     this.menuBroadvolume=false;
-                // }else {
-                //     this.menuBroadvolume=true;
-                // }
+                this.jsonAttrList=JSON.parse(this.menulist.data.jsonAttr)
+                this.menuBroadvolumeNumber=this.jsonAttrList.status.volume
+                if(this.menuBroadvolume){
+                    this.menuBroadvolume=false;
+                }else {
+                    this.menuBroadvolume=true;
+                }
             },
             async setBroadcastVolume(val){
                 await api.broadcast.setBroadcastVolume(this.menulist.id,val).then(res => {
@@ -3003,14 +3081,12 @@
                     types:types
                 }
                 this.getSearchFacility(SearchFacility)
-                Circle.setCenter(this.menulist.coordinate,radius+35);
+                Circle.setCenter(this.menulist.coordinate,radius+80);
             },
             menuDelete(){
                 $("#contextmenu_container").hide();
                 this.menuBroadvolume=false;
-                if(this.menulist.type=="warn"){
-                    this.escFun();
-                }
+                this.escFun();
             },
             treeShow(data){
                 console.log(data,'23123123')
@@ -3156,13 +3232,6 @@
                     that.getSearchFacility(SearchFacility)
                     Circle.setCenter(evt.coordinate,radius+35);
                 })
-
-                $(document).keyup(function(event){
-                    switch(event.keyCode) {
-                        case 27:
-                            that.escFun();
-                    }
-                });
             },
             escFun(){
                 $("#contextmenu_container").hide();
@@ -3195,7 +3264,13 @@
                         if(this.searchFacilityList[i].typeId=="1"){
                             broadListId.push(this.searchFacilityList[i].id)
                         }else if(this.searchFacilityList[i].typeId=="2"){
-                            cameraListId.push(this.searchFacilityList[i].id)
+                            cameraListId.push(this.searchFacilityList[i])
+                        }
+                    }
+                    if(cameraListId.length>0){
+                        let route = this.$route.path
+                            if (route.includes('warn')) {
+                            this.warnCameraShow(cameraListId[0])
                         }
                     }
                     console.log(broadListId)
@@ -3208,7 +3283,8 @@
         components: {
             Scrollcontainer,
             PersonDetail,
-            controlcameraDialog
+            controlcameraDialog,
+            AlarmDetail
         },
         watch: {
             getSearchInfo () {
