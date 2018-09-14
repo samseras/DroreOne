@@ -274,25 +274,58 @@
                     console.log(this.securityPersonInfo)
                 })
 
-                setTimeout(() => {
-                    let route = this.$route.path
-                    if (route.includes('controler/security')) {
-                        this.initPersonData();//长轮询
-                        this.treeShow();
-                    }
-                },5000)
+                // setTimeout(() => {
+                //     let route = this.$route.path
+                //     if (route.includes('controler/security')) {
+                //         this.initPersonData();//长轮询
+                //         this.treeShow();
+                //     }
+                // },5000)
             },
             async initScheduleData(){
                 Promise.all([this.getAllUser()]).then(result=>{
                     console.log(result,'00000')
-                    let users = result[0]
-
+                    // let users = result[0]
+                    let users = [  {
+                        "id": "1",
+                        "creator": null,
+                        "createTime": null,
+                        "modifier": "admin",
+                        "modifyTime": "2018-09-11 18:00:00",
+                        "name": "admin",
+                        "cnName": " 系统管理员",
+                        "gender": 0,
+                        "iconId": null,
+                        "mobileNum": "18800000000",
+                        "fixedPhoneNum": null,
+                        "idCardNum": null,
+                        "email": null,
+                        "workAddress": null,
+                        "description": null,
+                        "departmentId": null,
+                        "jobId": null,
+                        "roleId": "1",
+                        "role": {
+                            "id": "1",
+                            "creator": null,
+                            "createTime": null,
+                            "modifier": null,
+                            "modifyTime": null,
+                            "name": "admin",
+                            "description": "",
+                            "permissions": []
+                        },
+                        "job": null,
+                        "department": null,
+                        "gpsId": null,
+                        "gpsData": null
+                    }]
                     this.securitySchedulelist = users
-                    this.number=1
+                    this.number=this.securitySchedulelist.length
                     this.securityScheduleInfo=[]
 
                     let personObj = {
-                        label:'巡检计划1',
+                        label:'巡检1',
                         id:100010,
                         children:[]
                     }
@@ -314,8 +347,8 @@
                     }
 
                     this.securityScheduleInfo.push(personObj)
-                    this.fault=0
-                    this.online= this.number - this.fault
+                    // this.fault=0
+                    // this.online= this.number - this.fault
                     console.log(this.securityScheduleInfo)
                 })
             },
