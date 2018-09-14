@@ -374,9 +374,11 @@
                 if(!this.getLocationId) {
                     this.getAllBuild();//建筑现有标注
                     this.labelDot();// 建筑打点
-                }else {
+                }else {g
                     this.getAllBuildEdit();// 建筑修改
                 }
+            }else if(route.includes('warning-Event')){
+                this.labelDot()
             }
             if(this.getSearchInfo.id){
                 this.searchShow();
@@ -2412,215 +2414,149 @@
             },
             getAllPerson(){
 
-                let users =
-                    [
-                        {
-                            "id": "1",
-                            "creator": null,
-                            "createTime": null,
-                            "modifier": "admin",
-                            "modifyTime": "2018-09-11 18:00:00",
-                            "name": "admin",
-                            "cnName": " 系统管理员",
-                            "gender": 0,
-                            "iconId": null,
-                            "mobileNum": "18800000000",
-                            "fixedPhoneNum": null,
-                            "idCardNum": null,
-                            "email": null,
-                            "workAddress": null,
-                            "description": null,
-                            "departmentId": null,
-                            "jobId": null,
-                            "roleId": "1",
-                            "role": {
-                                "id": "1",
-                                "creator": null,
-                                "createTime": null,
-                                "modifier": null,
-                                "modifyTime": null,
-                                "name": "admin",
-                                "description": "",
-                                "permissions": null
-                            },
-                            "job": null,
-                            "department": null,
-                            "gpsId": "21a435fd-f067-4cb5-841e-0482bbe1c230",
-                            "gpsData":  {
-                                "deviceId": "21a435fd-f067-4cb5-841e-0482bbe1c230",
-                                "ioTDeviceId": null,
-                                "createTime": "2017-12-31 12:21:39",
-                                "longitude": 120.13310087077178,
-                                "latitude": 30.30729423238902,
-                                "altitude": null,
-                                "direction": null,
-                                "speed": 4,
-                                "telephone": null,
-                                "deviceNum": null,
-                                "coordinate": null
-                            }
-                        }
-                    ]
-                if(users.length > 0){
-                    users.forEach(obj=>{
-                        let latitude = ''
-                        let longitude = ''
-                        if(obj.gpsData){
-                            latitude = obj.gpsData.latitude,
-                                longitude = obj.gpsData.longitude
-                        }
-                        obj.status=obj.gpsData ? "ONLINE" : "OFFLINE";
-                        obj.location=[longitude,latitude];
-                        var icon = new droreMap.icon.Marker({
-                            coordinate: droreMap.trans.transFromWgsToLayer(obj.location),
-                            name:obj.name,
-                            subtype:'securityPerson',
-                            id:obj.id,
-                            url:'/static/img/icon/people_small.svg',
-                            type:'security',
-                            status:obj.gpsData ? "ONLINE" : "OFFLINE",
-                            description:obj.description,
-                            gpsData:obj.gpsData,
-                            data:obj,
-                        });
-                        droreMap.icon.addChild(icon);
-                        icon.showName=true
-                        droreMap.icon.showLayer(icon.id,false);
-                        let that = this;
-                        icon.onclick(function (e) {
-                            that.menulist = e.data;
-                            var div = document.getElementById('contextmenu_container')
-                            var popup = new  droreMap.pop.Popup(div,droreMap.trans.transFromWgsToLayer([longitude,latitude]),"contextmenu_container")
-                            droreMap.pop.addChild(popup,e.data.id);
-                            $("#contextmenu_container").attr("class","contextmenu "+e.subtype);
-                            if(e.data.status =="FAULT"){
-                                that.open=false
-                            }else if(e.data.status =="OFFLINE"){
-                                that.open=false
-                            }else {
-                                that.open= true
-                            }
-                            $("#contextmenu_container").show();
-                        });
-                    })
-                }
-                // setTimeout(() => {
-                //     this.getAllLangPerson();//长轮询
-                // },5000)
-                // Promise.all([this.getAllUser()]).then(result=>{
-                //     console.log(result,'00000')
-                //     // let users = result[0]
-                //     let users =  [
+                // let users =
+                //     [
                 //         {
-                //             "vehicle": {
-                //                 "id": "05579c25-8abb-4bfa-83ae-2a1e50a071ee",
-                //                 "createTime": null,
-                //                 "creator": null,
-                //                 "modifyTime": "2018-09-11 17:32:51",
-                //                 "modifier": "admin",
-                //                 "serialNum": "船001",
-                //                 "capacity": 33,
-                //                 "type": 1,
-                //                 "model": "363",
-                //                 "gpsDeviceId": "21a435fd-f067-4cb5-841e-0482bbe1c230",
-                //                 "pictureId": null,
-                //                 "maintenanceStatus": 0,
-                //                 "maintenanceDate": "2018-08-07",
-                //                 "purchaseDate": "2010-03-23",
-                //                 "description": "反感和的",
-                //                 "scenicAreaId": null,
-                //                 "deleted": false
-                //             },
-                //             "gpsDeviceId": "21a435fd-f067-4cb5-841e-0482bbe1c230",
-                //             "gpsDeviceName": "gps1",
-                //             "pictureId": null,
-                //             "picturePath": null,
-                //             "gpsData":
-                //             //null,
-                //                 {
-                //                     "deviceId": "21a435fd-f067-4cb5-841e-0482bbe1c230",
-                //                     "ioTDeviceId": null,
-                //                     "createTime": "2017-12-31 12:21:39",
-                //                     "longitude": 120.13310087077178,
-                //                     "latitude": 30.30729423238902,
-                //                     "altitude": null,
-                //                     "direction": null,
-                //                     "speed": 4,
-                //                     "telephone": null,
-                //                     "deviceNum": null,
-                //                     "coordinate": null
-                //                 },
-                //             "driver": {
+                //             "id": "1",
+                //             "creator": null,
+                //             "createTime": null,
+                //             "modifier": "admin",
+                //             "modifyTime": "2018-09-11 18:00:00",
+                //             "name": "admin",
+                //             "cnName": " 系统管理员",
+                //             "gender": 0,
+                //             "iconId": null,
+                //             "mobileNum": "18800000000",
+                //             "fixedPhoneNum": null,
+                //             "idCardNum": null,
+                //             "email": null,
+                //             "workAddress": null,
+                //             "description": null,
+                //             "departmentId": null,
+                //             "jobId": null,
+                //             "roleId": "1",
+                //             "role": {
                 //                 "id": "1",
                 //                 "creator": null,
                 //                 "createTime": null,
-                //                 "modifier": "admin",
-                //                 "modifyTime": "2018-09-11 18:00:00",
+                //                 "modifier": null,
+                //                 "modifyTime": null,
                 //                 "name": "admin",
-                //                 "cnName": " 系统管理员",
-                //                 "gender": 0,
-                //                 "iconId": null,
-                //                 "mobileNum": "18800000000",
-                //                 "fixedPhoneNum": null,
-                //                 "idCardNum": null,
-                //                 "email": null,
-                //                 "workAddress": null,
-                //                 "description": null,
-                //                 "departmentId": null,
-                //                 "jobId": null,
-                //                 "roleId": "1"
+                //                 "description": "",
+                //                 "permissions": null
+                //             },
+                //             "job": null,
+                //             "department": null,
+                //             "gpsId": "21a435fd-f067-4cb5-841e-0482bbe1c230",
+                //             "gpsData":  {
+                //                 "deviceId": "21a435fd-f067-4cb5-841e-0482bbe1c230",
+                //                 "ioTDeviceId": null,
+                //                 "createTime": "2017-12-31 12:21:39",
+                //                 "longitude": 120.13310087077178,
+                //                 "latitude": 30.30729423238902,
+                //                 "altitude": null,
+                //                 "direction": null,
+                //                 "speed": 4,
+                //                 "telephone": null,
+                //                 "deviceNum": null,
+                //                 "coordinate": null
                 //             }
                 //         }
                 //     ]
-                //
-                //     if(users.length > 0){
-                //         users.forEach(obj=>{
-                //             let latitude = ''
-                //             let longitude = ''
-                //             if(obj.gpsData){
-                //                 latitude = obj.gpsData.latitude,
-                //                     longitude = obj.gpsData.longitude
+                // if(users.length > 0){
+                //     users.forEach(obj=>{
+                //         let latitude = ''
+                //         let longitude = ''
+                //         if(obj.gpsData){
+                //             latitude = obj.gpsData.latitude,
+                //                 longitude = obj.gpsData.longitude
+                //         }
+                //         obj.status=obj.gpsData ? "ONLINE" : "OFFLINE";
+                //         obj.location=[longitude,latitude];
+                //         var icon = new droreMap.icon.Marker({
+                //             coordinate: droreMap.trans.transFromWgsToLayer(obj.location),
+                //             name:obj.name,
+                //             subtype:'securityPerson',
+                //             id:obj.id,
+                //             url:'/static/img/icon/people_small.svg',
+                //             type:'security',
+                //             status:obj.gpsData ? "ONLINE" : "OFFLINE",
+                //             description:obj.description,
+                //             gpsData:obj.gpsData,
+                //             data:obj,
+                //         });
+                //         droreMap.icon.addChild(icon);
+                //         icon.showName=true
+                //         droreMap.icon.showLayer(icon.id,false);
+                //         let that = this;
+                //         icon.onclick(function (e) {
+                //             that.menulist = e.data;
+                //             var div = document.getElementById('contextmenu_container')
+                //             var popup = new  droreMap.pop.Popup(div,droreMap.trans.transFromWgsToLayer([longitude,latitude]),"contextmenu_container")
+                //             droreMap.pop.addChild(popup,e.data.id);
+                //             $("#contextmenu_container").attr("class","contextmenu "+e.subtype);
+                //             if(e.data.status =="FAULT"){
+                //                 that.open=false
+                //             }else if(e.data.status =="OFFLINE"){
+                //                 that.open=false
+                //             }else {
+                //                 that.open= true
                 //             }
-                //             obj.status=obj.gpsData ? "ONLINE" : "OFFLINE";
-                //             obj.location=[longitude,latitude];
-                //             var icon = new droreMap.icon.Marker({
-                //                 coordinate: droreMap.trans.transFromWgsToLayer(obj.location),
-                //                 name:obj.vehicle.serialNum,
-                //                 subtype:'securityPerson',
-                //                 id:obj.vehicle.id,
-                //                 url:'/static/img/icon/people_small.png',
-                //                 type:'security',
-                //                 status:obj.gpsData ? "ONLINE" : "OFFLINE",
-                //                 description:obj.vehicle.description,
-                //                 driver:obj.driver,
-                //                 gpsData:obj.gpsData,
-                //                 vehicle:obj.vehicle,
-                //                 data:obj,
-                //             });
-                //             droreMap.icon.addChild(icon);
-                //             icon.showName=true
-                //             droreMap.icon.showLayer(icon.id,false);
-                //             let that = this;
-                //             icon.onclick(function (e) {
-                //                 that.menulist = e.data;
-                //                 var div = document.getElementById('contextmenu_container')
-                //                 var popup = new  droreMap.pop.Popup(div,droreMap.trans.transFromWgsToLayer([longitude,latitude]),"contextmenu_container")
-                //                 droreMap.pop.addChild(popup,e.data.id);
-                //                 $("#contextmenu_container").attr("class","contextmenu "+e.subtype);
-                //                 if(e.data.status =="FAULT"){
-                //                     that.open=false
-                //                 }else if(e.data.status =="OFFLINE"){
-                //                     that.open=false
-                //                 }else {
-                //                     that.open= true
-                //                 }
-                //                 $("#contextmenu_container").show();
-                //             });
-                //         })
-                //     }
-                //
-                //
-                // })
+                //             $("#contextmenu_container").show();
+                //         });
+                //     })
+                // }
+
+                Promise.all([this.getAllUser()]).then(result=>{
+                    console.log(result,'00000')
+                    let users = result[0]
+                    if(users.length > 0){
+                        users.forEach(obj=>{
+                            let latitude = ''
+                            let longitude = ''
+                            if(obj.gpsData){
+                                latitude = obj.gpsData.latitude,
+                                    longitude = obj.gpsData.longitude
+                            }
+                            obj.status=obj.gpsData ? "ONLINE" : "OFFLINE";
+                            obj.location=[longitude,latitude];
+                            var icon = new droreMap.icon.Marker({
+                                coordinate: droreMap.trans.transFromWgsToLayer(obj.location),
+                                name:obj.name,
+                                subtype:'securityPerson',
+                                id:obj.id,
+                                url:'/static/img/icon/people_small.svg',
+                                type:'security',
+                                status:obj.gpsData ? "ONLINE" : "OFFLINE",
+                                description:obj.description,
+                                gpsData:obj.gpsData,
+                                data:obj,
+                            });
+                            droreMap.icon.addChild(icon);
+                            icon.showName=true
+                            droreMap.icon.showLayer(icon.id,false);
+                            let that = this;
+                            icon.onclick(function (e) {
+                                that.menulist = e.data;
+                                var div = document.getElementById('contextmenu_container')
+                                var popup = new  droreMap.pop.Popup(div,droreMap.trans.transFromWgsToLayer([longitude,latitude]),"contextmenu_container")
+                                droreMap.pop.addChild(popup,e.data.id);
+                                $("#contextmenu_container").attr("class","contextmenu "+e.subtype);
+                                if(e.data.status =="FAULT"){
+                                    that.open=false
+                                }else if(e.data.status =="OFFLINE"){
+                                    that.open=false
+                                }else {
+                                    that.open= true
+                                }
+                                $("#contextmenu_container").show();
+                            });
+                        })
+                    }
+                    setTimeout(() => {
+                        this.getAllLangPerson();//长轮询
+                    },5000)
+                })
             },
             async getAllLangPerson(){
                 Promise.all([this.getAllUser()]).then(result=>{
@@ -2700,7 +2636,18 @@
                         }
                         res[i].actualValue = !res[i].actualValue ? "" : res[i].actualValue
                         res[i].type="warn"
-                        if(res[i].rule.alarmTypeId =="2") {
+                        if(res[i].rule.name=='') {
+                            if (res[i].status.id =="1")  {
+                                res[i].url = '/static/img/icon/pollingRule_one.svg'
+                                res[i].subtype ='pollingRule_one'
+                            } else  if (res[i].status.id =="2") {
+                                res[i].url = '/static/img/icon/pollingRule_two.svg'
+                                res[i].subtype ='pollingRule_two'
+                            }else {
+                                res[i].url = '/static/img/icon/pollingRule_three.svg'
+                                res[i].subtype ='pollingRule_three'
+                            }
+                        }else if(res[i].rule.alarmTypeId =="2") {
                             if (res[i].status.id =="1")  {
                                 res[i].url = '/static/img/icon/alarmcolumnRule_one.png'
                                 res[i].subtype ='alarmcolumnRule_one'
@@ -2801,6 +2748,7 @@
                         });
                         droreMap.icon.addChild(icon);
                         droreMap.icon.showLayer(icon.id,false);
+                        icon.showName=true
                         let that = this;
                         icon.onclick(function (e) {
                             that.menulist = e.data;
@@ -4659,6 +4607,7 @@
 
     }
     .contextmenu.alarmcolumnRule_one,.contextmenu.alarmcolumnRule_two,.contextmenu.alarmcolumnRule_three,
+    .contextmenu.pollingRule_one,.contextmenu.pollingRule_two,.contextmenu.pollingRule_three,
     .contextmenu.firefightingRule_one,.contextmenu.firefightingRule_two,.contextmenu.firefightingRule_three,
     .contextmenu.crossborderRule_one,.contextmenu.crossborderRule_two,.contextmenu.crossborderRule_three,
     .contextmenu.speedingRule_one,.contextmenu.speedingRule_two,.contextmenu.speedingRule_three,
@@ -4689,6 +4638,15 @@
     }
     .contextmenu.alarmcolumnRule_three i{
         background: url("/static/img/icon/alarmcolumnRule_three_big.png") no-repeat;
+    }
+    .contextmenu.pollingRule_one i{
+        background: url("/static/img/icon/pollingRule_one_big.svg") no-repeat;
+    }
+    .contextmenu.pollingRule_two i{
+        background: url("/static/img/icon/pollingRule_two_big.svg") no-repeat;
+    }
+    .contextmenu.pollingRule_three i{
+        background: url("/static/img/icon/pollingRule_three_big.svg") no-repeat;
     }
     .contextmenu.firefightingRule_one i{
         background: url("/static/img/icon/firefightingRule_one_big.png") no-repeat;
