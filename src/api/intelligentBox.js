@@ -15,7 +15,8 @@ const intelligentBox = {
     getAllSongs(){  //获取所有歌曲
         return axios({
             method: 'GET',
-            url: getUrl('/resource')
+            //url: getUrl('/resource')
+            url:getUrl('/broadcast/getAllMusicFiles')
 
         })
     },
