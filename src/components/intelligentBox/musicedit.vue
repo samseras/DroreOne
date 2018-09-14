@@ -68,7 +68,12 @@
                         </div>
                         <div class="content">
                             <el-checkbox-group v-model="checkedmusics" @change="handleCheckedmusicsChange">
-                                <el-checkbox v-for="music in musics" :label="music" ><span class="all-name">{{music.title}}</span><span class="all-time">{{music.artist}}</span></el-checkbox>
+                                <el-checkbox v-for="music in musics" :label="music" >
+                                    <span class="all-name">
+                                        <!--{{music.title}}</span><span class="all-time">{{music.artist}}-->
+                                        {{music}}
+                                    </span>
+                                </el-checkbox>
                             </el-checkbox-group>
                         </div>
                     </div>
@@ -438,7 +443,8 @@
                 console.log(arr1,arr2);*/
                 await api.intelligentBox.getAllSongs().then(res=>{
                     console.log(res,'传回来的所有歌曲1');
-                    this.firstmusics=res;
+                    this.musics=res;
+                    /*this.firstmusics=res;
                     this.musics=this.firstmusics.slice(0);  //排除数组地址传递的相互影响
                     this.musics.forEach(item => {
                         let endNum = item.path.lastIndexOf('_')
@@ -449,7 +455,7 @@
                         item.checked =false
                         item.pic = ''
                         item.artist = 'drore'
-                        /*if (this.broadList && this.broadList.length > 0) {
+                        /!*if (this.broadList && this.broadList.length > 0) {
                             console.log(this.broadList, 'opopoppopoopopopopop')
                             this.broadList.forEach(item1 => {
                                 if (item.id === item1.id) {
@@ -457,8 +463,8 @@
                                 }
                                 this.checked(item1.id)
                             })
-                        }*/
-                    })
+                        }*!/
+                    })*/
                 })
                 console.log(this.musics,'处理过后的歌曲单子1');
             },
