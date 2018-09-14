@@ -5,7 +5,7 @@
             <i class="el-icon-search"></i>
         </div>
         <div class="funcBtn">
-
+            <el-button size="mini"plain @click="addNewInfo"><i class="el-icon-circle-plus"></i>添加</el-button>
             <el-checkbox v-model="isSelected" @change="selectedAll">全选</el-checkbox>
             <el-button size="mini"plain @click="deleteCard"><i class="el-icon-delete"></i>删除</el-button>
             <el-button size="mini"plain @click="batchEdit"><i class="el-icon-edit"></i>修改</el-button>
@@ -80,6 +80,9 @@
             showPersonJob () {
                 this.route = this.$route.path
 
+            },
+            addNewInfo(){
+                this.$emit('addNewInfo')
             },
             batchDownload(){
                 if(this.listLength == 0){

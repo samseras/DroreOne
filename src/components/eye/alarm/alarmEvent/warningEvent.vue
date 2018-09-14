@@ -9,6 +9,7 @@
                         @selectedAll = 'selectedAll'
                         @batchEdit = 'batchEdit'
                         @choseType='choseType'
+                        @addNewInfo="addNewInfo"
                         :choseId="choseInfoId"
                         :listLength = "listLength"
                         @searchAnything="searchAnything"
@@ -184,6 +185,9 @@
                 this.choseInfos = selection.map(item => {
                     return item.id
                 })
+            },
+            addNewInfo () {
+                this.showDetail({},false,'添加巡检事件',)
             },
             showDetail (info,state,title) {
                 this.warningEventInfo = info;
