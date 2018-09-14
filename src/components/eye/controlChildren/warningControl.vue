@@ -172,10 +172,29 @@
                     let regionIdList = []
                     let arr = []
                     let idList = []
+                    this.pendinglist=[]
+                    this.faultlist=[]
+                    this.stockslist=[]
                     this.lightList.forEach(item => {
                         item.label = item.serialNum
                         item.type = 'warn'
-                        if(item.rule.alarmTypeId =="1"){
+                        if(item.rule==null){
+                            item.rule=[]
+                            item.rule.alarmTypeId=10
+                        }
+                        if(item.rule.alarmTypeId =="10") {
+                            item.regionName="巡检告警"
+                            if (item.status.id =="1")  {
+                                this.pendinglist.push(item.id)
+                                item.icon = '../../../static/img/alarm/pollingIconRule_one.svg'
+                            } else  if (item.status.id =="2") {
+                                this.faultlist.push(item.id)
+                                item.icon = '../../../static/img/alarm/pollingIconRule_two.svg'
+                            }else {
+                                this.stockslist.push(item.id)
+                                item.icon = '../../../static/img/alarm/ollingIconRule_three.svg'
+                            }
+                        }else if(item.rule.alarmTypeId =="1"){
                             item.regionName="设备故障"
                             if (item.status.id =="1")  {
                                 this.pendinglist.push(item.id)

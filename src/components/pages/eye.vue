@@ -478,7 +478,7 @@
                                         item.icon = '../../../static/img/alarm/conditionRule_one.svg'
                                     }
                                 } else {
-                                    item.icon = '../../../static/img/alarm/speedingRule_one.svg'
+                                    item.icon = '../../../static/img/alarm/pollingIconRule_one.svg'
                                 }
                                 this.warnList.push(item)
                             }

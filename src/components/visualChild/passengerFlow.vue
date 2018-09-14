@@ -188,9 +188,9 @@
                     legent:["18:00","17:00","16:00","15:00","14:00","13:00","12:00","11:00","10:00","9:00"],
                 },
                 tripFlowData:{
-                    lastWeek:[900,500,1300,1450,1400,1150,1350,900,500,1050,1050,600,300,1200],
-                    currWeek:[750,500,1000,600.1150,600,1200,600,700,1400,1200,600,1450],
-                    legent:["西湖","断桥","岳王庙","黄龙洞","宝石山","鼓楼","三公园","胡雪岩故居","湖滨公园","三潭印月"],
+                    lastWeek:[900,500,1300,1450,1400,1150,1350,900,500,1050,1050,600,300,1200,670,900,1410,1300,1120],
+                    currWeek:[750,500,1000,600.1150,600,1200,600,700,1400,1200,600,1450,1000,800,1200,1000,950,1000,1400],
+                    legent:["武林门码头","青园桥","朝晖桥","潮王桥","德胜桥","左侯桥","御码头","富义仓","乾隆坊","十里银湖","香积寺","大兜路","大关桥","青莎公园","小河直街","桥西历史街区","拱宸桥","张大仙庙与财神庙","手工活态馆"],
                 },
                 carData:{
                     carTime:['06-01', '06-02', '06-03', '06-04', '06-05', '06-06', '06-07', '06-08', '06-09', '06-10', '06-11', '06-12', '06-13', '06-14', '06-15'],
@@ -419,8 +419,8 @@
                 let option = {
                     grid: {
                         top:'10%',
-                        left: '6%',
-                        right: '6%',
+                        left: '3%',
+                        right: '3%',
                         bottom: '3%',
                         containLabel: true
                     },
@@ -476,33 +476,33 @@
                             },
                             axisLabel:{
                                 interval:0,
-                                // formatter:function(value){
-                                //     var ret = "";//拼接加\n返回的类目项
-                                //     var maxLength = 3;//每项显示文字个数
-                                //     var valLength = value.length;//X轴类目项的文字个数
-                                //     var rowN = Math.ceil(valLength / maxLength); //类目项需要换行的行数
-                                //     if (rowN > 1)//如果类目项的文字大于3,
-                                //     {
-                                //         for (var i = 0; i < rowN; i++) {
-                                //             var temp = "";//每次截取的字符串
-                                //             var start = i * maxLength;//开始截取的位置
-                                //             var end = start + maxLength;//结束截取的位置
-                                //             //这里也可以加一个是否是最后一行的判断，但是不加也没有影响，那就不加吧
-                                //             temp = value.substring(start, end) + "\n";
-                                //             ret += temp; //凭借最终的字符串
-                                //         }
-                                //         return ret;
-                                //     }
-                                //     else {
-                                //         return value;
-                                //     }
-                                // },
+                                formatter:function(value){
+                                    var ret = "";//拼接加\n返回的类目项
+                                    var maxLength = 3;//每项显示文字个数
+                                    var valLength = value.length;//X轴类目项的文字个数
+                                    var rowN = Math.ceil(valLength / maxLength); //类目项需要换行的行数
+                                    if (rowN > 1)//如果类目项的文字大于3,
+                                    {
+                                        for (var i = 0; i < rowN; i++) {
+                                            var temp = "";//每次截取的字符串
+                                            var start = i * maxLength;//开始截取的位置
+                                            var end = start + maxLength;//结束截取的位置
+                                            //这里也可以加一个是否是最后一行的判断，但是不加也没有影响，那就不加吧
+                                            temp = value.substring(start, end) + "\n";
+                                            ret += temp; //凭借最终的字符串
+                                        }
+                                        return ret;
+                                    }
+                                    else {
+                                        return value;
+                                    }
+                                },
                                 textStyle: {
                                     color: '#01e4ff'
                                 }
                             },
                             splitLine:{
-                                show:true,
+                                show:false,
                                 lineStyle:{
                                     color:'rgba(1,245,255,0.3)'
                                 }
