@@ -80,38 +80,15 @@
                             <img src="../../../static/img/broadcast.svg" alt="">
                             {{item.label}}
                         </div>
-
-
-
-                        <!--<el-form ref="form" :model="form" label-width="90px">
-
-                            <el-form-item label="执行日期：">
-                                <el-col :span="11">
-                                    <el-date-picker type="date" placeholder="选择日期" v-model="form.date1" style="width: 100%;"  value-format="yyyy-MM-dd"></el-date-picker>
-                                </el-col>
-                                <el-col class="line" :span="2">到</el-col>
-                                <el-col :span="11">
-                                    <el-date-picker  type="date" placeholder="选择日期" v-model="form.date2" style="width: 100%;" value-format="yyyy-MM-dd"></el-date-picker>
-                                </el-col>
-                            </el-form-item>
-                            <el-form-item label="执行时间：">
-                                <el-col :span="11">
-                                    <el-time-picker  placeholder="选择时间" v-model="form.time1" style="width: 100%;" value-format="HH:mm:ss"></el-time-picker>
-                                </el-col>
-                                <el-col class="line" :span="2">到</el-col>
-                                <el-col :span="11">
-                                    <el-time-picker  placeholder="选择时间" v-model="form.time2" style="width: 100%;" value-format="HH:mm:ss"></el-time-picker>
-                                </el-col>
-                            </el-form-item>
-                            <el-form-item label="播放频次：">
-                                <el-select v-model="form.frequency" placeholder="">
-                                    <el-option label="播放一次" value="0"></el-option>
-                                    <el-option label="循环播放" value="1"></el-option>
-                                </el-select>
-                            </el-form-item>
-
-                        </el-form>-->
                     </div>
+                </div>
+                <div class="text-show">
+                    <el-input
+                        type="textarea"
+                        :rows="2"
+                        placeholder="请输入广播文字"
+                        v-model="broadcastText">
+                    </el-input>
                 </div>
             </div>
             <span slot="footer" class="dialog-footer">
@@ -177,6 +154,7 @@
                 dialogVisible:false,
                 //playurl:'../../../static/img/intelligentbox/bo.png',
                 playurl:'../../../static/img/intelligentbox/bo1.png',
+                broadcastText:''
             }
         },
         created(){
@@ -443,6 +421,11 @@
                     })
                 }
             },
+            async getVolumn(){
+                /*await api.intelligentBox.getStartVolumn().then(res=>{
+
+                })*/
+            },
             async getAllMusics(){
                 /*let arr1=[{name:'xiaoming'},{name:'xiaoqiang'}];
                 let arr2=arr1.slice(0);
@@ -499,13 +482,16 @@
             },
             changeVolumn(){  //音量控制进度条
                 this.audioObj.volume=(this.voicenumber)/100;
+                console.log(this.voicenumber,'音量的大小');
             },
             changeProgerss(){
                 this.audioObj.currentTime=this.progressnumber/100*(this.audioObj.duration);
             },
             init(){
                 this.getAllMusics();
+                this.getVolumn();
             },
+
             handleClose(done) {  //关闭弹框
                 this.audioObj.pause();
                 this.playurl='../../../static/img/intelligentbox/bo.png';
@@ -767,7 +753,7 @@
                             width:98%;
                             height:100%;
                             overflow-y: auto;
-                            border:1px solid transparent;
+                            border:1px solid #eee;
                             margin-top:rem(16);
                             display:flex;
                             flex-direction: row;
@@ -782,6 +768,13 @@
                             }
 
                         }
+                    }
+                    .text-show{
+                        height:13%;
+                        width:98%;
+                        border:1px solid transparent;
+                        margin-top:rem(32);
+                        overflow-y: auto;
                     }
                 }
             }

@@ -38,11 +38,11 @@
             <el-tooltip class="item" effect="dark" content="查看" placement="top">
                 <button @click="menuShow" class="menuShow"></button>
             </el-tooltip>
-            <el-tooltip class="item" effect="dark" content="喊话" placement="top">
+            <el-tooltip class="item" effect="dark" content="广播操作" placement="top">
                 <button @click="showCast" class="showCast"></button>
             </el-tooltip>
             <musicedit :dialogisshow="dialogVisible" :selectedCast="selectedCast" @closeDialog="closeMusicEdit"></musicedit>
-            <el-tooltip class="item" effect="dark" content="操作" placement="top">
+            <el-tooltip class="item" effect="dark" content="故障处理" placement="top">
                  <button @click="menuOperation" class="menuOperation"></button>
             </el-tooltip>
             <el-tooltip class="item" effect="dark" content="电话" placement="top">
