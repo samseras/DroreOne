@@ -2700,7 +2700,18 @@
                         }
                         res[i].actualValue = !res[i].actualValue ? "" : res[i].actualValue
                         res[i].type="warn"
-                        if(res[i].rule.alarmTypeId =="2") {
+                        if(res[i].rule.name=='') {
+                            if (res[i].status.id =="1")  {
+                                res[i].url = '/static/img/icon/pollingRule_one.svg'
+                                res[i].subtype ='pollingRule_one'
+                            } else  if (res[i].status.id =="2") {
+                                res[i].url = '/static/img/icon/pollingRule_two.svg'
+                                res[i].subtype ='pollingRule_two'
+                            }else {
+                                res[i].url = '/static/img/icon/pollingRule_three.svg'
+                                res[i].subtype ='pollingRule_three'
+                            }
+                        }else if(res[i].rule.alarmTypeId =="2") {
                             if (res[i].status.id =="1")  {
                                 res[i].url = '/static/img/icon/alarmcolumnRule_one.png'
                                 res[i].subtype ='alarmcolumnRule_one'
@@ -2801,6 +2812,7 @@
                         });
                         droreMap.icon.addChild(icon);
                         droreMap.icon.showLayer(icon.id,false);
+                        icon.showName=true
                         let that = this;
                         icon.onclick(function (e) {
                             that.menulist = e.data;
@@ -4659,6 +4671,7 @@
 
     }
     .contextmenu.alarmcolumnRule_one,.contextmenu.alarmcolumnRule_two,.contextmenu.alarmcolumnRule_three,
+    .contextmenu.pollingRule_one,.contextmenu.pollingRule_two,.contextmenu.pollingRule_three,
     .contextmenu.firefightingRule_one,.contextmenu.firefightingRule_two,.contextmenu.firefightingRule_three,
     .contextmenu.crossborderRule_one,.contextmenu.crossborderRule_two,.contextmenu.crossborderRule_three,
     .contextmenu.speedingRule_one,.contextmenu.speedingRule_two,.contextmenu.speedingRule_three,
@@ -4689,6 +4702,15 @@
     }
     .contextmenu.alarmcolumnRule_three i{
         background: url("/static/img/icon/alarmcolumnRule_three_big.png") no-repeat;
+    }
+    .contextmenu.pollingRule_one i{
+        background: url("/static/img/icon/pollingRule_one_big.svg") no-repeat;
+    }
+    .contextmenu.pollingRule_two i{
+        background: url("/static/img/icon/pollingRule_two_big.svg") no-repeat;
+    }
+    .contextmenu.pollingRule_three i{
+        background: url("/static/img/icon/pollingRule_three_big.svg") no-repeat;
     }
     .contextmenu.firefightingRule_one i{
         background: url("/static/img/icon/firefightingRule_one_big.png") no-repeat;
