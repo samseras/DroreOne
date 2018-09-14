@@ -19,6 +19,13 @@ const intelligentBox = {
 
         })
     },
+    getStartVolumn(){
+        /*return axios({
+            method: 'GET',
+            url: getUrl('/iot/services/broadcast')
+
+        })*/
+    },
     postMusicInfo(form){  //传递编辑的音乐信息
         console.log(form,'音乐form表单里的好东西');
         return axios ({
