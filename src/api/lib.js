@@ -51,6 +51,12 @@ const lib = {
             url: getUrl(`/uc/currentuser`),
         })
     },
+    getDeviceById(type){
+        return axios({
+            method:'GET',
+            url:getUrl('/device?deviceType='+type)
+        })
+    },
 
 }
 

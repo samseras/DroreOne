@@ -148,20 +148,34 @@
 
                         <div  v-if="isAddEvent"  class="alarmContent">
                             <p class="serialNum">
-                                <span>事件编号：</span>
-                                <el-input type="text" v-model='eventInfo.serialNum' class="inputText" :maxlength="15" :disabled="true"></el-input>
+                                <span>事&nbsp;&nbsp;件&nbsp;&nbsp;编&nbsp;&nbsp;&nbsp;号：</span>
+                                <el-input type="text" v-model='addEventInfo.serialNum' class="inputText" :maxlength="15"></el-input>
                             </p>
                             <p class="type">
                                 <span>故障设备类型：</span>
-                                <el-input type="text" v-model='eventInfo.rule.alarmTypeName' class="inputText" :maxlength="15" :disabled='true'></el-input>
+                                <el-select @change="deviceTypeChange" v-model="addEventInfo.device.typeId" placeholder="请选择"  :maxlength="15">
+                                    <el-option
+                                        v-for="item in deviceType"
+                                        :key="item.id"
+                                        :label="item.name"
+                                        :value="item.id">
+                                    </el-option>
+                                </el-select>
                             </p>
                             <p class="sourceDevice">
-                                <span>故障设备：</span>
-                                <el-input type="text"  v-model='eventInfo.device.name' class="inputText" :maxlength="15" :disabled='true'></el-input>
+                                <span>故&nbsp;&nbsp;障&nbsp;&nbsp;设&nbsp;&nbsp;&nbsp;备：</span>
+                                <el-select filterable @change="deviceChange"  v-model="addEventInfo.device.id" :disabled= "isNotDevice" placeholder="请选择"  :maxlength="15">
+                                    <el-option
+                                        v-for="item in deviceObj"
+                                        :key="item.id"
+                                        :label="item.name"
+                                        :value="item.id">
+                                    </el-option>
+                                </el-select>
                             </p>
                             <p class="level">
-                                <span>严重等级：</span>
-                                <el-select  v-model="eventInfo.severity.id" size="mini" class="" placeholder="请选择" :disabled="readOnly">
+                                <span>严&nbsp;&nbsp;重&nbsp;&nbsp;等&nbsp;&nbsp;&nbsp;级：</span>
+                                <el-select  v-model="addEventInfo.severity.id" class="" placeholder="请选择" >
                                     <el-option
                                         v-for="item in levelInfo"
                                         :key="item.id"
@@ -171,8 +185,8 @@
                                 </el-select>
                             </p>
                             <p class="owner">
-                                <span>负责人员：</span>
-                                <el-select  v-model="eventInfo.owner.id" @change="ownerChange" size="mini" class="" placeholder="请选择" :disabled="readOnly">
+                                <span>负&nbsp;&nbsp;责&nbsp;&nbsp;人&nbsp;&nbsp;&nbsp;员：</span>
+                                <el-select  v-model="addEventInfo.owner.id" @change="ownerChange" class="" placeholder="请选择" :disabled="readOnly">
                                     <el-option-group
                                         v-for="group in personInfo"
                                         :key="group.label"
@@ -188,15 +202,16 @@
                             </p>
 
                             <p class="tel">
-                                <span>电话号码：</span>
-                                <el-input type="text" v-model="eventInfo.owner.phone" class="inputText" :maxlength="15" :disabled="true"></el-input>
+                                <span>电&nbsp;&nbsp;话&nbsp;&nbsp;号&nbsp;&nbsp;&nbsp;码：</span>
+                                <el-input type="text" v-model="addEventInfo.owner.phone" class="inputText" :maxlength="15" :disabled="true"></el-input>
                             </p>
                             <p>
-                                <span>发生位置：</span>
+                                <span>发&nbsp;&nbsp;生&nbsp;&nbsp;位&nbsp;&nbsp;&nbsp;置：</span>
+                                <span class="ps">{{addEventInfo.location}}</span><i class="el-icon-location-outline" @click="showAlarmDialog"></i>
                             </p>
                             <p class="status">
-                                <span>状&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 态:</span>
-                                <el-select  v-model="eventInfo.status.id" size="mini" class="" placeholder="请选择" :disabled="readOnly">
+                                <span>状&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 态:</span>
+                                <el-select  v-model="addEventInfo.status.id" class="" placeholder="请选择" >
                                     <el-option
                                         v-for="item in statusInfo"
                                         :key="item.id"
@@ -206,7 +221,7 @@
                                 </el-select>
                             </p>
                             <p class="description textArea">
-                                <span>处理备注：</span>
+                                <span>处&nbsp;&nbsp;理&nbsp;&nbsp;备&nbsp;&nbsp;&nbsp;注：</span>
                                 <el-input type="textarea" :rows='5' :cols="30" placeholder="请输入描述信息" v-model="handleDescription" :disabled="readOnly" :maxlength="140"></el-input>
                             </p>
                             <div class="attachment">
@@ -253,18 +268,25 @@
                       :alarmRuleId="eventInfo.rule.id"
                       :isReadonly="isReadonly">
         </AlarmDetail>
+        <AlarmMap v-if="alarmMapVisible"
+                  :visible="alarmMapVisible"
+                    @closeMapDialog = "closeMapDialog" @saveLocation = "saveLocation">
+        </AlarmMap>
     </div>
 
 </template>
 
 <script>
+    import AlarmMap from '@/components/alarmMapDialog'
      import ScrollContainer from '@/components/ScrollContainer'
      import api from '@/api'
      import AlarmDetail from '@/components/eye/alarm/alarmRule/alarmRuleDialog'
+    import { mapGetters} from 'vuex'
     export default {
         props: ['title','visible','readOnly','isBatchEdit','choseInfoId','Info','choseInfos'],
         data () {
             return{
+                alarmMapVisible:false,
                 eventInfo:{
                     severity:{
                       id:''
@@ -302,17 +324,68 @@
                 handleDescription:'',
                 isReadonly:false,
                 ruleInfo:{},
-                isAddEvent:false
+                isAddEvent:false,
+                deviceType:[],
+                isNotDevice:true,
+                deviceObj:{
+
+                },
+                addEventInfo:{
+                    severity:{
+                        id:''
+                    },
+                    status:{
+                        id:''
+                    },
+                    owner:{
+                        id:'',
+                        phone:''
+                    },
+                    serialNum:'',
+                    rule:{
+                        name:'',
+                        alarmTypeName:''
+                    },
+                    device:{
+                        id:'',
+                        name:'',
+                        typeId:'',
+                        typeName:''
+                    },
+                    occurenceTime:''
+                }
             }
         },
         computed:{
+            ...mapGetters([
+                'getLocation'
+            ]),
           orderByTime(){
               if(this.eventInfo.handleRecords && this.eventInfo.handleRecords.length >0){
                   return this.eventInfo.handleRecords.reverse()
               }
           }
         },
+
         methods: {
+
+            saveLocation () {
+                let locationString
+                if (this.getLocation.length > 0) {
+                    locationString = `${this.getLocation[0]},${this.getLocation[1]}`
+                }
+
+
+                this.addEventInfo.location = locationString
+
+                this.alarmMapVisible = false
+            },
+            closeMapDialog(){
+                this.alarmMapVisible  = false
+            },
+            showAlarmDialog(){
+                this.alarmMapVisible  = true
+            },
             getStatusPng(statusId,index){
                 let imgSrc
                 if(index == 0){
@@ -354,6 +427,7 @@
                         item.options.forEach((obj)=>{
                             if(obj.id == id){
                                 this.eventInfo.owner.phone = obj.phone
+                                this.addEventInfo.owner.phone = obj.phone
                             }
                         })
                     });
@@ -516,6 +590,7 @@
                 this.getPersonInfo();
                 this.getSeverityType();
                 this.getAlarmEventStatus();
+                this.getAllDeviceType();
             },
             async deleteUpload(){
                 if(this.initFileList.length > 0){
@@ -553,6 +628,19 @@
                 let result = personArray.filter((item)=>item.id == id)
                 return result[0].name
             },
+            async getAllDeviceType () {
+                await api.lib.getAllDeviceType().then(res => {
+                    console.log(res, '查询设备类型成功')
+                    res.push({
+                        id: 0,
+                        name: "非设备故障"
+
+                    })
+                    this.deviceType = res
+                }).catch(err => {
+                    console.log(error, '查询设备类型失败')
+                })
+            },
             async getSeverityType(){
                 await api.alarm.getSeverityType().then(res => {
                     console.log(res, '查询严重等级成功')
@@ -581,6 +669,7 @@
                 // if(r2.length > 0){
                 //     this.personInfo.push(this.addPersonn(r2));
                 // }
+                console.log(this.personInfo,'ppppppppppp')
             },
             addPersonn(array){
                 console.log()
@@ -616,6 +705,33 @@
                     console.log(err, '请求失败')
                 })
             },
+            deviceTypeChange(val){
+                this.addEventInfo.device.id = ""
+                this.addEventInfo.location = ""
+               if(val == 0){
+                   this.isNotDevice = true
+               }else{
+                   this.isNotDevice = false
+                   this.getDeviceById(val)
+               }
+            },
+            deviceChange(val){
+                this.deviceObj.forEach(item=>{
+                    if(item.id == val){
+                        if(item.longitude && item.latitude){
+                            this.addEventInfo.location = item.longitude+","+item.latitude
+                        }else{
+                            this.addEventInfo.location = ""
+                        }
+                    }
+                })
+            },
+           async getDeviceById(id){
+                await  api.lib.getDeviceById(id).then(res=>{
+                    console.log(this.deviceObj)
+                    this.deviceObj = res.devices
+                })
+            }
         },
         async created () {
             this.init();
@@ -640,7 +756,8 @@
         },
         components : {
             AlarmDetail,
-            ScrollContainer
+            ScrollContainer,
+            AlarmMap
         },
          mounted () {
         }
@@ -911,6 +1028,13 @@
                              background: #fff;
 
                          }
+                     }
+                     .ps{
+                         color:#c0c4cc;
+                         width: rem(365);
+                         overflow: hidden;
+                         text-overflow: ellipsis;
+                         white-space: nowrap;
                      }
                      img {
                          display: inline-block;
