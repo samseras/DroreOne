@@ -26,6 +26,8 @@ const alarm = [
             {path:'/alarm/waterlevel-Rule',name:'waterlevelRule',component: resolve => require(['@/components/eye/alarm/alarmRule/waterlevelRule'], resolve), meta: {id: '0104'}},
             {path:'/alarm/condition-Rule',name:'conditionRule',component: resolve => require(['@/components/eye/alarm/alarmRule/conditionRule'], resolve), meta: {id: '0104'}},
             {path:'/alarm/warning-Event',name:'warningEvent',component: resolve => require(['@/components/eye/alarm/alarmEvent/warningEvent'], resolve), meta: {id: '0104'}},
+            {path:'/alarm/patrol-Event',name:'patrolEvent',component: resolve => require(['@/components/eye/alarm/alarmEvent/patrolEvent'], resolve), meta: {id: '0104'}},
+
         ]
     }
 ]

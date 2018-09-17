@@ -86,6 +86,11 @@
                         index: '/alarm/warning-Event',
                         title: '告警事件'
                     },
+                    {
+                        icon: './../../static/img/alarm/alarmEvent.svg',
+                        index: '/alarm/patrol-Event',
+                        title: '巡检告警事件'
+                    }
                 ]
             }
         },

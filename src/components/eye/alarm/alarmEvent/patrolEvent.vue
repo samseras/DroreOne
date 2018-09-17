@@ -1,7 +1,7 @@
 <template>
-    <div class="warningEvent">
+    <div class="patrolEvent">
         <div class="title">
-            告警事件
+            巡检告警事件
         </div>
         <div class="personContent">
             <div class="funcTitle">
@@ -9,6 +9,7 @@
                         @selectedAll = 'selectedAll'
                         @batchEdit = 'batchEdit'
                         @choseType='choseType'
+                        @addNewInfo="addNewInfo"
                         :choseId="choseInfoId"
                         :listLength = "listLength"
                         @searchAnything="searchAnything"
@@ -20,7 +21,7 @@
                 <ScrollContainer>
                     <el-table
                         ref="multipleTable"
-                        :data="warningEventList"
+                        :data="patrolEventList"
                         tooltip-effect="dark"
                         style="width: 100%"
                         @selection-change="handleSelectionChange"
@@ -37,13 +38,13 @@
                         </el-table-column>
                         <el-table-column
                             sortable
-                            prop="rule.alarmTypeName"
-                            label="告警类型">
+                            prop="device.typeName"
+                            label="故障设备类型">
                         </el-table-column>
                         <el-table-column
                             show-overflow-tooltip
                             prop="device.name"
-                            label="来源">
+                            label="故障设备">
                         </el-table-column>
                         <el-table-column
                             sortable
@@ -64,6 +65,11 @@
                             width="180">
                         </el-table-column>
                         <el-table-column
+                            prop="location"
+                            label="发生位置"
+                            width="180">
+                        </el-table-column>
+                        <el-table-column
                             sortable
                             prop="severity.name"
                             label="严重等级">
@@ -74,7 +80,7 @@
                         </el-table-column>
                         <el-table-column
                             sortable
-                            prop="owner.phone"
+                            prop="owner.mobileNum"
                             label="负责人电话">
                         </el-table-column>
                         <el-table-column label="操作" width="200">
@@ -82,7 +88,7 @@
                                 <span @click="editInfo(scope.row,false,'编辑告警事件')" class="edit">处理</span> |
                                 <span @click="showDetail(scope.row,true,'查看告警事件')">查看</span> |
                                 <span @click="deletInfo(scope.row.id)">删除</span>
-                                <span @click="warnInfo(scope.row)"><img v-if="scope.row.status.id==1 || scope.row.status.id==2" :src="scope.row.status.id == '1' ?'../../../../../static/img/alarm/newalarm.png':'../../../../../static/img/alarm/processing.png'"></span>
+                                <span @click="patrolInfo(scope.row)"><img v-if="scope.row.status.id==1 || scope.row.status.id==2" :src="scope.row.status.id == '1' ?'../../../../../static/img/alarm/newalarm.png':'../../../../../static/img/alarm/processing.png'"></span>
                             </template>
                         </el-table-column>
                     </el-table>
@@ -111,8 +117,8 @@
     export default {
         data(){
             return{
-                warningEventList: [],
-                warningEventListTemp:[],
+                patrolEventList: [],
+                patrolEventListTemp:[],
                 visible: false,
                 warningEventInfo: {},
                 choseInfos: [],
@@ -126,7 +132,8 @@
                 listLength:'',
                 dataLength:'',
                 updateParams:[],
-                pageNum:1
+                pageNum:1,
+                deviceType:[]
             }
         },
         methods: {
@@ -138,7 +145,7 @@
             searchAnything (info) {
                 console.log(info, '这是要过滤的')
                 if (info.trim() !== '') {
-                    this.warningEventList = this.warningEventList.filter(item => {
+                    this.patrolEventList = this.patrolEventList.filter(item => {
                         if (item.serialNum.includes(info)) {
                             return item
                         }
@@ -151,7 +158,7 @@
                         if(item.owner.name.includes(info)){
                             return item
                         }
-                        if(item.owner.phone.includes(info)){
+                        if(item.owner.mobileNum.includes(info)){
                             return item
                         }
                         if(item.rule.alarmTypeName.includes(info)){
@@ -167,7 +174,7 @@
             },
             choseType(type){
                 console.log(type)
-                let dataList = this.warningEventListTemp;
+                let dataList = this.patrolEventListTemp;
                 let tempList = [];
                 if(type.length > 0){
                     tempList = dataList.filter((item)=>type.includes(item.status.id))
@@ -175,7 +182,7 @@
                     tempList = dataList;
                 }
 
-               return this.warningEventList = tempList;
+               return this.patrolEventList = tempList;
             },
             closeDialog () {
                 this.visible = false
@@ -184,6 +191,9 @@
                 this.choseInfos = selection.map(item => {
                     return item.id
                 })
+            },
+            addNewInfo () {
+                this.showDetail({},false,'添加巡检事件',)
             },
             showDetail (info,state,title) {
                 this.warningEventInfo = info;
@@ -217,10 +227,10 @@
                             console.log(res, '删除成功')
                             this.$message.success('删除成功')
                             for (let i = 0; i < this.choseInfoId.length; i++) {
-                                this.warningEventList = this.warningEventList.filter((item, index) => {
+                                this.patrolEventList = this.patrolEventList.filter((item, index) => {
                                     if (item.id === this.choseInfoId[i]){
-                                        this.warningEventList[index].checked = false
-                                        this.warningEventList[index].status = false
+                                        this.patrolEventList[index].checked = false
+                                        this.patrolEventList[index].status = false
                                     }
                                     return item.status !== false
                                 })
@@ -241,13 +251,13 @@
                     return
                 }
             },
-            warnInfo(index){
+            patrolInfo(index){
                 this.$router.push('/controler/warn')
                 this.$store.commit('SEARCH_INFO',index)
                 this.$store.commit('SHOW_SEARCH', true)
             },
             checked (row) {
-                this.warningEventList = this.warningEventList.filter(item => {
+                this.patrolEventList = this.patrolEventList.filter(item => {
                     if (item.id === row.id) {
                         item.checked = item.checked
                     }
@@ -266,7 +276,7 @@
                 }
             },
             selectedAll (state) {
-                this.warningEventList = this.warningEventList.filter((item) => {
+                this.patrolEventList = this.patrolEventList.filter((item) => {
                     if (state === true) {
                         item.checked = true
                         this.choseInfos.push(item)
@@ -313,7 +323,7 @@
                 }
             },
             addUpload(param){
-                let objArray = param.data
+                let obj = param.data
                 let fileAddList = param.fileAddList
                 let params = []
                 if(fileAddList.length > 0){
@@ -326,14 +336,23 @@
                     console.log(params)
                     Promise.all(params).then((result)=>{
                         console.log(result)
-                        objArray[0].attachmentIds = objArray[0].attachmentIds.concat(result.map(item=>item.id))
-                        this.updateParams = objArray
+                        obj.attachmentIds = obj.attachmentIds.concat(result.map(item=>item.id))
+                        this.updateParams = obj
 
-                    }).then(objArray=>{
-                        this.updateAlarmEvent(this.updateParams)
+                    }).then(obj=>{
+                        if(obj.id){
+                            this.updateAlarmEvent(this.updateParams)
+                        }else{
+                            this.addAlarmEvent(this.updateParams)
+                        }
+
                     })
                 }else{
-                    this.updateAlarmEvent(objArray)
+                    if(obj.id){
+                        this.updateAlarmEvent(obj)
+                    }else{
+                        this.addAlarmEvent(obj)
+                    }
                 }
             },
             uploadFile (data) {
@@ -347,57 +366,74 @@
                     })
                 })
             },
-            async updateAlarmEvent(objArray){
-                await api.alarm.updateAlarmEvent(objArray).then(res => {
-                        console.log(res, '修改成功')
-                        this.$message.success('修改成功')
+            async updateAlarmEvent(obj){
+                await api.alarm.updateAlarmEvent(obj).then(res => {
+                    console.log(res, '修改成功')
+                    this.$message.success('修改成功')
+                    this.choseInfos = []
+                    this.visible = false
+                    this.getAllAlarmEvent();
+                }).catch(err => {
+                    this.$message.error('修改失败，请稍后重试')
+                    console.log(err)
+                    this.choseInfos = []
+                })
+            },
+            async addAlarmEvent(obj){
+                await api.alarm.addAlarmEvent(obj).then(res => {
+                        console.log(res, '添加成功')
+                        this.$message.success('添加成功')
                         this.choseInfos = []
                         this.visible = false
                         this.getAllAlarmEvent();
                     }).catch(err => {
-                        this.$message.error('修改失败，请稍后重试')
+                        this.$message.error('添加失败，请稍后重试')
                         console.log(err)
                         this.choseInfos = []
                     })
             },
             async getAllAlarmEvent () {
                 this.loading = true
-                this.warningEventList = []
+                this.patrolEventList = []
                 await api.alarm.getAllAlarmEvent().then(res => {
                                 this.loading = false
                                 this.listLength = res.length
-                                let  list = JSON.parse(JSON.stringify(res))
+                                let list = JSON.parse(JSON.stringify(res))
+
                                 if(list.length >0){
                                     list.forEach(obj=>{
-                                        if(obj.rule){
-                                            this.warningEventList.push(obj)
+                                        if(!obj.rule){
+                                            this.patrolEventList.push(obj)
                                         }
                                     })
                                 }
-
-                                this.warningEventList.forEach(item => {
+                                this.patrolEventList.forEach(item => {
                                     item.checked = false;
-                                    if(item.rule && item.rule.alarmTypeId){
-                                        item.rule.alarmTypeName = this.getAlarmTypeNameById(item.rule.alarmTypeId)
-                                    }else{
-                                        item.rule.alarmTypeName = ''
-                                    }
+                                    // if(item.rule && item.rule.alarmTypeId){
+                                    //     item.rule.alarmTypeName = this.getAlarmTypeNameById(item.rule.alarmTypeId)
+                                    // }else{
+                                    //     item.rule.alarmTypeName = ''
+                                    // }
 
-                                    if(!item.rule || !item.rule.name){
-                                        item.rule = {
-                                            name : ""
+                                    if(!item.device){
+                                        item.device = {
+                                            id:'',
+                                            typeId:0,
+                                            typeName:'非设备故障'
                                         }
+                                    }else{
+                                        console.log('00')
+                                        item.device['typeName'] = this.getDeviceTypeById(item.device.typeId)
                                     }
-                                    item.device = !item.device ? "" : item.device
                                     item.acturalExtendValue = !item.acturalExtendValue ? "" : item.acturalExtendValue
                                     if(!item.owner || !item.owner.id){
                                         item.owner = {
                                             id : ""
                                         }
                                     }
-                                    if(!item.owner || !item.owner.phone){
+                                    if(!item.owner || !item.owner.mobileNum){
                                         item.owner = {
-                                            phone : ""
+                                            mobileNum : ""
                                         }
                                     }
                                     item.actualValue = !item.actualValue ? "" : item.actualValue
@@ -419,16 +455,20 @@
                                     }
                                     item.modifyTime=item.modifyTime.replace("-","/")
                                     item.byTime = -(new Date(item.modifyTime)).getTime()
+                                    if(item.longitude && item.latitude){
+                                        item.location = item.longitude+','+item.latitude
+                                    }
+
                                 })
 
-                                this.warningEventList = _.sortBy(this.warningEventList,'byTime')
+                                this.patrolEventList = _.sortBy(this.patrolEventList,'byTime')
 
-                                this.warningEventList = this.warningEventList.filter((item,index) => {
+                                this.patrolEventList = this.patrolEventList.filter((item,index) => {
                                     if (index < (this.pageNum * 10 ) && index > ((this.pageNum -1) * 10 ) - 1 ) {
                                         return item
                                     }
                                 })
-                                this.warningEventListTemp = JSON.parse(JSON.stringify(this.warningEventList))
+                                this.patrolEventListTemp = JSON.parse(JSON.stringify(this.patrolEventList))
                         }).catch(err => {
                             this.loading = false
                         })
@@ -436,6 +476,18 @@
             getAlarmTypeNameById(typeId){
                 let typeInfo =  this.alarmType.filter(item=>item.id == typeId)
                 return typeInfo[0].name;
+            },
+            getDeviceTypeById(typeId){
+                let deviceInfo =  this.deviceType.filter(item=>item.id == typeId)
+                return deviceInfo[0].name;
+            },
+            async getAllDeviceType () {
+                await api.lib.getAllDeviceType().then(res => {
+                    console.log(res, '查询设备类型成功')
+                    this.deviceType = res
+                }).catch(err => {
+                    console.log(error, '查询设备类型失败')
+                })
             },
             async getAllAlarmTypes(){
                 await api.alarm.getAllAlarmTypes().then(res => {
@@ -445,6 +497,7 @@
             },
             initData(){
                 this.getAllAlarmTypes();
+                this.getAllDeviceType();
             }
         },
         created () {
@@ -462,7 +515,7 @@
 </script>
 
 <style lang="scss" scoped type="text/scss">
-    .warningEvent{
+    .patrolEvent{
         .el-tag{
             color: #fff;
             width: 80%;

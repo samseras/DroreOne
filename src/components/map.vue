@@ -130,6 +130,7 @@
                 controleLedList:[],
                 controleTransportList:[],
                 controleSecurityPersonList:[],
+                controleSecurityScheduleList:[],
                 facilityPark:[],
                 facilityToilet:[],
                 facilityShop:[],
@@ -209,7 +210,8 @@
                 this.getAllVehicle();// 车船信息
                 this.heatEmShow=true
                 this.heatEm();//环境数据
-                this.getAllPerson();
+                this.getAllScheduleRoute(); //巡检路线输出
+                this.getAllPerson();  //人员输出
             } else if (route.includes('area-deploy')) {
                 if(!this.getLocationId){
                     this.getAllArea();// 片区输出
@@ -226,7 +228,7 @@
                 }
             }else if (route.includes('security-Dmis')) {
                 if(!this.getLocationId){
-                    this.getSecurityRoute();// 调度路线输出
+                    this.getSecurityRoute();// 巡检路线输出
                     this.road(); // 路线打点
                 }else {
                     this.getSecurityRouteEdit();//修改路线调度
@@ -374,7 +376,7 @@
                 if(!this.getLocationId) {
                     this.getAllBuild();//建筑现有标注
                     this.labelDot();// 建筑打点
-                }else {g
+                }else {
                     this.getAllBuildEdit();// 建筑修改
                 }
             }else if(route.includes('warning-Event')){
@@ -2412,6 +2414,30 @@
             async getAllUser(){
                 return await api.user.getUserGPSInfo()
             },
+
+            async getAllScheduleRoute(){
+                await api.roat.getTransportRoat(1).then(res=>{
+                    console.log(res,'巡检路线')
+                    for (var i = 0; i < res.length; i++) {
+                        var areaEvtList =new droreMap.road.RoadLayer('ROUTE_list', '#26bbf0', 'blue')
+                        let geo =JSON.parse(res[i].geo);
+                        let area = [];
+                        for(var j = 0; j < geo.length; j++) {
+                            let wgs=droreMap.trans.transFromWgsToLayer(geo[j])
+                            area.push(wgs);
+                        }
+                        var data = {"id": res[i].id, "name": res[i].name,"constructor":''}
+                        areaEvtList.addRoad(area, data)
+                        droreMap.road.addRoadLayer(areaEvtList,res[i].id)
+                        let route = this.$route.path
+                        if(route.includes('controler')){
+                            droreMap.road.removeStyleById(res[i].id,false)
+                        }
+                    }
+                }).catch(err=>{
+                    console.log(err)
+                })
+            },
             getAllPerson(){
 
                 // let users =
@@ -2509,7 +2535,56 @@
 
                 Promise.all([this.getAllUser()]).then(result=>{
                     console.log(result,'00000')
-                    let users = result[0]
+                    // let users = result[0]
+                    let users =
+                        [
+                            {
+                                "id": "1",
+                                "creator": null,
+                                "createTime": null,
+                                "modifier": "admin",
+                                "modifyTime": "2018-09-11 18:00:00",
+                                "name": "admin",
+                                "cnName": " 系统管理员",
+                                "gender": 0,
+                                "iconId": null,
+                                "mobileNum": "18800000000",
+                                "fixedPhoneNum": null,
+                                "idCardNum": null,
+                                "email": null,
+                                "workAddress": null,
+                                "description": null,
+                                "departmentId": null,
+                                "jobId": null,
+                                "roleId": "1",
+                                "role": {
+                                    "id": "1",
+                                    "creator": null,
+                                    "createTime": null,
+                                    "modifier": null,
+                                    "modifyTime": null,
+                                    "name": "admin",
+                                    "description": "",
+                                    "permissions": null
+                                },
+                                "job": null,
+                                "department": null,
+                                "gpsId": "21a435fd-f067-4cb5-841e-0482bbe1c230",
+                                "gpsData":  {
+                                    "deviceId": "21a435fd-f067-4cb5-841e-0482bbe1c230",
+                                    "ioTDeviceId": null,
+                                    "createTime": "2017-12-31 12:21:39",
+                                    "longitude": 120.13310087077178,
+                                    "latitude": 30.30729423238902,
+                                    "altitude": null,
+                                    "direction": null,
+                                    "speed": 4,
+                                    "telephone": null,
+                                    "deviceNum": null,
+                                    "coordinate": null
+                                }
+                            }
+                        ]
                     if(users.length > 0){
                         users.forEach(obj=>{
                             let latitude = ''
@@ -2560,7 +2635,66 @@
             },
             async getAllLangPerson(){
                 Promise.all([this.getAllUser()]).then(result=>{
-                    let users = result[0]
+                    // let users = result[0]
+                    let users =
+                        [
+                            {
+                                "id": "1",
+                                "creator": null,
+                                "createTime": null,
+                                "modifier": "admin",
+                                "modifyTime": "2018-09-11 18:00:00",
+                                "name": "admin",
+                                "cnName": " 系统管理员",
+                                "gender": 0,
+                                "iconId": null,
+                                "mobileNum": "18800000000",
+                                "fixedPhoneNum": null,
+                                "idCardNum": null,
+                                "email": null,
+                                "workAddress": null,
+                                "description": null,
+                                "departmentId": null,
+                                "jobId": null,
+                                "roleId": "1",
+                                "role": {
+                                    "id": "1",
+                                    "creator": null,
+                                    "createTime": null,
+                                    "modifier": null,
+                                    "modifyTime": null,
+                                    "name": "admin",
+                                    "description": "",
+                                    "permissions": null
+                                },
+                                "job": null,
+                                "department": null,
+                                "gpsId": "21a435fd-f067-4cb5-841e-0482bbe1c230",
+                                "gpsData":  {
+                                    "deviceId": "21a435fd-f067-4cb5-841e-0482bbe1c230",
+                                    "ioTDeviceId": null,
+                                    "createTime": "2017-12-31 12:21:39",
+                                    "longitude": 120.13310087077178,
+                                    "latitude": 30.30729423238902,
+                                    "altitude": null,
+                                    "direction": null,
+                                    "speed": 4,
+                                    "telephone": null,
+                                    "deviceNum": null,
+                                    "coordinate": null
+                                }
+                            }
+                        ]
+
+                    this.securityPersonList = users
+                    this.number=this.securityPersonList.length
+                    this.securityPersonInfo=[]
+
+                    let personObj = {
+                        label:'人员',
+                        id:100010,
+                        children:[]
+                    }
 
                     if(users.length > 0){
                         users.forEach(obj=>{
@@ -3307,12 +3441,6 @@
                 this.searchShow(this.getSearchInfo);
             },
             getTreeState(){
-
-
-
-                console.log('213123')
-
-
                 console.log(this.getTreeState,'选择树的内容')
                 this.selectedCast=(((this.getTreeState)[0]).checked).checkedNodes;
 
@@ -3357,8 +3485,14 @@
                                     this.controleTransportList.push(item1.id);
                                     this.$store.commit('CONTROLER_TRANSPORT', this.controleTransportList)
                                 } else if(item1.type =='security'){
-                                    this.controleSecurityPersonList.push(item1.id);
-                                    this.$store.commit('CONTROLER_SECURITY_PERSON', this.controleSecurityPersonList)
+                                    if(item1.subtype == 'securityPerson'){
+                                        this.controleSecurityPersonList.push(item1.id);
+                                        this.$store.commit('CONTROLER_SECURITY_PERSON', this.controleSecurityPersonList)
+                                    }else if(item1.subtype == 'securitySchedule'){
+                                        this.controleSecurityScheduleList.push(item1.id);
+                                        this.$store.commit('CONTROLER_SECURITY_SCHEDULE', this.controleSecurityScheduleList)
+                                    }
+
                                 } else if(item1.type =='park'){
                                     this.facilityPark.push(item1.id);
                                     this.$store.commit('FACILITY_PARK', this.facilityPark)
@@ -3428,8 +3562,14 @@
                                 this.controleTransportList=[];
                                 this.$store.commit('CONTROLER_TRANSPORT', this.controleTransportList)
                             } else if(item.type =='security'){
-                                this.controleSecurityPersonList=[];
-                                this.$store.commit('CONTROLER_SECURITY_PERSON', this.controleSecurityPersonList)
+                                if(item.subtype == 'securityPerson'){
+                                    this.controleSecurityPersonList=[];
+                                    this.$store.commit('CONTROLER_SECURITY_PERSON', this.controleSecurityPersonList)
+                                }else if (item.subtype == 'securitySchedule'){
+                                    this.controleSecurityScheduleList=[];
+                                    this.$store.commit('CONTROLER_SECURITY_SCHEDULE', this.controleSecurityScheduleList)
+                                }
+
                             }else if(item.type =='park'){
                                 this.facilityPark=[];
                                 this.$store.commit('FACILITY_PARK', this.facilityPark)
@@ -3471,11 +3611,15 @@
                             for (let i = 0; i < data.length; i++) {
                                 if(data[i].typeroad=='road'){
                                     this.roadShow(data[i]);
-                                }else if(data[i].type =='transport' || data[i].type =='security'){
+                                }else if(data[i].type =='transport' || (data[i].type =='security' && data[i].subtype =="securityPerson")){
                                     if(data[i].status == "ONLINE"){
                                         this.treeShow(data[i]);
                                     }
-                                } else {
+
+                                } else if(data[i].type =='security' && data[i].subtype =="securitySchedule"){
+                                     this.treeShow(data[i]);
+                                     this.roadShow(data[i])
+                                }else {
                                     if(data[i].type =='person'){
                                         this.roadShowID(data[i].routeId)
                                     }else if(data[i].type =='warn'){
@@ -3514,9 +3658,16 @@
                                     this.controleTransportList=[...new Set(this.controleTransportList)];
                                     this.$store.commit('CONTROLER_TRANSPORT', this.controleTransportList)
                                 } else if(data[i].type =='security'){
-                                    this.controleSecurityPersonList.push(data[i].id);
-                                    this.controleSecurityPersonList=[...new Set(this.controleSecurityPersonList)];
-                                    this.$store.commit('CONTROLER_SECURITY_PERSON', this.controleSecurityPersonList)
+                                    if(data[i].subtype =='securityPerson'){
+                                        this.controleSecurityPersonList.push(data[i].id);
+                                        this.controleSecurityPersonList=[...new Set(this.controleSecurityPersonList)];
+                                        this.$store.commit('CONTROLER_SECURITY_PERSON', this.controleSecurityPersonList)
+                                    }else if(data[i].subtype =='securitySchedule'){
+                                        this.controleSecurityScheduleList.push(data[i].id);
+                                        this.controleSecurityScheduleList=[...new Set(this.controleSecurityScheduleList)];
+                                        this.$store.commit('CONTROLER_SECURITY_SCHEDULE', this.controleSecurityScheduleList)
+                                    }
+
                                 }else if(data[i].type =='park'){
                                     this.facilityPark.push(data[i].id);
                                     this.facilityPark=[...new Set(this.facilityPark)];
@@ -3565,9 +3716,13 @@
                                 // console.log(this.getTreeState[0].children)
                                 if(this.getTreeState[0].children[i].typeroad=='road'){
                                     this.roadHide(this.getTreeState[0].children[i]);
-                                }else if(this.getTreeState[0].children[i].type =='transport' || this.getTreeState[0].children[i].type =='security'){
+                                }else if(this.getTreeState[0].children[i].type =='transport' ||
+                                    (this.getTreeState[0].children[i].type =='security' && this.getTreeState[0].children[i].subtype =='securityPerson')){
                                     this.treeHide(this.getTreeState[0].children[i]);
-                                } else {
+                                } else if(this.getTreeState[0].children[i].type =='security' && this.getTreeState[0].children[i].subtype =='securitySchedule'){
+                                    this.treeHide(this.getTreeState[0].children[i]);
+                                    this.roadHide(this.getTreeState[0].children[i])
+                                }else {
                                     if(this.getTreeState[0].children[i].type =='person'){
                                         this.roadHideID(this.getTreeState[0].children[i].routeId)
                                     }else if(this.getTreeState[0].children[i].type =='warn'){
@@ -3619,11 +3774,20 @@
                                     }
                                     this.$store.commit('CONTROLER_TRANSPORT', this.controleTransportList)
                                 }else if(this.getTreeState[0].children[i].type=='security'){
-                                    let index = this.controleSecurityPersonList.indexOf(this.getTreeState[0].children[i].id);
-                                    if (index > -1) {
-                                        this.controleSecurityPersonList.splice(index, 1);
+                                    if(this.getTreeState[0].children[i].subtype =='securityPerson'){
+                                        let index = this.controleSecurityPersonList.indexOf(this.getTreeState[0].children[i].id);
+                                        if (index > -1) {
+                                            this.controleSecurityPersonList.splice(index, 1);
+                                        }
+                                        this.$store.commit('CONTROLER_SECURITY_PERSON', this.controleSecurityPersonList)
+                                    }else if(this.getTreeState[0].children[i].subtype =='securitySchedule'){
+                                        let index = this.controleSecurityScheduleList.indexOf(this.getTreeState[0].children[i].id);
+                                        if (index > -1) {
+                                            this.controleSecurityScheduleList.splice(index, 1);
+                                        }
+                                        this.$store.commit('CONTROLER_SECURITY_SCHEDULE', this.controleSecurityScheduleList)
                                     }
-                                    this.$store.commit('CONTROLER_SECURITY_PERSON', this.controleTransportList)
+
                                 } else if(this.getTreeState[0].children[i].type=='park'){
                                     let index = this.facilityPark.indexOf(this.getTreeState[0].children[i].id);
                                     if (index > -1) {
@@ -3697,11 +3861,16 @@
                                     this.roadShowID(this.getTreeState[0].routeId)
                                 }else if(this.getTreeState[0].type =='warn'){
                                     this.treeShow(this.getTreeState[0]);
-                                }else if(this.getTreeState[0].type =='transport' || this.getTreeState[0].type =='security'){
+                                }else if(this.getTreeState[0].type =='transport' || (this.getTreeState[0].type =='security' && this.getTreeState[0].subtype =='securityPerson')){
                                     if(this.getTreeState[0].status == "ONLINE"){
                                         this.treeShow(this.getTreeState[0]);
                                     }
-                                }else {
+                                }else if(this.getTreeState[0].type =='security' && this.getTreeState[0].subtype =='securitySchedule'){
+                                    if(this.getTreeState[0].status == "ONLINE"){
+                                        this.treeShow(this.getTreeState[0]);
+                                        this.roadShow(this.getTreeState[0])
+                                    }
+                                } else {
                                     this.treeShow(this.getTreeState[0]);
                                 }
                             }
@@ -3734,9 +3903,16 @@
                                 this.controleTransportList=[...new Set(this.controleTransportList)];
                                 this.$store.commit('CONTROLER_TRANSPORT', this.controleTransportList)
                             }else if(this.getTreeState[0].type=='security'){
-                                this.controleSecurityPersonList.push(this.getTreeState[0].id);
-                                this.controleSecurityPersonList=[...new Set(this.controleSecurityPersonList)];
-                                this.$store.commit('CONTROLER_SECURITY_PERSON', this.controleSecurityPersonList)
+                                if(this.getTreeState[0].subtype=='securityPerson'){
+                                    this.controleSecurityPersonList.push(this.getTreeState[0].id);
+                                    this.controleSecurityPersonList=[...new Set(this.controleSecurityPersonList)];
+                                    this.$store.commit('CONTROLER_SECURITY_PERSON', this.controleSecurityPersonList)
+                                }else if(this.getTreeState[0].subtype=='securitySchedule'){
+                                    this.controleSecurityScheduleList.push(this.getTreeState[0].id);
+                                    this.controleSecurityScheduleList=[...new Set(this.controleSecurityScheduleList)];
+                                    this.$store.commit('CONTROLER_SECURITY_SCHEDULE', this.controleSecurityScheduleList)
+                                }
+
                             }else if(this.getTreeState[0].type=='park'){
                                 this.facilityPark.push(this.getTreeState[0].id);
                                 this.facilityPark=[...new Set(this.facilityPark)];
@@ -3787,13 +3963,17 @@
                                     this.roadHideID(this.getTreeState[0].routeId)
                                 }else if(this.getTreeState[0].type =='warn'){
                                     this.treeHide(this.getTreeState[0]);
-                                }else if(this.getTreeState[0].type =='transport' || this.getTreeState[0].type =='security'){
+                                }else if(this.getTreeState[0].type =='transport' || (this.getTreeState[0].type =='security' && this.getTreeState[0].subtype=='securityPerson')){
 
                                     if(this.getTreeState[0].status == "ONLINE"){
                                         this.treeHide(this.getTreeState[0]);
                                     }
-                                }
-                                else {
+                                }else if(this.getTreeState[0].type =='security' && this.getTreeState[0].subtype=='securitySchedule'){
+                                    if(this.getTreeState[0].status == "ONLINE"){
+                                        this.treeHide(this.getTreeState[0]);
+                                        this.roadHide(this.getTreeState[0])
+                                    }
+                                } else {
                                     this.treeHide(this.getTreeState[0]);
                                 }
                             }
@@ -3840,11 +4020,20 @@
                                 }
                                 this.$store.commit('CONTROLER_TRANSPORT', this.controleTransportList)
                             }else if(this.getTreeState[0].type=='security'){
-                                let index = this.controleSecurityPersonList.indexOf(this.getTreeState[0].id);
-                                if (index > -1) {
-                                    this.controleSecurityPersonList.splice(index, 1);
+                                if(this.getTreeState[0].subtype =='securityPerson'){
+                                    let index = this.controleSecurityPersonList.indexOf(this.getTreeState[0].id);
+                                    if (index > -1) {
+                                        this.controleSecurityPersonList.splice(index, 1);
+                                    }
+                                    this.$store.commit('CONTROLER_SECURITY_PERSON', this.controleSecurityPersonList)
+                                }else if(this.getTreeState[0].subtype =='securitySchedule'){
+                                    let index = this.controleSecurityScheduleList.indexOf(this.getTreeState[0].id);
+                                    if (index > -1) {
+                                        this.controleSecurityScheduleList.splice(index, 1);
+                                    }
+                                    this.$store.commit('CONTROLER_SECURITY_SCHEDULE', this.controleSecurityScheduleList)
                                 }
-                                this.$store.commit('CONTROLER_SECURITY_PERSON', this.controleSecurityPersonList)
+
                             }else if(this.getTreeState[0].type=='park'){
                                 let index = this.facilityPark.indexOf(this.getTreeState[0].id);
                                 if (index > -1) {
@@ -4003,6 +4192,7 @@
                 'getcontroLed',
                 'getcontroTransport',
                 'getcontrolSecurityPerson',
+                'getcontroleSecuritySchedule',
                 'getfacilityPark',
                 'getfacilityToilet',
                 'getfacilityShop',

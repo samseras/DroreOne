@@ -11,7 +11,7 @@
                 <div class="alarmEventContent">
                     <!--批量编辑-->
                     <ScrollContainer>
-                        <div class="alarmContent" v-if="!isAddEvent && isBatchEdit">
+                        <div class="alarmContent" v-if="!isPatrolEvent && isBatchEdit">
                             <p class="level">严重等级：
                             <el-select  v-model="batchlevel" size="mini" class="" placeholder="请选择">
                                 <el-option
@@ -34,13 +34,13 @@
                             </p>
                         </div>
 
-                        <div  v-if="!isAddEvent && !isBatchEdit"  class="alarmContent">
+                        <div  v-if="!isPatrolEvent && !isBatchEdit"  class="alarmContent">
                             <p class="serialNum">
                                 <span>编&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 号：</span>
                                 <el-input type="text" v-model='eventInfo.serialNum' class="inputText" :maxlength="15" :disabled="true"></el-input>
                             </p>
                             <p class="type">
-                                <span>指标类型：</span>
+                                <span>告警类型：</span>
                                 <el-input type="text" v-model='eventInfo.rule.alarmTypeName' class="inputText" :maxlength="15" :disabled='true'></el-input>
                             </p>
                             <p class="sourceDevice">
@@ -146,7 +146,7 @@
                             </div>
                         </div>
 
-                        <div  v-if="isAddEvent"  class="alarmContent">
+                        <div  v-if="isPatrolEvent"  class="alarmContent">
                             <p class="serialNum">
                                 <span>事&nbsp;&nbsp;件&nbsp;&nbsp;编&nbsp;&nbsp;&nbsp;号：</span>
                                 <el-input type="text" v-model='addEventInfo.serialNum' class="inputText" :maxlength="15"></el-input>
@@ -203,7 +203,7 @@
 
                             <p class="tel">
                                 <span>电&nbsp;&nbsp;话&nbsp;&nbsp;号&nbsp;&nbsp;&nbsp;码：</span>
-                                <el-input type="text" v-model="addEventInfo.owner.phone" class="inputText" :maxlength="15" :disabled="true"></el-input>
+                                <el-input type="text" v-model="addEventInfo.owner.mobileNum" class="inputText" :maxlength="15" :disabled="true"></el-input>
                             </p>
                             <p>
                                 <span>发&nbsp;&nbsp;生&nbsp;&nbsp;位&nbsp;&nbsp;&nbsp;置：</span>
@@ -221,6 +221,10 @@
                                 </el-select>
                             </p>
                             <p class="description textArea">
+                                <span>描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：</span>
+                                <el-input type="textarea" :rows='5' :cols="30" placeholder="请输入描述信息" v-model="addEventInfo.description" :disabled="readOnly" :maxlength="140"></el-input>
+                            </p>
+                            <p class="description textArea" v-if="!isPatrolAdd">
                                 <span>处&nbsp;&nbsp;理&nbsp;&nbsp;备&nbsp;&nbsp;&nbsp;注：</span>
                                 <el-input type="textarea" :rows='5' :cols="30" placeholder="请输入描述信息" v-model="handleDescription" :disabled="readOnly" :maxlength="140"></el-input>
                             </p>
@@ -240,7 +244,7 @@
                                 </div>
                             </div>
 
-                            <div class="processLog">
+                            <div class="processLog" v-if="!isPatrolAdd">
                                 <span>处理记录：</span>
                                 <div class="processDiv" v-for="(item, index) in orderByTime">
                                     <div class="processTime">{{item.submitTime}}</div>
@@ -324,7 +328,8 @@
                 handleDescription:'',
                 isReadonly:false,
                 ruleInfo:{},
-                isAddEvent:false,
+                isPatrolEvent:false,
+                isPatrolAdd:false,
                 deviceType:[],
                 isNotDevice:true,
                 deviceObj:{
@@ -339,7 +344,7 @@
                     },
                     owner:{
                         id:'',
-                        phone:''
+                        mobileNum:''
                     },
                     serialNum:'',
                     rule:{
@@ -352,8 +357,10 @@
                         typeId:'',
                         typeName:''
                     },
-                    occurenceTime:''
-                }
+                    occurenceTime:'',
+                    description:''
+                },
+                route:''
             }
         },
         computed:{
@@ -427,7 +434,7 @@
                         item.options.forEach((obj)=>{
                             if(obj.id == id){
                                 this.eventInfo.owner.phone = obj.phone
-                                this.addEventInfo.owner.phone = obj.phone
+                                this.addEventInfo.owner.mobileNum = obj.phone
                             }
                         })
                     });
@@ -442,72 +449,133 @@
             async saveDialog(){
                 let objArray = [];
                 let newInfo = {};
-                if(this.isBatchEdit){    //批量编辑
-                    console.log(this.choseInfoId);
-                    if(!this.batchlevel && !this.batchstatus){
-                        return;
-                    }
 
-                    objArray = this.choseInfos.map((item)=>{
-                        let attachmentIds = item.attachments.map(item=>item.id)
-                        var obj = {
-                            id:item.id,
-                            ownerId:item.owner.id,
-                            statusId:item.status.id,
-                            severityId:item.severity.id,
-                            attachmentIds:attachmentIds,
+                if(this.route.includes('warning')){
+                    if(this.isBatchEdit){    //批量编辑
+                        console.log(this.choseInfoId);
+                        if(!this.batchlevel && !this.batchstatus){
+                            return;
+                        }
+                        objArray = this.choseInfos.map((item)=>{
+                            let attachmentIds = item.attachments.map(item=>item.id)
+                            var obj = {
+                                id:item.id,
+                                ownerId:item.owner.id,
+                                statusId:item.status.id,
+                                severityId:item.severity.id,
+                                attachmentIds:attachmentIds,
+                                handleRecord:{
+                                    modifiedFields:item.modifiedFields,
+                                    handleDescription: item.handleDescription
+                                }
+                            }
+                            return obj
+                        });
+                        objArray.forEach((item)=>{
+                            if(this.batchlevel){
+                                if(item.handleRecord.modifiedFields && item.handleRecord.modifiedFields != ""){
+                                    item.handleRecord.modifiedFields += this.getServityNameById(item.severityId)+"->"+this.getServityNameById(this.batchlevel)+' '
+                                }else{
+                                    item.handleRecord.modifiedFields ='严重等级：'+this.getServityNameById(item.severityId)+"->"+this.getServityNameById(this.batchlevel)+' '
+                                }
+
+                                item.severityId = this.batchlevel;
+                            }
+                            if(this.batchstatus){
+                                if(item.handleRecord.modifiedFields && item.handleRecord.modifiedFields!= ""){
+                                    item.handleRecord.modifiedFields += this.getStatusNameById(item.statusId)+"->"+this.getStatusNameById(this.batchstatus)+' '
+                                }else{
+                                    item.handleRecord.modifiedFields = '状态：'+this.getStatusNameById(item.statusId)+"->"+this.getStatusNameById(this.batchstatus)+' '
+                                }
+
+                                item.statusId = this.batchstatus;
+                            }
+                        })
+                        let param = {
+                            data:objArray
+                        }
+                        this.$emit('saveEditInfo',param);
+                    }else{  //单个编辑或查看
+
+                        if(!this.eventInfo.severity.id){
+                            this.$message.error('请选择严重性等级')
+                            return;
+                        }
+
+                        if(!this.eventInfo.status.id){
+                            this.$message.error('请选择状态')
+                            return;
+                        }
+                        //监听变化
+                        if(this.Info.severity.id != this.eventInfo.severity.id){
+                            this.modifiedFields += '严重等级：'+this.Info.severity.name+'->'+this.getServityNameById(this.eventInfo.severity.id)+ " "
+                        }
+                        if(this.Info.owner.id != this.eventInfo.owner.id){
+                            this.modifiedFields += '负责人：'+this.Info.owner.name+'->'+this.getOwnerNameById(this.eventInfo.owner.id)+ " "
+                        }
+                        if(this.Info.status.id != this.eventInfo.status.id){
+                            this.modifiedFields += '状态：'+this.Info.status.name+'->'+this.getStatusNameById(this.eventInfo.status.id)
+                        }
+
+                        let  idArray = this.initFileList.map(item=>item.id)
+                        let ids = []
+                        this.fileList.forEach((item)=>{
+                            if(idArray.includes(item.id)){
+                                ids.push(item.id)
+                            }
+                        })
+
+                        newInfo = {
+                            id:this.eventInfo.id,
+                            ownerId:this.eventInfo.owner.id,
+                            statusId:this.eventInfo.status.id,
+                            severityId:this.eventInfo.severity.id,
+                            attachmentIds:ids,
                             handleRecord:{
-                                modifiedFields:item.modifiedFields,
-                                handleDescription: item.handleDescription
+                                modifiedFields:this.modifiedFields,
+                                handleDescription: this.handleDescription
                             }
                         }
-                        return obj
-                    });
-
-                    objArray.forEach((item)=>{
-                        if(this.batchlevel){
-                            if(item.handleRecord.modifiedFields && item.handleRecord.modifiedFields != ""){
-                                item.handleRecord.modifiedFields += this.getServityNameById(item.severityId)+"->"+this.getServityNameById(this.batchlevel)+' '
-                            }else{
-                                item.handleRecord.modifiedFields ='严重等级：'+this.getServityNameById(item.severityId)+"->"+this.getServityNameById(this.batchlevel)+' '
-                            }
-
-                            item.severityId = this.batchlevel;
+                        objArray.push(newInfo)
+                        await this.deleteUpload();
+                        let param = {
+                            data : objArray,
+                            fileAddList : this.fileAddList
                         }
-                        if(this.batchstatus){
-                            if(item.handleRecord.modifiedFields && item.handleRecord.modifiedFields!= ""){
-                                item.handleRecord.modifiedFields += this.getStatusNameById(item.statusId)+"->"+this.getStatusNameById(this.batchstatus)+' '
-                            }else{
-                                item.handleRecord.modifiedFields = '状态：'+this.getStatusNameById(item.statusId)+"->"+this.getStatusNameById(this.batchstatus)+' '
-                            }
-
-                            item.statusId = this.batchstatus;
-                        }
-                    })
-                    let param = {
-                        data:objArray
+                        await this.$emit('saveEditInfo',param)
                     }
-                    this.$emit('saveEditInfo',param);
-                }else{  //单个编辑或查看
-
-                    if(!this.eventInfo.severity.id){
-                        this.$message.error('请选择严重性等级')
+                }else if(this.route.includes('patrol')){
+                    console.log(this.addEventInfo)
+                    if(!this.addEventInfo.severity.id){
+                        this.$message.error('请选择严重性等级！')
+                        return;
+                    }
+                    console.log(this.addEventInfo.device.typeId,!this.addEventInfo.device.typeId)
+                    if(typeof this.addEventInfo.device.typeId != 'number'){
+                        this.$message.error('请选择故障设备类型！')
                         return;
                     }
 
-                    if(!this.eventInfo.status.id){
-                        this.$message.error('请选择状态')
+                    if(!this.addEventInfo.status.id){
+                        this.$message.error('请选择状态！')
                         return;
                     }
                     //监听变化
-                    if(this.Info.severity.id != this.eventInfo.severity.id){
-                        this.modifiedFields += '严重等级：'+this.Info.severity.name+'->'+this.getServityNameById(this.eventInfo.severity.id)+ " "
+                    console.log(this.addEventInfo)
+                    if(this.Info.severity){
+                        if(this.Info.severity.id != this.addEventInfo.severity.id){
+                            this.modifiedFields += '严重等级：'+this.Info.severity.name+'->'+this.getServityNameById(this.addEventInfo.severity.id)+ " "
+                        }
                     }
-                    if(this.Info.owner.id != this.eventInfo.owner.id){
-                        this.modifiedFields += '负责人：'+this.Info.owner.name+'->'+this.getOwnerNameById(this.eventInfo.owner.id)+ " "
+                    if(this.Info.owner){
+                        if(this.Info.owner.id != this.addEventInfo.owner.id){
+                            this.modifiedFields += '负责人：'+this.Info.owner.name+'->'+this.getOwnerNameById(this.addEventInfo.owner.id)+ " "
+                        }
                     }
-                    if(this.Info.status.id != this.eventInfo.status.id){
-                        this.modifiedFields += '状态：'+this.Info.status.name+'->'+this.getStatusNameById(this.eventInfo.status.id)
+                    if(this.Info.status){
+                        if(this.Info.status.id != this.addEventInfo.status.id){
+                            this.modifiedFields += '状态：'+this.Info.status.name+'->'+this.getStatusNameById(this.addEventInfo.status.id)
+                        }
                     }
 
                     let  idArray = this.initFileList.map(item=>item.id)
@@ -519,24 +587,32 @@
                     })
 
                     newInfo = {
-                        id:this.eventInfo.id,
-                        ownerId:this.eventInfo.owner.id,
-                        statusId:this.eventInfo.status.id,
-                        severityId:this.eventInfo.severity.id,
+                        serialNum:this.addEventInfo.serialNum,
+                        ownerId:this.addEventInfo.owner.id,
+                        statusId:this.addEventInfo.status.id,
+                        severityId:this.addEventInfo.severity.id,
+                        sourceDeviceId:this.addEventInfo.device.typeId == '0' ? "":this.addEventInfo.device.id,
+                        longitude: this.addEventInfo.location?this.addEventInfo.location.split(',')[0]:'',
+                        latitude: this.addEventInfo.location?this.addEventInfo.location.split(',')[1]:'',
                         attachmentIds:ids,
-                        handleRecord:{
+                        description:this.addEventInfo.description,
+                        alarmTypeId:"10"
+                    }
+                    if(this.addEventInfo.id){
+                        newInfo.id = this.addEventInfo.id
+                        newInfo.handleRecord = {
                             modifiedFields:this.modifiedFields,
                             handleDescription: this.handleDescription
                         }
                     }
-                    objArray.push(newInfo)
                     await this.deleteUpload();
                     let param = {
-                        data : objArray,
+                        data : newInfo,
                         fileAddList : this.fileAddList
                     }
                     await this.$emit('saveEditInfo',param)
                 }
+
             },
             guid() {
                  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
@@ -731,16 +807,39 @@
                     console.log(this.deviceObj)
                     this.deviceObj = res.devices
                 })
+            },
+            async getSerialNum(){
+                await api.alarm.getSerialNum().then(res=>{
+                    this.addEventInfo.serialNum = res.number
+                })
             }
+
         },
         async created () {
             this.init();
             console.log(this.Info);
-            if(Object.keys(this.Info).length == 0){
-               console.log("空空")
-                this.isAddEvent = true
+            this.route = this.$route.path
+            if(this.route.includes('patrol')){
+                this.isPatrolEvent = true
+                if(this.Info.fileList && this.Info.fileList instanceof Array && this.Info.fileList.length > 0){
+                    this.initFileList = JSON.parse(JSON.stringify(this.Info.fileList))
+                    this.fileList = JSON.parse(JSON.stringify(this.Info.fileList));
+                }
+                if(Object.keys(this.Info).length != 0){
+                    this.isPatrolAdd = false
+                    this.addEventInfo = JSON.parse(JSON.stringify(this.Info));
+                    if(this.addEventInfo.device && this.addEventInfo.device.typeId){
+                        this.getDeviceById(this.addEventInfo.device.typeId)
+                    }
+                    console.log(this.addEventInfo.device.id);
+                    console.log(this.deviceObj)
+                }else{
+                    this.isPatrolAdd = true
+                }
+
+                this.getSerialNum()
             }else{
-                this.isAddEvent = false
+                this.isPatrolEvent = false
                 if(this.Info.fileList && this.Info.fileList instanceof Array && this.Info.fileList.length > 0){
                     this.initFileList = JSON.parse(JSON.stringify(this.Info.fileList))
                     this.fileList = JSON.parse(JSON.stringify(this.Info.fileList));
@@ -750,9 +849,6 @@
                     this.getAlarmRuleById(this.eventInfo.rule.id)
                 }
             }
-
-
-
         },
         components : {
             AlarmDetail,
