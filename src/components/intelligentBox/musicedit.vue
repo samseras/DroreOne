@@ -4,7 +4,7 @@
             <source  id="audiosource" src=""></source>
         </audio>
         <el-dialog
-            title="播放设置"
+            title="播放"
             :visible.sync="dialogVisible"
             width="30%"
             :before-close="handleClose">
