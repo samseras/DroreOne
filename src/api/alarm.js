@@ -158,11 +158,21 @@ const alarm = {
             url: getUrl('/resource'),
             data:JSON.stringify(param)
         })
+    },
+    getSerialNum(){
+        return axios ({
+            method: 'GET',
+            url: getUrl('/alarm/number?type=10')
+        })
+    },
+    addAlarmEvent(params){
+        console.log(params, 'newdata')
+        return axios({
+            method: 'POST',
+            url: getUrl('/alarm/event'),
+            data:JSON.stringify(params),
+        })
     }
-
-
-
-
 }
 
 export default alarm

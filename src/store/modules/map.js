@@ -21,6 +21,7 @@ const map = {
         controled:[],
         controtransport:[],
         controlSecurityPerson:[],
+        controlSecuritySchedule:[],
         facilitypark:[],
         facilitytoilet:[],
         facilityshop:[],
@@ -35,9 +36,6 @@ const map = {
         musicShow:false,
     },
     getters: {
-        getTransportType(state){
-            return state.transportType
-        },
         getLocation (state) {
             return state.location
         },
@@ -77,9 +75,7 @@ const map = {
         getcontroBroad(state) {
             return state.controbroad
         },
-        getcontroTransport(state){
-            return state.controtransport
-        },
+
         getcontroCamera(state) {
             return state.controcamera
         },
@@ -124,6 +120,9 @@ const map = {
         },
         getcontrolSecurityPerson(state){
            return state.controlSecurityPerson
+        },
+        getcontrolSecuritySchedule(state){
+           return state.controlSecuritySchedule
         },
         getTreeShow(state){
             return state.treeShow
@@ -241,6 +240,9 @@ const map = {
         },
         [types.CONTROLER_SECURITY_PERSON](state,data){
             state.controlSecurityPerson = data
+        },
+        [types.CONTROLER_SECURITY_SCHEDULE](state,date){
+            state.controlSecuritySchedule = data
         },
         [types.TRANSPORT_TYPE](state,data){
             state.transportType = data

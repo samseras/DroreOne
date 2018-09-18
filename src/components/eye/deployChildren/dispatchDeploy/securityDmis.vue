@@ -436,7 +436,7 @@
             async getAllpatrol () {
                 this.isShowLoading = true
                 await api.patrol.getAllPatrol().then(res => {
-                    console.log(res, '请求成功')
+                    console.log(JSON.stringify(res), '请求成功')
                     this.isShowLoading = false
                     this.patrolList = res
                     this.patrolList.forEach(item => {
