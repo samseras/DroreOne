@@ -5,6 +5,9 @@
             <div class="top">
                 <h5>广播列表</h5>
                 <ul>
+                    <li class="group-cast">
+                        <img src="../../../../static/img/intelligentbox/cast-group.png" alt="" @click="showMusicEdit">
+                    </li>
                     <li>
                         <el-switch
                             v-model="open"
@@ -53,7 +56,9 @@
     import broadcastZtree from "./children/broadcastzTree.vue"
     import ScrollContainer from '@/components/ScrollContainer'
     import api from '@/api'
-    import {mapGetters} from 'vuex'
+    import {mapGetters,mapMutations} from 'vuex'
+    import map from "../../../store/modules/map";
+
 
     export default {
         data() {
@@ -78,9 +83,14 @@
         },
         components: {
             broadcastZtree,
-            ScrollContainer
+            ScrollContainer,
+
         },
         methods: {
+            ...mapMutations(['SET_MUSIC']),
+            showMusicEdit(){
+                this.$store.commit('SET_MUSIC',true)
+            },
             treeShow(){
                 if(this.getcontroBroad){
                     this.lightCheckout=this.getcontroBroad
@@ -256,6 +266,13 @@
                             width: 18px;
                             vertical-align: middle;
                             cursor: pointer;
+                        }
+                    }
+                    .group-cast{
+                        img{
+                            vertical-align: middle;
+                            cursor:pointer;
+
                         }
                     }
                 }

@@ -32,6 +32,7 @@ const map = {
         facilityroad:[],
         transportType:'0',
         treeShow:[],
+        musicShow:false,
     },
     getters: {
         getTransportType(state){
@@ -127,6 +128,9 @@ const map = {
         getTreeShow(state){
             return state.treeShow
         },
+        getMusicShow(state){
+            return state.musicShow
+        }
     },
     setters: {},
 
@@ -243,6 +247,9 @@ const map = {
         },
         [types.FACILITY_STATION] (state, data) {
             state.getfacilityStation= data
+        },
+        [types.SET_MUSIC](state,data){
+            state.musicShow=data;
         }
     },
     actions: {

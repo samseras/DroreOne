@@ -26,10 +26,10 @@
                             <ScrollContainer>
                                 <broadcast-ztree
                                     :title="title"
-                                    :Info="securityScheduleInfo"
+                                    :Info="securityPersonInfo"
                                     :lightCheckout="transportCheckout"
                                     :regionId="regionId"
-                                    :lightList="securitySchedulelist"
+                                    :lightList="securityPersonlist"
                                     :number="number"
                                     :fault="fault">
                                 </broadcast-ztree>
@@ -85,7 +85,7 @@
             tabClick(tab,event){
                console.log(tab,event)
                 if(tab.name == 'securitySchedule'){
-                   this.initScheduleData()
+                   // this.initsecuritySchedule()
                     this.title = '巡检计划'
                 }else if(tab.name == 'securityPerson'){
                    this.initPersonData()
@@ -274,84 +274,137 @@
                     console.log(this.securityPersonInfo)
                 })
 
-                // setTimeout(() => {
-                //     let route = this.$route.path
-                //     if (route.includes('controler/security')) {
-                //         this.initPersonData();//长轮询
-                //         this.treeShow();
-                //     }
-                // },5000)
-            },
-            async initScheduleData(){
-                Promise.all([this.getAllUser()]).then(result=>{
-                    console.log(result,'00000')
-                    // let users = result[0]
-                    let users = [  {
-                        "id": "1",
-                        "creator": null,
-                        "createTime": null,
-                        "modifier": "admin",
-                        "modifyTime": "2018-09-11 18:00:00",
-                        "name": "admin",
-                        "cnName": " 系统管理员",
-                        "gender": 0,
-                        "iconId": null,
-                        "mobileNum": "18800000000",
-                        "fixedPhoneNum": null,
-                        "idCardNum": null,
-                        "email": null,
-                        "workAddress": null,
-                        "description": null,
-                        "departmentId": null,
-                        "jobId": null,
-                        "roleId": "1",
-                        "role": {
-                            "id": "1",
-                            "creator": null,
-                            "createTime": null,
-                            "modifier": null,
-                            "modifyTime": null,
-                            "name": "admin",
-                            "description": "",
-                            "permissions": []
-                        },
-                        "job": null,
-                        "department": null,
-                        "gpsId": null,
-                        "gpsData": null
-                    }]
-                    this.securitySchedulelist = users
-                    this.number=this.securitySchedulelist.length
-                    this.securityScheduleInfo=[]
-
-                    let personObj = {
-                        label:'巡检1',
-                        id:100010,
-                        children:[]
+                setTimeout(() => {
+                    let route = this.$route.path
+                    if (route.includes('controler/security')) {
+                        this.initPersonData();//长轮询
+                        this.treeShow();
                     }
-                    if(users.length >0){
-                        users.forEach(userObj=>{
-                            personObj.children.push({
-                                label:userObj.name,
-                                id:userObj.id,
-                                url:'/static/img/icon/people_small.png',
-                                type:'security',
-                                subtype:'securityPerson',
-                                status:userObj.gpsData ? "ONLINE" : "OFFLINE",
-                                icon:userObj.gpsData ? '../../../static/img/people_open.svg' : '../../../static/img/people_gray.svg' ,
-                                longitude:userObj.gpsData ? userObj.gpsData.longitude : '',
-                                latitude:userObj.gpsData ? userObj.gpsData.latitude : '',
-                                gpsDeviceId:userObj.gpsId
-                            })
-                        })
-                    }
-
-                    this.securityScheduleInfo.push(personObj)
-                    // this.fault=0
-                    // this.online= this.number - this.fault
-                    console.log(this.securityScheduleInfo)
-                })
+                },5000)
             },
+            // async initScheduleData(){
+            //     Promise.all([this.getAllVehicle()]).then(result=>{
+            //         let vehicles = result[0]
+            //         // let vehicles = [
+            //         //     {
+            //         //         "vehicle": {
+            //         //             "id": "30c87807-a8cc-45e2-b6fe-8e9e7a29c790",
+            //         //             "createTime": null,
+            //         //             "creator": null,
+            //         //             "modifyTime": "2018-08-30 16:04:37",
+            //         //             "modifier": "anonymous",
+            //         //             "serialNum": "湘湖605",
+            //         //             "capacity": 0,
+            //         //             "type": 1,
+            //         //             "model": "001144",
+            //         //             "gpsDeviceId": "b0849754-7b4d-428b-b4de-d96f28eb7eb9",
+            //         //             "pictureId": null,
+            //         //             "maintenanceStatus": 0,
+            //         //             "maintenanceDate": null,
+            //         //             "purchaseDate": null,
+            //         //             "description": null,
+            //         //             "scenicAreaId": null,
+            //         //             "deleted": false
+            //         //         },
+            //         //         "gpsDeviceId": "b0849754-7b4d-428b-b4de-d96f28eb7eb9",
+            //         //         "gpsDeviceName": "船605",
+            //         //         "pictureId": null,
+            //         //         "picturePath": null,
+            //         //         "gpsData":
+            //         //             // null,
+            //         //             {
+            //         //             "deviceId": "b0849754-7b4d-428b-b4de-d96f28eb7eb9",
+            //         //             "ioTDeviceId": null,
+            //         //             "createTime": "2017-12-31 12:21:39",
+            //         //             "longitude": 120.21455,
+            //         //             "latitude": 30.1379,
+            //         //             "altitude": null,
+            //         //             "direction": null,
+            //         //             "speed": 4,
+            //         //             "telephone": null,
+            //         //             "deviceNum": null,
+            //         //             "coordinate": null
+            //         //         },
+            //         //         "driver": {
+            //         //             "id": "5b27d86e-af2e-4de9-8d99-3f6b0f2e0f27",
+            //         //             "createTime": "2018-08-31 11:41:32",
+            //         //             "creator": "anonymous",
+            //         //             "modifyTime": "2018-08-31 11:41:32",
+            //         //             "modifier": "anonymous",
+            //         //             "name": "test李四",
+            //         //             "gender": 1,
+            //         //             "idNum": null,
+            //         //             "phone": "18602987796",
+            //         //             "pictureId": null,
+            //         //             "description": "just a test",
+            //         //             "scenicAreaId": null,
+            //         //             "deleted": false
+            //         //         }
+            //         //     }
+            //         // ]
+            //         this.carlist = vehicles
+            //         this.number=this.carlist.length
+            //         this.transportInfo=[]
+            //         let carObj = {
+            //             label:'车辆',
+            //             id:100010,
+            //             children:[]
+            //         }
+            //         let boatObj = {
+            //             label:'船只',
+            //             id:100011,
+            //             children:[]
+            //         }
+            //         vehicles.forEach(veObj=>{
+            //             let childObj;
+            //             if(veObj.vehicle.type == 0){
+            //                 childObj = {
+            //                     label:veObj.vehicle.serialNum,
+            //                     id:veObj.vehicle.id,
+            //                     url:'/static/img/icon/bus_small.png',
+            //                     type:'transport',
+            //                     subtype:'car',
+            //                     icon:veObj.gpsData ? '../../../static/img/car_icon.svg' : '../../../static/img/car_gray.svg' ,
+            //                     status:veObj.gpsData ? "ONLINE" : "OFFLINE",
+            //                     longitude:veObj.gpsData ? veObj.gpsData.longitude : '',
+            //                     latitude:veObj.gpsData ? veObj.gpsData.latitude : '',
+            //                     gpsDeviceId:veObj.gpsDeviceId
+            //                 }
+            //                 carObj.children.push(childObj)
+            //             }else if(veObj.vehicle.type == 1){
+            //                 // let arr = ['../../../static/img/boat_icon.svg','../../../static/img/boat_gray.svg'];
+            //                 // let icon = arr[Math.floor(Math.random()*arr.length)];
+            //                 childObj = {
+            //                     label:veObj.vehicle.serialNum,
+            //                     id:veObj.vehicle.id,
+            //                     url:'/static/img/icon/boat_small.png',
+            //                     type:'transport',
+            //                     subtype:'boat',
+            //                     // icon:icon,
+            //                     icon:veObj.gpsData ? '../../../static/img/boat_icon.svg' : '../../../static/img/boat_gray.svg',
+            //                     status:veObj.gpsData ? "ONLINE" : "OFFLINE",
+            //                     longitude:veObj.gpsData ? veObj.gpsData.longitude : '',
+            //                     latitude:veObj.gpsData ? veObj.gpsData.latitude : '',
+            //                     gpsDeviceId:veObj.gpsDeviceId
+            //                 }
+            //                 boatObj.children.push(childObj)
+            //             }
+            //         })
+            //         this.transportInfo.push(carObj)
+            //         this.transportInfo.push(boatObj)
+            //         this.fault=0
+            //         this.online= this.number - this.fault
+            //         // this.drawLine();
+            //         console.log(this.transportInfo)
+            //     })
+            //     setTimeout(() => {
+            //         let route = this.$route.path
+            //         if (route.includes('controler/car')) {
+            //             this.initData();//长轮询
+            //             this.treeShow();
+            //         }
+            //     },5000)
+            // },
 
             async getAllUser(){
                 return await api.user.getUserGPSInfo()
