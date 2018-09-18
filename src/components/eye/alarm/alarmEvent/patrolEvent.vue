@@ -37,7 +37,6 @@
                             label="编号">
                         </el-table-column>
                         <el-table-column
-                            sortable
                             prop="device.typeName"
                             label="故障设备类型">
                         </el-table-column>
@@ -161,10 +160,10 @@
                         if(item.owner.mobileNum.includes(info)){
                             return item
                         }
-                        if(item.rule.alarmTypeName.includes(info)){
+                        if(item.device.name.includes(info)){
                             return item
                         }
-                        if(item.device.name.includes(info)){
+                        if(item.device.typeName.includes(info)){
                             return item
                         }
                     })
@@ -344,7 +343,7 @@
                         this.updateParams = obj
 
 
-                    }).then(obj=>{
+                    }).then(res=>{
                         if(obj instanceof Array){
                             this.updateAlarmEvent(this.updateParams)
                         }else{
@@ -414,11 +413,6 @@
                                 }
                                 this.patrolEventList.forEach(item => {
                                     item.checked = false;
-                                    // if(item.rule && item.rule.alarmTypeId){
-                                    //     item.rule.alarmTypeName = this.getAlarmTypeNameById(item.rule.alarmTypeId)
-                                    // }else{
-                                    //     item.rule.alarmTypeName = ''
-                                    // }
 
                                     if(!item.device){
                                         item.device = {
@@ -429,6 +423,7 @@
                                     }else{
                                         console.log('00')
                                         item.device['typeName'] = this.getDeviceTypeById(item.device.typeId)
+                                        console.log(item.device.typeName,'typeName')
                                     }
                                     item.acturalExtendValue = !item.acturalExtendValue ? "" : item.acturalExtendValue
                                     if(!item.owner || !item.owner.id){
