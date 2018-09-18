@@ -3,13 +3,6 @@
         <div class="top">
             <div class="left">
                 <Map></Map>
-                <!--<ul class="status-show">
-                    <li>嘿嘿</li>
-                    <li>哈哈</li>
-                    <li>哈哈</li>
-                    <li>哈哈</li>
-                    <li>哈哈</li>
-                </ul>-->
             </div>
             <div class="right">
                 <div class="title">

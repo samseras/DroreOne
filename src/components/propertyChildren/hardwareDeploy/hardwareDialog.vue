@@ -103,6 +103,10 @@
                         <span>端&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;口：</span>
                         <el-input type="text" v-model="broadCast.port" :disabled="isDisabled"></el-input>
                     </p>
+                    <p class="host">
+                        <span>编&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;号：</span>
+                        <el-input type="text" v-model="broadCast.serialNum" :disabled="isDisabled"></el-input>
+                    </p>
                     <p class="area place ps wrapstyle selectstyle">
                         <span>位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置：</span>
                         <span>{{broadCast.location}}</span>
@@ -652,7 +656,8 @@
                    port:'',
                    location:'',
                    regionId:'',
-                   description:''
+                   description:'',
+                   serialNum: ''
                },
                led:{
                    mac:'',

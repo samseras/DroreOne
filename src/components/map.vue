@@ -23,6 +23,7 @@
                 </div>
             </div>
         </div>
+        <musicedit :dialogisshow="dialogVisible" :selectedCast="selectedCast" @closeDialog="closeMusicEdit"></musicedit>
         <div id="contextmenu_container" class="contextmenu">
             <i @click="menuDelete"></i>
             <el-tooltip class="item" effect="dark" content="启停" placement="top">
@@ -41,7 +42,7 @@
             <el-tooltip class="item" effect="dark" content="广播操作" placement="top">
                 <button @click="showCast" class="showCast"></button>
             </el-tooltip>
-            <musicedit :dialogisshow="dialogVisible" :selectedCast="selectedCast" @closeDialog="closeMusicEdit"></musicedit>
+
             <el-tooltip class="item" effect="dark" content="故障处理" placement="top">
                  <button @click="menuOperation" class="menuOperation"></button>
             </el-tooltip>
@@ -392,7 +393,8 @@
                 'MAP_REGION_LOCATION',
                 'REGION_LOCATION_STATE',
                 'ROAT_LOCATION_STATE',
-                'MAP_ROAT_LOCATION'
+                'MAP_ROAT_LOCATION',
+                'SET_MUSIC'
             ]),
             closeDialog () {
                 this.visible = false
@@ -1705,6 +1707,7 @@
             },
             async getAllBroadcast(){//广播列表
                 await api.broadcast.getAllBroadcast().then((res)=>{
+
                     this.iconList=res.devices
                     for (let i=0;i<this.iconList.length;i++){
                         this.iconList[i].type="广播"
@@ -3081,6 +3084,7 @@
             },
             closeMusicEdit(){
                 this.dialogVisible=false;
+                this.$store.commit('SET_MUSIC',false)
             },
             menuOperation(){
                 this.menuBroadvolume=false;
@@ -3439,6 +3443,22 @@
         watch: {
             getSearchInfo () {
                 this.searchShow(this.getSearchInfo);
+            },
+            getMusicShow(){
+                console.log(this.getMusicShow,'哈哈哈哈')
+
+                if(this.getMusicShow===true){
+                    if(this.selectedCast.length>0){
+                        this.dialogVisible=true;
+                    }else{
+                        this.$message({
+                            message: '请选择至少一个广播',
+                            type: 'warning'
+                        });
+                        this.$store.commit('SET_MUSIC',false)
+                    }
+
+                }
             },
             getTreeState(){
                 console.log(this.getTreeState,'选择树的内容')
@@ -4203,7 +4223,8 @@
                 'getfacilityIndicator',
                 'getfacilityRoad',
                 'getfacilityStation',
-                'getTreeShow'
+                'getTreeShow',
+                'getMusicShow'
             ])
         }
     }
@@ -4682,10 +4703,10 @@
     }
     .broadcast_close{
         button.showCast{
-            display: block;
+            //display: block;
         }
         button.menuShow{
-            left:rem(30)
+            //left:rem(30)
         }
     }
     .contextmenu.Light i{

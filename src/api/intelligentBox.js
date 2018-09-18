@@ -27,11 +27,62 @@ const intelligentBox = {
 
         })*/
     },
+    postMusicVoice(flag,value){  //传递音量
+        console.log(flag,value,'22222');
+        return axios ({
+            method:'POST',
+            url:getUrl('/device/broadcast'),
+            data:{
+                "deviceId":flag,
+                "action":"SETVOLUME",
+                "value":value
+
+            }
+        })
+
+    },
+    startHanhua(flag){  //开始喊话
+        return axios ({
+            method:'POST',
+            url:getUrl('/device/broadcast'),
+            data:{
+                "deviceId":flag,
+                "action":"BRODCAST",
+                "value":''
+
+            }
+        })
+    },
+    stopHanhua(flag){  //停止喊话
+        return axios ({
+            /*method:'POST',
+            url:getUrl('/device/broadcast'),
+            data:{
+                "deviceId":flag,
+                "action":"BRODCAST",
+                "value":''
+
+            }*/
+        })
+    },
+    postTextCast(flag,text){
+        return axios ({
+            /*method:'POST',
+            url:getUrl('/device/broadcast'),
+            data:{
+                "deviceId":flag,
+                "action":"TTSBRODCAST",
+                "value":text
+
+            }*/
+        })
+    },
     postMusicInfo(form){  //传递编辑的音乐信息
         console.log(form,'音乐form表单里的好东西');
         return axios ({
             method:'POST',
-            url:getUrl('/smartspeaker/play/bgm'),
+            //url:getUrl('/smartspeaker/play/bgm'),
+            url:'/smartspeaker/play/bgm',
             data:{
                 /*"id": 123,*/
                 "speakers":form.transmsg,
