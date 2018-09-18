@@ -149,11 +149,11 @@
                         <div  v-if="isPatrolEvent"  class="alarmContent">
                             <p class="serialNum">
                                 <span>事&nbsp;&nbsp;件&nbsp;&nbsp;编&nbsp;&nbsp;&nbsp;号：</span>
-                                <el-input type="text" v-model='addEventInfo.serialNum' class="inputText" :maxlength="15"></el-input>
+                                <el-input type="text" v-model='addEventInfo.serialNum' class="inputText" :maxlength="15" :disabled= "true"></el-input>
                             </p>
                             <p class="type">
                                 <span>故障设备类型：</span>
-                                <el-select @change="deviceTypeChange" v-model="addEventInfo.device.typeId" placeholder="请选择"  :maxlength="15">
+                                <el-select @change="deviceTypeChange" v-model="addEventInfo.device.typeId" :disabled="readOnly" placeholder="请选择"  :maxlength="15">
                                     <el-option
                                         v-for="item in deviceType"
                                         :key="item.id"
@@ -175,7 +175,7 @@
                             </p>
                             <p class="level">
                                 <span>严&nbsp;&nbsp;重&nbsp;&nbsp;等&nbsp;&nbsp;&nbsp;级：</span>
-                                <el-select  v-model="addEventInfo.severity.id" class="" placeholder="请选择" >
+                                <el-select  v-model="addEventInfo.severity.id" class="" :disabled="readOnly" placeholder="请选择" >
                                     <el-option
                                         v-for="item in levelInfo"
                                         :key="item.id"
@@ -211,7 +211,7 @@
                             </p>
                             <p class="status">
                                 <span>状&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 态:</span>
-                                <el-select  v-model="addEventInfo.status.id" class="" placeholder="请选择" >
+                                <el-select  v-model="addEventInfo.status.id" class="" :disabled="readOnly" placeholder="请选择" >
                                     <el-option
                                         v-for="item in statusInfo"
                                         :key="item.id"
@@ -598,16 +598,41 @@
                         description:this.addEventInfo.description,
                         alarmTypeId:"10"
                     }
+                    objArray = []
                     if(this.addEventInfo.id){
-                        newInfo.id = this.addEventInfo.id
-                        newInfo.handleRecord = {
-                            modifiedFields:this.modifiedFields,
-                            handleDescription: this.handleDescription
+                        newInfo = {
+                            ownerId:this.addEventInfo.owner.id,
+                            statusId:this.addEventInfo.status.id,
+                            severityId:this.addEventInfo.severity.id,
+                            sourceDevieId:this.addEventInfo.device.typeId == '0' ? "":this.addEventInfo.device.id,
+                            longitude: this.addEventInfo.location?this.addEventInfo.location.split(',')[0]:'',
+                            latitude: this.addEventInfo.location?this.addEventInfo.location.split(',')[1]:'',
+                            attachmentIds:ids,
+                            description:this.addEventInfo.description,
+                            alarmTypeId:"10",
+                            handleRecord:{
+                                modifiedFields:this.modifiedFields,
+                                handleDescription: this.handleDescription
+                            }
+                        }
+                        objArray.push(newInfo)
+                    }else{
+                        newInfo = {
+                            serialNum:this.addEventInfo.serialNum,
+                            ownerId:this.addEventInfo.owner.id,
+                            statusId:this.addEventInfo.status.id,
+                            severityId:this.addEventInfo.severity.id,
+                            sourceDeviceId:this.addEventInfo.device.typeId == '0' ? "":this.addEventInfo.device.id,
+                            longitude: this.addEventInfo.location?this.addEventInfo.location.split(',')[0]:'',
+                            latitude: this.addEventInfo.location?this.addEventInfo.location.split(',')[1]:'',
+                            attachmentIds:ids,
+                            description:this.addEventInfo.description,
+                            alarmTypeId:"10"
                         }
                     }
                     await this.deleteUpload();
                     let param = {
-                        data : newInfo,
+                        data : this.addEventInfo.id ? objArray : newInfo,
                         fileAddList : this.fileAddList
                     }
                     await this.$emit('saveEditInfo',param)

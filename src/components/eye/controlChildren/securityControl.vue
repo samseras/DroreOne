@@ -332,59 +332,21 @@
                                     "description": null,
                                     "departmentId": null,
                                     "jobId": null,
-                                    "roleId": "1"
-                                }
-                            ]
-                        },
-                        {
-                            "inspectionSchedule": {
-                                "id": "df9cbb17-893e-4fa4-bde1-654175efe00a",
-                                "creator": "admin",
-                                "createTime": "2018-09-14",
-                                "modifier": null,
-                                "modifyTime": null,
-                                "name": "bingeeshi1",
-                                "days": "5",
-                                "startDate": null,
-                                "endDate": null,
-                                "shifts": null,
-                                "customizedStartTime": "14:06:36",
-                                "customizedEndTime": "14:07:36",
-                                "description": null,
-                                "routeId": "de53ac21-3e2b-48a3-9dfd-4e18a322c4b5",
-                                "scenicAreaId": null,
-                                "enabled": true,
-                                "deleted": false,
-                                "customizedDays": true,
-                                "customizedShift": false
-                            },
-                            "iScheduleMaps": [
-                                {
-                                    "securityId": "165d1e9ef1e-9bfd5e26c1406dff",
-                                    "gpsId": "21a435fd-f067-4cb5-841e-0482bbe1c230"
-                                }
-                            ],
-                            "routeName": "巡检路线11",
-                            "persons": [
-                                {
-                                    "id": "165d1e9ef1e-9bfd5e26c1406dff",
-                                    "creator": "admin",
-                                    "createTime": "2018-09-13 15:51:33",
-                                    "modifier": "admin",
-                                    "modifyTime": "2018-09-13 15:51:33",
-                                    "name": "test1",
-                                    "cnName": "测试安保1",
-                                    "gender": 1,
-                                    "iconId": null,
-                                    "mobileNum": "18602987796",
-                                    "fixedPhoneNum": null,
-                                    "idCardNum": null,
-                                    "email": null,
-                                    "workAddress": null,
-                                    "description": null,
-                                    "departmentId": "165d1e7a084-2f7d56ffe723740c",
-                                    "jobId": "165d1e7d166-175968a3f6e177be",
-                                    "roleId": "165d1e76037-f99c8ddf41f4dea3"
+                                    "roleId": "1",
+                                    "gpsId": "21a435fd-f067-4cb5-841e-0482bbe1c230",
+                                    "gpsData":  {
+                                        "deviceId": "21a435fd-f067-4cb5-841e-0482bbe1c230",
+                                        "ioTDeviceId": null,
+                                        "createTime": "2017-12-31 12:21:39",
+                                        "longitude": 120.13310087077178,
+                                        "latitude": 30.30729423238902,
+                                        "altitude": null,
+                                        "direction": null,
+                                        "speed": 4,
+                                        "telephone": null,
+                                        "deviceNum": null,
+                                        "coordinate": null
+                                    }
                                 }
                             ]
                         }
