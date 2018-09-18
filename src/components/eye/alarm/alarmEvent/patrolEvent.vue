@@ -336,11 +336,16 @@
                     console.log(params)
                     Promise.all(params).then((result)=>{
                         console.log(result)
-                        obj.attachmentIds = obj.attachmentIds.concat(result.map(item=>item.id))
+                        if(obj instanceof Array){
+                            obj[0].attachmentIds = obj[0].attachmentIds.concat(result.map(item=>item.id))
+                        }else{
+                            obj.attachmentIds = obj.attachmentIds.concat(result.map(item=>item.id))
+                        }
                         this.updateParams = obj
 
+
                     }).then(obj=>{
-                        if(obj.id){
+                        if(obj instanceof Array){
                             this.updateAlarmEvent(this.updateParams)
                         }else{
                             this.addAlarmEvent(this.updateParams)
@@ -348,7 +353,7 @@
 
                     })
                 }else{
-                    if(obj.id){
+                    if(obj instanceof Array){
                         this.updateAlarmEvent(obj)
                     }else{
                         this.addAlarmEvent(obj)
