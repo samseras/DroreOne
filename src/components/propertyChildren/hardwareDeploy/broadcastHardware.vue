@@ -213,7 +213,8 @@
                     description:info.description,
                     latitude: index[1],
                     longitude: index[0],
-                    pictureId:info.pictureId
+                    pictureId:info.pictureId,
+                    serialNum:info.serialNum
                 }]
                 await api.broadcast.updateBroadcast(scenicObj).then(res => {
                     console.log('修改成功')
@@ -272,6 +273,7 @@
                     port:info.port,
                     regionId:info.regionId,
                     description:info.description,
+                    serialNum:info.serialNum,
                     latitude:latitude,
                     longitude:longitude
                 }]
@@ -364,6 +366,7 @@
                     model:info.model,
                     ip:info.ip,
                     port:info.port,
+                    serialNum:info.serialNum,
                     regionId:info.regionId,
                     description:info.description,
                     latitude:latitude,
