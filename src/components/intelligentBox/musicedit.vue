@@ -3,8 +3,9 @@
         <audio id="audio" >
             <source  id="audiosource" src=""></source>
         </audio>
+
         <el-dialog
-            title="播放"
+            title="播放设置"
             :visible.sync="dialogVisible"
             width="30%"
             :before-close="handleClose">
@@ -22,7 +23,7 @@
                         <div class="right">
                             <!--<div class="button" @click="fastback"><img src="../../../static/img/intelligentbox/tui.png" alt=""></div>-->
                             <div class="button" @click="fastback"><img src="../../../static/img/intelligentbox/tui1.png" alt=""></div>
-                            <div class="button" @click="playaudio"><img :src="playurl" alt=""></div>
+                            <div class="button play-button" @click="playaudio"><img :src="playurl" alt=""></div>
                             <!--<div class="button" @click="fastgo"><img src="../../../static/img/intelligentbox/jin.png" alt=""></div>-->
                             <div class="button" @click="fastgo"><img src="../../../static/img/intelligentbox/jin1.png" alt=""></div>
                             <div class="button last-button" @mousedown="startHanhua" @mouseup="stopHanhua">
@@ -159,7 +160,8 @@
                 dialogVisible:false,
                 //playurl:'../../../static/img/intelligentbox/bo.png',
                 playurl:'../../../static/img/intelligentbox/bo1.png',
-                broadcastText:''
+                broadcastText:'',
+                finalSelectedCast:[]
             }
         },
         created(){
@@ -183,36 +185,40 @@
                 console.log(tempmsg,'监听兄弟页面的数据');
                 that.form.transmsg=tempmsg;
             });
-
-
         },
         watch:{
             dialogisshow(news,olds){   //监听弹框
-                /*if((news===true)&&(this.form.transmsg<1)){
-                    this.$message({
-                        message: '请先选择音箱',
-                        type: 'warning'
-                    });
-                    this.$emit('closeDialog');
-                    return;
-
-                }*/
-
                 this.dialogVisible=news;
                 if(this.dialogVisible===true){
                     this.audioObj=document.getElementById('audio');
                 }
             },
             selectedCast(news,olds){  //监听选择的广播
-                console.log(news,'@@@@@@@@@@')
+                console.log(news,'@@@@@@@@@@');
+                this.finalSelectedCast=news;
             }
         },
         methods:{
             startHanhua(){
-                hanhua.src='../../../static/img/intelligentbox/hanhuaing.png'
+                hanhua.src='../../../static/img/intelligentbox/hanhuaing.png';
+                let flag=[];
+                this.finalSelectedCast.forEach(item=>{
+                    console.log(item.id,'选择的广播Id');
+                    flag.push(item.id);
+
+                });
+                console.log(flag,'喊话的广播组');
+                api.intelligentBox.startHanhua(flag).then(res=>{
+                    console.log('传递声音完毕')
+                })
+
             },
             stopHanhua(){
-                hanhua.src='../../../static/img/intelligentbox/hanhua.png'
+                hanhua.src='../../../static/img/intelligentbox/hanhua.png';
+
+                api.intelligentBox.stopHanhua(flag).then(res=>{
+                    console.log('停止喊话')
+                })
             },
             gosearch(){
                 if (this.searchflag.trim() === '') {
@@ -250,40 +256,40 @@
                 console.log(this.checkedmusics,'选择的音乐对象');
             },
             save(){  //保存设置
-                console.log(this.form.time2);
-                if(this.form.date1===null){this.form.date1=''};
-                if(this.form.date2===null){this.form.date2=''};
-                if(this.form.time1===null){this.form.time1=''};
-                if(this.form.time2===null){this.form.time2=''};
+
+                //传递音量
+                let textFlag=[];
+                this.finalSelectedCast.forEach(item=>{
+                    console.log(item.id,'选择的广播Id');
+                    let flag=[];
+                    flag.push(item.id);
+                    textFlag.push(item.id);
+                    api.intelligentBox.postMusicVoice(flag,this.voicenumber).then(res=>{
+                        console.log('传递声音完毕')
+                    })
+                });
+                //传递文本信息
+                console.log(textFlag,'传递文本的广播id');
+                api.intelligentBox.postTextCast(textFlag,this.broadcastText).then(res=>{
+                    console.log('传递文本完毕')
+                })
 
 
-                if((this.form.date1!='')&&(this.form.date2!='')&&(this.form.time1!='')&&(this.form.time2!='')){
-                    this.form.playtype='1';
-                    this.saveInfo();
-                }else if((this.form.date1==='')&&(this.form.date2==='')&&(this.form.time1==='')&&(this.form.time2==='')){
-                    this.form.playtype='0';
-                    this.saveInfo();
-                }else{
-                    this.$message({ message: '请补充完整的执行日期和时间或者都不填',type: 'warning'});
-                    return;
-                }
+                //this.saveInfo();
+
 
             },
-            async saveInfo(){
-                this.transmusics=[];
-                this.checkedmusics.forEach(item=>{
-                    this.transmusics.push({
-                        id:item.id,
-                        //url:'http://192.168.0.150:8090'+item.src,
-                        url:item.src,
-                    })
-                })
-                this.form.transmusics=this.transmusics;
-                let that=this;
-                await api.intelligentBox.postMusicInfo(this.form).then(res=>{
+            saveInfo(){
+
+
+                //传递歌曲
+                //喊话
+                //广播文字
+
+                /*await api.intelligentBox.postMusicInfo(this.form).then(res=>{
                     console.log(res,'编辑好的音乐信息传递给后台');
                     that.handleClose();
-                })
+                })*/
             },
             fastback(){  //上一首
                 if(this.suijiflag===1||this.audioObj.loop===true){
@@ -330,7 +336,7 @@
                     });
                     return
                 }
-                if(this.playurl.includes('/bo')){
+                if(this.playurl.includes('/bo1')){
 
                     if(this.suijiflag===1){  //随机播放
                         let randomBgIndex = Math.round( Math.random() * (this.songurllist.length-1) );
@@ -500,7 +506,7 @@
 
             handleClose(done) {  //关闭弹框
                 this.audioObj.pause();
-                this.playurl='../../../static/img/intelligentbox/bo.png';
+                this.playurl='../../../static/img/intelligentbox/bo1.png';
                 this.$emit('closeDialog');
             },
 
@@ -538,7 +544,8 @@
         //height:100%;
         .el-dialog{
             margin-top:10vh;
-            height:63%;
+            //height:63%;
+            height:74%;
             .el-dialog__body{
                 border-top:1px solid #ddd;
                 height:77%;
@@ -559,7 +566,8 @@
                         .play-audio{
                             border-top-left-radius:rem(8);
                             border-top-right-radius:rem(8);
-                            height:23%;
+                            //height:23%;
+                            height:30%;
                             background-color:#efefef;
                             display:flex;
                             justify-content: space-around;
@@ -602,12 +610,17 @@
                                 .button{
                                     width:20%;
                                     text-align: center;
+                                    line-height:70%;
                                     img{
                                         cursor:pointer;
+                                        width:90%;
                                     }
                                 }
+                                .play-button{
+                                    width:30%;
+                                }
                                 .last-button{
-                                    width:40%;
+                                    width:30%;
                                 }
                             }
                         }
@@ -666,6 +679,11 @@
                                     width:40%;
                                     padding:0 rem(8);
                                     height:100%;
+                                    display:flex;
+                                    align-items:center;
+                                    .el-slider{
+                                        width:80%;
+                                    }
                                     .el-slider__bar{
                                         background-color:#26bbf0;
                                     }
@@ -736,7 +754,7 @@
                                 margin:rem(0) auto;
                                 .all-name{
                                     display:inline-block;
-                                    width:rem(754);
+                                    width:rem(192);
                                 }
                                 .all-time{
                                     //margin-right:-50%;
@@ -756,6 +774,7 @@
                     .form-show{
                         height:12%;
                         .form-box{
+
                             width:98%;
                             height:100%;
                             overflow-y: auto;
@@ -767,6 +786,7 @@
                             .hasSelect{
                                 width:33.33333333%;
                                 height:56%;
+                                font-size:rem(13);
                                 img{
                                     width:rem(20);
                                     vertical-align: bottom;

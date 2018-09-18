@@ -87,9 +87,9 @@
                         title: '告警事件'
                     },
                     {
-                        icon: './../../static/img/alarm/alarmEvent.svg',
+                        icon: './../../static/img/alarm/patrolAlarm.svg',
                         index: '/alarm/patrol-Event',
-                        title: '巡检告警事件'
+                        title: '巡检事件'
                     }
                 ]
             }

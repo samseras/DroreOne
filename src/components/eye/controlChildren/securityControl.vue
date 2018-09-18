@@ -83,7 +83,7 @@
         },
         methods: {
             tabClick(tab,event){
-               console.log(tab,event)
+                console.log(tab,event)
                 if(tab.name == 'securitySchedule'){
                     this.title = '巡检计划'
                     this.initScheduleData()
