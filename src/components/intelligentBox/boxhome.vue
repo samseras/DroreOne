@@ -1,12 +1,5 @@
 <template>
     <div class="box-home">
-        <!--<div>
-            <ul>
-               <li v-for="(item,i) in arr">
-                   {{item.schoolname}}
-               </li>
-            </ul>
-        </div>-->
         <setarea></setarea>
         <el-button type="text" @click="openDialog" class="bgmusic">背景乐设置</el-button>
         <musicedit :dialogisshow="dialogVisible" @closeDialog="guanbi"></musicedit>
