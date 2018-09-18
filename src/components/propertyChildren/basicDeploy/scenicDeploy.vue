@@ -14,6 +14,7 @@
                         :listsLength="listLength"
                         :personListFlag="selectFlag"
                         @fixedInfo = 'fixedInfo'
+                        @allDotInfo = 'allDotInfo'
                         @searchAnything="searchAnything"
                         @nextPage="nextPage"
                         @previousPage="previousPage"
@@ -113,6 +114,14 @@
                               @fixInfo = "fixInfo"
                               @addNewInfo="addNewPerson">
                 </PersonDetail>
+                <allDotMap v-if="allDotvisible"
+                           :visible="allDotvisible"
+                           :Info="allDotList"
+                           :title="title"
+                           @iconfixInfo="iconfixInfo"
+                           @iconListfixInfo="iconListfixInfo"
+                           @closeInfoDialog ="closeDialog">
+                </allDotMap>
             </div>
         </div>
     </div>
@@ -120,6 +129,7 @@
 
 <script>
     import ScrollContainer from '@/components/ScrollContainer'
+    import allDotMap from '@/components/allDotMap'
     import Header from './funHeader'
     import PersonDetail from './detailDialog'
     import api from '@/api'
@@ -145,7 +155,12 @@
                 isShowLoading: false,
                 currentNum: 50,
                 listLength: '',
-                pageNum: 1
+                pageNum: 1,
+                allDotvisible:false,
+                allDotList:{
+                    close:[],
+                    open:[]
+                }
             }
         },
         methods: {
@@ -161,7 +176,29 @@
             },
             closeDialog () {
                 this.visible = false
+                this.allDotvisible=false
                 this.getAllScenic()
+            },
+            iconListfixInfo(infoList){
+                infoList.forEach(obj=>{
+                    obj.location=[obj.longitude,obj.latitude]
+                    this.iconfixInfo(obj,obj.location)
+                })
+            },
+            async iconfixInfo(info,index){
+                let scenicObj = {
+                    description:info.description,
+                    id: info.scenicspotBean.id,
+                    name: info.scenicspotBean.name,
+                    capacity: info.scenicspotBean.capacity,
+                    regionId: info.regionId,
+                    latitude: index[1],
+                    longitude: index[0],
+                    pictureId:info.pictureId
+                }
+                await api.scenic.updateScenic(JSON.stringify(scenicObj)).then(res => {
+                    console.log('修改成功')
+                })
             },
             searchAnything (info) {
                 console.log(info, '这是要过滤的')
@@ -186,6 +223,11 @@
                 this.visible = true
                 this.isDisabled = state
                 this.title = title
+            },
+            allDotInfo(){
+                this.allDotvisible = true
+                this.title = '景点批量打点'
+                console.log(this.allDotvisible,this.allDotList, this.title)
             },
             addNewInfo () {
                 this.showPersonDetail({scenicspotBean:{}}, '添加景点信息', false)
@@ -410,6 +452,20 @@
                             return item
                         }
                     })
+                    this.allDotList.close=[]
+                    this.allDotList.open=[]
+                    for (let i = 0; i < res.length; i++) {
+                        res[i].id = res[i].scenicspotBean.id
+                        res[i].iconName = res[i].scenicspotBean.name
+                        res[i].iconSubtype = 'scenic'
+                        res[i].iconUrl = '/static/img/icon/scenic.png'
+                        res[i].iconType = '景点'
+                        if(res[i].longitude==null&&res[i].latitude==null){
+                            this.allDotList.close.push(res[i])
+                        }else {
+                            this.allDotList.open.push(res[i])
+                        }
+                    }
                     for (let i = 0; i < this.scenicList.length; i++) {
                         this.scenicList[i].checked = false
                         this.scenicList[i].status = true
@@ -448,7 +504,8 @@
         components: {
             ScrollContainer,
             Header,
-            PersonDetail
+            PersonDetail,
+            allDotMap
         }
     }
 </script>

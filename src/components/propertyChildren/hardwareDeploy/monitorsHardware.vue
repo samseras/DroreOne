@@ -16,6 +16,7 @@
                         @nextPage="nextPage"
                         @previousPage="previousPage"
                         @choseType="choseType"
+                        @allDotInfo = 'allDotInfo'
                         @toggleList="toggleList"
                         @getAllMonitor="getAllMonitor">
                 </Header>
@@ -118,6 +119,14 @@
                           @fixInfo="fixInfo">
 
                 </HardWare>
+                <allDotMap v-if="allDotvisible"
+                           :visible="allDotvisible"
+                           :Info="allDotList"
+                           :title="title"
+                           @iconfixInfo="iconfixInfo"
+                           @iconListfixInfo="iconListfixInfo"
+                           @closeInfoDialog ="closeDialog">
+                </allDotMap>
             </div>
         </div>
     </div>
@@ -125,6 +134,7 @@
 
 <script>
     import ScrollContainer from '@/components/ScrollContainer'
+    import allDotMap from '@/components/allDotMap'
     import Header from './camera.vue'
     import HardWare from './hardwareDialog.vue'
     import api from '@/api'
@@ -153,7 +163,12 @@
                 isShowLoading:false,
                 currentNum: 50,
                 listLength: '',
-                pageNum: 1
+                pageNum: 1,
+                allDotvisible:false,
+                allDotList:{
+                    close:[],
+                    open:[]
+                }
             }
         },
         methods:{
@@ -170,7 +185,39 @@
             },
             closeDialog () {
                 this.visible = false
+                this.allDotvisible=false
                 this.getAllMonitor()
+            },
+            allDotInfo(){
+                this.allDotvisible = true
+                this.title = '传感器批量打点'
+            },
+            iconListfixInfo(infoList){
+                infoList.forEach(obj=>{
+                    obj.location=[obj.longitude,obj.latitude]
+                    this.iconfixInfo(obj,obj.location)
+                })
+            },
+            async iconfixInfo(info,index){
+                let scenicObj = [{
+                    typeId: 6,
+                    id:info.id,
+                    sensorType:info.sensorType,
+                    name:info.name,
+                    model:info.model,
+                    ip:info.ip,
+                    mac:info.mac,
+                    port:info.port,
+                    serialNum:info.serialNum,
+                    regionId:info.regionId,
+                    description:info.description,
+                    latitude: index[1],
+                    longitude: index[0],
+                    pictureId:info.pictureId
+                }]
+                await api.monitor.updateMonitor(scenicObj).then(res => {
+                    console.log('修改成功')
+                })
             },
             searchAnything (info) {
                 console.log(info, '这是要过滤的')
@@ -446,7 +493,20 @@
                             return item
                         }
                     })
-
+                    this.allDotList.close=[]
+                    this.allDotList.open=[]
+                    let resDevices=res.devices
+                    for (let i = 0; i < resDevices.length; i++) {
+                        resDevices[i].iconName = resDevices[i].name
+                        resDevices[i].iconSubtype = 'Monitors'
+                        resDevices[i].iconUrl = '/static/img/icon/Monitors.png'
+                        resDevices[i].iconType = '传感器'
+                        if(resDevices[i].longitude==null&&resDevices[i].latitude==null){
+                            this.allDotList.close.push(resDevices[i])
+                        }else {
+                            this.allDotList.open.push(resDevices[i])
+                        }
+                    }
                     for (let i=0;i<this.monitorsList.length;i++){
                         this.monitorsList[i].checked=false
                         this.monitorsList[i].status=true
@@ -472,8 +532,8 @@
         components:{
             ScrollContainer,
             Header,
-            HardWare
-
+            HardWare,
+            allDotMap
         }
     }
 

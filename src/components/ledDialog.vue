@@ -6,7 +6,7 @@
             :before-close="closeDialog"
             width="50%"
             center>
-           <iframe src="http://124.90.43.59:8000/cx/index.html#/terminalHome" frameborder="0"></iframe>
+           <iframe src="http://124.90.43.59:8000?user=yunhe&token=dfsdgsdgsd" frameborder="0"></iframe>
         </el-dialog>
     </div>
 </template>

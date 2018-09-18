@@ -42,7 +42,7 @@
                             </template>
                         </el-table-column>
                         <el-table-column
-                            prop="securityIds.length"
+                            prop="iScheduleMaps.length"
                             label="人员数量">
                         </el-table-column>
                         <el-table-column
@@ -332,7 +332,7 @@
                     customizedShift: info.inspectionSchedule.customizedShift,
                     routeId: info.inspectionSchedule.routeId,
                     description: info.inspectionSchedule.description,
-                    securityIds: info.securityIds
+                    iScheduleMaps:info.iScheduleMaps
                 }
                 if (info.inspectionSchedule.customizedDays) {
                     obj.startDate = moment(info.inspectionSchedule.time[0]).format('YYYY-MM-DD')
@@ -363,7 +363,7 @@
                     customizedShift: info.inspectionSchedule.customizedShift,
                     routeId: info.inspectionSchedule.routeId,
                     description: info.inspectionSchedule.description,
-                    securityIds: info.securityIds
+                    iScheduleMaps:info.iScheduleMaps
                 }
                 if (info.inspectionSchedule.customizedDays) {
                     obj.startDate = moment(info.inspectionSchedule.time[0]).format('YYYY-MM-DD')
@@ -436,7 +436,7 @@
             async getAllpatrol () {
                 this.isShowLoading = true
                 await api.patrol.getAllPatrol().then(res => {
-                    console.log(res, '请求成功')
+                    console.log(JSON.stringify(res), '请求成功')
                     this.isShowLoading = false
                     this.patrolList = res
                     this.patrolList.forEach(item => {

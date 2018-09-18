@@ -3,7 +3,7 @@
         <div class="reveal">
             <!--顶部-->
             <div class="top">
-                <h5>车船调度计划列表</h5>
+                <h5>车船调度</h5>
                 <ul>
                     <!--<li>-->
                     <!--<el-switch-->
@@ -13,6 +13,12 @@
                     <!--</el-switch>-->
                     <!--</li>-->
                     <!--<li><img src="../../../../static/img/search.png" class="search" alt=""/></li>-->
+
+                    <!--<li>-->
+                        <!--<el-tooltip class="item" effect="dark" content="车载视频控件下载" placement="left">-->
+                            <!--<img src="../../../../static/img/down.svg" class="multiwindow" @click="cmsocxDown"  alt=""/>-->
+                        <!--</el-tooltip>-->
+                    <!--</li>-->
                 </ul>
             </div>
             <div class="middle">
@@ -23,19 +29,19 @@
                             :Info="transportInfo"
                             :lightCheckout="transportCheckout"
                             :regionId="regionId"
-                            :lightList="transportList"
+                            :lightList="carlist"
                             :number="number"
                             :fault="fault">
                         </broadcast-ztree>
                     </ScrollContainer>
                 </div>
             </div>
-            <div class="last">
-                <h5>设备故障率</h5>
-                <div>
-                    <div id="pie"></div>
-                </div>
-            </div>
+            <!--<div class="last">-->
+                <!--<h5>设备故障率</h5>-->
+                <!--<div>-->
+                    <!--<div id="pie"></div>-->
+                <!--</div>-->
+            <!--</div>-->
         </div>
     </div>
 </template>
@@ -60,15 +66,14 @@
                 optionMisic: [],
                 isShowBroadCard: false,
                 transportInfo: [],
+                carlist:[],
                 transportCheckout:[],
                 regionId:[],
                 transportList:[],
                 selectAll:[],
-                title:'车船调度计划',
+                title:'车船',
                 online: '0',
                 faultlist:[],
-                cars:[],
-                boats:[],
                 drivers:[],
                 crew:[]
             }
@@ -142,83 +147,144 @@
                 });
             },
             async initData(){
-                Promise.all([this.getAllVehicle(0),this.getAllVehicle(1),this.getAllDriver(1),this.getAllDriver(2),this.getAllTransport()]).then(result=>{
-                    console.log(result,'result')
-                    this.cars = result[0]
-                    this.boats = result[1]
-                    let vehicles = this.cars.concat(this.boats)
-                    this.drivers = result[2]
-                    this.crew = result[3]
-                    this.transportList = result[4]
-
-                    this.number=this.transportList.length
-                    let arr = []
-                    this.transportList[0].carObjs = [{
-                            name:'奥迪奥迪奥迪',
-                            id:'123321',
-                            status:'',
-                            latitude:30.281985840870185,
-                            longitude:120.06656811140255,
-                            location:[120.06656811140255,30.281985840870185],
-                            type:'transport',
-                            subtype:'car',
-                            url:'/static/img/icon/bus_small.png',
-                            description:'aaaaaaaaaa'
-                    }]
-
-                    this.transportList.forEach(item => {
-                        item.label = item.name
-                        item.type = 'transport'
-                        item.status = 'WORKING'
-                        // if (item.status =="FAULT")  {
-                        //     item.icon = '../../../static/img/led_damage.svg'
-                        //     this.faultlist.push(item.id)
-                        // } else  if (item.status =="OFFLINE") {
-                        //     item.icon = '../../../static/img/led.svg'
-                        // }else {
-                        //     item.icon = '../../../static/img/led_open.svg'
-                        // }
-
-                        let obj = {
-                            label: item.name,
-                            id: item.id,
-                            children: []
+                Promise.all([this.getAllVehicle()]).then(result=>{
+                    let vehicles = result[0]
+                    // let vehicles =  [
+                    //     {
+                    //         "vehicle": {
+                    //             "id": "05579c25-8abb-4bfa-83ae-2a1e50a071ee",
+                    //             "createTime": null,
+                    //             "creator": null,
+                    //             "modifyTime": "2018-09-11 17:32:51",
+                    //             "modifier": "admin",
+                    //             "serialNum": "船001",
+                    //             "capacity": 33,
+                    //             "type": 1,
+                    //             "model": "363",
+                    //             "gpsDeviceId": "21a435fd-f067-4cb5-841e-0482bbe1c230",
+                    //             "pictureId": null,
+                    //             "maintenanceStatus": 0,
+                    //             "maintenanceDate": "2018-08-07",
+                    //             "purchaseDate": "2010-03-23",
+                    //             "description": "反感和的",
+                    //             "scenicAreaId": null,
+                    //             "deleted": false
+                    //         },
+                    //         "gpsDeviceId": "21a435fd-f067-4cb5-841e-0482bbe1c230",
+                    //         "gpsDeviceName": "gps1",
+                    //         "pictureId": null,
+                    //         "picturePath": null,
+                    //         "gpsData":
+                    //             //null,
+                    //             {
+                    //             "deviceId": "21a435fd-f067-4cb5-841e-0482bbe1c230",
+                    //             "ioTDeviceId": null,
+                    //             "createTime": "2017-12-31 12:21:39",
+                    //             "longitude": 120.13310087077178,
+                    //             "latitude": 30.30729423238902,
+                    //             "altitude": null,
+                    //             "direction": null,
+                    //             "speed": 4,
+                    //             "telephone": null,
+                    //             "deviceNum": null,
+                    //             "coordinate": null
+                    //         },
+                    //         "driver": {
+                    //             "id": "1",
+                    //             "creator": null,
+                    //             "createTime": null,
+                    //             "modifier": "admin",
+                    //             "modifyTime": "2018-09-11 18:00:00",
+                    //             "name": "admin",
+                    //             "cnName": " 系统管理员",
+                    //             "gender": 0,
+                    //             "iconId": null,
+                    //             "mobileNum": "18800000000",
+                    //             "fixedPhoneNum": null,
+                    //             "idCardNum": null,
+                    //             "email": null,
+                    //             "workAddress": null,
+                    //             "description": null,
+                    //             "departmentId": null,
+                    //             "jobId": null,
+                    //             "roleId": "1"
+                    //         }
+                    //     }
+                    //     ]
+                    this.carlist = vehicles
+                    this.number=this.carlist.length
+                    this.transportInfo=[]
+                    let carObj = {
+                        label:'车辆',
+                        id:100010,
+                        children:[]
+                    }
+                    let boatObj = {
+                        label:'船只',
+                        id:100011,
+                        children:[]
+                    }
+                    vehicles.forEach(veObj=>{
+                        let childObj;
+                        if(veObj.vehicle.type == 0){
+                            childObj = {
+                                label:veObj.vehicle.serialNum,
+                                id:veObj.vehicle.id,
+                                url:'/static/img/icon/bus_small.png',
+                                type:'transport',
+                                subtype:'car',
+                                icon:veObj.gpsData ? '../../../static/img/car_icon.svg' : '../../../static/img/car_gray.svg' ,
+                                status:veObj.gpsData ? "ONLINE" : "OFFLINE",
+                                longitude:veObj.gpsData ? veObj.gpsData.longitude+0.451536705535+0.0048011541 : '',
+                                latitude:veObj.gpsData ? veObj.gpsData.latitude+0.49693734262853-0.0025647127: '',
+                                gpsDeviceId:veObj.gpsDeviceId
+                            }
+                            carObj.children.push(childObj)
+                        }else if(veObj.vehicle.type == 1){
+                            // let arr = ['../../../static/img/boat_icon.svg','../../../static/img/boat_gray.svg'];
+                            // let icon = arr[Math.floor(Math.random()*arr.length)];
+                            childObj = {
+                                label:veObj.vehicle.serialNum,
+                                id:veObj.vehicle.id,
+                                url:'/static/img/icon/boat_small.png',
+                                type:'transport',
+                                subtype:'boat',
+                                icon:veObj.gpsData ? '../../../static/img/boat_icon.svg' : '../../../static/img/boat_gray.svg',
+                                status:veObj.gpsData ? "ONLINE" : "OFFLINE",
+                                longitude:veObj.gpsData ? veObj.gpsData.longitude+0.451536705535+0.0048011541 : '',
+                                latitude:veObj.gpsData ? veObj.gpsData.latitude +0.49693734262853-0.0025647127: '',
+                                gpsDeviceId:veObj.gpsDeviceId
+                            }
+                            boatObj.children.push(childObj)
                         }
-                        if(item.vDriverMaps instanceof  Array && item.vDriverMaps.length >0){
-                            item.vDriverMaps.forEach(item1=>{
-                                item1.vehicleId
-                                vehicles.forEach(veObj=>{
-                                    if(item1.vehicleId == veObj.vehicle.id){
-                                        let childObj = {
-                                            label:veObj.vehicle.serialNum,
-                                            id:veObj.vehicle.id,
-                                            type:'transport',
-                                            transportObj:item,
-                                        }
-                                        obj.children.push(childObj)
-                                    }
-                                })
-                            })
-                        }
-                        arr.push(obj)
                     })
-
-                    this.fault=this.faultlist.length
+                    this.transportInfo.push(carObj)
+                    this.transportInfo.push(boatObj)
+                    this.fault=0
                     this.online= this.number - this.fault
-                    this.transportInfo = arr
-                    this.drawLine();
+                    // this.drawLine();
                     console.log(this.transportInfo)
                 })
+                setTimeout(() => {
+                    let route = this.$route.path
+                    if (route.includes('controler/car')) {
+                        this.initData();//长轮询
+                        this.treeShow();
+                    }
+                },5000)
             },
             async getAllTransport(){
                 return api.transport.getTransport()
             },
-            async getAllVehicle(id){
-                return await api.boat.getAllVehicle(id)
+            async getAllVehicle(){
+                return await api.boat.getAllVehicleGps()
             },
             async getAllDriver(id){
                 return await api.person.getJobPerson(id)
-            }
+            },
+            cmsocxDown(){
+                window.open('http://112.17.128.126:89/download/OCX.exe');
+            },
         },
         watch:{
 
@@ -227,6 +293,10 @@
             this.treeShow();
         },
         mounted() {
+            // setInterval(()=>{
+            //     this.transportInfo = []
+            //     this.initData();
+            // },5000)
             this.initData();
         },
         computed: {
@@ -259,10 +329,11 @@
                     display: flex;
                     li {
                         margin: 0 5px;
-                        .search{
-                            width: 18px;
+                        .multiwindow{
+                            width: 24px;
                             vertical-align: middle;
                             cursor: pointer;
+                            outline: none;
                         }
                     }
                 }

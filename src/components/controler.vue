@@ -3,7 +3,6 @@
         <div class="map">
             <Map></Map>
         </div>
-
         <div class="menu">
             <div class="left" v-if="isShowControler && getSearchState">
                 <router-view/>
@@ -39,9 +38,9 @@
                     {names:'MONITORS',route: '/controler/environment', img: '../../../static/img/detection.svg', desc: "环境检测传感器",controlShow:false},
                     {enable: true,names:'WARN',route: '/controler/warn', img: '../../../static/img/warn.svg', desc: "告警",controlShow:true},
                     {names:'LED',route: '/controler/screen', img: '../../../static/img/led.svg', desc: "LED大屏",controlShow:false},
-                    {enable: true,names:'PERSON',route: '/controler/person', img: '../../../static/img/dmis.svg', desc: "个人定位",controlShow:true},
-                    {enable: true,names:'CAR',route: '/controler/car', img: '../../../static/img/boatCar.svg', desc: "车船调度",controlShow:true},
+                    // {enable: true,names:'PERSON',route: '/controler/person', img: '../../../static/img/dmis.svg', desc: "个人定位",controlShow:true},
                     {names:'LIGHT',route: '/controler/light', img: '../../../static/img/light.svg', desc: "路灯",controlShow:false},
+                    {names:'SECURITY',route: '/controler/security', img: '../../../static/img/security.svg', desc: "巡检计划",controlShow:false},
                     // {route: '/controler/other', img: '../../../static/img/else.png', desc: "其他"}
                 ],
                 isShowControler: false,
@@ -49,9 +48,11 @@
                 activeIndex: 1,
                 isSearch: false,
                 controler:[
+                    {enable: true,names:'CAR',route: '/controler/car', img: '../../../static/img/boatCar.svg', desc: "车船调度",controlShow:true},
                     {enable: true,names:'WARN',route: '/controler/warn', img: '../../../static/img/warn.svg', desc: "告警",controlShow:true},
-                    {enable: false,names:'CAR',route: '/controler/car', img: '../../../static/img/boatCar.svg', desc: "车船调度",controlShow:true},
-                    {enable: true,names:'PERSON',route: '/controler/person', img: '../../../static/img/dmis.svg', desc: "个人定位",controlShow:true},
+                    {enable: false,names:'PERSON',route: '/controler/person', img: '../../../static/img/dmis.svg', desc: "个人定位",controlShow:true},
+                    {enable: true,names:'SECURITY',route: '/controler/security', img: '../../../static/img/security.svg', desc: "巡检计划",controlShow:true},
+
                 ],
                 controlShow:true,
                 CAMERA:false,
@@ -69,7 +70,38 @@
             Map
         },
         created () {
+            let route = this.$route.path;
+            if (route.includes('camera')){
+                this.activeIndex = 4
+            }
+            if (route.includes('broad')){
+                this.activeIndex = 5
+            }
+            if (route.includes('wifi')){
+                this.activeIndex = 0
+            }
+            if (route.includes('environment')){
+                this.activeIndex = 1
+            }
+            if (route.includes('warn')){
+                this.activeIndex = 6
+            }
+            if (route.includes('screen')){
+                this.activeIndex = 3
+            }
+            if (route.includes('person')){
+                this.activeIndex = 8
+            }
+            if (route.includes('car')){
+                this.activeIndex = 7
+            }
+            if (route.includes('light')){
+                this.activeIndex = 2
+            }
             if (this.getSearchInfo.id) {
+                this.isShowControler = true
+            }
+            if (this.getSearchState) {
                 this.isShowControler = true
             }
             this.getAllControler()
@@ -201,6 +233,7 @@
             flex: 1;
             height: 100%;
             background: #000;
+
         }
     }
 

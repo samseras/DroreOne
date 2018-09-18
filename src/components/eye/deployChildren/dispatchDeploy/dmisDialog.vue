@@ -12,18 +12,18 @@
                 <div class="card">
                     <!--巡更路线-->
                     <div class="personCardContent" v-if="route.includes('security')">
-                        <p class="sex">
+                        <div class="row">
                             <span class="dmisTitle">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 称：</span>
-                            <el-input type="text"v-model="security.inspectionSchedule.name"class="inputText" :maxlength="50" :disabled='isDisabled'></el-input>
-                        </p>
-                        <p class="time">
+                            <el-input type="text"v-model="security.inspectionSchedule.name"class="inputText" :maxlength="15" :disabled='isDisabled'></el-input>
+                        </div>
+                        <div class="row">
                             <span class="dmisTitle">时&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 间：</span>
                             <el-checkbox-group v-model="filterList" @change="selectDays" :disabled='isDisabled'>
                                 <el-checkbox v-for="item in week" :label="item.id" :key="item.id">{{item.type}}</el-checkbox>
                             </el-checkbox-group>
                             <el-checkbox label="自定义" @change="weekCustom(security.inspectionSchedule.customizedDays)" v-model="security.inspectionSchedule.customizedDays" :disabled='isDisabled'></el-checkbox>
-                        </p>
-                        <p class="time" v-if="security.inspectionSchedule.customizedDays">
+                        </div>
+                        <div class="row" v-if="security.inspectionSchedule.customizedDays">
                             <span class="dmisTitle">选择时间：</span>
                             <el-date-picker
                                 v-model="daySelect"
@@ -34,14 +34,26 @@
                                 start-placeholder="开始日期"
                                 end-placeholder="结束日期">
                             </el-date-picker>
-                        </p>
-                        <p class="time">
-                            <span class="dmisTitle">班&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 次：</span>
+                        </div>
+                        <div class="row">
+                            <span class="Hardware dmisTitle">班&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 次：</span>
                             <el-checkbox-group v-model="classesList" @change="security.inspectionSchedule.customizedShift = false" :disabled='isDisabled'>
                                 <el-checkbox v-for="item in classes" :label="item.id" :key="item.id">{{item.type}}</el-checkbox>
                             </el-checkbox-group>
                             <el-checkbox label="自定义" @change="dayCustom(security.inspectionSchedule.customizedShift)" v-model="security.inspectionSchedule.customizedShift" :disabled='isDisabled'></el-checkbox>
-                            <el-time-picker v-if="security.inspectionSchedule.customizedShift"
+                            <!--<el-time-picker v-if="security.inspectionSchedule.customizedShift"-->
+                                            <!--is-range-->
+                                            <!--v-model="timeSelect"-->
+                                            <!--range-separator="至"-->
+                                            <!--:disabled='isDisabled'-->
+                                            <!--start-placeholder="开始时间"-->
+                                            <!--end-placeholder="结束时间"-->
+                                            <!--placeholder="选择时间范围">-->
+                            <!--</el-time-picker>-->
+                        </div>
+                        <div class="Hardware row"  v-if="security.inspectionSchedule.customizedShift">
+                            <span class="dmisTitle">选择时间：</span>
+                            <el-time-picker
                                             is-range
                                             v-model="timeSelect"
                                             range-separator="至"
@@ -50,8 +62,8 @@
                                             end-placeholder="结束时间"
                                             placeholder="选择时间范围">
                             </el-time-picker>
-                        </p>
-                        <p class="name">
+                        </div>
+                        <div class="row">
                             <span class="dmisTitle">岗&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 位：</span>
                             <el-select v-model="jobName" size="mini" class="" multiple placeholder="请选择" :disabled='isDisabled' @change="getJobNameList">
                                 <el-option
@@ -61,24 +73,53 @@
                                     :value="item.id">
                                 </el-option>
                             </el-select>
-                        </p >
-                        <p class="name">
-                            <span class="dmisTitle">人&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 员：</span>
-                            <el-select v-model="security.securityIds" size="mini" class="" multiple placeholder="请选择" :disabled='isDisabled'>
-                                <el-option
-                                    v-for="item in personList"
-                                    :key="item.id"
-                                    :label="item.name"
-                                    :value="item.id">
-                                </el-option>
-                            </el-select>
-                        </p >
-                        <!--<p class="idNum">重复调度：-->
-                        <!--<el-radio v-model="radio" label="1">是</el-radio>-->
-                        <!--<el-radio v-model="radio" label="0">否</el-radio>-->
-                        <!--</p>-->
-                        <p class="phoneNum">
-                            <span class="dmisTitle">线路绘制：</span>
+                        </div>
+                        <div class="relateVehicle">
+                            <div class="dmisTitle">关联人员：</div>
+                            <div class="dmisContent">
+                                <table>
+                                    <thead>
+                                    <tr>
+                                        <th class="headCar">人员信息</th>
+                                        <th class="headPerson">GPS信息</th>
+                                        <th class="headAdd" @click="addSecurityRow"><i class="el-icon-plus"></i></th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr v-for="(dataObj,index) in security.iScheduleMaps" :key="index">
+                                        <td class="person">
+                                            <el-select @change="personChange" v-model="dataObj.securityId" placeholder="请选择" :disabled="isDisabled" :maxlength="15">
+                                                <el-option
+                                                    v-for="item in personList"
+                                                    :key="item.id"
+                                                    :label="item.name"
+                                                    :value="item.id"
+                                                    :disabled="item.disabled">
+                                                </el-option>
+                                            </el-select>
+                                        </td>
+                                        <td class="gps">
+                                            <el-select @change="gpsChange" v-model="dataObj.gpsId" placeholder="请选择" :disabled="isDisabled" :maxlength="15">
+                                                <el-option
+                                                    v-for="item in gpsOption"
+                                                    :key="item.id"
+                                                    :label="item.name"
+                                                    :value="item.id"
+                                                    :disabled="item.disabled">
+                                                </el-option>
+                                            </el-select>
+                                        </td>
+                                        <td class="delete" @click="deleteSecurityRow(dataObj)">
+                                            <i class="el-icon-close"></i>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div class="uploadText row">
+                            <span class="updataTitle dmisTitle">线路绘制：</span>
                             <!--<input type="text"v-model="security.location" class="location">-->
                             <el-select v-model="security.inspectionSchedule.routeId" placeholder="请选择" :disabled='isDisabled'>
                                 <el-option
@@ -89,16 +130,16 @@
                                 </el-option>
                             </el-select>
                             <i class="el-icon-location-outline" @click="showMapDialog"></i>
-                        </p>
-                        <p class="type textArea">
+                        </div>
+                        <div class="textArea row">
                             <span class="description dmisTitle">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：</span>
                             <el-input type="textarea"  v-model="security.inspectionSchedule.description" :disabled="isDisabled" ></el-input>
-                        </p>
+                        </div>
                     </div>
                     <!--广播-->
                     <div class="personCardContent" v-if="route.includes('broadcast')">
                         <p class="sex"><span class="dmisTitle"> 名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 称：</span>
-                            <el-input type="text"v-model="broadList.broadcastSchedule.name" class="inputText" :maxlength="50" :disabled='isDisabled'></el-input>
+                            <el-input type="text"v-model="broadList.broadcastSchedule.name" class="inputText" :maxlength="15" :disabled='isDisabled'></el-input>
                         </p>
                         <p class="time">
                             <span class="dmisTitle">时&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 间：</span>
@@ -141,10 +182,6 @@
                                 @check="handleCheckChange">
                             </el-tree>
                         </p>
-                        <!--<p class="idNum">重复调度：-->
-                        <!--<el-radio v-model="radio" label="1">是</el-radio>-->
-                        <!--<el-radio v-model="radio" label="0">否</el-radio>-->
-                        <!--</p>-->
                         <p class="uploadText"><span class="updataTitle dmisTitle">定义内容：</span>
                             <!--<input type="text"v-model="broadList.musicIds" class="inputText">-->
                             <span v-for="item in broadList.musics" :key="item.id">{{item.title}}</span>
@@ -159,7 +196,7 @@
                     <div class="personCardContent" v-if="route.includes('lamppost')">
                         <p class="sex">
                             <span class="dmisTitle">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 称：</span>
-                            <el-input type="text" v-model="lamppost.lightSchedule.name" class="inputText" :maxlength="50" :disabled='isDisabled'></el-input>
+                            <el-input type="text" v-model="lamppost.lightSchedule.name" class="inputText" :maxlength="15" :disabled='isDisabled'></el-input>
                         </p>
                         <p class="time">
                             <span class="dmisTitle">时&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 间：</span>
@@ -212,7 +249,7 @@
                     <div class="personCardContent" v-if="route.includes('purifier')">
                         <p class="sex">
                             <span class="dmisTitle">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 称：</span>
-                            <el-input type="text"v-model="purifier.cleanSchedule.name"class="inputText" :maxlength="50" :disabled='isDisabled'></el-input>
+                            <el-input type="text"v-model="purifier.cleanSchedule.name"class="inputText" :maxlength="15" :disabled='isDisabled'></el-input>
                         </p>
                         <p class="time">
                             <span class="dmisTitle">时&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 间：</span>
@@ -259,7 +296,7 @@
                                     :value="item.id">
                                 </el-option>
                             </el-select>
-                        </p >
+                        </p>
                         <p class="name">
                             <span class="dmisTitle">人&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 员：</span>
                             <el-select v-model="purifier.cleanerIds" size="mini" class="" multiple placeholder="请选择" :disabled='isDisabled'>
@@ -270,7 +307,7 @@
                                     :value="item.id">
                                 </el-option>
                             </el-select>
-                        </p >
+                        </p>
                         <!--<p class="idNum">重复调度：-->
                         <!--<el-radio v-model="radio" label="1">是</el-radio>-->
                         <!--<el-radio v-model="radio" label="0">否</el-radio>-->
@@ -295,7 +332,7 @@
                     <div class="personCardContent" v-if="route.includes('screen')">
                         <p class="sex">
                             <span class="dmisTitle">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 称：</span>
-                            <el-input type="text"v-model="screen.ledSchedule.name" class="inputText" :disabled="isDisabled" :maxlength="50"></el-input>
+                            <el-input type="text"v-model="screen.ledSchedule.name" class="inputText" :disabled="isDisabled" :maxlength="15"></el-input>
                         </p>
                         <p class="time">
                             <span class="dmisTitle">时&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 间：</span>
@@ -355,7 +392,7 @@
                     <div class="personCardContent" v-if="route.includes('transport')">
                         <div class="row">
                             <span class="dmisTitle">调度类型：</span>
-                            <el-select v-model="transport.type" @change = "typeChange" placeholder="请选择" :disabled="isDisabled" :maxlength="50">
+                            <el-select v-model="transport.type" @change = "typeChange" placeholder="请选择" :disabled="isDisabled" :maxlength="15">
                                 <el-option
                                     v-for="item in toolType"
                                     :key="item.value"
@@ -366,7 +403,7 @@
                         </div>
                         <div class="row">
                             <span class="dmisTitle">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 称：</span>
-                            <el-input type="text"v-model="transport.name" class="inputText" :disabled="isDisabled" :maxlength="50"></el-input>
+                            <el-input type="text"v-model="transport.name" class="inputText" :disabled="isDisabled" :maxlength="15"></el-input>
                         </div>
                         <div class="row">
                             <span class="dmisTitle">时&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 间：</span>
@@ -398,6 +435,17 @@
                                             placeholder="选择时间范围">
                             </el-time-picker>
                         </div>
+                        <div class="row">
+                            <span class="dmisTitle">岗&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 位：</span>
+                            <el-select v-model="jobName" size="mini" class="" multiple placeholder="请选择" :disabled='isDisabled' @change="getJobNameList">
+                                <el-option
+                                    v-for="item in jobList"
+                                    :key="item.id"
+                                    :label="item.name"
+                                    :value="item.id">
+                                </el-option>
+                            </el-select>
+                        </div>
                         <div class="relateVehicle">
                             <div class="dmisTitle">关联车船：</div>
                             <div class="dmisContent">
@@ -412,7 +460,7 @@
                                     <tbody>
                                     <tr v-for="(dataObj,index) in transport.vDriverMaps" :key="index">
                                         <td class="vehicle">
-                                            <el-select @change="vehicleChange" v-show="transport.type == '0'" v-model="dataObj.vehicleId" placeholder="请选择" :disabled="isDisabled" :maxlength="50">
+                                            <el-select @change="vehicleChange" v-show="transport.type == '0'" v-model="dataObj.vehicleId" placeholder="请选择" :disabled="isDisabled" :maxlength="15">
                                                 <el-option
                                                     v-for="item in cars"
                                                     :key="item.id"
@@ -421,7 +469,7 @@
                                                     :disabled="item.disabled">
                                                 </el-option>
                                             </el-select>
-                                            <el-select @change="vehicleChange" v-show="transport.type == '1'" v-model="dataObj.vehicleId" placeholder="请选择" :disabled="isDisabled" :maxlength="50">
+                                            <el-select @change="vehicleChange" v-show="transport.type == '1'" v-model="dataObj.vehicleId" placeholder="请选择" :disabled="isDisabled" :maxlength="15">
                                                 <el-option
                                                     v-for="item in boats"
                                                     :key="item.id"
@@ -433,20 +481,11 @@
 
                                         </td>
                                         <td class="person">
-                                            <el-select @change="driverChange" v-show="transport.type == '0'" v-model="dataObj.driverId" placeholder="请选择" :disabled="isDisabled" :maxlength="50">
+                                            <el-select @change="personChange" v-model="dataObj.driverId" placeholder="请选择" :disabled="isDisabled" :maxlength="15">
                                                 <el-option
-                                                    v-for="item in drivers"
+                                                    v-for="item in personList"
                                                     :key="item.id"
-                                                    :label="item.label"
-                                                    :value="item.id"
-                                                    :disabled="item.disabled">
-                                                </el-option>
-                                            </el-select>
-                                            <el-select @change="driverChange" v-show="transport.type == '1'" v-model="dataObj.driverId" placeholder="请选择" :disabled="isDisabled" :maxlength="50">
-                                                <el-option
-                                                    v-for="item in crew"
-                                                    :key="item.id"
-                                                    :label="item.label"
+                                                    :label="item.name"
                                                     :value="item.id"
                                                     :disabled="item.disabled">
                                                 </el-option>
@@ -494,7 +533,7 @@
         <MapDialog v-if="mapVisible" :visible="mapVisible" class="map" @closeMapDialog = 'closeMapDialog'></MapDialog>
         <broadcastDialog v-if="broadcastVisible" :visible="broadcastVisible" :broadList="broadList.musics" class="broadcastContent" @closeBroadcastDialog = 'closeBroadcastDialog' @saveMusicList = "musicList"></broadcastDialog>
         <ScreenDialog v-if="screenVisible" :visible="screenVisible" :screenContentList="screen.contents" class="screenContent" @closeScreenDialog = 'closeScreenDialog' @saveContent="saveContent"></ScreenDialog>
-        <SiteMap v-if="siteMapVisible" :visible="siteMapVisible" :type="transport.type" class="map" @closeMapDialog = 'closeSiteMapDialog'></SiteMap>
+        <SiteMap v-if="siteMapVisible" :name="routeName" :visible="siteMapVisible" :type="transport.type" class="map" @closeMapDialog = 'closeSiteMapDialog' :isDisabled="isDisabled"></SiteMap>
     </div>
 </template>
 
@@ -560,7 +599,7 @@
                         classTime: [],
                         days: []
                     },
-                    securityIds: []
+                    iScheduleMaps:[]
                 },
                 purifier:{
                     cleanSchedule: {
@@ -601,8 +640,6 @@
                 ],
                 boats:[],
                 cars:[],
-                drivers:[],
-                crew:[],
                 lineOptions:[],
                 transport:{
                         id:"",
@@ -611,7 +648,8 @@
                         days:[],
                         description:"",
                         time: [],
-                        watchTime: []
+                        watchTime: [],
+                        vDriverMaps:[]
                 },
                 transObj:{
                     vId:"",
@@ -655,7 +693,9 @@
                 jobList: [],
                 jobName: [],
                 copyPersonList: [],
-                rowNum:0
+                rowNum:0,
+                routeName:'',
+                gpsOption:[]
             }
         },
         methods: {
@@ -694,39 +734,73 @@
                     })
                 }
             },
-            driverChange(val){
-                if(this.transport.type == '0'){
-                    this.drivers.forEach(item=>{
-                        if(item.id == val){
-                            item.disabled = true
-                        }
-                    })
-                }else{
-                    this.crew.forEach(item=>{
-                        if(item.id == val){
-                            item.disabled = true
-                        }
-                    })
+            personChange(val){
+                this.personList.forEach(item=>{
+                    if(item.id == val){
+                        item.disabled = true
+                    }
+                })
+                console.log(this.personList)
+            },
+            gpsChange(val){
+                this.gpsOption.forEach(item=>{
+                    if(item.id == val){
+                        item.disabled = true
+                    }
+                })
+            },
+            addSecurityRow(){
+                if(this.isDisabled){
+                    return
                 }
+                this.security.iScheduleMaps.push({
+                    securityId:'',
+                    gpsId:''
+                })
             },
             addRow(){
                 if(this.isDisabled){
                     return
                 }
-                this.rowNum++;
                 this.transport.vDriverMaps.push({
-                    id:this.rowNum,
                     vehicleId:'',
                     driverId:''
                 })
+            },
+            deleteSecurityRow(obj){
+                if(this.isDisabled){
+                    return
+                }
+
+                this.security.iScheduleMaps = this.security.iScheduleMaps.filter(item=>{
+                    if(item.securityId != obj.securityId){
+                        return true
+                    }
+                })
+
+                if(obj.securityId){
+                    this.personList.forEach(item=>{
+                        if(item.id == obj.securityId){
+                            item.disabled = false
+                        }
+                    })
+                }
+                if(obj.gpsId){
+                    this.gpsOption.forEach(item=>{
+                        if(item.id == obj.gpsId){
+                            item.disabled = false
+                        }
+                    })
+                }
+
             },
             deleteRow(obj){
                 if(this.isDisabled){
                     return
                 }
-                this.transport.vDriverMaps.forEach((item,index)=>{
-                    if(item.id == obj.id){
-                        this.transport.vDriverMaps.splice(index,1)
+                this.transport.vDriverMaps = this.transport.vDriverMaps.filter(item=>{
+                    if(item.vehicleId != obj.vehicleId){
+                        return true
                     }
                 })
 
@@ -734,13 +808,6 @@
                     if(obj.vehicleId){
                         this.cars.forEach(item=>{
                             if(item.id == obj.vehicleId){
-                                item.disabled = false
-                            }
-                        })
-                    }
-                    if(obj.driverId){
-                        this.drivers.forEach(item=>{
-                            if(item.id == obj.driverId){
                                 item.disabled = false
                             }
                         })
@@ -753,13 +820,13 @@
                             }
                         })
                     }
-                    if(obj.driverId){
-                        this.crew.forEach(item=>{
-                            if(item.id == obj.driverId){
-                                item.disabled = false
-                            }
-                        })
-                    }
+                }
+                if(obj.driverId){
+                    this.personList.forEach(item=>{
+                        if(item.id == obj.driverId){
+                            item.disabled = false
+                        }
+                    })
                 }
             },
             async typeChange(val){
@@ -772,8 +839,7 @@
                 await this.getTransportRoat()
                 await this.getAllVehicle(0);  //车辆数据
                 await this.getAllVehicle(1);  //船数据
-                await this.getAllDriver(1);  //司机数据
-                await this.getAllDriver(2); //船夫数据
+                await this.getSafePerson(); //人员
             },
             selectDays () {
                 let route = this.$route.path
@@ -821,15 +887,12 @@
             addNewInfo () {
                 let newInfo = {}
                 if (this.route.includes('security')) {
+                    console.log(!this.security.inspectionSchedule.name, '这个是啥')
                     if (!this.security.inspectionSchedule.name || this.security.inspectionSchedule.name === ''){
                         this.$message.error('请输入完整信息')
                         return
                     }
-                    if (!this.security.securityIds || this.security.securityIds.length < 1) {
-                        this.$message.error('请选择巡更人员')
-                        return
-                    }
-                if (!this.security.inspectionSchedule.routeId || this.security.inspectionSchedule.routeId === '') {
+                    if (!this.security.inspectionSchedule.routeId || this.security.inspectionSchedule.routeId === '') {
                         this.$message.error('请选择巡更路线')
                         return
                     }
@@ -1037,8 +1100,13 @@
                     }
                     this.transport.watchTime= this.timeSelect
 
+                    if(!this.transport.routeId || this.transport.routeId == "") {
+                        this.$message.error('请选择路线')
+                        return
+                    }
+
                     if(this.transport.vDriverMaps.length >0){
-                        this.transport.vDriverMaps = this.transport.vDriverMaps.map(item=>{
+                        this.transport.svDriverMaps = this.transport.vDriverMaps.map(item=>{
                             return {
                                 vehicleId:item.vehicleId,
                                 driverIds : new Array(item.driverId)
@@ -1063,6 +1131,7 @@
                 }
             },
             weekDay(state){
+                console.log(this.filterList)
                 state = false
             },
             dayCustom(state){
@@ -1079,6 +1148,11 @@
             },
             showSiteMap(){
                 this.siteMapVisible = true
+                this.lineOptions.forEach(item=>{
+                    if(this.transport.routeId && item.id == this.transport.routeId){
+                        this.routeName = item.name;
+                    }
+                })
             },
             showBroadcastDialog () {
                 this.broadcastVisible  = true
@@ -1154,6 +1228,7 @@
                         item.label = item.name
                         item.disabled=this.isDisabled
                     })
+                    console.log(res.devices)
                     this.classFunction(res.devices)
                 }).catch(err => {
                     console.log(err, '请求失败')
@@ -1214,7 +1289,7 @@
                         if (this.jobName.includes(item.jobId)) {
                             return item
                         }
-                    })
+                     })
                 }
             },
             async getAllRegion () {
@@ -1226,8 +1301,7 @@
               })
             },
             async getAllRouteLine () {
-                await api.roat.getAllRoat().then(res => {
-                    console.log(res, '请求成功')
+                await api.roat.getTransportRoat(1).then(res => {
                     this.options = res
                 }).catch(err => {
                     console.log(err, '请求失败')
@@ -1267,43 +1341,28 @@
                     console.log(err)
                 })
             },
-            async getAllDriver(id){
-                await api.person.getJobPerson(id).then(res=>{
-                    console.log(res, ' this is driver')
-                    if(res instanceof Array && res.length>0){
-                            if (id === 1) {
-                                this.drivers = res.map(item=>{
-                                    if(item.personBean){
-                                        return {
-                                            id : item.personBean.id,
-                                            label : item.personBean.name
-                                        }
-                                    }
-                                })
-                            } else if (id === 2) {
-                                this.crew = res.map(item=>{
-                                    if(item.personBean){
-                                        return {
-                                            id : item.personBean.id,
-                                            label : item.personBean.name
-                                        }
-                                    }
-                                })
-                            }
-                    }
-                }).catch(err=>{
+            async getGpsOption(){
+                await api.gps.getAllGps().then((res)=>{
+                    console.log(res,'这是GPS')
+                    this.gpsOption=res.devices
+                }).catch((err)=>{
                     console.log(err)
                 })
-            },
-
+            }
         },
         async created () {
             this.route = this.$route.path
+            console.log(this.Info,'  opopop')
             if (this.route.includes('security')) {
                 this.getSafePerson()
+                this.getGpsOption()
                 this.getJobInfo()
                 this.getAllRouteLine()
                 this.security = this.Info;
+                if(!this.security.iScheduleMaps){
+                    this.$set(this.security,"iScheduleMaps",[])
+                }
+
                 if (this.security.inspectionSchedule.customizedDays === false) {
                     this.filterList = this.security.inspectionSchedule.days;
                 } else {
@@ -1314,6 +1373,13 @@
                 } else {
                     this.timeSelect = this.security.inspectionSchedule.classTime
                 }
+
+                if (this.Info.id) {
+                    this.$store.commit('LOCATION_ID', this.Info.id)
+                }else {
+                    this.$store.commit('LOCATION_ID', '')
+                }
+
             } else if(this.route.includes('broadcast')) {
                 this.getAllBroadcast()
                 this.broadList = this.Info;
@@ -1361,13 +1427,15 @@
                 this.label = this.Info;
             } else if(this.route.includes('transport')){
                 this.transport = this.Info;
-
+                if(!this.transport.routeId){
+                    this.$set(this.transport,"routeId", "")
+                }
+                console.log(this.transport.routeId)
+                await this.getJobInfo();
                 await this.getTransportRoat();
                 await this.getAllVehicle(0);  //车辆数据
                 await this.getAllVehicle(1);  //船数据
-                await this.getAllDriver(1);  //司机数据
-                await this.getAllDriver(2); //船夫数据
-
+                await this.getSafePerson(); //人员
 
                 if(this.transport.customizedDays === false) {
                     this.filterList = this.transport.days;
@@ -1376,12 +1444,14 @@
                 }
                 this.timeSelect = this.transport.watchTime
 
-                this.transport.vDriverMaps.forEach(item=>{
-                    item.driverId = item.driverIds[0]
-                })
-
                 if (this.Info.id) {
                     this.$store.commit('LOCATION_ID', this.Info.id)
+                    this.transport.vDriverMaps = this.transport.svDriverMaps.map(item=>{
+                        return {
+                            vehicleId:item.vehicleId,
+                            driverId:item.driverIds[0]
+                        }
+                    })
                 }else {
                     this.$store.commit('LOCATION_ID', '')
                 }
@@ -1808,11 +1878,8 @@
                             text-align:center;
                             border:1px solid #dcdfe6;
                         }
-                        .vehicle{
+                        .vehicle,.person,.gps{
                             width:40%;
-                        }
-                        .person{
-                            width: 40%;
                         }
                         .delete{
                             width: 20%;

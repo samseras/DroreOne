@@ -19,7 +19,7 @@ const basic = [
     {
         path: '/basic-property',
         name: 'ProBasicMenu',
-        // redirect: '/basic-property/park-deploy',
+        redirect: '/basic-property/park-deploy',
         component: resolve => require(['@/components/propertyChildren/basicMenu'], resolve),
         meta: {id: '0402'},
         children: [

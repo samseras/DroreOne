@@ -16,6 +16,7 @@
                         @previousPage="previousPage"
                         @selectedAll = 'selectedAll'
                         @fixedInfo = 'fixedInfo'
+                        @allDotInfo = 'allDotInfo'
                         @searchAnything="searchAnything"
                         @getAllPlant="getAllPlant">
                 </Header>
@@ -112,6 +113,14 @@
                               @fixInfo = "fixInfo"
                               @addNewInfo="addNewTree">
                 </PersonDetail>
+                <allDotMap v-if="allDotvisible"
+                           :visible="allDotvisible"
+                           :Info="allDotList"
+                           :title="title"
+                           @iconfixInfo="iconfixInfo"
+                           @iconListfixInfo="iconListfixInfo"
+                           @closeInfoDialog ="closeDialog">
+                </allDotMap>
             </div>
         </div>
     </div>
@@ -119,6 +128,7 @@
 
 <script>
     import ScrollContainer from '@/components/ScrollContainer'
+    import allDotMap from '@/components/allDotMap'
     import Header from './funHeader'
     import PersonDetail from './detailDialog'
     import api from '@/api'
@@ -144,7 +154,12 @@
                 isShowLoading: false,
                 currentNum: 50,
                 listLength: '',
-                pageNum: 1
+                pageNum: 1,
+                allDotvisible:false,
+                allDotList:{
+                    close:[],
+                    open:[]
+                }
             }
         },
         methods: {
@@ -160,7 +175,31 @@
             },
             closeDialog () {
                 this.visible = false
+                this.allDotvisible=false
                 this.getAllPlant()
+            },
+            iconListfixInfo(infoList){
+                infoList.forEach(obj=>{
+                    obj.location=[obj.longitude,obj.latitude]
+                    this.iconfixInfo(obj,obj.location)
+                })
+            },
+            async iconfixInfo(info,index){
+                let scenicObj = {
+                    id: info.plant.id,
+                    name: info.plant.name,
+                    regionId: info.regionId,
+                    latitude: index[1],
+                    longitude: index[0],
+                    plantYear: info.plant.plantYear,
+                    height: info.plant.height,
+                    description: info.plant.description,
+                    genera: info.plant.genera,
+                    pictureId:info.pictureId
+                }
+                await api.plant.updatePlant(JSON.stringify(scenicObj)).then(res => {
+                    console.log('修改成功')
+                })
             },
             searchAnything (info) {
                 console.log(info, '这是要过滤的')
@@ -188,6 +227,11 @@
                 this.visible = true
                 this.isDisabled = state
                 this.title = title
+            },
+            allDotInfo(){
+                this.allDotvisible = true
+                this.title = '植物批量打点'
+                // console.log(this.allDotvisible,this.allDotList, this.title)
             },
             addNewInfo () {
                 this.showPersonDetail({plant:{}}, '添加植物信息',false)
@@ -422,7 +466,20 @@
                             return item
                         }
                     })
-
+                    this.allDotList.close=[]
+                    this.allDotList.open=[]
+                    for (let i = 0; i < res.length; i++) {
+                        res[i].id = res[i].plant.id
+                        res[i].iconName = res[i].plant.name
+                        res[i].iconSubtype = 'plant'
+                        res[i].iconUrl = '/static/img/icon/plant.png'
+                        res[i].iconType = '植物'
+                        if(res[i].longitude==null&&res[i].latitude==null){
+                            this.allDotList.close.push(res[i])
+                        }else {
+                            this.allDotList.open.push(res[i])
+                        }
+                    }
                     for (let i = 0; i < this.treeList.length; i++) {
                         this.treeList[i].checked = false
                         this.treeList[i].status = true
@@ -456,7 +513,8 @@
         components: {
             ScrollContainer,
             Header,
-            PersonDetail
+            PersonDetail,
+            allDotMap
         }
     }
 </script>
