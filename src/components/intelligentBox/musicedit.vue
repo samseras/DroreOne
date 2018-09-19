@@ -61,14 +61,14 @@
                                 </el-input>
                             </div>
                             <div class="allsel">
-                                <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange">全选</el-checkbox>
+                                <!--<el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange">全选</el-checkbox>-->
                             </div>
                             <div class="del">
                                 <!--<i class="el-icon-delete"></i><span>删除</span>-->
                             </div>
                         </div>
                         <div class="content">
-                            <el-checkbox-group v-model="checkedmusics" @change="handleCheckedmusicsChange">
+                            <el-checkbox-group v-model="checkedmusics" :min="0" :max="1" @change="handleCheckedmusicsChange">
                                 <el-checkbox v-for="music in musics" :label="music" >
                                     <span class="all-name">
                                         <!--{{music.title}}</span><span class="all-time">{{music.artist}}-->
@@ -126,7 +126,7 @@
 
                 sourceurl:'',
                 progressnumber:0,
-                voicenumber:2,
+                voicenumber:30,
                 loopurl:'../../../static/img/intelligentbox/danquxunhuan.png',
                 audioObj:'',
                 alltime:0,
@@ -225,7 +225,7 @@
                     this.musics=this.firstmusics;
                 } else {
                     this.musics = this.musics.filter(item => {
-                        if (item.title.includes(this.searchflag)) {
+                        if (item.includes(this.searchflag)) {
                             return item
                         }
                     })
@@ -265,14 +265,21 @@
                     flag.push(item.id);
                     textFlag.push(item.id);
                     api.intelligentBox.postMusicVoice(flag,this.voicenumber).then(res=>{
+                        console.log(res);
                         console.log('传递声音完毕')
                     })
                 });
                 //传递文本信息
                 console.log(textFlag,'传递文本的广播id');
                 api.intelligentBox.postTextCast(textFlag,this.broadcastText).then(res=>{
+                    console.log(res);
                     console.log('传递文本完毕')
                 })
+                //传递歌曲名字
+                api.intelligentBox.postSongName(textFlag,this.checkedmusics).then(res=>{
+                    console.log('传递歌曲完毕');
+                })
+
 
 
                 //this.saveInfo();
@@ -450,8 +457,8 @@
                 await api.intelligentBox.getAllSongs().then(res=>{
                     console.log(res,'传回来的所有歌曲1');
                     this.musics=res;
-                    /*this.firstmusics=res;
-                    this.musics=this.firstmusics.slice(0);  //排除数组地址传递的相互影响
+                    this.firstmusics=res;
+                    /*this.musics=this.firstmusics.slice(0);  //排除数组地址传递的相互影响
                     this.musics.forEach(item => {
                         let endNum = item.path.lastIndexOf('_')
                         let startNum = item.path.lastIndexOf('/') + 1
