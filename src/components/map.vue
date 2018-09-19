@@ -23,7 +23,7 @@
                 </div>
             </div>
         </div>
-        <musicedit :dialogisshow="dialogVisible" :selectedCast="selectedCast" @closeDialog="closeMusicEdit"></musicedit>
+        <musicedit :dialogisshow="dialogVisible" :isGroup="isGroup" :selectedCast="selectedCast" @closeDialog="closeMusicEdit" :Infos="menulist"></musicedit>
         <div id="contextmenu_container" class="contextmenu">
             <i @click="menuDelete"></i>
             <el-tooltip class="item" effect="dark" content="启停" placement="top">
@@ -166,8 +166,10 @@
                 heatEmNameNine:'0',
                 carcameravisible:false,
                 dialogVisible:false,
+                isGroup:false,
                 selectedCast:[],
-                selectedCastContent:[]
+                selectedCastContent:[],
+
 
             }
         },
@@ -3155,9 +3157,11 @@
             },
             showCast(){
                 this.dialogVisible=true;
+
             },
             closeMusicEdit(){
                 this.dialogVisible=false;
+                this.isGroup=false;
                 this.$store.commit('SET_MUSIC',false)
             },
             menuOperation(){
@@ -3524,12 +3528,14 @@
                 if(this.getMusicShow===true){
                     if(this.selectedCast.length>0){
                         this.dialogVisible=true;
+                        this.isGroup=true;
                     }else{
                         this.$message({
                             message: '请选择至少一个广播',
                             type: 'warning'
                         });
-                        this.$store.commit('SET_MUSIC',false)
+                        this.$store.commit('SET_MUSIC',false);
+                        this.isGroup=false;
                     }
 
                 }

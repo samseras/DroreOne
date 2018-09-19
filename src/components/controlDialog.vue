@@ -51,6 +51,9 @@
                         <p class="name">当前音量：
                             {{this.volume}}
                         </p>
+                        <p class="name">当前状态：
+                            {{this.statusCurrent}}
+                        </p>
                     </div>
                     <div v-if="cameraShow" class="cameraShow">
                         <p class="name">媒体编码：
@@ -299,7 +302,8 @@
                 deviceName:'',
                 deviceNum:'',
                 mobileNum:'',
-                selectedCasts:[]
+                selectedCasts:[],
+                statusCurrent:''
             }
         },
         components: {
@@ -458,10 +462,18 @@
                     this.volume='0'
                 };
 
-                api.intelligentBox.getStartVolumn(this.selectedCasts).then(res=>{
+                /*api.intelligentBox.getStartVolumn(this.selectedCasts).then(res=>{
                     console.log(res,'获取初始音量')
                     this.volume=res;
-                })
+                });*/
+                api.intelligentBox.getStartStatus(this.selectedCasts).then(res=>{
+                    console.log(res,'获取初始状态')
+                    this.volume=res.volume;
+                    this.statusCurrent=res.status;
+
+                    //this.volume=res;
+                });
+
             }
             if(this.Info.type==="摄像头"){
                 this.jsonAttr=JSON.parse(this.Info.jsonAttr)

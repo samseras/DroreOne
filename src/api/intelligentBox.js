@@ -20,6 +20,18 @@ const intelligentBox = {
 
         })
     },
+    getStartStatus(flag){
+        return axios ({
+            method:'POST',
+            url:getUrl('/device/broadcast'),
+            data:{
+                "deviceId":flag,
+                "action":"GETBROADCASTDATA",
+                "value":''
+
+            }
+        })
+    },
     getStartVolumn(flag){
         return axios ({
             method:'POST',

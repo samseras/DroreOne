@@ -82,10 +82,16 @@
                 </div>
                 <div class="form-show">
                     <div class="form-box">
-                        <div class="hasSelect" v-for="(item,i) in selectedCast">
+
+                        <div v-if="isGroup" class="hasSelect" v-for="(item,i) in selectedCast">
                             <img src="../../../static/img/broadcast.svg" alt="">
                             {{item.label}}
                         </div>
+                        <div v-if="!isGroup" class="hasSelect">
+                            <img src="../../../static/img/broadcast.svg" alt="">
+                            {{Infos.name}}
+                        </div>
+
                     </div>
                 </div>
                 <div class="text-show">
@@ -120,7 +126,7 @@
     import Bus from '@/api/bus.js'
     export default{
         name:'boxEdit',
-        props:['dialogisshow','selectedCast'],
+        props:['dialogisshow','selectedCast','Infos','isGroup'],
         data(){
             return{
 
@@ -161,7 +167,8 @@
                 //playurl:'../../../static/img/intelligentbox/bo.png',
                 playurl:'../../../static/img/intelligentbox/bo1.png',
                 broadcastText:'',
-                finalSelectedCast:[]
+                finalSelectedCast:[],
+
             }
         },
         created(){
@@ -187,15 +194,34 @@
             });
         },
         watch:{
+            isGroup(news,olds){  //判断是否是组
+                if(news===true){
+                    console.log('组打开的页面');
+                }
+            },
             dialogisshow(news,olds){   //监听弹框
                 this.dialogVisible=news;
                 if(this.dialogVisible===true){
                     this.audioObj=document.getElementById('audio');
+                    //获取状态
+                    var that=this;
+                    let arrCurrentSelect=[];
+                    if(this.Infos.id){  //单个广播打开时
+                        arrCurrentSelect.push(this.Infos.id);
+                        console.log(this.Infos,'当前选择的广播');
+                        api.intelligentBox.getStartStatus(arrCurrentSelect).then(res=>{
+                            that.voicenumber=res.volume;
+                        });
+                    }
                 }
             },
             selectedCast(news,olds){  //监听选择的广播
                 console.log(news,'@@@@@@@@@@');
                 this.finalSelectedCast=news;
+                /*let arrStatus=[];
+                arrStatus.push(((this.finalSelectedCast)[0]).id);*/
+
+
             }
         },
         methods:{
@@ -257,46 +283,55 @@
             },
             save(){  //保存设置
 
-                //传递音量
-                let textFlag=[];
-                this.finalSelectedCast.forEach(item=>{
-                    console.log(item.id,'选择的广播Id');
-                    let flag=[];
-                    flag.push(item.id);
-                    textFlag.push(item.id);
-                    api.intelligentBox.postMusicVoice(flag,this.voicenumber).then(res=>{
+                if(this.isGroup===true){  //广播组操作
+                    //传递音量
+                    let textFlag=[];
+                    this.finalSelectedCast.forEach(item=>{
+                        console.log(item.id,'选择的广播Id');
+                        let flag=[];
+                        flag.push(item.id);
+                        textFlag.push(item.id);
+                        api.intelligentBox.postMusicVoice(flag,this.voicenumber).then(res=>{
+                            console.log(res);
+                            console.log('传递声音完毕')
+                        })
+                    });
+                    //传递文本信息
+                    console.log(textFlag,'传递文本的广播id');
+                    api.intelligentBox.postTextCast(textFlag,this.broadcastText).then(res=>{
                         console.log(res);
-                        console.log('传递声音完毕')
+                        console.log('传递文本完毕')
                     })
-                });
-                //传递文本信息
-                console.log(textFlag,'传递文本的广播id');
-                api.intelligentBox.postTextCast(textFlag,this.broadcastText).then(res=>{
-                    console.log(res);
-                    console.log('传递文本完毕')
-                })
-                //传递歌曲名字
-                api.intelligentBox.postSongName(textFlag,this.checkedmusics).then(res=>{
-                    console.log('传递歌曲完毕');
-                })
+                    //传递歌曲名字
+                    api.intelligentBox.postSongName(textFlag,this.checkedmusics).then(res=>{
+                        console.log('传递歌曲完毕');
+                    })
+
+                }else{
+                    this.saveSignal();   //单个广播操作
+                }
 
 
 
-                //this.saveInfo();
+
 
 
             },
-            saveInfo(){
+            saveSignal(){
+                let idFlag=[];
+                idFlag.push(this.Infos.id);
+                api.intelligentBox.postMusicVoice(idFlag,this.voicenumber).then(res=>{
+                    console.log(res);
+                    console.log('传递单个声音完毕')
+                });
+                api.intelligentBox.postTextCast(idFlag,this.broadcastText).then(res=>{
+                    console.log(res);
+                    console.log('传递单个文本完毕')
+                });
+                api.intelligentBox.postSongName(idFlag,this.checkedmusics).then(res=>{
+                    console.log('传递单个歌曲完毕');
+                })
 
-
-                //传递歌曲
-                //喊话
-                //广播文字
-
-                /*await api.intelligentBox.postMusicInfo(this.form).then(res=>{
-                    console.log(res,'编辑好的音乐信息传递给后台');
-                    that.handleClose();
-                })*/
             },
             fastback(){  //上一首
                 if(this.suijiflag===1||this.audioObj.loop===true){
