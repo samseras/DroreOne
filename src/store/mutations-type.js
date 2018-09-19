@@ -75,6 +75,7 @@ export const GET_FILE_PAGE_NUMBER = 'GET_FILE_PAGE_NUMBER'
 export const SEARCH_FILE_LIST = 'SEARCH_FILE_LIST'
 export const CHECK_FILE_ROW = 'CHECK_FILE_ROW'
 export const SELECT_ALL = 'SELECT_ALL'
+export const FILE_LIST = 'FILE_LIST'
 
 // data
 export const DATA_LENGTH = 'DATA_LENGTH'
