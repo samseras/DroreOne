@@ -287,7 +287,7 @@
                 let  myreg = /^[1][3,4,5,6,7,8][0-9]{9}$/;   //电话号码校验
                 let intreg = /^[1-9]\d*$/; //非零正整数校验
                 let integerreg = /^(0|[1-9][0-9]*)$/; //大于等于0正整数
-                let userReg = /^[a-zA-Z]([-_a-zA-Z0-9]{1,19})+$/
+                // let userReg = /^[a-zA-Z]([-_a-zA-Z0-9]{1,19})+$/
                 if (this.route.includes('role')) {
                     newInfo = this.role
                     if (!(newInfo.name && newInfo.name.trim() !== '')) {
@@ -319,12 +319,13 @@
                     if (!(newInfo.name && newInfo.name.trim() !== '')) {
                         this.$message.error('请输入用登录账号')
                         return
-                    } else if (newInfo.name && newInfo.name.trim() !== '') {
-                        if (!userReg.test(newInfo.name)) {
-                            this.$message.error('请输入符合要求的登录账号')
-                            return
-                        }
                     }
+                    // else if (newInfo.name && newInfo.name.trim() !== '') {
+                    //     if (!userReg.test(newInfo.name)) {
+                    //         this.$message.error('请输入符合要求的登录账号')
+                    //         return
+                    //     }
+                    // }
                     if (newInfo.password && newInfo.password.trim() !== '') {
                         if (!(newInfo.confirmPassword && newInfo.confirmPassword.trim() !== '')) {
                             this.$message.error('请确认密码')

@@ -184,12 +184,12 @@
                 }
             },
             async updataUserInfo () {
-                let userReg = /^[a-zA-Z]([-_a-zA-Z0-9]{1,19})+$/
+                // let userReg = /^[a-zA-Z]([-_a-zA-Z0-9]{1,19})+$/
                 let obj = {...this.info}
-                if (!userReg.test(obj.name)) {
-                    this.$message.error('请输入符合要求的登录名')
-                    return
-                }
+                // if (!userReg.test(obj.name)) {
+                //     this.$message.error('请输入符合要求的登录名')
+                //     return
+                // }
                 if (this.showFixPsd) {
                     if (!(this.oldPassword.trim()=== '' && this.newPassword.trim()==='' && this.surePassword.trim()==='')) {
                         if (this.oldPassword.trim() === '') {
