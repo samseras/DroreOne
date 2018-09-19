@@ -129,7 +129,8 @@
                 controleBroadList:[],
                 controleCameraList:[],
                 controleLedList:[],
-                controleTransportList:[],
+                controleTransportVehicleList:[],
+                controleTransportScheduleList:[],
                 controleSecurityPersonList:[],
                 controleSecurityScheduleList:[],
                 facilityPark:[],
@@ -2538,63 +2539,99 @@
 
                 Promise.all([this.getAllUser()]).then(result=>{
                     console.log(result,'00000')
-                    // let users = result[0]
-                    let users =
-                        [
-                            {
-                                "id": "1",
-                                "creator": null,
-                                "createTime": null,
-                                "modifier": "admin",
-                                "modifyTime": "2018-09-11 18:00:00",
-                                "name": "admin",
-                                "cnName": " 系统管理员",
-                                "gender": 0,
-                                "iconId": null,
-                                "mobileNum": "18800000000",
-                                "fixedPhoneNum": null,
-                                "idCardNum": null,
-                                "email": null,
-                                "workAddress": null,
-                                "description": null,
-                                "departmentId": null,
-                                "jobId": null,
-                                "roleId": "1",
-                                "role": {
-                                    "id": "1",
-                                    "creator": null,
-                                    "createTime": null,
-                                    "modifier": null,
-                                    "modifyTime": null,
-                                    "name": "admin",
-                                    "description": "",
-                                    "permissions": null
-                                },
-                                "job": null,
-                                "department": null,
-                                "gpsId": "21a435fd-f067-4cb5-841e-0482bbe1c230",
-                                "gpsData":  {
-                                    "deviceId": "21a435fd-f067-4cb5-841e-0482bbe1c230",
-                                    "ioTDeviceId": null,
-                                    "createTime": "2017-12-31 12:21:39",
-                                    "longitude": 120.13310087077178,
-                                    "latitude": 30.30729423238902,
-                                    "altitude": null,
-                                    "direction": null,
-                                    "speed": 4,
-                                    "telephone": null,
-                                    "deviceNum": null,
-                                    "coordinate": null
-                                }
-                            }
-                        ]
+                    let users = result[0]
+                    // let users =
+                    //     [
+                    //         {
+                    //             "id": "798298ecd17a87586a2a123",
+                    //             "creator": null,
+                    //             "createTime": null,
+                    //             "modifier": "admin",
+                    //             "modifyTime": "2018-09-11 18:00:00",
+                    //             "name": "admin",
+                    //             "cnName": " 系统管理员",
+                    //             "gender": 0,
+                    //             "iconId": null,
+                    //             "mobileNum": "18800000000",
+                    //             "fixedPhoneNum": null,
+                    //             "idCardNum": null,
+                    //             "email": null,
+                    //             "workAddress": null,
+                    //             "description": null,
+                    //             "departmentId": null,
+                    //             "jobId": null,
+                    //             "roleId": "1",
+                    //             "role": {
+                    //                 "id": "1",
+                    //                 "creator": null,
+                    //                 "createTime": null,
+                    //                 "modifier": null,
+                    //                 "modifyTime": null,
+                    //                 "name": "admin",
+                    //                 "description": "",
+                    //                 "permissions": null
+                    //             },
+                    //             "job": null,
+                    //             "department": null,
+                    //             "gpsId": "21a435fd-f067-4cb5-841e-0482bbe1c230",
+                    //             "gpsData":  {
+                    //                 "deviceId": "21a435fd-f067-4cb5-841e-0482bbe1c230",
+                    //                 "ioTDeviceId": null,
+                    //                 "createTime": "2017-12-31 12:21:39",
+                    //                 "longitude": 120.13310087077178,
+                    //                 "latitude": 30.30729423238902,
+                    //                 "altitude": null,
+                    //                 "direction": null,
+                    //                 "speed": 4,
+                    //                 "telephone": null,
+                    //                 "deviceNum": null,
+                    //                 "coordinate": null
+                    //             }
+                    //         },
+                    //         {
+                    //             "id": "05579c25-8abb-4bfa-83ae-2a1e50a071ee",
+                    //             "creator": null,
+                    //             "createTime": null,
+                    //             "modifier": "admin",
+                    //             "modifyTime": "2018-09-11 18:00:00",
+                    //             "name": "xuyixiang",
+                    //             "cnName": "用户",
+                    //             "gender": 0,
+                    //             "iconId": null,
+                    //             "mobileNum": "18800203265",
+                    //             "fixedPhoneNum": null,
+                    //             "idCardNum": null,
+                    //             "email": null,
+                    //             "workAddress": null,
+                    //             "description": null,
+                    //             "departmentId": null,
+                    //             "jobId": null,
+                    //             "roleId": "1",
+                    //             "gpsId": "2b696d8b-7f38-41dc-8b3c-8db147c02c32",
+                    //             "gpsData":  {
+                    //                 "deviceId": "2b696d8b-7f38-41dc-8b3c-8db147c02c32",
+                    //                 "ioTDeviceId": null,
+                    //                 "createTime": "2017-12-31 12:21:39",
+                    //                 "longitude": 120.1333035877555,
+                    //                 "latitude": 30.30820253332855,
+                    //                 "altitude": null,
+                    //                 "direction": null,
+                    //                 "speed": 0,
+                    //                 "telephone": null,
+                    //                 "deviceNum": null,
+                    //                 "coordinate": null
+                    //             }
+                    //         }
+                    //
+                    //
+                    //     ]
                     if(users.length > 0){
                         users.forEach(obj=>{
                             let latitude = ''
                             let longitude = ''
                             if(obj.gpsData){
                                 latitude = obj.gpsData.latitude,
-                                    longitude = obj.gpsData.longitude
+                                longitude = obj.gpsData.longitude
                             }
                             obj.status=obj.gpsData ? "ONLINE" : "OFFLINE";
                             obj.location=[longitude,latitude];
@@ -2638,56 +2675,91 @@
             },
             async getAllLangPerson(){
                 Promise.all([this.getAllUser()]).then(result=>{
-                    // let users = result[0]
-                    let users =
-                        [
-                            {
-                                "id": "1",
-                                "creator": null,
-                                "createTime": null,
-                                "modifier": "admin",
-                                "modifyTime": "2018-09-11 18:00:00",
-                                "name": "admin",
-                                "cnName": " 系统管理员",
-                                "gender": 0,
-                                "iconId": null,
-                                "mobileNum": "18800000000",
-                                "fixedPhoneNum": null,
-                                "idCardNum": null,
-                                "email": null,
-                                "workAddress": null,
-                                "description": null,
-                                "departmentId": null,
-                                "jobId": null,
-                                "roleId": "1",
-                                "role": {
-                                    "id": "1",
-                                    "creator": null,
-                                    "createTime": null,
-                                    "modifier": null,
-                                    "modifyTime": null,
-                                    "name": "admin",
-                                    "description": "",
-                                    "permissions": null
-                                },
-                                "job": null,
-                                "department": null,
-                                "gpsId": "21a435fd-f067-4cb5-841e-0482bbe1c230",
-                                "gpsData":  {
-                                    "deviceId": "21a435fd-f067-4cb5-841e-0482bbe1c230",
-                                    "ioTDeviceId": null,
-                                    "createTime": "2017-12-31 12:21:39",
-                                    "longitude": 120.13310087077178,
-                                    "latitude": 30.30729423238902,
-                                    "altitude": null,
-                                    "direction": null,
-                                    "speed": 4,
-                                    "telephone": null,
-                                    "deviceNum": null,
-                                    "coordinate": null
-                                }
-                            }
-                        ]
+                    let users = result[0]
+                    // let users =
+                    //     [
+                    //         {
+                    //             "id": "798298ecd17a87586a2a123",
+                    //             "creator": null,
+                    //             "createTime": null,
+                    //             "modifier": "admin",
+                    //             "modifyTime": "2018-09-11 18:00:00",
+                    //             "name": "admin",
+                    //             "cnName": " 系统管理员",
+                    //             "gender": 0,
+                    //             "iconId": null,
+                    //             "mobileNum": "18800000000",
+                    //             "fixedPhoneNum": null,
+                    //             "idCardNum": null,
+                    //             "email": null,
+                    //             "workAddress": null,
+                    //             "description": null,
+                    //             "departmentId": null,
+                    //             "jobId": null,
+                    //             "roleId": "1",
+                    //             "role": {
+                    //                 "id": "1",
+                    //                 "creator": null,
+                    //                 "createTime": null,
+                    //                 "modifier": null,
+                    //                 "modifyTime": null,
+                    //                 "name": "admin",
+                    //                 "description": "",
+                    //                 "permissions": null
+                    //             },
+                    //             "job": null,
+                    //             "department": null,
+                    //             "gpsId": "21a435fd-f067-4cb5-841e-0482bbe1c230",
+                    //             "gpsData":  {
+                    //                 "deviceId": "21a435fd-f067-4cb5-841e-0482bbe1c230",
+                    //                 "ioTDeviceId": null,
+                    //                 "createTime": "2017-12-31 12:21:39",
+                    //                 "longitude": 120.13310087077178,
+                    //                 "latitude": 30.30729423238902,
+                    //                 "altitude": null,
+                    //                 "direction": null,
+                    //                 "speed": 4,
+                    //                 "telephone": null,
+                    //                 "deviceNum": null,
+                    //                 "coordinate": null
+                    //             }
+                    //         },
+                    //         {
+                    //             "id": "05579c25-8abb-4bfa-83ae-2a1e50a071ee",
+                    //             "creator": null,
+                    //             "createTime": null,
+                    //             "modifier": "admin",
+                    //             "modifyTime": "2018-09-11 18:00:00",
+                    //             "name": "xuyixiang",
+                    //             "cnName": "用户",
+                    //             "gender": 0,
+                    //             "iconId": null,
+                    //             "mobileNum": "18800203265",
+                    //             "fixedPhoneNum": null,
+                    //             "idCardNum": null,
+                    //             "email": null,
+                    //             "workAddress": null,
+                    //             "description": null,
+                    //             "departmentId": null,
+                    //             "jobId": null,
+                    //             "roleId": "1",
+                    //             "gpsId": "2b696d8b-7f38-41dc-8b3c-8db147c02c32",
+                    //             "gpsData":  {
+                    //                 "deviceId": "2b696d8b-7f38-41dc-8b3c-8db147c02c32",
+                    //                 "ioTDeviceId": null,
+                    //                 "createTime": "2017-12-31 12:21:39",
+                    //                 "longitude": 120.1333035877555,
+                    //                 "latitude": 30.30820253332855,
+                    //                 "altitude": null,
+                    //                 "direction": null,
+                    //                 "speed": 0,
+                    //                 "telephone": null,
+                    //                 "deviceNum": null,
+                    //                 "coordinate": null
+                    //             }
+                    //         }
+                    //
+                    //     ]
 
                     this.securityPersonList = users
                     this.number=this.securityPersonList.length
@@ -3502,8 +3574,14 @@
                                     this.controleLedList.push(item1.id);
                                     this.$store.commit('CONTROLER_LED', this.controleLedList)
                                 } else if(item1.type =='transport'){
-                                    this.controleTransportList.push(item1.id);
-                                    this.$store.commit('CONTROLER_TRANSPORT', this.controleTransportList)
+                                    if(item1.subtype == 'transportCar' || item1.subtype == 'transportBoat'){
+                                        this.controleTransportVehicleList.push(item1.id);
+                                        this.$store.commit('CONTROLER_TRANSPORT_VEHICLE', this.controleTransportVehicleList)
+                                    }else if(item1.subtype == 'transportSchedule'){
+                                        this.controleTransportScheduleList.push(item1.id);
+                                        this.$store.commit('CONTROLER_TRANSPORT_SCHEDULE', this.controleTransportScheduleList)
+
+                                    }
                                 } else if(item1.type =='security'){
                                     if(item1.subtype == 'securityPerson'){
                                         this.controleSecurityPersonList.push(item1.id);
@@ -3512,7 +3590,6 @@
                                         this.controleSecurityScheduleList.push(item1.id);
                                         this.$store.commit('CONTROLER_SECURITY_SCHEDULE', this.controleSecurityScheduleList)
                                     }
-
                                 } else if(item1.type =='park'){
                                     this.facilityPark.push(item1.id);
                                     this.$store.commit('FACILITY_PARK', this.facilityPark)
@@ -3579,8 +3656,14 @@
                                 this.controleLedList=[];
                                 this.$store.commit('CONTROLER_LED', this.controleLedList)
                             }else if(item.type=='transport'){
-                                this.controleTransportList=[];
-                                this.$store.commit('CONTROLER_TRANSPORT', this.controleTransportList)
+                                if(item.subtype == 'transportCar' || item.subtype == 'transportBoat'){
+                                    this.controleTransportVehicleList=[];
+                                    this.$store.commit('CONTROLER_TRANSPORT_VEHICLE', this.controleTransportVehicleList)
+                                }else if(item.subtype == 'transportSchedule'){
+                                    this.controleTransportScheduleList=[];
+                                    this.$store.commit('CONTROLER_TRANSPORT_SCHEDULE', this.controleTransportScheduleList)
+                                }
+
                             } else if(item.type =='security'){
                                 if(item.subtype == 'securityPerson'){
                                     this.controleSecurityPersonList=[];
@@ -3631,14 +3714,17 @@
                             for (let i = 0; i < data.length; i++) {
                                 if(data[i].typeroad=='road'){
                                     this.roadShow(data[i]);
-                                }else if(data[i].type =='transport' || (data[i].type =='security' && data[i].subtype =="securityPerson")){
+                                }else if((data[i].type =='transport' && (data[i].subtype == 'transportCar' || data[i].subtype == 'transportBoat'))|| (data[i].type =='security' && data[i].subtype =="securityPerson")){
                                     if(data[i].status == "ONLINE"){
                                         this.treeShow(data[i]);
                                     }
 
-                                } else if(data[i].type =='security' && data[i].subtype =="securitySchedule"){
+                                }else if(data[i].type =='transport' && data[i].subtype =="transportSchedule"){
+                                    this.treeShow(data[i]);
+                                    this.roadShow(data[i].routeObj)
+                                }else if(data[i].type =='security' && data[i].subtype =="securitySchedule"){
                                      this.treeShow(data[i]);
-                                     this.roadShow(data[i])
+                                     this.roadShow(data[i].routeObj)
                                 }else {
                                     if(data[i].type =='person'){
                                         this.roadShowID(data[i].routeId)
@@ -3674,9 +3760,18 @@
                                     this.controleLedList=[...new Set(this.controleLedList)];
                                     this.$store.commit('CONTROLER_LED', this.controleLedList)
                                 }else if(data[i].type=='transport'){
-                                    this.controleTransportList.push(data[i].id);
-                                    this.controleTransportList=[...new Set(this.controleTransportList)];
-                                    this.$store.commit('CONTROLER_TRANSPORT', this.controleTransportList)
+
+                                    if(data[i].subtype == 'transportCar' || data[i].subtype == 'transportBoat'){
+                                        this.controleTransportVehicleList.push(data[i].id);
+                                        this.controleTransportVehicleList=[...new Set(this.controleTransportVehicleList)];
+                                        this.$store.commit('CONTROLER_TRANSPORT_VEHICLE', this.controleTransportVehicleList)
+                                    }else if(data[i].subtype == 'transportSchedule'){
+                                        this.controleTransportScheduleList.push(data[i].id);
+                                        this.controleTransportScheduleList=[...new Set(this.controleTransportScheduleList)];
+                                        this.$store.commit('CONTROLER_TRANSPORT_SCHEDULE', this.controleTransportScheduleList)
+                                    }
+
+
                                 } else if(data[i].type =='security'){
                                     if(data[i].subtype =='securityPerson'){
                                         this.controleSecurityPersonList.push(data[i].id);
@@ -3736,12 +3831,17 @@
                                 // console.log(this.getTreeState[0].children)
                                 if(this.getTreeState[0].children[i].typeroad=='road'){
                                     this.roadHide(this.getTreeState[0].children[i]);
-                                }else if(this.getTreeState[0].children[i].type =='transport' ||
-                                    (this.getTreeState[0].children[i].type =='security' && this.getTreeState[0].children[i].subtype =='securityPerson')){
+                                }else if(this.getTreeState[0].children[i].type =='security' && this.getTreeState[0].children[i].subtype =='securityPerson'){
+                                    this.treeHide(this.getTreeState[0].children[i]);
+                                } else if(this.getTreeState[0].children[i].type =='transport' &&
+                                    (this.getTreeState[0].children[i].subtype =='transportCar' || this.getTreeState[0].children[i].subtype =='transportBoat')){
                                     this.treeHide(this.getTreeState[0].children[i]);
                                 } else if(this.getTreeState[0].children[i].type =='security' && this.getTreeState[0].children[i].subtype =='securitySchedule'){
                                     this.treeHide(this.getTreeState[0].children[i]);
-                                    this.roadHide(this.getTreeState[0].children[i])
+                                    this.roadHide(this.getTreeState[0].children[i].routeObj)
+                                }else if(this.getTreeState[0].children[i].type =='transport' && this.getTreeState[0].children[i].subtype =='transportSchedule'){
+                                    this.treeHide(this.getTreeState[0].children[i]);
+                                    this.roadHide(this.getTreeState[0].children[i].routeObj)
                                 }else {
                                     if(this.getTreeState[0].children[i].type =='person'){
                                         this.roadHideID(this.getTreeState[0].children[i].routeId)
@@ -3788,11 +3888,19 @@
                                     }
                                     this.$store.commit('CONTROLER_LED', this.controleLedList)
                                 }else if(this.getTreeState[0].children[i].type=='transport'){
-                                    let index = this.controleTransportList.indexOf(this.getTreeState[0].children[i].id);
-                                    if (index > -1) {
-                                        this.controleTransportList.splice(index, 1);
+                                    if(this.getTreeState[0].children[i].subtype == 'transportCar' || this.getTreeState[0].children[i].subtype == 'transportBoat'){
+                                        let index = this.controleTransportVehicleList.indexOf(this.getTreeState[0].children[i].id);
+                                        if (index > -1) {
+                                            this.controleTransportVehicleList.splice(index, 1);
+                                        }
+                                        this.$store.commit('CONTROLER_TRANSPORT_VEHICLE', this.controleTransportVehicleList)
+                                    }else if(this.getTreeState[0].children[i].subtype == 'transportSchedule'){
+                                        let index = this.controleTransportScheduleList.indexOf(this.getTreeState[0].children[i].id);
+                                        if (index > -1) {
+                                            this.controleTransportScheduleList.splice(index, 1);
+                                        }
+                                        this.$store.commit('CONTROLER_TRANSPORT_SCHEDULE', this.controleTransportScheduleList)
                                     }
-                                    this.$store.commit('CONTROLER_TRANSPORT', this.controleTransportList)
                                 }else if(this.getTreeState[0].children[i].type=='security'){
                                     if(this.getTreeState[0].children[i].subtype =='securityPerson'){
                                         let index = this.controleSecurityPersonList.indexOf(this.getTreeState[0].children[i].id);
@@ -3881,14 +3989,23 @@
                                     this.roadShowID(this.getTreeState[0].routeId)
                                 }else if(this.getTreeState[0].type =='warn'){
                                     this.treeShow(this.getTreeState[0]);
-                                }else if(this.getTreeState[0].type =='transport' || (this.getTreeState[0].type =='security' && this.getTreeState[0].subtype =='securityPerson')){
+                                }else if(this.getTreeState[0].type =='security' && this.getTreeState[0].subtype =='securityPerson'){
                                     if(this.getTreeState[0].status == "ONLINE"){
                                         this.treeShow(this.getTreeState[0]);
+                                    }
+                                }else if(this.getTreeState[0].type =='transport' && (this.getTreeState[0].subtype =='transportCar' || this.getTreeState[0].subtype =='transportBoat')){
+                                    if(this.getTreeState[0].status == "ONLINE"){
+                                        this.treeShow(this.getTreeState[0]);
+                                    }
+                                }else if(this.getTreeState[0].type =='transport' && this.getTreeState[0].subtype =='transportSchedule'){
+                                    if(this.getTreeState[0].status == "ONLINE"){
+                                        this.treeShow(this.getTreeState[0]);
+                                        this.roadShow(this.getTreeState[0].routeObj)
                                     }
                                 }else if(this.getTreeState[0].type =='security' && this.getTreeState[0].subtype =='securitySchedule'){
                                     if(this.getTreeState[0].status == "ONLINE"){
                                         this.treeShow(this.getTreeState[0]);
-                                        this.roadShow(this.getTreeState[0])
+                                        this.roadShow(this.getTreeState[0].routeObj)
                                     }
                                 } else {
                                     this.treeShow(this.getTreeState[0]);
@@ -3919,9 +4036,15 @@
                                 this.controleLedList=[...new Set(this.controleLedList)];
                                 this.$store.commit('CONTROLER_LED', this.controleLedList)
                             }else if(this.getTreeState[0].type=='transport'){
-                                this.controleTransportList.push(this.getTreeState[0].id);
-                                this.controleTransportList=[...new Set(this.controleTransportList)];
-                                this.$store.commit('CONTROLER_TRANSPORT', this.controleTransportList)
+                                if(this.getTreeState[0].subtype == 'transportCar' || this.getTreeState[0].subtype == 'transportBoat'){
+                                    this.controleTransportVehicleList.push(this.getTreeState[0].id);
+                                    this.controleTransportVehicleList=[...new Set(this.controleTransportVehicleList)];
+                                    this.$store.commit('CONTROLER_TRANSPORT_VEHICLE', this.controleTransportVehicleList)
+                                }else if(this.getTreeState[0].subtype == 'transportSchedule'){
+                                    this.controleTransportScheduleList.push(this.getTreeState[0].id);
+                                    this.controleTransportScheduleList=[...new Set(this.controleTransportScheduleList)];
+                                    this.$store.commit('CONTROLER_TRANSPORT_SCHEDULE', this.controleTransportScheduleList)
+                                }
                             }else if(this.getTreeState[0].type=='security'){
                                 if(this.getTreeState[0].subtype=='securityPerson'){
                                     this.controleSecurityPersonList.push(this.getTreeState[0].id);
@@ -3983,15 +4106,29 @@
                                     this.roadHideID(this.getTreeState[0].routeId)
                                 }else if(this.getTreeState[0].type =='warn'){
                                     this.treeHide(this.getTreeState[0]);
-                                }else if(this.getTreeState[0].type =='transport' || (this.getTreeState[0].type =='security' && this.getTreeState[0].subtype=='securityPerson')){
+                                }else if(this.getTreeState[0].type =='security' && this.getTreeState[0].subtype=='securityPerson'){
 
                                     if(this.getTreeState[0].status == "ONLINE"){
                                         this.treeHide(this.getTreeState[0]);
                                     }
+                                }else if(this.getTreeState[0].type =='transport' && (this.getTreeState[0].subtype =='transportCar' || this.getTreeState[0].subtype=='transportBoat')){
+
+                                    if(this.getTreeState[0].status == "ONLINE"){
+                                        this.treeHide(this.getTreeState[0]);
+                                    }
+                                }else if(this.getTreeState[0].type =='transport' && this.getTreeState[0].subtype =='transportSchedule'){
+                                    if(this.getTreeState[0].status == "ONLINE"){
+                                        this.treeHide(this.getTreeState[0]);
+                                        if(this.selectedCast.length == 0){
+                                            this.roadHide(this.getTreeState[0].routeObj)
+                                        }
+                                    }
                                 }else if(this.getTreeState[0].type =='security' && this.getTreeState[0].subtype=='securitySchedule'){
                                     if(this.getTreeState[0].status == "ONLINE"){
                                         this.treeHide(this.getTreeState[0]);
-                                        this.roadHide(this.getTreeState[0])
+                                        if(this.selectedCast.length == 0){
+                                            this.roadHide(this.getTreeState[0].routeObj)
+                                        }
                                     }
                                 } else {
                                     this.treeHide(this.getTreeState[0]);
@@ -4034,11 +4171,20 @@
                                 }
                                 this.$store.commit('CONTROLER_LED', this.controleLedList)
                             }else if(this.getTreeState[0].type=='transport'){
-                                let index = this.controleTransportList.indexOf(this.getTreeState[0].id);
-                                if (index > -1) {
-                                    this.controleTransportList.splice(index, 1);
+                                if(this.getTreeState[0].subtype == 'transportCar' || this.getTreeState[0].subtype == 'transportBoat'){
+                                    let index = this.controleTransportVehicleList.indexOf(this.getTreeState[0].id);
+                                    if (index > -1) {
+                                        this.controleTransportVehicleList.splice(index, 1);
+                                    }
+                                    this.$store.commit('CONTROLER_TRANSPORT_VEHICLE', this.controleTransportVehicleList)
+                                }else if(this.getTreeState[0].subtype == 'transportSchedule'){
+                                    let index = this.controleTransportScheduleList.indexOf(this.getTreeState[0].id);
+                                    if (index > -1) {
+                                        this.controleTransportScheduleList.splice(index, 1);
+                                    }
+                                    this.$store.commit('CONTROLER_TRANSPORT_SCHEDULE', this.controleTransportScheduleList)
+
                                 }
-                                this.$store.commit('CONTROLER_TRANSPORT', this.controleTransportList)
                             }else if(this.getTreeState[0].type=='security'){
                                 if(this.getTreeState[0].subtype =='securityPerson'){
                                     let index = this.controleSecurityPersonList.indexOf(this.getTreeState[0].id);
@@ -4137,6 +4283,9 @@
                                 if (route.includes('controler')) {
                                     this.droreMappopup(layer);
                                 }
+                                if(this.getTreeShow.subtype == 'transportSchedule'){
+                                    this.roadShow(this.getTreeShow.routeObj)
+                                }
                             }else{
                                 let layer = droreMap.icon.returnLayer(this.getTreeShow.id)
                                 this.menulist = layer.data;
@@ -4155,6 +4304,9 @@
                                 let route = this.$route.path
                                 if (route.includes('controler')) {
                                     this.droreMappopup(layer);
+                                }
+                                if(this.getTreeShow.subtype == 'securitySchedule'){
+                                    this.roadShow(this.getTreeShow.routeObj)
                                 }
                             }else{
                                 let layer = droreMap.icon.returnLayer(this.getTreeShow.id)
@@ -4210,9 +4362,10 @@
                 'getcontroBroad',
                 'getcontroCamera',
                 'getcontroLed',
-                'getcontroTransport',
+                'getcontroTransportVehicle',
+                'getcontroTransportSchedule',
                 'getcontrolSecurityPerson',
-                'getcontroleSecuritySchedule',
+                'getcontrolSecuritySchedule',
                 'getfacilityPark',
                 'getfacilityToilet',
                 'getfacilityShop',
