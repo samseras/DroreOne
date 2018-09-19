@@ -70,10 +70,10 @@
                     <div class="avatar-edit-image" v-if="files.length">
                         <img ref="editImage" :src="files[0].url" />
                     </div>
-                    <div class="text-center p-4">
-                        <button type="button" class="btn btn-secondary" @click.prevent="$refs.upload.clear">取消</button>
-                        <button type="submit" class="btn btn-primary" @click.prevent="editSave">保存</button>
-                    </div>
+                    <!--<div class="text-center p-4">-->
+                        <!--<button type="button" class="btn btn-secondary" @click.prevent="$refs.upload.clear">取消</button>-->
+                        <!--<button type="submit" class="btn btn-primary" @click.prevent="editSave">保存</button>-->
+                    <!--</div>-->
                 </div>
             </div>
             <div class=""slot="footer" class="dialog-footer cardFooter">
@@ -122,6 +122,7 @@
             },
             closeDialog () {
                 console.log(this.src)
+                this.$refs.upload.clear
                 this.$emit('closeInfoDialog')
             },
             imgError (e) {
@@ -185,6 +186,9 @@
             },
             async updataUserInfo () {
                 // let userReg = /^[a-zA-Z]([-_a-zA-Z0-9]{1,19})+$/
+                if (this.cropper.getCroppedCanvas) {
+                    this.editSave()
+                }
                 let obj = {...this.info}
                 // if (!userReg.test(obj.name)) {
                 //     this.$message.error('请输入符合要求的登录名')
@@ -222,7 +226,7 @@
                         return
                     })
                 }
-                if (this.info.iconId) {
+                if (this.info.iconId && this.src === '') {
                     obj.iconId = this.info.iconId
                 }
                 for (let i in obj) {
@@ -247,7 +251,7 @@
                 await api.lib.getUserInfo().then(res => {
                     this.isShowLoading = false
                     console.log(res, '这是请求回来的用户信息')
-                    // this.$store.commit('SET_USER_DETAIL_INFO', res)
+                    this.$store.commit('SET_USER_DETAIL_INFO', res[0])
                     this.showFixPsd = false
                     this.oldPassword = ''
                     this.newPassword = ''
