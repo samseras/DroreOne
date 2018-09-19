@@ -78,7 +78,7 @@
             this.getFolderList()
         },
         methods: {
-            ...mapMutations(['SET_CRUMBS', 'SET_CLICK_CRUMBS', 'SELECT_FILE_LIST', 'SET_FIX_FILE', 'SET_FILE_LIST_LENGTH', 'CHECK_FILE_ROW']),
+            ...mapMutations(['SET_CRUMBS', 'SET_CLICK_CRUMBS', 'SELECT_FILE_LIST', 'SET_FIX_FILE', 'SET_FILE_LIST_LENGTH', 'CHECK_FILE_ROW', 'FILE_LIST']),
             checked (row) {
                 this.fileList = this.fileList.filter(item => {
                     if (item.id ===row.id) {
@@ -120,6 +120,7 @@
                         time: new Date().getTime()
                     }
                     this.$store.commit('SET_FILE_LIST_LENGTH', obj)
+                    this.$store.commit('FILE_LIST', this.fileList)
                     this.fileList.forEach(item => {
                         item.checked = false
                     })
@@ -179,6 +180,7 @@
                         time: new Date().getTime()
                     }
                     this.$store.commit('SET_FILE_LIST_LENGTH', obj)
+                    this.$store.commit('FILE_LIST', this.fileList)
                     this.fileList.forEach(item => {
                         item.checked = false
                     })
@@ -204,6 +206,7 @@
                             time: new Date().getTime()
                         }
                         this.$store.commit('SET_FILE_LIST_LENGTH', obj)
+                        this.$store.commit('FILE_LIST', this.fileList)
                         this.fileList.forEach(item => {
                             item.checked = false
                         })
@@ -226,6 +229,7 @@
                             time: new Date().getTime()
                         }
                         this.$store.commit('SET_FILE_LIST_LENGTH', obj)
+                        this.$store.commit('FILE_LIST', this.fileList)
                         this.fileList.forEach(item => {
                             item.checked = false
                         })

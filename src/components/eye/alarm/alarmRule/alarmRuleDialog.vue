@@ -61,19 +61,25 @@
                             (安保)
                         </p>
                         <p class="relatedManager">
+                            <span>管理者岗位：</span>
+                            <el-select v-model="jobList" size="mini" multiple placeholder="请选择" v-if='!isReadonly' @change="filterPerson">
+                                <el-option
+                                    v-for="group in jobInfo"
+                                    :key="group.id"
+                                    :value="group.id"
+                                    :label="group.name">
+                                </el-option>
+                            </el-select>
+                        </p>
+                        <p class="relatedManager">
                             <span>管&nbsp;理&nbsp;&nbsp;者：</span>
                             <el-select v-model="alarmcolumnInfo.relatedManagerIds" size="mini" multiple placeholder="请选择" :disabled='isReadonly'>
-                                <el-option-group
+                                <el-option
                                     v-for="group in personInfo"
-                                    :key="group.label"
-                                    :label="group.label">
-                                    <el-option
-                                        v-for="item in group.options"
-                                        :key="item.id"
-                                        :label="item.name"
-                                        :value="item.id">
-                                    </el-option>
-                                </el-option-group>
+                                    :key="group.id"
+                                    :value="group.id"
+                                    :label="group.cnName?group.cnName:group.name">
+                                </el-option>
                             </el-select>
                         </p>
                         <p class="description textArea">
@@ -123,19 +129,25 @@
                             (安保)
                         </p>
                         <p class="relatedManager">
+                            <span>管理者岗位：</span>
+                            <el-select v-model="jobList" size="mini" multiple placeholder="请选择" v-if='!isReadonly' @change="filterPerson">
+                                <el-option
+                                    v-for="group in jobInfo"
+                                    :key="group.id"
+                                    :value="group.id"
+                                    :label="group.name">
+                                </el-option>
+                            </el-select>
+                        </p>
+                        <p class="relatedManager">
                             <span>管&nbsp;理&nbsp;&nbsp;者：</span>
                             <el-select v-model="firefightingInfo.relatedManagerIds" size="mini" multiple placeholder="请选择" :disabled='isReadonly'>
-                                <el-option-group
+                                <el-option
                                     v-for="group in personInfo"
-                                    :key="group.label"
-                                    :label="group.label">
-                                    <el-option
-                                        v-for="item in group.options"
-                                        :key="item.id"
-                                        :label="item.name"
-                                        :value="item.id">
-                                    </el-option>
-                                </el-option-group>
+                                    :key="group.id"
+                                    :value="group.id"
+                                    :label="group.cnName?group.cnName:group.name">
+                                </el-option>
                             </el-select>
                         </p>
                         <p class="description textArea">
@@ -185,19 +197,25 @@
                             (安保)
                         </p>
                         <p class="relatedManager">
+                            <span>管理者岗位：</span>
+                            <el-select v-model="jobList" size="mini" multiple placeholder="请选择" v-if='!isReadonly' @change="filterPerson">
+                                <el-option
+                                    v-for="group in jobInfo"
+                                    :key="group.id"
+                                    :value="group.id"
+                                    :label="group.name">
+                                </el-option>
+                            </el-select>
+                        </p>
+                        <p class="relatedManager">
                             <span>管&nbsp;理&nbsp;&nbsp;者：</span>
                             <el-select v-model="crossborderInfo.relatedManagerIds" size="mini" multiple placeholder="请选择" :disabled='isReadonly'>
-                                <el-option-group
+                                <el-option
                                     v-for="group in personInfo"
-                                    :key="group.label"
-                                    :label="group.label">
-                                    <el-option
-                                        v-for="item in group.options"
-                                        :key="item.id"
-                                        :label="item.name"
-                                        :value="item.id">
-                                    </el-option>
-                                </el-option-group>
+                                    :key="group.id"
+                                    :value="group.id"
+                                    :label="group.cnName?group.cnName:group.name">
+                                </el-option>
                             </el-select>
                         </p>
                         <p class="description textArea">
@@ -270,19 +288,25 @@
                             (安保)
                         </p>
                         <p class="relatedManager">
+                            <span>管理者岗位：</span>
+                            <el-select v-model="jobList" size="mini" multiple placeholder="请选择" v-if='!isReadonly' @change="filterPerson">
+                                <el-option
+                                    v-for="group in jobInfo"
+                                    :key="group.id"
+                                    :value="group.id"
+                                    :label="group.name">
+                                </el-option>
+                            </el-select>
+                        </p>
+                        <p class="relatedManager">
                             <span>管&nbsp;理&nbsp;&nbsp;者：</span>
                             <el-select v-model="speedingInfo.relatedManagerIds" size="mini" multiple placeholder="请选择" :disabled='isReadonly'>
-                                <el-option-group
+                                <el-option
                                     v-for="group in personInfo"
-                                    :key="group.label"
-                                    :label="group.label">
-                                    <el-option
-                                        v-for="item in group.options"
-                                        :key="item.id"
-                                        :label="item.name"
-                                        :value="item.id">
-                                    </el-option>
-                                </el-option-group>
+                                    :key="group.id"
+                                    :value="group.id"
+                                    :label="group.cnName?group.cnName:group.name">
+                                </el-option>
                             </el-select>
                         </p>
                         <p class="description textArea">
@@ -342,19 +366,25 @@
                             (米)
                         </p>
                         <p class="relatedManager">
+                            <span>管理者岗位：</span>
+                            <el-select v-model="jobList" size="mini" multiple placeholder="请选择" v-if='!isReadonly' @change="filterPerson">
+                                <el-option
+                                    v-for="group in jobInfo"
+                                    :key="group.id"
+                                    :value="group.id"
+                                    :label="group.name">
+                                </el-option>
+                            </el-select>
+                        </p>
+                        <p class="relatedManager">
                             <span>管&nbsp;理&nbsp;&nbsp;者：</span>
                             <el-select v-model="offtrackInfo.relatedManagerIds" size="mini" multiple placeholder="请选择" :disabled='isReadonly'>
-                                <el-option-group
+                                <el-option
                                     v-for="group in personInfo"
-                                    :key="group.label"
-                                    :label="group.label">
-                                    <el-option
-                                        v-for="item in group.options"
-                                        :key="item.id"
-                                        :label="item.name"
-                                        :value="item.id">
-                                    </el-option>
-                                </el-option-group>
+                                    :key="group.id"
+                                    :value="group.id"
+                                    :label="group.cnName?group.cnName:group.name">
+                                </el-option>
                             </el-select>
                         </p>
                         <p class="description textArea">
@@ -409,19 +439,25 @@
                             <el-input type="text" v-model='overlimitInfo.upperThreshold' class="inputText" :maxlength="50" :disabled='isReadonly'></el-input>
                             (人)
                         </p>
+                        <p class="relatedManager">
+                            <span>管理者岗位：</span>
+                            <el-select v-model="jobList" size="mini" multiple placeholder="请选择" v-if='!isReadonly' @change="filterPerson">
+                                <el-option
+                                    v-for="group in jobInfo"
+                                    :key="group.id"
+                                    :value="group.id"
+                                    :label="group.name">
+                                </el-option>
+                            </el-select>
+                        </p>
                         <p class="relatedManager">管&nbsp;理&nbsp;&nbsp;者：
                             <el-select v-model="overlimitInfo.relatedManagerIds" size="mini" multiple placeholder="请选择" :disabled='isReadonly'>
-                                <el-option-group
+                                <el-option
                                     v-for="group in personInfo"
-                                    :key="group.label"
-                                    :label="group.label">
-                                    <el-option
-                                        v-for="item in group.options"
-                                        :key="item.id"
-                                        :label="item.name"
-                                        :value="item.id">
-                                    </el-option>
-                                </el-option-group>
+                                    :key="group.id"
+                                    :value="group.id"
+                                    :label="group.cnName?group.cnName:group.name">
+                                </el-option>
                             </el-select>
                         </p>
                         <p class="description textArea">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：<br>
@@ -485,19 +521,25 @@
                             (米)
                         </p>
                         <p class="relatedManager">
+                            <span>管理者岗位：</span>
+                            <el-select v-model="jobList" size="mini" multiple placeholder="请选择" v-if='!isReadonly' @change="filterPerson">
+                                <el-option
+                                    v-for="group in jobInfo"
+                                    :key="group.id"
+                                    :value="group.id"
+                                    :label="group.name">
+                                </el-option>
+                            </el-select>
+                        </p>
+                        <p class="relatedManager">
                             <span>管&nbsp;理&nbsp;&nbsp;者：</span>
                             <el-select v-model="waterlevelInfo.relatedManagerIds" size="mini" multiple placeholder="请选择" :disabled='isReadonly'>
-                                <el-option-group
+                                <el-option
                                     v-for="group in personInfo"
-                                    :key="group.label"
-                                    :label="group.label">
-                                    <el-option
-                                        v-for="item in group.options"
-                                        :key="item.id"
-                                        :label="item.name"
-                                        :value="item.id">
-                                    </el-option>
-                                </el-option-group>
+                                    :key="group.id"
+                                    :value="group.id"
+                                    :label="group.cnName?group.cnName:group.name">
+                                </el-option>
                             </el-select>
                         </p>
                         <p class="description textArea">
@@ -615,19 +657,25 @@
                             (级)
                         </p>
                         <p class="relatedManager">
+                            <span>管理者岗位：</span>
+                            <el-select v-model="jobList" size="mini" multiple placeholder="请选择" v-if='!isReadonly' @change="filterPerson">
+                                <el-option
+                                    v-for="group in jobInfo"
+                                    :key="group.id"
+                                    :value="group.id"
+                                    :label="group.name">
+                                </el-option>
+                            </el-select>
+                        </p>
+                        <p class="relatedManager">
                             <span>管&nbsp;理&nbsp;&nbsp;者：</span>
                             <el-select v-model="conditionInfo.relatedManagerIds" size="mini" multiple placeholder="请选择" :disabled='isReadonly'>
-                                <el-option-group
+                                <el-option
                                     v-for="group in personInfo"
-                                    :key="group.label"
-                                    :label="group.label">
-                                    <el-option
-                                        v-for="item in group.options"
-                                        :key="item.id"
-                                        :label="item.name"
-                                        :value="item.id">
-                                    </el-option>
-                                </el-option-group>
+                                    :key="group.id"
+                                    :value="group.id"
+                                    :label="group.cnName?group.cnName:group.name">
+                                </el-option>
                             </el-select>
                         </p>
                         <p class="description textArea">
@@ -688,9 +736,32 @@
                 isShowLoading: false,
                 deviceReadOnly:false,
                 ruleInfo:{},
+                jobList: [],
+                jobInfo: [],
+                copyPersonList: []
             }
         },
         methods: {
+            filterPerson () {
+                if (this.jobList.length === 0) {
+                    this.personInfo = this.copyPersonList
+                } else {
+                    this.personInfo = this.copyPersonList.filter(item => {
+                        if (item.jobId && this.jobList.includes(item.jobId)) {
+                            return item
+                        }
+                    })
+                }
+                console.log(this.personInfo, './././././././././')
+            },
+            async getJobList () {
+                await api.user.getUserJobInfo().then(res => {
+                    console.log(res, '人员岗位信息')
+                    this.jobInfo = res
+                }).catch(err => {
+                    console.log(err, '人员岗位失败')
+                })
+            },
             severityChange(){
                // this.alarmcolumnInfo = this.alarmcolumnInfo.slice(0)
             },
@@ -1546,13 +1617,14 @@
                     options:temp
                 }
             },
-            async getPerson(type){
-                let personInfo = [];
-                await api.person.getJobPerson(type).then(res => {
-                    personInfo = res;
+            async getPerson(){
+                await api.user.getUserInfo().then(res => {
+                    console.log(res, '请求人员信息')
+                    this.personInfo = res;
+                    this.copyPersonList = this.personInfo
                 }).catch(err => {
+                    console.log(err, '请求失败')
                 })
-                return personInfo;
             },
             async getPoliceDevice(){
                 await api.police.getAllPolice().then(res => {
@@ -1640,7 +1712,8 @@
             },
             initData(){
                 //人员
-                this.getPersonInfo();
+                this.getPerson();
+                this.getJobList()
                 //关联设备（报警柱）  --报警柱
                 this.getPoliceDevice();
                 //关联巡检计划  --偏离轨迹

@@ -55,26 +55,40 @@ const intelligentBox = {
     },
     stopHanhua(flag){  //停止喊话
         return axios ({
-            /*method:'POST',
+            method:'POST',
             url:getUrl('/device/broadcast'),
             data:{
                 "deviceId":flag,
-                "action":"BRODCAST",
+                "action":"STOP",
                 "value":''
 
-            }*/
+            }
         })
     },
     postTextCast(flag,text){
         return axios ({
-            /*method:'POST',
+            method:'POST',
             url:getUrl('/device/broadcast'),
             data:{
                 "deviceId":flag,
                 "action":"TTSBRODCAST",
                 "value":text
 
-            }*/
+            }
+        })
+    },
+    postSongName(flag,songName){
+        let str=songName.toString();
+        console.log(str,'666666');
+        return axios ({
+            method:'POST',
+            url:getUrl('/device/broadcast'),
+            data:{
+                "deviceId":flag,
+                "action":"TTSBRODCAST",
+                "value":str
+
+            }
         })
     },
     postMusicInfo(form){  //传递编辑的音乐信息
