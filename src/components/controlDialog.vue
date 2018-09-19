@@ -190,7 +190,7 @@
     import HistoryMap from '@/components/historyMap'
     export default {
         name: "control-dialog",
-        props: ['visible', 'Info','title'],
+        props: ['visible', 'Info','title','selectedCastContent'],
         data () {
             return {
                 historyvisible:false,
@@ -298,12 +298,21 @@
                 speed:'0',
                 deviceName:'',
                 deviceNum:'',
-                mobileNum:''
+                mobileNum:'',
+                selectedCasts:[]
             }
         },
         components: {
             HistoryMap
         },
+        watch:{
+
+            selectedCastContent(news,olds){  //监听选择的广播
+                console.log(news,'!!!!!!!!!!');
+                //this.selectedCasts=news;
+            }
+        },
+
         methods: {
             closeHistoryDialog(){
                 this.historyvisible = false
@@ -430,7 +439,9 @@
 
         },
         created () {
-            console.log(this.Info)
+            console.log(this.Info);
+            console.log(this.Info.id);
+            (this.selectedCasts).push(this.Info.id);
             if(this.Info.type==="wifi"){
                 this.wifiShow=true
                 this.getWifiById()
@@ -441,10 +452,16 @@
                 if(this.jsonAttr){
                     this.fileName=this.jsonAttr.status.fileName
                     this.volume=this.jsonAttr.status.volume
+
                 }else {
                     this.fileName='暂未启用'
                     this.volume='0'
-                }
+                };
+
+                api.intelligentBox.getStartVolumn(this.selectedCasts).then(res=>{
+                    console.log(res,'获取初始音量')
+                    this.volume=res;
+                })
             }
             if(this.Info.type==="摄像头"){
                 this.jsonAttr=JSON.parse(this.Info.jsonAttr)

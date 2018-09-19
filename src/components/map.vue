@@ -66,6 +66,7 @@
                       :Info="buildInfo"
                       :title="title"
                       :visible="visible"
+                      :selectedCastContent="selectedCastContent"
                       @closeInfoDialog ="closeDialog">
         </PersonDetail>
         <controlcameraDialog v-if="cameravisible"
@@ -164,7 +165,8 @@
                 heatEmNameNine:'0',
                 carcameravisible:false,
                 dialogVisible:false,
-                selectedCast:[]
+                selectedCast:[],
+                selectedCastContent:[]
 
             }
         },
@@ -3463,7 +3465,7 @@
             getTreeState(){
                 console.log(this.getTreeState,'选择树的内容')
                 this.selectedCast=(((this.getTreeState)[0]).checked).checkedNodes;
-
+                this.selectedCastContent=this.selectedCast;
                 console.log(this.getTreeState,'213123')
 
                 if(this.getTreeState.length>1) {
@@ -4703,10 +4705,10 @@
     }
     .broadcast_close{
         button.showCast{
-            //display: block;
+            display: block;
         }
         button.menuShow{
-            //left:rem(30)
+            left:rem(30)
         }
     }
     .contextmenu.Light i{
