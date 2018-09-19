@@ -368,23 +368,27 @@
                 'getLocation'
             ]),
           orderByTime(){
-              if(this.eventInfo.handleRecords && this.eventInfo.handleRecords.length >0){
-                  return this.eventInfo.handleRecords.reverse()
-              }
+                if(this.route.includes('warning')){
+                    if(this.eventInfo.handleRecords && this.eventInfo.handleRecords.length >0){
+                        return this.eventInfo.handleRecords.reverse()
+                    }
+                }else if(this.route.includes('patrol')){
+                    if(this.addEventInfo.handleRecords && this.addEventInfo.handleRecords.length >0){
+                        return this.addEventInfo.handleRecords.reverse()
+                    }
+                }
           }
         },
 
         methods: {
-
             saveLocation () {
                 let locationString
                 if (this.getLocation.length > 0) {
                     locationString = `${this.getLocation[0]},${this.getLocation[1]}`
+                    this.addEventInfo['longitude'] = this.getLocation[0]
+                    this.addEventInfo['latitude'] = this.getLocation[1]
                 }
-
-
                 this.addEventInfo.location = locationString
-
                 this.alarmMapVisible = false
             },
             closeMapDialog(){
@@ -586,30 +590,18 @@
                         }
                     })
 
-                    newInfo = {
-                        serialNum:this.addEventInfo.serialNum,
-                        ownerId:this.addEventInfo.owner.id,
-                        statusId:this.addEventInfo.status.id,
-                        severityId:this.addEventInfo.severity.id,
-                        sourceDeviceId:this.addEventInfo.device.typeId == '0' ? "":this.addEventInfo.device.id,
-                        longitude: this.addEventInfo.location?this.addEventInfo.location.split(',')[0]:'',
-                        latitude: this.addEventInfo.location?this.addEventInfo.location.split(',')[1]:'',
-                        attachmentIds:ids,
-                        description:this.addEventInfo.description,
-                        alarmTypeId:"10"
-                    }
                     objArray = []
                     if(this.addEventInfo.id){
                         newInfo = {
+                            id:this.addEventInfo.id,
                             ownerId:this.addEventInfo.owner.id,
                             statusId:this.addEventInfo.status.id,
                             severityId:this.addEventInfo.severity.id,
-                            sourceDevieId:this.addEventInfo.device.typeId == '0' ? "":this.addEventInfo.device.id,
-                            longitude: this.addEventInfo.location?this.addEventInfo.location.split(',')[0]:'',
-                            latitude: this.addEventInfo.location?this.addEventInfo.location.split(',')[1]:'',
+                            sourceDeviceId:this.addEventInfo.device.typeId == '0' ? "":this.addEventInfo.device.id,
+                            longitude: this.addEventInfo.longitude,
+                            latitude: this.addEventInfo.latitude,
                             attachmentIds:ids,
                             description:this.addEventInfo.description,
-                            alarmTypeId:"10",
                             handleRecord:{
                                 modifiedFields:this.modifiedFields,
                                 handleDescription: this.handleDescription
