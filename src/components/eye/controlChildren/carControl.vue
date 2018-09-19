@@ -1,53 +1,49 @@
 <template>
     <div class="car">
         <div class="reveal">
-            <!--顶部-->
-            <div class="top">
-                <h5>车船调度</h5>
-                <ul>
-                    <!--<li>-->
-                    <!--<el-switch-->
-                    <!--v-model="open"-->
-                    <!--active-color="#53b6a7"-->
-                    <!--inactive-color="#808080">-->
-                    <!--</el-switch>-->
-                    <!--</li>-->
-                    <!--<li><img src="../../../../static/img/search.png" class="search" alt=""/></li>-->
+            <el-tabs v-model="activeName" @tab-click="tabClick" stretch>
+                <el-tab-pane label="车船调度" name="transportVehicle">
 
-                    <!--<li>-->
-                        <!--<el-tooltip class="item" effect="dark" content="车载视频控件下载" placement="left">-->
-                            <!--<img src="../../../../static/img/down.svg" class="multiwindow" @click="cmsocxDown"  alt=""/>-->
-                        <!--</el-tooltip>-->
-                    <!--</li>-->
-                </ul>
-            </div>
-            <div class="middle">
-                <div class="boottom" id="ztree">
-                    <ScrollContainer>
-                        <broadcast-ztree
-                            :title="title"
-                            :Info="transportInfo"
-                            :lightCheckout="transportCheckout"
-                            :regionId="regionId"
-                            :lightList="carlist"
-                            :number="number"
-                            :fault="fault">
-                        </broadcast-ztree>
-                    </ScrollContainer>
-                </div>
-            </div>
-            <!--<div class="last">-->
-                <!--<h5>设备故障率</h5>-->
-                <!--<div>-->
-                    <!--<div id="pie"></div>-->
-                <!--</div>-->
-            <!--</div>-->
+                    <div class="middle">
+                        <div class="boottom">
+                            <ScrollContainer>
+                                <broadcast-ztree
+                                    :title="title"
+                                    :Info="transportVehicleInfo"
+                                    :lightCheckout="vehicleCheckout"
+                                    :regionId="regionId"
+                                    :lightList="transportVehicleList"
+                                    :number="number"
+                                    :fault="fault">
+                                </broadcast-ztree>
+                            </ScrollContainer>
+                        </div>
+                    </div>
+                </el-tab-pane>
+                <el-tab-pane label="车船计划调度" name="transportSchedule">
+                    <div class="middle">
+                        <div class="boottom">
+                            <ScrollContainer>
+                                <schedule-ztree
+                                    :title="title"
+                                    :Info="transportScheduleInfo"
+                                    :lightCheckout="scheduleCheckout"
+                                    :regionId="regionId"
+                                    :lightList="transportScheduleList"
+                                    :number="number">
+                                </schedule-ztree>
+                            </ScrollContainer>
+                        </div>
+                    </div>
+                </el-tab-pane>
+            </el-tabs>
         </div>
     </div>
 </template>
 
 <script>
     import broadcastZtree from "./children/broadcastzTree.vue"
+    import scheduleZtree from "./children/schedulezTree.vue"
     import ScrollContainer from '@/components/ScrollContainer'
     import api from '@/api'
     import {mapGetters} from 'vuex'
@@ -65,9 +61,10 @@
                 fault: '0',
                 optionMisic: [],
                 isShowBroadCard: false,
-                transportInfo: [],
-                carlist:[],
-                transportCheckout:[],
+                transportVehicleInfo: [],
+                transportScheduleInfo: [],
+                transportVehicleList:[],
+                transportScheduleList:[],
                 regionId:[],
                 transportList:[],
                 selectAll:[],
@@ -75,20 +72,46 @@
                 online: '0',
                 faultlist:[],
                 drivers:[],
-                crew:[]
+                crew:[],
+                vehicleCheckout:[],
+                scheduleCheckout:[],
+                activeName:'transportVehicle',
+                transportRoutes:[]
+
             }
         },
         components: {
             broadcastZtree,
+            scheduleZtree,
             ScrollContainer
         },
         methods: {
-            treeShow(){
-                console.log(this.getcontroTransport,'1');
-                if(this.getcontroTransport){
-                    this.transportCheckout=this.getcontroTransport
+            tabClick(tab,event){
+                console.log(tab,event)
+                if(tab.name == 'transportVehicle'){
+                    this.title = '车船'
+                    this.initVehicle()
+                    this.treeShow('vehicle')
+                }else if(tab.name == 'transportSchedule'){
+                    this.title = '车船计划'
+                    this.initSchedule()
+                    this.treeShow('schedule')
                 }
             },
+            treeShow(type){
+                console.log(this.getcontroTransportVehicle,'1');
+                console.log(this.getcontroTransportSchedule,'2');
+                if(type == 'vehicle'){
+                    if(this.getcontroTransportVehicle){
+                        this.vehicleCheckout=this.getcontroTransportVehicle
+                    }
+                }else if(type == 'schedule'){
+                    if(this.getcontroTransportSchedule){
+                        this.scheduleCheckout=this.getcontroTransportSchedule
+                    }
+                }
+            },
+
             showBroadCard() {
                 console.log(777)
                 this.isShowBroadCard = true
@@ -146,7 +169,7 @@
                     color: ['#26bbf0', '#f36a5a']
                 });
             },
-            async initData(){
+            async initVehicle(){
                 Promise.all([this.getAllVehicle()]).then(result=>{
                     let vehicles = result[0]
                     // let vehicles =  [
@@ -211,9 +234,9 @@
                     //         }
                     //     }
                     //     ]
-                    this.carlist = vehicles
-                    this.number=this.carlist.length
-                    this.transportInfo=[]
+                    this.transportVehicleList = vehicles
+                    this.number=this.transportVehicleList.length
+                    this.transportVehicleInfo=[]
                     let carObj = {
                         label:'车辆',
                         id:100010,
@@ -232,7 +255,7 @@
                                 id:veObj.vehicle.id,
                                 url:'/static/img/icon/bus_small.png',
                                 type:'transport',
-                                subtype:'car',
+                                subtype:'transportCar',
                                 icon:veObj.gpsData ? '../../../static/img/car_icon.svg' : '../../../static/img/car_gray.svg' ,
                                 status:veObj.gpsData ? "ONLINE" : "OFFLINE",
                                 longitude:veObj.gpsData ? veObj.gpsData.longitude+0.451536705535+0.0048011541 : '',
@@ -248,7 +271,7 @@
                                 id:veObj.vehicle.id,
                                 url:'/static/img/icon/boat_small.png',
                                 type:'transport',
-                                subtype:'boat',
+                                subtype:'transportBoat',
                                 icon:veObj.gpsData ? '../../../static/img/boat_icon.svg' : '../../../static/img/boat_gray.svg',
                                 status:veObj.gpsData ? "ONLINE" : "OFFLINE",
                                 longitude:veObj.gpsData ? veObj.gpsData.longitude+0.451536705535+0.0048011541 : '',
@@ -258,20 +281,168 @@
                             boatObj.children.push(childObj)
                         }
                     })
-                    this.transportInfo.push(carObj)
-                    this.transportInfo.push(boatObj)
+                    this.transportVehicleInfo.push(carObj)
+                    this.transportVehicleInfo.push(boatObj)
                     this.fault=0
                     this.online= this.number - this.fault
                     // this.drawLine();
-                    console.log(this.transportInfo)
+                    console.log(this.transportVehicleInfo)
                 })
-                setTimeout(() => {
-                    let route = this.$route.path
-                    if (route.includes('controler/car')) {
-                        this.initData();//长轮询
-                        this.treeShow();
+                // setTimeout(() => {
+                //     let route = this.$route.path
+                //     if (route.includes('controler/car')) {
+                //         this.initVehicle();//长轮询
+                //         this.treeShow('vehicle');
+                //     }
+                // },5000)
+            },
+            async initSchedule(){
+                Promise.all([this.getAllTransport()]).then(result=>{
+                    // let schedules = result[0]
+
+                    let schedules = [
+                            {
+                                "id": "0a9c3e8a-99c7-4c5f-90c4-54128115fd40",
+                                "creator": "admin",
+                                "createTime": "2018-09-12",
+                                "modifier": "admin",
+                                "modifyTime": "2018-09-12",
+                                "name": "船001",
+                                "days": "1,2,3,4,5,6,7",
+                                "startDate": null,
+                                "endDate": null,
+                                "startTime": "00:20:39",
+                                "endTime": "23:59:40",
+                                "routeId": "0e2d936d-b75a-4bc1-8309-84b2b21dfe3f",
+                                "description": "三十",
+                                "scenicAreaId": null,
+                                "type": "1",
+                                "svDriverMaps": [
+                                    {
+                                        "vehicleId": "ceb54f57-08d4-49a0-81db-a3e7c486b154",
+                                        "driverIds": [
+                                            "1"
+                                        ]
+                                    }
+                                ],
+                                "stations": [],
+                                "status": "ONLINE",
+                                "enabled": true,
+                                "customizedDays": false,
+                                "deleted": false,
+                                "vehicles":[
+                                    {
+                                     "id":"ceb54f57-08d4-49a0-81db-a3e7c486b154",
+                                     "createTime": "2018-09-12 11:08:50",
+                                     "creator": "admin",
+                                     "modifyTime": "2018-09-12 11:08:50",
+                                     "modifier": "admin",
+                                     "serialNum": "船test1",
+                                     "capacity": 36,
+                                     "type": 1,
+                                     "model": null,
+                                     "pictureId": null,
+                                     "maintenanceStatus": 0,
+                                     "maintenanceDate": null,
+                                     "purchaseDate": null,
+                                     "description": null,
+                                     "scenicAreaId": null,
+                                     "deleted": false,
+                                     "gpsDeviceId": "c13e503f-713d-4cd7-9a5d-c62220e1f612",
+                                     "gpsData": {
+                                        "deviceId": "c13e503f-713d-4cd7-9a5d-c62220e1f612",
+                                        "ioTDeviceId": "1000000",
+                                        "deviceName": "\ufffd\ufffd\ufffd\ufffd",
+                                        "createTime": "2018-09-19 14:09:22",
+                                        "longitude": 119.680681,
+                                        "latitude": 29.810524,
+                                        "altitude": null,
+                                        "direction": null,
+                                        "speed": 0,
+                                        "telephone": null,
+                                        "deviceNum": "1000000",
+                                        "coordinate": "",
+                                        "tag": "ceb54f57-08d4-49a0-81db-a3e7c486b154"
+                                     },
+                                    }
+                                ]
+                            }
+                        ]
+
+                    console.log(JSON.stringify(schedules))
+                    this.transportScheduleList = schedules
+                    this.number=this.transportScheduleList.length
+                    this.transportScheduleInfo=[]
+                    if(schedules.length >0){
+                        if(this.transportRoutes.length>0){
+                            schedules.forEach(scObj=>{
+                                this.transportRoutes.forEach(routeObj=>{
+                                    if(scObj.routeId == routeObj.id){
+                                        scObj['routeObj'] = routeObj
+                                    }
+                                })
+                            })
+                        }
+
+                        schedules.forEach(obj=>{
+                            let scheduleObj = {
+                                label:obj.name,
+                                id:obj.id,
+                                children:[]
+                            }
+
+                            if(obj.vehicles.length >0){
+                                obj.vehicles.forEach(veObj=>{
+                                    let childObj;
+                                    if(obj.type == 0){
+                                        childObj = {
+                                            label:veObj.serialNum,
+                                            id:veObj.id,
+                                            url:'/static/img/icon/bus_small.png',
+                                            type:'transport',
+                                            subtype:'transportSchedule',
+                                            icon:veObj.gpsData ? '../../../static/img/car_icon.svg' : '../../../static/img/car_gray.svg' ,
+                                            status:veObj.gpsData ? "ONLINE" : "OFFLINE",
+                                            longitude:veObj.gpsData ? veObj.gpsData.longitude+0.451536705535+0.0048011541 : '',
+                                            latitude:veObj.gpsData ? veObj.gpsData.latitude+0.49693734262853-0.0025647127: '',
+                                            gpsDeviceId:veObj.gpsDeviceId,
+                                            routeObj:obj.routeObj
+                                        }
+                                    }else if(obj.type == 1){
+                                        childObj = {
+                                            label:veObj.serialNum,
+                                            id:veObj.id,
+                                            url:'/static/img/icon/boat_small.png',
+                                            type:'transport',
+                                            subtype:'transportSchedule',
+                                            icon:veObj.gpsData ? '../../../static/img/boat_icon.svg' : '../../../static/img/boat_gray.svg',
+                                            status:veObj.gpsData ? "ONLINE" : "OFFLINE",
+                                            longitude:veObj.gpsData ? veObj.gpsData.longitude+0.451536705535+0.0048011541 : '',
+                                            latitude:veObj.gpsData ? veObj.gpsData.latitude +0.49693734262853-0.0025647127: '',
+                                            gpsDeviceId:veObj.gpsDeviceId,
+                                            routeObj:obj.routeObj
+                                        }
+                                    }
+                                    scheduleObj.children.push(childObj)
+                                })
+                            }
+                            this.transportScheduleInfo.push(scheduleObj)
+                        })
+
                     }
-                },5000)
+
+                    // this.fault=0
+                    // this.online= this.number - this.fault
+                    // this.drawLine();
+                    console.log(this.transportScheduleInfo)
+                })
+                // setTimeout(() => {
+                //     let route = this.$route.path
+                //     if (route.includes('controler/car')) {
+                //         this.initSchedule();//长轮询
+                //         this.treeShow('schedule');
+                //     }
+                // },5000)
             },
             async getAllTransport(){
                 return api.transport.getTransport()
@@ -285,22 +456,33 @@
             cmsocxDown(){
                 window.open('http://112.17.128.126:89/download/OCX.exe');
             },
+            async getAllTransportRoute(){
+                Promise.all([this.getTransportRouteCar(),this.getTransportRouteBoat()]).then(result=>{
+                   this.transportRoutes = result[0].concat(result[1])
+                }).catch(err=>{
+                    console.log(err)
+                })
+            },
+            async getTransportRouteCar(){
+                return await api.roat.getTransportRoat(2)
+            },
+            async getTransportRouteBoat(){
+                return await api.roat.getTransportRoat(3)
+            },
         },
         watch:{
 
         },
         created: function () {
-            this.treeShow();
+            this.treeShow('vehicle');
+            this.getAllTransportRoute()
         },
         mounted() {
-            // setInterval(()=>{
-            //     this.transportInfo = []
-            //     this.initData();
-            // },5000)
-            this.initData();
+
+            this.initVehicle();
         },
         computed: {
-            ...mapGetters(['getcontroTransport'])
+            ...mapGetters(['getcontroTransportVehicle','getcontroTransportSchedule'])
         }
     }
 </script>
@@ -314,7 +496,6 @@
             height: 100%;
             display: flex;
             flex-direction: column;
-            background: #f2f2f2;
             .top {
                 width: 100%;
                 height: 40px;

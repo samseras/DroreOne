@@ -19,7 +19,8 @@ const map = {
         controbroad:[],
         controcamera:[],
         controled:[],
-        controtransport:[],
+        controtransportVehicle:[],
+        controtransportSchedule:[],
         controlSecurityPerson:[],
         controlSecuritySchedule:[],
         facilitypark:[],
@@ -112,9 +113,13 @@ const map = {
         getfacilityStation(state){
             return state.facilityStation
         },
-        getcontroTransport(state){
-            return state.controtransport
+        getcontroTransportVehicle(state){
+            return state.controtransportVehicle
         },
+        getcontroTransportSchedule(state){
+            return state.controtransportSchedule
+        },
+
         getTransportType(state){
             return state.transportType
         },
@@ -235,13 +240,16 @@ const map = {
             state.facilityroad= data
             // console.log(state.facilityroad,'commit')
         },
-        [types.CONTROLER_TRANSPORT] (state, data) {
-            state.controtransport = data
+        [types.CONTROLER_TRANSPORT_VEHICLE] (state, data) {
+            state.controtransportVehicle = data
+        },
+        [types.CONTROLER_TRANSPORT_SCHEDULE] (state, data) {
+            state.controtransportSchedule = data
         },
         [types.CONTROLER_SECURITY_PERSON](state,data){
             state.controlSecurityPerson = data
         },
-        [types.CONTROLER_SECURITY_SCHEDULE](state,date){
+        [types.CONTROLER_SECURITY_SCHEDULE](state,data){
             state.controlSecuritySchedule = data
         },
         [types.TRANSPORT_TYPE](state,data){

@@ -12,7 +12,7 @@
                <div class="createdFloder">
                    <p class="name">
                        <span>名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称：</span>
-                       <el-input v-model="name":maxlength="20"></el-input>
+                       <el-input v-model="name" :maxlength="20" @blur="checkFileName" ref="createFile"></el-input>
                    </p>
                    <p class="textarea ms ms-person name">
                        <span class="des-person">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：</span>
@@ -48,6 +48,14 @@
             }
         },
         methods: {
+            checkFileName () {
+                console.log(this.getFileList, 'lplplpkokojojoiokok')
+                if (this.getFileList.length > 0 && this.getFileList.includes(this.name)) {
+                    this.$message.error('该文件名已在此文件夹下存在，请重新填写')
+                    this.$refs.createFile.focus()
+                    return
+                }
+            },
             closeDialog () {
                 this.$emit('closeDialog')
             },
@@ -57,6 +65,11 @@
                     this.fileObj.description = this.description
                     this.$emit('SaveFixFile', this.fileObj)
                 } else {
+                    if (this.getFileList.length > 0 && this.getFileList.includes(this.name)) {
+                        this.$message.error('该文件名已在此文件夹下存在，请重新填写')
+                        this.$refs.createFile.focus()
+                        return
+                    }
                     let obj = {
                         name: this.name,
                         description: this.description
@@ -66,7 +79,7 @@
             }
         },
         computed: {
-            ...mapGetters(['getFixFile'])
+            ...mapGetters(['getFixFile', 'getFileList'])
         }
     }
 </script>

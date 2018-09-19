@@ -1,7 +1,7 @@
 <template>
     <div class="moveFileDialog">
         <el-dialog
-            title="上传文件"
+            title="文件移动"
             :close-on-click-modal = false
             :visible="visible"
             :before-close="closeDialog"
@@ -9,6 +9,7 @@
             class="dialog echatDialog"
             center>
             <div class="card">
+                <span>选择文件夹：</span>
                 <el-tree
                     :data="folderList"
                     :props="defaultProps"
@@ -31,6 +32,7 @@
 
 <script>
     import api from '@/api'
+    import {mapGetters} from 'vuex'
     export default {
         name: "upload-file-dialog",
         props: ['visible'],
@@ -54,6 +56,9 @@
                 await api.file.getFloderList(id).then(res => {
                     console.log(res, '請求成功')
                     this.folderList = res
+                    this.folderList = this.folderList.filter(item => {
+                        return item.id !== this.getSelectFileList[0].id
+                    })
                 }).catch(err => {
                     console.log(err)
                 })
@@ -72,13 +77,11 @@
                 console.log(data, checked, indeterminate);
             },
             loadNode1 (node, resolve) {
-                console.log(node, 'lplplplpplplp')
                 let id  = node.data.id
                 console.log(id)
                 api.file.getMoreFile(id).then(res => {
-                    console.log(res, '请求文件成功')
                     res = res.filter(item => {
-                        return item.type === 0
+                        return item.type === 0 && item.id !== this.getSelectFileList[0].id
                     })
                     resolve(res)
                 }).catch(err => {
@@ -88,6 +91,9 @@
             getCurrentNode (data) {
                this.selectNodeId = data.id
             }
+        },
+        computed: {
+            ...mapGetters(['getSelectFileList'])
         }
     }
 </script>

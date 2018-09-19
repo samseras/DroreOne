@@ -19,7 +19,8 @@ const file = {
         filePageNum: {},
         searchContent: {},
         checkFileRow: {},
-        selectAllState: {}
+        selectAllState: {},
+        fileList: []
     },
     getters: {
         getCreatedState (state) {
@@ -64,6 +65,9 @@ const file = {
         },
         getSelectAllState (state) {
             return state.selectAllState
+        },
+        getFileList (state) {
+            return state.fileList
         }
     },
     setters: {},
@@ -110,6 +114,15 @@ const file = {
         },
         [types.SELECT_ALL] (state, data) {
             state.selectAllState = data
+        },
+        [types.FILE_LIST] (state, data) {
+            let names = []
+            if (data.length > 0) {
+                names = data.map(item => {
+                    return item.name
+                })
+            }
+            state.fileList = names
         }
     },
     actions: {
