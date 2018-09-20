@@ -35,7 +35,9 @@ axios.interceptors.response.use(
         if (error.response) {
             switch (error.response.status){
                 case 401:
-                    store.dispatch('clearToken').then(() => location.reload())
+                    if (!error.response.config.url.includes('login')) {
+                        store.dispatch('clearToken').then(() => location.reload())
+                    }
             }
         }
         return Promise.reject(error.response.data)

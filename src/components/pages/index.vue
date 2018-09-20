@@ -6,7 +6,7 @@
             <router-link class="indexExit" to="/login" ></router-link>
             <div class="user" v-if="getUserDetailMsg.cnName">{{getUserDetailMsg.cnName}}</div>
             <div class="user" v-if="!getUserDetailMsg.cnName">{{getUserDetailMsg.name}}</div>
-            <img class="userAvatar" :src="getUrl(getUserDetailMsg.iconId)" alt="" @error="imgError">
+            <img class="userAvatar" :src="getUrl(getUserDetailMsg.iconId)" alt="" @error="imgError" @click="showUserDialog">
             <div id="getTime">
                 {{currTime | timeFiler}} ({{currTime | weekFiler}})
             </div>
@@ -98,6 +98,11 @@
             </el-carousel>
         </div>
         <footer>版权所属：浙江卓锐科技股份有限公司</footer>
+        <UserInfoDialog
+            v-if="visible"
+            :visible="visible"
+            @closeInfoDialog="visible = false">
+        </UserInfoDialog>
     </div>
 
 </template>
@@ -107,6 +112,7 @@
     import ScrollContainer from '@/components/ScrollContainer'
     import { mapGetters,mapActions} from 'vuex'
     import screenfull from 'screenfull'
+    import UserInfoDialog from '@/components/userInfoDialog'
 	export default {
 		data() {
 	        return {
@@ -115,6 +121,7 @@
                 isFullscreen:false,
                 searchList: [],
                 routeList: [],
+                visible: false,
                 list: [
                     {title: '全视之眼', route: '/eye'},
                     {title: '数据中心', route: '/property'},
@@ -157,6 +164,9 @@
                 } else {
                     return url
                 }
+            },
+            showUserDialog () {
+                this.visible = true
             },
             gqjq(){
                 if (this.getUserRole.includes('01') || this.getUserRole[0] == 1) {
@@ -299,7 +309,8 @@
             },
         },
         components: {
-            ScrollContainer
+            ScrollContainer,
+            UserInfoDialog
         },
         async created () {
 		    await this.getUserDetailInfo()

@@ -23,7 +23,7 @@
                 </div>
             </div>
         </div>
-        <musicedit :dialogisshow="dialogVisible" :selectedCast="selectedCast" @closeDialog="closeMusicEdit"></musicedit>
+        <musicedit :dialogisshow="dialogVisible" :isGroup="isGroup" :selectedCast="selectedCast" @closeDialog="closeMusicEdit" :Infos="menulist"></musicedit>
         <div id="contextmenu_container" class="contextmenu">
             <i @click="menuDelete"></i>
             <el-tooltip class="item" effect="dark" content="启停" placement="top">
@@ -66,6 +66,7 @@
                       :Info="buildInfo"
                       :title="title"
                       :visible="visible"
+                      :selectedCastContent="selectedCastContent"
                       @closeInfoDialog ="closeDialog">
         </PersonDetail>
         <controlcameraDialog v-if="cameravisible"
@@ -165,7 +166,10 @@
                 heatEmNameNine:'0',
                 carcameravisible:false,
                 dialogVisible:false,
-                selectedCast:[]
+                isGroup:false,
+                selectedCast:[],
+                selectedCastContent:[],
+
 
             }
         },
@@ -3183,9 +3187,11 @@
             },
             showCast(){
                 this.dialogVisible=true;
+
             },
             closeMusicEdit(){
                 this.dialogVisible=false;
+                this.isGroup=false;
                 this.$store.commit('SET_MUSIC',false)
             },
             menuOperation(){
@@ -3552,12 +3558,14 @@
                 if(this.getMusicShow===true){
                     if(this.selectedCast.length>0){
                         this.dialogVisible=true;
+                        this.isGroup=true;
                     }else{
                         this.$message({
                             message: '请选择至少一个广播',
                             type: 'warning'
                         });
-                        this.$store.commit('SET_MUSIC',false)
+                        this.$store.commit('SET_MUSIC',false);
+                        this.isGroup=false;
                     }
 
                 }
@@ -3565,7 +3573,7 @@
             getTreeState(){
                 console.log(this.getTreeState,'选择树的内容')
                 this.selectedCast=(((this.getTreeState)[0]).checked).checkedNodes;
-
+                this.selectedCastContent=this.selectedCast;
                 console.log(this.getTreeState,'213123')
 
                 if(this.getTreeState.length>1) {
@@ -4886,10 +4894,10 @@
     }
     .broadcast_close{
         button.showCast{
-            //display: block;
+            display: block;
         }
         button.menuShow{
-            //left:rem(30)
+            left:rem(30)
         }
     }
     .contextmenu.Light i{

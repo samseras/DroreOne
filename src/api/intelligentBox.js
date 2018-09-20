@@ -20,12 +20,29 @@ const intelligentBox = {
 
         })
     },
-    getStartVolumn(){
-        /*return axios({
-            method: 'GET',
-            url: getUrl('/iot/services/broadcast')
+    getStartStatus(flag){
+        return axios ({
+            method:'POST',
+            url:getUrl('/device/broadcast'),
+            data:{
+                "deviceId":flag,
+                "action":"GETBROADCASTDATA",
+                "value":''
 
-        })*/
+            }
+        })
+    },
+    getStartVolumn(flag){
+        return axios ({
+            method:'POST',
+            url:getUrl('/device/broadcast'),
+            data:{
+                "deviceId":flag,
+                "action":"GETVOLUME",
+                "value":''
+
+            }
+        })
     },
     postMusicVoice(flag,value){  //传递音量
         console.log(flag,value,'22222');
