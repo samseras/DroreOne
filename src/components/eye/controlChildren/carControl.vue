@@ -428,7 +428,6 @@
                             }
                             this.transportScheduleInfo.push(scheduleObj)
                         })
-
                     }
 
                     // this.fault=0

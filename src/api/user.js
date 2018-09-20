@@ -111,6 +111,13 @@ const user = {
         })
     },
 
+    getUserGpsById(id){
+        return axios({
+            method: 'GET',
+            url: getUrl(`/uc/user?withgps=true?id=`+id)
+        })
+    },
+
     getUserHistoryRoute(param){
         return axios ({
             method: 'POST',

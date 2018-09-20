@@ -3,7 +3,7 @@
         <el-dialog
             :visible="visible"
             :close-on-click-modal = false
-            title="车船历史轨迹"
+            :title="title"
             :before-close="closeHistoryDialog"
             width="70%"
             class="dialog map_Dialog"
@@ -17,7 +17,7 @@
 <script>
     import historyMap from "../../static/js/historyMap.js"
     export default {
-        props: ['visible','historyData'],
+        props: ['visible','historyData','title'],
         name: "historyDialog",
         data () {
             return{

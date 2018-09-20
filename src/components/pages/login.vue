@@ -93,7 +93,6 @@
                     return
                 }
                 let obj = `BASIC ${Base64.encode(this.username +  ":"+ this.password)}`
-                debugger
                 await api.login.userLogin(obj).then(res => {
                     console.log(res, 'this is new login api respones')
                     let aid = 'request-token'
