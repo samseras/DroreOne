@@ -2448,332 +2448,362 @@
             },
             getAllPerson(){
 
-                // let users =
-                //     [
-                //         {
-                //             "id": "1",
-                //             "creator": null,
-                //             "createTime": null,
-                //             "modifier": "admin",
-                //             "modifyTime": "2018-09-11 18:00:00",
-                //             "name": "admin",
-                //             "cnName": " 系统管理员",
-                //             "gender": 0,
-                //             "iconId": null,
-                //             "mobileNum": "18800000000",
-                //             "fixedPhoneNum": null,
-                //             "idCardNum": null,
-                //             "email": null,
-                //             "workAddress": null,
-                //             "description": null,
-                //             "departmentId": null,
-                //             "jobId": null,
-                //             "roleId": "1",
-                //             "role": {
-                //                 "id": "1",
-                //                 "creator": null,
-                //                 "createTime": null,
-                //                 "modifier": null,
-                //                 "modifyTime": null,
-                //                 "name": "admin",
-                //                 "description": "",
-                //                 "permissions": null
-                //             },
-                //             "job": null,
-                //             "department": null,
-                //             "gpsId": "21a435fd-f067-4cb5-841e-0482bbe1c230",
-                //             "gpsData":  {
-                //                 "deviceId": "21a435fd-f067-4cb5-841e-0482bbe1c230",
-                //                 "ioTDeviceId": null,
-                //                 "createTime": "2017-12-31 12:21:39",
-                //                 "longitude": 120.13310087077178,
-                //                 "latitude": 30.30729423238902,
-                //                 "altitude": null,
-                //                 "direction": null,
-                //                 "speed": 4,
-                //                 "telephone": null,
-                //                 "deviceNum": null,
-                //                 "coordinate": null
-                //             }
-                //         }
-                //     ]
-                // if(users.length > 0){
-                //     users.forEach(obj=>{
-                //         let latitude = ''
-                //         let longitude = ''
-                //         if(obj.gpsData){
-                //             latitude = obj.gpsData.latitude,
-                //                 longitude = obj.gpsData.longitude
-                //         }
-                //         obj.status=obj.gpsData ? "ONLINE" : "OFFLINE";
-                //         obj.location=[longitude,latitude];
-                //         var icon = new droreMap.icon.Marker({
-                //             coordinate: droreMap.trans.transFromWgsToLayer(obj.location),
-                //             name:obj.name,
-                //             subtype:'securityPerson',
-                //             id:obj.id,
-                //             url:'/static/img/icon/people_small.svg',
-                //             type:'security',
-                //             status:obj.gpsData ? "ONLINE" : "OFFLINE",
-                //             description:obj.description,
-                //             gpsData:obj.gpsData,
-                //             data:obj,
-                //         });
-                //         droreMap.icon.addChild(icon);
-                //         icon.showName=true
-                //         droreMap.icon.showLayer(icon.id,false);
-                //         let that = this;
-                //         icon.onclick(function (e) {
-                //             that.menulist = e.data;
-                //             var div = document.getElementById('contextmenu_container')
-                //             var popup = new  droreMap.pop.Popup(div,droreMap.trans.transFromWgsToLayer([longitude,latitude]),"contextmenu_container")
-                //             droreMap.pop.addChild(popup,e.data.id);
-                //             $("#contextmenu_container").attr("class","contextmenu "+e.subtype);
-                //             if(e.data.status =="FAULT"){
-                //                 that.open=false
-                //             }else if(e.data.status =="OFFLINE"){
-                //                 that.open=false
-                //             }else {
-                //                 that.open= true
-                //             }
-                //             $("#contextmenu_container").show();
-                //         });
-                //     })
-                // }
-
-                Promise.all([this.getAllUser()]).then(result=>{
-                    console.log(result,'00000')
-                    let users = result[0]
-                    // let users =
-                    //     [
-                    //         {
-                    //             "id": "798298ecd17a87586a2a123",
-                    //             "creator": null,
-                    //             "createTime": null,
-                    //             "modifier": "admin",
-                    //             "modifyTime": "2018-09-11 18:00:00",
-                    //             "name": "admin",
-                    //             "cnName": " 系统管理员",
-                    //             "gender": 0,
-                    //             "iconId": null,
-                    //             "mobileNum": "18800000000",
-                    //             "fixedPhoneNum": null,
-                    //             "idCardNum": null,
-                    //             "email": null,
-                    //             "workAddress": null,
-                    //             "description": null,
-                    //             "departmentId": null,
-                    //             "jobId": null,
-                    //             "roleId": "1",
-                    //             "role": {
-                    //                 "id": "1",
-                    //                 "creator": null,
-                    //                 "createTime": null,
-                    //                 "modifier": null,
-                    //                 "modifyTime": null,
-                    //                 "name": "admin",
-                    //                 "description": "",
-                    //                 "permissions": null
-                    //             },
-                    //             "job": null,
-                    //             "department": null,
-                    //             "gpsId": "21a435fd-f067-4cb5-841e-0482bbe1c230",
-                    //             "gpsData":  {
-                    //                 "deviceId": "21a435fd-f067-4cb5-841e-0482bbe1c230",
-                    //                 "ioTDeviceId": null,
-                    //                 "createTime": "2017-12-31 12:21:39",
-                    //                 "longitude": 120.13310087077178,
-                    //                 "latitude": 30.30729423238902,
-                    //                 "altitude": null,
-                    //                 "direction": null,
-                    //                 "speed": 4,
-                    //                 "telephone": null,
-                    //                 "deviceNum": null,
-                    //                 "coordinate": null
-                    //             }
-                    //         },
-                    //         {
-                    //             "id": "05579c25-8abb-4bfa-83ae-2a1e50a071ee",
-                    //             "creator": null,
-                    //             "createTime": null,
-                    //             "modifier": "admin",
-                    //             "modifyTime": "2018-09-11 18:00:00",
-                    //             "name": "xuyixiang",
-                    //             "cnName": "用户",
-                    //             "gender": 0,
-                    //             "iconId": null,
-                    //             "mobileNum": "18800203265",
-                    //             "fixedPhoneNum": null,
-                    //             "idCardNum": null,
-                    //             "email": null,
-                    //             "workAddress": null,
-                    //             "description": null,
-                    //             "departmentId": null,
-                    //             "jobId": null,
-                    //             "roleId": "1",
-                    //             "gpsId": "2b696d8b-7f38-41dc-8b3c-8db147c02c32",
-                    //             "gpsData":  {
-                    //                 "deviceId": "2b696d8b-7f38-41dc-8b3c-8db147c02c32",
-                    //                 "ioTDeviceId": null,
-                    //                 "createTime": "2017-12-31 12:21:39",
-                    //                 "longitude": 120.1333035877555,
-                    //                 "latitude": 30.30820253332855,
-                    //                 "altitude": null,
-                    //                 "direction": null,
-                    //                 "speed": 0,
-                    //                 "telephone": null,
-                    //                 "deviceNum": null,
-                    //                 "coordinate": null
-                    //             }
-                    //         }
-                    //
-                    //
-                    //     ]
-                    if(users.length > 0){
-                        users.forEach(obj=>{
-                            let latitude = ''
-                            let longitude = ''
-                            if(obj.gpsData){
-                                latitude = obj.gpsData.latitude,
-                                longitude = obj.gpsData.longitude
-                            }
-                            obj.status=obj.gpsData ? "ONLINE" : "OFFLINE";
-                            obj.location=[longitude,latitude];
-                            var icon = new droreMap.icon.Marker({
-                                coordinate: droreMap.trans.transFromWgsToLayer(obj.location),
-                                name:obj.name,
-                                subtype:'securityPerson',
-                                id:obj.id,
-                                url:'/static/img/icon/people_small.svg',
-                                type:'security',
-                                status:obj.gpsData ? "ONLINE" : "OFFLINE",
-                                description:obj.description,
-                                gpsData:obj.gpsData,
-                                data:obj,
-                            });
-                            droreMap.icon.addChild(icon);
-                            icon.showName=true
-                            droreMap.icon.showLayer(icon.id,false);
-                            let that = this;
-                            icon.onclick(function (e) {
-                                that.menulist = e.data;
-                                var div = document.getElementById('contextmenu_container')
-                                var popup = new  droreMap.pop.Popup(div,droreMap.trans.transFromWgsToLayer([longitude,latitude]),"contextmenu_container")
-                                droreMap.pop.addChild(popup,e.data.id);
-                                $("#contextmenu_container").attr("class","contextmenu "+e.subtype);
-                                if(e.data.status =="FAULT"){
-                                    that.open=false
-                                }else if(e.data.status =="OFFLINE"){
-                                    that.open=false
-                                }else {
-                                    that.open= true
+                let users =
+                        [
+                            {
+                                "id": "798298ecd17a87586a2a123",
+                                "creator": null,
+                                "createTime": null,
+                                "modifier": "admin",
+                                "modifyTime": "2018-09-11 18:00:00",
+                                "name": "admin",
+                                "cnName": " 系统管理员",
+                                "gender": 0,
+                                "iconId": null,
+                                "mobileNum": "18800000000",
+                                "fixedPhoneNum": null,
+                                "idCardNum": null,
+                                "email": null,
+                                "workAddress": null,
+                                "description": null,
+                                "departmentId": null,
+                                "jobId": null,
+                                "roleId": "1",
+                                "role": {
+                                    "id": "1",
+                                    "creator": null,
+                                    "createTime": null,
+                                    "modifier": null,
+                                    "modifyTime": null,
+                                    "name": "admin",
+                                    "description": "",
+                                    "permissions": null
+                                },
+                                "job": null,
+                                "department": null,
+                                "gpsId": "21a435fd-f067-4cb5-841e-0482bbe1c230",
+                                "gpsData":  {
+                                    "deviceId": "21a435fd-f067-4cb5-841e-0482bbe1c230",
+                                    "ioTDeviceId": null,
+                                    "createTime": "2017-12-31 12:21:39",
+                                    "longitude": 120.13310087077178,
+                                    "latitude": 30.30729423238902,
+                                    "altitude": null,
+                                    "direction": null,
+                                    "speed": 4,
+                                    "telephone": null,
+                                    "deviceNum": null,
+                                    "coordinate": null
                                 }
-                                $("#contextmenu_container").show();
-                            });
-                        })
-                    }
-                    setTimeout(() => {
-                        this.getAllLangPerson();//长轮询
-                    },5000)
-                })
+                            },
+                            {
+                                "id": "05579c25-8abb-4bfa-83ae-2a1e50a071ee",
+                                "creator": null,
+                                "createTime": null,
+                                "modifier": "admin",
+                                "modifyTime": "2018-09-11 18:00:00",
+                                "name": "xuyixiang",
+                                "cnName": "用户",
+                                "gender": 0,
+                                "iconId": null,
+                                "mobileNum": "18800203265",
+                                "fixedPhoneNum": null,
+                                "idCardNum": null,
+                                "email": null,
+                                "workAddress": null,
+                                "description": null,
+                                "departmentId": null,
+                                "jobId": null,
+                                "roleId": "1",
+                                "gpsId": "2b696d8b-7f38-41dc-8b3c-8db147c02c32",
+                                "gpsData":  {
+                                    "deviceId": "2b696d8b-7f38-41dc-8b3c-8db147c02c32",
+                                    "ioTDeviceId": null,
+                                    "createTime": "2017-12-31 12:21:39",
+                                    "longitude": 120.1333035877555,
+                                    "latitude": 30.30820253332855,
+                                    "altitude": null,
+                                    "direction": null,
+                                    "speed": 0,
+                                    "telephone": null,
+                                    "deviceNum": null,
+                                    "coordinate": null
+                                }
+                            }
+
+
+                        ]
+                if(users.length > 0){
+                    users.forEach(obj=>{
+                        let latitude = ''
+                        let longitude = ''
+                        if(obj.gpsData){
+                            latitude = obj.gpsData.latitude,
+                                longitude = obj.gpsData.longitude
+                        }
+                        obj.status=obj.gpsData ? "ONLINE" : "OFFLINE";
+                        obj.location=[longitude,latitude];
+                        var icon = new droreMap.icon.Marker({
+                            coordinate: droreMap.trans.transFromWgsToLayer(obj.location),
+                            name:obj.name,
+                            subtype:'securityPerson',
+                            id:obj.id,
+                            url:'/static/img/icon/people_small.svg',
+                            type:'security',
+                            status:obj.gpsData ? "ONLINE" : "OFFLINE",
+                            description:obj.description,
+                            gpsData:obj.gpsData,
+                            data:obj,
+                        });
+                        droreMap.icon.addChild(icon);
+                        icon.showName=true
+                        droreMap.icon.showLayer(icon.id,false);
+                        let that = this;
+                        icon.onclick(function (e) {
+                            that.menulist = e.data;
+                            var div = document.getElementById('contextmenu_container')
+                            var popup = new  droreMap.pop.Popup(div,droreMap.trans.transFromWgsToLayer([longitude,latitude]),"contextmenu_container")
+                            droreMap.pop.addChild(popup,e.data.id);
+                            $("#contextmenu_container").attr("class","contextmenu "+e.subtype);
+                            if(e.data.status =="FAULT"){
+                                that.open=false
+                            }else if(e.data.status =="OFFLINE"){
+                                that.open=false
+                            }else {
+                                that.open= true
+                            }
+                            $("#contextmenu_container").show();
+                        });
+                    })
+                }
+
+                // Promise.all([this.getAllUser()]).then(result=>{
+                //     console.log(result,'00000')
+                //     let users = result[0]
+                //     // let users =
+                //     //     [
+                //     //         {
+                //     //             "id": "798298ecd17a87586a2a123",
+                //     //             "creator": null,
+                //     //             "createTime": null,
+                //     //             "modifier": "admin",
+                //     //             "modifyTime": "2018-09-11 18:00:00",
+                //     //             "name": "admin",
+                //     //             "cnName": " 系统管理员",
+                //     //             "gender": 0,
+                //     //             "iconId": null,
+                //     //             "mobileNum": "18800000000",
+                //     //             "fixedPhoneNum": null,
+                //     //             "idCardNum": null,
+                //     //             "email": null,
+                //     //             "workAddress": null,
+                //     //             "description": null,
+                //     //             "departmentId": null,
+                //     //             "jobId": null,
+                //     //             "roleId": "1",
+                //     //             "role": {
+                //     //                 "id": "1",
+                //     //                 "creator": null,
+                //     //                 "createTime": null,
+                //     //                 "modifier": null,
+                //     //                 "modifyTime": null,
+                //     //                 "name": "admin",
+                //     //                 "description": "",
+                //     //                 "permissions": null
+                //     //             },
+                //     //             "job": null,
+                //     //             "department": null,
+                //     //             "gpsId": "21a435fd-f067-4cb5-841e-0482bbe1c230",
+                //     //             "gpsData":  {
+                //     //                 "deviceId": "21a435fd-f067-4cb5-841e-0482bbe1c230",
+                //     //                 "ioTDeviceId": null,
+                //     //                 "createTime": "2017-12-31 12:21:39",
+                //     //                 "longitude": 120.13310087077178,
+                //     //                 "latitude": 30.30729423238902,
+                //     //                 "altitude": null,
+                //     //                 "direction": null,
+                //     //                 "speed": 4,
+                //     //                 "telephone": null,
+                //     //                 "deviceNum": null,
+                //     //                 "coordinate": null
+                //     //             }
+                //     //         },
+                //     //         {
+                //     //             "id": "05579c25-8abb-4bfa-83ae-2a1e50a071ee",
+                //     //             "creator": null,
+                //     //             "createTime": null,
+                //     //             "modifier": "admin",
+                //     //             "modifyTime": "2018-09-11 18:00:00",
+                //     //             "name": "xuyixiang",
+                //     //             "cnName": "用户",
+                //     //             "gender": 0,
+                //     //             "iconId": null,
+                //     //             "mobileNum": "18800203265",
+                //     //             "fixedPhoneNum": null,
+                //     //             "idCardNum": null,
+                //     //             "email": null,
+                //     //             "workAddress": null,
+                //     //             "description": null,
+                //     //             "departmentId": null,
+                //     //             "jobId": null,
+                //     //             "roleId": "1",
+                //     //             "gpsId": "2b696d8b-7f38-41dc-8b3c-8db147c02c32",
+                //     //             "gpsData":  {
+                //     //                 "deviceId": "2b696d8b-7f38-41dc-8b3c-8db147c02c32",
+                //     //                 "ioTDeviceId": null,
+                //     //                 "createTime": "2017-12-31 12:21:39",
+                //     //                 "longitude": 120.1333035877555,
+                //     //                 "latitude": 30.30820253332855,
+                //     //                 "altitude": null,
+                //     //                 "direction": null,
+                //     //                 "speed": 0,
+                //     //                 "telephone": null,
+                //     //                 "deviceNum": null,
+                //     //                 "coordinate": null
+                //     //             }
+                //     //         }
+                //     //
+                //     //
+                //     //     ]
+                //     if(users.length > 0){
+                //         users.forEach(obj=>{
+                //             let latitude = ''
+                //             let longitude = ''
+                //             if(obj.gpsData){
+                //                 latitude = obj.gpsData.latitude,
+                //                 longitude = obj.gpsData.longitude
+                //             }
+                //             obj.status=obj.gpsData ? "ONLINE" : "OFFLINE";
+                //             obj.location=[longitude,latitude];
+                //             var icon = new droreMap.icon.Marker({
+                //                 coordinate: droreMap.trans.transFromWgsToLayer(obj.location),
+                //                 name:obj.name,
+                //                 subtype:'securityPerson',
+                //                 id:obj.id,
+                //                 url:'/static/img/icon/people_small.svg',
+                //                 type:'security',
+                //                 status:obj.gpsData ? "ONLINE" : "OFFLINE",
+                //                 description:obj.description,
+                //                 gpsData:obj.gpsData,
+                //                 data:obj,
+                //             });
+                //             droreMap.icon.addChild(icon);
+                //             icon.showName=true
+                //             droreMap.icon.showLayer(icon.id,false);
+                //             let that = this;
+                //             icon.onclick(function (e) {
+                //                 that.menulist = e.data;
+                //                 var div = document.getElementById('contextmenu_container')
+                //                 var popup = new  droreMap.pop.Popup(div,droreMap.trans.transFromWgsToLayer([longitude,latitude]),"contextmenu_container")
+                //                 droreMap.pop.addChild(popup,e.data.id);
+                //                 $("#contextmenu_container").attr("class","contextmenu "+e.subtype);
+                //                 if(e.data.status =="FAULT"){
+                //                     that.open=false
+                //                 }else if(e.data.status =="OFFLINE"){
+                //                     that.open=false
+                //                 }else {
+                //                     that.open= true
+                //                 }
+                //                 $("#contextmenu_container").show();
+                //             });
+                //         })
+                //     }
+                //     setTimeout(() => {
+                //         this.getAllLangPerson();//长轮询
+                //     },5000)
+                // })
             },
             async getAllLangPerson(){
                 Promise.all([this.getAllUser()]).then(result=>{
-                    let users = result[0]
-                    // let users =
-                    //     [
-                    //         {
-                    //             "id": "798298ecd17a87586a2a123",
-                    //             "creator": null,
-                    //             "createTime": null,
-                    //             "modifier": "admin",
-                    //             "modifyTime": "2018-09-11 18:00:00",
-                    //             "name": "admin",
-                    //             "cnName": " 系统管理员",
-                    //             "gender": 0,
-                    //             "iconId": null,
-                    //             "mobileNum": "18800000000",
-                    //             "fixedPhoneNum": null,
-                    //             "idCardNum": null,
-                    //             "email": null,
-                    //             "workAddress": null,
-                    //             "description": null,
-                    //             "departmentId": null,
-                    //             "jobId": null,
-                    //             "roleId": "1",
-                    //             "role": {
-                    //                 "id": "1",
-                    //                 "creator": null,
-                    //                 "createTime": null,
-                    //                 "modifier": null,
-                    //                 "modifyTime": null,
-                    //                 "name": "admin",
-                    //                 "description": "",
-                    //                 "permissions": null
-                    //             },
-                    //             "job": null,
-                    //             "department": null,
-                    //             "gpsId": "21a435fd-f067-4cb5-841e-0482bbe1c230",
-                    //             "gpsData":  {
-                    //                 "deviceId": "21a435fd-f067-4cb5-841e-0482bbe1c230",
-                    //                 "ioTDeviceId": null,
-                    //                 "createTime": "2017-12-31 12:21:39",
-                    //                 "longitude": 120.13310087077178,
-                    //                 "latitude": 30.30729423238902,
-                    //                 "altitude": null,
-                    //                 "direction": null,
-                    //                 "speed": 4,
-                    //                 "telephone": null,
-                    //                 "deviceNum": null,
-                    //                 "coordinate": null
-                    //             }
-                    //         },
-                    //         {
-                    //             "id": "05579c25-8abb-4bfa-83ae-2a1e50a071ee",
-                    //             "creator": null,
-                    //             "createTime": null,
-                    //             "modifier": "admin",
-                    //             "modifyTime": "2018-09-11 18:00:00",
-                    //             "name": "xuyixiang",
-                    //             "cnName": "用户",
-                    //             "gender": 0,
-                    //             "iconId": null,
-                    //             "mobileNum": "18800203265",
-                    //             "fixedPhoneNum": null,
-                    //             "idCardNum": null,
-                    //             "email": null,
-                    //             "workAddress": null,
-                    //             "description": null,
-                    //             "departmentId": null,
-                    //             "jobId": null,
-                    //             "roleId": "1",
-                    //             "gpsId": "2b696d8b-7f38-41dc-8b3c-8db147c02c32",
-                    //             "gpsData":  {
-                    //                 "deviceId": "2b696d8b-7f38-41dc-8b3c-8db147c02c32",
-                    //                 "ioTDeviceId": null,
-                    //                 "createTime": "2017-12-31 12:21:39",
-                    //                 "longitude": 120.1333035877555,
-                    //                 "latitude": 30.30820253332855,
-                    //                 "altitude": null,
-                    //                 "direction": null,
-                    //                 "speed": 0,
-                    //                 "telephone": null,
-                    //                 "deviceNum": null,
-                    //                 "coordinate": null
-                    //             }
-                    //         }
-                    //
-                    //     ]
+                    // let users = result[0]
+                    let users =
+                        [
+                            {
+                                "id": "798298ecd17a87586a2a123",
+                                "creator": null,
+                                "createTime": null,
+                                "modifier": "admin",
+                                "modifyTime": "2018-09-11 18:00:00",
+                                "name": "admin",
+                                "cnName": " 系统管理员",
+                                "gender": 0,
+                                "iconId": null,
+                                "mobileNum": "18800000000",
+                                "fixedPhoneNum": null,
+                                "idCardNum": null,
+                                "email": null,
+                                "workAddress": null,
+                                "description": null,
+                                "departmentId": null,
+                                "jobId": null,
+                                "roleId": "1",
+                                "role": {
+                                    "id": "1",
+                                    "creator": null,
+                                    "createTime": null,
+                                    "modifier": null,
+                                    "modifyTime": null,
+                                    "name": "admin",
+                                    "description": "",
+                                    "permissions": null
+                                },
+                                "job": null,
+                                "department": null,
+                                "gpsId": "21a435fd-f067-4cb5-841e-0482bbe1c230",
+                                "gpsData":  {
+                                    "deviceId": "21a435fd-f067-4cb5-841e-0482bbe1c230",
+                                    "ioTDeviceId": null,
+                                    "createTime": "2017-12-31 12:21:39",
+                                    "longitude": 120.13310087077178,
+                                    "latitude": 30.30729423238902,
+                                    "altitude": null,
+                                    "direction": null,
+                                    "speed": 4,
+                                    "telephone": null,
+                                    "deviceNum": null,
+                                    "coordinate": null
+                                }
+                            },
+                            {
+                                "id": "05579c25-8abb-4bfa-83ae-2a1e50a071ee",
+                                "creator": null,
+                                "createTime": null,
+                                "modifier": "admin",
+                                "modifyTime": "2018-09-11 18:00:00",
+                                "name": "xuyixiang",
+                                "cnName": "用户",
+                                "gender": 0,
+                                "iconId": null,
+                                "mobileNum": "18800203265",
+                                "fixedPhoneNum": null,
+                                "idCardNum": null,
+                                "email": null,
+                                "workAddress": null,
+                                "description": null,
+                                "departmentId": null,
+                                "jobId": null,
+                                "roleId": "1",
+                                "gpsId": "2b696d8b-7f38-41dc-8b3c-8db147c02c32",
+                                "gpsData":  {
+                                    "deviceId": "2b696d8b-7f38-41dc-8b3c-8db147c02c32",
+                                    "ioTDeviceId": null,
+                                    "createTime": "2017-12-31 12:21:39",
+                                    "longitude": 120.1333035877555,
+                                    "latitude": 30.30820253332855,
+                                    "altitude": null,
+                                    "direction": null,
+                                    "speed": 0,
+                                    "telephone": null,
+                                    "deviceNum": null,
+                                    "coordinate": null
+                                }
+                            }
+
+                        ]
 
                     this.securityPersonList = users
                     this.number=this.securityPersonList.length
                     this.securityPersonInfo=[]
-
-                    let personObj = {
-                        label:'人员',
-                        id:100010,
-                        children:[]
-                    }
 
                     if(users.length > 0){
                         users.forEach(obj=>{

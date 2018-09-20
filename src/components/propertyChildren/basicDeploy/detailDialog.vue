@@ -886,6 +886,8 @@
                     this.build.location = locationString
                 } else if (this.route.includes('wharf')) {
                     this.wharf.location = locationString
+                } else if (this.route.includes('station')){
+                    this.station.location = locationString
                 }
                 this.mapVisible = false
             },
