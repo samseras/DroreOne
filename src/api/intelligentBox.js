@@ -70,19 +70,19 @@ const intelligentBox = {
             }
         })
     },
-    stopHanhua(flag){  //停止喊话
+    stopHanhua(flag,id){  //停止喊话
         return axios ({
             method:'POST',
             url:getUrl('/device/broadcast'),
             data:{
                 "deviceId":flag,
-                "action":"STOP",
-                "value":''
+                "action":"STOPPLAY",
+                "value":id
 
             }
         })
     },
-    postTextCast(flag,text){
+    postTextCast(flag,text){  //传递文字播放
         return axios ({
             method:'POST',
             url:getUrl('/device/broadcast'),
@@ -94,7 +94,7 @@ const intelligentBox = {
             }
         })
     },
-    postSongName(flag,songName){
+    postSongName(flag,songName){  //传递歌曲
         let str=songName.toString();
         console.log(str,'666666');
         return axios ({
@@ -102,8 +102,22 @@ const intelligentBox = {
             url:getUrl('/device/broadcast'),
             data:{
                 "deviceId":flag,
-                "action":"TTSBRODCAST",
+                "action":"startPlay",
                 "value":str
+
+            }
+        })
+    },
+    stopSongName(stopFlag,castFlag){
+        //let str=songName.toString();
+
+        return axios ({
+            method:'POST',
+            url:getUrl('/device/broadcast'),
+            data:{
+                "deviceId":castFlag,
+                "action":"stopPlay",
+                "value":stopFlag
 
             }
         })
