@@ -183,7 +183,8 @@
         <HistoryMap v-if="historyvisible"
                     :visible="historyvisible"
                     @closeHistoryDialog = "closeHistoryDialog"
-                    :historyData="historyData">
+                    :historyData="historyData"
+                    :title="mapTitle">
         </HistoryMap>
     </div>
 </template>
@@ -302,6 +303,7 @@
                 deviceName:'',
                 deviceNum:'',
                 mobileNum:'',
+                mapTitle:'',
                 selectedCasts:[],
                 statusCurrent:''
             }
@@ -337,6 +339,7 @@
                         from:this.dateRange[0],
                         to:this.dateRange[1]
                     }
+                    this.mapTitle = '车船历史轨迹'
                     // console.log(param)
                     Promise.all([this.getHistoryRoute(param)]).then(res=>{
                         // console.log(res,'历史轨迹数据')
@@ -350,12 +353,15 @@
                         from:this.dateRange[0],
                         to:this.dateRange[1]
                     }
+                    this.mapTitle = '人员历史轨迹'
+                    this.historyData = ''
+                    this.historyvisible = true
                     // console.log(param)
-                    Promise.all([this.getPersonHistory(param)]).then(res=>{
-                        // console.log(res,'历史轨迹数据')
-                        this.historyData = res[0]
-                        this.historyvisible = true
-                    })
+                    // Promise.all([this.getPersonHistory(param)]).then(res=>{
+                    //     // console.log(res,'历史轨迹数据')
+                    //     this.historyData = res[0]
+                    //     this.historyvisible = true
+                    // })
                 }
 
                 // this.historyData =[
@@ -434,6 +440,17 @@
                         let route = this.$route.path
                         if (route.includes('controler')) {
                             this.getTransportById()
+                        }
+                    },5000)
+                })
+            },
+            async getPersonById(){
+                await api.user.getUserGpsById(this.Info.id).then(res=>{
+                    this.speed = res[0].gpsData ? res[0].gpsData.speed :'0'
+                    setTimeout(()=>{
+                        let route = this.$route.path
+                        if (route.includes('controler')) {
+                            this.getPersonById()
                         }
                     },5000)
                 })
@@ -601,7 +618,7 @@
                 this.facility=false
                 this.sercurityPerson = true
 
-                // this.getTransportById()
+                this.getPersonById()
             }
 
         },
