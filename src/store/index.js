@@ -4,7 +4,6 @@ import analyze from './modules/analyze'
 import map from './modules/map'
 import job from './modules/job'
 import user from './modules/user'
-import iot from './modules/iot'
 import menu from  './modules/menuType'
 import file from './modules/file'
 
@@ -16,7 +15,6 @@ export default new vuex.Store({
         map,
         job,
         user,
-        iot,
         menu,
         file
     }
