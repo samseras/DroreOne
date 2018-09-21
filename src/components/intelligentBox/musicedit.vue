@@ -68,7 +68,7 @@
                             </div>
                         </div>
                         <div class="content">
-                            <el-checkbox-group v-model="checkedmusics" :min="0" :max="1" @change="handleCheckedmusicsChange">
+                            <el-checkbox-group v-model="checkedmusics"  @change="handleCheckedmusicsChange">
                                 <el-checkbox v-for="music in musics" :label="music" >
                                     <span class="all-name">
                                         <!--{{music.title}}</span><span class="all-time">{{music.artist}}-->
@@ -168,6 +168,10 @@
                 playurl:'../../../static/img/intelligentbox/bo1.png',
                 broadcastText:'',
                 finalSelectedCast:[],
+                idFlag:[],
+                stopId:'',
+                hanhuaFlag:[],
+                hanhuaId:'',
 
             }
         },
@@ -227,14 +231,20 @@
         methods:{
             startHanhua(){
                 hanhua.src='../../../static/img/intelligentbox/hanhuaing.png';
-                let flag=[];
-                this.finalSelectedCast.forEach(item=>{
-                    console.log(item.id,'选择的广播Id');
-                    flag.push(item.id);
+                this.hanhuaFlag=[];
+                if(this.isGroup===true){
+                    this.finalSelectedCast.forEach(item=>{
+                        console.log(item.id,'选择的广播Id');
+                        this.hanhuaFlag.push(item.id);
 
-                });
-                console.log(flag,'喊话的广播组');
-                api.intelligentBox.startHanhua(flag).then(res=>{
+                    });
+                }else if(this.isGroup===false){
+                    this.hanhuaFlag.push(this.Infos.id)
+                }
+
+                console.log(this.hanhuaFlag,'喊话的广播组');
+                api.intelligentBox.startHanhua(this.hanhuaFlag).then(res=>{
+                    this.hanhuaId=res;
                     console.log('传递声音完毕')
                 })
 
@@ -242,7 +252,7 @@
             stopHanhua(){
                 hanhua.src='../../../static/img/intelligentbox/hanhua.png';
 
-                api.intelligentBox.stopHanhua(flag).then(res=>{
+                api.intelligentBox.stopHanhua(this.hanhuaFlag,this.hanhuaId).then(res=>{
                     console.log('停止喊话')
                 })
             },
@@ -318,23 +328,21 @@
 
             },
             saveSignal(){
-                let idFlag=[];
-                idFlag.push(this.Infos.id);
-                api.intelligentBox.postMusicVoice(idFlag,this.voicenumber).then(res=>{
+                let idSignalFlag=[];
+                idSignalFlag.push(this.Infos.id);
+                api.intelligentBox.postMusicVoice(idSignalFlag,this.voicenumber).then(res=>{
                     console.log(res);
                     console.log('传递单个声音完毕')
                 });
-                api.intelligentBox.postTextCast(idFlag,this.broadcastText).then(res=>{
+                api.intelligentBox.postTextCast(idSignalFlag,this.broadcastText).then(res=>{
                     console.log(res);
                     console.log('传递单个文本完毕')
                 });
-                api.intelligentBox.postSongName(idFlag,this.checkedmusics).then(res=>{
-                    console.log('传递单个歌曲完毕');
-                })
+
 
             },
             fastback(){  //上一首
-                if(this.suijiflag===1||this.audioObj.loop===true){
+                /*if(this.suijiflag===1||this.audioObj.loop===true){
                     this.playaudio();
                 }else{
                     this.shunxuflag-=1;
@@ -344,12 +352,12 @@
                     document.getElementById('audio').load();
                     document.getElementById('title').innerText = this.songnamelist[this.shunxuflag];
                     this.audioObj.play();
-                }
+                }*/
             },
             fastgo(){  //下一首
                 //alert('5555');
                 //this.audioObj.currentTime=this.audioObj.duration;
-                if(this.suijiflag===1||this.audioObj.loop===true){
+                /*if(this.suijiflag===1||this.audioObj.loop===true){
                     this.playaudio();
                 }else{
                     this.shunxuflag+=1;
@@ -359,7 +367,7 @@
                     document.getElementById('audio').load();
                     document.getElementById('title').innerText = this.songnamelist[this.shunxuflag];
                     this.audioObj.play();
-                }
+                }*/
             },
             progress(){  //播放进度条
                 let that=this;
@@ -380,7 +388,31 @@
                 }
                 if(this.playurl.includes('/bo1')){
 
-                    if(this.suijiflag===1){  //随机播放
+                    /***************/
+                    this.idFlag=[];
+                    if(this.isGroup===true){
+
+                        this.finalSelectedCast.forEach(item=>{
+                            console.log(item.id,'选择的广播Id');
+                            let flag=[];
+                            flag.push(item.id);
+                            this.idFlag.push(item.id);
+
+                        });
+                    }else if(this.isGroup===false){
+                        this.idFlag.push(this.Infos.id);
+                    }
+
+
+                    api.intelligentBox.postSongName(this.idFlag,this.checkedmusics).then(res=>{
+                        console.log(res);
+                        this.stopId=res;
+                        console.log('传递播放歌曲完毕');
+                    })
+                    /***************/
+
+
+                    /*if(this.suijiflag===1){  //随机播放
                         let randomBgIndex = Math.round( Math.random() * (this.songurllist.length-1) );
                         document.getElementById('audio').src = this.songurllist[randomBgIndex];
                         document.getElementById('audiosource').src = this.songurllist[randomBgIndex];
@@ -420,13 +452,20 @@
                         console.log(that.songurllist.length);
                         !that.songurllist.length && that.audioObj.removeEventListener('ended',playEndedHandler,false);//只有一个元素时解除绑定
                     }
+                    this.progress();*/
                     //this.playurl='../../../static/img/intelligentbox/stop.png';
                     this.playurl='../../../static/img/intelligentbox/stop1.png';
-                    this.progress();
+
                 }else{
-                    this.audioObj.pause();
+                    /*this.audioObj.pause();*/
                     //this.playurl='../../../static/img/intelligentbox/bo.png'
-                    this.playurl='../../../static/img/intelligentbox/bo1.png'
+                    this.playurl='../../../static/img/intelligentbox/bo1.png';
+                    /***************/
+
+                    api.intelligentBox.stopSongName(this.stopId,this.idFlag).then(res=>{
+                        console.log('停止单个歌曲完毕');
+                    })
+                    /***************/
                 }
             },
             suijiPlay(){  //选择随机播放

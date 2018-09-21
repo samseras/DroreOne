@@ -489,7 +489,7 @@
                     </p>
                     <p class="name">
                         <s>高&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;度(m)：</s>
-                        <el-input type="number" min="0" v-model="build.building.layers"  placeholder="请输入建筑层高（数字）" :disabled="isDisabled"></el-input>
+                        <el-input type="number" min="0" v-model="build.building.height"  placeholder="请输入建筑层高（数字）" :disabled="isDisabled"></el-input>
                     </p>
                     <p class="name">
                         <span>年&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;代：</span>

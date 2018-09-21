@@ -52,17 +52,17 @@
                     <el-button type="primary" @click="onSubmit">查询</el-button>
                 </el-form-item>
             </el-form>
-            <template>
+            <!--<template>
                 test：
                 {{getCurPage}}
 
-            </template>
+            </template>-->
         </div>
     </div>
 </template>
 
 <script>
-    import {mapGetters,mapMutations,mapActions} from 'vuex'
+    //import {mapGetters,mapMutations,mapActions} from 'vuex'
     import api from '@/api'
     export default {
         name: "iotHome",
@@ -112,12 +112,12 @@
             }
         },
         computed:{
-            ...mapGetters(['getCurPage']),
+            //...mapGetters(['getCurPage']),
 
         },
         methods:{
-            ...mapMutations(['CURPAGE']),
-            ...mapActions(['getActionTest']),
+            //...mapMutations(['CURPAGE']),
+            //...mapActions(['getActionTest']),
             hallo(){
                 this.$refs.anniu.innerText=this.message;
             },
@@ -132,14 +132,14 @@
             },
             onSubmit(val) {
                 console.log(this.formInline,'提交的东西');
-                this.$store.dispatch('getActionTest');
+                //this.$store.dispatch('getActionTest');
             }
 
         },
         mounted(){
-            this.$store.commit('CURPAGE',this.mutationFlag);
+            //this.$store.commit('CURPAGE',this.mutationFlag);
 
-            console.log(this.getCurPage);
+            //console.log(this.getCurPage);
         },
         created () {
 
