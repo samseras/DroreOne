@@ -311,7 +311,7 @@
                             personObj.children.push({
                                 label:userObj.name,
                                 id:userObj.id,
-                                url:'/static/img/icon/people_small.png',
+                                url:'/static/img/icon/people_small.svg',
                                 type:'security',
                                 subtype:'securityPerson',
                                 status:userObj.gpsData ? "ONLINE" : "OFFLINE",
@@ -513,7 +513,7 @@
                                     scheduleObj.children.push({
                                         label:user.name,
                                         id:user.id,
-                                        url:'/static/img/icon/people_small.png',
+                                        url:'/static/img/icon/people_small.svg',
                                         type:'security',
                                         subtype:'securitySchedule',
                                         status:user.gpsData ? "ONLINE" : "OFFLINE",
