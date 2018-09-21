@@ -519,65 +519,86 @@
                     // let vehicles =  [
                     //     {
                     //         "vehicle": {
-                    //             "id": "05579c25-8abb-4bfa-83ae-2a1e50a071ee",
-                    //             "createTime": null,
-                    //             "creator": null,
-                    //             "modifyTime": "2018-09-11 17:32:51",
+                    //             "id": "ceb54f57-08d4-49a0-81db-a3e7c486b154",
+                    //             "createTime": "2018-09-12 11:08:50",
+                    //             "creator": "admin",
+                    //             "modifyTime": "2018-09-12 11:08:50",
                     //             "modifier": "admin",
-                    //             "serialNum": "船001",
-                    //             "capacity": 33,
+                    //             "serialNum": "船test1",
+                    //             "capacity": 36,
                     //             "type": 1,
-                    //             "model": "363",
-                    //             "gpsDeviceId": "21a435fd-f067-4cb5-841e-0482bbe1c230",
+                    //             "model": null,
+                    //             "gpsDeviceId": "c13e503f-713d-4cd7-9a5d-c62220e1f612",
                     //             "pictureId": null,
                     //             "maintenanceStatus": 0,
-                    //             "maintenanceDate": "2018-08-07",
-                    //             "purchaseDate": "2010-03-23",
-                    //             "description": "反感和的",
+                    //             "maintenanceDate": null,
+                    //             "purchaseDate": null,
+                    //             "description": null,
                     //             "scenicAreaId": null,
                     //             "deleted": false
                     //         },
-                    //         "gpsDeviceId": "21a435fd-f067-4cb5-841e-0482bbe1c230",
-                    //         "gpsDeviceName": "gps1",
+                    //         "gpsDeviceId": "c13e503f-713d-4cd7-9a5d-c62220e1f612",
+                    //         "gpsDeviceName": "testgps1",
                     //         "pictureId": null,
                     //         "picturePath": null,
-                    //         "gpsData":
-                    //         //null,
-                    //             {
-                    //                 "deviceId": "21a435fd-f067-4cb5-841e-0482bbe1c230",
-                    //                 "ioTDeviceId": null,
-                    //                 "createTime": "2017-12-31 12:21:39",
-                    //                 "longitude": 120.13310087077178,
-                    //                 "latitude": 30.30729423238902,
-                    //                 "altitude": null,
-                    //                 "direction": null,
-                    //                 "speed": 4,
-                    //                 "telephone": null,
-                    //                 "deviceNum": null,
-                    //                 "coordinate": null
-                    //             },
-                    //         "driver": {
-                    //             "id": "1",
-                    //             "creator": null,
-                    //             "createTime": null,
+                    //         "gpsData": {
+                    //             "deviceId": "c13e503f-713d-4cd7-9a5d-c62220e1f612",
+                    //             "ioTDeviceId": "1000000",
+                    //             "deviceName": "\ufffd\ufffd\ufffd\ufffd",
+                    //             "createTime": "2018-09-21 10:15:56",
+                    //             "longitude": 120.13275684584266,
+                    //             "latitude": 30.30874363611955,
+                    //             "altitude": null,
+                    //             "direction": null,
+                    //             "speed": 0,
+                    //             "telephone": null,
+                    //             "deviceNum": "1000000",
+                    //             "coordinate": "",
+                    //             "tag": "ceb54f57-08d4-49a0-81db-a3e7c486b154"
+                    //         },
+                    //         "driver": null
+                    //     },
+                    //     {
+                    //         "vehicle": {
+                    //             "id": "966fda56-8cc3-4847-86cc-7e939df14369",
+                    //             "createTime": "2018-09-12 11:09:17",
+                    //             "creator": "admin",
+                    //             "modifyTime": "2018-09-12 11:09:17",
                     //             "modifier": "admin",
-                    //             "modifyTime": "2018-09-11 18:00:00",
-                    //             "name": "admin",
-                    //             "cnName": " 系统管理员",
-                    //             "gender": 0,
-                    //             "iconId": null,
-                    //             "mobileNum": "18800000000",
-                    //             "fixedPhoneNum": null,
-                    //             "idCardNum": null,
-                    //             "email": null,
-                    //             "workAddress": null,
+                    //             "serialNum": "船test2",
+                    //             "capacity": 0,
+                    //             "type": 1,
+                    //             "model": null,
+                    //             "gpsDeviceId": "2b696d8b-7f38-41dc-8b3c-8db147c02c32",
+                    //             "pictureId": null,
+                    //             "maintenanceStatus": 0,
+                    //             "maintenanceDate": null,
+                    //             "purchaseDate": null,
                     //             "description": null,
-                    //             "departmentId": null,
-                    //             "jobId": null,
-                    //             "roleId": "1"
-                    //         }
-                    //     }
-                    // ]
+                    //             "scenicAreaId": null,
+                    //             "deleted": false
+                    //         },
+                    //         "gpsDeviceId": "2b696d8b-7f38-41dc-8b3c-8db147c02c32",
+                    //         "gpsDeviceName": "testgps2",
+                    //         "pictureId": null,
+                    //         "picturePath": null,
+                    //         "gpsData": {
+                    //             "deviceId": "2b696d8b-7f38-41dc-8b3c-8db147c02c32",
+                    //             "ioTDeviceId": "1000007",
+                    //             "deviceName": "\ufffd\ufffd\ufffd豸\ufffd\ufffd\ufffd߲\ufffd\ufffd\ufffd",
+                    //             "createTime": "2018-09-21 10:15:56",
+                    //             "longitude": 120.13500857210744,
+                    //             "latitude": 30.305894893713628,
+                    //             "altitude": null,
+                    //             "direction": null,
+                    //             "speed": 0,
+                    //             "telephone": null,
+                    //             "deviceNum": "1000007",
+                    //             "coordinate": "",
+                    //             "tag": "966fda56-8cc3-4847-86cc-7e939df14369"
+                    //         },
+                    //         "driver": null
+                    //     }]
                     if(vehicles.length > 0){
                         vehicles.forEach(obj=>{
                             let latitude = ''
@@ -585,8 +606,8 @@
                             // var latitude = 30.121381873225815+Math.random()*0.01
                             // var longitude = 120.20690542885497+Math.random()*0.01
                             if(obj.gpsData){
-                                latitude = obj.gpsData.latitude+0.49693734262853-0.0025647127,
-                                longitude = obj.gpsData.longitude+0.451536705535+0.0048011541
+                                latitude = obj.gpsData.latitude,
+                                longitude = obj.gpsData.longitude
                             }
                             obj.status=obj.gpsData ? "ONLINE" : "OFFLINE";
                             obj.location=[longitude,latitude];
@@ -635,6 +656,89 @@
                 //具体的车船信息，包括关联的人员信息
                 Promise.all([this.getAllVehicleGps()]).then(result=>{
                     let vehicles = result[0]
+                    // let vehicles =  [
+                    //     {
+                    //         "vehicle": {
+                    //             "id": "ceb54f57-08d4-49a0-81db-a3e7c486b154",
+                    //             "createTime": "2018-09-12 11:08:50",
+                    //             "creator": "admin",
+                    //             "modifyTime": "2018-09-12 11:08:50",
+                    //             "modifier": "admin",
+                    //             "serialNum": "船test1",
+                    //             "capacity": 36,
+                    //             "type": 1,
+                    //             "model": null,
+                    //             "gpsDeviceId": "c13e503f-713d-4cd7-9a5d-c62220e1f612",
+                    //             "pictureId": null,
+                    //             "maintenanceStatus": 0,
+                    //             "maintenanceDate": null,
+                    //             "purchaseDate": null,
+                    //             "description": null,
+                    //             "scenicAreaId": null,
+                    //             "deleted": false
+                    //         },
+                    //         "gpsDeviceId": "c13e503f-713d-4cd7-9a5d-c62220e1f612",
+                    //         "gpsDeviceName": "testgps1",
+                    //         "pictureId": null,
+                    //         "picturePath": null,
+                    //         "gpsData": {
+                    //             "deviceId": "c13e503f-713d-4cd7-9a5d-c62220e1f612",
+                    //             "ioTDeviceId": "1000000",
+                    //             "deviceName": "\ufffd\ufffd\ufffd\ufffd",
+                    //             "createTime": "2018-09-21 10:15:56",
+                    //             "longitude": 120.13275684584266,
+                    //             "latitude": 30.30874363611955,
+                    //             "altitude": null,
+                    //             "direction": null,
+                    //             "speed": 0,
+                    //             "telephone": null,
+                    //             "deviceNum": "1000000",
+                    //             "coordinate": "",
+                    //             "tag": "ceb54f57-08d4-49a0-81db-a3e7c486b154"
+                    //         },
+                    //         "driver": null
+                    //     },
+                    //     {
+                    //         "vehicle": {
+                    //             "id": "966fda56-8cc3-4847-86cc-7e939df14369",
+                    //             "createTime": "2018-09-12 11:09:17",
+                    //             "creator": "admin",
+                    //             "modifyTime": "2018-09-12 11:09:17",
+                    //             "modifier": "admin",
+                    //             "serialNum": "船test2",
+                    //             "capacity": 0,
+                    //             "type": 1,
+                    //             "model": null,
+                    //             "gpsDeviceId": "2b696d8b-7f38-41dc-8b3c-8db147c02c32",
+                    //             "pictureId": null,
+                    //             "maintenanceStatus": 0,
+                    //             "maintenanceDate": null,
+                    //             "purchaseDate": null,
+                    //             "description": null,
+                    //             "scenicAreaId": null,
+                    //             "deleted": false
+                    //         },
+                    //         "gpsDeviceId": "2b696d8b-7f38-41dc-8b3c-8db147c02c32",
+                    //         "gpsDeviceName": "testgps2",
+                    //         "pictureId": null,
+                    //         "picturePath": null,
+                    //         "gpsData": {
+                    //             "deviceId": "2b696d8b-7f38-41dc-8b3c-8db147c02c32",
+                    //             "ioTDeviceId": "1000007",
+                    //             "deviceName": "\ufffd\ufffd\ufffd豸\ufffd\ufffd\ufffd߲\ufffd\ufffd\ufffd",
+                    //             "createTime": "2018-09-21 10:15:56",
+                    //             "longitude": 120.13500857210744,
+                    //             "latitude": 30.305894893713628,
+                    //             "altitude": null,
+                    //             "direction": null,
+                    //             "speed": 0,
+                    //             "telephone": null,
+                    //             "deviceNum": "1000007",
+                    //             "coordinate": "",
+                    //             "tag": "966fda56-8cc3-4847-86cc-7e939df14369"
+                    //         },
+                    //         "driver": null
+                    //     }]
                     if(vehicles.length > 0){
                         vehicles.forEach(obj=>{
                             // var latitude = obj.gpsData.latitude+Math.random()*0.01
@@ -642,8 +746,8 @@
                             let latitude = ''
                             let longitude = ''
                             if(obj.gpsData){
-                                latitude = obj.gpsData.latitude+0.49693734262853-0.0025647127,
-                                longitude = obj.gpsData.longitude+0.451536705535+0.0048011541
+                                latitude = obj.gpsData.latitude,
+                                longitude = obj.gpsData.longitude
                             }
                             obj.location=[longitude,latitude];
                             let layer = droreMap.icon.returnLayer(obj.vehicle.id)
@@ -2448,358 +2552,385 @@
             },
             getAllPerson(){
 
-                let users =
-                        [
-                            {
-                                "id": "798298ecd17a87586a2a123",
-                                "creator": null,
-                                "createTime": null,
-                                "modifier": "admin",
-                                "modifyTime": "2018-09-11 18:00:00",
-                                "name": "admin",
-                                "cnName": " 系统管理员",
-                                "gender": 0,
-                                "iconId": null,
-                                "mobileNum": "18800000000",
-                                "fixedPhoneNum": null,
-                                "idCardNum": null,
-                                "email": null,
-                                "workAddress": null,
-                                "description": null,
-                                "departmentId": null,
-                                "jobId": null,
-                                "roleId": "1",
-                                "role": {
-                                    "id": "1",
-                                    "creator": null,
-                                    "createTime": null,
-                                    "modifier": null,
-                                    "modifyTime": null,
-                                    "name": "admin",
-                                    "description": "",
-                                    "permissions": null
-                                },
-                                "job": null,
-                                "department": null,
-                                "gpsId": "21a435fd-f067-4cb5-841e-0482bbe1c230",
-                                "gpsData":  {
-                                    "deviceId": "21a435fd-f067-4cb5-841e-0482bbe1c230",
-                                    "ioTDeviceId": null,
-                                    "createTime": "2017-12-31 12:21:39",
-                                    "longitude": 120.13310087077178,
-                                    "latitude": 30.30729423238902,
-                                    "altitude": null,
-                                    "direction": null,
-                                    "speed": 4,
-                                    "telephone": null,
-                                    "deviceNum": null,
-                                    "coordinate": null
-                                }
-                            },
-                            {
-                                "id": "05579c25-8abb-4bfa-83ae-2a1e50a071ee",
-                                "creator": null,
-                                "createTime": null,
-                                "modifier": "admin",
-                                "modifyTime": "2018-09-11 18:00:00",
-                                "name": "xuyixiang",
-                                "cnName": "用户",
-                                "gender": 0,
-                                "iconId": null,
-                                "mobileNum": "18800203265",
-                                "fixedPhoneNum": null,
-                                "idCardNum": null,
-                                "email": null,
-                                "workAddress": null,
-                                "description": null,
-                                "departmentId": null,
-                                "jobId": null,
-                                "roleId": "1",
-                                "gpsId": "2b696d8b-7f38-41dc-8b3c-8db147c02c32",
-                                "gpsData":  {
-                                    "deviceId": "2b696d8b-7f38-41dc-8b3c-8db147c02c32",
-                                    "ioTDeviceId": null,
-                                    "createTime": "2017-12-31 12:21:39",
-                                    "longitude": 120.1333035877555,
-                                    "latitude": 30.30820253332855,
-                                    "altitude": null,
-                                    "direction": null,
-                                    "speed": 0,
-                                    "telephone": null,
-                                    "deviceNum": null,
-                                    "coordinate": null
-                                }
-                            }
-
-
-                        ]
-                if(users.length > 0){
-                    users.forEach(obj=>{
-                        let latitude = ''
-                        let longitude = ''
-                        if(obj.gpsData){
-                            latitude = obj.gpsData.latitude,
-                                longitude = obj.gpsData.longitude
-                        }
-                        obj.status=obj.gpsData ? "ONLINE" : "OFFLINE";
-                        obj.location=[longitude,latitude];
-                        var icon = new droreMap.icon.Marker({
-                            coordinate: droreMap.trans.transFromWgsToLayer(obj.location),
-                            name:obj.name,
-                            subtype:'securityPerson',
-                            id:obj.id,
-                            url:'/static/img/icon/people_small.svg',
-                            type:'security',
-                            status:obj.gpsData ? "ONLINE" : "OFFLINE",
-                            description:obj.description,
-                            gpsData:obj.gpsData,
-                            data:obj,
-                        });
-                        droreMap.icon.addChild(icon);
-                        icon.showName=true
-                        droreMap.icon.showLayer(icon.id,false);
-                        let that = this;
-                        icon.onclick(function (e) {
-                            that.menulist = e.data;
-                            var div = document.getElementById('contextmenu_container')
-                            var popup = new  droreMap.pop.Popup(div,droreMap.trans.transFromWgsToLayer([longitude,latitude]),"contextmenu_container")
-                            droreMap.pop.addChild(popup,e.data.id);
-                            $("#contextmenu_container").attr("class","contextmenu "+e.subtype);
-                            if(e.data.status =="FAULT"){
-                                that.open=false
-                            }else if(e.data.status =="OFFLINE"){
-                                that.open=false
-                            }else {
-                                that.open= true
-                            }
-                            $("#contextmenu_container").show();
-                        });
-                    })
-                }
-
-                // Promise.all([this.getAllUser()]).then(result=>{
-                //     console.log(result,'00000')
-                //     let users = result[0]
-                //     // let users =
-                //     //     [
-                //     //         {
-                //     //             "id": "798298ecd17a87586a2a123",
-                //     //             "creator": null,
-                //     //             "createTime": null,
-                //     //             "modifier": "admin",
-                //     //             "modifyTime": "2018-09-11 18:00:00",
-                //     //             "name": "admin",
-                //     //             "cnName": " 系统管理员",
-                //     //             "gender": 0,
-                //     //             "iconId": null,
-                //     //             "mobileNum": "18800000000",
-                //     //             "fixedPhoneNum": null,
-                //     //             "idCardNum": null,
-                //     //             "email": null,
-                //     //             "workAddress": null,
-                //     //             "description": null,
-                //     //             "departmentId": null,
-                //     //             "jobId": null,
-                //     //             "roleId": "1",
-                //     //             "role": {
-                //     //                 "id": "1",
-                //     //                 "creator": null,
-                //     //                 "createTime": null,
-                //     //                 "modifier": null,
-                //     //                 "modifyTime": null,
-                //     //                 "name": "admin",
-                //     //                 "description": "",
-                //     //                 "permissions": null
-                //     //             },
-                //     //             "job": null,
-                //     //             "department": null,
-                //     //             "gpsId": "21a435fd-f067-4cb5-841e-0482bbe1c230",
-                //     //             "gpsData":  {
-                //     //                 "deviceId": "21a435fd-f067-4cb5-841e-0482bbe1c230",
-                //     //                 "ioTDeviceId": null,
-                //     //                 "createTime": "2017-12-31 12:21:39",
-                //     //                 "longitude": 120.13310087077178,
-                //     //                 "latitude": 30.30729423238902,
-                //     //                 "altitude": null,
-                //     //                 "direction": null,
-                //     //                 "speed": 4,
-                //     //                 "telephone": null,
-                //     //                 "deviceNum": null,
-                //     //                 "coordinate": null
-                //     //             }
-                //     //         },
-                //     //         {
-                //     //             "id": "05579c25-8abb-4bfa-83ae-2a1e50a071ee",
-                //     //             "creator": null,
-                //     //             "createTime": null,
-                //     //             "modifier": "admin",
-                //     //             "modifyTime": "2018-09-11 18:00:00",
-                //     //             "name": "xuyixiang",
-                //     //             "cnName": "用户",
-                //     //             "gender": 0,
-                //     //             "iconId": null,
-                //     //             "mobileNum": "18800203265",
-                //     //             "fixedPhoneNum": null,
-                //     //             "idCardNum": null,
-                //     //             "email": null,
-                //     //             "workAddress": null,
-                //     //             "description": null,
-                //     //             "departmentId": null,
-                //     //             "jobId": null,
-                //     //             "roleId": "1",
-                //     //             "gpsId": "2b696d8b-7f38-41dc-8b3c-8db147c02c32",
-                //     //             "gpsData":  {
-                //     //                 "deviceId": "2b696d8b-7f38-41dc-8b3c-8db147c02c32",
-                //     //                 "ioTDeviceId": null,
-                //     //                 "createTime": "2017-12-31 12:21:39",
-                //     //                 "longitude": 120.1333035877555,
-                //     //                 "latitude": 30.30820253332855,
-                //     //                 "altitude": null,
-                //     //                 "direction": null,
-                //     //                 "speed": 0,
-                //     //                 "telephone": null,
-                //     //                 "deviceNum": null,
-                //     //                 "coordinate": null
-                //     //             }
-                //     //         }
-                //     //
-                //     //
-                //     //     ]
-                //     if(users.length > 0){
-                //         users.forEach(obj=>{
-                //             let latitude = ''
-                //             let longitude = ''
-                //             if(obj.gpsData){
-                //                 latitude = obj.gpsData.latitude,
-                //                 longitude = obj.gpsData.longitude
-                //             }
-                //             obj.status=obj.gpsData ? "ONLINE" : "OFFLINE";
-                //             obj.location=[longitude,latitude];
-                //             var icon = new droreMap.icon.Marker({
-                //                 coordinate: droreMap.trans.transFromWgsToLayer(obj.location),
-                //                 name:obj.name,
-                //                 subtype:'securityPerson',
-                //                 id:obj.id,
-                //                 url:'/static/img/icon/people_small.svg',
-                //                 type:'security',
-                //                 status:obj.gpsData ? "ONLINE" : "OFFLINE",
-                //                 description:obj.description,
-                //                 gpsData:obj.gpsData,
-                //                 data:obj,
-                //             });
-                //             droreMap.icon.addChild(icon);
-                //             icon.showName=true
-                //             droreMap.icon.showLayer(icon.id,false);
-                //             let that = this;
-                //             icon.onclick(function (e) {
-                //                 that.menulist = e.data;
-                //                 var div = document.getElementById('contextmenu_container')
-                //                 var popup = new  droreMap.pop.Popup(div,droreMap.trans.transFromWgsToLayer([longitude,latitude]),"contextmenu_container")
-                //                 droreMap.pop.addChild(popup,e.data.id);
-                //                 $("#contextmenu_container").attr("class","contextmenu "+e.subtype);
-                //                 if(e.data.status =="FAULT"){
-                //                     that.open=false
-                //                 }else if(e.data.status =="OFFLINE"){
-                //                     that.open=false
-                //                 }else {
-                //                     that.open= true
-                //                 }
-                //                 $("#contextmenu_container").show();
-                //             });
-                //         })
+                // let users = [
+                //     {
+                //         "id": "165d0c3918c-2706abc77a5ee8e8",
+                //         "creator": "admin",
+                //         "createTime": "2018-09-13 10:30:02",
+                //         "modifier": "admin",
+                //         "modifyTime": "2018-09-13 10:30:02",
+                //         "name": "binge",
+                //         "cnName": "斌",
+                //         "gender": 1,
+                //         "iconId": null,
+                //         "mobileNum": "18629086642",
+                //         "fixedPhoneNum": "",
+                //         "idCardNum": "",
+                //         "email": null,
+                //         "workAddress": null,
+                //         "description": null,
+                //         "departmentId": null,
+                //         "jobId": null,
+                //         "roleId": "1",
+                //         "gpsId": null,
+                //         "gpsData": {
+                //             "deviceId": "c13e503f-713d-4cd7-9a5d-c62220e1f612",
+                //             "ioTDeviceId": "1000000",
+                //             "deviceName": "gps0",
+                //             "createTime": "2018-09-21 10:15:56",
+                //             "longitude": 120.13337197656278,
+                //             "latitude": 30.307558496764344,
+                //             "altitude": null,
+                //             "direction": null,
+                //             "speed": 0,
+                //             "telephone": null,
+                //             "deviceNum": "1000000",
+                //             "coordinate": "",
+                //             "tag": "ceb54f57-08d4-49a0-81db-a3e7c486b154"
+                //         },
+                //         "role": {
+                //             "id": "1",
+                //             "creator": null,
+                //             "createTime": null,
+                //             "modifier": null,
+                //             "modifyTime": null,
+                //             "name": "admin",
+                //             "description": "",
+                //             "permissions": null
+                //         },
+                //         "job": null,
+                //         "department": null
+                //     },
+                //     {
+                //         "id": "1",
+                //         "creator": null,
+                //         "createTime": null,
+                //         "modifier": "admin",
+                //         "modifyTime": "2018-09-11 18:00:00",
+                //         "name": "admin",
+                //         "cnName": " 系统管理员",
+                //         "gender": 0,
+                //         "iconId": null,
+                //         "mobileNum": "18800000000",
+                //         "fixedPhoneNum": null,
+                //         "idCardNum": null,
+                //         "email": null,
+                //         "workAddress": null,
+                //         "description": null,
+                //         "departmentId": null,
+                //         "jobId": null,
+                //         "roleId": "1",
+                //         "gpsId": null,
+                //         "gpsData":{
+                //             "deviceId": "2b696d8b-7f38-41dc-8b3c-8db147c02c32",
+                //             "ioTDeviceId": "1000007",
+                //             "deviceName": "gps1",
+                //             "createTime": "2018-09-21 10:15:56",
+                //             "longitude": 120.13500857210744,
+                //             "latitude": 30.305894893713628,
+                //             "altitude": null,
+                //             "direction": null,
+                //             "speed": 0,
+                //             "telephone": null,
+                //             "deviceNum": "1000007",
+                //             "coordinate": "",
+                //             "tag": "966fda56-8cc3-4847-86cc-7e939df14369"
+                //         },
+                //         "role": {
+                //             "id": "1",
+                //             "creator": null,
+                //             "createTime": null,
+                //             "modifier": null,
+                //             "modifyTime": null,
+                //             "name": "admin",
+                //             "description": "",
+                //             "permissions": null
+                //         },
+                //         "job": null,
+                //         "department": null
                 //     }
-                //     setTimeout(() => {
-                //         this.getAllLangPerson();//长轮询
-                //     },5000)
-                // })
+                // ]
+                // if(users.length > 0){
+                //     users.forEach(obj=>{
+                //         let latitude = ''
+                //         let longitude = ''
+                //         if(obj.gpsData){
+                //             latitude = obj.gpsData.latitude,
+                //                 longitude = obj.gpsData.longitude
+                //         }
+                //         obj.status=obj.gpsData ? "ONLINE" : "OFFLINE";
+                //         obj.location=[longitude,latitude];
+                //         var icon = new droreMap.icon.Marker({
+                //             coordinate: droreMap.trans.transFromWgsToLayer(obj.location),
+                //             name:obj.name,
+                //             subtype:'securityPerson',
+                //             id:obj.id,
+                //             url:'/static/img/icon/people_small.svg',
+                //             type:'security',
+                //             status:obj.gpsData ? "ONLINE" : "OFFLINE",
+                //             description:obj.description,
+                //             gpsData:obj.gpsData,
+                //             data:obj,
+                //         });
+                //         droreMap.icon.addChild(icon);
+                //         icon.showName=true
+                //         droreMap.icon.showLayer(icon.id,false);
+                //         let that = this;
+                //         icon.onclick(function (e) {
+                //             that.menulist = e.data;
+                //             var div = document.getElementById('contextmenu_container')
+                //             var popup = new  droreMap.pop.Popup(div,droreMap.trans.transFromWgsToLayer([longitude,latitude]),"contextmenu_container")
+                //             droreMap.pop.addChild(popup,e.data.id);
+                //             $("#contextmenu_container").attr("class","contextmenu "+e.subtype);
+                //             if(e.data.status =="FAULT"){
+                //                 that.open=false
+                //             }else if(e.data.status =="OFFLINE"){
+                //                 that.open=false
+                //             }else {
+                //                 that.open= true
+                //             }
+                //             $("#contextmenu_container").show();
+                //         });
+                //     })
+                // }
+
+                Promise.all([this.getAllUser()]).then(result=>{
+                    console.log(result,'00000')
+                    let users = result[0]
+                    // let users =
+                    //     [
+                    //         {
+                    //             "id": "798298ecd17a87586a2a123",
+                    //             "creator": null,
+                    //             "createTime": null,
+                    //             "modifier": "admin",
+                    //             "modifyTime": "2018-09-11 18:00:00",
+                    //             "name": "admin",
+                    //             "cnName": " 系统管理员",
+                    //             "gender": 0,
+                    //             "iconId": null,
+                    //             "mobileNum": "18800000000",
+                    //             "fixedPhoneNum": null,
+                    //             "idCardNum": null,
+                    //             "email": null,
+                    //             "workAddress": null,
+                    //             "description": null,
+                    //             "departmentId": null,
+                    //             "jobId": null,
+                    //             "roleId": "1",
+                    //             "role": {
+                    //                 "id": "1",
+                    //                 "creator": null,
+                    //                 "createTime": null,
+                    //                 "modifier": null,
+                    //                 "modifyTime": null,
+                    //                 "name": "admin",
+                    //                 "description": "",
+                    //                 "permissions": null
+                    //             },
+                    //             "job": null,
+                    //             "department": null,
+                    //             "gpsId": "21a435fd-f067-4cb5-841e-0482bbe1c230",
+                    //             "gpsData":  {
+                    //                 "deviceId": "21a435fd-f067-4cb5-841e-0482bbe1c230",
+                    //                 "ioTDeviceId": null,
+                    //                 "createTime": "2017-12-31 12:21:39",
+                    //                 "longitude": 120.13310087077178,
+                    //                 "latitude": 30.30729423238902,
+                    //                 "altitude": null,
+                    //                 "direction": null,
+                    //                 "speed": 4,
+                    //                 "telephone": null,
+                    //                 "deviceNum": null,
+                    //                 "coordinate": null
+                    //             }
+                    //         },
+                    //         {
+                    //             "id": "05579c25-8abb-4bfa-83ae-2a1e50a071ee",
+                    //             "creator": null,
+                    //             "createTime": null,
+                    //             "modifier": "admin",
+                    //             "modifyTime": "2018-09-11 18:00:00",
+                    //             "name": "xuyixiang",
+                    //             "cnName": "用户",
+                    //             "gender": 0,
+                    //             "iconId": null,
+                    //             "mobileNum": "18800203265",
+                    //             "fixedPhoneNum": null,
+                    //             "idCardNum": null,
+                    //             "email": null,
+                    //             "workAddress": null,
+                    //             "description": null,
+                    //             "departmentId": null,
+                    //             "jobId": null,
+                    //             "roleId": "1",
+                    //             "gpsId": "2b696d8b-7f38-41dc-8b3c-8db147c02c32",
+                    //             "gpsData":  {
+                    //                 "deviceId": "2b696d8b-7f38-41dc-8b3c-8db147c02c32",
+                    //                 "ioTDeviceId": null,
+                    //                 "createTime": "2017-12-31 12:21:39",
+                    //                 "longitude": 120.1333035877555,
+                    //                 "latitude": 30.30820253332855,
+                    //                 "altitude": null,
+                    //                 "direction": null,
+                    //                 "speed": 0,
+                    //                 "telephone": null,
+                    //                 "deviceNum": null,
+                    //                 "coordinate": null
+                    //             }
+                    //         }
+                    //
+                    //
+                    //     ]
+                    if(users.length > 0){
+                        users.forEach(obj=>{
+                            let latitude = ''
+                            let longitude = ''
+                            if(obj.gpsData){
+                                latitude = obj.gpsData.latitude,
+                                longitude = obj.gpsData.longitude
+                            }
+                            obj.status=obj.gpsData ? "ONLINE" : "OFFLINE";
+                            obj.location=[longitude,latitude];
+                            var icon = new droreMap.icon.Marker({
+                                coordinate: droreMap.trans.transFromWgsToLayer(obj.location),
+                                name:obj.name,
+                                subtype:'securityPerson',
+                                id:obj.id,
+                                url:'/static/img/icon/people_small.svg',
+                                type:'security',
+                                status:obj.gpsData ? "ONLINE" : "OFFLINE",
+                                description:obj.description,
+                                gpsData:obj.gpsData,
+                                data:obj,
+                            });
+                            droreMap.icon.addChild(icon);
+                            icon.showName=true
+                            droreMap.icon.showLayer(icon.id,false);
+                            let that = this;
+                            icon.onclick(function (e) {
+                                that.menulist = e.data;
+                                var div = document.getElementById('contextmenu_container')
+                                var popup = new  droreMap.pop.Popup(div,droreMap.trans.transFromWgsToLayer([longitude,latitude]),"contextmenu_container")
+                                droreMap.pop.addChild(popup,e.data.id);
+                                $("#contextmenu_container").attr("class","contextmenu "+e.subtype);
+                                if(e.data.status =="FAULT"){
+                                    that.open=false
+                                }else if(e.data.status =="OFFLINE"){
+                                    that.open=false
+                                }else {
+                                    that.open= true
+                                }
+                                $("#contextmenu_container").show();
+                            });
+                        })
+                    }
+                    setTimeout(() => {
+                        this.getAllLangPerson();//长轮询
+                    },5000)
+                })
             },
             async getAllLangPerson(){
                 Promise.all([this.getAllUser()]).then(result=>{
-                    // let users = result[0]
-                    let users =
-                        [
-                            {
-                                "id": "798298ecd17a87586a2a123",
-                                "creator": null,
-                                "createTime": null,
-                                "modifier": "admin",
-                                "modifyTime": "2018-09-11 18:00:00",
-                                "name": "admin",
-                                "cnName": " 系统管理员",
-                                "gender": 0,
-                                "iconId": null,
-                                "mobileNum": "18800000000",
-                                "fixedPhoneNum": null,
-                                "idCardNum": null,
-                                "email": null,
-                                "workAddress": null,
-                                "description": null,
-                                "departmentId": null,
-                                "jobId": null,
-                                "roleId": "1",
-                                "role": {
-                                    "id": "1",
-                                    "creator": null,
-                                    "createTime": null,
-                                    "modifier": null,
-                                    "modifyTime": null,
-                                    "name": "admin",
-                                    "description": "",
-                                    "permissions": null
-                                },
-                                "job": null,
-                                "department": null,
-                                "gpsId": "21a435fd-f067-4cb5-841e-0482bbe1c230",
-                                "gpsData":  {
-                                    "deviceId": "21a435fd-f067-4cb5-841e-0482bbe1c230",
-                                    "ioTDeviceId": null,
-                                    "createTime": "2017-12-31 12:21:39",
-                                    "longitude": 120.13310087077178,
-                                    "latitude": 30.30729423238902,
-                                    "altitude": null,
-                                    "direction": null,
-                                    "speed": 4,
-                                    "telephone": null,
-                                    "deviceNum": null,
-                                    "coordinate": null
-                                }
-                            },
-                            {
-                                "id": "05579c25-8abb-4bfa-83ae-2a1e50a071ee",
-                                "creator": null,
-                                "createTime": null,
-                                "modifier": "admin",
-                                "modifyTime": "2018-09-11 18:00:00",
-                                "name": "xuyixiang",
-                                "cnName": "用户",
-                                "gender": 0,
-                                "iconId": null,
-                                "mobileNum": "18800203265",
-                                "fixedPhoneNum": null,
-                                "idCardNum": null,
-                                "email": null,
-                                "workAddress": null,
-                                "description": null,
-                                "departmentId": null,
-                                "jobId": null,
-                                "roleId": "1",
-                                "gpsId": "2b696d8b-7f38-41dc-8b3c-8db147c02c32",
-                                "gpsData":  {
-                                    "deviceId": "2b696d8b-7f38-41dc-8b3c-8db147c02c32",
-                                    "ioTDeviceId": null,
-                                    "createTime": "2017-12-31 12:21:39",
-                                    "longitude": 120.1333035877555,
-                                    "latitude": 30.30820253332855,
-                                    "altitude": null,
-                                    "direction": null,
-                                    "speed": 0,
-                                    "telephone": null,
-                                    "deviceNum": null,
-                                    "coordinate": null
-                                }
-                            }
-
-                        ]
+                    let users = result[0]
+                    // let users = [
+                    //     {
+                    //         "id": "165d0c3918c-2706abc77a5ee8e8",
+                    //         "creator": "admin",
+                    //         "createTime": "2018-09-13 10:30:02",
+                    //         "modifier": "admin",
+                    //         "modifyTime": "2018-09-13 10:30:02",
+                    //         "name": "binge",
+                    //         "cnName": "斌",
+                    //         "gender": 1,
+                    //         "iconId": null,
+                    //         "mobileNum": "18629086642",
+                    //         "fixedPhoneNum": "",
+                    //         "idCardNum": "",
+                    //         "email": null,
+                    //         "workAddress": null,
+                    //         "description": null,
+                    //         "departmentId": null,
+                    //         "jobId": null,
+                    //         "roleId": "1",
+                    //         "gpsId": null,
+                    //         "gpsData": {
+                    //             "deviceId": "c13e503f-713d-4cd7-9a5d-c62220e1f612",
+                    //             "ioTDeviceId": "1000000",
+                    //             "deviceName": "gps0",
+                    //             "createTime": "2018-09-21 10:15:56",
+                    //             "longitude": 120.13337197656278,
+                    //             "latitude": 30.307558496764344,
+                    //             "altitude": null,
+                    //             "direction": null,
+                    //             "speed": 0,
+                    //             "telephone": null,
+                    //             "deviceNum": "1000000",
+                    //             "coordinate": "",
+                    //             "tag": "ceb54f57-08d4-49a0-81db-a3e7c486b154"
+                    //         },
+                    //         "role": {
+                    //             "id": "1",
+                    //             "creator": null,
+                    //             "createTime": null,
+                    //             "modifier": null,
+                    //             "modifyTime": null,
+                    //             "name": "admin",
+                    //             "description": "",
+                    //             "permissions": null
+                    //         },
+                    //         "job": null,
+                    //         "department": null
+                    //     },
+                    //     {
+                    //         "id": "1",
+                    //         "creator": null,
+                    //         "createTime": null,
+                    //         "modifier": "admin",
+                    //         "modifyTime": "2018-09-11 18:00:00",
+                    //         "name": "admin",
+                    //         "cnName": " 系统管理员",
+                    //         "gender": 0,
+                    //         "iconId": null,
+                    //         "mobileNum": "18800000000",
+                    //         "fixedPhoneNum": null,
+                    //         "idCardNum": null,
+                    //         "email": null,
+                    //         "workAddress": null,
+                    //         "description": null,
+                    //         "departmentId": null,
+                    //         "jobId": null,
+                    //         "roleId": "1",
+                    //         "gpsId": null,
+                    //         "gpsData":{
+                    //             "deviceId": "2b696d8b-7f38-41dc-8b3c-8db147c02c32",
+                    //             "ioTDeviceId": "1000007",
+                    //             "deviceName": "gps1",
+                    //             "createTime": "2018-09-21 10:15:56",
+                    //             "longitude": 120.13500857210744,
+                    //             "latitude": 30.305894893713628,
+                    //             "altitude": null,
+                    //             "direction": null,
+                    //             "speed": 0,
+                    //             "telephone": null,
+                    //             "deviceNum": "1000007",
+                    //             "coordinate": "",
+                    //             "tag": "966fda56-8cc3-4847-86cc-7e939df14369"
+                    //         },
+                    //         "role": {
+                    //             "id": "1",
+                    //             "creator": null,
+                    //             "createTime": null,
+                    //             "modifier": null,
+                    //             "modifyTime": null,
+                    //             "name": "admin",
+                    //             "description": "",
+                    //             "permissions": null
+                    //         },
+                    //         "job": null,
+                    //         "department": null
+                    //     }
+                    // ]
 
                     this.securityPersonList = users
                     this.number=this.securityPersonList.length
@@ -2811,7 +2942,7 @@
                             let longitude = ''
                             if(obj.gpsData){
                                 latitude = obj.gpsData.latitude,
-                                    longitude = obj.gpsData.longitude
+                                longitude = obj.gpsData.longitude
                             }
                             obj.status=obj.gpsData ? "ONLINE" : "OFFLINE";
                             obj.location=[longitude,latitude];
