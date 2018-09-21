@@ -175,65 +175,87 @@
                     // let vehicles =  [
                     //     {
                     //         "vehicle": {
-                    //             "id": "05579c25-8abb-4bfa-83ae-2a1e50a071ee",
-                    //             "createTime": null,
-                    //             "creator": null,
-                    //             "modifyTime": "2018-09-11 17:32:51",
+                    //             "id": "ceb54f57-08d4-49a0-81db-a3e7c486b154",
+                    //             "createTime": "2018-09-12 11:08:50",
+                    //             "creator": "admin",
+                    //             "modifyTime": "2018-09-12 11:08:50",
                     //             "modifier": "admin",
-                    //             "serialNum": "船001",
-                    //             "capacity": 33,
+                    //             "serialNum": "船test1",
+                    //             "capacity": 36,
                     //             "type": 1,
-                    //             "model": "363",
-                    //             "gpsDeviceId": "21a435fd-f067-4cb5-841e-0482bbe1c230",
+                    //             "model": null,
+                    //             "gpsDeviceId": "c13e503f-713d-4cd7-9a5d-c62220e1f612",
                     //             "pictureId": null,
                     //             "maintenanceStatus": 0,
-                    //             "maintenanceDate": "2018-08-07",
-                    //             "purchaseDate": "2010-03-23",
-                    //             "description": "反感和的",
+                    //             "maintenanceDate": null,
+                    //             "purchaseDate": null,
+                    //             "description": null,
                     //             "scenicAreaId": null,
                     //             "deleted": false
                     //         },
-                    //         "gpsDeviceId": "21a435fd-f067-4cb5-841e-0482bbe1c230",
-                    //         "gpsDeviceName": "gps1",
+                    //         "gpsDeviceId": "c13e503f-713d-4cd7-9a5d-c62220e1f612",
+                    //         "gpsDeviceName": "testgps1",
                     //         "pictureId": null,
                     //         "picturePath": null,
-                    //         "gpsData":
-                    //             //null,
-                    //             {
-                    //             "deviceId": "21a435fd-f067-4cb5-841e-0482bbe1c230",
-                    //             "ioTDeviceId": null,
-                    //             "createTime": "2017-12-31 12:21:39",
-                    //             "longitude": 120.13310087077178,
-                    //             "latitude": 30.30729423238902,
+                    //         "gpsData": {
+                    //             "deviceId": "c13e503f-713d-4cd7-9a5d-c62220e1f612",
+                    //             "ioTDeviceId": "1000000",
+                    //             "deviceName": "\ufffd\ufffd\ufffd\ufffd",
+                    //             "createTime": "2018-09-21 10:15:56",
+                    //             "longitude": 120.13275684584266,
+                    //             "latitude": 30.30874363611955,
                     //             "altitude": null,
                     //             "direction": null,
-                    //             "speed": 4,
+                    //             "speed": 0,
                     //             "telephone": null,
-                    //             "deviceNum": null,
-                    //             "coordinate": null
+                    //             "deviceNum": "1000000",
+                    //             "coordinate": "",
+                    //             "tag": "ceb54f57-08d4-49a0-81db-a3e7c486b154"
                     //         },
-                    //         "driver": {
-                    //             "id": "1",
-                    //             "creator": null,
-                    //             "createTime": null,
+                    //         "driver": null
+                    //     },
+                    //     {
+                    //         "vehicle": {
+                    //             "id": "966fda56-8cc3-4847-86cc-7e939df14369",
+                    //             "createTime": "2018-09-12 11:09:17",
+                    //             "creator": "admin",
+                    //             "modifyTime": "2018-09-12 11:09:17",
                     //             "modifier": "admin",
-                    //             "modifyTime": "2018-09-11 18:00:00",
-                    //             "name": "admin",
-                    //             "cnName": " 系统管理员",
-                    //             "gender": 0,
-                    //             "iconId": null,
-                    //             "mobileNum": "18800000000",
-                    //             "fixedPhoneNum": null,
-                    //             "idCardNum": null,
-                    //             "email": null,
-                    //             "workAddress": null,
+                    //             "serialNum": "船test2",
+                    //             "capacity": 0,
+                    //             "type": 1,
+                    //             "model": null,
+                    //             "gpsDeviceId": "2b696d8b-7f38-41dc-8b3c-8db147c02c32",
+                    //             "pictureId": null,
+                    //             "maintenanceStatus": 0,
+                    //             "maintenanceDate": null,
+                    //             "purchaseDate": null,
                     //             "description": null,
-                    //             "departmentId": null,
-                    //             "jobId": null,
-                    //             "roleId": "1"
-                    //         }
-                    //     }
-                    //     ]
+                    //             "scenicAreaId": null,
+                    //             "deleted": false
+                    //         },
+                    //         "gpsDeviceId": "2b696d8b-7f38-41dc-8b3c-8db147c02c32",
+                    //         "gpsDeviceName": "testgps2",
+                    //         "pictureId": null,
+                    //         "picturePath": null,
+                    //         "gpsData": {
+                    //             "deviceId": "2b696d8b-7f38-41dc-8b3c-8db147c02c32",
+                    //             "ioTDeviceId": "1000007",
+                    //             "deviceName": "\ufffd\ufffd\ufffd豸\ufffd\ufffd\ufffd߲\ufffd\ufffd\ufffd",
+                    //             "createTime": "2018-09-21 10:15:56",
+                    //             "longitude": 120.13500857210744,
+                    //             "latitude": 30.305894893713628,
+                    //             "altitude": null,
+                    //             "direction": null,
+                    //             "speed": 0,
+                    //             "telephone": null,
+                    //             "deviceNum": "1000007",
+                    //             "coordinate": "",
+                    //             "tag": "966fda56-8cc3-4847-86cc-7e939df14369"
+                    //         },
+                    //         "driver": null
+                    //     }]
+
                     this.transportVehicleList = vehicles
                     this.number=this.transportVehicleList.length
                     this.transportVehicleInfo=[]
@@ -258,8 +280,8 @@
                                 subtype:'transportCar',
                                 icon:veObj.gpsData ? '../../../static/img/car_icon.svg' : '../../../static/img/car_gray.svg' ,
                                 status:veObj.gpsData ? "ONLINE" : "OFFLINE",
-                                longitude:veObj.gpsData ? veObj.gpsData.longitude+0.451536705535+0.0048011541 : '',
-                                latitude:veObj.gpsData ? veObj.gpsData.latitude+0.49693734262853-0.0025647127: '',
+                                longitude:veObj.gpsData ? veObj.gpsData.longitude: '',
+                                latitude:veObj.gpsData ? veObj.gpsData.latitude: '',
                                 gpsDeviceId:veObj.gpsDeviceId
                             }
                             carObj.children.push(childObj)
@@ -274,8 +296,8 @@
                                 subtype:'transportBoat',
                                 icon:veObj.gpsData ? '../../../static/img/boat_icon.svg' : '../../../static/img/boat_gray.svg',
                                 status:veObj.gpsData ? "ONLINE" : "OFFLINE",
-                                longitude:veObj.gpsData ? veObj.gpsData.longitude+0.451536705535+0.0048011541 : '',
-                                latitude:veObj.gpsData ? veObj.gpsData.latitude +0.49693734262853-0.0025647127: '',
+                                longitude:veObj.gpsData ? veObj.gpsData.longitude: '',
+                                latitude:veObj.gpsData ? veObj.gpsData.latitude: '',
                                 gpsDeviceId:veObj.gpsDeviceId
                             }
                             boatObj.children.push(childObj)
@@ -288,87 +310,17 @@
                     // this.drawLine();
                     console.log(this.transportVehicleInfo)
                 })
-                // setTimeout(() => {
-                //     let route = this.$route.path
-                //     if (route.includes('controler/car')) {
-                //         this.initVehicle();//长轮询
-                //         this.treeShow('vehicle');
-                //     }
-                // },5000)
+                setTimeout(() => {
+                    let route = this.$route.path
+                    if (route.includes('controler/car')) {
+                        this.initVehicle();//长轮询
+                        this.treeShow('vehicle');
+                    }
+                },5000)
             },
             async initSchedule(){
                 Promise.all([this.getAllTransport()]).then(result=>{
-                    // let schedules = result[0]
-
-                    let schedules = [
-                            {
-                                "id": "0a9c3e8a-99c7-4c5f-90c4-54128115fd40",
-                                "creator": "admin",
-                                "createTime": "2018-09-12",
-                                "modifier": "admin",
-                                "modifyTime": "2018-09-12",
-                                "name": "船001",
-                                "days": "1,2,3,4,5,6,7",
-                                "startDate": null,
-                                "endDate": null,
-                                "startTime": "00:20:39",
-                                "endTime": "23:59:40",
-                                "routeId": "0e2d936d-b75a-4bc1-8309-84b2b21dfe3f",
-                                "description": "三十",
-                                "scenicAreaId": null,
-                                "type": "1",
-                                "svDriverMaps": [
-                                    {
-                                        "vehicleId": "ceb54f57-08d4-49a0-81db-a3e7c486b154",
-                                        "driverIds": [
-                                            "1"
-                                        ]
-                                    }
-                                ],
-                                "stations": [],
-                                "status": "ONLINE",
-                                "enabled": true,
-                                "customizedDays": false,
-                                "deleted": false,
-                                "vehicles":[
-                                    {
-                                     "id":"ceb54f57-08d4-49a0-81db-a3e7c486b154",
-                                     "createTime": "2018-09-12 11:08:50",
-                                     "creator": "admin",
-                                     "modifyTime": "2018-09-12 11:08:50",
-                                     "modifier": "admin",
-                                     "serialNum": "船test1",
-                                     "capacity": 36,
-                                     "type": 1,
-                                     "model": null,
-                                     "pictureId": null,
-                                     "maintenanceStatus": 0,
-                                     "maintenanceDate": null,
-                                     "purchaseDate": null,
-                                     "description": null,
-                                     "scenicAreaId": null,
-                                     "deleted": false,
-                                     "gpsDeviceId": "c13e503f-713d-4cd7-9a5d-c62220e1f612",
-                                     "gpsData": {
-                                        "deviceId": "c13e503f-713d-4cd7-9a5d-c62220e1f612",
-                                        "ioTDeviceId": "1000000",
-                                        "deviceName": "\ufffd\ufffd\ufffd\ufffd",
-                                        "createTime": "2018-09-19 14:09:22",
-                                        "longitude": 119.680681,
-                                        "latitude": 29.810524,
-                                        "altitude": null,
-                                        "direction": null,
-                                        "speed": 0,
-                                        "telephone": null,
-                                        "deviceNum": "1000000",
-                                        "coordinate": "",
-                                        "tag": "ceb54f57-08d4-49a0-81db-a3e7c486b154"
-                                     },
-                                    }
-                                ]
-                            }
-                        ]
-
+                    let schedules = result[0]
                     console.log(JSON.stringify(schedules))
                     this.transportScheduleList = schedules
                     this.number=this.transportScheduleList.length
@@ -396,29 +348,33 @@
                                     let childObj;
                                     if(obj.type == 0){
                                         childObj = {
-                                            label:veObj.serialNum,
-                                            id:veObj.id,
+                                            label:veObj.vehicle.serialNum,
+                                            id:veObj.vehicle.id,
                                             url:'/static/img/icon/bus_small.png',
                                             type:'transport',
                                             subtype:'transportSchedule',
                                             icon:veObj.gpsData ? '../../../static/img/car_icon.svg' : '../../../static/img/car_gray.svg' ,
                                             status:veObj.gpsData ? "ONLINE" : "OFFLINE",
-                                            longitude:veObj.gpsData ? veObj.gpsData.longitude+0.451536705535+0.0048011541 : '',
-                                            latitude:veObj.gpsData ? veObj.gpsData.latitude+0.49693734262853-0.0025647127: '',
+                                            // longitude:veObj.gpsData ? veObj.gpsData.longitude+0.451536705535+0.0048011541 : '',
+                                            // latitude:veObj.gpsData ? veObj.gpsData.latitude+0.49693734262853-0.0025647127: '',
+                                            longitude:veObj.gpsData ? veObj.gpsData.longitude: '',
+                                            latitude:veObj.gpsData ? veObj.gpsData.latitude: '',
                                             gpsDeviceId:veObj.gpsDeviceId,
                                             routeObj:obj.routeObj
                                         }
                                     }else if(obj.type == 1){
                                         childObj = {
-                                            label:veObj.serialNum,
-                                            id:veObj.id,
+                                            label:veObj.vehicle.serialNum,
+                                            id:veObj.vehicle.id,
                                             url:'/static/img/icon/boat_small.png',
                                             type:'transport',
                                             subtype:'transportSchedule',
                                             icon:veObj.gpsData ? '../../../static/img/boat_icon.svg' : '../../../static/img/boat_gray.svg',
                                             status:veObj.gpsData ? "ONLINE" : "OFFLINE",
-                                            longitude:veObj.gpsData ? veObj.gpsData.longitude+0.451536705535+0.0048011541 : '',
-                                            latitude:veObj.gpsData ? veObj.gpsData.latitude +0.49693734262853-0.0025647127: '',
+                                            // longitude:veObj.gpsData ? veObj.gpsData.longitude+0.451536705535+0.0048011541 : '',
+                                            // latitude:veObj.gpsData ? veObj.gpsData.latitude +0.49693734262853-0.0025647127: '',
+                                            longitude:veObj.gpsData ? veObj.gpsData.longitude: '',
+                                            latitude:veObj.gpsData ? veObj.gpsData.latitude: '',
                                             gpsDeviceId:veObj.gpsDeviceId,
                                             routeObj:obj.routeObj
                                         }
@@ -435,13 +391,13 @@
                     // this.drawLine();
                     console.log(this.transportScheduleInfo)
                 })
-                // setTimeout(() => {
-                //     let route = this.$route.path
-                //     if (route.includes('controler/car')) {
-                //         this.initSchedule();//长轮询
-                //         this.treeShow('schedule');
-                //     }
-                // },5000)
+                setTimeout(() => {
+                    let route = this.$route.path
+                    if (route.includes('controler/car')) {
+                        this.initSchedule();//长轮询
+                        this.treeShow('schedule');
+                    }
+                },5000)
             },
             async getAllTransport(){
                 return api.transport.getTransport()

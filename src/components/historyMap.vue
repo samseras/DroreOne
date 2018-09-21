@@ -66,8 +66,10 @@
                      return
                  }
                 this.historyData.forEach(item=>{
-                    geo.push([item.longitude+0.451536705535+0.0048011541,item.latitude+0.49693734262853-0.0025647127])
+                    // geo.push([item.longitude+0.451536705535+0.0048011541,item.latitude+0.49693734262853-0.0025647127])
+                    geo.push([item.longitude,item.latitude])
                 })
+
                 var areaEvtList =new historyMap.road.RoadLayer('ROUTE_list', '#fb9000', 'blue')
                 let area = [];
                 for(var i = 0; i < geo.length; i++) {
@@ -78,7 +80,8 @@
                 areaEvtList.addRoad(area, data)
                 historyMap.road.addRoadLayer(areaEvtList, this.historyData[0].id)
                 console.log()
-                historyMap.map.panToCoord(historyMap.trans.transFromWgsToLayer([this.historyData[0].longitude+0.451536705535+0.0048011541,this.historyData[0].latitude+0.49693734262853-0.0025647127]));
+                // historyMap.map.panToCoord(historyMap.trans.transFromWgsToLayer([this.historyData[0].longitude+0.451536705535+0.0048011541,this.historyData[0].latitude+0.49693734262853-0.0025647127]));
+                historyMap.map.panToCoord(historyMap.trans.transFromWgsToLayer([this.historyData[0].longitude,this.historyData[0].latitude]));
 
             }
         },
