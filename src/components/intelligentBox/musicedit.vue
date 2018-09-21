@@ -553,7 +553,7 @@
                         }*!/
                     })*/
                 })
-                console.log(this.musics,'处理过后的歌曲单子1');
+                //console.log(this.musics,'处理过后的歌曲单子1');
             },
             showtime(){  //显示当前歌曲总时间
                 let that=this;
@@ -589,6 +589,10 @@
                 this.audioObj.pause();
                 this.playurl='../../../static/img/intelligentbox/bo1.png';
                 this.$emit('closeDialog');
+                //alert(3333);
+                api.intelligentBox.stopSongName(this.stopId,this.idFlag).then(res=>{
+                    console.log('停止单个歌曲完毕');
+                })
             },
 
         }
@@ -626,7 +630,7 @@
         .el-dialog{
             margin-top:10vh;
             //height:63%;
-            height:74%;
+            height:80%;
             .el-dialog__body{
                 border-top:1px solid #ddd;
                 height:77%;
