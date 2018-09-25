@@ -1,42 +1,44 @@
 <template>
     <div class="car">
         <div class="reveal">
-            <el-tabs v-model="activeName" @tab-click="tabClick" stretch>
-                <el-tab-pane label="车船调度" name="transportVehicle">
+            <div class="top">
+                <div :class="[activeVehicle, stretchClass,itemClass]" @click="tabClick('vehicle')">
+                    车船调度
+                </div>
+                <div :class="[activeSchedule, stretchClass,itemClass]" @click="tabClick('schedule')">
+                    车船计划调度
+                </div>
+                <div :class="[barClass,stretchClass,positionClass]"></div>
+            </div>
+            <div class="middle" v-show="isVehicle">
+                <div class="boottom">
+                    <ScrollContainer>
+                        <broadcast-ztree
+                            :title="title"
+                            :Info="transportVehicleInfo"
+                            :lightCheckout="vehicleCheckout"
+                            :regionId="regionId"
+                            :lightList="transportVehicleList"
+                            :number="vehicleNumber">
+                        </broadcast-ztree>
+                    </ScrollContainer>
+                </div>
+            </div>
 
-                    <div class="middle">
-                        <div class="boottom">
-                            <ScrollContainer>
-                                <broadcast-ztree
-                                    :title="title"
-                                    :Info="transportVehicleInfo"
-                                    :lightCheckout="vehicleCheckout"
-                                    :regionId="regionId"
-                                    :lightList="transportVehicleList"
-                                    :number="number"
-                                    :fault="fault">
-                                </broadcast-ztree>
-                            </ScrollContainer>
-                        </div>
-                    </div>
-                </el-tab-pane>
-                <el-tab-pane label="车船计划调度" name="transportSchedule">
-                    <div class="middle">
-                        <div class="boottom">
-                            <ScrollContainer>
-                                <schedule-ztree
-                                    :title="title"
-                                    :Info="transportScheduleInfo"
-                                    :lightCheckout="scheduleCheckout"
-                                    :regionId="regionId"
-                                    :lightList="transportScheduleList"
-                                    :number="number">
-                                </schedule-ztree>
-                            </ScrollContainer>
-                        </div>
-                    </div>
-                </el-tab-pane>
-            </el-tabs>
+            <div class="middle"  v-show="!isVehicle">
+                <div class="boottom">
+                    <ScrollContainer>
+                        <schedule-ztree
+                            :title="title"
+                            :Info="transportScheduleInfo"
+                            :lightCheckout="scheduleCheckout"
+                            :regionId="regionId"
+                            :lightList="transportScheduleList"
+                            :number="scheduleNumber">
+                        </schedule-ztree>
+                    </ScrollContainer>
+                </div>
+            </div>
         </div>
     </div>
 </template>
@@ -52,6 +54,15 @@
         name:'car',
         data() {
             return {
+                positionClass:'',
+                activeVehicle:'',
+                activeSchedule:'',
+                stretchClass:'stretch',
+                barClass:'bar',
+                itemClass:'item',
+                isVehicle:true,
+                vehicleNumber: '0',
+                scheduleNumber: '0',
                 open:false,
                 isShow: true,
                 options: [],
@@ -86,21 +97,26 @@
             ScrollContainer
         },
         methods: {
-            tabClick(tab,event){
-                console.log(tab,event)
-                if(tab.name == 'transportVehicle'){
+            tabClick(type){
+                if(type == 'vehicle'){
                     this.title = '车船'
                     this.initVehicle()
                     this.treeShow('vehicle')
-                }else if(tab.name == 'transportSchedule'){
+                    this.positionClass = 'vehicleBar'
+                    this.activeVehicle = 'isActive'
+                    this.activeSchedule=''
+                    this.isVehicle = true
+                }else if(type == 'schedule'){
                     this.title = '车船计划'
                     this.initSchedule()
                     this.treeShow('schedule')
+                    this.positionClass = 'scheduleBar'
+                    this.activeVehicle = ''
+                    this.activeSchedule = 'isActive'
+                    this.isVehicle = false
                 }
             },
             treeShow(type){
-                console.log(this.getcontroTransportVehicle,'1');
-                console.log(this.getcontroTransportSchedule,'2');
                 if(type == 'vehicle'){
                     if(this.getcontroTransportVehicle){
                         this.vehicleCheckout=this.getcontroTransportVehicle
@@ -113,7 +129,6 @@
             },
 
             showBroadCard() {
-                console.log(777)
                 this.isShowBroadCard = true
             },
             newagenda: function () {
@@ -257,7 +272,7 @@
                     //     }]
 
                     this.transportVehicleList = vehicles
-                    this.number=this.transportVehicleList.length
+                    this.vehicleNumber=this.transportVehicleList.length
                     this.transportVehicleInfo=[]
                     let carObj = {
                         label:'车辆',
@@ -305,8 +320,8 @@
                     })
                     this.transportVehicleInfo.push(carObj)
                     this.transportVehicleInfo.push(boatObj)
-                    this.fault=0
-                    this.online= this.number - this.fault
+                    // this.fault=0
+                    // this.online= this.number - this.fault
                     // this.drawLine();
                     console.log(this.transportVehicleInfo)
                 })
@@ -323,7 +338,7 @@
                     let schedules = result[0]
                     console.log(JSON.stringify(schedules))
                     this.transportScheduleList = schedules
-                    this.number=this.transportScheduleList.length
+                    this.scheduleNumber=this.transportScheduleList.length
                     this.transportScheduleInfo=[]
                     if(schedules.length >0){
                         if(this.transportRoutes.length>0){
@@ -429,6 +444,10 @@
 
         },
         created: function () {
+
+            this.activeVehicle = 'isActive'
+            this.positionClass = 'vehicleBar'
+            this.activeSchedule=''
             this.treeShow('vehicle');
             this.getAllTransportRoute()
         },
@@ -452,26 +471,67 @@
             display: flex;
             flex-direction: column;
             .top {
-                width: 100%;
+                /*width: 100%;*/
+                min-width: 100%;
                 height: 40px;
                 line-height: 40px;
                 display: flex;
                 justify-content: space-between;
                 background: #fff;
-                h5 {
-                    margin-left: 15px;
+
+                transition: transform .3s,-webkit-transform .3s;
+                float: left;
+                z-index: 2;
+                white-space: nowrap;
+                position: relative;
+                .stretch{
+                    flex: 1;
+                    text-align: center;
                 }
-                ul {
-                    display: flex;
-                    li {
-                        margin: 0 5px;
-                        .multiwindow{
-                            width: 24px;
-                            vertical-align: middle;
-                            cursor: pointer;
-                            outline: none;
-                        }
-                    }
+                .item{
+                    padding: 0 20px;
+                    height: 40px;
+                    -webkit-box-sizing: border-box;
+                    box-sizing: border-box;
+                    line-height: 40px;
+                    display: inline-block;
+                    list-style: none;
+                    font-size: 14px;
+                    font-weight: 500;
+                    color: #303133;
+                    position: relative;
+                }
+                .item:hover {
+                    color: #409EFF;
+                    cursor: pointer;
+                }
+                .item.is-active {
+                    color: #409EFF;
+                }
+                .bar{
+                    position: absolute;
+                    bottom: 0;
+                    left: 0;
+                    height: 2px;
+                    background-color: #409EFF;
+                    z-index: 1;
+                    -webkit-transition: -webkit-transform .3s cubic-bezier(.645,.045,.355,1);
+                    transition: -webkit-transform .3s cubic-bezier(.645,.045,.355,1);
+                    transition: transform .3s cubic-bezier(.645,.045,.355,1);
+                    transition: transform .3s cubic-bezier(.645,.045,.355,1), -webkit-transform .3s cubic-bezier(.645,.045,.355,1);
+                    transition: transform .3s cubic-bezier(.645,.045,.355,1),-webkit-transform .3s cubic-bezier(.645,.045,.355,1);
+                    list-style: none;
+                }
+                .vehicleBar{
+                    width: 105px;
+                    transform: translateX(0px);
+                }
+                .scheduleBar{
+                    width: 105px;
+                    transform: translateX(145px);
+                }
+                .isActive{
+                    color: #409EFF;
                 }
             }
             .list_search{

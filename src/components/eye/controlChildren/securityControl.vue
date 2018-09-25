@@ -1,42 +1,44 @@
 <template>
     <div class="security">
         <div class="reveal">
-            <el-tabs v-model="activeName" @tab-click="tabClick" stretch>
-                <el-tab-pane label="人员调度" name="securityPerson">
+            <div class="top">
+                <div :class="[activePerson, stretchClass,itemClass]" @click="tabClick('person')">
+                    人员调度
+                </div>
+                <div :class="[activeSchedule, stretchClass,itemClass]" @click="tabClick('schedule')">
+                    巡检计划调度
+                </div>
+                <div :class="[barClass,stretchClass,positionClass]"></div>
+            </div>
+            <div class="middle" v-show="isPerson">
+                <div class="boottom">
+                    <ScrollContainer>
+                        <broadcast-ztree
+                            :title="title"
+                            :Info="securityPersonInfo"
+                            :lightCheckout="sePersonCheckout"
+                            :regionId="regionId"
+                            :lightList="securityPersonlist"
+                            :number="personNumber">
+                        </broadcast-ztree>
+                    </ScrollContainer>
+                </div>
+            </div>
 
-                    <div class="middle">
-                        <div class="boottom">
-                            <ScrollContainer>
-                                <broadcast-ztree
-                                    :title="title"
-                                    :Info="securityPersonInfo"
-                                    :lightCheckout="sePersonCheckout"
-                                    :regionId="regionId"
-                                    :lightList="securityPersonlist"
-                                    :number="number">
-                                </broadcast-ztree>
-                            </ScrollContainer>
-                        </div>
-                    </div>
-                </el-tab-pane>
-                <el-tab-pane label="巡检计划调度" name="securitySchedule">
-                    <div class="middle">
-                        <div class="boottom">
-                            <ScrollContainer>
-                                <schedule-ztree
-                                    :title="title"
-                                    :Info="securityScheduleInfo"
-                                    :lightCheckout="seScheduleCheckout"
-                                    :regionId="regionId"
-                                    :lightList="securitySchedulelist"
-                                    :number="number">
-                                </schedule-ztree>
-                            </ScrollContainer>
-                        </div>
-                    </div>
-
-                </el-tab-pane>
-            </el-tabs>
+            <div class="middle"  v-show="!isPerson">
+                <div class="boottom">
+                    <ScrollContainer>
+                        <schedule-ztree
+                            :title="title"
+                            :Info="securityScheduleInfo"
+                            :lightCheckout="seScheduleCheckout"
+                            :regionId="regionId"
+                            :lightList="securitySchedulelist"
+                            :number="scheduleNumber">
+                        </schedule-ztree>
+                    </ScrollContainer>
+                </div>
+            </div>
         </div>
     </div>
 </template>
@@ -52,12 +54,20 @@
         name:'security',
         data() {
             return {
+                positionClass:'',
+                activePerson:'',
+                activeSchedule:'',
+                stretchClass:'stretch',
+                barClass:'bar',
+                itemClass:'item',
+                isPerson:true,
                 open:false,
                 isShow: true,
                 options: [],
                 boatObjs:[],
                 value: '',
-                number: '0',
+                personNumber: '0',
+                scheduleNumber: '0',
                 fault: '0',
                 optionMisic: [],
                 isShowBroadCard: false,
@@ -84,16 +94,23 @@
             ScrollContainer
         },
         methods: {
-            tabClick(tab,event){
-                console.log(tab,event)
-                if(tab.name == 'securitySchedule'){
-                    this.title = '巡检计划'
-                    this.initScheduleData()
-                    this.treeShow('person')
-                }else if(tab.name == 'securityPerson'){
+            tabClick(type){
+                if(type == 'person'){
                     this.title = '人员'
                     this.initPersonData()
+                    this.treeShow('person')
+                    this.positionClass = 'personBar'
+                    this.activePerson = 'isActive'
+                    this.activeSchedule=''
+                    this.isPerson = true
+                }else if(type == 'schedule'){
+                    this.title = '巡检计划'
+                    this.initScheduleData()
                     this.treeShow('schedule')
+                    this.positionClass = 'scheduleBar'
+                    this.activePerson = ''
+                    this.activeSchedule = 'isActive'
+                    this.isPerson = false
                 }
             },
             treeShow(type){
@@ -265,7 +282,7 @@
                 //     }
                 // ]
                 // this.securityPersonList = users
-                // this.number=this.securityPersonList.length
+                // this.personNumber=this.securityPersonList.length
                 // this.securityPersonInfo=[]
                 //
                 // let personObj = {
@@ -298,7 +315,7 @@
                     let users = result[0]
 
                     this.securityPersonList = users
-                    this.number=this.securityPersonList.length
+                    this.personNumber=this.securityPersonList.length
                     this.securityPersonInfo=[]
 
                     let personObj = {
@@ -439,7 +456,7 @@
                 //     }
                 // ]
                 // this.securitySchedulelist = schedules
-                // this.number=this.securitySchedulelist.length
+                // this.scheduleNumber=this.securitySchedulelist.length
                 // this.securityScheduleInfo=[]
                 //
                 //
@@ -488,7 +505,7 @@
                     let schedules = result[0]
 
                     this.securitySchedulelist = schedules
-                    this.number=this.securitySchedulelist.length
+                    this.scheduleNumber=this.securitySchedulelist.length
                     this.securityScheduleInfo=[]
 
 
@@ -558,6 +575,9 @@
 
         },
         created: function () {
+            this.activePerson = 'isActive'
+            this.positionClass = 'personBar'
+            this.activeSchedule=''
             this.treeShow('person');
             this.getScheduleRoute()
         },
@@ -581,26 +601,67 @@
             display: flex;
             flex-direction: column;
             .top {
-                width: 100%;
+                /*width: 100%;*/
+                min-width: 100%;
                 height: 40px;
                 line-height: 40px;
                 display: flex;
                 justify-content: space-between;
                 background: #fff;
-                h5 {
-                    margin-left: 15px;
+
+                transition: transform .3s,-webkit-transform .3s;
+                float: left;
+                z-index: 2;
+                white-space: nowrap;
+                position: relative;
+                .stretch{
+                    flex: 1;
+                    text-align: center;
                 }
-                ul {
-                    display: flex;
-                    li {
-                        margin: 0 5px;
-                        .multiwindow{
-                            width: 24px;
-                            vertical-align: middle;
-                            cursor: pointer;
-                            outline: none;
-                        }
-                    }
+                .item{
+                    padding: 0 20px;
+                    height: 40px;
+                    -webkit-box-sizing: border-box;
+                    box-sizing: border-box;
+                    line-height: 40px;
+                    display: inline-block;
+                    list-style: none;
+                    font-size: 14px;
+                    font-weight: 500;
+                    color: #303133;
+                    position: relative;
+                }
+                .item:hover {
+                    color: #409EFF;
+                    cursor: pointer;
+                }
+                .item.is-active {
+                    color: #409EFF;
+                }
+                .bar{
+                    position: absolute;
+                    bottom: 0;
+                    left: 0;
+                    height: 2px;
+                    background-color: #409EFF;
+                    z-index: 1;
+                    -webkit-transition: -webkit-transform .3s cubic-bezier(.645,.045,.355,1);
+                    transition: -webkit-transform .3s cubic-bezier(.645,.045,.355,1);
+                    transition: transform .3s cubic-bezier(.645,.045,.355,1);
+                    transition: transform .3s cubic-bezier(.645,.045,.355,1), -webkit-transform .3s cubic-bezier(.645,.045,.355,1);
+                    transition: transform .3s cubic-bezier(.645,.045,.355,1),-webkit-transform .3s cubic-bezier(.645,.045,.355,1);
+                    list-style: none;
+                }
+                .personBar{
+                    width: 105px;
+                    transform: translateX(0px);
+                }
+                .scheduleBar{
+                    width: 105px;
+                    transform: translateX(145px);
+                }
+                .isActive{
+                    color: #409EFF;
                 }
             }
             .list_search{
