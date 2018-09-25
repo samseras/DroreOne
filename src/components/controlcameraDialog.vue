@@ -83,7 +83,7 @@
                 ptz:false,
                 gWndId:'0',
                 nWndCount:'1',
-                channel:'1000022$1$0$0',
+                channel:'',
                 nStreamType:'1',
                 nMediaType:'1',
                 nTransType:'1',
@@ -103,11 +103,12 @@
                 window.open(protocol+'//'+host+"/static/template/DPSDK_OCX.exe");
             },
             init(){
-                if(this.Info.channel==null && this.Info.channel==undefined){
-                    // this.playback=false
-                }else {
-                    this.channel=this.Info.channel
-                }
+                this.channel=this.Info.channel
+                // if(this.Info.channel==null && this.Info.channel==undefined){
+                //     // this.playback=false
+                // }else {
+                //     // this.channel=this.Info.channel
+                // }
             },
             initViedo () {
                 this.obj = document.getElementById("DPSDK_OCX");
