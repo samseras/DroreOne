@@ -70,7 +70,7 @@
                             <div class="stepBar">
                                 <div style="height: 450px;">
                                     <el-steps direction="vertical" :active="1" >
-                                        <el-step v-for="(item,i) in eventStepData"  icon="el-icon-time"  status="process" :title="item.createTime" :description="item.content"></el-step>
+                                        <el-step v-for="(item,i) in eventStepData" :key="i"  icon="el-icon-time"  status="process" :title="item.createTime" :description="item.content"></el-step>
                                     </el-steps>
                                 </div>
                             </div>

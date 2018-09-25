@@ -590,9 +590,11 @@
                 this.playurl='../../../static/img/intelligentbox/bo1.png';
                 this.$emit('closeDialog');
                 //alert(3333);
-                api.intelligentBox.stopSongName(this.stopId,this.idFlag).then(res=>{
-                    console.log('停止单个歌曲完毕');
-                })
+                if(this.stopId!==''){
+                    api.intelligentBox.stopSongName(this.stopId,this.idFlag).then(res=>{
+                        console.log('停止单个歌曲完毕');
+                    })
+                }
             },
 
         }
