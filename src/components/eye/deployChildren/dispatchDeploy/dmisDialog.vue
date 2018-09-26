@@ -92,7 +92,7 @@
                                                 <el-option
                                                     v-for="item in personList"
                                                     :key="item.id"
-                                                    :label="item.name"
+                                                    :label="item.cnName"
                                                     :value="item.id"
                                                     :disabled="item.disabled">
                                                 </el-option>
@@ -485,7 +485,7 @@
                                                 <el-option
                                                     v-for="item in personList"
                                                     :key="item.id"
-                                                    :label="item.name"
+                                                    :label="item.cnName"
                                                     :value="item.id"
                                                     :disabled="item.disabled">
                                                 </el-option>

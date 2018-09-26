@@ -328,7 +328,7 @@
                     if(users.length >0){
                         users.forEach(userObj=>{
                             childObj = {
-                                label:userObj.name,
+                                label:userObj.cnName,
                                 id:userObj.id,
                                 url:'/static/img/icon/people_small.svg',
                                 type:'security',
@@ -534,7 +534,7 @@
                             if(obj.persons instanceof Array && obj.persons.length > 0){
                                 obj.persons.forEach(user=>{
                                     childInfo = {
-                                        label:user.name,
+                                        label:user.cnName,
                                         id:user.id,
                                         url:'/static/img/icon/people_small.svg',
                                         type:'security',

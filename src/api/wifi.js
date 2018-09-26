@@ -20,6 +20,12 @@ const wifi={
             url: getUrl('/device?deviceType=7')
         })
     },
+    getDeviceById(id){
+        return axios({
+            method:'GET',
+            url: getUrl(`/device/${id}`)
+        })
+    },
     updateWifi(params){
         return axios({
             method:'PUT',
