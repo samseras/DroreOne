@@ -20,7 +20,7 @@
             @check="handleCheckChange">
             <span class="custom-tree-node" slot-scope="{ node, Info }" @click="treeShow(node)">
                 <img class="icon" :src="node.icon" v-if="node.icon"/>
-                <span>{{ node.label }}</span>
+                <span :class="{ highLight : node.data.state == 'ONLINE' ? true : false}">{{ node.label }}</span>
             </span>
         </el-tree>
     </div>
@@ -209,7 +209,13 @@
                     display: inline-block;
                     vertical-align: bottom;
                 }
+
            }
        }
+
+       .highLight{
+           color: #00B83F;
+       }
+
    }
 </style>

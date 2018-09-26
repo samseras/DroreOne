@@ -527,6 +527,7 @@
                             let scheduleObj = {
                                 label:obj.inspectionSchedule.name,
                                 id:obj.inspectionSchedule.id,
+                                state:obj.status,
                                 children:[]
                             }
                             this.regionId.push(obj.inspectionSchedule.id)
