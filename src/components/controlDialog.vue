@@ -352,7 +352,7 @@
                     // this.historyvisible = true
                     console.log(param)
                     Promise.all([this.getHistoryRoute(param)]).then(res=>{
-                        // console.log(res,'历史轨迹数据')
+                        console.log(res,'车船历史轨迹数据')
                         this.historyData = res[0]
                         this.historyvisible = true
                     })
@@ -391,7 +391,7 @@
                     // this.historyvisible = true
                     console.log(param)
                     Promise.all([this.getPersonHistory(param)]).then(res=>{
-                        // console.log(res,'历史轨迹数据')
+                        console.log(res,'人员历史轨迹数据')
                         this.historyData = res[0]
                         this.historyvisible = true
                     })
