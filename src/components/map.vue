@@ -606,8 +606,8 @@
                             // var latitude = 30.121381873225815+Math.random()*0.01
                             // var longitude = 120.20690542885497+Math.random()*0.01
                             if(obj.gpsData){
-                                latitude = obj.gpsData.latitude,
-                                longitude = obj.gpsData.longitude
+                                latitude = obj.gpsData.latitude+0.49693734262853-0.0025647127,
+                                longitude = obj.gpsData.longitude+0.451536705535+0.0048011541
                             }
                             obj.status=obj.gpsData ? "ONLINE" : "OFFLINE";
                             obj.location=[longitude,latitude];
@@ -746,8 +746,8 @@
                             let latitude = ''
                             let longitude = ''
                             if(obj.gpsData){
-                                latitude = obj.gpsData.latitude,
-                                longitude = obj.gpsData.longitude
+                                latitude = obj.gpsData.latitude+0.49693734262853-0.0025647127,
+                                longitude = obj.gpsData.longitude+0.451536705535+0.0048011541
                             }
                             obj.location=[longitude,latitude];
                             let layer = droreMap.icon.returnLayer(obj.vehicle.id)
