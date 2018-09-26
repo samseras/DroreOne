@@ -10,10 +10,7 @@
                         @toggleList = "toggleList"
                         @choseType = 'choseType'
                         :choseId="choseInfoId"
-                        :listsLength="listLength"
                         :personListFlag="selectFlag"
-                        @nextPage="nextPage"
-                        @previousPage="previousPage"
                         @selectedAll = 'selectedAll'
                         @fixedInfo = 'fixedInfo'
                         @allDotInfo = 'allDotInfo'
@@ -116,11 +113,13 @@
     import DetailDialog from './detailDialog'
     import api from '@/api'
     import _ from 'lodash'
+    import {mapGetters,mapMutations} from 'vuex'
 
     export default {
         name: "indicator-deploy",
         data () {
             return {
+                allIndicatorList: [],
                 selectFlag:false,
                 tempSelects:[],
                 isShowIndicatorCard: true,
@@ -137,7 +136,6 @@
                 isShowLoading: false,
                 currentNum: 50,
                 listLength: '',
-                pageNum: 1,
                 allDotvisible:false,
                 allDotList:{
                     close:[],
@@ -147,6 +145,7 @@
             }
         },
         methods: {
+            ...mapMutations(['TOTAL_NUM']),
             imgError (e) {
                 e.target.src = this.getUrl(null);
             },
@@ -185,7 +184,7 @@
             searchAnything (info) {
                 console.log(info, '这是要过滤的')
                 if (info.trim() !== '') {
-                    this.indicatorList = this.checkList.filter(item => {
+                    this.indicatorList = this.allIndicatorList.filter(item => {
                         if (item.regionName && item.regionName.includes(info)) {
                             return item
                         }
@@ -420,16 +419,6 @@
                     this.$message.error('请选择一条数据')
                 }
             },
-            previousPage (page) {
-                console.log(page, '这是传过来的pageNum')
-                this.pageNum = page
-                this.getAllIndicator ()
-            },
-            nextPage (page) {
-                console.log(page, '这个是下一页的pageNUM')
-                this.pageNum = page
-                this.getAllIndicator ()
-            },
             async getAllIndicator () {
                 this.isShowLoading = true
                 await api.indicator.getAllIndicator().then(res => {
@@ -439,11 +428,14 @@
                     }else{
                         this.show =false
                     }
-                    this.listLength = res.length
                     this.isShowLoading = false
-                    this.indicatorList = res
-                    this.indicatorList = this.indicatorList.filter((item,index) =>{
-                        if(index < (this.pageNum*35)&& index>(this.pageNum-1)*35 -1){
+                    this.allIndicatorList = res
+                    let date = new Date().getTime()
+                    let obj = {totalNum: res.length}
+                    obj[date] = new Date().getTime()
+                    this.$store.commit('TOTAL_NUM', obj)
+                    this.indicatorList = this.allIndicatorList.filter((item,index) =>{
+                        if(index < (this.getCurrentNum*35)&& index>(this.getCurrentNum-1)*35 -1){
                             return item
                         }
                     })
@@ -507,6 +499,14 @@
             Header,
             DetailDialog,
             allDotMap
+        },
+        watch: {
+            getCurrentNum () {
+                this.getAllIndicator()
+            }
+        },
+        computed: {
+            ...mapGetters(['getCurrentNum'])
         }
     }
 </script>

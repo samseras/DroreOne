@@ -56,32 +56,17 @@
                         </p>
                     </div>
                     <div v-if="cameraShow" class="cameraShow">
-                        <p class="name">媒体编码：
-                            {{this.indexCode}}
+                        <p class="name">设 备 &nbsp;I&nbsp;P：
+                            {{this.Info.ip}}
                         </p>
-                        <p class="name">媒体地址：
-                            {{this.ipAddr}}
-                        </p>
-                        <p class="name">媒体端口：
-                            {{this.port}}
-                        </p>
-                        <p class="name">设备名称：
-                            {{this.networkname}}
-                        </p>
-                        <p class="name">设备编码：
-                            {{this.networkindexCode}}
-                        </p>
-                        <p class="name">设备地址：
-                            {{this.networkAddr}}
-                        </p>
-                        <p class="name">设备端口：
-                            {{this.networkPort}}
-                        </p>
-                        <p class="name">设备账号：
-                            {{this.userName}}
-                        </p>
-                        <p class="name">设备密码：
-                            {{this.userPwd}}
+                        <!--<p class="name">设备端口：-->
+                            <!--{{this.Info.port}}-->
+                        <!--</p>-->
+                        <!--<p class="name">平 台 &nbsp;I&nbsp;P：-->
+                            <!--{{this.Info.consoleIp}}-->
+                        <!--</p>-->
+                        <p class="name">通道编码：
+                            {{this.Info.channel}}
                         </p>
                     </div>
                     <div v-if="environment" class="environment">
@@ -367,7 +352,7 @@
                     // this.historyvisible = true
                     console.log(param)
                     Promise.all([this.getHistoryRoute(param)]).then(res=>{
-                        // console.log(res,'历史轨迹数据')
+                        console.log(res,'车船历史轨迹数据')
                         this.historyData = res[0]
                         this.historyvisible = true
                     })
@@ -406,7 +391,7 @@
                     // this.historyvisible = true
                     console.log(param)
                     Promise.all([this.getPersonHistory(param)]).then(res=>{
-                        // console.log(res,'历史轨迹数据')
+                        console.log(res,'人员历史轨迹数据')
                         this.historyData = res[0]
                         this.historyvisible = true
                     })
@@ -510,6 +495,10 @@
         created () {
             console.log(this.Info);
             console.log(this.Info.id);
+            let route = this.$route.path
+            if (route.includes('facility')) {
+                this.facility=false
+            }
             (this.selectedCasts).push(this.Info.id);
             if(this.Info.type==="wifi"){
                 this.wifiShow=true
@@ -543,27 +532,6 @@
             if(this.Info.type==="摄像头"){
                 this.jsonAttr=JSON.parse(this.Info.jsonAttr)
                 this.cameraShow=true
-                if(this.jsonAttr){
-                    this.indexCode=this.jsonAttr.vrmServer.indexCode
-                    this.ipAddr=this.jsonAttr.vrmServer.ipAddr
-                    this.port=this.jsonAttr.vrmServer.port
-                    this.networkname=this.jsonAttr.device.name
-                    this.networkindexCode=this.jsonAttr.device.indexCode
-                    this.networkAddr=this.jsonAttr.device.networkAddr
-                    this.networkPort=this.jsonAttr.device.networkPort
-                    this.userName=this.jsonAttr.device.userName
-                    this.userPwd=this.jsonAttr.device.userPwd
-                }else {
-                    this.indexCode=''
-                    this.ipAddr=''
-                    this.port=''
-                    this.networkname=''
-                    this.networkindexCode=''
-                    this.networkAddr=''
-                    this.networkPort=''
-                    this.userName=''
-                    this.userPwd=''
-                }
             }
             if(this.Info.type==="传感器"){
                 this.jsonAttr=JSON.parse(this.Info.jsonAttr)

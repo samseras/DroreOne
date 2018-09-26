@@ -1,7 +1,7 @@
 <template>
     <div class="cameraTitle">
         <div class="titleSearch">
-            <input type="text" placeholder="请输入搜索内容" v-model="searchContent" @keyup="startSearch">
+            <input type="text" placeholder="请输入搜索内容" v-model="searchContent">
             <i class="el-icon-search"></i>
         </div>
         <div class="titleBtn">
@@ -54,9 +54,7 @@
         </div>
 
         <div class="titlePage" v-if="!route.includes('hardwaretype')">
-            <span>当前第{{currentPageNum}}页/共{{pageAllNum}}页</span>
-            <span class="upPage"@click="previousPage"><</span>
-            <span class="downPage" @click="nextPage">></span>
+            <Pagination class="pageSize"></Pagination>
             <span class="listForm" @click="toggleList('list')" v-if="isShowIcon"><i class="el-icon-tickets"></i></span>
             <span class="cardForm" @click="toggleList('card')" v-if="!isShowIcon"><i class="el-icon-menu"></i></span>
         </div>
@@ -66,6 +64,7 @@
 <script>
     import api from '@/api'
     import {mapGetters,mapMutations} from 'vuex'
+    import Pagination from '@/components/public/Pagination'
 
     export default{
         props: ['choseId','personListFlag'],
@@ -73,7 +72,6 @@
         data(){
             return{
                 searchKeys:'',
-                listsLength: 0,
                 filterList:[],
                 cameraList:[
                     {type:'室内'},
@@ -106,7 +104,7 @@
             }
         },
         methods:{
-            ...mapMutations(['SHOWHARDWAREICON']),
+            ...mapMutations(['SHOWHARDWAREICON', 'CURRENT_NUM']),
             startSearch () {
                 // if (this.searchContent !== '') {
                 this.$emit('searchAnything', this.searchContent)
@@ -486,28 +484,18 @@
                 this.route=this.$route.path
             },
             showHeader() {
+                let date = new Date().getTime()
+                let obj = {
+                    currentNum: 1
+                }
+                obj[date] = new Date().getTime()
+                this.$store.commit('CURRENT_NUM', obj)
                 let route = this.$route.path
                 if (route.includes('gps-Hware')) {
                     this.allDotisShowHeader = false
                 }else  {
                     this.allDotisShowHeader = true
                 }
-            },
-            previousPage () {//上一页
-                this.currentPageNum--
-                if(this.currentPageNum < 1) {
-                    this.currentPageNum = 1
-                    return
-                }
-                this.$emit('previousPage',this.currentPageNum)
-            },
-            nextPage () {//下一页
-                this.currentPageNum++
-                if (this.currentPageNum > this.pageAllNum) {
-                    this.currentPageNum = this.pageAllNum
-                    return
-                }
-                this.$emit('nextPage',this.currentPageNum)
             }
         },
         watch:{
@@ -523,26 +511,28 @@
                     this.isSelected=false
                 }
             },
-            getDataLength () {
-                if (this.getDataLength.listLength > 0) {
-                    this.listsLength = this.getDataLength.listLength
-                    this.pageAllNum = Math.ceil(this.getDataLength.listLength / 35)
+            listsLength () {
+                if (this.listsLength > 0) {
+                    this.pageAllNum = Math.ceil(this.listsLength / 35)
                 }
             },
             getHardWareIcon () {
                 this.toggleList(this.getHardWareIcon)
+            },
+            searchContent () {
+                this.startSearch()
             }
         },
         created(){
             this.showPersonJob()
             this.showHeader()
             this.toggleList(this.getHardWareIcon)
-            if (this.getDataLength && this.getDataLength.listLength > 0) {
-                this.listsLength = this.getDataLength.listLength
-            }
         },
         computed: {
-            ...mapGetters(['getHardWareIcon', 'getDataLength'])
+            ...mapGetters(['getHardWareIcon'])
+        },
+        components: {
+            Pagination
         }
     }
 </script>
@@ -616,11 +606,15 @@
             margin-left: rem(20);
             font-size:rem(13);
             float:right;
-            margin-top:rem(3);
+            margin-top: rem(-3);
+            .pageSize{
+                margin-top: rem(-3);
+            }
             span{
-                display:inline-block;
+                float: right;
                 cursor: pointer;
-                margin-left:rem(5);
+                margin-left: rem(10);
+                margin-top: rem(6);
             }
             .upPage,downPage,listForm,cardForm{
                 padding: rem(5);

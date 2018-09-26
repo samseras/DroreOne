@@ -11,13 +11,10 @@
                         @choseType = 'choseType'
                         :choseId="choseInfoId"
                         @selectedAll = 'selectedAll'
-                        :listsLength="listLength"
                         :personListFlag="selectFlag"
                         @fixedInfo = 'fixedInfo'
                         @allDotInfo = 'allDotInfo'
                         @searchAnything="searchAnything"
-                        @nextPage="nextPage"
-                        @previousPage="previousPage"
                         @getAllScenic="getAllScenic">
                 </Header>
             </div>
@@ -134,11 +131,13 @@
     import PersonDetail from './detailDialog'
     import api from '@/api'
     import _ from 'lodash'
+    import {mapGetters,mapMutations} from 'vuex'
 
     export default {
         name: "scenic-deploy",
         data () {
             return {
+                allScenicList: [],
                 selectFlag:false,
                 tempSelects:[],
                 isShowScenicCard: true,
@@ -155,7 +154,6 @@
                 isShowLoading: false,
                 currentNum: 50,
                 listLength: '',
-                pageNum: 1,
                 allDotvisible:false,
                 allDotList:{
                     close:[],
@@ -164,6 +162,7 @@
             }
         },
         methods: {
+            ...mapMutations(['TOTAL_NUM']),
             imgError (e) {
                 e.target.src = this.getUrl(null);
             },
@@ -203,7 +202,7 @@
             searchAnything (info) {
                 console.log(info, '这是要过滤的')
                 if (info.trim() !== '') {
-                    this.scenicList = this.checkList.filter(item => {
+                    this.scenicList = this.allScenicList.filter(item => {
                         if ((item.regionName)&&(item.regionName.includes(info))) {
                             return item
                         }
@@ -425,16 +424,6 @@
                     this.$message.error('请选择一条数据')
                 }
             },
-            previousPage (page) {
-                console.log(page, '这是传过来的pageNum')
-                this.pageNum = page
-                this.getAllScenic()
-            },
-            nextPage (page) {
-                console.log(page, '这个是下一页的pageNUM')
-                this.pageNum = page
-                this.getAllScenic()
-            },
             async getAllScenic () {
                 this.isShowLoading = true
                 await api.scenic.getAllScenic().then((res) => {
@@ -444,11 +433,14 @@
                     }else{
                         this.show =false
                     }
-                    this.listLength = res.length
                     this.isShowLoading = false
-                    this.scenicList = res
-                    this.scenicList = this.scenicList.filter((item,index) => {
-                        if (index < (this.pageNum * 35 ) && index > ((this.pageNum -1) * 35 ) - 1 ) {
+                    this.allScenicList = res
+                    let date = new Date().getTime()
+                    let obj = {totalNum: res.length}
+                    obj[date] = new Date().getTime()
+                    this.$store.commit('TOTAL_NUM', obj)
+                    this.scenicList = this.allScenicList.filter((item,index) => {
+                        if (index < (this.getCurrentNum * 35 ) && index > ((this.getCurrentNum -1) * 35 ) - 1 ) {
                             return item
                         }
                     })
@@ -506,6 +498,14 @@
             Header,
             PersonDetail,
             allDotMap
+        },
+        watch: {
+            getCurrentNum () {
+                this.getAllScenic()
+            }
+        },
+        computed: {
+            ...mapGetters(['getCurrentNum'])
         }
     }
 </script>

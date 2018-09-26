@@ -14,9 +14,7 @@
                         :choseId="choseInfoId"
                         :listsLength="listLength"
                         :personListFlag="selectFlag"
-                        @nextPage="nextPage"
                         @allDotInfo = 'allDotInfo'
-                        @previousPage="previousPage"
                         @searchAnything="searchAnything"
                         @getAllPark="getAllPark">
 
@@ -142,10 +140,12 @@
     import PersonDetail from './detailDialog'
     import api from '@/api'
     import _ from 'lodash'
+    import {mapGetters,mapMutations} from 'vuex'
     export default {
         name: "park-deploy",
         data(){
             return{
+                allParkList: [],
                 selectFlag:false,
                 tempSelects:[],
                 isShowParkCard: true,
@@ -163,7 +163,6 @@
                 isShowLoading: false,
                 currentNum: 50,
                 listLength: '',
-                pageNum: 1,
                 allDotvisible:false,
                 allDotList:{
                     close:[],
@@ -172,6 +171,7 @@
             }
         },
         methods: {
+            ...mapMutations(['TOTAL_NUM']),
             imgError (e) {
                 e.target.src = this.getUrl(null);
             },
@@ -212,7 +212,7 @@
                 console.log(info, '这是要过滤的')
                 console.log(this.checkList)
                 if (info.trim() !== '') {
-                    this.parkList = this.checkList.filter(item => {
+                    this.parkList = this.allParkList.filter(item => {
                         if ((item.regionName)&&(item.regionName.includes(info))) {
                             return item
                         }
@@ -442,16 +442,6 @@
                     this.$message.error('请选择一条数据')
                 }
             },
-            previousPage (page) {
-                console.log(page, '这是传过来的pageNum')
-                this.pageNum = page
-                this.getAllPark ()
-            },
-            nextPage (page) {
-                console.log(page, '这个是下一页的pageNUM')
-                this.pageNum = page
-                this.getAllPark ()
-            },
             async getAllPark () {
                 this.isShowLoading = true
                 await api.park.getAllPark().then(res => {
@@ -461,11 +451,14 @@
                     }else{
                         this.show =false
                     }
-                    this.listLength = res.length
                     this.isShowLoading = false
-                    this.parkList = res
-                    this.parkList = this.parkList.filter((item,index) =>{
-                        if(index <(this.pageNum*35) && index>(this.pageNum-1)*35-1){
+                    this.allParkList = res
+                    let date = new Date().getTime()
+                    let obj = {totalNum: res.length}
+                    obj[date] = new Date().getTime()
+                    this.$store.commit('TOTAL_NUM', obj)
+                    this.parkList = this.allParkList.filter((item,index) =>{
+                        if(index <(this.getCurrentNum*35) && index>(this.getCurrentNum-1)*35-1){
                             return item
                         }
                     })
@@ -536,6 +529,14 @@
             Header,
             PersonDetail,
             allDotMap
+        },
+        watch: {
+            getCurrentNum () {
+                this.getAllPark()
+            }
+        },
+        computed: {
+            ...mapGetters(['getCurrentNum'])
         }
     }
 </script>

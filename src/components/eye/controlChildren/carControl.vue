@@ -271,17 +271,18 @@
                     //         "driver": null
                     //     }]
 
-                    this.transportVehicleList = vehicles
-                    this.vehicleNumber=this.transportVehicleList.length
+
+                    this.vehicleNumber=vehicles.length
                     this.transportVehicleInfo=[]
+                    this.transportVehicleList=[]
                     let carObj = {
                         label:'车辆',
-                        id:100010,
+                        id:'100010',
                         children:[]
                     }
                     let boatObj = {
                         label:'船只',
-                        id:100011,
+                        id:'100011',
                         children:[]
                     }
                     vehicles.forEach(veObj=>{
@@ -293,35 +294,35 @@
                                 url:'/static/img/icon/bus_small.png',
                                 type:'transport',
                                 subtype:'transportCar',
+                                regionId:'100010',
                                 icon:veObj.gpsData ? '../../../static/img/car_icon.svg' : '../../../static/img/car_gray.svg' ,
                                 status:veObj.gpsData ? "ONLINE" : "OFFLINE",
-                                longitude:veObj.gpsData ? veObj.gpsData.longitude: '',
-                                latitude:veObj.gpsData ? veObj.gpsData.latitude: '',
+                                longitude:veObj.gpsData ? veObj.gpsData.longitude+0.451536705535+0.0048011541: '',
+                                latitude:veObj.gpsData ? veObj.gpsData.latitude+0.49693734262853-0.0025647127: '',
                                 gpsDeviceId:veObj.gpsDeviceId
                             }
                             carObj.children.push(childObj)
                         }else if(veObj.vehicle.type == 1){
-                            // let arr = ['../../../static/img/boat_icon.svg','../../../static/img/boat_gray.svg'];
-                            // let icon = arr[Math.floor(Math.random()*arr.length)];
                             childObj = {
                                 label:veObj.vehicle.serialNum,
                                 id:veObj.vehicle.id,
                                 url:'/static/img/icon/boat_small.png',
                                 type:'transport',
                                 subtype:'transportBoat',
+                                regionId:'100011',
                                 icon:veObj.gpsData ? '../../../static/img/boat_icon.svg' : '../../../static/img/boat_gray.svg',
                                 status:veObj.gpsData ? "ONLINE" : "OFFLINE",
-                                longitude:veObj.gpsData ? veObj.gpsData.longitude: '',
-                                latitude:veObj.gpsData ? veObj.gpsData.latitude: '',
+                                longitude:veObj.gpsData ? veObj.gpsData.longitude+0.451536705535+0.0048011541: '',
+                                latitude:veObj.gpsData ? veObj.gpsData.latitude+0.49693734262853-0.0025647127: '',
                                 gpsDeviceId:veObj.gpsDeviceId
                             }
                             boatObj.children.push(childObj)
                         }
+                        this.transportVehicleList.push(childObj)
                     })
                     this.transportVehicleInfo.push(carObj)
                     this.transportVehicleInfo.push(boatObj)
-                    // this.fault=0
-                    // this.online= this.number - this.fault
+
                     // this.drawLine();
                     console.log(this.transportVehicleInfo)
                 })
@@ -337,9 +338,10 @@
                 Promise.all([this.getAllTransport()]).then(result=>{
                     let schedules = result[0]
                     console.log(JSON.stringify(schedules))
-                    this.transportScheduleList = schedules
-                    this.scheduleNumber=this.transportScheduleList.length
+
+                    this.scheduleNumber=schedules.length
                     this.transportScheduleInfo=[]
+                    this.transportScheduleList=[]
                     if(schedules.length >0){
                         if(this.transportRoutes.length>0){
                             schedules.forEach(scObj=>{
@@ -355,6 +357,7 @@
                             let scheduleObj = {
                                 label:obj.name,
                                 id:obj.id,
+                                state:obj.status,
                                 children:[]
                             }
 
@@ -368,12 +371,13 @@
                                             url:'/static/img/icon/bus_small.png',
                                             type:'transport',
                                             subtype:'transportSchedule',
+                                            regionId:obj.id,
                                             icon:veObj.gpsData ? '../../../static/img/car_icon.svg' : '../../../static/img/car_gray.svg' ,
                                             status:veObj.gpsData ? "ONLINE" : "OFFLINE",
                                             // longitude:veObj.gpsData ? veObj.gpsData.longitude+0.451536705535+0.0048011541 : '',
                                             // latitude:veObj.gpsData ? veObj.gpsData.latitude+0.49693734262853-0.0025647127: '',
-                                            longitude:veObj.gpsData ? veObj.gpsData.longitude: '',
-                                            latitude:veObj.gpsData ? veObj.gpsData.latitude: '',
+                                            longitude:veObj.gpsData ? veObj.gpsData.longitude+0.451536705535+0.0048011541: '',
+                                            latitude:veObj.gpsData ? veObj.gpsData.latitude+0.49693734262853-0.0025647127: '',
                                             gpsDeviceId:veObj.gpsDeviceId,
                                             routeObj:obj.routeObj
                                         }
@@ -384,6 +388,7 @@
                                             url:'/static/img/icon/boat_small.png',
                                             type:'transport',
                                             subtype:'transportSchedule',
+                                            regionId:obj.id,
                                             icon:veObj.gpsData ? '../../../static/img/boat_icon.svg' : '../../../static/img/boat_gray.svg',
                                             status:veObj.gpsData ? "ONLINE" : "OFFLINE",
                                             // longitude:veObj.gpsData ? veObj.gpsData.longitude+0.451536705535+0.0048011541 : '',
@@ -394,6 +399,7 @@
                                             routeObj:obj.routeObj
                                         }
                                     }
+                                    this.transportScheduleList.push(childObj)
                                     scheduleObj.children.push(childObj)
                                 })
                             }
@@ -401,8 +407,6 @@
                         })
                     }
 
-                    // this.fault=0
-                    // this.online= this.number - this.fault
                     // this.drawLine();
                     console.log(this.transportScheduleInfo)
                 })
@@ -452,7 +456,6 @@
             this.getAllTransportRoute()
         },
         mounted() {
-
             this.initVehicle();
         },
         computed: {

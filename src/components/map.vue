@@ -606,8 +606,8 @@
                             // var latitude = 30.121381873225815+Math.random()*0.01
                             // var longitude = 120.20690542885497+Math.random()*0.01
                             if(obj.gpsData){
-                                latitude = obj.gpsData.latitude,
-                                longitude = obj.gpsData.longitude
+                                latitude = obj.gpsData.latitude+0.49693734262853-0.0025647127,
+                                longitude = obj.gpsData.longitude+0.451536705535+0.0048011541
                             }
                             obj.status=obj.gpsData ? "ONLINE" : "OFFLINE";
                             obj.location=[longitude,latitude];
@@ -746,8 +746,8 @@
                             let latitude = ''
                             let longitude = ''
                             if(obj.gpsData){
-                                latitude = obj.gpsData.latitude,
-                                longitude = obj.gpsData.longitude
+                                latitude = obj.gpsData.latitude+0.49693734262853-0.0025647127,
+                                longitude = obj.gpsData.longitude+0.451536705535+0.0048011541
                             }
                             obj.location=[longitude,latitude];
                             let layer = droreMap.icon.returnLayer(obj.vehicle.id)
@@ -3351,7 +3351,12 @@
                 var explorer = window.navigator.userAgent;
                 if (explorer.indexOf("MSIE") >= 0 || (!!window.ActiveXObject || "ActiveXObject" in window)) {
                     this.buildInfo = this.menulist.data
-                    this.cameravisible = true
+                    if(this.buildInfo.channel==null){
+                        this.$message.error('当前摄像头未设置通道编号，请设置后再预览！');
+                    }else {
+                        this.cameravisible = true
+                    }
+                    // this.cameravisible = true
                     this.title = this.menulist.type+' :  '+this.menulist.name
                 } else {
                     this.$message.error('您当前的浏览器不支持该控件的播放，请使用IE10以上的浏览器');
@@ -3363,7 +3368,11 @@
                 var explorer = window.navigator.userAgent;
                 if (explorer.indexOf("MSIE") >= 0 || (!!window.ActiveXObject || "ActiveXObject" in window)) {
                     this.buildInfo = data
-                    this.cameravisible = true
+                    if(this.buildInfo.channel==null){
+                        this.$message.error('当前摄像头未设置通道编号，请设置后再预览！');
+                    }else {
+                        this.cameravisible = true
+                    }
                     this.title = '摄像头 : '+ data.name
                 } else {
                     this.$message.error('您当前的浏览器不支持该控件的播放，请使用IE10以上的浏览器');
@@ -3703,9 +3712,10 @@
             },
             getTreeState(){
                 console.log(this.getTreeState,'选择树的内容')
-                this.selectedCast=(((this.getTreeState)[0]).checked).checkedNodes;
+                if(((this.getTreeState)[0]).checked){
+                    this.selectedCast=(((this.getTreeState)[0]).checked).checkedNodes;
+                }
                 this.selectedCastContent=this.selectedCast;
-                console.log(this.getTreeState,'213123')
 
                 if(this.getTreeState.length>1) {
                     // console.log(this.getTreeState,'ioioioiooioioiooi')
@@ -3802,7 +3812,13 @@
                                     this.roadHideID(item.routeId)
                                 }else if(item.type =='warn'){
                                     this.treeHide(item);
-                                }else {
+                                }else if(item.type =='security' && item.subtype == "securitySchedule"){
+                                    this.treeHide(item);
+                                    this.roadHide(item.routeObj)
+                                }else if(item.type =='transport' && item.subtype == "transportSchedule"){
+                                    this.treeHide(item);
+                                    this.roadHide(item.routeObj)
+                                } else {
                                     this.treeHide(item);
                                 }
                             }
@@ -3889,11 +3905,19 @@
                                     }
 
                                 }else if(data[i].type =='transport' && data[i].subtype =="transportSchedule"){
-                                    this.treeShow(data[i]);
-                                    this.roadShow(data[i].routeObj)
+                                    if(data[i].status == "ONLINE"){
+                                        this.treeShow(data[i]);
+                                        this.roadShow(data[i].routeObj)
+                                    }
                                 }else if(data[i].type =='security' && data[i].subtype =="securitySchedule"){
-                                     this.treeShow(data[i]);
-                                     this.roadShow(data[i].routeObj)
+                                    if(data[i].status == "ONLINE"){
+                                        this.treeShow(data[i]);
+                                        this.roadShow(data[i].routeObj)
+                                    }
+                                }else if(data[i].type =='security' && data[i].subtype =="securityPerson"){
+                                    if(data[i].status == "ONLINE"){
+                                        this.treeShow(data[i]);
+                                    }
                                 }else {
                                     if(data[i].type =='person'){
                                         this.roadShowID(data[i].routeId)
@@ -4176,7 +4200,7 @@
                                         this.treeShow(this.getTreeState[0]);
                                         this.roadShow(this.getTreeState[0].routeObj)
                                     }
-                                } else {
+                                }else {
                                     this.treeShow(this.getTreeState[0]);
                                 }
                             }

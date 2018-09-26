@@ -10,14 +10,11 @@
                         @selectedAll="selectedAll"
                         @searchAnything="searchAnything"
                         :choseId="choseInfoId"
-                        :listsLength = "listLength"
                         :personListFlag="selectFlag"
                         @fixedInfo="fixedInfo"
                         @choseType="choseType"
                         @toggleList="toggleList"
-                        @nextPage="nextPage"
                         @allDotInfo = 'allDotInfo'
-                        @previousPage="previousPage"
                         @getAllCamera="getAllCamera">
                 </Header>
             </div>
@@ -86,7 +83,7 @@
                         </el-table-column>
                     </el-table>
 
-                    <div class="personInfo" v-for="(item,index) in cameraList" v-if="isShowPersonCard && item.status">
+                    <div class="personInfo" v-for="(item,index) in cameraList" v-if="isShowPersonCard && item.statu">
                         <div class="checkBox">
                             <el-checkbox v-model="item.checked" @change="checked(item.id)" class="checkBtn"></el-checkbox>
                         </div>
@@ -138,11 +135,12 @@
     import HardWare from './hardwareDialog.vue'
     import api from '@/api'
     import _ from 'lodash'
-    import {mapMutations} from 'vuex'
+    import {mapGetters,mapMutations} from 'vuex'
 
     export default{
         data(){
             return{
+                allCameraList: [],
                 selectFlag:false,
                 tempSelects:[],
                 isShowPersonCard:true,
@@ -159,8 +157,6 @@
                 show:false,
                 isShowLoading: false,
                 currentNum: 50,
-                listLength: '',
-                pageNum: 1,
                 allDotvisible:false,
                 allDotList:{
                     close:[],
@@ -169,7 +165,7 @@
             }
         },
         methods:{
-            ...mapMutations(['DATA_LENGTH']),
+            ...mapMutations(['TOTAL_NUM']),
             imgError (e) {
                 e.target.src = this.getUrl(null);
             },
@@ -219,11 +215,11 @@
             searchAnything (info) {
                 console.log(info, '这是要过滤的')
                 if (info.trim() !== '') {
-                    this.cameraList = this.checkList.filter(item => {
+                    this.cameraList = this.allCameraList.filter(item => {
                         if (item.name.includes(info)) {
                             return item
                         }
-                        if (item.regionName.includes(info)) {
+                        if (item.regionName && item.regionName.includes(info)) {
                             return item
                         }
                         if (item.ip && item.ip.includes(info)) {
@@ -252,7 +248,6 @@
                 this.visible=true
                 this.isDisabled = state
                 this.title=title
-
             },
             async fixInfo(info){
                 let index = info.location.includes(',')?info.location.indexOf(','):info.location.indexOf('，')
@@ -431,7 +426,7 @@
                 console.log(type)
                 if(type.length===0){
                     this.cameraList=this.checkList.filter((item)=>{
-                        item.status=true
+                        item.statu=true
                         return item
                     })
                 }else{
@@ -442,12 +437,12 @@
                             item.type = '枪机'
                         }
                         if(type.includes(item.type)){
-                            item.status=true
+                            item.statu=true
                         }else{
-                            item.status=false
+                            item.statu=false
                             console.log(item.type)
                         }
-                        return item.status === true
+                        return item.statu === true
                     })
                 }
             },
@@ -467,19 +462,8 @@
                 console.log(this.choseInfoId)
                 this.selectFlag=true
             },
-            previousPage (page) {
-                console.log(page, '这是传过来的pageNum')
-                this.pageNum = page
-                this.getAllCamera ()
-            },
-            nextPage (page) {
-                console.log(page, '这个是下一页的pageNUM')
-                this.pageNum = page
-                this.getAllCamera ()
-            },
             async getAllCamera () {
                 this.choseInfoId=[];
-                console.log("aaaaaaaaaaaaaaaaa")
                 this.isShowLoading = true
                 await api.camera.getAllCamera().then((res) => {
                     console.log(res, '这是请求回来的所有数据')
@@ -488,16 +472,15 @@
                     }else{
                         this.show = false
                     }
-                    this.listLength = res.devices.length
-                    let obj = {
-                        listLength: res.devices.length
-                    }
-                    obj[new Date().getTime()] = new Date().getTime()
-                    this.$store.commit('DATA_LENGTH', obj)
                     this.isShowLoading = false
-                    this.cameraList = res.devices
-                    this.cameraList = this.cameraList.filter((item,index) => {
-                        if (index < (this.pageNum * 35 ) && index > ((this.pageNum -1) * 35 ) - 1 ) {
+                    // this.allCameraList = res.devices
+                    this.allCameraList = res.devices
+                    let date = new Date().getTime()
+                    let obj = {totalNum: res.devices.length}
+                    obj[date] = new Date().getTime()
+                    this.$store.commit('TOTAL_NUM', obj)
+                    this.cameraList = this.allCameraList.filter((item,index) => {
+                        if (index < (this.getCurrentNum * 35 ) && index > ((this.getCurrentNum -1) * 35 ) - 1 ) {
                             return item
                         }
                     })
@@ -517,16 +500,11 @@
                     }
                     for (let i=0; i < this.cameraList.length; i++) {
                         this.cameraList[i].checked = false
-                        this.cameraList[i].status = true
+                        this.cameraList[i].statu = true
                         this.cameraList[i].id=this.cameraList[i].id
                         this.cameraList[i].location = `${this.cameraList[i].longitude},${this.cameraList[i].latitude}`
                         this.cameraList[i].modifyTime=this.cameraList[i].modifyTime.replace("-","/")
                         this.cameraList[i].byTime = -(new Date(this.cameraList[i].modifyTime)).getTime()
-                        if(this.cameraList[i].cameraType == 0){
-                            this.cameraList[i].cameraType = '球机'
-                        }else {
-                            this.cameraList[i].cameraType = '枪机'
-                        }
                     }
                     this.cameraList = _.sortBy(this.cameraList,'byTime')
                     this.checkList = this.cameraList
@@ -556,7 +534,14 @@
             Header,
             HardWare,
             allDotMap
-
+        },
+        watch: {
+            getCurrentNum () {
+                this.getAllCamera()
+            }
+        },
+        computed: {
+            ...mapGetters(['getCurrentNum'])
         }
     }
 
