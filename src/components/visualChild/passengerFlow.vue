@@ -9,7 +9,7 @@
                   <div class="totalFlow">
                       <el-select v-model="realFlowCurr" class="flowKind" @change="selectKindReal">
                           <el-option
-                              v-for="item in totalFlowOption"
+                              v-for="item in addFlowOption"
                               :key="item.value"
                               :label="item.label"
                               :value="item.value">
@@ -61,7 +61,7 @@
                      <!--</el-date-picker>-->
                      <el-select v-model="tripFlowCurr" class="flowKind" @change="selectKindTrip">
                          <el-option
-                             v-for="item in totalFlowOption"
+                             v-for="item in tripFlowOption"
                              :key="item.value"
                              :label="item.label"
                              :value="item.value">
@@ -107,7 +107,7 @@
         name: "passenger-flow",
         data(){
             return{
-                realTimeFlowNum:784511,
+                realTimeFlowNum:0,
                 pickerOptions2: {
                     shortcuts: [{
                         text: '当天',
@@ -151,8 +151,8 @@
                         }
                     }]
                 },
-                totalFlowNum:784511,
-                totalFlowCurr:'最近一年',
+                totalFlowNum:0,
+                totalFlowCurr:'当天',
                 realFlowCurr:'当日',
                 quantumFlowCurr:'最近一周',
                 tripFlowCurr:'本周',
@@ -162,49 +162,74 @@
                 currLengent:'本周',
                 lastLengent:'上一周',
                 totalFlowOption:[
-                    {value: 'year', label: '最近一年'},
-                    {value: 'quarter', label: '最近季度'},
-                    {value: 'month', label: '最近一月'},
-                    {value: 'week', label: '最近一周'},
-                    {value: 'day', label: '当日'}
+                    {value: 'lastYear', label: '最近一年'},
+                    {value: 'lastQuarter', label: '最近季度'},
+                    {value: 'lastMonth', label: '最近一月'},
+                    {value: 'lastWeek', label: '最近一周'},
+                    {value: 'lastDay', label: '最近一天'}
                 ],
+                addFlowOption:[
+                    {value: 'lastYear', label: '最近一年'},
+                    {value: 'lastQuarter', label: '最近季度'},
+                    {value: 'lastMonth', label: '最近一月'},
+                    {value: 'lastWeek', label: '最近一周'},
+                    {value: 'lastDay', label: '当日'}
+                ],
+                tripFlowOption:[
+                    // {value: 'lastYear', label: '最近一年'},
+                    {value: 'lastQuarter', label: '最近季度'},
+                    {value: 'lastMonth', label: '最近一月'},
+                    {value: 'lastWeetk', label: '最近一周'},
+                    // {value: 'lastDay', label: '当日'}
+                ],
+
                 totalFlowDom:null,
                 tripFlowDom:null,
                 realpassDom:null,
                 totalFlowData:{
                     data:[
-                        {name:'18:00',value:120},
-                        {name:'17:00',value:140},
-                        {name:'16:00',value:150},
-                        {name:'15:00',value:200},
-                        {name:'14:00',value:230},
-                        {name:'13:00',value:300},
-                        {name:'12:00',value:320},
-                        {name:'11:00',value:350},
-                        {name:'10:00',value:410},
-                        {name:'9:00',value:450},
+                        // {name:'18:00',value:120},
+                        // {name:'17:00',value:140},
+                        // {name:'16:00',value:150},
+                        // {name:'15:00',value:200},
+                        // {name:'14:00',value:230},
+                        // {name:'13:00',value:300},
+                        // {name:'12:00',value:320},
+                        // {name:'11:00',value:350},
+                        // {name:'10:00',value:410},
+                        // {name:'9:00',value:450},
                     ],
                     // data:['120','140','150','200','230','300','320','350','410','450'],
-                    legent:["18:00","17:00","16:00","15:00","14:00","13:00","12:00","11:00","10:00","9:00"],
+                    // legent:["18:00","17:00","16:00","15:00","14:00","13:00","12:00","11:00","10:00","9:00"],
+                    legent:[]
                 },
                 tripFlowData:{
-                    lastWeek:[900,500,1300,1450,1400,1150,1350,900,500,1050,1050,600,300,1200,670,900,1410,1300,1120],
-                    currWeek:[750,500,1000,600.1150,600,1200,600,700,1400,1200,600,1450,1000,800,1200,1000,950,1000,1400],
-                    legent:["武林门码头","青园桥","朝晖桥","潮王桥","德胜桥","左侯桥","御码头","富义仓","乾隆坊","十里银湖","香积寺","大兜路","大关桥","青莎公园","小河直街","桥西历史街区","拱宸桥","张大仙庙与财神庙","手工活态馆"],
+                    lastWeek:[900,500,1300,1450,1400,1150,1350,900,500,1050,1050,600,300,1200],
+                    lastWeek:[],
+                    // currWeek:[750,500,1000,600.1150,600,1200,600,700,1400,1200,600,1450],
+                    currWeek:[],
+                    legent:["石岩山","东方文化园","老虎洞游客中心","金融小镇","城山广场","窑里坞","跨湖楼","古越人家","海洋极地公园","狮子山"],
                 },
+                selectKindRealval:'lastDay',
                 carData:{
-                    carTime:['06-01', '06-02', '06-03', '06-04', '06-05', '06-06', '06-07', '06-08', '06-09', '06-10', '06-11', '06-12', '06-13', '06-14', '06-15'],
-                    carNumber:[0, 182, 191, 134, 150, 120, 110, 125, 145, 122, 165, 122, 89, 112, 34]
+                    // carTime:['06-01', '06-02', '06-03', '06-04', '06-05', '06-06', '06-07', '06-08', '06-09', '06-10', '06-11', '06-12', '06-13', '06-14', '06-15'],
+                    // carNumber:[0, 182, 191, 134, 150, 120, 110, 125, 145, 122, 165, 122, 89, 112, 34]
+                    carTime:[],
+                    carNumber:[]
                 },
             }
         },
         methods:{
             init(){
+                this.selectKindQuantum();
+                this.selectKindReal();
+                this.selectKindtotal();
+                this.selectKindTrip();
                 this.realTimeFlow();
-                this.totalFlow();
-                this.totalInfo();
-                this.tripFlow();
-                this.realpassFlow()
+                // this.totalFlow();
+                // this.totalInfo();
+                // this.tripFlow();
+                // this.realpassFlow()
             },
             // selectTimeTrip(val){
             //     console.log(val,'************')
@@ -240,80 +265,250 @@
                 d = d < 10 ? ('0' + d) : d;
                 return y + '-' + m + '-' + d;
             },
-            selectKindQuantum(val){
-                 console.log(val,"@@@@@@@@@@@@@@@@@@@@@@@@@")
-                this.totalInfo()
+            async selectKindQuantum(){
+                await api.passFlowAnalysis.todayPassFlow().then(res=>{
+                    // console.log(res,"各时段客流")
+                    let arr = [],obj={},lengentArr = [];
+                    let arrObj=[];
+                    if(res.length > 10){
+                        let arr0= res.reverse();
+                        // console.log('jinrupanduan')
+                       for(let i=0;i<arr0.length;i++){
+                         if(i<10){
+                             arrObj.push(arr0[i]);
+                         }
+                       }
+                       arrObj = arrObj.reverse();
+                        arrObj.forEach(item=>{
+                            let str = item.hour.toString()+':00';
+                            obj.name = str;
+                            obj.value = item.total_stay_count;
+                            arr.push(obj);
+                            lengentArr.push(str);
+                            obj = {};str='';
+                        })
+                    }else{
+                        let obj = {
+                            hour:'',
+                            total_stay_count:0
+                        }
+                        let n = 10-res.length;
+                        let m = res[res.length-1].hour;
+                        for(let i=0;i<n;i++){
+                            obj.hour = m+i+1;
+                            res.push(obj);
+                            obj = {
+                                hour:'',
+                                total_stay_count:0
+                            }
+                        }
+                        res.forEach(item=>{
+                            let str = item.hour.toString()+':00';
+                            obj.name = str;
+                            obj.value = item.total_stay_count;
+                            arr.push(obj);
+                            lengentArr.push(str);
+                            obj = {};str='';
+                        })
+                        // console.log('进入判断')
+                        // res.forEach(item=>{
+                        //     let str = item.hour.toString()+':00';
+                        //     obj.name = str;
+                        //     obj.value = item.total_stay_count;
+                        //     arr.push(obj);
+                        //     lengentArr.push(str);
+                        //     obj = {};str='';
+                        // })
+                        // let n = res[0].hour-1;
+                        // let long = 10-res.length;
+                        // for(let i=n;i>long;i--){
+                        //     let str = i+':00';
+                        //     console.log(str,"当前i")
+                        //     obj.name = str;
+                        //     obj.value = 0;
+                        //     arr.unshift(obj);
+                        //     lengentArr.unshift(str);
+                        //     obj = {};str='';
+                        // }
+                    }
+                    this.totalFlowData.data = arr;
+                    this.totalFlowData.legent = lengentArr;
+                    // console.log(this.totalFlowData,"PPPPPPPPP")
+                    this.totalInfo()
+                })
+
             },
             selectKindReal(val){
-                console.log(val,"@@@@@@@@@@@@@@@@@@@@@@@@@")
-                this.totalFlow()
+                if(val!=undefined){
+                    this.selectKindRealval=val
+                }
+                let obj ='"lastDay"'
+                if(this.selectKindRealval == 'lastDay'){
+                    obj = JSON.stringify(this.selectKindRealval);
+                    if(obj=='"lastDay"'){
+                        this.grandPassFlow(obj)
+                    }
+                    console.log(obj,this.selectKindRealval,"累计客流数据当日")
+                    setTimeout(() => {
+                        let route = this.$route.path
+                        if (route.includes('passengerFlow')) {
+                            this.selectKindReal();//长轮询
+                        }
+                    },60000)
+                }else{
+                    obj = JSON.stringify(this.selectKindRealval);
+                    this.grandPassFlow(obj)
+                    console.log(this.selectKindRealval,"累计客流数据其他    ")
+                }
             },
-            selectKindtotal(val){
+            async grandPassFlow(obj){
+                await api.passFlowAnalysis.grandPassFlow(obj).then(res=>{
+                    let count = 0
+                    res.forEach(item=>{
+                        count += item.total_stay_count
+                    })
+                    this.totalFlowNum = count;
+                    this.totalFlow()
+                })
+            },
+            async selectKindtotal(val){
+                let obj = {
+                    "timeRangeType": "lastDay"
+                }
+                if(val == undefined){
+                    obj.timeRangeType = 'lastDay';
+                }else{
+                    obj.timeRangeType = val;
+                }
+                await api.passFlowAnalysis.totalPassFlow(obj).then(res=>{
+                    console.log(res,"总客流统计")
+                    let arr = [],obj={},lengentArr=[];
+                    res.forEach(item=>{
+                        let str = '';
+                        if(item.hour){
+                            str = item.day+'\n'+item.key.toString()+':00';
+                        }else if(item.week){
+                            str = item.key.toString()+'周';
+                        }else if(item.month){
+                            str = item.key.toString()+'月';
+                        }else if(item.quarter){
+                            str = item.key.toString()+'月';
+                        }else{
+                            str = item.key.toString();
+                        }
+                        obj.name = str;
+                        obj.value = item.total_stay_count;
+                        arr.push(obj);
+                        lengentArr.push(str);
+                        obj={}
+                    })
+                    this.carData.carTime = lengentArr;
+                    this.carData.carNumber = arr;
+                    this.realpassFlow()
+                })
                 this.currtotalTime='';
-                console.log(val,"@@@@@@@@@@@@@@@@@@@@@@@@@")
-                this.realpassFlow()
             },
-            selectKindTrip(val){
-                console.log(val,"@@@@@@@@@@@@@@@@@@@@@@@@@")
-                if(val == 'day'){
-                   this.currLengent = '当天';
-                   this.lastLengent = '前一天'
-
-                }else if(val == 'month'){
-                    this.currLengent = '本月';
-                    this.lastLengent = '上一月'
-                }else if(val == 'week'){
+            async selectKindTrip(val){
+                let obj = {
+                    "timeUnit": "week"
+                }
+                if(val == undefined || val =='lastWeek'){
+                    obj.timeUnit = 'week';
                     this.currLengent = '本周';
                     this.lastLengent = '上一周'
-                }else if(val == 'year'){
+                }else if(val =='lastYear'){
+                    obj.timeUnit = 'year';
                     this.currLengent = '本年';
                     this.lastLengent = '上一年'
-                }else{
+                }else if(val =='lastMonth'){
+                    obj.timeUnit = 'month';
+                    this.currLengent = '本月';
+                    this.lastLengent = '上一月'
+                }else if(val =='lastQuarter'){
+                    obj.timeUnit = 'quarter';
                     this.currLengent = '本季度';
                     this.lastLengent = '上一季度'
+                }else if(val =='lastDay'){
+                    obj.timeUnit = 'day';
+                    this.currLengent = '当天';
+                    this.lastLengent = '前一天'
                 }
-                this.tripFlow()
+                await api.passFlowAnalysis.tripPassFlow(obj).then(res=>{
+                    console.log(res,"景区环比客流")
+                    let arr = [],obj={},lengentArr = [],arr1=[],obj1={};
+                    if(res[0].length == 0){
+                        if(res[1].length == 0){
+                            for(let i=0;i<this.tripFlowData.legent.length;i++){
+                                obj.name = this.tripFlowData.legent[i];
+                                obj.value = 0;
+                                arr.push(obj);
+                                obj={};
+                                obj1.name = this.tripFlowData.legent[i];
+                                obj1.value = 0;
+                                arr1.push(obj1);
+                                lengentArr.push(this.tripFlowData.legent[i]);
+                                obj1={}
+                            }
+                        }else{
+                            for(let i=0;i<res[1].length;i++){
+                                obj.name = res[1][i].location;
+                                obj.value = 0;
+                                arr.push(obj);
+                                obj={};
+                                obj1.name = res[1][i].location;
+                                obj1.value = res[1][i].total_stay_count;
+                                arr1.push(obj1);
+                                lengentArr.push(res[1][i].location);
+                                obj1={}
+                            }
+                        }
+                    }else{
+                        res[0].forEach(item=>{
+                            obj.name = item.location;
+                            obj.value = item.total_stay_count;
+                            arr.push(obj);
+                            obj={}
+                        })
+                        res[1].forEach(item=>{
+                            obj1.name = item.location;
+                            obj1.value = item.total_stay_count;
+                            arr1.push(obj1);
+                            lengentArr.push(item.location);
+                            obj1={}
+                        })
+                    }
+                    console.log(this.tripFlowData,"景区环比变换后的数据")
+                    this.tripFlowData.lastWeek = arr;
+                    this.tripFlowData.legent = lengentArr;
+                    this.tripFlowData.currWeek = arr1;
+                    this.tripFlow()
+                })
+                console.log(val,"@@@@@@@@@@@@@@@@@@@@@@@@@")
             },
            async realTimeFlow(){
-                // await api.passFlowAnalysis.realPassFlow().then(res=>{
-                //     let count = 0;
-                //      for(let i=0;i<res.total.length;i++){
-                //          count += res.total[i].stayCount;
-                //      }
-                //     this.realTimeFlowNum = count;
-                //     let arr = this.realTimeFlowNum.toString().split('').reverse();
-                //     let currArr = [];
-                //     for(let i=0;i<arr.length;i++){
-                //         if((i == 3 || i == 6 || i == 9) && i<arr.length-1){
-                //             currArr.push('、')
-                //         }
-                //         currArr.push(arr[i])
-                //     }
-                //     currArr = currArr.reverse();
-                //     this.realTimeFlowNum = currArr.join('');
-                //     console.log(res,"实时客流量")
-                //     console.log(count,"实时客流量")
-                // })
-               this.realTimeFlowNum = 784511;
-               let arr = this.realTimeFlowNum.toString().split('').reverse();
-               let currArr = [];
-               for(let i=0;i<arr.length;i++){
-                   if((i == 3 || i == 6 || i == 9) && i<arr.length-1){
-                       currArr.push('、')
-                   }
-                   currArr.push(arr[i])
-               }
-               currArr = currArr.reverse();
-               this.realTimeFlowNum = currArr.join('');
+                await api.passFlowAnalysis.realPassFlow().then(res=>{
+                    // let count = 0;
+                    //  for(let i=0;i<res.total.length;i++){
+                    //      count += res.total[i].stayCount;
+                    //  }
+                    this.realTimeFlowNum = res.realtimepassflow;
+                    let arr = this.realTimeFlowNum.toString().split('').reverse();
+                    let currArr = [];
+                    for(let i=0;i<arr.length;i++){
+                        if((i == 3 || i == 6 || i == 9) && i<arr.length-1){
+                            currArr.push(',')
+                        }
+                        currArr.push(arr[i])
+                    }
+                    currArr = currArr.reverse();
+                    this.realTimeFlowNum = currArr.join('');
+                })
                setTimeout(() => {
                    let route = this.$route.path
                    if (route.includes('passengerFlow')) {
                        this.realTimeFlow();//长轮询
                    }
-                   console.log(route,"@@@@@@@@@@$$$$$$$$$$")
-               },5000)
-
-
+               },60000)
             },
             totalFlow(){
                 // this.totalFlowNum = 784511;
@@ -321,7 +516,7 @@
                 let currArr = [];
                 for(let i=0;i<arr.length;i++){
                     if((i == 3 || i == 6 || i == 9) && i<arr.length-1){
-                        currArr.push('、')
+                        currArr.push(',')
                     }
                     currArr.push(arr[i])
                 }
@@ -419,8 +614,8 @@
                 let option = {
                     grid: {
                         top:'10%',
-                        left: '3%',
-                        right: '3%',
+                        left: '6%',
+                        right: '6%',
                         bottom: '3%',
                         containLabel: true
                     },
@@ -439,18 +634,29 @@
                             }
                         },
                         formatter:(name)=>{
+                            // console.log(name,"同比上涨")
                             let currName='';
                             let percentNum = 0;
                             let isUp = '同比上涨';
-                            let num = name[0].data-name[1].data;
-                            currName = name[0].axisValue+"\n";
-                            percentNum = ((num/name[1].data)*100).toFixed(0)
+                            let num = name[0].data.value-name[1].data.value;
+                            currName = name[0].axisValue+'\n';
+                            // console.log(currName,"同比")
+                            // console.log(name,"同比")
+                            // console.log(num,"同比")
+                            if(name[1].data.value == 0){
+                                percentNum = name[0].data.value
+                            }else if(percentNum== 'NaN'){
+                                percentNum = 0
+                            }else{
+                                percentNum = ((num/name[1].data.value)*100).toFixed(0);
+                            }
+
                              if(num>0){
                                  isUp = '同比上涨';
                              }else{
                                  isUp = '同比下降';
                              }
-                            return currName+isUp+Math.abs(percentNum)+'%';
+                            return currName+ '\n' +this.currLengent+' '+name[0].data.value + '\n' +this.lastLengent+' '+name[1].data.value+' '+isUp+Math.abs(percentNum)+'%';
                         }
                     },
                     legend: {
@@ -478,7 +684,7 @@
                                 interval:0,
                                 formatter:function(value){
                                     var ret = "";//拼接加\n返回的类目项
-                                    var maxLength = 3;//每项显示文字个数
+                                    var maxLength = 4;//每项显示文字个数
                                     var valLength = value.length;//X轴类目项的文字个数
                                     var rowN = Math.ceil(valLength / maxLength); //类目项需要换行的行数
                                     if (rowN > 1)//如果类目项的文字大于3,
@@ -654,6 +860,9 @@
                         axisTick:{
                             show:false
                         },
+                        textStyle: {
+                            color: '#01e4ff'
+                        },
                         data: this.carData.carTime
                     }],
                     yAxis: [{
@@ -694,7 +903,7 @@
                         }
                     ],
                     series: [{
-                        name: '增长数',
+                        name: '',
                         type: 'line',
                         smooth: true,
                         symbol: 'circle',
