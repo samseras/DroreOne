@@ -27,8 +27,8 @@
         name: "heat-map",
         data(){
             return{
-                sum:12346,
-                nowPassenger:4576,
+//                sum:12346,
+//                nowPassenger:4576,
                 total:[],
                 real:[],
                 value: [],
@@ -47,34 +47,72 @@
         },
         methods:{
             localeNum(){
-                let total = this.sum,
-                    real = this.nowPassenger;
-                this.total = String(parseFloat(total).toLocaleString()).split('')
-                this.real = String(parseFloat(real).toLocaleString()).split('')
+//                let total = this.sum,
+//                    real = this.nowPassenger;
+//                this.total = String(parseFloat(total).toLocaleString()).split('')
+//                this.real = String(parseFloat(real).toLocaleString()).split('')
             },
             async getHotArea(){ //运河景区热力
                 await api.passFlowAnalysis.heatFlow().then(res =>{
                     console.log(res,'123454')
-                    this.value = [],this.lngLat = []
+                    console.log(typeof(res[0].dayFlow),'123454')
+                    let sum = 0;
+                    let realNum = 0;
+                    this.value = [],this.lngLat = [];
+//                    let this.total= 0,this.real= 0;
+                    let obj = {
+                        name:"",
+                        longitude:"",
+                        latitude:"",
+                        totals:0,
+                        info:0,
+                        maxNum:"",
+                        time:""
+                    }
+                    let hot = {
+                        lng:"",
+                        lat:"",
+                        count:0
+                    }
                     res.forEach((item,index) =>{
-                      let obj = {
-                          id:index,
-                          name:item.areaIdName,
-                          longitude:item.longitude,
-                          latitude:item.latitude,
-                          info:item.stayCount,
-                          maxNum:item.maxLoad,
-                          time:item.openingTime
-                      }
-                      let hot = {
-                          lng:item.longitude,
-                          lat:item.latitude,
-                          count:item.stayCount
-                      }
+                        obj.name=item.areaIdName;
+                        obj.longitude=item.longitude;
+                        obj.latitude=item.latitude;
+                        obj.totals=item.dayFlow;
+                        obj.info=item.stayCount;
+                        obj.maxNum=item.maxLoad;
+                        obj.time=item.openingTime;
+                        hot.lng = item.longitude;
+                        hot.lat = item.latitude;
+                        hot.count = item.dayFlow;
+
+                        sum +=item.dayFlow;
+                        realNum +=item.stayCount;
                      this.lngLat.push(hot)
-                    this.value.push(obj)
-                        console.log(this.value,'wqertr')
+                     this.value.push(obj)
+                        hot = {
+                            lng:"",
+                            lat:"",
+                            count:0
+                        };
+                        obj = {
+                            id:index,
+                            name:"",
+                            longitude:"",
+                            latitude:"",
+                            totals:0,
+                            info:0,
+                            maxNum:"",
+                            time:""
+                        }
+
                     })
+                    this.total = String(parseFloat(sum).toLocaleString()).split('');
+                    this.real = String(parseFloat(realNum).toLocaleString()).split('')
+//                    console.log(this.lngLat,'wqertr')
+//                    console.log(this.value,'wqertr')
+//                    console.log(this.total,"!!!!!")
+//                    console.log(this.real,"@@@@@222")
                 }).catch(err =>{
                     console.log(err)
                 })
@@ -243,42 +281,42 @@
                     height: 218, // 信息窗口高度
                     title : "<span style='font-size:15px;color:#FF0000;background-color:#FFFFFF'></span>"
                 }
-//                setInterval(() => {
-//                    let route = this.$route.path
-//                    if (route.includes('scenicHeaTMap')) {
-//                        data_info = this.value
+                setInterval(() => {
+                    let route = this.$route.path
+                    if (route.includes('scenicHeaTMap')) {
+                        data_info = this.value
 //                        console.log(data_info[19].info,'-------',this.value[19].info, '././././../././././././.')
-//                        for (var i = 0; i < data_info.length; i++) {
-//                            var marker = new BMap.Marker(new BMap.Point(data_info[i].position[0], data_info[i].position[1])) // 创建标注
-////                    marker.setAnimation(BMAP_ANIMATION_BOUNCE)
-//                            var content =
-//                                "<div class='dialog' style='background: url("+'./../../../static/img/num.png'+") no-repeat; background-position: inherit; background-size: 100%'>" +
-//                                "<h2 style='margin:5px 0 5px 10px;padding:0.2em 0;color:#fff'>" + data_info[i].name + " </h2> " +
-//                                "<p style='margin-top:10px;line-height:2.0;font-size:14px;color:#fff'>当前人数：<span style='font-size: 20px;font-weight:bolder;color:#fbc91c'>" + data_info[i].info + "</span></p>" +
-//                                "<p style='margin-top:10px;line-height:2.0;font-size:14px;color:#fff'>最大容量：<span style='font-size: 20px;font-weight:bolder;color:#fbc91c'>" + data_info[i].maxNum + "</span></p>" +
-//                                "<p style='margin-top:10px;line-height:2.0;font-size:14px;color:#fff'>开放时间：<span style='font-size: 20px;font-weight:bolder;color:#fbc91c'>" + data_info[i].time + "</span></p>" +
-//                                "</div>"
-//                            map.addOverlay(marker) // 将标注添加到地图中
-//                            addClickHandler(content, marker)
-////                     marker.setAnimation(BMAP_ANIMATION_BOUNCE); //跳动的动画
-//                        }
-//                    }
-//                },10000)
-//                for (var i = 0; i < data_info.length; i++) {
-////                    console.log(data_info[i].position,'1234')
-//                    var marker = new BMap.Marker(new BMap.Point(data_info[i].position[0], data_info[i].position[1])) // 创建标注
-////                    marker.setAnimation(BMAP_ANIMATION_BOUNCE)
-//                    var content =
-//                        "<div class='dialog' style='background: url("+'./../../../static/img/num.png'+") no-repeat; background-position: inherit; background-size: 100%'>" +
-//                        "<h2 style='margin:5px 0 5px 10px;padding:0.2em 0;color:#fff'>" + data_info[i].name + " </h2> " +
-//                        "<p style='margin-top:20px;line-height:2.0;font-size:14px;color:#fff'>当前人数：<span style='font-size: 20px;font-weight:bolder;color:#fbc91c'>" + data_info[i].info + "</span></p>" +
-//                        "<p style='margin-top:10px;line-height:2.0;font-size:14px;color:#fff'>最大容量：<span style='font-size: 20px;font-weight:bolder;color:#fbc91c'>" + data_info[i].maxNum + "</span></p>" +
-//                        "<p style='margin-top:10px;line-height:2.0;font-size:14px;color:#fff'>开放时间：<span style='font-size: 20px;font-weight:bolder;color:#fbc91c'>" + data_info[i].time + "</span></p>" +
-//                        "</div>"
-//                    map.addOverlay(marker) // 将标注添加到地图中
-//                    addClickHandler(content, marker)
-////                     marker.setAnimation(BMAP_ANIMATION_BOUNCE); //跳动的动画
-//                }
+                        for (var i = 0; i < data_info.length; i++) {
+                            var marker = new BMap.Marker(new BMap.Point(data_info[i].longitude, data_info[i].latitude)) // 创建标注
+//                    marker.setAnimation(BMAP_ANIMATION_BOUNCE)
+                            var content =
+                                "<div class='dialog' style='background: url("+'./../../../static/img/num.png'+") no-repeat; background-position: inherit; background-size: 100%'>" +
+                                "<h2 style='margin:5px 0 5px 10px;padding:0.2em 0;color:#fff'>" + data_info[i].name + " </h2> " +
+                                "<p style='margin-top:10px;line-height:2.0;font-size:14px;color:#fff'>当前人数：<span style='font-size: 20px;font-weight:bolder;color:#fbc91c'>" + data_info[i].info + "</span></p>" +
+                                "<p style='margin-top:10px;line-height:2.0;font-size:14px;color:#fff'>最大容量：<span style='font-size: 20px;font-weight:bolder;color:#fbc91c'>" + data_info[i].maxNum + "</span></p>" +
+                                "<p style='margin-top:10px;line-height:2.0;font-size:14px;color:#fff'>开放时间：<span style='font-size: 20px;font-weight:bolder;color:#fbc91c'>" + data_info[i].time + "</span></p>" +
+                                "</div>"
+                            map.addOverlay(marker) // 将标注添加到地图中
+                            addClickHandler(content, marker)
+//                     marker.setAnimation(BMAP_ANIMATION_BOUNCE); //跳动的动画
+                        }
+                    }
+                },10000)
+                for (var i = 0; i < data_info.length; i++) {
+//                    console.log(data_info[i].position,'1234')
+                    var marker = new BMap.Marker(new BMap.Point(data_info[i].longitude, data_info[i].latitude)) // 创建标注
+//                    marker.setAnimation(BMAP_ANIMATION_BOUNCE)
+                    var content =
+                        "<div class='dialog' style='background: url("+'./../../../static/img/num.png'+") no-repeat; background-position: inherit; background-size: 100%'>" +
+                        "<h2 style='margin:5px 0 5px 10px;padding:0.2em 0;color:#fff'>" + data_info[i].name + " </h2> " +
+                        "<p style='margin-top:20px;line-height:2.0;font-size:14px;color:#fff'>当前人数：<span style='font-size: 20px;font-weight:bolder;color:#fbc91c'>" + data_info[i].info + "</span></p>" +
+                        "<p style='margin-top:10px;line-height:2.0;font-size:14px;color:#fff'>最大容量：<span style='font-size: 20px;font-weight:bolder;color:#fbc91c'>" + data_info[i].maxNum + "</span></p>" +
+                        "<p style='margin-top:10px;line-height:2.0;font-size:14px;color:#fff'>开放时间：<span style='font-size: 20px;font-weight:bolder;color:#fbc91c'>" + data_info[i].time + "</span></p>" +
+                        "</div>"
+                    map.addOverlay(marker) // 将标注添加到地图中
+                    addClickHandler(content, marker)
+//                     marker.setAnimation(BMAP_ANIMATION_BOUNCE); //跳动的动画
+                }
                 function addClickHandler (content, marker) {
                     marker.addEventListener('click', function (e) {
                         openInfo(content, e)})
@@ -291,11 +329,12 @@
                 }
 //                热力图
 //                var points = this.lngLat
-                var points =[
-                    {"lng":120.140742,"lat":30.337346,"count":300},
-                    {"lng":120.14269,"lat":30.329816,"count":851},
-
-                    {"lng":120.153785,"lat":30.302519,"count":308}];
+                var points = this.lngLat
+//                    [
+//                    {"lng":120.140742,"lat":30.337346,"count":300},
+//                    {"lng":120.14269,"lat":30.329816,"count":851},
+//
+//                    {"lng":120.153785,"lat":30.302519,"count":308}];
                 var heatmapOverlay = new BMapLib.HeatmapOverlay({"radius":20});
                 map.addOverlay(heatmapOverlay);
                 heatmapOverlay.setDataSet({data:points,min:0,max:500});
@@ -390,5 +429,28 @@
             /*height:100%;*/
             /*border:1px solid #01f5ff;*/
         /*}*/
+        .BMap_pop{
+            background: transparent !important;
+            .BMap_top{
+                background: transparent;
+                border-color: transparent;
+            }
+            div{
+                background: transparent !important;
+                border-color: transparent !important;
+                img{
+                    display: none;
+                }
+            }
+            .dialog{
+                width: 222px;
+                height: 218px;
+                background: url("./../../../static/img/num.png") no-repeat !important;
+                padding: 10px;
+                box-sizing: border-box;
+                background-position: initial;
+                background-size: inherit;
+            }
+        }
     }
 </style>
