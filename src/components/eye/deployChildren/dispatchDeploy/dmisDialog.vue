@@ -888,6 +888,11 @@
                 let newInfo = {}
                 if (this.route.includes('security')) {
                     console.log(!this.security.inspectionSchedule.name, '这个是啥')
+
+                    if(this.security.iScheduleMaps.length == 0){
+                        this.$message.error('请至少添加一条人员信息')
+                        return
+                    }
                     if (!this.security.inspectionSchedule.name || this.security.inspectionSchedule.name === ''){
                         this.$message.error('请输入完整信息')
                         return
@@ -1073,6 +1078,12 @@
                     this.screen.ledSchedule.watchTime= this.timeSelect
                     newInfo = this.screen
                 } else if(this.route.includes('transport')) {
+
+                    if(this.transport.vDriverMaps.length == 0){
+                        this.$message.error('请至少添加一条车船信息')
+                        return
+                    }
+
                     if (!(this.transport.name && this.transport.name !== '')) {
                         this.$message.error('请输入完整信息')
                         return
@@ -1105,14 +1116,12 @@
                         return
                     }
 
-                    if(this.transport.vDriverMaps.length >0){
-                        this.transport.svDriverMaps = this.transport.vDriverMaps.map(item=>{
-                            return {
-                                vehicleId:item.vehicleId,
-                                driverIds : new Array(item.driverId)
-                            }
-                        })
-                    }
+                    this.transport.svDriverMaps = this.transport.vDriverMaps.map(item=>{
+                        return {
+                            vehicleId:item.vehicleId,
+                            driverIds : new Array(item.driverId)
+                        }
+                    })
                     newInfo = this.transport
                 }
                 newInfo.status = true

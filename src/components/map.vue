@@ -3703,9 +3703,10 @@
             },
             getTreeState(){
                 console.log(this.getTreeState,'选择树的内容')
-                this.selectedCast=(((this.getTreeState)[0]).checked).checkedNodes;
+                if(((this.getTreeState)[0]).checked){
+                    this.selectedCast=(((this.getTreeState)[0]).checked).checkedNodes;
+                }
                 this.selectedCastContent=this.selectedCast;
-                console.log(this.getTreeState,'213123')
 
                 if(this.getTreeState.length>1) {
                     // console.log(this.getTreeState,'ioioioiooioioiooi')
@@ -3802,7 +3803,13 @@
                                     this.roadHideID(item.routeId)
                                 }else if(item.type =='warn'){
                                     this.treeHide(item);
-                                }else {
+                                }else if(item.type =='security' && item.subtype == "securitySchedule"){
+                                    this.treeHide(item);
+                                    this.roadHide(item.routeObj)
+                                }else if(item.type =='transport' && item.subtype == "transportSchedule"){
+                                    this.treeHide(item);
+                                    this.roadHide(item.routeObj)
+                                } else {
                                     this.treeHide(item);
                                 }
                             }
@@ -3889,11 +3896,19 @@
                                     }
 
                                 }else if(data[i].type =='transport' && data[i].subtype =="transportSchedule"){
-                                    this.treeShow(data[i]);
-                                    this.roadShow(data[i].routeObj)
+                                    if(data[i].status == "ONLINE"){
+                                        this.treeShow(data[i]);
+                                        this.roadShow(data[i].routeObj)
+                                    }
                                 }else if(data[i].type =='security' && data[i].subtype =="securitySchedule"){
-                                     this.treeShow(data[i]);
-                                     this.roadShow(data[i].routeObj)
+                                    if(data[i].status == "ONLINE"){
+                                        this.treeShow(data[i]);
+                                        this.roadShow(data[i].routeObj)
+                                    }
+                                }else if(data[i].type =='security' && data[i].subtype =="securityPerson"){
+                                    if(data[i].status == "ONLINE"){
+                                        this.treeShow(data[i]);
+                                    }
                                 }else {
                                     if(data[i].type =='person'){
                                         this.roadShowID(data[i].routeId)
@@ -4176,7 +4191,7 @@
                                         this.treeShow(this.getTreeState[0]);
                                         this.roadShow(this.getTreeState[0].routeObj)
                                     }
-                                } else {
+                                }else {
                                     this.treeShow(this.getTreeState[0]);
                                 }
                             }

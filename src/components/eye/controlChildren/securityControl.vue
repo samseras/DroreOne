@@ -33,7 +33,7 @@
                             :Info="securityScheduleInfo"
                             :lightCheckout="seScheduleCheckout"
                             :regionId="regionId"
-                            :lightList="securitySchedulelist"
+                            :list="securitySchedulelist"
                             :number="scheduleNumber">
                         </schedule-ztree>
                     </ScrollContainer>
@@ -314,29 +314,34 @@
                     console.log(result,'00000')
                     let users = result[0]
 
-                    this.securityPersonList = users
-                    this.personNumber=this.securityPersonList.length
+                    this.personNumber=users.length
                     this.securityPersonInfo=[]
+                    this.securityPersonlist = []
 
                     let personObj = {
                         label:'人员',
-                        id:100010,
+                        id:'100000',
                         children:[]
                     }
+                    this.regionId = ['100000']
+                    let childObj
                     if(users.length >0){
                         users.forEach(userObj=>{
-                            personObj.children.push({
+                            childObj = {
                                 label:userObj.name,
                                 id:userObj.id,
                                 url:'/static/img/icon/people_small.svg',
                                 type:'security',
                                 subtype:'securityPerson',
+                                regionId:'100000',
                                 status:userObj.gpsData ? "ONLINE" : "OFFLINE",
                                 icon:userObj.gpsData ? '../../../static/img/people_open.svg' : '../../../static/img/people_gray.svg' ,
                                 longitude:userObj.gpsData ? userObj.gpsData.longitude : '',
                                 latitude:userObj.gpsData ? userObj.gpsData.latitude : '',
                                 gpsDeviceId:userObj.gpsId
-                            })
+                            }
+                            this.securityPersonlist.push(childObj)
+                            personObj.children.push(childObj)
                         })
                     }
 
@@ -504,11 +509,10 @@
                     console.log(result,'00000')
                     let schedules = result[0]
 
-                    this.securitySchedulelist = schedules
-                    this.scheduleNumber=this.securitySchedulelist.length
+                    this.scheduleNumber=schedules.length
                     this.securityScheduleInfo=[]
-
-
+                    this.securitySchedulelist=[]
+                    this.regionId = []
                     if(schedules.length >0){
                         if(this.scheduleRoutes.length>0){
                             schedules.forEach(scObj=>{
@@ -525,21 +529,26 @@
                                 id:obj.inspectionSchedule.id,
                                 children:[]
                             }
-                            if(obj.persons && obj.persons.length > 0){
+                            this.regionId.push(obj.inspectionSchedule.id)
+                            let childInfo = {}
+                            if(obj.persons instanceof Array && obj.persons.length > 0){
                                 obj.persons.forEach(user=>{
-                                    scheduleObj.children.push({
+                                    childInfo = {
                                         label:user.name,
                                         id:user.id,
                                         url:'/static/img/icon/people_small.svg',
                                         type:'security',
                                         subtype:'securitySchedule',
+                                        regionId:obj.inspectionSchedule.id,
                                         status:user.gpsData ? "ONLINE" : "OFFLINE",
                                         icon:user.gpsData ? '../../../static/img/people_open.svg' : '../../../static/img/people_gray.svg' ,
                                         longitude:user.gpsData ? user.gpsData.longitude : '',
                                         latitude:user.gpsData ? user.gpsData.latitude : '',
                                         gpsDeviceId:user.gpsId?user.gpsId:'',
                                         routeObj:obj.routeObj
-                                    })
+                                    }
+                                    scheduleObj.children.push(childInfo)
+                                    this.securitySchedulelist.push(childInfo)
                                 })
                             }
                             this.securityScheduleInfo.push(scheduleObj)
@@ -547,6 +556,7 @@
                     }
                     console.log(this.securityScheduleInfo)
                 })
+
                 setTimeout(() => {
                     let route = this.$route.path
                     if (route.includes('controler/security')) {
@@ -582,7 +592,6 @@
             this.getScheduleRoute()
         },
         mounted() {
-
             this.initPersonData();
         },
         computed: {

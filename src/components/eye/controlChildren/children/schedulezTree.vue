@@ -29,7 +29,7 @@
 <script>
     import {mapMutations,mapGetters} from 'vuex'
     export default {
-        props:['Info','regionId','lightList','number','title','lightInfo','lightCheckout'],
+        props:['Info','regionId','list','number','title','lightInfo','lightCheckout'],
         data() {
             return {
                 filterText: '',
@@ -71,7 +71,7 @@
 
                 console.log(this.Info);
                 // this.$store.commit('SHOW_TREE', this.Info)
-                if (checkedKeysId.length == this.lightList.length) {
+                if (checkedKeysId.length == this.list.length) {
                     this.selectAllCheckBox = true
                 } else {
                     this.selectAllCheckBox = false
@@ -81,8 +81,8 @@
                 let arr
                 if(this.selectAllCheckBox){
                     this.selectedAll= []
-                    for (let i=0;i<this.lightList.length;i++){
-                        this.selectedAll.push({id:this.lightList[i].id,label: this.lightList[i].label})
+                    for (let i=0;i<this.list.length;i++) {
+                        this.selectedAll.push({id:this.list[i].id,label: this.list[i].label})
                     }
                     this.$refs.tree.setCheckedNodes(this.selectedAll);
                     arr = this.$refs.tree.getCheckedNodes()
@@ -96,12 +96,12 @@
                 }else {
                     this.selectedAll= []
                     this.$refs.tree.setCheckedNodes(this.selectedAll);
-                    this.lightList.forEach(item => {
+                    this.list.forEach(item => {
                         if (item.checked) {
                             delete item.checked
                         }
                     })
-                    arr = this.lightList
+                    arr = this.list
                 }
                 this.$store.commit('SHOW_TREE', arr)
             },
@@ -118,7 +118,7 @@
                 } else {
                     this.selectAllCheckBox = false
                 }
-                // console.log(checked.checkedNodes.length,this.lightList.length);
+                // console.log(checked.checkedNodes.length,this.list.length);
                 data.checked = checked
                 console.log(data, '这是最后提交的')
                 this.$store.commit('SHOW_TREE', data)
