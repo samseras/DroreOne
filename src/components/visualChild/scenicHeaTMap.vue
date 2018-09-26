@@ -20,6 +20,7 @@
 </template>
 
 <script>
+    import api from '@/api'
     import 'echarts/extension-src/bmap/bmap.js'
     import ScrollContainer from '@/components/ScrollContainer'
     export default {
@@ -30,39 +31,18 @@
                 nowPassenger:4576,
                 total:[],
                 real:[],
-                value: [
-                    {name: '武林门码头', value: 100},
-                    {name: '青园桥', value: 520},
-                    {name: '朝晖桥', value: 230},
-                    {name: '德胜桥', value: 922},
-                    {name: '御码头', value: 12044},
-                    {name: '富义仓', value: 500},
-                    {name: '乾隆坊', value: 122356},
-                    {name: '香积寺', value: 400},
-                    {name: '大兜路', value: 1722},
-                    {name: '青莎公园', value: 600}
-                ],
+                value: [],
                 geoCoordMap: {
-                    '武林门码头': [120.169102,30.279783],
-                    '青园桥': [120.167581,30.282035],
-                    '朝晖桥': [120.168273,30.293409],
-                    '潮王桥': [120.160606,30.292085],
-                    '德胜桥': [120.310025,30.324044],
-                    '左侯桥': [120.14493,30.270835],//
-                    '御码头': [120.157075,30.299584],
+                    '浙窑公园': [120.140742,30.337346],
+                    '运河天地': [120.143493,30.329816],
+                    '桥西': [120.14269,30.324313],
+                    '小河': [120.14338,30.306265],
+                    '大兜': [120.153785,30.302519],
                     '富义仓': [120.155508,30.301285],
-                    '乾隆坊': [120.153469,30.301031],
-                    '十里银湖': [120.179464,30.242971],///
-                    '香积寺': [120.153359,30.30435],
-                    '大兜路': [120.148654,30.309133],
-                    '大关桥': [120.147217,30.308903],
-                    '青莎公园': [120.145296,30.315264],
-                    '小河直街': [120.142548,30.312621],
-                    '桥西历史街区': [120.143762,30.324962],
-                    '拱宸桥': [120.14594,30.324335],
-                    '张大仙庙与财神庙': [120.144732,30.323184],
-                    '手工活态馆': [120.144804,30.3248215]
-                }
+                    '活态馆': [120.144804,30.324821]
+                },
+                points:[],
+                lngLat:[]
             }
         },
         methods:{
@@ -72,307 +52,281 @@
                 this.total = String(parseFloat(total).toLocaleString()).split('')
                 this.real = String(parseFloat(real).toLocaleString()).split('')
             },
-            getPassenger(){//获取后台实时客流
-
-            },
-            getEchartsMap () {
-                let that = this
-                var convertData = function (data, n) {
-                    var res = []
-                    for (var i = 0; i < data.length; i++) {
-                        var geoCoord = that.geoCoordMap[data[i].name]
-                        if (geoCoord) {
-                            res.push(geoCoord.concat(data[i].value + (Math.random() - 0.5) * n))
-                        }
+            async getHotArea(){ //运河景区热力
+                await api.passFlowAnalysis.heatFlow().then(res =>{
+                    console.log(res,'123454')
+                    this.value = [],this.lngLat = []
+                    res.forEach((item,index) =>{
+                      let obj = {
+                          id:index,
+                          name:item.areaIdName,
+                          longitude:item.longitude,
+                          latitude:item.latitude,
+                          info:item.stayCount,
+                          maxNum:item.maxLoad,
+                          time:item.openingTime
+                      }
+                      let hot = {
+                          lng:item.longitude,
+                          lat:item.latitude,
+                          count:item.stayCount
+                      }
+                     this.lngLat.push(hot)
+                    this.value.push(obj)
+                        console.log(this.value,'wqertr')
+                    })
+                }).catch(err =>{
+                    console.log(err)
+                })
+                setTimeout(() =>{
+                    let route = this.$route.path
+                    if(route.includes('scenicHeaTMap')){
+                      this.getHotArea(); //长轮循
                     }
-                    return res
-                }
-                let option = {
-                    baseOption: {
-                        toolbox: {
-                            show: true,
-                            left: '10px',
-                            top: '10px',
-                            feature: {
-                                restore: {},
-                                saveAsImage: {
-                                    backgroundColor: '#081633'
-                                }
+                },5000)
+            },
+            getbaiduMap () {
+                let map = new BMap.Map('echartHotMap',{enableMapClick:false})
+
+                map.centerAndZoom(new BMap.Point(120.145306,30.321234), 14)
+                map.enableScrollWheelZoom() // 启用滚轮放大缩小，默认禁用
+//                map.enableContinuousZoom() // 启用地图惯性拖拽，默认禁用
+
+                map.setMapStyle({
+                    styleJson: [
+                        {
+                            'featureType': 'water',
+                            'elementType': 'all',
+                            'stylers': {
+                                'color': '#021019'
                             }
                         },
-                        timeline: {
-                            autoPlay: true,
-                            data: ['7:00', '8:00', '9:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00'],
-                            axisType: 'category',
-                            padding: [5, 5, 5, 5],
-                            playInterval: 1500,
-                            lineStyle: {color: 'red'},
-                            label: {
-                                normal: {
-                                    textStyle: {
-                                        color: '#fff',
-                                        fontSize: 13
-                                    }
-                                }
+                        {
+                            'featureType': 'highway',
+                            'elementType': 'geometry.fill',
+                            'stylers': {
+                                'color': '#000000'
                             }
                         },
-                        bmap: {
-                            center: [120.168713,30.28058],
-                            zoom: 15,
-                            roam: true,
-                            mapStyle: {
-                                styleJson: [
-                                    {
-                                        'featureType': 'land', // 调整土地颜色
-                                        'elementType': 'geometry',
-                                        'stylers': {
-                                            'color': '#081734'
-                                        }
-                                    },
-                                    {
-                                        'featureType': 'building', // 调整建筑物颜色
-                                        'elementType': 'geometry',
-                                        'stylers': {
-                                            'color': '#04406F'
-                                        }
-                                    },
-                                    {
-                                        'featureType': 'building', // 调整建筑物标签是否可视
-                                        'elementType': 'labels',
-                                        'stylers': {
-                                            'visibility': 'off'
-                                        }
-                                    },
-                                    {
-                                        'featureType': 'highway', // 调整高速道路颜色
-                                        'elementType': 'geometry',
-                                        'stylers': {
-                                            'color': '#015B99'
-                                        }
-                                    },
-                                    {
-                                        'featureType': 'highway', // 调整高速名字是否可视
-                                        'elementType': 'labels',
-                                        'stylers': {
-                                            'visibility': 'off'
-                                        }
-                                    },
-                                    {
-                                        'featureType': 'arterial', // 调整一些干道颜色
-                                        'elementType': 'geometry',
-                                        'stylers': {
-                                            'color': '#003051'
-                                        }
-                                    },
-                                    {
-                                        'featureType': 'arterial',
-                                        'elementType': 'labels',
-                                        'stylers': {
-                                            'visibility': 'off'
-                                        }
-                                    },
-                                    {
-                                        'featureType': 'green',
-                                        'elementType': 'geometry',
-                                        'stylers': {
-                                            'visibility': 'off'
-                                        }
-                                    },
-                                    {
-                                        'featureType': 'water',
-                                        'elementType': 'geometry',
-                                        'stylers': {
-                                            'color': '#044161'
-                                        }
-                                    },
-                                    {
-                                        'featureType': 'subway', // 调整地铁颜色
-                                        'elementType': 'geometry.stroke',
-                                        'stylers': {
-                                            'color': '#003051'
-                                        }
-                                    },
-                                    {
-                                        'featureType': 'subway',
-                                        'elementType': 'labels',
-                                        'stylers': {
-                                            'visibility': 'off'
-                                        }
-                                    },
-                                    {
-                                        'featureType': 'railway',
-                                        'elementType': 'geometry',
-                                        'stylers': {
-                                            'visibility': 'off'
-                                        }
-                                    },
-                                    {
-                                        'featureType': 'railway',
-                                        'elementType': 'labels',
-                                        'stylers': {
-                                            'visibility': 'off'
-                                        }
-                                    },
-                                    {
-                                        'featureType': 'all', // 调整所有的标签的边缘颜色
-                                        'elementType': 'labels.text.stroke',
-                                        'stylers': {
-                                            'color': '#313131'
-                                        }
-                                    },
-                                    {
-                                        'featureType': 'all', // 调整所有标签的填充颜色
-                                        'elementType': 'labels.text.fill',
-                                        'stylers': {
-                                            'color': '#FFFFFF'
-                                        }
-                                    },
-                                    {
-                                        'featureType': 'manmade',
-                                        'elementType': 'geometry',
-                                        'stylers': {
-                                            'visibility': 'off'
-                                        }
-                                    },
-                                    {
-                                        'featureType': 'manmade',
-                                        'elementType': 'labels',
-                                        'stylers': {
-                                            'visibility': 'off'
-                                        }
-                                    },
-                                    {
-                                        'featureType': 'local',
-                                        'elementType': 'geometry',
-                                        'stylers': {
-                                            'visibility': 'off'
-                                        }
-                                    },
-                                    {
-                                        'featureType': 'local',
-                                        'elementType': 'labels',
-                                        'stylers': {
-                                            'visibility': 'off'
-                                        }
-                                    },
-                                    {
-                                        'featureType': 'subway',
-                                        'elementType': 'geometry',
-                                        'stylers': {
-                                            'lightness': -65
-                                        }
-                                    },
-                                    {
-                                        'featureType': 'railway',
-                                        'elementType': 'all',
-                                        'stylers': {
-                                            'lightness': -40
-                                        }
-                                    },
-                                    {
-                                        'featureType': 'boundary',
-                                        'elementType': 'geometry',
-                                        'stylers': {
-                                            'color': '#8b8787',
-                                            'weight': '1',
-                                            'lightness': -29
-                                        }
-                                    }]
+                        {
+                            'featureType': 'highway',
+                            'elementType': 'geometry.stroke',
+                            'stylers': {
+                                'color': '#147a92'
                             }
                         },
-                        visualMap: {
-                            min: 0,
-                            max: 3000,
-                            splitNumber: 5,
-                            inRange: {
-                                color: ['blue', 'green', 'yellow', 'red']
-                            },
-                            textStyle: {
-                                color: '#fff'
-                            },
-                            bottom: 100
-                        },
-                        series: [{
-                            type: 'heatmap',
-                            mapType: 'china',
-                            coordinateSystem: 'bmap',
-                            blurSize: 50
-                        }]
-                    },
-                    options: [
                         {
-                            series: [{
-                                data: convertData(this.value, 10000)
-                            }]
+                            'featureType': 'arterial',
+                            'elementType': 'geometry.fill',
+                            'stylers': {
+                                'color': '#6fa8dcff'
+                            }
                         },
                         {
-                            series: [{
-                                data: convertData(this.value, 20000)
-                            }]
+                            'featureType': 'arterial',
+                            'elementType': 'geometry.stroke',
+                            'stylers': {
+                                'color': '#666666ff'
+                            }
                         },
                         {
-                            series: [{
-                                data: convertData(this.value, 30000)
-                            }]
+                            'featureType': 'local',
+                            'elementType': 'geometry',
+                            'stylers': {
+                                'color': '#000000'
+                            }
                         },
                         {
-                            series: [{
-                                data: convertData(this.value, 40000)
-                            }]
+                            'featureType': 'land',
+                            'elementType': 'all',
+                            'stylers': {
+                                'color': '#032748ff'
+                            }
                         },
                         {
-                            series: [{
-                                data: convertData(this.value, 50000)
-                            }]
+                            'featureType': 'railway',
+                            'elementType': 'geometry.fill',
+                            'stylers': {
+                                'color': '#000000'
+                            }
                         },
                         {
-                            series: [{
-                                data: convertData(this.value, 60000)
-                            }]
+                            'featureType': 'railway',
+                            'elementType': 'geometry.stroke',
+                            'stylers': {
+                                'color': '#08304b'
+                            }
                         },
                         {
-                            series: [{
-                                data: convertData(this.value, 90000)
-                            }]
+                            'featureType': 'subway',
+                            'elementType': 'geometry',
+                            'stylers': {
+                                'lightness': -70
+                            }
                         },
                         {
-                            series: [{
-                                data: convertData(this.value, 70000)
-                            }]
+                            'featureType': 'building',
+                            'elementType': 'geometry.fill',
+                            'stylers': {
+                                'color': '#000000'
+                            }
                         },
                         {
-                            series: [{
-                                data: convertData(this.value, 60000)
-                            }]
+                            'featureType': 'all',
+                            'elementType': 'labels.text.fill',
+                            'stylers': {
+                                'color': '#857f7f'
+                            }
                         },
                         {
-                            series: [{
-                                data: convertData(this.value, 50000)
-                            }]
+                            'featureType': 'all',
+                            'elementType': 'labels.text.stroke',
+                            'stylers': {
+                                'color': '#000000'
+                            }
                         },
                         {
-                            series: [{
-                                data: convertData(this.value, 30000)
-                            }]
+                            'featureType': 'building',
+                            'elementType': 'geometry',
+                            'stylers': {
+                                'color': '#00ffffff'
+                            }
+                        },
+                        {
+                            'featureType': 'green',
+                            'elementType': 'geometry',
+                            'stylers': {
+                                'color': '#062032'
+                            }
+                        },
+                        {
+                            'featureType': 'boundary',
+                            'elementType': 'all',
+                            'stylers': {
+                                'color': '#2190b8ff'
+                            }
+                        },
+                        {
+                            'featureType': 'manmade',
+                            'elementType': 'geometry',
+                            'stylers': {
+                                'color': '#022338'
+                            }
+                        },
+                        {
+                            'featureType': 'poi',
+                            'elementType': 'all',
+                            'stylers': {
+                                'visibility': 'off'
+                            }
+                        },
+                        {
+                            'featureType': 'all',
+                            'elementType': 'labels.icon',
+                            'stylers': {
+                                'visibility': 'off'
+                            }
+                        },
+                        {
+                            'featureType': 'all',
+                            'elementType': 'labels.text.fill',
+                            'stylers': {
+                                'color': '#eeeeeeff',
+                                'visibility': 'on'
+                            }
                         }
                     ]
+                })
+                var data_info = this.value
+                var opts = {
+                    width : 222, // 信息窗口宽度
+                    height: 218, // 信息窗口高度
+                    title : "<span style='font-size:15px;color:#FF0000;background-color:#FFFFFF'></span>"
                 }
-                let myChart = this.$echarts.init(document.getElementById('echartHotMap'))
-                myChart.setOption(option)
-            }
+//                setInterval(() => {
+//                    let route = this.$route.path
+//                    if (route.includes('scenicHeaTMap')) {
+//                        data_info = this.value
+//                        console.log(data_info[19].info,'-------',this.value[19].info, '././././../././././././.')
+//                        for (var i = 0; i < data_info.length; i++) {
+//                            var marker = new BMap.Marker(new BMap.Point(data_info[i].position[0], data_info[i].position[1])) // 创建标注
+////                    marker.setAnimation(BMAP_ANIMATION_BOUNCE)
+//                            var content =
+//                                "<div class='dialog' style='background: url("+'./../../../static/img/num.png'+") no-repeat; background-position: inherit; background-size: 100%'>" +
+//                                "<h2 style='margin:5px 0 5px 10px;padding:0.2em 0;color:#fff'>" + data_info[i].name + " </h2> " +
+//                                "<p style='margin-top:10px;line-height:2.0;font-size:14px;color:#fff'>当前人数：<span style='font-size: 20px;font-weight:bolder;color:#fbc91c'>" + data_info[i].info + "</span></p>" +
+//                                "<p style='margin-top:10px;line-height:2.0;font-size:14px;color:#fff'>最大容量：<span style='font-size: 20px;font-weight:bolder;color:#fbc91c'>" + data_info[i].maxNum + "</span></p>" +
+//                                "<p style='margin-top:10px;line-height:2.0;font-size:14px;color:#fff'>开放时间：<span style='font-size: 20px;font-weight:bolder;color:#fbc91c'>" + data_info[i].time + "</span></p>" +
+//                                "</div>"
+//                            map.addOverlay(marker) // 将标注添加到地图中
+//                            addClickHandler(content, marker)
+////                     marker.setAnimation(BMAP_ANIMATION_BOUNCE); //跳动的动画
+//                        }
+//                    }
+//                },10000)
+//                for (var i = 0; i < data_info.length; i++) {
+////                    console.log(data_info[i].position,'1234')
+//                    var marker = new BMap.Marker(new BMap.Point(data_info[i].position[0], data_info[i].position[1])) // 创建标注
+////                    marker.setAnimation(BMAP_ANIMATION_BOUNCE)
+//                    var content =
+//                        "<div class='dialog' style='background: url("+'./../../../static/img/num.png'+") no-repeat; background-position: inherit; background-size: 100%'>" +
+//                        "<h2 style='margin:5px 0 5px 10px;padding:0.2em 0;color:#fff'>" + data_info[i].name + " </h2> " +
+//                        "<p style='margin-top:20px;line-height:2.0;font-size:14px;color:#fff'>当前人数：<span style='font-size: 20px;font-weight:bolder;color:#fbc91c'>" + data_info[i].info + "</span></p>" +
+//                        "<p style='margin-top:10px;line-height:2.0;font-size:14px;color:#fff'>最大容量：<span style='font-size: 20px;font-weight:bolder;color:#fbc91c'>" + data_info[i].maxNum + "</span></p>" +
+//                        "<p style='margin-top:10px;line-height:2.0;font-size:14px;color:#fff'>开放时间：<span style='font-size: 20px;font-weight:bolder;color:#fbc91c'>" + data_info[i].time + "</span></p>" +
+//                        "</div>"
+//                    map.addOverlay(marker) // 将标注添加到地图中
+//                    addClickHandler(content, marker)
+////                     marker.setAnimation(BMAP_ANIMATION_BOUNCE); //跳动的动画
+//                }
+                function addClickHandler (content, marker) {
+                    marker.addEventListener('click', function (e) {
+                        openInfo(content, e)})
+                }
+                function openInfo (content, e) {
+                    var p = e.target
+                    var point = new BMap.Point(p.getPosition().lng, p.getPosition().lat)
+                    var infoWindow = new BMap.InfoWindow(content, opts) // 创建信息窗口对象
+                    map.openInfoWindow(infoWindow, point) // 开启信息窗口
+                }
+//                热力图
+//                var points = this.lngLat
+                var points =[
+                    {"lng":120.140742,"lat":30.337346,"count":300},
+                    {"lng":120.14269,"lat":30.329816,"count":851},
+
+                    {"lng":120.153785,"lat":30.302519,"count":308}];
+                var heatmapOverlay = new BMapLib.HeatmapOverlay({"radius":20});
+                map.addOverlay(heatmapOverlay);
+                heatmapOverlay.setDataSet({data:points,min:0,max:500});
+                setGradient()
+                function setGradient(){
+                    var gradient = {0: 'rgb(49, 222, 94)',
+                        0.5: 'rgb(239, 237, 71)',
+                        1: 'rgb(238, 76, 76)'};
+                    var colors = document.querySelectorAll("input[type='color']");
+                    colors = [].slice.call(colors,0);
+                    colors.forEach(function(ele){
+                        gradient[ele.getAttribute("data-key")] = ele.value;
+                    });
+                    heatmapOverlay.setOptions({"gradient":gradient});
+                }
+            },
+
         },
         components:{
             ScrollContainer
         },
         async mounted(){
-            await this.getEchartsMap()
+            await this.getHotArea()
+            await this.getbaiduMap()
             await this.localeNum()
         },
         created(){
-            let that = this
-            setInterval(function(){
-                that.getPassenger()
-            },50000)
+//            let that = this
+//            setInterval(function(){
+//                that.getPassenger()
+//            },50000)
         }
     }
 </script>

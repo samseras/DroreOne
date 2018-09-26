@@ -8,6 +8,12 @@ const passFlowAnalysis = {
             method: 'GET',
             url: '/iot/cache/PassFlow_Current_Data',
         })
+    },
+    heatFlow (){
+        return axios({
+            method:'GET',
+            url:'/iot/cache/PassFlow_Detail_Log'
+        })
     }
 }
 
