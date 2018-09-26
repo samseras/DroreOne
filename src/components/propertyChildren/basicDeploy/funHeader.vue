@@ -1,7 +1,7 @@
 <template>
     <div class="funHeader">
         <div class="searchInfo">
-            <input type="text" placeholder="请输入搜索内容" v-model="searchContent" @keyup="startSearch">
+            <input type="text" placeholder="请输入搜索内容" v-model="searchContent" >
             <i class="el-icon-search"></i>
         </div>
         <div class="funcBtn">
@@ -48,9 +48,7 @@
             </el-checkbox-group>
         </div>
         <div class="page">
-            <span>当前第{{currentPageNum}}页/共{{pageAllNum}}页</span>
-            <span class="upPage"@click="previousPage"><</span>
-            <span class="downPage" @click="nextPage">></span>
+            <Pagination class="pageSize"></Pagination>
             <span class="listForm" @click="toggleList('list')" v-if="isShowIcon"><i class="el-icon-tickets"></i></span>
             <span class="cardForm" @click="toggleList('card')" v-if="!isShowIcon"><i class="el-icon-menu"></i></span>
         </div>
@@ -60,12 +58,14 @@
 <script>
     import api from '@/api'
     import {mapGetters,mapMutations} from 'vuex'
+    import Pagination from '@/components/public/Pagination'
     export default {
         name: "fun-header",
         props: ['choseId', 'listsLength', 'personListFlag'],
         inject:['reload'],
         data() {
             return {
+                currentPage3: 1,
                 filterList: [],
                 personTypeList: [],
                 indicatorType: [
@@ -93,7 +93,7 @@
             }
         },
         methods: {
-            ...mapMutations(['SHOWBASICICON']),
+            ...mapMutations(['SHOWBASICICON', 'CURRENT_NUM']),
             startSearch() {
                 // if (this.searchContent !== '') {
                 this.$emit('searchAnything', this.searchContent)
@@ -641,6 +641,12 @@
                 }
             },
             showHeader() {
+                let date = new Date().getTime()
+                let obj = {
+                    currentNum: 1
+                }
+                obj[date] = new Date().getTime()
+                this.$store.commit('CURRENT_NUM', obj)
                 let route = this.$route.path
                 if (route.includes('roat')) {
                     this.isShowHeader = false
@@ -657,22 +663,6 @@
                     this.allDotisShowHeader = true
                 }
             },
-            previousPage() {//上一页
-                this.currentPageNum--
-                if (this.currentPageNum < 1) {
-                    this.currentPageNum = 1
-                    return
-                }
-                this.$emit('previousPage', this.currentPageNum)
-            },
-            nextPage() {//下一页
-                this.currentPageNum++
-                if (this.currentPageNum > this.pageAllNum) {
-                    this.currentPageNum = this.pageAllNum
-                    return
-                }
-                this.$emit('nextPage', this.currentPageNum)
-            }
         },
         filters: {
             packFilter(item) {
@@ -685,7 +675,6 @@
         },
         watch: {
             '$route'() {
-                this.currentPageNum = 1
                 this.showType()
                 this.showHeader()
             },
@@ -704,6 +693,9 @@
             },
             getBasicIcon() {
                 this.toggleList(this.getBasicIcon)
+            },
+            searchContent () {
+                this.startSearch()
             }
         },
         created() {
@@ -713,6 +705,9 @@
         },
         computed: {
             ...mapGetters(['getBasicIcon'])
+        },
+        components: {
+            Pagination
         }
     }
 </script>
@@ -789,11 +784,15 @@
             margin-left: rem(20);
             font-size: rem(12);
             float: right;
-            margin-top: rem(3);
+            margin-top: rem(-3);
+            .pageSize{
+                margin-top: rem(-3);
+            }
             span{
-                display: inline-block;
+                float: right;
                 cursor: pointer;
-                margin-left: rem(5);
+                margin-left: rem(10);
+                margin-top: rem(6);
             }
             .upPage,downPage,listForm,cardForm{
                 padding: rem(5);

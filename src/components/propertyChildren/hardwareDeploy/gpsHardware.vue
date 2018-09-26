@@ -10,11 +10,8 @@
                         @selectedAll="selectedAll"
                         @fixedInfo="fixedInfo"
                         :choseId="choseInfoId"
-                        :listsLength = "listLength"
                         @searchAnything="searchAnything"
                         :personListFlag="selectFlag"
-                        @nextPage="nextPage"
-                        @previousPage="previousPage"
                         @choseType="choseType"
                         @toggleList="toggleList"
                         @getAllGps="getAllGps">
@@ -125,10 +122,12 @@
     import HardWare from './hardwareDialog.vue'
     import api from '@/api'
     import _ from 'lodash'
+    import {mapMutations, mapGetters} from 'vuex'
 
     export default{
         data(){
             return{
+                allGpsList: [],
                 selectFlag:false,
                 tempSelects:[],
                 isShowGpsCard:true,
@@ -147,11 +146,10 @@
                 show:false,
                 isShowLoading:false,
                 currentNum: 50,
-                listLength: '',
-                pageNum: 1
             }
         },
         methods:{
+            ...mapMutations(['TOTAL_NUM']),
             imgError (e) {
                 e.target.src = this.getUrl(null);
             },
@@ -170,8 +168,8 @@
             searchAnything (info) {
                 console.log(info, '这是要过滤的')
                 if (info.trim() !== '') {
-                    this.gpsList = this.checkList.filter(item => {
-                        if (item.regionName.includes(info)) {
+                    this.gpsList = this.allGpsList.filter(item => {
+                        if (item.regionName && item.regionName.includes(info)) {
                             return item
                         }
                         if (item.ip && item.ip.includes(info)) {
@@ -367,16 +365,6 @@
                 this.selectFlag=true
                 console.log(this.choseInfoId)
             },
-            previousPage (page) {
-                console.log(page, '这是传过来的pageNum')
-                this.pageNum = page
-                this.getAllGps()
-            },
-            nextPage (page) {
-                console.log(page, '这个是下一页的pageNUM')
-                this.pageNum = page
-                this.getAllGps()
-            },
             async getAllGps(){
                 this.choseInfoId=[];//
                 this.isShowLoading=true
@@ -387,11 +375,14 @@
                     }else{
                         this.show = false
                     }
-                    this.listLength = res.devices.length
                     this.isShowLoading=false
-                    this.gpsList=res.devices
-                    this.gpsList = this.gpsList.filter((item,index) => {
-                        if (index < (this.pageNum * 35 ) && index > ((this.pageNum -1) * 35 ) - 1 ) {
+                    this.allGpsList=res.devices
+                    let date = new Date().getTime()
+                    let obj = {totalNum: res.devices.length}
+                    obj[date] = new Date().getTime()
+                    this.$store.commit('TOTAL_NUM', obj)
+                    this.gpsList = this.allGpsList.filter((item,index) => {
+                        if (index < (this.getCurrentNum * 35 ) && index > ((this.getCurrentNum -1) * 35 ) - 1 ) {
                             return item
                         }
                     })
@@ -420,6 +411,14 @@
             Header,
             HardWare
 
+        },
+        watch: {
+            getCurrentNum () {
+                this.getAllGps()
+            }
+        },
+        computed: {
+            ...mapGetters(['getCurrentNum'])
         }
     }
 

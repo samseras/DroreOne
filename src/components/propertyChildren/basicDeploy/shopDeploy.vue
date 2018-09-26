@@ -10,10 +10,7 @@
                         @toggleList = "toggleList"
                         @choseType = 'choseType'
                         :choseId="choseInfoId"
-                        :listsLength="listLength"
                         :personListFlag="selectFlag"
-                        @nextPage="nextPage"
-                        @previousPage="previousPage"
                         @selectedAll = 'selectedAll'
                         @fixedInfo = 'fixedInfo'
                         @allDotInfo = 'allDotInfo'
@@ -141,11 +138,13 @@
     import PersonDetail from './detailDialog'
     import api from '@/api'
     import _ from 'lodash'
+    import {mapGetters,mapMutations} from 'vuex'
 
     export default {
         name: "shop-deploy",
         data () {
             return {
+                allShopList: [],
                 selectFlag:false,
                 tempSelects:[],
                 isShowShopCard: true,
@@ -162,7 +161,6 @@
                 isShowLoading: false,
                 currentNum: 50,
                 listLength: '',
-                pageNum: 1,
                 allDotvisible:false,
                 allDotList:{
                     close:[],
@@ -171,6 +169,7 @@
             }
         },
         methods: {
+            ...mapMutations(['TOTAL_NUM']),
             imgError (e) {
                 e.target.src = this.getUrl(null);
             },
@@ -211,7 +210,7 @@
             searchAnything (info) {
                 console.log(info, '这是要过滤的')
                 if (info.trim() !== '') {
-                    this.shopList = this.checkList.filter(item => {
+                    this.shopList = this.allShopList.filter(item => {
                         if (item.businessTypeName.includes(info)) {
                             return item
                         }
@@ -293,7 +292,6 @@
                             //         return item.id !== this.choseInfoId[i]
                             //     })
                             // }
-                            this.getAllShop()
                             this.$message.success('删除成功')
                             this.choseInfoId = []
                             this.getAllShop()
@@ -471,16 +469,6 @@
                     this.$message.error('请选择一条数据')
                 }
             },
-            previousPage (page) {
-                console.log(page, '这是传过来的pageNum')
-                this.pageNum = page
-                this.getAllShop ()
-            },
-            nextPage (page) {
-                console.log(page, '这个是下一页的pageNUM')
-                this.pageNum = page
-                this.getAllShop ()
-            },
             async getAllShop () {
                 this.isShowLoading = true
                 await api.shop.getAllShop().then(res => {
@@ -490,11 +478,14 @@
                     }else{
                         this.show =false
                     }
-                    this.listLength =res.length
                     this.isShowLoading = false
-                    this.shopList = res
-                    this.shopList = this.shopList.filter((item,index) =>{
-                        if(index <(this.pageNum*35)&& index>(this.pageNum-1)*35-1){
+                    this.allShopList = res
+                    let date = new Date().getTime()
+                    let obj = {totalNum: res.length}
+                    obj[date] = new Date().getTime()
+                    this.$store.commit('TOTAL_NUM', obj)
+                    this.shopList = this.allShopList.filter((item,index) =>{
+                        if(index <(this.getCurrentNum*35)&& index>(this.getCurrentNum-1)*35-1){
                             return item
                         }
                     })
@@ -577,8 +568,15 @@
             Header,
             PersonDetail,
             allDotMap
+        },
+        watch: {
+            getCurrentNum () {
+                this.getAllShop()
+            }
+        },
+        computed: {
+            ...mapGetters(['getCurrentNum'])
         }
-
     }
 </script>
 

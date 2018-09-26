@@ -13,10 +13,7 @@
                         @fixedInfo = 'fixedInfo'
                         @allDotInfo = 'allDotInfo'
                         :choseId="choseInfoId"
-                        :listsLength="listLength"
                         :personListFlag="selectFlag"
-                        @nextPage="nextPage"
-                        @previousPage="previousPage"
                         @searchAnything="searchAnything"
                         @getAllTrash="getAllTrash">
 
@@ -40,8 +37,11 @@
                         </el-table-column>
                         <el-table-column
                             prop="dustbinBean.name"
-                            label="垃圾桶名称"
-                            width="200">
+                            width="200"
+                            label="垃圾桶名称">
+                            <template slot-scope="scope">
+                                <span class="dustbinName">{{scope.row.dustbinBean.name}}</span>
+                            </template>
                         </el-table-column>
                         <el-table-column
                             width="150"
@@ -130,10 +130,12 @@
     import PersonDetail from './detailDialog'
     import api from '@/api'
     import _ from 'lodash'
+    import {mapGetters,mapMutations} from 'vuex'
     export default {
         name: "trash-deploy",
         data (){
             return {
+                allTrashList: [],
                 selectFlag:false,
                 tempSelects:[],
                 isShowTrashCard: true,
@@ -151,7 +153,6 @@
                 isShowLoading: false,
                 currentNum: 50,
                 listLength: '',
-                pageNum: 1,
                 allDotvisible:false,
                 allDotList:{
                     close:[],
@@ -160,6 +161,7 @@
             }
         },
         methods : {
+            ...mapMutations(['TOTAL_NUM']),
             imgError (e) {
                 e.target.src = this.getUrl(null);
             },
@@ -200,7 +202,7 @@
             searchAnything (info) {
                 console.log(info, '这是要过滤的')
                 if (info.trim() !== '') {
-                    this.trashList = this.checkList.filter(item => {
+                    this.trashList = this.allTrashList.filter(item => {
                         if (item.regionName && item.regionName.includes(info)) {
                             return item
                         }
@@ -431,17 +433,6 @@
                     this.$message.error('请选择一条数据')
                 }
             },
-            previousPage (page) {
-                console.log(page, '这是传过来的pageNum')
-                this.pageNum = page
-                this.getAllTrash ()
-            },
-            nextPage (page) {
-                console.log(page, '这个是下一页的pageNUM')
-                this.pageNum = page
-                this.getAllTrash ()
-            },
-
             async getAllTrash () {
                 console.log('垃圾桶')
                 this.isShowLoading = true
@@ -452,11 +443,14 @@
                     }else{
                         this.show =false
                     }
-                    this.listLength = res.length
                     this.isShowLoading = false
-                    this.trashList = res
-                    this.trashList = this.trashList.filter((item,index) =>{
-                        if(index < (this.pageNum*35)&& index>(this.pageNum-1)*35 -1){
+                    this.allTrashList = res
+                    let date = new Date().getTime()
+                    let obj = {totalNum: res.length}
+                    obj[date] = new Date().getTime()
+                    this.$store.commit('TOTAL_NUM', obj)
+                    this.trashList = this.allTrashList.filter((item,index) =>{
+                        if(index < (this.getCurrentNum*35)&& index>(this.getCurrentNum-1)*35 -1){
                             return item
                         }
                     })
@@ -512,6 +506,14 @@
             Header,
             PersonDetail,
             allDotMap
+        },
+        watch: {
+            getCurrentNum () {
+                this.getAllTrash()
+            }
+        },
+        computed: {
+            ...mapGetters(['getCurrentNum'])
         }
     }
 </script>

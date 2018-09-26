@@ -11,10 +11,7 @@
                         @selectedAll = 'selectedAll'
                         @fixedInfo = 'fixedInfo'
                         :choseId="choseInfoId"
-                        :listsLength="listLength"
                         :personListFlag="selectFlag"
-                        @nextPage="nextPage"
-                        @previousPage="previousPage"
                         @allDotInfo = 'allDotInfo'
                         @searchAnything="searchAnything"
                         @getAllStation="getAllStation">
@@ -137,10 +134,12 @@
     import PersonDetail from './detailDialog'
     import api from '@/api'
     import _ from 'lodash'
+    import {mapGetters,mapMutations} from 'vuex'
     export default {
         name: "station-deploy",
         data(){
             return{
+                allStationList: [],
                 selectFlag:false,
                 tempSelects:[],
                 isShowParkCard: true,
@@ -158,7 +157,6 @@
                 isShowLoading: false,
                 currentNum: 50,
                 listLength: '',
-                pageNum: 1,
                 stationTypeId2Name:{
                     '0' : '车站',
                     '1' : '码头'
@@ -175,6 +173,7 @@
             }
         },
         methods: {
+            ...mapMutations(['TOTAL_NUM']),
             imgError (e) {
                 e.target.src = this.getUrl(null,0);
             },
@@ -218,14 +217,12 @@
                 })
             },
             searchAnything (info) {
-                console.log(info, '这是要过滤的')
-                console.log(this.checkList)
                 if (info.trim() !== '') {
-                    this.stationList = this.checkList.filter(item => {
-                        if ((item.regionName)&&(item.regionName.includes(info))) {
+                    this.stationList = this.allStationList.filter(item => {
+                        if (item.regionName && item.regionName.includes(info)) {
                             return item
                         }
-                        if (item.parkingBean.name.includes(info)) {
+                        if (item.name.includes(info)) {
                             return item
                         }
                     })
@@ -419,16 +416,7 @@
                     this.$message.error('请选择一条数据')
                 }
             },
-            previousPage (page) {
-                console.log(page, '这是传过来的pageNum')
-                this.pageNum = page
-                this.getAllStation ()
-            },
-            nextPage (page) {
-                console.log(page, '这个是下一页的pageNUM')
-                this.pageNum = page
-                this.getAllStation ()
-            },
+
             async getAllStation () {
                 this.isShowLoading = true
                 await api.station.getAllStation().then(res => {
@@ -438,11 +426,14 @@
                     }else{
                         this.show =false
                     }
-                    this.listLength = res.length
                     this.isShowLoading = false
-                    this.stationList = res
-                    this.stationList = this.stationList.filter((item,index) =>{
-                        if(index <(this.pageNum*35) && index>(this.pageNum-1)*35-1){
+                    this.allStationList = res
+                    let date = new Date().getTime()
+                    let obj = {totalNum: res.length}
+                    obj[date] = new Date().getTime()
+                    this.$store.commit('TOTAL_NUM', obj)
+                    this.stationList = this.allStationList.filter((item,index) =>{
+                        if(index <(this.getCurrentNum*35) && index>(this.getCurrentNum-1)*35-1){
                             return item
                         }
                     })
@@ -503,6 +494,14 @@
             Header,
             PersonDetail,
             allDotMap
+        },
+        watch: {
+            getCurrentNum () {
+                this.getAllStation()
+            }
+        },
+        computed: {
+            ...mapGetters(['getCurrentNum'])
         }
     }
 </script>

@@ -9,10 +9,7 @@
                         @deletInfo = "deletInfo"
                         @toggleList = "toggleList"
                         :choseId="choseInfoId"
-                        :listsLength="listLength"
                         :personListFlag="selectFlag"
-                        @nextPage="nextPage"
-                        @previousPage="previousPage"
                         @choseType = 'choseType'
                         @selectedAll = 'selectedAll'
                         @fixedInfo = 'fixedInfo'
@@ -131,10 +128,12 @@
     import PersonDetail from './detailDialog'
     import api from '@/api'
     import _ from 'lodash'
+    import {mapGetters,mapMutations} from 'vuex'
     export default {
         name: 'boatCar-deploy',
         data () {
             return {
+                allBoatCarList: [],
                 selectFlag:false,
                 tempSelects:[],
                 isShowBoatCard: true,
@@ -151,11 +150,10 @@
                 isShowLoading: false,
                 selection: [],
                 currentNum: 50,
-                listLength: '',
-                pageNum: 1
             }
         },
         methods: {
+            ...mapMutations(['TOTAL_NUM']),
             imgError (e) {
                 e.target.src = this.getUrl(null,0);
             },
@@ -177,7 +175,7 @@
             searchAnything (info) {
                 console.log(info, '这是要过滤的')
                 if (info.trim() !== '') {
-                    this.boatCarList = this.checkList.filter(item => {
+                    this.boatCarList = this.allBoatCarList.filter(item => {
                         /*if (item.driverName.includes(info)) {
                             return item
                         }
@@ -411,16 +409,6 @@
                      this.$message.error('请选择一条数据')
                  }
             },
-            previousPage (page) {
-                console.log(page, '这是传过来的pageNum')
-                this.pageNum = page
-                this.getAllBoat ()
-            },
-            nextPage (page) {
-                console.log(page, '这个是下一页的pageNUM')
-                this.pageNum = page
-                this.getAllBoat ()
-            },
             async getAllBoat (){
                 this.isShowLoading = true
                 await api.boat.getAllBoat().then(res => {
@@ -430,10 +418,13 @@
                         this.show =false
                     }
                     this.isShowLoading = false
-                    this.listLength = res.length;
-                    this.boatCarList = res
-                    this.boatCarList = this.boatCarList.filter((item,index) => {
-                        if (index < (this.pageNum * 35 ) && index > ((this.pageNum -1) * 35 ) - 1 ) {
+                    this.allBoatCarList = res
+                    let date = new Date().getTime()
+                    let obj = {totalNum: res.length}
+                    obj[date] = new Date().getTime()
+                    this.$store.commit('TOTAL_NUM', obj)
+                    this.boatCarList = this.allBoatCarList.filter((item,index) => {
+                        if (index < (this.getCurrentNum * 35 ) && index > ((this.getCurrentNum -1) * 35 ) - 1 ) {
                             return item
                         }
                     })
@@ -484,6 +475,14 @@
             ScrollContainer,
             Header,
             PersonDetail
+        },
+        watch: {
+            getCurrentNum () {
+                this.getAllBoat()
+            }
+        },
+        computed: {
+            ...mapGetters(['getCurrentNum'])
         }
     }
 </script>
