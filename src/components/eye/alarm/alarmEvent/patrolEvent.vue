@@ -378,7 +378,7 @@
                     this.visible = false
                     this.getAllAlarmEvent();
                 }).catch(err => {
-                    this.$message.error('修改失败，请稍后重试')
+                    this.$message.error('修改失败，'+err.message)
                     console.log(err)
                     this.choseInfos = []
                 })
@@ -391,7 +391,7 @@
                         this.visible = false
                         this.getAllAlarmEvent();
                     }).catch(err => {
-                        this.$message.error('添加失败，请稍后重试')
+                        this.$message.error('添加失败，'+err.message)
                         console.log(err)
                         this.choseInfos = []
                     })
