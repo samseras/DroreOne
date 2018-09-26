@@ -3351,7 +3351,12 @@
                 var explorer = window.navigator.userAgent;
                 if (explorer.indexOf("MSIE") >= 0 || (!!window.ActiveXObject || "ActiveXObject" in window)) {
                     this.buildInfo = this.menulist.data
-                    this.cameravisible = true
+                    if(this.buildInfo.channel==null){
+                        this.$message.error('当前摄像头未设置通道编号，请设置后再预览！');
+                    }else {
+                        this.cameravisible = true
+                    }
+                    // this.cameravisible = true
                     this.title = this.menulist.type+' :  '+this.menulist.name
                 } else {
                     this.$message.error('您当前的浏览器不支持该控件的播放，请使用IE10以上的浏览器');
@@ -3363,7 +3368,11 @@
                 var explorer = window.navigator.userAgent;
                 if (explorer.indexOf("MSIE") >= 0 || (!!window.ActiveXObject || "ActiveXObject" in window)) {
                     this.buildInfo = data
-                    this.cameravisible = true
+                    if(this.buildInfo.channel==null){
+                        this.$message.error('当前摄像头未设置通道编号，请设置后再预览！');
+                    }else {
+                        this.cameravisible = true
+                    }
                     this.title = '摄像头 : '+ data.name
                 } else {
                     this.$message.error('您当前的浏览器不支持该控件的播放，请使用IE10以上的浏览器');

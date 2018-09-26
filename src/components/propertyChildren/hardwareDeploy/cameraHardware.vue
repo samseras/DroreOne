@@ -522,11 +522,11 @@
                         this.cameraList[i].location = `${this.cameraList[i].longitude},${this.cameraList[i].latitude}`
                         this.cameraList[i].modifyTime=this.cameraList[i].modifyTime.replace("-","/")
                         this.cameraList[i].byTime = -(new Date(this.cameraList[i].modifyTime)).getTime()
-                        if(this.cameraList[i].cameraType == 0){
-                            this.cameraList[i].cameraType = '球机'
-                        }else {
-                            this.cameraList[i].cameraType = '枪机'
-                        }
+                        // if(this.cameraList[i].cameraType == 0){
+                        //     this.cameraList[i].cameraType = '球机'
+                        // }else {
+                        //     this.cameraList[i].cameraType = '枪机'
+                        // }
                     }
                     this.cameraList = _.sortBy(this.cameraList,'byTime')
                     this.checkList = this.cameraList
