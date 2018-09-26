@@ -12,11 +12,8 @@
                         @fixedInfo="fixedInfo"
                         @choseType="choseType"
                         @toggleList="toggleList"
-                        @nextPage="nextPage"
-                        @previousPage="previousPage"
                         @getAllBroadcast="getAllBroadcast"
                         @allDotInfo = 'allDotInfo'
-                        :listsLength = "listLength"
                         :personListFlag="selectFlag"
                         :choseId="choseInfoId">
                 </Header>
@@ -141,11 +138,12 @@
     import HardWare from './hardwareDialog.vue'
     import api from '@/api'
     import _ from 'lodash'
-    import {mapMutations} from 'vuex'
+    import {mapGetters,mapMutations} from 'vuex'
 
     export default{
         data(){
             return{
+                allBroadList: [],
                 selectFlag:false,
                 tempSelects:[],
                 key:'',
@@ -164,8 +162,6 @@
                 show:false,
                 isShowLoading:false,
                 currentNum: 50,
-                listLength: '',
-                pageNum: 1,
                 allDotvisible:false,
                 allDotList:{
                     close:[],
@@ -174,7 +170,7 @@
             }
         },
         methods:{
-            ...mapMutations(['DATA_LENGTH']),
+            ...mapMutations(['TOTAL_NUM']),
             imgError (e) {
                 e.target.src = this.getUrl(null);
             },
@@ -226,8 +222,8 @@
             searchAnything (info) {
                 console.log(info, '这是要过滤的')
                 if (info.trim() !== '') {
-                    this.broadList = this.checkList.filter(item => {
-                        if (item.regionName.includes(info)) {
+                    this.broadList = this.allBroadList.filter(item => {
+                        if (item.regionName && item.regionName.includes(info)) {
                             return item
                         }
                         if (item.ip && item.ip.includes(info)) {
@@ -256,7 +252,6 @@
                 this.visible=true
                 this.isDisabled = state
                 this.title=title
-
             },
 
             async fixInfo(info){
@@ -467,16 +462,6 @@
                 this.selectFlag=true
                 console.log(this.choseInfoId)
             },
-            previousPage (page) {
-                console.log(page, '这是传过来的pageNum')
-                this.pageNum = page
-                this.getAllBroadcast()
-            },
-            nextPage (page) {
-                console.log(page, '这个是下一页的pageNUM')
-                this.pageNum = page
-                this.getAllBroadcast()
-            },
             async getAllBroadcast(){
                 this.choseInfoId=[];
                 this.isShowLoading=true
@@ -488,15 +473,13 @@
                         this.show = false
                     }
                     this.isShowLoading=false
-                    this.broadList=res.devices
-                    this.listLength = res.devices.length
-                    let obj = {
-                        listLength: res.devices.length
-                    }
-                    obj[new Date().getTime()] = new Date().getTime()
-                    this.$store.commit('DATA_LENGTH', obj)
-                    this.broadList = this.broadList.filter((item,index) => {
-                        if (index < (this.pageNum * 35 ) && index > ((this.pageNum -1) * 35 ) - 1 ) {
+                    this.allBroadList=res.devices
+                    let date = new Date().getTime()
+                    let obj = {totalNum: res.devices.length}
+                    obj[date] = new Date().getTime()
+                    this.$store.commit('TOTAL_NUM', obj)
+                    this.broadList = this.allBroadList.filter((item,index) => {
+                        if (index < (this.getCurrentNum * 35 ) && index > ((this.getCurrentNum -1) * 35 ) - 1 ) {
                             return item
                         }
                     })
@@ -553,6 +536,14 @@
             Header,
             HardWare,
             allDotMap
+        },
+        watch: {
+            getCurrentNum () {
+                this.getAllBroadcast()
+            }
+        },
+        computed: {
+            ...mapGetters(['getCurrentNum'])
         }
     }
 

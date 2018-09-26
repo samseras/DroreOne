@@ -10,11 +10,8 @@
                         @selectedAll="selectedAll"
                         @fixedInfo="fixedInfo"
                         :choseId="choseInfoId"
-                        :listsLength = "listLength"
                         @searchAnything="searchAnything"
                         :personListFlag="selectFlag"
-                        @nextPage="nextPage"
-                        @previousPage="previousPage"
                         @choseType="choseType"
                         @allDotInfo = 'allDotInfo'
                         @toggleList="toggleList"
@@ -139,11 +136,12 @@
     import HardWare from './hardwareDialog.vue'
     import api from '@/api'
     import _ from 'lodash'
-    import {mapMutations} from 'vuex'
+    import {mapGetters, mapMutations} from 'vuex'
 
     export default{
         data(){
             return{
+                allMonitorsList: [],
                 selectFlag:false,
                 tempSelects:[],
                 isShowMonitorsCard:true,
@@ -163,7 +161,6 @@
                 isShowLoading:false,
                 currentNum: 50,
                 listLength: '',
-                pageNum: 1,
                 allDotvisible:false,
                 allDotList:{
                     close:[],
@@ -172,7 +169,6 @@
             }
         },
         methods:{
-            ...mapMutations(['DATA_LENGTH']),
             imgError (e) {
                 e.target.src = this.getUrl(null);
             },
@@ -222,8 +218,8 @@
             searchAnything (info) {
                 console.log(info, '这是要过滤的')
                 if (info.trim() !== '') {
-                    this.monitorsList = this.checkList.filter(item => {
-                        if (item.regionName.includes(info)) {
+                    this.monitorsList = this.allMonitorsList.filter(item => {
+                        if (item.regionName && item.regionName.includes(info)) {
                             return item
                         }
                         if (item.ip && item.ip.includes(info)) {
@@ -459,16 +455,7 @@
                 this.selectFlag=true
                 console.log(this.choseInfoId)
             },
-            previousPage (page) {
-                console.log(page, '这是传过来的pageNum')
-                this.pageNum = page
-                this.getAllMonitor()
-            },
-            nextPage (page) {
-                console.log(page, '这个是下一页的pageNUM')
-                this.pageNum = page
-                this.getAllMonitor()
-            },
+
             async getAllMonitor(){
                 this.choseInfoId=[];//
                 this.isShowLoading=true
@@ -479,17 +466,14 @@
                     }else{
                         this.show = false
                     }
-                    this.listLength = res.devices.length
-                    let obj = {
-                        listLength: res.devices.length
-                    }
-                    obj[new Date().getTime()] = new Date().getTime()
-                    this.$store.commit('DATA_LENGTH', obj)
-
                     this.isShowLoading=false
-                    this.monitorsList=res.devices
-                    this.monitorsList = this.monitorsList.filter((item,index) => {
-                        if (index < (this.pageNum * 35 ) && index > ((this.pageNum -1) * 35 ) - 1 ) {
+                    this.allMonitorsList=res.devices
+                    let date = new Date().getTime()
+                    let obj = {totalNum: res.devices.length}
+                    obj[date] = new Date().getTime()
+                    this.$store.commit('TOTAL_NUM', obj)
+                    this.monitorsList = this.allMonitorsList.filter((item,index) => {
+                        if (index < (this.getCurrentNum * 35 ) && index > ((this.getCurrentNum -1) * 35 ) - 1 ) {
                             return item
                         }
                     })
@@ -534,6 +518,14 @@
             Header,
             HardWare,
             allDotMap
+        },
+        watch: {
+            getCurrentNum () {
+                this.getAllMonitor()
+            }
+        },
+        computed: {
+            ...mapGetters(['getCurrentNum'])
         }
     }
 

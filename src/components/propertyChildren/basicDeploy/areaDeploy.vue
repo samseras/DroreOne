@@ -10,9 +10,6 @@
                         @toggleList = "toggleList"
                         @choseType = 'choseType'
                         @selectedAll = 'selectedAll'
-                        :listsLength = 'listLength'
-                        @nextPage="nextPage"
-                        @previousPage="previousPage"
                         @fixedInfo = 'fixedInfo'
                         :personListFlag="selectFlag"
                         @searchAnything="searchAnything">
@@ -126,15 +123,16 @@
     import PersonDetail from './detailDialog'
     import api from '@/api'
     import _ from 'lodash'
+    import {mapGetters,mapMutations} from 'vuex'
     export default {
         name: 'area-deploy',
         data(){
             return{
+                allAreaList: [],
                 selectFlag:false,
                 tempSelects:[],
                 isShowAreaCard: true,
                 checkList: [],
-                filterList: [],
                 areaList: [],
                 visible: false,
                 areaInfo: {},
@@ -144,13 +142,11 @@
                 title: '',
                 show:false,
                 isShowLoading : false,
-                allSelFlag:-1,
                 currentNum: 50,
-                listLength: '',
-                pageNum: 1
             }
         },
         methods: {
+            ...mapMutations(['TOTAL_NUM']),
             closeDialog () {
                 this.visible = false
                 this.getAllArea()
@@ -158,7 +154,7 @@
             searchAnything (info) {
                 console.log(info, '这是要过滤的')
                 if (info.trim() !== '') {
-                    this.areaList = this.checkList.filter(item => {
+                    this.areaList = this.allAreaList.filter(item => {
                         if (item.name.includes(info)) {
                             return item
                         }
@@ -367,16 +363,6 @@
                     this.$message.error('请选择一条数据')
                 }
             },
-            previousPage (page) {
-                console.log(page, '这是传过来的pageNum')
-                this.pageNum = page
-                this.getAllArea()
-            },
-            nextPage (page) {
-                console.log(page, '这个是下一页的pageNUM')
-                this.pageNum = page
-                this.getAllArea()
-            },
             async getAllArea () {
                 this.isShowLoading = true
                 await api.area.getAllRegion().then(res => {
@@ -386,15 +372,17 @@
                     }else{
                         this.show =false
                     }
-                    this.listLength = res.length
                     this.isShowLoading = false
-                    this.areaList = res
-                    this.areaList = this.areaList.filter((item,index) => {
-                        if (index < (this.pageNum * 35 ) && index > ((this.pageNum -1) * 35 ) - 1 ) {
+                    this.allAreaList = res
+                    let date = new Date().getTime()
+                    let obj = {totalNum: res.length}
+                    obj[date] = new Date().getTime()
+                    this.$store.commit('TOTAL_NUM', obj)
+                    this.areaList = this.allAreaList.filter((item,index) => {
+                        if (index < (this.getCurrentNum *  35) && index > ((this.getCurrentNum -1) * 35 ) - 1 ) {
                             return item
                         }
                     })
-
                     for (let i = 0; i < this.areaList.length; i++) {
                         this.areaList[i].checked = false
                         this.areaList[i].status = true
@@ -421,6 +409,14 @@
             ScrollContainer,
             Header,
             PersonDetail
+        },
+        watch: {
+            getCurrentNum () {
+                this.getAllArea()
+            }
+        },
+        computed: {
+            ...mapGetters(['getCurrentNum'])
         }
     }
 

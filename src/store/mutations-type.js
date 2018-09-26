@@ -80,3 +80,7 @@ export const FILE_LIST = 'FILE_LIST'
 
 // data
 export const DATA_LENGTH = 'DATA_LENGTH'
+
+// 公共部分（分页）
+export const CURRENT_NUM = 'CURRENT_NUM' //页数
+export const TOTAL_NUM = 'TOTAL_NUM' // 数据条数

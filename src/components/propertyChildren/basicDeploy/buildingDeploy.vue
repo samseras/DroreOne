@@ -11,10 +11,7 @@
                         @choseType = 'choseType'
                         @selectedAll = 'selectedAll'
                         :choseId="choseInfoId"
-                        :listsLength="listLength"
                         :personListFlag="selectFlag"
-                        @nextPage="nextPage"
-                        @previousPage="previousPage"
                         @fixedInfo = 'fixedInfo'
                         @allDotInfo = 'allDotInfo'
                         @searchAnything="searchAnything"
@@ -134,11 +131,12 @@
     import api from '@/api'
     import moment from 'moment'
     import _ from 'lodash'
-
+    import {mapGetters,mapMutations} from 'vuex'
     export default {
         name: "build-deploy",
         data(){
             return{
+                allBuildList: [],
                 selectFlag:false,
                 tempSelects:[],
                 isShowToiletCard: true,
@@ -155,7 +153,6 @@
                 isShowLoading: false,
                 currentNum: 50,
                 listLength: '',
-                pageNum: 1,
                 allDotvisible:false,
                 allDotList:{
                     close:[],
@@ -164,6 +161,7 @@
             }
         },
         methods: {
+            ...mapMutations(['TOTAL_NUM']),
             imgError (e) {
                 e.target.src = this.getUrl(null);
             },
@@ -206,7 +204,7 @@
                 console.log(info, '这是要过滤的')
                 console.log(this.checkList)
                 if (info.trim() !== '') {
-                    this.buildList = this.checkList.filter(item => {
+                    this.buildList = this.allBuildList.filter(item => {
                         if ((item.regionName)&&(item.regionName.includes(info))) {
                             return item
                         }
@@ -443,31 +441,23 @@
                     this.$message.error('请选择一条数据')
                 }
             },
-            previousPage (page) {
-                console.log(page, '这是传过来的pageNum')
-                this.pageNum = page
-                this.getAllBuild ()
-            },
-            nextPage (page) {
-                console.log(page, '这个是下一页的pageNUM')
-                this.pageNum = page
-                this.getAllBuild ()
-            },
             async getAllBuild () {
                 this.isShowLoading = true
                 await api.build.getAllBuild().then(res => {
                     console.log(res, '这是请求回来的所有')
-
                     if(res.length === 0){
                         this.show = true
                     }else{
                         this.show =false
                     }
-                    this.listLength = res.length
                     this.isShowLoading = false
-                    this.buildList = res
-                    this.buildList = this.buildList.filter((item,index) =>{
-                        if(index < (this.pageNum*35)&& index>(this.pageNum-1)*35 -1){
+                    this.allBuildList = res
+                    let date = new Date().getTime()
+                    let obj = {totalNum: res.length}
+                    obj[date] = new Date().getTime()
+                    this.$store.commit('TOTAL_NUM', obj)
+                    this.buildList = this.allBuildList.filter((item,index) =>{
+                        if(index < (this.getCurrentNum*35)&& index>(this.getCurrentNum-1)*35 -1){
                             return item
                         }
                     })
@@ -519,6 +509,14 @@
             Header,
             PersonDetail,
             allDotMap
+        },
+        watch: {
+            getCurrentNum () {
+                this.getAllBuild()
+            }
+        },
+        computed: {
+            ...mapGetters(['getCurrentNum'])
         }
     }
 </script>

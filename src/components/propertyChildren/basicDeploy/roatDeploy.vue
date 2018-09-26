@@ -12,9 +12,6 @@
                         @selectedAll = 'selectedAll'
                         @fixedInfo = 'fixedInfo'
                         :personListFlag="selectFlag"
-                        :listsLength = 'listLength'
-                        @nextPage="nextPage"
-                        @previousPage="previousPage"
                         @searchAnything="searchAnything">
                 </Header>
             </div>
@@ -113,11 +110,13 @@
     import PersonDetail from './detailDialog'
     import api from '@/api'
     import _ from 'lodash'
+    import {mapGetters,mapMutations} from 'vuex'
 
     export default {
         name: "roat-deploy",
         data(){
             return{
+                allRoatList: [],
                 selectFlag:false,
                 tempSelects:[],
                 isShowRoatCard: true,
@@ -134,10 +133,10 @@
                 isShowLoading: false,
                 currentNum: 50,
                 listLength: '',
-                pageNum: 1
             }
         },
         methods: {
+            ...mapMutations(['TOTAL_NUM']),
             closeDialog () {
                 this.visible = false
                 this.getAllRoat()
@@ -145,7 +144,7 @@
             searchAnything (info) {
                 console.log(info, '这是要过滤的')
                 if (info.trim() !== '') {
-                    this.roatList = this.checkList.filter(item => {
+                    this.roatList = this.allRoatList.filter(item => {
                         if (item.name.includes(info)) {
                             return item
                         }
@@ -345,16 +344,6 @@
                     this.$message.error('请选择一条数据')
                 }
             },
-            previousPage (page) {
-                console.log(page, '这是传过来的pageNum')
-                this.pageNum = page
-                this.getAllRoat()
-            },
-            nextPage (page) {
-                console.log(page, '这个是下一页的pageNUM')
-                this.pageNum = page
-                this.getAllRoat()
-            },
             async getAllRoat () {
                 this.isShowLoading = true
                 await api.deployRoad.getAllRoute().then(res => {
@@ -364,11 +353,14 @@
                     }else{
                         this.show =false
                     }
-                    this.listLength = res.length
                     this.isShowLoading = false
-                    this.roatList = res
-                    this.roatList = this.roatList.filter((item,index) => {
-                        if (index < (this.pageNum * 35 ) && index > ((this.pageNum -1) * 35 ) - 1 ) {
+                    this.allRoatList = res
+                    let date = new Date().getTime()
+                    let obj = {totalNum: res.length}
+                    obj[date] = new Date().getTime()
+                    this.$store.commit('TOTAL_NUM', obj)
+                    this.roatList = this.allRoatList.filter((item,index) => {
+                        if (index < (this.getCurrentNum * 35 ) && index > ((this.getCurrentNum -1) * 35 ) - 1 ) {
                             return item
                         }
                     })
@@ -428,6 +420,14 @@
             ScrollContainer,
             Header,
             PersonDetail
+        },
+        watch: {
+            getCurrentNum () {
+                this.getAllRoat()
+            }
+        },
+        computed: {
+            ...mapGetters(['getCurrentNum'])
         }
     }
 </script>

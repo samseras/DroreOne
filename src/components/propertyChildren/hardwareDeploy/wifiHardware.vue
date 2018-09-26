@@ -11,10 +11,7 @@
                         @fixedInfo="fixedInfo"
                         @searchAnything="searchAnything"
                         :choseId="choseInfoId"
-                        :listsLength = "listLength"
                         :personListFlag="selectFlag"
-                        @nextPage="nextPage"
-                        @previousPage="previousPage"
                         @allDotInfo = 'allDotInfo'
                         @choseType="choseType"
                         @toggleList="toggleList"
@@ -146,11 +143,12 @@
     import HardWare from './hardwareDialog.vue'
     import api from '@/api'
     import _ from 'lodash'
-    import {mapMutations} from 'vuex'
+    import {mapGetters,mapMutations} from 'vuex'
 
     export default{
         data(){
             return{
+                allWifiList: [],
                 selectFlag:false,
                 tempSelects:[],
                 isShowWifiCard:true,
@@ -169,7 +167,6 @@
                 isShowLoading:false,
                 currentNum: 50,
                 listLength: '',
-                pageNum: 1,
                 allDotvisible:false,
                 allDotList:{
                     close:[],
@@ -178,7 +175,7 @@
             }
         },
         methods:{
-            ...mapMutations(['DATA_LENGTH']),
+            ...mapMutations(['TOTAL_NUM']),
             imgError (e) {
                 e.target.src = this.getUrl(null);
             },
@@ -230,7 +227,7 @@
                 console.log(info, '这是要过滤的')
                 if (info.trim() !== '') {
                     // console.log(this.checkList, 'p[p[p[p[p[p[p[p[p')
-                    this.wifiList = this.checkList.filter(item => {
+                    this.wifiList = this.allWifiList.filter(item => {
                         if (item.regionName && item.regionName.includes(info)) {
                             return item
                         }
@@ -471,16 +468,7 @@
                 console.log(this.choseInfoId)
                 this.selectFlag=true
             },
-            previousPage (page) {
-                console.log(page, '这是传过来的pageNum')
-                this.pageNum = page
-                this.getAllWifi()
-            },
-            nextPage (page) {
-                console.log(page, '这个是下一页的pageNUM')
-                this.pageNum = page
-                this.getAllWifi()
-            },
+
             async getAllWifi(){
                 this.choseInfoId=[];
                 this.isShowLoading=true
@@ -492,15 +480,14 @@
                         this.show = false
                     }
                     this.listLength = res.devices.length
-                    let obj = {
-                        listLength: res.devices.length
-                    }
-                    obj[new Date().getTime()] = new Date().getTime()
-                    this.$store.commit('DATA_LENGTH', obj)
                     this.isShowLoading=false
-                    this.wifiList=res.devices
-                    this.wifiList = this.wifiList.filter((item,index) => {
-                        if (index < (this.pageNum * 35 ) && index > ((this.pageNum -1) * 35 ) - 1 ) {
+                    this.allWifiList=res.devices
+                    let date = new Date().getTime()
+                    let obj = {totalNum: res.devices.length}
+                    obj[date] = new Date().getTime()
+                    this.$store.commit('TOTAL_NUM', obj)
+                    this.wifiList = this.allWifiList.filter((item,index) => {
+                        if (index < (this.getCurrentNum * 35 ) && index > ((this.getCurrentNum -1) * 35 ) - 1 ) {
                             return item
                         }
                     })
@@ -554,7 +541,14 @@
             Header,
             HardWare,
             allDotMap
-
+        },
+        watch: {
+            getCurrentNum () {
+                this.getAllWifi()
+            }
+        },
+        computed: {
+            ...mapGetters(['getCurrentNum'])
         }
     }
 

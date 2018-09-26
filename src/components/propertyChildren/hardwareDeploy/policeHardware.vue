@@ -11,7 +11,6 @@
                         @fixedInfo="fixedInfo"
                         @searchAnything="searchAnything"
                         :choseId="choseInfoId"
-                        :listsLength = "listLength"
                         :personListFlag="selectFlag"
                         @choseType="choseType"
                         @toggleList="toggleList"
@@ -137,11 +136,12 @@
     import HardWare from './hardwareDialog.vue'
     import api from '@/api'
     import _ from 'lodash'
-    import {mapMutations} from 'vuex'
+    import {mapMutations, mapGetters} from 'vuex'
 
     export default{
         data(){
             return{
+                allPoliceList: [],
                 selectFlag:false,
                 tempSelects:[],
                 isShowPoliceCard:true,
@@ -160,7 +160,6 @@
                 isShowLoading:false,
                 currentNum: 50,
                 listLength: '',
-                pageNum: 1,
                 allDotvisible:false,
                 allDotList:{
                     close:[],
@@ -169,7 +168,7 @@
             }
         },
         methods:{
-            ...mapMutations(['DATA_LENGTH']),
+            ...mapMutations(['TOTAL_NUM']),
             imgError (e) {
                 e.target.src = this.getUrl(null);
             },
@@ -219,7 +218,7 @@
             searchAnything (info) {
                 console.log(info, '这是要过滤的')
                 if (info.trim() !== '') {
-                    this.policeList = this.checkList.filter(item => {
+                    this.policeList = this.allPoliceList.filter(item => {
                         if (item.name.includes(info)) {
                             return item
                         }
@@ -454,16 +453,7 @@
                 console.log(this.choseInfoId)
                 this.selectFlag=true
             },
-            previousPage (page) {
-                console.log(page, '这是传过来的pageNum')
-                this.pageNum = page
-                this.getAllPolice()
-            },
-            nextPage (page) {
-                console.log(page, '这个是下一页的pageNUM')
-                this.pageNum = page
-                this.getAllPolice()
-            },
+
             async getAllPolice(){
                 this.choseInfoId=[];
                 this.isShowLoading=true
@@ -474,16 +464,15 @@
                     }else{
                         this.show = false
                     }
-                    this.listLength = res.devices.length
-                    let obj = {
-                        listLength: res.devices.length
-                    }
-                    obj[new Date().getTime()] = new Date().getTime()
-                    this.$store.commit('DATA_LENGTH', obj)
                     this.isShowLoading=false
-                    this.policeList=res.devices
-                    this.policeList = this.policeList.filter((item,index) => {
-                        if (index < (this.pageNum * 35 ) && index > ((this.pageNum -1) * 35 ) - 1 ) {
+                    this.allPoliceList = res.devices
+                    let date = new Date().getTime()
+                    let obj = {totalNum: res.devices.length}
+                    obj[date] = new Date().getTime()
+                    this.$store.commit('TOTAL_NUM', obj)
+                    console.log(this.getCurrentNum, 'kokokookllklklklklko')
+                    this.policeList = this.allPoliceList.filter((item,index) => {
+                        if (index < (this.getCurrentNum * 35 ) && index > ((this.getCurrentNum -1) * 35 ) - 1 ) {
                             return item
                         }
                     })
@@ -514,7 +503,6 @@
                     this.checkList = this.policeList
 
                     this.selectFlag=false
-
                 }).catch((err)=>{
                     console.log(err)
                 })
@@ -538,7 +526,14 @@
             Header,
             HardWare,
             allDotMap
-
+        },
+        watch: {
+            getCurrentNum () {
+                this.getAllPolice()
+            }
+        },
+        computed: {
+            ...mapGetters(['getCurrentNum'])
         }
     }
 
