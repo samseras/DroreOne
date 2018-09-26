@@ -555,6 +555,7 @@
                             this.securityScheduleInfo.push(scheduleObj)
                         })
                     }
+                    this.securityScheduleInfo.sort(this.compare("state"))
                     console.log(this.securityScheduleInfo)
                 })
 
@@ -566,7 +567,19 @@
                     }
                 },5000)
             },
-
+            compare(prop){
+                return function(x,y){
+                    let valx = x[prop];
+                    let valy = y[prop];
+                    if(valx == 'ONLINE' && valy == "OFFLINE"){
+                        return -1;
+                    }else if(valx == 'OFFLINE' && valy == "ONLINE"){
+                        return 1;
+                    }else{
+                        return 0;
+                    }
+                }
+            },
             async getAllUser(){
                 return await api.user.getUserGPSInfo()
             },
