@@ -50,11 +50,14 @@ module.exports = {
             //target:'drorexa-lixing:8050/',
             //target:'http://192.168.123.231:8050/',
             //target:'http://drorexa-lixing:8050/',
-            // target:'http://172.16.14.112:8666/v1/',
-            target:'http://192.168.0.150:8050/',
+            target:'http://10.2.1.6:8666/v1/',
+            // target:'http://192.168.0.150:8050/',
             changeOrigin:true
         },
-
+        // '/iot':{
+        //     target:'http://172.16.14.112:8666/v1/',
+        //     changeOrigin:true
+        // }
 
     },
 

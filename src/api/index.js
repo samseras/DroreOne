@@ -44,6 +44,7 @@ import transport from "./transport"
 import station from './station'
 import user from './user'
 import intelligentBox from './intelligentBox'
+import passFlowAnalysis from './passFlowAnalysis'
 
 
 export default {
@@ -89,5 +90,6 @@ export default {
     transport,
     station,
     user,
-    intelligentBox
+    intelligentBox,
+    passFlowAnalysis
 }
