@@ -169,7 +169,8 @@
                     :visible="historyvisible"
                     @closeHistoryDialog = "closeHistoryDialog"
                     :historyData="historyData"
-                    :title="mapTitle">
+                    :title="mapTitle"
+                    :isvehicle="isvehicle">
         </HistoryMap>
     </div>
 </template>
@@ -182,6 +183,7 @@
         props: ['visible', 'Info','title','selectedCastContent'],
         data () {
             return {
+                isvehicle:true,
                 historyvisible:false,
                 historyData:[],
                 wifiInfo:{},
@@ -325,6 +327,7 @@
                         to:this.dateRange[1]
                     }
                     this.mapTitle = '车船历史轨迹'
+                    this.isvehicle = true
                     this.historyData = [
                         {
                             id:'1',
@@ -364,37 +367,38 @@
                         to:this.dateRange[1]
                     }
                     this.mapTitle = '人员历史轨迹'
-                    // this.historyData = [
-                    //     {
-                    //         id:'1',
-                    //         deviceId:'2',
-                    //         deviceName:'aaa',
-                    //         longitude:this.Info.gpsData.longitude+(Math.random()*10)/10000,
-                    //         latitude:this.Info.gpsData.latitude+(Math.random()*10)/10000
-                    //     },
-                    //     {
-                    //         id:'1',
-                    //         deviceId:'2',
-                    //         deviceName:'aaa',
-                    //         longitude:this.Info.gpsData.longitude+(Math.random()*10)/10000,
-                    //         latitude:this.Info.gpsData.latitude+(Math.random()*10)/10000
-                    //     },
-                    //     {
-                    //         id:'1',
-                    //         deviceId:'2',
-                    //         deviceName:'aaa',
-                    //         longitude:this.Info.gpsData.longitude+(Math.random()*10)/10000,
-                    //         latitude:this.Info.gpsData.latitude+(Math.random()*10)/10000
-                    //     }
-                    //
-                    // ]
-                    // this.historyvisible = true
+                    this.isvehicle = false
+                    this.historyData = [
+                        {
+                            id:'1',
+                            deviceId:'2',
+                            deviceName:'aaa',
+                            longitude:this.Info.gpsData.longitude+(Math.random()*10)/10000,
+                            latitude:this.Info.gpsData.latitude+(Math.random()*10)/10000
+                        },
+                        {
+                            id:'1',
+                            deviceId:'2',
+                            deviceName:'aaa',
+                            longitude:this.Info.gpsData.longitude+(Math.random()*10)/10000,
+                            latitude:this.Info.gpsData.latitude+(Math.random()*10)/10000
+                        },
+                        {
+                            id:'1',
+                            deviceId:'2',
+                            deviceName:'aaa',
+                            longitude:this.Info.gpsData.longitude+(Math.random()*10)/10000,
+                            latitude:this.Info.gpsData.latitude+(Math.random()*10)/10000
+                        }
+
+                    ]
+                    this.historyvisible = true
                     console.log(param)
-                    Promise.all([this.getPersonHistory(param)]).then(res=>{
-                        console.log(res,'人员历史轨迹数据')
-                        this.historyData = res[0]
-                        this.historyvisible = true
-                    })
+                    // Promise.all([this.getPersonHistory(param)]).then(res=>{
+                    //     console.log(res,'人员历史轨迹数据')
+                    //     this.historyData = res[0]
+                    //     this.historyvisible = true
+                    // })
                 }
 
                 // this.historyData =[

@@ -17,7 +17,7 @@
 <script>
     import historyMap from "../../static/js/historyMap.js"
     export default {
-        props: ['visible','historyData','title'],
+        props: ['visible','historyData','title','isvehicle'],
         name: "historyDialog",
         data () {
             return{
@@ -66,7 +66,11 @@
                      return
                  }
                 this.historyData.forEach(item=>{
-                    geo.push([item.longitude+0.451536705535+0.0048011541,item.latitude+0.49693734262853-0.0025647127])
+                    if(this.isvehicle){
+                        geo.push([item.longitude+0.451536705535+0.0048011541,item.latitude+0.49693734262853-0.0025647127])
+                    }else{
+                        geo.push([item.longitude,item.latitude])
+                    }
                     // geo.push([item.longitude,item.latitude])
                 })
 
@@ -80,7 +84,11 @@
                 areaEvtList.addRoad(area, data)
                 historyMap.road.addRoadLayer(areaEvtList, this.historyData[0].id)
                 console.log()
-                historyMap.map.panToCoord(historyMap.trans.transFromWgsToLayer([this.historyData[0].longitude+0.451536705535+0.0048011541,this.historyData[0].latitude+0.49693734262853]));
+                if(this.isvehicle){
+                    historyMap.map.panToCoord(historyMap.trans.transFromWgsToLayer([this.historyData[0].longitude+0.451536705535+0.0048011541,this.historyData[0].latitude+0.49693734262853]));
+                }else{
+                    historyMap.map.panToCoord(historyMap.trans.transFromWgsToLayer([this.historyData[0].longitude,this.historyData[0].latitude]));
+                }
                 // historyMap.map.panToCoord(historyMap.trans.transFromWgsToLayer([this.historyData[0].longitude,this.historyData[0].latitude]));
 
             }
