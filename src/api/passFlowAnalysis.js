@@ -17,6 +17,12 @@ import axios from '@/http'
 import {getUrl} from "./path";
 
 const passFlowAnalysis = {
+    heatFlow (){
+        return axios({
+            method:'GET',
+            url:'/iot/cache/PassFlow_Detail_Log'
+        })
+    },
     realPassFlow () {     //实时客流
         return axios({
             method: 'POST',
