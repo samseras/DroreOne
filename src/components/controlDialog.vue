@@ -126,7 +126,8 @@
                                 start-placeholder="开始日期"
                                 end-placeholder="结束日期"
                                 align="right"
-                                value-format="yyyy-MM-dd HH:mm:ss">
+                                value-format="yyyy-MM-dd HH:mm:ss"
+                                @change="dateCheck">
                             </el-date-picker>
                         </p>
                     </div>
@@ -147,7 +148,8 @@
                                 start-placeholder="开始日期"
                                 end-placeholder="结束日期"
                                 align="right"
-                                value-format="yyyy-MM-dd HH:mm:ss">
+                                value-format="yyyy-MM-dd HH:mm:ss"
+                                @change="dateCheck">
                             </el-date-picker>
                         </p>
                     </div>
@@ -159,7 +161,7 @@
                     </p>
                 </div>
                 <div v-if="transport || sercurityPerson" class=""slot="footer" class="dialog-footer cardFooter">
-                    <el-button size="mini" class="hold" @click='findHistory'>查找</el-button>
+                    <el-button size="mini" class="hold" @click='findHistory' :disabled = "isInquireDisable">查找</el-button>
                     <el-button size="mini" @click = 'closeDialog'>取消</el-button>
                 </div>
 
@@ -193,6 +195,7 @@
                 facility:true,
                 park:false,
                 transport:false,
+                isInquireDisable:false,
                 parking:[
                     {
                         "id": "4e98470b8c574b71b17c060ca91e7b0b",
@@ -277,15 +280,16 @@
                             start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
                             picker.$emit('pick', [start, end]);
                         }
-                    }, {
-                        text: '最近三个月',
-                        onClick(picker) {
-                            const end = new Date();
-                            const start = new Date();
-                            start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
-                            picker.$emit('pick', [start, end]);
-                        }
                     }]
+                    // {
+                    //     text: '最近三个月',
+                    //     onClick(picker) {
+                    //         const end = new Date();
+                    //         const start = new Date();
+                    //         start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
+                    //         picker.$emit('pick', [start, end]);
+                    //     }
+                    // }]
                 },
                 speed:'0',
                 deviceName:'',
@@ -308,6 +312,16 @@
         },
 
         methods: {
+            dateCheck(val){
+                console.log(val)
+                let duringDate = Math.round((new Date(val[1]).getTime() - new Date(val[0]).getTime())/(1000 * 60 ))
+                if(duringDate > 30*24*60){
+                    this.isInquireDisable =  true
+                    this.$message.error('查询时间不能超过一个月！')
+                    return
+                }
+                this.isInquireDisable =  false
+            },
             closeHistoryDialog(){
                 this.historyvisible = false
             },

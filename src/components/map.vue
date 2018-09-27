@@ -2669,7 +2669,7 @@
                             obj.location=[longitude,latitude];
                             var icon = new droreMap.icon.Marker({
                                 coordinate: droreMap.trans.transFromWgsToLayer(obj.location),
-                                name:obj.name,
+                                name:obj.cnName,
                                 subtype:'securityPerson',
                                 id:obj.id,
                                 url:'/static/img/icon/people_small.svg',
