@@ -359,7 +359,7 @@
                         this.initPersonData();//长轮询
                         this.treeShow('person');
                     }
-                },5000)
+                },10000)
             },
             async initScheduleData(){
                 // let schedules = [
@@ -680,7 +680,7 @@
                         this.initScheduleData();//长轮询
                         this.treeShow('schedule');
                     }
-                },5000)
+                },10000)
             },
             compare(prop){
                 return function(x,y){

@@ -238,6 +238,7 @@
                     this.road(); // 路线打点
                 }else {
                     this.getSecurityRouteEdit();//修改路线调度
+                    this.road(); // 路线打点
                 }
             } else if (route.includes('indicator-deploy'))  {
                 this.getAllArea();// 片区输出
@@ -2701,7 +2702,7 @@
                     }
                     setTimeout(() => {
                         this.getAllLangPerson();//长轮询
-                    },5000)
+                    },10000)
                 })
             },
             async getAllLangPerson(){
@@ -2855,7 +2856,7 @@
                     if (route.includes('controler')) {
                         this.getAllLangPerson();//长轮询
                     }
-                },5000)
+                },10000)
             },
             async getAllAlarmEvent () {
                 await api.alarm.getAllAlarmEventundone().then(res => {
