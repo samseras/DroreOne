@@ -75,6 +75,7 @@
                         count:0
                     }
                     res.forEach((item,index) =>{
+                         hot = {},obj = {}
                         obj.name=item.areaIdName;
                         obj.longitude=item.longitude;
                         obj.latitude=item.latitude;
@@ -87,32 +88,15 @@
                         hot.count = item.dayFlow;
 
                         sum +=item.dayFlow;
+                        console.log(sum,'98765')
                         realNum +=item.stayCount;
                      this.lngLat.push(hot)
                      this.value.push(obj)
-                        hot = {
-                            lng:"",
-                            lat:"",
-                            count:0
-                        };
-                        obj = {
-                            id:index,
-                            name:"",
-                            longitude:"",
-                            latitude:"",
-                            totals:0,
-                            info:0,
-                            maxNum:"",
-                            time:""
-                        }
 
                     })
                     this.total = String(parseFloat(sum).toLocaleString()).split('');
+                    console.log(this.total,'123456')
                     this.real = String(parseFloat(realNum).toLocaleString()).split('')
-//                    console.log(this.lngLat,'wqertr')
-//                    console.log(this.value,'wqertr')
-//                    console.log(this.total,"!!!!!")
-//                    console.log(this.real,"@@@@@222")
                 }).catch(err =>{
                     console.log(err)
                 })
