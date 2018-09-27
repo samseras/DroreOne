@@ -406,7 +406,7 @@
                             this.transportScheduleInfo.push(scheduleObj)
                         })
                     }
-
+                    this.transportScheduleInfo.sort(this.compare('state'))
                     // this.drawLine();
                     console.log(this.transportScheduleInfo)
                 })
@@ -443,6 +443,19 @@
             async getTransportRouteBoat(){
                 return await api.roat.getTransportRoat(3)
             },
+            compare(prop){
+                return function(x,y){
+                    let valx = x[prop];
+                    let valy = y[prop];
+                    if(valx == 'ONLINE' && valy == "OFFLINE"){
+                        return -1;
+                    }else if(valx == 'OFFLINE' && valy == "ONLINE"){
+                        return 1;
+                    }else{
+                        return 0;
+                    }
+                }
+            }
         },
         watch:{
 

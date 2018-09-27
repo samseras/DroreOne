@@ -267,7 +267,7 @@
             },
             async selectKindQuantum(){
                 await api.passFlowAnalysis.todayPassFlow().then(res=>{
-                    // console.log(res,"各时段客流")
+                     console.log(res,"各时段客流")
                     let arr = [],obj={},lengentArr = [];
                     let arrObj=[];
                     if(res.length > 10){
@@ -363,6 +363,7 @@
             },
             async grandPassFlow(obj){
                 await api.passFlowAnalysis.grandPassFlow(obj).then(res=>{
+                    console.log(res,"累计客流")
                     let count = 0
                     res.forEach(item=>{
                         count += item.total_stay_count
@@ -491,6 +492,7 @@
                     //  for(let i=0;i<res.total.length;i++){
                     //      count += res.total[i].stayCount;
                     //  }
+                    console.log(res,"实时客流")
                     this.realTimeFlowNum = res.realtimepassflow;
                     let arr = this.realTimeFlowNum.toString().split('').reverse();
                     let currArr = [];
