@@ -170,6 +170,7 @@
                     @closeHistoryDialog = "closeHistoryDialog"
                     :historyData="historyData"
                     :title="mapTitle"
+                    :Info = "Info"
                     :isvehicle="isvehicle">
         </HistoryMap>
     </div>
@@ -328,37 +329,38 @@
                     }
                     this.mapTitle = '车船历史轨迹'
                     this.isvehicle = true
-                    this.historyData = [
-                        {
-                            id:'1',
-                            deviceId:'2',
-                            deviceName:'aaa',
-                            longitude:this.Info.gpsData.longitude+(Math.random()*10)/10000,
-                            latitude:this.Info.gpsData.latitude+(Math.random()*10)/10000
-                        },
-                        {
-                            id:'1',
-                            deviceId:'2',
-                            deviceName:'aaa',
-                            longitude:this.Info.gpsData.longitude+(Math.random()*10)/10000,
-                            latitude:this.Info.gpsData.latitude+(Math.random()*10)/10000
-                        },
-                        {
-                            id:'1',
-                            deviceId:'2',
-                            deviceName:'aaa',
-                            longitude:this.Info.gpsData.longitude+(Math.random()*10)/10000,
-                            latitude:this.Info.gpsData.latitude+(Math.random()*10)/10000
-                        }
+                    // this.historyData = [
+                    //     {
+                    //         id:'1',
+                    //         deviceId:'2',
+                    //         deviceName:'aaa',
+                    //         longitude:this.Info.gpsData.longitude+(Math.random()*10)/10000,
+                    //         latitude:this.Info.gpsData.latitude+(Math.random()*10)/10000
+                    //     },
+                    //     {
+                    //         id:'1',
+                    //         deviceId:'2',
+                    //         deviceName:'aaa',
+                    //         longitude:this.Info.gpsData.longitude+(Math.random()*10)/10000,
+                    //         latitude:this.Info.gpsData.latitude+(Math.random()*10)/10000
+                    //     },
+                    //     {
+                    //         id:'1',
+                    //         deviceId:'2',
+                    //         deviceName:'aaa',
+                    //         longitude:this.Info.gpsData.longitude+(Math.random()*10)/10000,
+                    //         latitude:this.Info.gpsData.latitude+(Math.random()*10)/10000
+                    //     }
+                    //
+                    // ]
+                    // this.historyvisible = true
 
-                    ]
-                    this.historyvisible = true
-                    console.log(param)
-                    // Promise.all([this.getHistoryRoute(param)]).then(res=>{
-                    //     console.log(res,'车船历史轨迹数据')
-                    //     this.historyData = res[0]
-                    //     this.historyvisible = true
-                    // })
+                    console.log(this.Info)
+                    Promise.all([this.getHistoryRoute(param)]).then(res=>{
+                        console.log(res,'车船历史轨迹数据')
+                        this.historyData = res[0]
+                        this.historyvisible = true
+                    })
                 }else if(this.sercurityPerson){
                     //人员历史轨迹
                     var param = {
@@ -368,37 +370,37 @@
                     }
                     this.mapTitle = '人员历史轨迹'
                     this.isvehicle = false
-                    this.historyData = [
-                        {
-                            id:'1',
-                            deviceId:'2',
-                            deviceName:'aaa',
-                            longitude:this.Info.gpsData.longitude+(Math.random()*10)/10000,
-                            latitude:this.Info.gpsData.latitude+(Math.random()*10)/10000
-                        },
-                        {
-                            id:'1',
-                            deviceId:'2',
-                            deviceName:'aaa',
-                            longitude:this.Info.gpsData.longitude+(Math.random()*10)/10000,
-                            latitude:this.Info.gpsData.latitude+(Math.random()*10)/10000
-                        },
-                        {
-                            id:'1',
-                            deviceId:'2',
-                            deviceName:'aaa',
-                            longitude:this.Info.gpsData.longitude+(Math.random()*10)/10000,
-                            latitude:this.Info.gpsData.latitude+(Math.random()*10)/10000
-                        }
-
-                    ]
-                    this.historyvisible = true
+                    // this.historyData = [
+                    //     {
+                    //         id:'1',
+                    //         deviceId:'2',
+                    //         deviceName:'aaa',
+                    //         longitude:this.Info.gpsData.longitude+(Math.random()*10)/10000,
+                    //         latitude:this.Info.gpsData.latitude+(Math.random()*10)/10000
+                    //     },
+                    //     {
+                    //         id:'1',
+                    //         deviceId:'2',
+                    //         deviceName:'aaa',
+                    //         longitude:this.Info.gpsData.longitude+(Math.random()*10)/10000,
+                    //         latitude:this.Info.gpsData.latitude+(Math.random()*10)/10000
+                    //     },
+                    //     {
+                    //         id:'1',
+                    //         deviceId:'2',
+                    //         deviceName:'aaa',
+                    //         longitude:this.Info.gpsData.longitude+(Math.random()*10)/10000,
+                    //         latitude:this.Info.gpsData.latitude+(Math.random()*10)/10000
+                    //     }
+                    //
+                    // ]
+                    // this.historyvisible = true
                     console.log(param)
-                    // Promise.all([this.getPersonHistory(param)]).then(res=>{
-                    //     console.log(res,'人员历史轨迹数据')
-                    //     this.historyData = res[0]
-                    //     this.historyvisible = true
-                    // })
+                    Promise.all([this.getPersonHistory(param)]).then(res=>{
+                        console.log(res,'人员历史轨迹数据')
+                        this.historyData = res[0]
+                        this.historyvisible = true
+                    })
                 }
 
                 // this.historyData =[

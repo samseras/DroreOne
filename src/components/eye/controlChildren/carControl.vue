@@ -217,8 +217,8 @@
                     //             "ioTDeviceId": "1000000",
                     //             "deviceName": "\ufffd\ufffd\ufffd\ufffd",
                     //             "createTime": "2018-09-21 10:15:56",
-                    //             "longitude": 120.13275684584266,
-                    //             "latitude": 30.30874363611955,
+                    //             "longitude": 120.133034358847,
+                    //             "latitude": 30.308330545773803,
                     //             "altitude": null,
                     //             "direction": null,
                     //             "speed": 0,
@@ -297,8 +297,10 @@
                                 regionId:'100010',
                                 icon:veObj.gpsData ? '../../../static/img/car_icon.svg' : '../../../static/img/car_gray.svg' ,
                                 status:veObj.gpsData ? "ONLINE" : "OFFLINE",
-                                longitude:veObj.gpsData ? veObj.gpsData.longitude+0.451536705535+0.0048011541: '',
-                                latitude:veObj.gpsData ? veObj.gpsData.latitude+0.49693734262853-0.0025647127: '',
+                                // longitude:veObj.gpsData ? veObj.gpsData.longitude+0.451536705535+0.0048011541: '',
+                                // latitude:veObj.gpsData ? veObj.gpsData.latitude+0.49693734262853-0.0025647127: '',
+                                longitude:veObj.gpsData ? veObj.gpsData.longitude : '',
+                                latitude:veObj.gpsData ? veObj.gpsData.latitude : '',
                                 gpsDeviceId:veObj.gpsDeviceId
                             }
                             carObj.children.push(childObj)
@@ -312,8 +314,10 @@
                                 regionId:'100011',
                                 icon:veObj.gpsData ? '../../../static/img/boat_icon.svg' : '../../../static/img/boat_gray.svg',
                                 status:veObj.gpsData ? "ONLINE" : "OFFLINE",
-                                longitude:veObj.gpsData ? veObj.gpsData.longitude+0.451536705535+0.0048011541: '',
-                                latitude:veObj.gpsData ? veObj.gpsData.latitude+0.49693734262853-0.0025647127: '',
+                                // longitude:veObj.gpsData ? veObj.gpsData.longitude+0.451536705535+0.0048011541: '',
+                                // latitude:veObj.gpsData ? veObj.gpsData.latitude+0.49693734262853-0.0025647127: '',
+                                longitude:veObj.gpsData ? veObj.gpsData.longitude : '',
+                                latitude:veObj.gpsData ? veObj.gpsData.latitude : '',
                                 gpsDeviceId:veObj.gpsDeviceId
                             }
                             boatObj.children.push(childObj)
@@ -376,8 +380,8 @@
                                             status:veObj.gpsData ? "ONLINE" : "OFFLINE",
                                             // longitude:veObj.gpsData ? veObj.gpsData.longitude+0.451536705535+0.0048011541 : '',
                                             // latitude:veObj.gpsData ? veObj.gpsData.latitude+0.49693734262853-0.0025647127: '',
-                                            longitude:veObj.gpsData ? veObj.gpsData.longitude+0.451536705535+0.0048011541: '',
-                                            latitude:veObj.gpsData ? veObj.gpsData.latitude+0.49693734262853-0.0025647127: '',
+                                            longitude:veObj.gpsData ? veObj.gpsData.longitude: '',
+                                            latitude:veObj.gpsData ? veObj.gpsData.latitude: '',
                                             gpsDeviceId:veObj.gpsDeviceId,
                                             routeObj:obj.routeObj
                                         }

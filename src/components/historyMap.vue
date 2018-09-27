@@ -17,7 +17,7 @@
 <script>
     import historyMap from "../../static/js/historyMap.js"
     export default {
-        props: ['visible','historyData','title','isvehicle'],
+        props: ['visible','historyData','title','isvehicle','Info'],
         name: "historyDialog",
         data () {
             return{
@@ -66,12 +66,12 @@
                      return
                  }
                 this.historyData.forEach(item=>{
-                    if(this.isvehicle){
-                        geo.push([item.longitude+0.451536705535+0.0048011541,item.latitude+0.49693734262853-0.0025647127])
-                    }else{
-                        geo.push([item.longitude,item.latitude])
-                    }
-                    // geo.push([item.longitude,item.latitude])
+                    // if(this.isvehicle){
+                    //     geo.push([item.longitude+0.451536705535+0.0048011541,item.latitude+0.49693734262853-0.0025647127])
+                    // }else{
+                    //     geo.push([item.longitude,item.latitude])
+                    // }
+                    geo.push([item.longitude,item.latitude])
                 })
 
                 var areaEvtList =new historyMap.road.RoadLayer('ROUTE_list', '#fb9000', 'blue')
@@ -80,16 +80,16 @@
                     let wgs=historyMap.trans.transFromWgsToLayer(geo[i])
                     area.push(wgs);
                 }
-                var data = {"id": this.historyData[0].deviceId, "name": this.historyData[0].deviceName,"constructor":''}
+                // var data = {"id": this.historyData[0].deviceId, "name": this.historyData[0].deviceName,"constructor":''}
+                var data = {"id": this.Info.id, "name": this.Info.name,"constructor":''}
                 areaEvtList.addRoad(area, data)
-                historyMap.road.addRoadLayer(areaEvtList, this.historyData[0].id)
-                console.log()
-                if(this.isvehicle){
-                    historyMap.map.panToCoord(historyMap.trans.transFromWgsToLayer([this.historyData[0].longitude+0.451536705535+0.0048011541,this.historyData[0].latitude+0.49693734262853]));
-                }else{
-                    historyMap.map.panToCoord(historyMap.trans.transFromWgsToLayer([this.historyData[0].longitude,this.historyData[0].latitude]));
-                }
-                // historyMap.map.panToCoord(historyMap.trans.transFromWgsToLayer([this.historyData[0].longitude,this.historyData[0].latitude]));
+                historyMap.road.addRoadLayer(areaEvtList, this.Info.id)
+                // if(this.isvehicle){
+                //     historyMap.map.panToCoord(historyMap.trans.transFromWgsToLayer([this.historyData[0].longitude+0.451536705535+0.0048011541,this.historyData[0].latitude+0.49693734262853-0.0025647127]));
+                // }else{
+                //     historyMap.map.panToCoord(historyMap.trans.transFromWgsToLayer([this.historyData[0].longitude,this.historyData[0].latitude]));
+                // }
+                historyMap.map.panToCoord(historyMap.trans.transFromWgsToLayer([this.historyData[0].longitude,this.historyData[0].latitude]));
 
             }
         },
