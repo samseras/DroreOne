@@ -386,8 +386,6 @@
                 }else {
                     this.getAllBuildEdit();// 建筑修改
                 }
-            }else if(route.includes('warning-Event')){
-                this.labelDot()
             }
             if(this.getSearchInfo.id){
                 this.searchShow();
