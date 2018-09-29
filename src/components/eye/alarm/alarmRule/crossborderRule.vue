@@ -36,6 +36,11 @@
                             label="名称">
                         </el-table-column>
                         <el-table-column
+                            show-overflow-tooltip
+                            prop="relatedDeviceNames"
+                            label="关联摄像头">
+                        </el-table-column>
+                        <el-table-column
                             prop="deviceScope"
                             label="设备调度范围(m)">
                         </el-table-column>
@@ -113,6 +118,9 @@
                             return item
                         }
                         if(item.relatedManagerNames.includes(info)){
+                            return item
+                        }
+                        if(item.relatedDeviceNames.includes(info)){
                             return item
                         }
                         if(item.deviceScope.toString().includes(info)){

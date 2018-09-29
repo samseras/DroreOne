@@ -426,7 +426,7 @@
             },
             async getAlarmRule(){
                 this.loading = true
-                this.alarmTypeId = this.getAlarmTypeId("报警柱")
+                this.alarmTypeId = this.getAlarmTypeId("SOS")
                 await api.alarm.getAlarmRulesByParameters(this.alarmTypeId).then(res => {
                     this.loading = false
                     this.alarmcolumnList = res
