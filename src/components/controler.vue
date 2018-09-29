@@ -35,7 +35,7 @@
                     {names:'CAMERA',route: '/controler/camera', img: '../../../static/img/camera.svg', desc: "摄像头",controlShow:false},
                     {names:'BROADCAST',route: '/controler/broad', img: '../../../static/img/broadcast.svg', desc: "广播",controlShow:false},
                     {names:'WIFI',route: '/controler/wifi', img: '../../../static/img/wifi.svg', desc: "WIFI",controlShow:false},
-                    {names:'MONITORS',route: '/controler/environment', img: '../../../static/img/detection.svg', desc: "环境检测传感器",controlShow:false},
+//                    {names:'MONITORS',route: '/controler/environment', img: '../../../static/img/detection.svg', desc: "环境检测传感器",controlShow:false},
                     {enable: true,names:'WARN',route: '/controler/warn', img: '../../../static/img/warn.svg', desc: "告警",controlShow:true},
                     {names:'LED',route: '/controler/screen', img: '../../../static/img/led.svg', desc: "LED大屏",controlShow:false},
                     // {enable: true,names:'PERSON',route: '/controler/person', img: '../../../static/img/dmis.svg', desc: "个人定位",controlShow:true},
