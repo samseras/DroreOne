@@ -884,6 +884,9 @@
         .el-dialog .el-dialog--center{
             width: 100%;
         }
+        .el-textarea{
+            display: block;
+        }
         .el-input.is-disabled .el-input__inner,.el-textarea.is-disabled .el-textarea__inner{
             background-color:transparent;
         }
