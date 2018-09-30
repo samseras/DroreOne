@@ -919,17 +919,6 @@
                            return
                        }
                    }
-                   if (newInfo.mac && newInfo.mac !== '') {
-                       if(!(newInfo.mac && myMac.test(newInfo.mac))){
-                           this.$message.error('请输入正确的MAC编号')
-                           return
-                       }
-                   }
-
-                   /*if(!(newInfo.serialNum && intreg.test1(newInfo.serialNum))){
-                       this.$message.error('编号只能输入数字！')
-                       return
-                   }*/
 
                }else if(this.route.includes('wifi')) {
                    newInfo = this.wifi
@@ -953,12 +942,7 @@
                            return
                        }
                    }
-                   if (newInfo.mac && newInfo.mac !== '') {
-                       if(!(newInfo.mac && myMac.test(newInfo.mac))){
-                           this.$message.error('请输入正确的MAC编号')
-                           return
-                       }
-                   }
+
 
                }else if(this.route.includes('monitors')) {
                    newInfo = this.monitors
@@ -982,12 +966,7 @@
                            return
                        }
                    }
-                   if (newInfo.mac && newInfo.mac !== '') {
-                       if(!(newInfo.mac && myMac.test(newInfo.mac))){
-                           this.$message.error('请输入正确的MAC编号')
-                           return
-                       }
-                   }
+
 
                }else if(this.route.includes('Light')) {
                    newInfo = this.Light
@@ -1030,13 +1009,6 @@
                            return
                        }
                    }
-                   if (newInfo.mac && newInfo.mac !== '') {
-                       if(!(newInfo.mac && myMac.test(newInfo.mac))){
-                           this.$message.error('请输入正确的MAC编号')
-                           return
-                       }
-                   }
-
                }else if(this.route.includes('police')) {
                    newInfo = this.police
                    if(
@@ -1059,12 +1031,11 @@
                            return
                        }
                    }
-                   if (newInfo.mac && newInfo.mac !== '') {
-                       if(!(newInfo.mac && myMac.test(newInfo.mac))){
-                           this.$message.error('请输入正确的MAC编号')
-                           return
-                       }
-                   }
+                   /*
+                   if(!(newInfo.mac && myMac.test(newInfo.mac))){
+                       this.$message.error('请输入正确的MAC编号')
+                       return
+                   }*/
                    /*if(!(newInfo.serialNum && intreg.test1(newInfo.serialNum))){
                        this.$message.error('编号只能输入数字！')
                        return
