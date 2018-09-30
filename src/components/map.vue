@@ -170,6 +170,7 @@
                 isGroup:false,
                 selectedCast:[],
                 selectedCastContent:[],
+                alarmType:[]
 
 
             }
@@ -211,6 +212,7 @@
                 this.overView();//鹰眼
                 // this.rangeSearch();// 范围查找
                 this.getAllRoute();//调度路线
+                this.getAllAlarmTypes();
                 this.getAllAlarmEvent();//告警事件现有标注
                 //this.getAllTransportRoute();// 车船调度路线输出
                 //this.getAllStation();
@@ -2857,15 +2859,34 @@
                     }
                 },10000)
             },
+            getAlarmTypeNameById(typeId){
+                let typeInfo =  this.alarmType.filter(item=>item.id == typeId)
+                if(typeInfo instanceof Array && typeInfo.length > 0){
+                    return typeInfo[0].name;
+                }
+                return "";
+            },
+            async getAllAlarmTypes(){
+                await api.alarm.getAllAlarmTypes().then(res => {
+                    this.alarmType = res;
+                }).catch(err => {
+                })
+            },
             async getAllAlarmEvent () {
                 await api.alarm.getAllAlarmEventundone().then(res => {
                     for (let i=0;i<res.length;i++) {
                         res[i].location = [res[i].longitude,res[i].latitude]
+
+                        if(res[i].rule && res[i].rule.alarmTypeId){
+                            res[i].rule['alarmTypeName'] = this.getAlarmTypeNameById(res[i].rule.alarmTypeId)
+                        }
+
                         if(!res[i].rule || !res[i].rule.name){
                             res[i].rule = {
                                 name : ""
                             }
                         }
+
                         res[i].device = !res[i].device ? "" : res[i].device
                         res[i].acturalExtendValue = !res[i].acturalExtendValue ? "" : res[i].acturalExtendValue
                         if(!res[i].owner || !res[i].owner.id){

@@ -467,6 +467,9 @@
                                 ownerId:item.owner.id,
                                 statusId:item.status.id,
                                 severityId:item.severity.id,
+                                sourceDeviceId:item.device.id,
+                                longitude: item.longitude,
+                                latitude: item.latitude,
                                 attachmentIds:attachmentIds,
                                 handleRecord:{
                                     modifiedFields:item.modifiedFields,
@@ -534,6 +537,9 @@
                             ownerId:this.eventInfo.owner.id,
                             statusId:this.eventInfo.status.id,
                             severityId:this.eventInfo.severity.id,
+                            sourceDeviceId:this.eventInfo.device.id,
+                            longitude: this.eventInfo.longitude,
+                            latitude: this.eventInfo.latitude,
                             attachmentIds:ids,
                             handleRecord:{
                                 modifiedFields:this.modifiedFields,
