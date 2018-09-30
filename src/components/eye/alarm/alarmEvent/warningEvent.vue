@@ -74,7 +74,7 @@
                         </el-table-column>
                         <el-table-column
                             sortable
-                            prop="owner.phone"
+                            prop="owner.mobileNum"
                             label="负责人电话">
                         </el-table-column>
                         <el-table-column label="操作" width="200">
@@ -151,7 +151,7 @@
                         if(item.owner.name.includes(info)){
                             return item
                         }
-                        if(item.owner.phone.includes(info)){
+                        if(item.owner.mobileNum.includes(info)){
                             return item
                         }
                         if(item.rule.alarmTypeName.includes(info)){
@@ -395,9 +395,9 @@
                                             id : ""
                                         }
                                     }
-                                    if(!item.owner || !item.owner.phone){
+                                    if(!item.owner || !item.owner.mobileNum){
                                         item.owner = {
-                                            phone : ""
+                                            mobileNum : ""
                                         }
                                     }
                                     item.actualValue = !item.actualValue ? "" : item.actualValue

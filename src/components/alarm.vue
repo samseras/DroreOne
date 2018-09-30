@@ -47,21 +47,21 @@
                                 index: '/alarm/firefighting-Rule',
                                 title: '消防'
                             },
-                            {
-                                icon: './../../static/img/alarm/crossborderRule.svg',
-                                index: '/alarm/crossborder-Rule',
-                                title: '越界'
-                            },
-                            {
-                                icon: './../../static/img/alarm/speedingRule.svg',
-                                index: '/alarm/speeding-Rule',
-                                title: '超速'
-                            },
-                            {
-                                icon: './../../static/img/alarm/offtrackRule.svg',
-                                index: '/alarm/offtrack-Rule',
-                                title: '偏离轨迹'
-                            },
+//                            {
+//                                icon: './../../static/img/alarm/crossborderRule.svg',
+//                                index: '/alarm/crossborder-Rule',
+//                                title: '越界'
+//                            },
+//                            {
+//                                icon: './../../static/img/alarm/speedingRule.svg',
+//                                index: '/alarm/speeding-Rule',
+//                                title: '超速'
+//                            },
+//                            {
+//                                icon: './../../static/img/alarm/offtrackRule.svg',
+//                                index: '/alarm/offtrack-Rule',
+//                                title: '偏离轨迹'
+//                            },
                             {
                                 icon: './../../static/img/alarm/overlimitRule.svg',
                                 index: '/alarm/overlimit-Rule',

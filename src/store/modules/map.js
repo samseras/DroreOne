@@ -19,6 +19,7 @@ const map = {
         controbroad:[],
         controcamera:[],
         controled:[],
+        controleWarn:[],
         controtransportVehicle:[],
         controtransportSchedule:[],
         controlSecurityPerson:[],
@@ -63,6 +64,9 @@ const map = {
         },
         getTreeState(state) {
             return state.treeData
+        },
+        getcontroleWarn(state){
+            return state.controleWarn
         },
         getcontroleLight(state) {
             return state.controleLight
@@ -183,6 +187,9 @@ const map = {
         [types.CONTROLER_LIGHT] (state, data) {
             state.controleLight = data
             // console.log(state.controleLight,'commit')
+        },
+        [types.CONTROLER_WARN](state,data){
+            state.controleWarn = data
         },
         [types.CONTROLER_ENVIRONMENT] (state, data) {
             state.controenvironment = data
