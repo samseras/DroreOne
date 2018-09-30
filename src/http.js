@@ -9,7 +9,7 @@ axios.interceptors.request.use(
         // 此处做请求拦截，如果有需要
         if (!(config.url.includes('login'))) {
             config.headers = {
-                'request-token': JSON.parse(localStorage.getItem('token')),
+                'request-token': JSON.parse(sessionStorage.getItem('token')),
                 "x-ajax": true,
                 "content-type":'application/json',
             }

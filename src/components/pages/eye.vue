@@ -418,7 +418,7 @@
                 this.searchList = []
             },
             logout() {
-                let data = JSON.parse(localStorage.getItem('token'))
+                let data = JSON.parse(sessionStorage.getItem('token'))
                 this.$store.dispatch('logout',data).then(() => {
                     this.$message.success('登出成功')
                     location.reload()

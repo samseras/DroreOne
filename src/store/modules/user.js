@@ -14,7 +14,7 @@ const user = {
     getters: {
         getUserInfo (state) {
             if (state.user === '') {
-                return localStorage.getItem('userName')
+                return sessionStorage.getItem('userName')
             } else{
                 return state.user
             }
@@ -23,12 +23,12 @@ const user = {
             if (state.userDetailInfo) {
                 let info = state.userDetailInfo
                 if (info.id === '1') {
-                    localStorage.setItem('role', JSON.stringify([1]))
+                    sessionStorage.setItem('role', JSON.stringify([1]))
                     return [1]
                 } else {
                     let role = (info.role === undefined || info.role === null)? []: info.role.permissions
                     if (role === null || role.length === 0) {
-                        localStorage.setItem('role', JSON.stringify([]))
+                        sessionStorage.setItem('role', JSON.stringify([]))
                         return []
                     } else if (role.length > 0) {
                         let rolesId = role.map(item => {
@@ -40,7 +40,7 @@ const user = {
                             }
                         })
                         rolesId = Array.from(new Set(rolesId))
-                        localStorage.setItem('role', JSON.stringify(rolesId))
+                        sessionStorage.setItem('role', JSON.stringify(rolesId))
                         return rolesId
                     }
                 }
@@ -71,13 +71,13 @@ const user = {
         },
         async logout ({commit},data) {
             commit(types.SET_USER, '')
-            localStorage.removeItem('token')
-            localStorage.removeItem('role')
+            sessionStorage.removeItem('token')
+            sessionStorage.removeItem('role')
             return await api.login.userLogout(data)
         },
         clearToken ({commit}) {
             commit(types.SET_USER, '')
-            localStorage.removeItem('token')
+            sessionStorage.removeItem('token')
         },
         async getUserDetailInfo ({commit},username) {
             try {
