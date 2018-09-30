@@ -163,10 +163,10 @@
                 let title = $("#subheading").val();
                 if(title){
                     this.$store.commit('COMPANY_DATA_NAME', title);
-                    localStorage.setItem("title",title);
+                    sessionStorage.setItem("title",title);
                 }else{
                     this.$store.commit('COMPANY_DATA_NAME', '卓锐科技股份有限公司')
-                    localStorage.setItem("title",'卓锐科技股份有限公司');
+                    sessionStorage.setItem("title",'卓锐科技股份有限公司');
                 }
                 let docElm = document.documentElement;
                 if (docElm.requestFullscreen) {
@@ -224,7 +224,7 @@
                 })
             },
             logout() {
-                let data = JSON.parse(localStorage.getItem('token'))
+                let data = JSON.parse(sessionStorage.getItem('token'))
                 this.$store.dispatch('logout',data).then(() => {
                     this.$message.success('登出成功')
                     location.reload()

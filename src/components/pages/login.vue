@@ -97,7 +97,7 @@
                 await api.login.userLogin(obj).then(res => {
                     console.log(res, 'this is new login api respones')
                     let aid = 'request-token'
-                    localStorage.setItem('token', JSON.stringify(res[aid]))
+                    sessionStorage.setItem('token', JSON.stringify(res[aid]))
                     if (res[aid] !== '') {
                         this.$router.push('droreone')
                     }

@@ -82,8 +82,8 @@ const router = new Router({
 // 路由拦截
 router.beforeEach((to, from, next) => {
     next(true)
-    let token = localStorage.getItem('token')
-    let role = JSON.parse(localStorage.getItem('role') || '[]')
+    let token = sessionStorage.getItem('token')
+    let role = JSON.parse(sessionStorage.getItem('role') || '[]')
     if (token) {
         if (to.path === '/login') {
             next()
