@@ -369,7 +369,7 @@
                                 let  list = JSON.parse(JSON.stringify(res))
                                 if(list.length >0){
                                     list.forEach(obj=>{
-                                        if(obj.rule){
+                                        if(obj.alarmType && obj.alarmType.id != "10"){
                                             this.warningEventList.push(obj)
                                         }
                                     })
@@ -498,6 +498,9 @@
                 width: 100%;
                 flex: 1;
                 margin-top: rem(20);
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
                 .personInfo{
                     width: rem(210);
                     height: rem(140);
