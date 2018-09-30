@@ -445,6 +445,17 @@
                     this.updateAlarmEvent(objArray)
                 }
             },
+            uploadFile (data) {
+                return new Promise((resolve, reject) => {
+                    api.alarm.uploadAttachments(data).then(res => {
+                        console.log(res, '上传成功')
+                        resolve(res)
+                    }).catch(err => {
+                        reject(res)
+                        console.log(err, '上传失败')
+                    })
+                })
+            },
             async updateAlarmEvent(objArray){
                 await api.alarm.updateAlarmEvent(objArray).then(res => {
                     console.log(res, '修改成功')

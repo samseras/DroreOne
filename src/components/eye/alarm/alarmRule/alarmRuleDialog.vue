@@ -29,7 +29,7 @@
                             <el-input type="text" v-model='alarmcolumnInfo.name' class="inputText" :maxlength="50" :disabled='isReadonly'></el-input>
                         </p>
                         <p class="status">
-                            <span>S&nbsp;&nbsp;O&nbsp;&nbsp;S：</span>
+                            <span>关联报警柱：</span>
                             <el-select  v-model="alarmcolumnInfo.relatedDeviceIds" size="mini" class="" :disabled='isReadonly' multiple placeholder="请选择">
                                 <el-option
                                     v-for="item in policeInfo"
