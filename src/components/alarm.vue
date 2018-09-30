@@ -40,7 +40,7 @@
                             {
                                 icon: './../../static/img/alarm/alarmcolumnRule.svg',
                                 index: '/alarm/alarmcolumn-Rule',
-                                title: '报警柱'
+                                title: 'SOS'
                             },
                             {
                                 icon: './../../static/img/alarm/firefightingRule.svg',

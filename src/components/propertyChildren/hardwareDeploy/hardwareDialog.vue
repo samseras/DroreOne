@@ -514,9 +514,9 @@
                         <span>M&nbsp;&nbsp;&nbsp;A&nbsp;&nbsp;&nbsp;C：</span>
                         <el-input type="text" v-model="police.mac" :disabled="isDisabled"></el-input>
                     </p>
-                    <!--<p class="IP">设&nbsp;&nbsp;备&nbsp;&nbsp;IP:
+                    <p class="IP">设&nbsp;&nbsp;备&nbsp;&nbsp;IP:
                         <el-input type="text" v-model="police.ip" :disabled="isDisabled"></el-input>
-                    </p>-->
+                    </p>
 
                     <p class="place ps area">
                         <span>位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置：</span>

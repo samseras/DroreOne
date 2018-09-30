@@ -354,7 +354,7 @@
                     name:info.name,
                     model:info.model,
                     serialNum:info.serialNum,
-                    /*ip:info.ip,*/
+                    ip:info.ip,
                     regionId:info.regionId,
                     port:info.port,
                     description:info.description,
@@ -495,6 +495,7 @@
                         this.policeList[i].status=true
                         this.policeList[i].id=this.policeList[i].id
                         this.policeList[i].mac=this.policeList[i].mac
+//                        this.policeList[i].ip = this.policeList[i].ip
                         this.policeList[i].location=`${this.policeList[i].longitude},${this.policeList[i].latitude}`
                         this.policeList[i].modifyTime=this.policeList[i].modifyTime.replace("-","/")
                         this.policeList[i].byTime = -(new Date(this.policeList[i].modifyTime)).getTime()

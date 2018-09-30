@@ -29,7 +29,7 @@
                             <el-input type="text" v-model='alarmcolumnInfo.name' class="inputText" :maxlength="50" :disabled='isReadonly'></el-input>
                         </p>
                         <p class="status">
-                            <span>报&nbsp;&nbsp;警&nbsp;&nbsp;柱：</span>
+                            <span>S&nbsp;&nbsp;O&nbsp;&nbsp;S：</span>
                             <el-select  v-model="alarmcolumnInfo.relatedDeviceIds" size="mini" class="" :disabled='isReadonly' multiple placeholder="请选择">
                                 <el-option
                                     v-for="item in policeInfo"
@@ -174,7 +174,17 @@
                             <span>名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称：</span>
                             <el-input type="text" v-model='crossborderInfo.name' class="inputText" :maxlength="50" :disabled='isReadonly'></el-input>
                         </p>
-
+                        <p class="status">
+                            <span>摄&nbsp;&nbsp;像&nbsp;&nbsp;头：</span>
+                            <el-select  v-model="crossborderInfo.relatedDeviceIds" size="mini" class="" :disabled='isReadonly' multiple placeholder="请选择">
+                                <el-option
+                                    v-for="item in cameraInfoList"
+                                    :key="item.id"
+                                    :label="item.name"
+                                    :value="item.id">
+                                </el-option>
+                            </el-select>
+                        </p>
                         <p class="severityName">
                             <span>严重等级：</span>
                             <el-select  v-model="crossborderInfo.severityId" size="mini" placeholder="请选择" :disabled='isReadonly'>
@@ -713,6 +723,7 @@
                 waterlevelInfo:{},
                 conditionInfo:{},
                 policeInfo:[],
+                cameraInfoList:[],
                 overlimitDeviceInfo:[],
                 waterlevelDeviceInfo:[],
                 conditionDeviceInfo:[],
@@ -1632,6 +1643,7 @@
                 }).catch(err => {
                 })
             },
+
             async getSchedules(){
                 await api.patrol.getAllPatrol().then(res => {
                     this.patrolInfo = res.map((item)=>{
@@ -1652,8 +1664,10 @@
             async getCameraDevice(){
                 let cameraInfo = {};
                 await api.camera.getAllCamera().then(res => {
+
                     cameraInfo.label = "摄像头";
                     cameraInfo.options = res.devices;
+                    this.cameraInfoList = res.devices
                 }).catch(err => {
                 })
                 return cameraInfo;
