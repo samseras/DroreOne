@@ -281,15 +281,6 @@
                             picker.$emit('pick', [start, end]);
                         }
                     }]
-                    // {
-                    //     text: '最近三个月',
-                    //     onClick(picker) {
-                    //         const end = new Date();
-                    //         const start = new Date();
-                    //         start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
-                    //         picker.$emit('pick', [start, end]);
-                    //     }
-                    // }]
                 },
                 speed:'0',
                 deviceName:'',
@@ -384,35 +375,39 @@
                     }
                     this.mapTitle = '人员历史轨迹'
                     this.isvehicle = false
-                    // this.historyData = [
-                    //     {
-                    //         id:'1',
-                    //         deviceId:'2',
-                    //         deviceName:'aaa',
-                    //         longitude:this.Info.gpsData.longitude+(Math.random()*10)/10000,
-                    //         latitude:this.Info.gpsData.latitude+(Math.random()*10)/10000
-                    //     },
-                    //     {
-                    //         id:'1',
-                    //         deviceId:'2',
-                    //         deviceName:'aaa',
-                    //         longitude:this.Info.gpsData.longitude+(Math.random()*10)/10000,
-                    //         latitude:this.Info.gpsData.latitude+(Math.random()*10)/10000
-                    //     },
-                    //     {
-                    //         id:'1',
-                    //         deviceId:'2',
-                    //         deviceName:'aaa',
-                    //         longitude:this.Info.gpsData.longitude+(Math.random()*10)/10000,
-                    //         latitude:this.Info.gpsData.latitude+(Math.random()*10)/10000
-                    //     }
-                    //
-                    // ]
-                    // this.historyvisible = true
+//                     this.historyData = [
+//                         {
+//                             id:'1',
+//                             deviceId:'2',
+//                             deviceName:'aaa',
+//                             longitude:this.Info.gpsData.longitude+(Math.random()*10)/10000,
+//                             latitude:this.Info.gpsData.latitude+(Math.random()*10)/10000
+//                         },
+//                         {
+//                             id:'1',
+//                             deviceId:'2',
+//                             deviceName:'aaa',
+//                             longitude:this.Info.gpsData.longitude+(Math.random()*10)/10000,
+//                             latitude:this.Info.gpsData.latitude+(Math.random()*10)/10000
+//                         }
+//                     ]
+//                     this.historyvisible = true
                     console.log(param)
                     Promise.all([this.getPersonHistory(param)]).then(res=>{
                         console.log(res,'人员历史轨迹数据')
+                        console.log(JSON.stringify(res))
                         this.historyData = res[0]
+//                        this.historyData = []
+//                        res[0].forEach(item=>{
+//                            this.historyData.push({
+//                                 id:'1',
+//                                 deviceId:'2',
+//                                 deviceName:'aaa',
+//                                 longitude:item.longitude,
+//                                 latitude:item.latitude
+//                            })
+//                        })
+                        console.log(this.historyData)
                         this.historyvisible = true
                     })
                 }
