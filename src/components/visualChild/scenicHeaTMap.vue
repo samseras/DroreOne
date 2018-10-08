@@ -55,11 +55,9 @@
             async getHotArea(){ //运河景区热力
                 await api.passFlowAnalysis.heatFlow().then(res =>{
                     console.log(res,'123454')
-                    console.log(typeof(res[0].dayFlow),'123454')
                     let sum = 0;
                     let realNum = 0;
                     this.value = [],this.lngLat = [];
-//                    let this.total= 0,this.real= 0;
                     let obj = {
                         name:"",
                         longitude:"",
@@ -88,15 +86,27 @@
                         hot.count = item.dayFlow;
 
                         sum +=item.dayFlow;
-                        console.log(sum,'98765')
+//                        console.log(sum,'98765')
                         realNum +=item.stayCount;
                      this.lngLat.push(hot)
                      this.value.push(obj)
 
                     })
-                    this.total = String(parseFloat(sum).toLocaleString()).split('');
-                    console.log(this.total,'123456')
+//                    this.total = String(parseFloat(sum).toLocaleString()).split('');
+//                    console.log(this.total,'123456')
                     this.real = String(parseFloat(realNum).toLocaleString()).split('')
+                }).catch(err =>{
+                    console.log(err)
+                })
+                //当日客流总计
+                await api.passFlowAnalysis.grandPassFlow('"lastDay"').then(res =>{
+                    let count = 0
+                    res.forEach(item=>{
+                        count += item.total_stay_count
+                    })
+                    this.total = String(parseFloat(count).toLocaleString()).split('');
+                    console.log(this.total,'123456')
+                    console.log(res,'累计客流')
                 }).catch(err =>{
                     console.log(err)
                 })
