@@ -563,6 +563,12 @@
                         <span class="des">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：</span>
                         <el-input type="textarea" :rows="3"  v-model="station.description" :disabled="isDisabled" :maxlength="140"></el-input>
                     </p>
+                    <div class="img">
+                        <img :src="getUrl(station.picturePath)" alt="" v-if="isDisabled" @error="imgError">
+                        <label for="avatar" v-if="!isDisabled">
+                            <img :src="files.length ? files[0].url : getUrl(station.picturePath)"  @error="imgError" class="rounded-circle" />
+                        </label>
+                    </div>
                 </div>
 
                 <div class="text-center p-2">
@@ -843,8 +849,13 @@
                                imgSrc = './../../../static/img/boatPic.png';
                            }
                        } else if (route.includes('station')) {// 站点码头
-                           imgSrc = './../../../../static/img/boatCartCard.png'
-                       }
+                           console.log(this.station)
+                           if(!this.station.type || this.station.type == "0"){
+                               imgSrc = './../../../../static/img/stationCard.svg'
+                           }else if(this.station.type == "1"){
+                               imgSrc = './../../../../static/img/landingCard.svg'
+                           }
+                        }
                     }
                     return imgSrc
                 } else {

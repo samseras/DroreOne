@@ -126,6 +126,7 @@
                 ledvisible:false,
                 controleLightList:[],
                 controleEnvironmentList:[],
+                controleWarnList:[],
                 controleWifiList:[],
                 controleBroadList:[],
                 controleCameraList:[],
@@ -169,6 +170,7 @@
                 isGroup:false,
                 selectedCast:[],
                 selectedCastContent:[],
+                alarmType:[]
 
 
             }
@@ -210,6 +212,7 @@
                 this.overView();//鹰眼
                 // this.rangeSearch();// 范围查找
                 this.getAllRoute();//调度路线
+                this.getAllAlarmTypes();
                 this.getAllAlarmEvent();//告警事件现有标注
                 //this.getAllTransportRoute();// 车船调度路线输出
                 //this.getAllStation();
@@ -441,6 +444,17 @@
                 }else{
                     this.updateAlarmEvent(objArray)
                 }
+            },
+            uploadFile (data) {
+                return new Promise((resolve, reject) => {
+                    api.alarm.uploadAttachments(data).then(res => {
+                        console.log(res, '上传成功')
+                        resolve(res)
+                    }).catch(err => {
+                        reject(res)
+                        console.log(err, '上传失败')
+                    })
+                })
             },
             async updateAlarmEvent(objArray){
                 await api.alarm.updateAlarmEvent(objArray).then(res => {
@@ -2856,15 +2870,34 @@
                     }
                 },10000)
             },
+            getAlarmTypeNameById(typeId){
+                let typeInfo =  this.alarmType.filter(item=>item.id == typeId)
+                if(typeInfo instanceof Array && typeInfo.length > 0){
+                    return typeInfo[0].name;
+                }
+                return "";
+            },
+            async getAllAlarmTypes(){
+                await api.alarm.getAllAlarmTypes().then(res => {
+                    this.alarmType = res;
+                }).catch(err => {
+                })
+            },
             async getAllAlarmEvent () {
                 await api.alarm.getAllAlarmEventundone().then(res => {
                     for (let i=0;i<res.length;i++) {
                         res[i].location = [res[i].longitude,res[i].latitude]
+
+                        if(res[i].rule && res[i].rule.alarmTypeId){
+                            res[i].rule['alarmTypeName'] = this.getAlarmTypeNameById(res[i].rule.alarmTypeId)
+                        }
+
                         if(!res[i].rule || !res[i].rule.name){
                             res[i].rule = {
                                 name : ""
                             }
                         }
+
                         res[i].device = !res[i].device ? "" : res[i].device
                         res[i].acturalExtendValue = !res[i].acturalExtendValue ? "" : res[i].acturalExtendValue
                         if(!res[i].owner || !res[i].owner.id){
@@ -2872,25 +2905,15 @@
                                 id : ""
                             }
                         }
-                        if(!res[i].owner || !res[i].owner.phone){
+                        if(!res[i].owner || !res[i].owner.mobileNum){
                             res[i].owner = {
-                                phone : ""
+                                mobileNum : ""
                             }
                         }
                         res[i].actualValue = !res[i].actualValue ? "" : res[i].actualValue
                         res[i].type="warn"
-                        if(res[i].rule.name=='') {
-                            if (res[i].status.id =="1")  {
-                                res[i].url = '/static/img/icon/pollingRule_one.svg'
-                                res[i].subtype ='pollingRule_one'
-                            } else  if (res[i].status.id =="2") {
-                                res[i].url = '/static/img/icon/pollingRule_two.svg'
-                                res[i].subtype ='pollingRule_two'
-                            }else {
-                                res[i].url = '/static/img/icon/pollingRule_three.svg'
-                                res[i].subtype ='pollingRule_three'
-                            }
-                        }else if(res[i].rule.alarmTypeId =="2") {
+
+                        if(res[i].alarmType.id =="2") {
                             if (res[i].status.id =="1")  {
                                 res[i].url = '/static/img/icon/alarmcolumnRule_one.png'
                                 res[i].subtype ='alarmcolumnRule_one'
@@ -2901,7 +2924,7 @@
                                 res[i].url = '/static/img/icon/alarmcolumnRule_three.png'
                                 res[i].subtype ='alarmcolumnRule_three'
                             }
-                        }else if(res[i].rule.alarmTypeId =="3") {
+                        }else if(res[i].alarmType.id =="3") {
                             if (res[i].status.id =="1")  {
                                 res[i].url = '/static/img/icon/firefightingRule_one.png'
                                 res[i].subtype ='firefightingRule_one'
@@ -2912,7 +2935,7 @@
                                 res[i].url = '/static/img/icon/firefightingRule_three.png'
                                 res[i].subtype ='firefightingRule_three'
                             }
-                        }else if(res[i].rule.alarmTypeId =="4") {
+                        }else if(res[i].alarmType.id =="4") {
                             if (res[i].status.id =="1")  {
                                 res[i].url = '/static/img/icon/crossborderRule_one.png'
                                 res[i].subtype ='crossborderRule_one'
@@ -2923,7 +2946,7 @@
                                 res[i].url = '/static/img/icon/crossborderRule_three.png'
                                 res[i].subtype ='crossborderRule_three'
                             }
-                        }else if(res[i].rule.alarmTypeId =="5") {
+                        }else if(res[i].alarmType.id =="5") {
                             if (res[i].status.id =="1")  {
                                 res[i].url = '/static/img/icon/speedingRule_one.png'
                                 res[i].subtype ='speedingRule_one'
@@ -2934,7 +2957,7 @@
                                 res[i].url = '/static/img/icon/speedingRule_three.png'
                                 res[i].subtype ='speedingRule_three'
                             }
-                        }else if(res[i].rule.alarmTypeId =="6") {
+                        }else if(res[i].alarmType.id =="6") {
                             if (res[i].status.id =="1")  {
                                 res[i].url = '/static/img/icon/offtrackRule_one.png'
                                 res[i].subtype ='offtrackRule_one'
@@ -2945,7 +2968,7 @@
                                 res[i].url = '/static/img/icon/offtrackRule_three.png'
                                 res[i].subtype ='offtrackRule_three'
                             }
-                        }else if(res[i].rule.alarmTypeId =="7") {
+                        }else if(res[i].alarmType.id =="7") {
                             if (res[i].status.id =="1")  {
                                 res[i].url = '/static/img/icon/overlimitRule_one.png'
                                 res[i].subtype ='overlimitRule_one'
@@ -2956,7 +2979,7 @@
                                 res[i].url = '/static/img/icon/overlimitRule_three.png'
                                 res[i].subtype ='overlimitRule_three'
                             }
-                        }else if(res[i].rule.alarmTypeId =="8") {
+                        }else if(res[i].alarmType.id =="8") {
                             if (res[i].status.id =="1")  {
                                 res[i].url = '/static/img/icon/waterlevelRule_one.png'
                                 res[i].subtype ='waterlevelRule_one'
@@ -2967,7 +2990,7 @@
                                 res[i].url = '/static/img/icon/waterlevelRule_three.png'
                                 res[i].subtype ='waterlevelRule_three'
                             }
-                        }else if(res[i].rule.alarmTypeId =="9") {
+                        }else if(res[i].alarmType.id =="9") {
                             if (res[i].status.id =="1")  {
                                 res[i].url = '/static/img/icon/conditionRule_one.png'
                                 res[i].subtype ='conditionRule_one'
@@ -2978,6 +3001,18 @@
                                 res[i].url = '/static/img/icon/conditionRule_three.png'
                                 res[i].subtype ='conditionRule_three'
                             }
+                        }else if(res[i].alarmType.id =="10") {
+                            if (res[i].status.id =="1")  {
+                                res[i].url = '/static/img/icon/pollingRule_one.svg'
+                                res[i].subtype ='pollingRule_one'
+                            } else  if (res[i].status.id =="2") {
+                                res[i].url = '/static/img/icon/pollingRule_two.svg'
+                                res[i].subtype ='pollingRule_two'
+                            }else {
+                                res[i].url = '/static/img/icon/pollingRule_three.svg'
+                                res[i].subtype ='pollingRule_three'
+                            }
+                            res[i]['rule']['alarmTypeName'] = '巡检告警'
                         }
                         var icon = new droreMap.icon.Marker({
                             coordinate: droreMap.trans.transFromWgsToLayer(res[i].location),
@@ -3606,6 +3641,9 @@
                                 if(item1.type=='light'){
                                     this.controleLightList.push(item1.id);
                                     this.$store.commit('CONTROLER_LIGHT', this.controleLightList)
+                                }else if(item1.type=='warn'){
+                                    this.controleWarnList.push(item1.id);
+                                    this.$store.commit('CONTROLER_WARN', this.controleWarnList)
                                 }else if(item1.type=='environment'){
                                     this.controleEnvironmentList.push(item1.id);
                                     this.$store.commit('CONTROLER_ENVIRONMENT', this.controleEnvironmentList)
@@ -3694,6 +3732,9 @@
                             if(item.type=='light'){
                                 this.controleLightList=[];
                                 this.$store.commit('CONTROLER_LIGHT', this.controleLightList)
+                            }else if(item.type=='warn'){
+                                this.controleWarnList=[];
+                                this.$store.commit('CONTROLER_WARN', this.controleWarnList)
                             }else if(item.type=='environment'){
                                 this.controleEnvironmentList=[];
                                 this.$store.commit('CONTROLER_ENVIRONMENT', this.controleEnvironmentList)
@@ -3801,6 +3842,10 @@
                                     this.controleLightList.push(data[i].id);
                                     this.controleLightList=[...new Set(this.controleLightList)];
                                     this.$store.commit('CONTROLER_LIGHT', this.controleLightList)
+                                }else if(data[i].type=='warn'){
+                                    this.controleWarnList.push(data[i].id);
+                                    this.controleWarnList=[...new Set(this.controleWarnList)];
+                                    this.$store.commit('CONTROLER_WARN', this.controleWarnList)
                                 }else if(data[i].type=='environment'){
                                     this.controleEnvironmentList.push(data[i].id);
                                     this.controleEnvironmentList=[...new Set(this.controleEnvironmentList)];
@@ -3919,6 +3964,12 @@
                                         this.controleLightList.splice(index, 1);
                                     }
                                     this.$store.commit('CONTROLER_LIGHT', this.controleLightList)
+                                }else if(this.getTreeState[0].children[i].type=='warn'){
+                                    let index = this.controleWarnList.indexOf(this.getTreeState[0].children[i].id);
+                                    if (index > -1) {
+                                        this.controleWarnList.splice(index, 1);
+                                    }
+                                    this.$store.commit('CONTROLER_WARN', this.controleWarnList)
                                 }else if(this.getTreeState[0].children[i].type=='environment'){
                                     let index = this.controleEnvironmentList.indexOf(this.getTreeState[0].children[i].id);
                                     if (index > -1) {
@@ -4077,6 +4128,10 @@
                                 this.controleLightList.push(this.getTreeState[0].id);
                                 this.controleLightList=[...new Set(this.controleLightList)];
                                 this.$store.commit('CONTROLER_LIGHT', this.controleLightList)
+                            }else if(this.getTreeState[0].type=='warn'){
+                                this.controleWarnList.push(this.getTreeState[0].id);
+                                this.controleWarnList=[...new Set(this.controleWarnList)];
+                                this.$store.commit('CONTROLER_WARN', this.controleWarnList)
                             }else if(this.getTreeState[0].type=='environment'){
                                 this.controleEnvironmentList.push(this.getTreeState[0].id);
                                 this.controleEnvironmentList=[...new Set(this.controleEnvironmentList)];
@@ -4202,6 +4257,12 @@
                                     this.controleLightList.splice(index, 1);
                                 }
                                 this.$store.commit('CONTROLER_LIGHT', this.controleLightList)
+                            }else if(this.getTreeState[0].type=='warn'){
+                                let index = this.controleWarnList.indexOf(this.getTreeState[0].id);
+                                if (index > -1) {
+                                    this.controleWarnList.splice(index, 1);
+                                }
+                                this.$store.commit('CONTROLER_WARN', this.controleWarnList)
                             }else if(this.getTreeState[0].type=='environment'){
                                 let index = this.controleEnvironmentList.indexOf(this.getTreeState[0].id);
                                 if (index > -1) {
@@ -4424,6 +4485,7 @@
                 'getcontroBroad',
                 'getcontroCamera',
                 'getcontroLed',
+                'getcontroleWarn',
                 'getcontroTransportVehicle',
                 'getcontroTransportSchedule',
                 'getcontrolSecurityPerson',

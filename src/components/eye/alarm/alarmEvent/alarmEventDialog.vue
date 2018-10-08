@@ -98,7 +98,7 @@
 
                             <p class="tel">
                                 <span>电话号码：</span>
-                                <el-input type="text" v-model="eventInfo.owner.phone" class="inputText" :maxlength="15" :disabled="true"></el-input>
+                                <el-input type="text" v-model="eventInfo.owner.mobileNum" class="inputText" :maxlength="15" :disabled="true"></el-input>
                             </p>
                             <p class="status">
                                 <span>状&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 态:</span>
@@ -300,7 +300,7 @@
                     },
                     owner:{
                         id:'',
-                        phone:''
+                        mobileNum:''
                     },
                     serialNum:'',
                     rule:{
@@ -437,8 +437,8 @@
                     this.personInfo.forEach((item)=>{
                         item.options.forEach((obj)=>{
                             if(obj.id == id){
-                                this.eventInfo.owner.phone = obj.phone
-                                this.addEventInfo.owner.mobileNum = obj.phone
+                                this.eventInfo.owner.mobileNum = obj.mobileNum
+                                this.addEventInfo.owner.mobileNum = obj.mobileNum
                             }
                         })
                     });
@@ -454,7 +454,7 @@
                 let objArray = [];
                 let newInfo = {};
 
-                if(this.route.includes('warning')){
+                if(this.route.includes('warning') || (this.route.includes('warn') && this.eventInfo.alarmType.id != '10')){
                     if(this.isBatchEdit){    //批量编辑
                         console.log(this.choseInfoId);
                         if(!this.batchlevel && !this.batchstatus){
@@ -467,6 +467,9 @@
                                 ownerId:item.owner.id,
                                 statusId:item.status.id,
                                 severityId:item.severity.id,
+                                sourceDeviceId:item.device.id,
+                                longitude: item.longitude,
+                                latitude: item.latitude,
                                 attachmentIds:attachmentIds,
                                 handleRecord:{
                                     modifiedFields:item.modifiedFields,
@@ -534,6 +537,9 @@
                             ownerId:this.eventInfo.owner.id,
                             statusId:this.eventInfo.status.id,
                             severityId:this.eventInfo.severity.id,
+                            sourceDeviceId:this.eventInfo.device.id,
+                            longitude: this.eventInfo.longitude,
+                            latitude: this.eventInfo.latitude,
                             attachmentIds:ids,
                             handleRecord:{
                                 modifiedFields:this.modifiedFields,
@@ -548,7 +554,10 @@
                         }
                         await this.$emit('saveEditInfo',param)
                     }
-                }else if(this.route.includes('patrol')){
+                }else if(this.route.includes('patrol') || (this.route.includes('warn') && this.eventInfo.alarmType.id == '10')){
+                    if(this.route.includes('warn') && this.eventInfo.alarmType.id == '10'){
+                        this.addEventInfo = this.eventInfo
+                    }
                     console.log(this.addEventInfo)
                     if(!this.addEventInfo.severity.id){
                         this.$message.error('请选择严重性等级！')
@@ -770,7 +779,7 @@
                     return {
                         id: item.id,
                         name:item.cnName,
-                        phone:item.mobileNum
+                        mobileNum:item.mobileNum
                     }
                 })
                 return {
@@ -852,9 +861,8 @@
                     console.log(this.deviceObj)
                 }else{
                     this.isPatrolAdd = true
+                    this.getSerialNum()
                 }
-
-                this.getSerialNum()
             }else{
                 this.isPatrolEvent = false
                 if(this.Info.fileList && this.Info.fileList instanceof Array && this.Info.fileList.length > 0){

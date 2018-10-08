@@ -89,9 +89,9 @@
         },
         methods: {
             treeShow(){
-                console.log(this.getcontroleLight)
-                if(this.getcontroleLight){
-                    this.lightCheckout=this.getcontroleLight
+                console.log(this.getcontroleWarn)
+                if(this.getcontroleWarn){
+                    this.lightCheckout=this.getcontroleWarn
                 }
             },
             showBroadCard() {
@@ -100,7 +100,6 @@
             },
             newagenda: function () {
                 $(".newagenda").show();
-
             },
             drawLine() {
                 // 基于准备好的dom，初始化echarts实例
@@ -261,7 +260,7 @@
                                 }
                             }
                         }else if(item.rule.alarmTypeId =="2") {
-                            item.regionName="报警柱"
+                            item.regionName="SOS"
                             if (item.status.id =="1")  {
                                 this.pendinglist.push(item.id)
                                 item.icon = '../../../static/img/alarm/alarmcolumnRule_one.svg'
@@ -409,7 +408,7 @@
             this.getAllAlarmEvent();
         },
         computed: {
-            ...mapGetters(['getcontroleLight'])
+            ...mapGetters(['getcontroleWarn'])
         }
     }
 </script>
