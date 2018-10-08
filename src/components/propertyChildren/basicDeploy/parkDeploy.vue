@@ -50,7 +50,7 @@
                         </el-table-column>
                         <el-table-column
                             width="140"
-                            prop="state"
+                            prop="parkingBean.state"
                             label="状态">
                         </el-table-column>
 
