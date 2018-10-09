@@ -33,20 +33,9 @@
                     <el-checkbox-group v-model="stationCheckedList" @change="stationOpt">
                         <div class="checkRow" v-for="item in stationCheckList" >
                             <el-checkbox :label="item.id">{{item.name}}</el-checkbox>
-                            <!--<i class="el-icon-sort-up"></i>-->
-                            <!--<i class="el-icon-sort-down"></i>-->
                             <img src="../../static/img/moveUp.svg"  @click="sortStation('up',item)" />
                             <img src="../../static/img/moveDown.svg"  @click="sortStation('down',item)" />
-                            <!--<button @click="sortStation('up',item)" class="sortButton">-->
-                                <!--<span>↑</span>-->
-                            <!--</button>-->
-                            <!--<button @click="sortStation('down',item)" class="sortButton">-->
-                                <!--<span>↓</span>-->
-                            <!--</button>-->
                         </div>
-                        <!--<el-checkbox label="复选框 A"></el-checkbox>-->
-                        <!--<el-checkbox label="复选框 B"></el-checkbox>-->
-                        <!--<el-checkbox label="复选框 C"></el-checkbox>-->
                     </el-checkbox-group>
                 </div>
             </div>
@@ -5011,27 +5000,6 @@
                 }
                 .checkRow{
                     display: block;
-                    .sortButton{
-                        margin:1px;
-                        padding:0;
-                        color:#fff;
-                        font-size:1.14em;
-                        font-weight:700;
-                        text-decoration:none;
-                        text-align:center;
-                        height:rem(25);
-                        width:rem(25);
-                        line-height:.4em;
-                        background-color:rgba(0,60,136,.5);
-                        border:2px solid #999;
-                        border-radius:2px;
-                        /*top: 2px;*/
-                        /*left: 2px;*/
-                        /*position: absolute;*/
-                        z-index: 2;
-                        cursor: pointer;
-                        outline:none;
-                    }
                 }
             }
         }
