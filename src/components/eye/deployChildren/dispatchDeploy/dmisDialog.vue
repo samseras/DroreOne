@@ -533,7 +533,7 @@
         <MapDialog v-if="mapVisible" :visible="mapVisible" class="map" @closeMapDialog = 'closeMapDialog'></MapDialog>
         <broadcastDialog v-if="broadcastVisible" :visible="broadcastVisible" :broadList="broadList.musics" class="broadcastContent" @closeBroadcastDialog = 'closeBroadcastDialog' @saveMusicList = "musicList"></broadcastDialog>
         <ScreenDialog v-if="screenVisible" :visible="screenVisible" :screenContentList="screen.contents" class="screenContent" @closeScreenDialog = 'closeScreenDialog' @saveContent="saveContent"></ScreenDialog>
-        <SiteMap v-if="siteMapVisible" :name="routeName" :visible="siteMapVisible" :type="transport.type" class="map" @closeMapDialog = 'closeSiteMapDialog' :isDisabled="isDisabled"></SiteMap>
+        <SiteMap v-if="siteMapVisible" :visible="siteMapVisible" :type="transport.type" class="map" @closeMapDialog = 'closeSiteMapDialog' :isDisabled="isDisabled"></SiteMap>
     </div>
 </template>
 
@@ -1455,12 +1455,13 @@
 
                 if (this.Info.id) {
                     this.$store.commit('LOCATION_ID', this.Info.id)
-                    this.transport.vDriverMaps = this.transport.svDriverMaps.map(item=>{
+                    let vArray  = this.transport.svDriverMaps.map(item=>{
                         return {
                             vehicleId:item.vehicleId,
                             driverId:item.driverIds[0]
                         }
                     })
+                    this.$set(this.transport,"vDriverMaps", vArray)
                 }else {
                     this.$store.commit('LOCATION_ID', '')
                 }
