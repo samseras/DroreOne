@@ -11,10 +11,7 @@
                         @choseType='choseType'
                         @addNewInfo="addNewInfo"
                         :choseId="choseInfoId"
-                        :listLength = "listLength"
-                        @searchAnything="searchAnything"
-                        @previousPage="previousPage"
-                        @nextPage="nextPage">
+                        @searchAnything="searchAnything">
                 </Header>
             </div>
             <div class="personList" v-loading="loading">
@@ -113,9 +110,11 @@
     import Header from './alarmEventHeader'
     import AlarmDetail from './alarmEventDialog'
     // import moment from 'moment'
+    import {mapGetters,mapMutations} from 'vuex'
     export default {
         data(){
             return{
+                allPatrolEventList: [],
                 patrolEventList: [],
                 patrolEventListTemp:[],
                 visible: false,
@@ -136,6 +135,7 @@
             }
         },
         methods: {
+            ...mapMutations(['TOTAL_NUM']),
             filterStatus(value,row){
                 console.log(value,'value')
                 console.log(row,'row')
@@ -144,7 +144,7 @@
             searchAnything (info) {
                 console.log(info, '这是要过滤的')
                 if (info.trim() !== '') {
-                    this.patrolEventList = this.patrolEventList.filter(item => {
+                    this.patrolEventList = this.allPatrolEventList.filter(item => {
                         if (item.serialNum.includes(info)) {
                             return item
                         }
@@ -303,16 +303,6 @@
                     return
                 }
             },
-            previousPage (page) {
-                console.log(page, '这是传过来的pageNum')
-                this.pageNum = page
-                this.getAllAlarmEvent ()
-            },
-            nextPage (page) {
-                console.log(page, '这个是下一页的pageNUM')
-                this.pageNum = page
-                this.getAllAlarmEvent ()
-            },
             saveEditInfo(param){ //编辑保存
                 let that=this
                 if(that.isBatchEdit){
@@ -398,20 +388,23 @@
             },
             async getAllAlarmEvent () {
                 this.loading = true
-                this.patrolEventList = []
+                this.allPatrolEventList = []
                 await api.alarm.getAllAlarmEvent().then(res => {
                                 this.loading = false
-                                this.listLength = res.length
+                                let date = new Date().getTime()
+                                let obj = {totalNum: res.length}
+                                obj[date] = new Date().getTime()
+                                this.$store.commit('TOTAL_NUM', obj)
                                 let list = JSON.parse(JSON.stringify(res))
 
                                 if(list.length >0){
                                     list.forEach(obj=>{
                                         if(obj.alarmType && obj.alarmType.id && obj.alarmType.id == "10"){
-                                            this.patrolEventList.push(obj)
+                                            this.allPatrolEventList.push(obj)
                                         }
                                     })
                                 }
-                                this.patrolEventList.forEach(item => {
+                                this.allPatrolEventList.forEach(item => {
                                     item.checked = false;
 
                                     if(!item.device){
@@ -461,10 +454,10 @@
 
                                 })
 
-                                this.patrolEventList = _.sortBy(this.patrolEventList,'byTime')
+                                this.allPatrolEventList = _.sortBy(this.patrolEventList,'byTime')
 
-                                this.patrolEventList = this.patrolEventList.filter((item,index) => {
-                                    if (index < (this.pageNum * 10 ) && index > ((this.pageNum -1) * 10 ) - 1 ) {
+                                this.patrolEventList = this.allPatrolEventList.filter((item,index) => {
+                                    if (index < (this.getCurrentNum * 35 ) && index > ((this.getCurrentNum -1) * 35 ) - 1 ) {
                                         return item
                                     }
                                 })
@@ -510,6 +503,14 @@
             Header,
             AlarmDetail
         },
+        watch: {
+            getCurrentNum () {
+                this.getAllAlarmEvent()
+            }
+        },
+        computed: {
+            ...mapGetters(['getCurrentNum'])
+        }
     }
 
 </script>
