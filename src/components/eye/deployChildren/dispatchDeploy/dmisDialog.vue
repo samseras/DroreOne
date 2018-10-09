@@ -753,6 +753,24 @@
                 if(this.isDisabled){
                     return
                 }
+
+                if(this.security.iScheduleMaps.length > 0){
+                    this.security.iScheduleMaps.forEach(item=>{
+                        this.personList.forEach(item1=>{
+                            if(item1.id == item.securityId){
+                                item1.disabled = true
+                            }
+                        })
+
+                        this.gpsOption.forEach(item2=>{
+                            if(item2.id == item.gpsId){
+                                item2.disabled = true
+                            }
+                        })
+
+                    })
+                }
+
                 this.security.iScheduleMaps.push({
                     securityId:'',
                     gpsId:''
@@ -762,6 +780,33 @@
                 if(this.isDisabled){
                     return
                 }
+
+                if(this.transport.vDriverMaps.length > 0){
+                    this.transport.vDriverMaps.forEach(item=>{
+                        if(this.transport.type == '0'){
+                            this.cars.forEach(item1=>{
+                                if(item1.id == item.vehicleId){
+                                    item1.disabled = true
+                                }
+                            })
+                        }else{
+                            this.boats.forEach(item1=>{
+                                if(item1.id == item.vehicleId){
+                                    item1.disabled = true
+                                }
+                            })
+                        }
+
+                        this.personList.forEach(item2=>{
+                            if(item2.id == item.driverId){
+                                item2.disabled = true
+                            }
+                        })
+
+                    })
+                }
+
+
                 this.transport.vDriverMaps.push({
                     vehicleId:'',
                     driverId:''
@@ -1455,13 +1500,16 @@
 
                 if (this.Info.id) {
                     this.$store.commit('LOCATION_ID', this.Info.id)
-                    let vArray  = this.transport.svDriverMaps.map(item=>{
+
+                    if(!this.transport.vDriverMaps){
+                        this.$set(this.transport,"vDriverMaps",[])
+                    }
+                    this.transport.vDriverMaps  = this.transport.svDriverMaps.map(item=>{
                         return {
                             vehicleId:item.vehicleId,
                             driverId:item.driverIds[0]
                         }
                     })
-                    this.$set(this.transport,"vDriverMaps", vArray)
                 }else {
                     this.$store.commit('LOCATION_ID', '')
                 }
