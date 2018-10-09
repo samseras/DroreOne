@@ -341,8 +341,13 @@
             async initSchedule(){
                 Promise.all([this.getAllTransport()]).then(result=>{
                     let schedules = result[0]
-                    console.log(JSON.stringify(schedules))
+                    console.log(schedules)
 
+                    if(schedules.length >0){
+                        schedules = schedules.filter(item=>{
+                            return item.enabled
+                        })
+                    }
                     this.scheduleNumber=schedules.length
                     this.transportScheduleInfo=[]
                     this.transportScheduleList=[]
