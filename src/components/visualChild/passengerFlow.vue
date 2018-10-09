@@ -664,6 +664,7 @@
                     legend: {
                         show:true,
                         left:'center',
+                        selectedMode:false,
                         textStyle:{
                             color:'#01e4ff'
                         },
