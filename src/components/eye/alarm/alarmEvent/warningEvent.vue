@@ -10,10 +10,7 @@
                         @batchEdit = 'batchEdit'
                         @choseType='choseType'
                         :choseId="choseInfoId"
-                        :listLength = "listLength"
-                        @searchAnything="searchAnything"
-                        @previousPage="previousPage"
-                        @nextPage="nextPage">
+                        @searchAnything="searchAnything">
                 </Header>
             </div>
             <div class="personList" v-loading="loading">
@@ -107,10 +104,12 @@
     import api from '@/api'
     import Header from './alarmEventHeader'
     import AlarmDetail from './alarmEventDialog'
+    import {mapGetters,mapMutations} from 'vuex'
     // import moment from 'moment'
     export default {
         data(){
             return{
+                allWarningEventList: [],
                 warningEventList: [],
                 warningEventListTemp:[],
                 visible: false,
@@ -130,6 +129,7 @@
             }
         },
         methods: {
+            ...mapMutations(['TOTAL_NUM']),
             filterStatus(value,row){
                 console.log(value,'value')
                 console.log(row,'row')
@@ -138,7 +138,7 @@
             searchAnything (info) {
                 console.log(info, '这是要过滤的')
                 if (info.trim() !== '') {
-                    this.warningEventList = this.warningEventList.filter(item => {
+                    this.warningEventList = this.allWarningEventList.filter(item => {
                         if (item.serialNum.includes(info)) {
                             return item
                         }
@@ -294,16 +294,6 @@
                     return
                 }
             },
-            previousPage (page) {
-                console.log(page, '这是传过来的pageNum')
-                this.pageNum = page
-                this.getAllAlarmEvent ()
-            },
-            nextPage (page) {
-                console.log(page, '这个是下一页的pageNUM')
-                this.pageNum = page
-                this.getAllAlarmEvent ()
-            },
             saveEditInfo(param){ //编辑保存
                 let that=this
                 if(that.isBatchEdit){
@@ -362,20 +352,23 @@
             },
             async getAllAlarmEvent () {
                 this.loading = true
-                this.warningEventList = []
+                this.allWarningEventList = []
                 await api.alarm.getAllAlarmEvent().then(res => {
                                 this.loading = false
-                                this.listLength = res.length
+                                let date = new Date().getTime()
+                                let obj = {totalNum: res.length}
+                                obj[date] = new Date().getTime()
+                                this.$store.commit('TOTAL_NUM', obj)
                                 let  list = JSON.parse(JSON.stringify(res))
                                 if(list.length >0){
                                     list.forEach(obj=>{
                                         if(obj.alarmType && obj.alarmType.id != "10"){
-                                            this.warningEventList.push(obj)
+                                            this.allWarningEventList.push(obj)
                                         }
                                     })
                                 }
 
-                                this.warningEventList.forEach(item => {
+                                this.allWarningEventList.forEach(item => {
                                     item.checked = false;
                                     if(item.rule && item.rule.alarmTypeId){
                                         item.rule.alarmTypeName = this.getAlarmTypeNameById(item.rule.alarmTypeId)
@@ -421,10 +414,10 @@
                                     item.byTime = -(new Date(item.modifyTime)).getTime()
                                 })
 
-                                this.warningEventList = _.sortBy(this.warningEventList,'byTime')
+                                this.allWarningEventList = _.sortBy(this.warningEventList,'byTime')
 
-                                this.warningEventList = this.warningEventList.filter((item,index) => {
-                                    if (index < (this.pageNum * 10 ) && index > ((this.pageNum -1) * 10 ) - 1 ) {
+                                this.warningEventList = this.allWarningEventList.filter((item,index) => {
+                                    if (index < (this.pageNum * 35 ) && index > ((this.pageNum -1) * 35 ) - 1 ) {
                                         return item
                                     }
                                 })
@@ -457,6 +450,14 @@
             Header,
             AlarmDetail
         },
+        watch: {
+            getCurrentNum () {
+                this.getAllAlarmEvent()
+            }
+        },
+        computed: {
+            ...mapGetters(['getCurrentNum'])
+        }
     }
 
 </script>
