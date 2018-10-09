@@ -624,6 +624,11 @@
                     //             "status": "ONLINE"
                     //         }
                     //     ]
+                    if(schedules.length >0){
+                        schedules = schedules.filter(item=>{
+                            return item.inspectionSchedule.enabled
+                        })
+                    }
                     this.scheduleNumber=schedules.length
                     this.securityScheduleInfo=[]
                     this.securitySchedulelist=[]

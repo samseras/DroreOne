@@ -37,13 +37,15 @@
                 this.$emit('closeMapDialog')
             },
             saveRoat () {
+                console.log(this.getStationChecked,'getStationChecked')
                 let roatObj = {
                     name: this.name,
                     geo: {
                         type:"LineString",
                         coordinates: this.getRoatLocation
                     },
-                    type:this.type == '0' ? 2 : 3  //车 :2  船:3
+                    type:this.type == '0' ? 2 : 3,  //车 :2  船:3
+                    eOrders:this.getStationChecked
                 }
                 console.log(this.type)
                 api.roat.createRoat(JSON.stringify(roatObj)).then(res => {
@@ -61,7 +63,7 @@
             Map
         },
         computed: {
-            ...mapGetters(['getRoatLocation'])
+            ...mapGetters(['getRoatLocation','getStationChecked'])
         }
     }
 </script>

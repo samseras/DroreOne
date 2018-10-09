@@ -36,6 +36,7 @@ const map = {
         transportType:'0',
         treeShow:[],
         musicShow:false,
+        stationChecked:[]
     },
     getters: {
         getLocation (state) {
@@ -138,6 +139,9 @@ const map = {
         },
         getMusicShow(state){
             return state.musicShow
+        },
+        getStationChecked(state){
+            return state.stationChecked
         }
     },
     setters: {},
@@ -267,6 +271,9 @@ const map = {
         },
         [types.SET_MUSIC](state,data){
             state.musicShow=data;
+        },
+        [types.STATION_CHECKED](state,data){
+            state.stationChecked = data
         }
     },
     actions: {

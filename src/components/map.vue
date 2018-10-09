@@ -23,6 +23,23 @@
                 </div>
             </div>
         </div>
+        <div class="transportStation" v-if='tsShow'>
+            <button @click="transportShowButton" class="transportShowButton">
+                <span>»</span>
+            </button>
+            <div class="tscontent" v-show="tsContentShow">
+                <div class="tscontentList">
+                    <h4>路线关联站点</h4>
+                    <el-checkbox-group v-model="stationCheckedList" @change="stationOpt">
+                        <div class="checkRow" v-for="item in stationCheckList" >
+                            <el-checkbox :label="item.id">{{item.name}}</el-checkbox>
+                            <img src="../../static/img/moveUp.svg"  @click="sortStation('up',item)" />
+                            <img src="../../static/img/moveDown.svg"  @click="sortStation('down',item)" />
+                        </div>
+                    </el-checkbox-group>
+                </div>
+            </div>
+        </div>
         <musicedit :dialogisshow="dialogVisible" :isGroup="isGroup" :selectedCast="selectedCast" @closeDialog="closeMusicEdit" :Infos="menulist"></musicedit>
         <div id="contextmenu_container" class="contextmenu">
             <i @click="menuDelete"></i>
@@ -111,6 +128,10 @@
         name: "map1",
         data () {
             return {
+                stationCheckedList:[],
+                stationCheckList:[],
+                tsContentShow:true,
+                tsShow:false,
                 heatEmShow:false,
                 AlarmDetailShow:false,
                 warningEventInfo: [],
@@ -215,7 +236,7 @@
                 this.getAllAlarmTypes();
                 this.getAllAlarmEvent();//告警事件现有标注
                 //this.getAllTransportRoute();// 车船调度路线输出
-                //this.getAllStation();
+//                this.getAllStation();
                 this.getAllVehicle();// 车船信息
                 this.heatEmShow=true
                 this.heatEm();//环境数据
@@ -260,6 +281,8 @@
                     this.getAllStationEdit();// 站点修改
                 }
             } else if (route.includes('transport-Dmis')) {
+                this.tsShow = true
+                this.getStationList()
                 if(!this.getLocationId){
                     this.getTransportRoute(); //车船调度路线输出
                     this.getStation(); //站点现有标注
@@ -401,7 +424,8 @@
                 'REGION_LOCATION_STATE',
                 'ROAT_LOCATION_STATE',
                 'MAP_ROAT_LOCATION',
-                'SET_MUSIC'
+                'SET_MUSIC',
+                'STATION_CHECKED'
             ]),
             closeDialog () {
                 this.visible = false
@@ -800,6 +824,26 @@
                         this.getAllLangVehicle();//长轮询
                     }
                 },5000)
+            },
+            async getStationList(){ //站点
+                await api.station.getAllStation().then(res=>{
+                    if(this.getTransportType == '0'){
+                        this.stationCheckList=res.filter(item=>{
+                            if(item.type == '0'){
+                                return true
+                            }
+                        })
+                    }else if(this.getTransportType == '1'){
+                        this.stationCheckList=res.filter(item=>{
+                            if(item.type == '1'){
+                                return true
+                            }
+                        })
+                    }
+                    console.log(this.stationCheckList,'stationCheckList')
+                }).catch(err=>{
+                    console.log(err)
+                })
             },
             async getStation(){ //站点
                 await api.station.getAllStation().then(res=>{
@@ -3129,7 +3173,7 @@
                 this.getAllRoute();//调度路线
                 this.getAllAlarmEvent();//告警事件现有标注
                 //this.getAllTransportRoute();// 车船调度路线输出
-                //this.getAllStation();
+//                this.getAllStation();
                 this.getAllVehicle();// 车船信息
                     // this.heatEmShow=true
                     // this.heatEm();//环境数据
@@ -3579,6 +3623,42 @@
                     $(".heatEmButton span").text("»");
                 }
                 this.heatShow=!this.heatShow
+            },
+            transportShowButton(){
+                if(this.tsContentShow){
+                    $(".transportShowButton span").text("«");
+                }else {
+                    $(".transportShowButton span").text("»");
+                }
+                this.tsContentShow=!this.tsContentShow
+            },
+            sortStation(type,item){
+                console.log(item)
+                let index = this.stationCheckList.indexOf(item)
+                if(type == "up"){
+                    this.stationCheckList.splice(index, 1, ...this.stationCheckList.splice(index-1 , 1, this.stationCheckList[index]))
+                }else{
+                    this.stationCheckList.splice(index, 1, ...this.stationCheckList.splice(index+1 , 1, this.stationCheckList[index]))
+                }
+                this.stationOpt()
+            },
+            stationOpt(){
+                console.log(this.stationCheckedList)
+                let objArray = []
+                if(this.stationCheckList.length>0){
+                    let i = 1;
+                    this.stationCheckList.forEach(item=>{
+                        if(this.stationCheckedList.includes(item.id)){
+                            objArray.push({
+                                entityId:item.id,
+                                order:i
+                            })
+                            i++;
+                        }
+                    })
+                    console.log(objArray,'objArray')
+                    this.$store.commit('STATION_CHECKED',objArray);
+                }
             }
         },
         components: {
@@ -4750,6 +4830,18 @@
             margin-left: -13px;
         }
     }
+    .transportStation{
+        .tscontent{
+            .el-checkbox{
+                line-height: rem(25);
+                margin-left: rem(10);
+                .el-checkbox__label{
+                    color: #fff;
+                }
+            }
+        }
+    }
+
 </style>
 <style lang="scss" scoped>
     #map{
@@ -4856,6 +4948,58 @@
                         margin-right: rem(2);
                         display: inline-block;
                     }
+                }
+            }
+        }
+    }
+    .transportStation{
+        position: absolute;
+        left: rem(50);
+        top:rem(70);
+        .transportShowButton{
+            display:block;
+            margin:1px;
+            padding:0;
+            color:#fff;
+            font-size:1.14em;
+            font-weight:700;
+            text-decoration:none;
+            text-align:center;
+            height:rem(30);
+            width:rem(30);
+            line-height:.4em;
+            background-color:rgba(0,60,136,.5);
+            border:2px solid #999;
+            border-radius:2px;
+            top: 2px;
+            left: 2px;
+            position: absolute;
+            z-index: 2;
+            cursor: pointer;
+            outline:none;
+        }
+        .tscontent{
+            position: relative;
+            -moz-border-radius: 5px;
+            -webkit-border-radius: 5px;
+            border-radius: 5px;
+            color: #fff;
+            z-index: 1;
+            -moz-border-radius: 5px;
+            -webkit-border-radius: 5px;
+            border-radius: 5px;
+            background-color:rgba(0,0,0,.4);
+            .tscontentList{
+                position: relative;
+                z-index: 1;
+                padding:rem(10) rem(20);
+                h4{
+                    font-size: 14px;
+                    line-height: rem(24);
+                    margin-left: rem(30);
+                }
+                .checkRow{
+                    display: block;
                 }
             }
         }

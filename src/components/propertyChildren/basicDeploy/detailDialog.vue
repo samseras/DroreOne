@@ -555,6 +555,10 @@
                             </el-option>
                         </el-select>
                     </p>
+                    <p class="sex">
+                        <span>站点容量：</span>
+                        <el-input type="text"v-model="station.capacity" :disabled="isDisabled"></el-input>
+                    </p >
                     <p class="phoneNum">
                         <span>位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置：</span>
                         <span :class="{ps:isDisabled}">{{station.location}}</span><i class="el-icon-location-outline" @click="showMapDialog"></i>

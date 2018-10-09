@@ -48,7 +48,7 @@
                         let Circle = new historyMap.geom.Circle()
                         Circle.setCenter([0,0],0);
                         historyMap.object.getMap().getLayers().getArray()[1].setVisible(false)
-                        historyMap.status.limitExtent = true
+//                        historyMap.status.limitExtent = true
 
                     },
                     error: function(e) {

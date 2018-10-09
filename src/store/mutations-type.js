@@ -85,3 +85,6 @@ export const DATA_LENGTH = 'DATA_LENGTH'
 // 公共部分（分页）
 export const CURRENT_NUM = 'CURRENT_NUM' //页数
 export const TOTAL_NUM = 'TOTAL_NUM' // 数据条数
+
+//车船调度
+export const STATION_CHECKED = 'STATION_CHECKED'
