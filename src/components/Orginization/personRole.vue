@@ -180,8 +180,15 @@
             },
             async fixInfo(info) {
                 let permiss = []
+                // console.log(info, 'this is fix info')
                 info.rolesIds.forEach(item => {
-                    permiss.push({...item})
+                    console.log(item, 'item info')
+                    if (item.id) {
+                        permiss.push({...item})
+                    } else {
+                        permiss.push({id: item})
+                    }
+
                 })
                 let jobObj = {
                     id: info.id,

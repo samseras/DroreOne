@@ -243,7 +243,7 @@
                             this.choseInfoId = []
                         }).catch(err => {
                             console.log(err)
-                            this.$message.error('删除失败，请稍后重试')
+                            this.$message.error(err.message)
                         })
                     }).catch(() => {
                         this.$message.info('取消删除')
