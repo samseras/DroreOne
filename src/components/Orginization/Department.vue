@@ -6,6 +6,7 @@
                         @deletInfo="deletInfo"
                         @toggleList="toggleList"
                         @selectedAll='selectedAll'
+                        @searchAnything="searchAnything"
                         @fixedInfo='fixedInfo'>
                 </Header>
             </div>
@@ -95,12 +96,13 @@
     import PersonDetail from '@/components/Orginization/Orginizadialog'
     import api from '@/api'
     import _ from 'lodash'
-    import {mapGetters} from 'vuex'
+    import {mapGetters,mapMutations} from 'vuex'
 
     export default {
         name: 'department',
         data() {
             return {
+                allDepartmentList: [],
                 isShowPersonCard: true,
                 checkList: [],
                 visible: false,
@@ -114,6 +116,7 @@
             }
         },
         methods: {
+            ...mapMutations(['TOTAL_NUM']),
             handleSelectionChange(val) {
                 this.multipleSelection = val;
             },
@@ -122,6 +125,21 @@
                 this.visible = true
                 this.title = title
                 this.isDisabled = true
+            },
+            searchAnything (info) {
+                console.log(info, '这是要过滤的')
+                if (info.trim() !== '') {
+                    this.departmentList = this.allDepartmentList.filter(item => {
+                        if (
+                            item.name.includes(info)
+                            || (item.name && item.name.includes(info))
+                            || (item.description && item.description.includes(info))) {
+                            return item
+                        }
+                    })
+                } else {
+                    this.getAllDepartment()
+                }
             },
             addNewInfo() {
                 this.showPersonDetail({personBean: {}}, '添加部门信息')
@@ -238,7 +256,16 @@
                 await api.user.getUserDepartment().then(res => {
                     console.log(res, '这是请求回来的')
                     this.isShowLoading = false
-                    this.departmentList = res
+                    this.allDepartmentList = res
+                    let date = new Date().getTime()
+                    let obj = {totalNum: res.length}
+                    obj[date] = new Date().getTime()
+                    this.$store.commit('TOTAL_NUM', obj)
+                    this.departmentList = this.allDepartmentList.filter((item,index) => {
+                        if (index < (this.getCurrentNum * 35 ) && index > ((this.getCurrentNum-1) * 35 ) - 1 ) {
+                            return item
+                        }
+                    })
                     this.departmentList.forEach(item => {
                         item.checked = false
                         item.status = true
@@ -254,8 +281,13 @@
         created() {
             this.getAllDepartment()
         },
+        watch: {
+            getCurrentNum () {
+                this.getAllDepartment()
+            }
+        },
         computed: {
-            ...mapGetters(['getUserRole'])
+            ...mapGetters(['getUserRole', 'getCurrentNum'])
         },
         components: {
             ScrollContainer,
