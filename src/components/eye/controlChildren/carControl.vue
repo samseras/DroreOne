@@ -388,6 +388,7 @@
                                             longitude:veObj.gpsData ? veObj.gpsData.longitude: '',
                                             latitude:veObj.gpsData ? veObj.gpsData.latitude: '',
                                             gpsDeviceId:veObj.gpsDeviceId,
+                                            stations:obj.stations,
                                             routeObj:obj.routeObj
                                         }
                                     }else if(obj.type == 1){
@@ -405,6 +406,7 @@
                                             longitude:veObj.gpsData ? veObj.gpsData.longitude: '',
                                             latitude:veObj.gpsData ? veObj.gpsData.latitude: '',
                                             gpsDeviceId:veObj.gpsDeviceId,
+                                            stations:obj.stations,
                                             routeObj:obj.routeObj
                                         }
                                     }

@@ -105,6 +105,8 @@
         </AlarmDetail>
         <ledDialog v-if="ledvisible" :ledvisible="ledvisible"  @closeDialog ="closeDialog">
         </ledDialog>
+        <stationDialog v-if="stationShow" :stationShow="stationShow" :stationInfo = "stationInfo" @closeDialog ="closeStationDialog">
+        </stationDialog>
     </Scrollcontainer>
 
 </template>
@@ -122,12 +124,13 @@
 
     import AlarmDetail from '@/components/eye/alarm/alarmEvent/alarmEventDialog'
     import ledDialog from '@/components/ledDialog'
-
+    import stationDialog from '@/components/stationDialog'
 
     export default {
         name: "map1",
         data () {
             return {
+                stationShow:false,
                 stationCheckedList:[],
                 stationCheckList:[],
                 tsContentShow:true,
@@ -236,7 +239,7 @@
                 this.getAllAlarmTypes();
                 this.getAllAlarmEvent();//告警事件现有标注
                 //this.getAllTransportRoute();// 车船调度路线输出
-//                this.getAllStation();
+                this.getAllStation();
                 this.getAllVehicle();// 车船信息
                 this.heatEmShow=true
                 this.heatEm();//环境数据
@@ -427,6 +430,9 @@
                 'SET_MUSIC',
                 'STATION_CHECKED'
             ]),
+            closeStationDialog(){
+              this.stationShow = false
+            },
             closeDialog () {
                 this.visible = false
                 this.cameravisible = false
@@ -3118,6 +3124,11 @@
                             });
                         } else if(icon.subtype=="station" || icon.subtype == "landing"){
                             //站点没有点击事件
+                            icon.onclick(function (e) {
+                                that.stationInfo = e.data.data
+                                that.stationShow = true
+                            });
+
                         }else if(icon.subtype.includes("led")){
                             console.log("aaaaaaaaaa")
                             icon.onclick(function (e) {
@@ -3669,8 +3680,8 @@
             musicedit,
 
             AlarmDetail,
-            ledDialog
-
+            ledDialog,
+            stationDialog
         },
         watch: {
             getSearchInfo () {
@@ -3897,6 +3908,12 @@
                                 }else if(data[i].type =='transport' && data[i].subtype =="transportSchedule"){
                                     if(data[i].status == "ONLINE"){
                                         this.treeShow(data[i]);
+
+                                        if(data[i].stations && data[i].stations.length>0){
+                                            data[i].stations.forEach(item=>{
+                                                this.treeShow(item)
+                                            })
+                                        }
                                         this.roadShow(data[i].routeObj)
                                     }
                                 }else if(data[i].type =='security' && data[i].subtype =="securitySchedule"){
@@ -4028,6 +4045,11 @@
                                     this.roadHide(this.getTreeState[0].children[i].routeObj)
                                 }else if(this.getTreeState[0].children[i].type =='transport' && this.getTreeState[0].children[i].subtype =='transportSchedule'){
                                     this.treeHide(this.getTreeState[0].children[i]);
+                                    if(this.getTreeState[0].children[i].stations && this.getTreeState[0].children[i].stations.length>0){
+                                        this.getTreeState[0].children[i].stations.forEach(item=>{
+                                            this.treeHide(item)
+                                        })
+                                    }
                                     this.roadHide(this.getTreeState[0].children[i].routeObj)
                                 }else {
                                     if(this.getTreeState[0].children[i].type =='person'){
@@ -4193,6 +4215,11 @@
                                 }else if(this.getTreeState[0].type =='transport' && this.getTreeState[0].subtype =='transportSchedule'){
                                     if(this.getTreeState[0].status == "ONLINE"){
                                         this.treeShow(this.getTreeState[0]);
+                                        if(this.getTreeState[0].stations && this.getTreeState[0].stations.length>0){
+                                            this.getTreeState[0].stations.forEach(item=>{
+                                                this.treeShow(item)
+                                            })
+                                        }
                                         this.roadShow(this.getTreeState[0].routeObj)
                                     }
                                 }else if(this.getTreeState[0].type =='security' && this.getTreeState[0].subtype =='securitySchedule'){
@@ -4316,7 +4343,14 @@
                                 }else if(this.getTreeState[0].type =='transport' && this.getTreeState[0].subtype =='transportSchedule'){
                                     if(this.getTreeState[0].status == "ONLINE"){
                                         this.treeHide(this.getTreeState[0]);
+
                                         if(this.selectedCast.length == 0){
+                                            if(this.getTreeState[0].stations && this.getTreeState[0].stations.length>0){
+                                                this.getTreeState[0].stations.forEach(item=>{
+                                                    this.treeHide(item)
+                                                })
+                                            }
+
                                             this.roadHide(this.getTreeState[0].routeObj)
                                         }
                                     }

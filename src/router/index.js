@@ -56,6 +56,11 @@ const routes = [
         path: "/screen/:id",
         component: resolve => require(['@/components/pages/screenShow'], resolve)
     },
+    {
+        path: "/station",
+        name: 'Station',
+        component: resolve => require(['@/components/pages/stationShow'], resolve)
+    },
 
     //数据中心
     ...property,
