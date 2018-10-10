@@ -6,6 +6,7 @@
                         @deletInfo="deletInfo"
                         @toggleList="toggleList"
                         @selectedAll='selectedAll'
+                        @searchAnything="searchAnything"
                         @fixedInfo='fixedInfo'>
                 </Header>
             </div>
@@ -83,6 +84,7 @@
         name: 'person-post',
         data() {
             return {
+                allPersonPostList: [],
                 isShowPersonCard: true,
                 checkList: [],
                 filterList: [],
@@ -98,7 +100,22 @@
             }
         },
         methods: {
-            ...mapMutations(['JOB_TYPE','DEL_JOB_TYPR']),
+            ...mapMutations(['JOB_TYPE','DEL_JOB_TYPR', 'TOTAL_NUM']),
+            searchAnything (info) {
+                console.log(info, '这是要过滤的')
+                if (info.trim() !== '') {
+                    this.personPostList = this.allPersonPostList.filter(item => {
+                        if (
+                            item.name.includes(info)
+                            || (item.name && item.name.includes(info))
+                            || (item.description && item.description.includes(info))) {
+                            return item
+                        }
+                    })
+                } else {
+                    this.getAllJobInfo()
+                }
+            },
             handleSelectionChange(val) {
                 this.multipleSelection = val;
             },
@@ -217,7 +234,16 @@
                 await api.user.getUserJobInfo().then(res => {
                     console.log(res, '这是请求回来的')
                     this.isShowLoading = false
-                    this.personPostList = res
+                    this.allPersonPostList = res
+                    let date = new Date().getTime()
+                    let obj = {totalNum: res.length}
+                    obj[date] = new Date().getTime()
+                    this.$store.commit('TOTAL_NUM', obj)
+                    this.personPostList = this.allPersonPostList.filter((item,index) => {
+                        if (index < (this.getCurrentNum * 35 ) && index > ((this.getCurrentNum-1) * 35 ) - 1 ) {
+                            return item
+                        }
+                    })
                     this.personPostList.forEach(item => {
                         item.checked = false
                         item.status = true
@@ -233,8 +259,13 @@
         created() {
             this.getAllJobInfo()
         },
+        watch: {
+            getCurrentNum () {
+                this.getAllJobInfo()
+            }
+        },
         computed: {
-            ...mapGetters(['getUserRole'])
+            ...mapGetters(['getUserRole', 'getCurrentNum'])
         },
         components: {
             ScrollContainer,

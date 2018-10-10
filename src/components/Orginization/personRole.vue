@@ -5,6 +5,7 @@
                 <Header @addNewInfo="addNewInfo"
                         @deletInfo="deletInfo"
                         @selectedAll='selectedAll'
+                        @searchAnything="searchAnything"
                         @fixedInfo='fixedInfo'>
                 </Header>
             </div>
@@ -90,12 +91,13 @@
     import PersonDetail from '@/components/Orginization/Orginizadialog'
     import api from '@/api'
     import _ from 'lodash'
-    import {mapGetters} from 'vuex'
+    import {mapGetters, mapMutations} from 'vuex'
 
     export default {
         name: 'person-role',
         data() {
             return {
+                allPersonRoleList: [],
                 isShowPersonCard: true,
                 checkList: [],
                 visible: false,
@@ -109,6 +111,21 @@
             }
         },
         methods: {
+            ...mapMutations(['TOTAL_NUM']),
+            searchAnything (info) {
+                if (info.trim() !== '') {
+                    this.personRoleList = this.allPersonRoleList.filter(item => {
+                        if (
+                            item.name.includes(info)
+                            || (item.name && item.name.includes(info))
+                            || (item.description && item.description.includes(info))) {
+                            return item
+                        }
+                    })
+                } else {
+                    this.getAllUserRoleInfo()
+                }
+            },
             handleSelectionChange(val) {
                 this.multipleSelection = val;
             },
@@ -180,9 +197,7 @@
             },
             async fixInfo(info) {
                 let permiss = []
-                // console.log(info, 'this is fix info')
                 info.rolesIds.forEach(item => {
-                    console.log(item, 'item info')
                     if (item.id) {
                         permiss.push({...item})
                     } else {
@@ -233,7 +248,16 @@
                 await api.user.getUserRoleInfo().then(res => {
                     console.log(res, '这个是请求回来的数据')
                     this.isShowLoading = false
-                    this.personRoleList = res
+                    this.allPersonRoleList = res
+                    let date = new Date().getTime()
+                    let obj = {totalNum: res.length}
+                    obj[date] = new Date().getTime()
+                    this.$store.commit('TOTAL_NUM', obj)
+                    this.personRoleList = this.allPersonRoleList.filter((item,index) => {
+                        if (index < (this.getCurrentNum * 35 ) && index > ((this.getCurrentNum-1) * 35 ) - 1 ) {
+                            return item
+                        }
+                    })
                     this.personRoleList.forEach(item => {
                         item.right = item.permissions.map(item1 => {
                            if (item1 !== null && item1.module) {
@@ -266,11 +290,16 @@
                 }
             }
         },
+        watch: {
+            getCurrentNum () {
+                this.getAllUserRoleInfo()
+            }
+        },
         created() {
             this.getAllUserRoleInfo()
         },
         computed: {
-            ...mapGetters(['getUserRole'])
+            ...mapGetters(['getUserRole', 'getCurrentNum'])
         },
         components: {
             ScrollContainer,

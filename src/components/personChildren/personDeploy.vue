@@ -7,14 +7,11 @@
                         @toggleList="toggleList"
                         @selectedAll='selectedAll'
                         :choseId="choseInfoId"
-                        :listsLength="listLength"
                         :personListFlag="selectFlag"
                         @fixedInfo='fixedInfo'
                         @searchAnything="searchAnything"
                         @selectDepartment="filterPersonList"
                         @selectJob="filterPersonList"
-                        @nextPage="nextPage"
-                        @previousPage="previousPage"
                         @getAllPerson="getAllPerson">
                 </Header>
             </div>
@@ -138,12 +135,13 @@
     import PersonDetail from '@/components/Orginization/Orginizadialog'
     import api from '@/api'
     import _ from 'lodash'
-    import {mapGetters} from 'vuex'
+    import {mapGetters,mapMutations} from 'vuex'
 
     export default {
         name: 'person-deploy',
         data() {
             return {
+                allPersonList: [],
                 selectFlag:false,
                 tempSelects:[],
                 isShowPersonCard: true,
@@ -162,6 +160,7 @@
             }
         },
         methods: {
+            ...mapMutations(['TOTAL_NUM']),
             closeDialog () {
                 this.visible = false
                 this.getAllPerson()
@@ -188,7 +187,7 @@
             searchAnything (info) {
                 console.log(info, '这是要过滤的')
                 if (info.trim() !== '') {
-                    this.personList = this.checkList.filter(item => {
+                    this.personList = this.allPersonList.filter(item => {
                         if (
                             item.name.includes(info)
                             || (item.cnName && item.cnName.includes(info))
@@ -372,17 +371,6 @@
                 this.personInfo = item
                 this.showPersonDetail(this.personInfo, '修改人员信息', false)
             },
-            previousPage (page) {
-                console.log(page, '这是传过来的pageNum')
-                this.pageNum = page
-                this.getAllPerson()
-            },
-            nextPage (page) {
-                console.log(page, '这个是下一页的pageNUM')
-                this.pageNum = page
-                this.getAllPerson()
-            },
-
             async getAllPerson() {
                 this.choseInfoId = []       //人员切换左侧选项卡去掉上项的默认选择
                 this.isShowLoading = true
@@ -393,11 +381,14 @@
                     }else{
                         this.show = false
                     }
-                    this.listLength = res.length
                     this.isShowLoading = false
-                    this.personList = res
-                    this.personList = this.personList.filter((item,index) => {
-                        if (index < (this.pageNum * 35 ) && index > ((this.pageNum -1) * 35 ) - 1 ) {
+                    this.allPersonList = res
+                    let date = new Date().getTime()
+                    let obj = {totalNum: res.length}
+                    obj[date] = new Date().getTime()
+                    this.$store.commit('TOTAL_NUM', obj)
+                    this.personList = this.allPersonList.filter((item,index) => {
+                        if (index < (this.getCurrentNum * 35 ) && index > ((this.getCurrentNum-1) * 35 ) - 1 ) {
                             return item
                         }
                     })
@@ -456,10 +447,13 @@
                 this.pageNum = 1
                 this.personList = []
                 this.getAllPerson()
+            },
+            getCurrentNum () {
+                this.getAllArea()
             }
         },
         computed: {
-            ...mapGetters(['getUserRole'])
+            ...mapGetters(['getUserRole','getCurrentNum'])
         },
         components: {
             ScrollContainer,

@@ -141,7 +141,7 @@
                 <!--岗位信息-->
                 <div class="personCardContent" v-if="route.includes('post')">
                     <p class="name">
-                        <span>岗位名称：</span>
+                        <span>角色名称：</span>
                         <el-input v-model="personPost.name" :disabled="isDisabled" :maxlength="15"></el-input>
                     </p>
                     <p class="textarea ms ms-person">
@@ -153,7 +153,7 @@
                 <!--角色信息-->
                 <div class="personCardContent" v-if="route.includes('role')">
                     <p class="name">
-                        <span>角色名称：</span>
+                        <span>岗位名称：</span>
                         <el-input v-model="role.name" :disabled="isDisabled" :maxlength="15"></el-input>
                     </p>
 
