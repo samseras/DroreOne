@@ -538,7 +538,6 @@
         },
         mounted(){
             this.getAllAlarmEventbadge();//告警事件列表
-            this.aplayAudio()
         },
         components: {
             UserInfoDialog
