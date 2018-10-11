@@ -281,7 +281,7 @@
             // 语音播放
              aplayAudio () {
                 const audioSOS = document.getElementById('audioSOS')
-                console.log(audioSOS,'123213')
+                // console.log(audioSOS,'123213')
                  audioSOS.play()
             },
             getUrl (url) {
@@ -302,18 +302,18 @@
                  this.isshowHead = hideData;
             },
             showSearch(e){
-                console.log('显示搜索')
+                // console.log('显示搜索')
                 this.$refs.searchInput.style.opacity = "1";
                 this.$refs.hitSearch.style.opacity = "0";
             },
             hideSearch(){
-                console.log('隐藏搜索')
+                // console.log('隐藏搜索')
                 this.$refs.searchInput.style.opacity = "0";
                 this.$refs.hitSearch.style.opacity = "1";
             },
             goModule(item, index) {
                 this.visible = false;
-                console.log(item,'opo')
+                // console.log(item,'opo')
                 this.$store.commit('SHOW_SEARCH', false)
                 this.activeIndex = index;
                 switch (item) {
@@ -360,16 +360,16 @@
                     isRefish = false
                 }
                 if (this.searchContent && this.searchContent.trim() !== '' && isRefish) {
-                    console.log(this.searchContent, '-=-=-=-=-=-=-=')
+                    // console.log(this.searchContent, '-=-=-=-=-=-=-=')
                     this.isShowloading = true
                     api.publi.getSearch(this.searchContent).then(res => {
                         this.isShowloading = false
-                        console.log(res)
+                        // console.log(res)
                         this.searchList = res
                         this.standby = this.searchList
                     }).catch(err => {
                         this.isShowloading = false
-                        console.log(err,'搜索失败')
+                        // console.log(err,'搜索失败')
                     })
                 } else if (isRefish){
                     this.searchList =[]
@@ -377,18 +377,18 @@
                     if (this.searchIndex > 0) {
                         this.searchIndex--;
                         if (this.searchList.length > 4) {
-                            console.log(90000)
+                            // console.log(90000)
                             this.$refs.dev.style.top = (-this.searchIndex * 24)+ 'px'
                         }
                         if (this.searchIndex > this.searchList.length - 4 && this.searchList.length > 4) {
-                            console.log(8000)
+                            // console.log(8000)
                             this.$refs.dev.style.top = (-(this.searchList.length - 4) * 24)+ 'px'
                         }
                         this.searchContent = this.searchList[this.searchIndex].name
                     }
                 } else if (e.keyCode === 40) {//下
                     if (this.searchIndex < this.searchList.length - 1) {
-                        console.log(this.searchIndex, '*********',this.searchList.length)
+                        // console.log(this.searchIndex, '*********',this.searchList.length)
                         this.searchIndex++;
                         if (this.searchList.length > 4) {
                             this.$refs.dev.style.top = (-this.searchIndex * 24)+ 'px'
@@ -413,7 +413,7 @@
                 }
             },
             position (item) {
-                console.log(item, '[][][][]]]')
+                // console.log(item, '[][][][]]]')
                 this.searchContent = item.name
                 this.$store.commit('SEARCH_INFO', item)
                 this.$store.commit('SHOW_SEARCH', true)
@@ -428,7 +428,7 @@
                         }
                     }
                 }
-                console.log(item, '[][][][]]]')
+                // console.log(item, '[][][][]]]')
                 this.searchContent = item.name
                 this.$store.commit('SEARCH_INFO', item)
                 this.searchList = []
@@ -501,7 +501,7 @@
                                 if(time!=null){
                                     if(time<this.warnList[0].time){
                                         this.aplayAudio()
-                                        console.log(item.occurenceTime,'123123123')
+                                        // console.log(item.occurenceTime,'123123123')
                                     }
                                 }
                                 sessionStorage.setItem('time',this.warnList[0].time); // 存入一个值
