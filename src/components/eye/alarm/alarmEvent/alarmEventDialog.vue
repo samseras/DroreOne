@@ -41,7 +41,7 @@
                             </p>
                             <p class="type">
                                 <span>告警类型：</span>
-                                <el-input type="text" v-model='eventInfo.rule.alarmTypeName' class="inputText" :maxlength="15" :disabled='true'></el-input>
+                                <el-input type="text" v-model='eventInfo.alarmType.name' class="inputText" :maxlength="15" :disabled='true'></el-input>
                             </p>
                             <p class="sourceDevice">
                                 <span>来&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 源：</span>
@@ -51,7 +51,7 @@
                                 <span>发生时间：</span>
                                 <el-input type="text"  v-model='eventInfo.occurenceTime' class="inputText" :maxlength="15" :disabled='true'></el-input>
                             </p>
-                            <p class="alarmRule">
+                            <p class="alarmRule" v-if="eventInfo.rule && eventInfo.rule.name">
                                 <span class="ruleStyle">关联规则：</span>
                                 <!--<el-input type="text" v-model='eventInfo.alarmRuleName' class="inputText" :maxlength="15" :readonly='true'></el-input>-->
                                 <span class="inputText el-input showRuleDetail ruleStyle" @click="showRuleDetail">{{eventInfo.rule.name}}</span>
@@ -184,6 +184,15 @@
                                     </el-option>
                                 </el-select>
                             </p>
+
+                            <p class="tel" v-if="addEventInfo.creator && addEventInfo.creator.name">
+                                <span>创&nbsp;&nbsp;建&nbsp;&nbsp;人&nbsp;&nbsp;&nbsp;员：</span>
+                                <el-input type="text" v-model="addEventInfo.creator.cnName?addEventInfo.creator.cnName:addEventInfo.creator.name" class="inputText" :maxlength="15" :disabled="true"></el-input>
+                            </p>
+                            <p class="tel" v-if="addEventInfo.creator && addEventInfo.creator.name">
+                                <span>电&nbsp;&nbsp;话&nbsp;&nbsp;号&nbsp;&nbsp;&nbsp;码：</span>
+                                <el-input type="text" v-model="addEventInfo.creator.mobileNum" class="inputText" :disabled="true"></el-input>
+                            </p>
                             <p class="owner">
                                 <span>负&nbsp;&nbsp;责&nbsp;&nbsp;人&nbsp;&nbsp;&nbsp;员：</span>
                                 <el-select  v-model="addEventInfo.owner.id" @change="ownerChange" class="" placeholder="请选择" :disabled="readOnly">
@@ -300,6 +309,7 @@
                     },
                     owner:{
                         id:'',
+                        name: '',
                         mobileNum:''
                     },
                     serialNum:'',

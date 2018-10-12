@@ -10,6 +10,7 @@
                         @batchEdit = 'batchEdit'
                         @choseType='choseType'
                         :choseId="choseInfoId"
+                        @selectPerson="filterOnwer"
                         @searchAnything="searchAnything">
                 </Header>
             </div>
@@ -34,7 +35,7 @@
                         </el-table-column>
                         <el-table-column
                             sortable
-                            prop="rule.alarmTypeName"
+                            prop="alarmType.name"
                             label="告警类型">
                         </el-table-column>
                         <el-table-column
@@ -66,20 +67,22 @@
                             label="严重等级">
                         </el-table-column>
                         <el-table-column
-                            prop="owner.name"
                             label="负责人">
+                            <template slot-scope="scope">
+                                <span v-if="scope.row.owner">{{scope.row.owner.cnName?scope.row.owner.cnName:scope.row.owner.name}}</span>
+                            </template>
                         </el-table-column>
-                        <el-table-column
-                            sortable
-                            prop="owner.mobileNum"
-                            label="负责人电话">
-                        </el-table-column>
+                        <!--<el-table-column-->
+                            <!--sortable-->
+                            <!--prop="owner.mobileNum"-->
+                            <!--label="负责人电话">-->
+                        <!--</el-table-column>-->
                         <el-table-column label="操作" width="200">
                             <template slot-scope="scope">
                                 <span @click="editInfo(scope.row,false,'编辑告警事件')" class="edit">处理</span> |
                                 <span @click="showDetail(scope.row,true,'查看告警事件')">查看</span> |
                                 <span @click="deletInfo(scope.row.id)">删除</span>
-                                <span @click="warnInfo(scope.row)"><img v-if="scope.row.status.id==1 || scope.row.status.id==2" :src="scope.row.status.id == '1' ?'../../../../../static/img/alarm/newalarm.png':'../../../../../static/img/alarm/processing.png'"></span>
+                                <span @click="warnInfo(scope.row)"><img class="funcImg" v-if="scope.row.status.id==1 || scope.row.status.id==2" :src="scope.row.status.id == '1' ?'../../../../../static/img/alarm/newalarm.png':'../../../../../static/img/alarm/processing.png'"></span>
                             </template>
                         </el-table-column>
                     </el-table>
@@ -130,6 +133,18 @@
         },
         methods: {
             ...mapMutations(['TOTAL_NUM']),
+            filterOnwer (onwer) {
+                console.log(onwer, '选择的人员信息')
+                if (onwer.length === 0) {
+                    this.getAllAlarmEvent()
+                    return
+                }
+                this.warningEventList = this.allWarningEventList.filter(item => {
+                    if (item.owner && onwer.includes(item.owner.id)) {
+                        return item
+                    }
+                })
+            },
             filterStatus(value,row){
                 console.log(value,'value')
                 console.log(row,'row')
@@ -282,6 +297,13 @@
             },
             editInfo (info,state,title) {
                 console.log(info);
+                if (info.owner === null) {
+                    info.owner = {
+                        id: '',
+                        name: '',
+                        mobileNum: ''
+                    }
+                }
                 this.showDetail(info,state,title);
             },
             batchEdit(){
@@ -367,8 +389,12 @@
                                         }
                                     })
                                 }
-
-                                this.allWarningEventList.forEach(item => {
+                                this.warningEventList = this.allWarningEventList.filter((item,index) => {
+                                    if (index < (this.pageNum * 35 ) && index > ((this.pageNum -1) * 35 ) - 1 ) {
+                                        return item
+                                    }
+                                })
+                                this.warningEventList.forEach(item => {
                                     item.checked = false;
                                     if(item.rule && item.rule.alarmTypeId){
                                         item.rule.alarmTypeName = this.getAlarmTypeNameById(item.rule.alarmTypeId)
@@ -415,12 +441,6 @@
                                 })
 
                                 this.allWarningEventList = _.sortBy(this.warningEventList,'byTime')
-
-                                this.warningEventList = this.allWarningEventList.filter((item,index) => {
-                                    if (index < (this.pageNum * 35 ) && index > ((this.pageNum -1) * 35 ) - 1 ) {
-                                        return item
-                                    }
-                                })
                                 this.warningEventListTemp = JSON.parse(JSON.stringify(this.warningEventList))
                         }).catch(err => {
                             this.loading = false
@@ -560,6 +580,13 @@
                             line-height: rem(22);
                         }
                     }
+                }
+                .funcImg{
+                    width: rem(25);
+                    height: rem(25);
+                    float: right;
+                    margin-right: rem(35);
+                    border-radius: rem(5);
                 }
             }
         }

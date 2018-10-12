@@ -11,6 +11,7 @@
                         @choseType='choseType'
                         @addNewInfo="addNewInfo"
                         :choseId="choseInfoId"
+                        @selectPerson="filterOnwer"
                         @searchAnything="searchAnything">
                 </Header>
             </div>
@@ -31,18 +32,22 @@
                         </el-table-column>
                         <el-table-column
                             prop="serialNum"
+                            width="120"
                             label="编号">
                         </el-table-column>
                         <el-table-column
+                            width="120"
                             prop="device.typeName"
                             label="故障设备类型">
                         </el-table-column>
                         <el-table-column
                             show-overflow-tooltip
                             prop="device.name"
+                            width="120"
                             label="故障设备">
                         </el-table-column>
                         <el-table-column
+                            width="140"
                             sortable
                             :filters="[{ text: '新告警', value: '1' }, { text: '处理中', value: '2' },{ text: '已处理', value: '3' }]"
                             :filter-method="filterStatus"
@@ -61,30 +66,50 @@
                             width="180">
                         </el-table-column>
                         <el-table-column
-                            prop="location"
-                            label="发生位置"
-                            width="180">
-                        </el-table-column>
-                        <el-table-column
                             sortable
+                            width="120"
                             prop="severity.name"
                             label="严重等级">
                         </el-table-column>
+
                         <el-table-column
-                            prop="owner.name"
-                            label="负责人">
+                            label="创建人"
+                            width="120">
+                            <template slot-scope="scope">
+                                <span v-if="scope.row.creator">{{scope.row.creator.cnName?scope.row.creator.cnName:scope.row.creator.name}}</span>
+                            </template>
                         </el-table-column>
+
                         <el-table-column
-                            sortable
-                            prop="owner.mobileNum"
-                            label="负责人电话">
+                            width="120"
+                            label="负责人">
+                            <template slot-scope="scope">
+                                <span v-if="scope.row.owner">{{scope.row.owner.cnName?scope.row.owner.cnName:scope.row.owner.name}}</span>
+                            </template>
+                        </el-table-column>
+                        <!--<el-table-column-->
+                            <!--sortable-->
+                            <!--prop="owner.mobileNum"-->
+                            <!--label="负责人电话">-->
+                        <!--</el-table-column>-->
+                        <el-table-column
+                            label="描述">
+                            <template slot-scope="scope">
+                                <div class="box" v-if="scope.row.description">
+                                    <div class="bottom">
+                                        <el-tooltip class="item" effect="light" :content=scope.row.description placement="bottom">
+                                            <el-button>{{scope.row.description}}</el-button>
+                                        </el-tooltip>
+                                    </div>
+                                </div>
+                            </template>
                         </el-table-column>
                         <el-table-column label="操作" width="200">
                             <template slot-scope="scope">
                                 <span @click="editInfo(scope.row,false,'编辑巡检事件')" class="edit">处理</span> |
                                 <span @click="showDetail(scope.row,true,'查看巡检事件')">查看</span> |
                                 <span @click="deletInfo(scope.row.id)">删除</span>
-                                <span @click="patrolInfo(scope.row)"><img v-if="scope.row.status.id==1 || scope.row.status.id==2" :src="scope.row.status.id == '1' ?'../../../../../static/img/alarm/newalarm.png':'../../../../../static/img/alarm/processing.png'"></span>
+                                <span @click="patrolInfo(scope.row)"><img class="funcImg" v-if="scope.row.status.id==1 || scope.row.status.id==2" :src="scope.row.status.id == '1' ?'../../../../../static/img/alarm/newalarm.png':'../../../../../static/img/alarm/processing.png'"></span>
                             </template>
                         </el-table-column>
                     </el-table>
@@ -136,6 +161,20 @@
         },
         methods: {
             ...mapMutations(['TOTAL_NUM']),
+            filterOnwer (onwer,creator) {
+                console.log(onwer, '选择的人员信息')
+                console.log(creator, 'fvfvdf')
+                if (onwer.length === 0 && creator.length === 0) {
+                    this.getAllAlarmEvent()
+                    return
+                }
+                this.patrolEventList = this.allPatrolEventList.filter(item => {
+                    if ((item.owner && onwer.includes(item.owner.id) )||
+                        (item.creator && creator.includes(item.creator.id))) {
+                        return item
+                    }
+                })
+            },
             filterStatus(value,row){
                 console.log(value,'value')
                 console.log(row,'row')
@@ -396,7 +435,7 @@
                                 obj[date] = new Date().getTime()
                                 this.$store.commit('TOTAL_NUM', obj)
                                 let list = JSON.parse(JSON.stringify(res))
-
+                    console.log(list, 'ioioioiooi')
                                 if(list.length >0){
                                     list.forEach(obj=>{
                                         if(obj.alarmType && obj.alarmType.id && obj.alarmType.id == "10"){
@@ -404,9 +443,13 @@
                                         }
                                     })
                                 }
-                                this.allPatrolEventList.forEach(item => {
+                                this.patrolEventList = this.allPatrolEventList.filter((item,index) => {
+                                    if (index < (this.getCurrentNum *  35) && index > ((this.getCurrentNum -1) * 35 ) - 1 ) {
+                                        return item
+                                    }
+                                })
+                                this.patrolEventList.forEach(item => {
                                     item.checked = false;
-
                                     if(!item.device){
                                         item.device = {
                                             id:'',
@@ -453,14 +496,7 @@
                                     }
 
                                 })
-
-                                this.allPatrolEventList = _.sortBy(this.patrolEventList,'byTime')
-
-                                this.patrolEventList = this.allPatrolEventList.filter((item,index) => {
-                                    if (index < (this.getCurrentNum * 35 ) && index > ((this.getCurrentNum -1) * 35 ) - 1 ) {
-                                        return item
-                                    }
-                                })
+                                this.patrolEventList = _.sortBy(this.patrolEventList,'byTime')
                                 this.patrolEventListTemp = JSON.parse(JSON.stringify(this.patrolEventList))
                         }).catch(err => {
                             this.loading = false
@@ -515,6 +551,21 @@
 
 </script>
 
+<style lang="scss">
+    .patrolEvent .box .el-button{
+        border:1px solid transparent;
+        background: transparent;
+        text-align: left;
+        padding: 0;
+    }
+    .patrolEvent .box .el-button span{
+        display:inline-block;
+        width:300px;
+        white-space: nowrap ;
+        overflow: hidden ;
+        text-overflow: ellipsis ;
+    }
+</style>
 <style lang="scss" scoped type="text/scss">
     .patrolEvent{
         .el-tag{
@@ -613,6 +664,13 @@
                             line-height: rem(22);
                         }
                     }
+                }
+                .funcImg{
+                    width: rem(25);
+                    height: rem(25);
+                    float: right;
+                    margin-right: rem(35);
+                    border-radius: rem(5);
                 }
             }
         }
