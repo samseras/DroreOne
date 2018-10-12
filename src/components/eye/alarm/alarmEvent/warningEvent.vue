@@ -354,6 +354,7 @@
                 this.loading = true
                 this.allWarningEventList = []
                 await api.alarm.getAllAlarmEvent().then(res => {
+                    console.log(res,'123123123')
                                 this.loading = false
                                 let date = new Date().getTime()
                                 let obj = {totalNum: res.length}
@@ -367,7 +368,6 @@
                                         }
                                     })
                                 }
-
                                 this.allWarningEventList.forEach(item => {
                                     item.checked = false;
                                     if(item.rule && item.rule.alarmTypeId){
@@ -422,6 +422,7 @@
                                     }
                                 })
                                 this.warningEventListTemp = JSON.parse(JSON.stringify(this.warningEventList))
+
                         }).catch(err => {
                             this.loading = false
                         })
