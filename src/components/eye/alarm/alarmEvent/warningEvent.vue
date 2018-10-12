@@ -376,6 +376,7 @@
                 this.loading = true
                 this.allWarningEventList = []
                 await api.alarm.getAllAlarmEvent().then(res => {
+                    console.log(res,'123123123')
                                 this.loading = false
                                 let date = new Date().getTime()
                                 let obj = {totalNum: res.length}
@@ -442,6 +443,7 @@
 
                                 this.allWarningEventList = _.sortBy(this.warningEventList,'byTime')
                                 this.warningEventListTemp = JSON.parse(JSON.stringify(this.warningEventList))
+
                         }).catch(err => {
                             this.loading = false
                         })

@@ -8,10 +8,14 @@
             <el-checkbox class="check" v-model="selectAllCheckBox" @change="selectAllCheck">{{title}}总数<font>{{number}}</font>个</el-checkbox>
             <!--<el-checkbox class="check">故障<font>{{fault}}</font>个</el-checkbox>-->
         </div>
+        <div class="loading" v-if="loading">
+            <i class="el-icon-loading"></i>
+        </div>
         <el-tree
             :data="Info"
             show-checkbox
             node-key="id"
+            :empty-text="emptyText"
             :default-checked-keys="lightCheckout"
             :filter-node-method="filterNode"
             default-expand-all
@@ -35,6 +39,8 @@
             return {
                 filterText: '',
                 selectAllCheckBox: false,
+                emptyText:'加载中……',
+                loading:true
             }
         },
         methods: {
@@ -172,7 +178,10 @@
                 this.$refs.tree.setCheckedKeys([this.getSearchInfo.id])
             }
         },
-
+        updated(){
+            this.emptyText='暂无数据'
+            this.loading=false
+        },
     };
 
 </script>
@@ -197,6 +206,15 @@
                 margin-left: 10px;
             }
         }
+        .loading{
+            margin: rem(20) auto 0;
+            text-align: center;
+            .el-icon-loading{
+                font-size: rem(36);
+                color: #666;
+            }
+        }
+
         .el-tree-node__children{
             .custom-tree-node{
                 .icon{

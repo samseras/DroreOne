@@ -438,7 +438,7 @@
                     console.log(list, 'ioioioiooi')
                                 if(list.length >0){
                                     list.forEach(obj=>{
-                                        if(obj.alarmType && obj.alarmType.id && obj.alarmType.id == "10"){
+                                        if(obj.alarmType && obj.alarmType.id == "10"){
                                             this.allPatrolEventList.push(obj)
                                         }
                                     })
