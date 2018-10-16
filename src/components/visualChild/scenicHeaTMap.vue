@@ -47,10 +47,12 @@
         },
         methods:{
             localeNum(){
-//                let total = this.sum,
-//                    real = this.nowPassenger;
-//                this.total = String(parseFloat(total).toLocaleString()).split('')
-//                this.real = String(parseFloat(real).toLocaleString()).split('')
+                api.passFlowAnalysis.realPassFlow().then(res => {
+                    console.log(res, 'ioiooio')
+                    this.real = String(parseFloat(res.realtimepassflow).toLocaleString()).split('')
+                }).catch(err => {
+                    console.log(err)
+                })
             },
             async getHotArea(){ //运河景区热力
                 await api.passFlowAnalysis.heatFlow().then(res =>{
@@ -87,14 +89,13 @@
 
                         sum +=item.dayFlow;
 //                        console.log(sum,'98765')
-                        realNum +=item.stayCount;
+//                        realNum +=item.stayCount;
                      this.lngLat.push(hot)
                      this.value.push(obj)
-
                     })
 //                    this.total = String(parseFloat(sum).toLocaleString()).split('');
 //                    console.log(this.total,'123456')
-                    this.real = String(parseFloat(realNum).toLocaleString()).split('')
+
                 }).catch(err =>{
                     console.log(err)
                 })
@@ -114,6 +115,7 @@
                     let route = this.$route.path
                     if(route.includes('scenicHeaTMap')){
                       this.getHotArea(); //长轮循
+                        this.localeNum()
                     }
                 },5000)
             },
