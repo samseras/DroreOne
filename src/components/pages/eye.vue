@@ -37,17 +37,22 @@
                         <button @click="showSearch" class="hitSearch" ref="hitSearch">
                             <i class="el-icon-search showSearch"></i>
                         </button>
-                        <el-badge :value="badge" :max="99" class="item alarmBadge">
-                            <button @click="warnListShow=!warnListShow" class="alarmBadgebuttom">
-                                <i>&#xe8c0</i>
-                            </button>
-                        </el-badge>
-                        <button>
-                            <i>&#xe627</i>
-                        </button>
-                        <button>
-                            <i>&#xe647</i>
-                        </button>
+                        <!--<button class="alarmBadgebuttom">-->
+                            <!--<i>&#xe8c0</i>-->
+                        <!--</button>-->
+                        <el-tooltip class="item" effect="dark" content="今日告警事件" placement="right">
+                            <el-badge :value="badge" :max="99" class="item alarmBadge">
+                                <button @click="warnListShow=!warnListShow" class="alarmBadgebuttom">
+                                    <i>&#xe8c0</i>
+                                </button>
+                            </el-badge>
+                        </el-tooltip>
+                        <!--<button>-->
+                            <!--<i>&#xe627</i>-->
+                        <!--</button>-->
+                        <!--<button>-->
+                            <!--<i>&#xe647</i>-->
+                        <!--</button>-->
                         <!--<div v-for="item in title">-->
                             <!--<a href="#">-->
                                 <!--<i v-html="item"></i>-->
@@ -84,6 +89,10 @@
                 <button @click="alarmBadge">更多告警</button>
             </div>
         </el-container>
+
+        <!-- 告警音 -->
+        <audio id="audioSOS" src="../../../static/template/warn.mp3"/>
+
         <UserInfoDialog
             v-if="visible"
             :visible="visible"
@@ -153,6 +162,7 @@
                 alarmList:[],
                 warnListShow:false,
                 warnList:[],
+                errCount: 0
             }
         },
         created () {
@@ -268,6 +278,12 @@
             imgError (e) {
                 e.target.src = this.getUrl(null);
             },
+            // 语音播放
+             aplayAudio () {
+                const audioSOS = document.getElementById('audioSOS')
+                // console.log(audioSOS,'123213')
+                 audioSOS.play()
+            },
             getUrl (url) {
                 if (url === null || url === undefined) {
                     return './../../static/img/peopleInfo.svg'
@@ -286,18 +302,18 @@
                  this.isshowHead = hideData;
             },
             showSearch(e){
-                console.log('显示搜索')
+                // console.log('显示搜索')
                 this.$refs.searchInput.style.opacity = "1";
                 this.$refs.hitSearch.style.opacity = "0";
             },
             hideSearch(){
-                console.log('隐藏搜索')
+                // console.log('隐藏搜索')
                 this.$refs.searchInput.style.opacity = "0";
                 this.$refs.hitSearch.style.opacity = "1";
             },
             goModule(item, index) {
                 this.visible = false;
-                console.log(item,'opo')
+                // console.log(item,'opo')
                 this.$store.commit('SHOW_SEARCH', false)
                 this.activeIndex = index;
                 switch (item) {
@@ -344,16 +360,16 @@
                     isRefish = false
                 }
                 if (this.searchContent && this.searchContent.trim() !== '' && isRefish) {
-                    console.log(this.searchContent, '-=-=-=-=-=-=-=')
+                    // console.log(this.searchContent, '-=-=-=-=-=-=-=')
                     this.isShowloading = true
                     api.publi.getSearch(this.searchContent).then(res => {
                         this.isShowloading = false
-                        console.log(res)
+                        // console.log(res)
                         this.searchList = res
                         this.standby = this.searchList
                     }).catch(err => {
                         this.isShowloading = false
-                        console.log(err,'搜索失败')
+                        // console.log(err,'搜索失败')
                     })
                 } else if (isRefish){
                     this.searchList =[]
@@ -361,18 +377,18 @@
                     if (this.searchIndex > 0) {
                         this.searchIndex--;
                         if (this.searchList.length > 4) {
-                            console.log(90000)
+                            // console.log(90000)
                             this.$refs.dev.style.top = (-this.searchIndex * 24)+ 'px'
                         }
                         if (this.searchIndex > this.searchList.length - 4 && this.searchList.length > 4) {
-                            console.log(8000)
+                            // console.log(8000)
                             this.$refs.dev.style.top = (-(this.searchList.length - 4) * 24)+ 'px'
                         }
                         this.searchContent = this.searchList[this.searchIndex].name
                     }
                 } else if (e.keyCode === 40) {//下
                     if (this.searchIndex < this.searchList.length - 1) {
-                        console.log(this.searchIndex, '*********',this.searchList.length)
+                        // console.log(this.searchIndex, '*********',this.searchList.length)
                         this.searchIndex++;
                         if (this.searchList.length > 4) {
                             this.$refs.dev.style.top = (-this.searchIndex * 24)+ 'px'
@@ -397,7 +413,7 @@
                 }
             },
             position (item) {
-                console.log(item, '[][][][]]]')
+                // console.log(item, '[][][][]]]')
                 this.searchContent = item.name
                 this.$store.commit('SEARCH_INFO', item)
                 this.$store.commit('SHOW_SEARCH', true)
@@ -412,7 +428,7 @@
                         }
                     }
                 }
-                console.log(item, '[][][][]]]')
+                // console.log(item, '[][][][]]]')
                 this.searchContent = item.name
                 this.$store.commit('SEARCH_INFO', item)
                 this.searchList = []
@@ -429,58 +445,69 @@
                     this.alarmList=res
                     let alarmList = []
                     this.warnList=[]
+                    let timeStamp = new Date(new Date().setHours(0, 0, 0, 0))
                     this.alarmList.forEach(item => {
                         if(item.status.id=="1"){
-                            if (!alarmList.includes(item.id)) {
-                                alarmList.push(item.id)
-                            }
-                            // if(item.rule.alarmTypeId =="2") {
-                            //     item.longitude=item.longitude-0.004567198366942193
-                            //     item.latitude=item.latitude+0.0031051178912733235
-                            // }
-                            if(this.warnList.length<6){
-                                if(item.rule!=null){
-                                    if(item.rule.alarmTypeId =="1"){
-                                        if(item.device.typeId =="1"){
-                                            item.icon = '../../../static/img/broadcast_danage.svg'
-                                        }else if(item.device.typeId =="2"){
-                                            item.icon = '../../../static/img/camera_danage.svg'
-                                        }else  if(item.device.typeId =="3") {
-                                            item.icon = '../../../static/img/machine_danage.svg'
-                                        }else  if(item.device.typeId =="4") {
-                                            item.icon = '../../../static/img/led_danage.svg'
-                                        }else  if(item.device.typeId =="5") {
-                                            item.icon = '../../../static/img/light_danage.svg'
-                                        }else  if(item.device.typeId =="6") {
-                                            item.icon = '../../../static/img/detection_danage.svg'
-                                        }else  if(item.device.typeId =="7") {
-                                            item.icon = '../../../static/img/wifi_danage.svg'
-                                        }else  if(item.device.typeId =="8") {
-                                            item.icon = '../../../static/img/wring_danage.svg'
-                                        }else  if(item.device.typeId =="9") {
-                                            item.icon = '../../../static/img/gps_danage.svg'
-                                        }
-                                    }else if(item.rule.alarmTypeId =="2") {
-                                        item.icon = '../../../static/img/alarm/alarmcolumnRule_one.svg'
-                                    }else if(item.rule.alarmTypeId =="3") {
-                                        item.icon = '../../../static/img/alarm/firefightingRule_one.svg'
-                                    }else if(item.rule.alarmTypeId =="4") {
-                                        item.icon = '../../../static/img/alarm/crossborderRule_one.svg'
-                                    }else if(item.rule.alarmTypeId =="5") {
-                                        item.icon = '../../../static/img/alarm/speedingRule_one.svg'
-                                    }else if(item.rule.alarmTypeId =="6") {
-                                        item.icon = '../../../static/img/alarm/offtrackRule_one.svg'
-                                    }else if(item.rule.alarmTypeId =="7") {
-                                        item.icon = '../../../static/img/alarm/overlimitRule_one.svg'
-                                    }else if(item.rule.alarmTypeId =="8") {
-                                        item.icon = '../../../static/img/alarm/waterlevelRule_one.svg'
-                                    }else if(item.rule.alarmTypeId =="9") {
-                                        item.icon = '../../../static/img/alarm/conditionRule_one.svg'
-                                    }
-                                } else {
-                                    item.icon = '../../../static/img/alarm/pollingIconRule_one.svg'
+                            item.time=new Date(item.occurenceTime).getTime()
+                            if(item.time>timeStamp){
+                                if (!alarmList.includes(item.id)) {
+                                    alarmList.push(item.id)
                                 }
-                                this.warnList.push(item)
+                                if(this.warnList.length<6){
+                                    if(item.rule!=null){
+                                        if(item.rule.alarmTypeId =="1"){
+                                            if(item.device.typeId =="1"){
+                                                item.icon = '../../../static/img/broadcast_danage.svg'
+                                            }else if(item.device.typeId =="2"){
+                                                item.icon = '../../../static/img/camera_danage.svg'
+                                            }else  if(item.device.typeId =="3") {
+                                                item.icon = '../../../static/img/machine_danage.svg'
+                                            }else  if(item.device.typeId =="4") {
+                                                item.icon = '../../../static/img/led_danage.svg'
+                                            }else  if(item.device.typeId =="5") {
+                                                item.icon = '../../../static/img/light_danage.svg'
+                                            }else  if(item.device.typeId =="6") {
+                                                item.icon = '../../../static/img/detection_danage.svg'
+                                            }else  if(item.device.typeId =="7") {
+                                                item.icon = '../../../static/img/wifi_danage.svg'
+                                            }else  if(item.device.typeId =="8") {
+                                                item.icon = '../../../static/img/wring_danage.svg'
+                                            }else  if(item.device.typeId =="9") {
+                                                item.icon = '../../../static/img/gps_danage.svg'
+                                            }
+                                        }else if(item.rule.alarmTypeId =="2") {
+                                            item.icon = '../../../static/img/alarm/alarmcolumnRule_one.svg'
+                                        }else if(item.rule.alarmTypeId =="3") {
+                                            item.icon = '../../../static/img/alarm/firefightingRule_one.svg'
+                                        }else if(item.rule.alarmTypeId =="4") {
+                                            item.icon = '../../../static/img/alarm/crossborderRule_one.svg'
+                                        }else if(item.rule.alarmTypeId =="5") {
+                                            item.icon = '../../../static/img/alarm/speedingRule_one.svg'
+                                        }else if(item.rule.alarmTypeId =="6") {
+                                            item.icon = '../../../static/img/alarm/offtrackRule_one.svg'
+                                        }else if(item.rule.alarmTypeId =="7") {
+                                            item.icon = '../../../static/img/alarm/overlimitRule_one.svg'
+                                        }else if(item.rule.alarmTypeId =="8") {
+                                            item.icon = '../../../static/img/alarm/waterlevelRule_one.svg'
+                                        }else if(item.rule.alarmTypeId =="9") {
+                                            item.icon = '../../../static/img/alarm/conditionRule_one.svg'
+                                        }
+                                    } else {
+                                        item.icon = '../../../static/img/alarm/pollingIconRule_one.svg'
+                                    }
+                                    this.warnList.push(item)
+                                }
+                                let time=sessionStorage.getItem('time');
+                                if(time!=null){
+                                    if(time<this.warnList[0].time){
+                                        this.aplayAudio()
+                                        // console.log(item.occurenceTime,'123123123')
+                                    }
+                                }
+                                sessionStorage.setItem('time',this.warnList[0].time); // 存入一个值
+                            }else {
+                                sessionStorage.setItem('time',this.alarmList[0].time); // 存入一个值
+                                return
                             }
                         }
                     })
@@ -517,6 +544,11 @@
         },
         computed: {
             ...mapGetters(['getUserInfo', 'getUserDetailMsg', 'getUserRole'])
+        },
+        watch:{
+            // 'errCount': function () {
+            //     this.aplayAudio()
+            // }
         }
     }
 </script>

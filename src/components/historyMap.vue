@@ -16,6 +16,7 @@
 
 <script>
     import historyMap from "../../static/js/historyMap.js"
+    import api from '@/api'
     export default {
         props: ['visible','historyData','title','isvehicle','Info'],
         name: "historyDialog",
@@ -62,36 +63,34 @@
             },
             drewRoadLine(){
                 let geo = []
+                var areaEvtList =new historyMap.road.RoadLayer('ROUTE_list', '#fb9000', 'blue')
                  if(!this.historyData || this.historyData.length == 0){
                      return
                  }
                 this.historyData.forEach(item=>{
-                    // if(this.isvehicle){
-                    //     geo.push([item.longitude+0.451536705535+0.0048011541,item.latitude+0.49693734262853-0.0025647127])
-                    // }else{
-                    //     geo.push([item.longitude,item.latitude])
-                    // }
-                    geo.push([item.longitude,item.latitude])
+                    if(this.isvehicle){
+                        geo.push(historyMap.trans.transFromWgsToLayer([item.longitude,item.latitude]))
+                    }else{
+                        let _coord = historyMap.trans.transFromWgsToLayer([item.longitude,item.latitude]);
+                        _coord[0] = _coord[0]+parseFloat('-110')
+                        _coord[1] = _coord[1]+parseFloat('-20')
+                        geo.push(_coord)
+                    }
                 })
-
-                var areaEvtList =new historyMap.road.RoadLayer('ROUTE_list', '#fb9000', 'blue')
-                let area = [];
-                for(var i = 0; i < geo.length; i++) {
-                    let wgs=historyMap.trans.transFromWgsToLayer(geo[i])
-                    area.push(wgs);
-                }
                 // var data = {"id": this.historyData[0].deviceId, "name": this.historyData[0].deviceName,"constructor":''}
                 var data = {"id": this.Info.id, "name": this.Info.name,"constructor":''}
-                areaEvtList.addRoad(area, data)
+                areaEvtList.addRoad(geo, data)
                 historyMap.road.addRoadLayer(areaEvtList, this.Info.id)
-                // if(this.isvehicle){
-                //     historyMap.map.panToCoord(historyMap.trans.transFromWgsToLayer([this.historyData[0].longitude+0.451536705535+0.0048011541,this.historyData[0].latitude+0.49693734262853-0.0025647127]));
-                // }else{
-                //     historyMap.map.panToCoord(historyMap.trans.transFromWgsToLayer([this.historyData[0].longitude,this.historyData[0].latitude]));
-                // }
-                historyMap.map.panToCoord(historyMap.trans.transFromWgsToLayer([this.historyData[0].longitude,this.historyData[0].latitude]));
-
-            }
+                if(this.isvehicle){
+                    historyMap.map.panToCoord(historyMap.trans.transFromWgsToLayer([this.historyData[0].longitude,this.historyData[0].latitude]));
+                    // historyMap.map.panToCoord(historyMap.trans.transFromWgsToLayer([this.historyData[0].longitude+0.451536705535+0.0048011541,this.historyData[0].latitude+0.49693734262853-0.0025647127]));
+                }else{
+                    let _coord = historyMap.trans.transFromWgsToLayer([this.historyData[0].longitude,this.historyData[0].latitude]);
+                    _coord[0] = _coord[0]+parseFloat('-110')
+                    _coord[1] = _coord[1]+parseFloat('-20')
+                    historyMap.map.panToCoord(_coord);
+                }
+            },
         },
         mounted() {
               setTimeout(()=>{

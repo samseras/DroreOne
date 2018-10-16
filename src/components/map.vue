@@ -2879,8 +2879,11 @@
                             }
                             obj.status=obj.gpsData ? "ONLINE" : "OFFLINE";
                             obj.location=[longitude,latitude];
+                            let _coord = droreMap.trans.transFromWgsToLayer(obj.location);
+                            _coord[0] = _coord[0]+parseFloat('-110')
+                            _coord[1] = _coord[1]+parseFloat('-20')
                             var icon = new droreMap.icon.Marker({
-                                coordinate: droreMap.trans.transFromWgsToLayer(obj.location),
+                                coordinate: _coord,
                                 name:obj.name,
                                 subtype:'securityPerson',
                                 id:obj.id,

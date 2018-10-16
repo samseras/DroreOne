@@ -11,13 +11,30 @@
             <el-button size="mini"plain @click="batchEdit"><i class="el-icon-edit"></i>修改</el-button>
             <el-button size="mini" plain @click="batchDownload"><i class="el-icon-download"></i>导出</el-button>
 
+            <div class="checkStyle">
+                <el-checkbox-group v-model="filterList" @change="choseType">
+                    <el-checkbox v-for="item in statusInfo" :label="item.id">{{item.name}}</el-checkbox>
+                </el-checkbox-group>
+            </div>
+            <div class="selectDepar">
+                <el-select v-if="!route.includes('warning')" v-model="creator" multiple collapse-tags placeholder="创建人" @change="selectOnwer">
+                    <el-option
+                        v-for="item in personList"
+                        :key="item.id"
+                        :label="item.cnName?item.cnName:item.name"
+                        :value="item.id">
+                    </el-option>
+                </el-select>
+                <el-select v-model="onwer" multiple collapse-tags placeholder="负责人" @change="selectOnwer">
+                    <el-option
+                        v-for="item in personList"
+                        :key="item.id"
+                        :label="item.cnName?item.cnName:item.name"
+                        :value="item.id">
+                    </el-option>
+                </el-select>
+            </div>
         </div>
-        <div class="checkStyle">
-            <el-checkbox-group v-model="filterList" @change="choseType">
-                <el-checkbox v-for="item in statusInfo" :label="item.id">{{item.name}}</el-checkbox>
-            </el-checkbox-group>
-        </div>
-
         <div class="page">
             <Pagination class="pageSize"></Pagination>
         </div>
@@ -53,11 +70,24 @@
                 searchContent: '',
                 currentPageNum:1,
                 pageAllNum:1,
-                isPatrol:false
+                isPatrol:false,
+                creator: [],
+                onwer: [],
+                personList: []
             }
         },
         methods: {
             ...mapMutations(['SHOWBASICICON', 'CURRENT_NUM']),
+            async getUserInfo () {
+                await api.user.getUserInfo().then(res => {
+                    console.log(res, '用户信息')
+                    this.personList = res
+                })
+            },
+            selectOnwer () {
+                console.log(this.onwer,this.creator, 'kokokokokokokoko')
+                this.$emit('selectPerson', this.onwer,this.creator)
+            },
             startSearch(){
                 console.log(this.searchContent)
                 this.$emit('searchAnything',this.searchContent)
@@ -153,6 +183,8 @@
         },
         watch: {
             '$route' () {
+                this.route = this.$route.path
+                this.getUserInfo()
                 this.showPersonJob()
             },
             listLength() {
@@ -165,12 +197,14 @@
             }
         },
         created () {
+            this.route = this.$route.path
             let route = this.$route.path
             if(route.includes('patrol')){
                 this.isPatrol = true;
             }else{
                 this.isPatrol = false;
             }
+            this.getUserInfo()
             this.getStatusType();
             this.showPersonJob()
         },
@@ -189,6 +223,11 @@
         .el-checkbox__inner{
             margin-top: rem(2);
             margin-right: rem(2);
+        }
+        .selectDepar{
+            .el-input__inner{
+                height: rem(30) !important
+            }
         }
     }
     .warningEvent{
@@ -250,13 +289,6 @@
                 cursor: pointer;
             }
         }
-        .checkStyle{
-            margin-left: rem(50);
-            .el-checkbox{
-                margin-left: rem(10);
-                margin-bottom: rem(2);
-            }
-        }
         .funcBtn{
             margin-left: rem(20);
             margin-top: rem(4);
@@ -277,6 +309,20 @@
             .el-button {
                 padding: rem(5) rem(5);
                 margin: 0;
+            }
+            .selectDepar{
+                height: rem(30);
+                display: inline-block;
+                margin-top: rem(-5);
+                margin-left: rem(50);
+                float: right;
+            }
+            .checkStyle{
+                margin-left: rem(30);
+                .el-checkbox{
+                    margin-left: rem(10);
+                    margin-bottom: rem(2);
+                }
             }
         }
         .filite{

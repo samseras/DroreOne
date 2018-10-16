@@ -152,7 +152,7 @@
                     }]
                 },
                 totalFlowNum:0,
-                totalFlowCurr:'当天',
+                totalFlowCurr:'最近一周',
                 realFlowCurr:'当日',
                 quantumFlowCurr:'最近一周',
                 tripFlowCurr:'本周',
@@ -166,7 +166,7 @@
                     {value: 'lastQuarter', label: '最近季度'},
                     {value: 'lastMonth', label: '最近一月'},
                     {value: 'lastWeek', label: '最近一周'},
-                    {value: 'lastDay', label: '最近一天'}
+                    // {value: 'lastDay', label: '最近一天'}
                 ],
                 addFlowOption:[
                     {value: 'lastYear', label: '最近一年'},
@@ -282,7 +282,7 @@
                         arrObj.forEach(item=>{
                             let str = item.hour.toString()+':00';
                             obj.name = str;
-                            obj.value = item.total_stay_count;
+                            obj.value = item.total_day_flow;
                             arr.push(obj);
                             lengentArr.push(str);
                             obj = {};str='';
@@ -290,7 +290,7 @@
                     }else{
                         let obj = {
                             hour:'',
-                            total_stay_count:0
+                            total_day_flow:0
                         }
                         let n = 10-res.length;
                         let m = res[res.length-1].hour;
@@ -299,13 +299,13 @@
                             res.push(obj);
                             obj = {
                                 hour:'',
-                                total_stay_count:0
+                                total_day_flow:0
                             }
                         }
                         res.forEach(item=>{
                             let str = item.hour.toString()+':00';
                             obj.name = str;
-                            obj.value = item.total_stay_count;
+                            obj.value = item.total_day_flow;
                             arr.push(obj);
                             lengentArr.push(str);
                             obj = {};str='';
@@ -314,7 +314,7 @@
                         // res.forEach(item=>{
                         //     let str = item.hour.toString()+':00';
                         //     obj.name = str;
-                        //     obj.value = item.total_stay_count;
+                        //     obj.value = item.total_day_flow;
                         //     arr.push(obj);
                         //     lengentArr.push(str);
                         //     obj = {};str='';
@@ -374,10 +374,10 @@
             },
             async selectKindtotal(val){
                 let obj = {
-                    "timeRangeType": "lastDay"
+                    "timeRangeType": "lastWeek"
                 }
                 if(val == undefined){
-                    obj.timeRangeType = 'lastDay';
+                    obj.timeRangeType = 'lastWeek';
                 }else{
                     obj.timeRangeType = val;
                 }
@@ -398,7 +398,7 @@
                             str = item.key.toString();
                         }
                         obj.name = str;
-                        obj.value = item.total_stay_count;
+                        obj.value = item.total_day_flow;
                         arr.push(obj);
                         lengentArr.push(str);
                         obj={}
@@ -457,7 +457,7 @@
                                 arr.push(obj);
                                 obj={};
                                 obj1.name = res[1][i].location;
-                                obj1.value = res[1][i].total_stay_count;
+                                obj1.value = res[1][i].total_day_flow;
                                 arr1.push(obj1);
                                 lengentArr.push(res[1][i].location);
                                 obj1={}
@@ -466,17 +466,24 @@
                     }else{
                         res[0].forEach(item=>{
                             obj.name = item.location;
-                            obj.value = item.total_stay_count;
+                            obj.value = item.total_day_flow;
                             arr.push(obj);
                             obj={}
                         })
-                        res[1].forEach(item=>{
-                            obj1.name = item.location;
-                            obj1.value = item.total_stay_count;
-                            arr1.push(obj1);
-                            lengentArr.push(item.location);
-                            obj1={}
-                        })
+                        if (res[1].length > 0) {
+                            res[1].forEach(item=>{
+                                obj1.name = item.location;
+                                obj1.value = item.total_day_flow;
+                                arr1.push(obj1);
+                                lengentArr.push(item.location);
+                                obj1={}
+                            })
+                        } else {
+                            for (let i = 0; i < res[0].length; i++) {
+                                arr1.push({name: res[0][i].location, value: 0})
+                                lengentArr.push(res[0][i].location)
+                            }
+                        }
                     }
                     console.log(this.tripFlowData,"景区环比变换后的数据")
                     this.tripFlowData.lastWeek = arr;
@@ -981,7 +988,6 @@
                         color: #01f5ff;
                     }
                 }
-
             }
         }
         .el-select-dropdown{

@@ -160,9 +160,9 @@
                     <!--<p class="width">屏幕宽高(cm)：-->
                         <!--<el-input type="text" v-model="led.area" :disabled="isDisabled" placeholder="例：22,33"></el-input>-->
                     <!--</p>-->
-                    <!--<p class="IP">IP&nbsp;&nbsp;地&nbsp;&nbsp;址:
+                    <p class="IP">IP&nbsp;&nbsp;地&nbsp;&nbsp;址:
                         <el-input type="text" v-model="led.ip" :disabled="isDisabled"></el-input>
-                    </p>-->
+                    </p>
                     <p class="width">
                         <span>屏幕宽(cm)：</span>
                         <el-input type="text" v-model="led.screenWidth" :disabled="isDisabled"></el-input>
@@ -909,10 +909,12 @@
                        this.$message.error('请输入完整信息')
                        return
                    }
-                   /*if(!(newInfo.ip && myip.test1(newInfo.ip))){
-                       this.$message.error('请输入有效ip地址！')
-                       return
-                   }*/
+                   if (newInfo.ip && newInfo.ip !== '') {
+                       if(!(newInfo.ip && myip.test(newInfo.ip))){
+                           this.$message.error('请输入有效ip地址')
+                           return
+                       }
+                   }
                    if (newInfo.port && newInfo.port !== '') {
                        if(!(newInfo.port && myport.test(newInfo.port))){
                            this.$message.error('请输入正确端口号')
