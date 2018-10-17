@@ -64,47 +64,47 @@
                 stationId:'',
                 result:[
                     {
-                        "id": "4abbaa01-5185-4169-86d0-e3984ce6c85b",
+                        "id": "a435e789-f922-4c65-91ea-ca09324e4ce5",
                         "creator": "admin",
-                        "createTime": "2018-10-10",
+                        "createTime": "2018-10-17",
                         "modifier": "admin",
-                        "modifyTime": "2018-10-16",
-                        "name": "船只计划1",
-                        "days": "2,3,4,5,1",
+                        "modifyTime": "2018-10-17",
+                        "name": "船只计划=",
+                        "days": "1,2,3,4,5,6,7",
                         "startDate": null,
                         "endDate": null,
-                        "startTime": "09:00:22",
-                        "endTime": "20:59:22",
-                        "routeId": "7a4dc215-f7ab-4ccc-a033-26964677d3c6",
-                        "description": "船只路线1",
+                        "startTime": "08:24:59",
+                        "endTime": "21:24:59",
+                        "routeId": "6f5a899b-9cb6-4b37-ac80-8f4c46d3a7d7",
+                        "description": "sdf",
                         "scenicAreaId": null,
                         "type": "1",
                         "svDriverMaps": [
                             {
-                                "vehicleId": "671233ad-f55d-49f3-91a3-f4879e0fde19",
+                                "vehicleId": "753e56f3-fa3a-4f83-9c47-3c6fef52b40d",
                                 "driverIds": [
-                                    "16652a27bf7-ce9cd929b1d33ed2"
+                                    "166153e1798-c168105afba35c5c"
                                 ]
                             }
                         ],
                         "stations": [
                             {
-                                "id": "99801774-db1d-4aa0-9ec3-4edbb012f1a3",
+                                "id": "34ba111f-9a92-49a8-84be-bde6e3bc8478",
                                 "creator": "admin",
-                                "createTime": "2018-10-08",
+                                "createTime": "2018-10-17",
                                 "modifier": "admin",
-                                "modifyTime": "2018-10-08",
-                                "name": "那地方",
+                                "modifyTime": "2018-10-17",
+                                "name": "二号码头",
                                 "pictureId": null,
-                                "capacity": 44,
-                                "description": "东方红",
+                                "capacity": 63,
+                                "description": null,
                                 "scenicAreaId": null,
                                 "type": "1",
                                 "status": null,
-                                "regionId": "2d5807d6-87c9-4031-a07d-8bdf60eb4168",
-                                "regionName": "小河",
-                                "longitude": 120.13351651746035,
-                                "latitude": 30.308427886587783,
+                                "regionId": "9752ae86-c863-4adb-9c2a-8c75a081fb64",
+                                "regionName": "浙窑",
+                                "longitude": 120.13243626077417,
+                                "latitude": 30.307825346211757,
                                 "epsg": 4326,
                                 "deleted": false
                             },
@@ -129,22 +129,22 @@
                                 "deleted": false
                             },
                             {
-                                "id": "1c4c5e2e-31a0-4e65-92d1-673a702dce75",
-                                "creator": null,
-                                "createTime": null,
+                                "id": "66c2b041-e9cd-4759-b688-82770bd3fc3e",
+                                "creator": "admin",
+                                "createTime": "2018-10-17",
                                 "modifier": "admin",
-                                "modifyTime": "2018-10-09",
-                                "name": "阿道夫广发基金",
+                                "modifyTime": "2018-10-17",
+                                "name": "一号码头",
                                 "pictureId": null,
-                                "capacity": null,
-                                "description": "sdf",
+                                "capacity": 33,
+                                "description": "打的费",
                                 "scenicAreaId": null,
                                 "type": "1",
                                 "status": null,
-                                "regionId": "a23c0a6e-e146-427e-b94a-ea79f4ab6316",
-                                "regionName": "富义仓",
-                                "longitude": 120.13337260411663,
-                                "latitude": 30.30723043082261,
+                                "regionId": "2d5807d6-87c9-4031-a07d-8bdf60eb4168",
+                                "regionName": "小河",
+                                "longitude": 120.13756309096141,
+                                "latitude": 30.303278761154342,
                                 "epsg": 4326,
                                 "deleted": false
                             }
@@ -154,16 +154,16 @@
                         "vehicles": [
                             {
                                 "vehicle": {
-                                    "id": "671233ad-f55d-49f3-91a3-f4879e0fde19",
-                                    "createTime": "2018-09-27 12:44:46",
+                                    "id": "753e56f3-fa3a-4f83-9c47-3c6fef52b40d",
+                                    "createTime": "2018-09-27 12:51:43",
                                     "creator": "admin",
-                                    "modifyTime": "2018-09-27 12:44:46",
+                                    "modifyTime": "2018-09-27 12:51:43",
                                     "modifier": "admin",
-                                    "serialNum": "水漾",
+                                    "serialNum": "运河行02",
                                     "capacity": 0,
                                     "type": 1,
                                     "model": null,
-                                    "gpsDeviceId": "6c5677ad-3b3b-4c36-a441-6f879cb41405",
+                                    "gpsDeviceId": "1d9472f0-1719-48fd-bd2b-71a5deacbc3e",
                                     "pictureId": null,
                                     "maintenanceStatus": 0,
                                     "maintenanceDate": null,
@@ -177,109 +177,101 @@
                                 "pictureId": null,
                                 "picturePath": null,
                                 "gpsData": {
-                                    "deviceId": "1008601",
-                                    "ioTDeviceId": "1008601",
-                                    "deviceName": "\ufffd\ufffd\ufffd",
-                                    "createTime": "2018-10-16 09:48:50",
-                                    "longitude": 120.134399,
-                                    "latitude": 30.321667,
+                                    "deviceId": "1019092",
+                                    "ioTDeviceId": "1019092",
+                                    "deviceName": "\ufffd˺\ufffd\ufffd\ufffd02",
+                                    "createTime": "2018-10-17 14:29:22",
+                                    "longitude": 120.157898,
+                                    "latitude": 30.276783,
                                     "altitude": null,
                                     "direction": null,
                                     "speed": 0,
                                     "telephone": null,
-                                    "deviceNum": "1008601",
+                                    "deviceNum": "1019092",
                                     "coordinate": "",
-                                    "tag": "671233ad-f55d-49f3-91a3-f4879e0fde19"
+                                    "tag": "753e56f3-fa3a-4f83-9c47-3c6fef52b40d"
                                 },
-                                "realTimeRatio": 0.4,
+                                "realTimeRatio": null,
                                 "driver": null,
                                 "prevStation": null,
-                                "curStation": "59e5e6f0-e730-4dd0-8d04-506fcd400a60",
-                                "nextStation": "1c4c5e2e-31a0-4e65-92d1-673a702dce75",
+                                "curStation": {
+                                    "id": "34ba111f-9a92-49a8-84be-bde6e3bc8478",
+                                    "creator": "admin",
+                                    "createTime": "2018-10-17",
+                                    "modifier": "admin",
+                                    "modifyTime": "2018-10-17",
+                                    "name": "二号码头",
+                                    "pictureId": null,
+                                    "capacity": 63,
+                                    "description": null,
+                                    "scenicAreaId": null,
+                                    "type": "1",
+                                    "status": "CURRENT",
+                                    "regionId": "9752ae86-c863-4adb-9c2a-8c75a081fb64",
+                                    "regionName": "浙窑",
+                                    "longitude": 120.13243626077417,
+                                    "latitude": 30.307825346211757,
+                                    "epsg": 4326,
+                                    "deleted": false
+                                },
+                                "nextStation": {
+                                    "id": "59e5e6f0-e730-4dd0-8d04-506fcd400a60",
+                                    "creator": "admin",
+                                    "createTime": "2018-10-08",
+                                    "modifier": "admin",
+                                    "modifyTime": "2018-10-08",
+                                    "name": "结婚后",
+                                    "pictureId": null,
+                                    "capacity": 32,
+                                    "description": "桑",
+                                    "scenicAreaId": null,
+                                    "type": "1",
+                                    "status": "OTHER",
+                                    "regionId": "a23c0a6e-e146-427e-b94a-ea79f4ab6316",
+                                    "regionName": "富义仓",
+                                    "longitude": 120.13486638109748,
+                                    "latitude": 30.306761263274716,
+                                    "epsg": 4326,
+                                    "deleted": false
+                                },
                                 "arriveTime": 0,
-                                "willArriveTime": 4,
-                                "direction": true,
-                                "vacancy":10
+                                "willArriveTime": 3,
+                                "direction": false,
+                                "upNum": null,
+                                "downNum": null,
+                                "vacancy": 10
                             }
                         ],
-                        "willArriveVeFW": {
-                            "vehicle": {
-                                "id": "671233ad-f55d-49f3-91a3-f4879e0fde19",
-                                "createTime": "2018-09-27 12:44:46",
-                                "creator": "admin",
-                                "modifyTime": "2018-09-27 12:44:46",
-                                "modifier": "admin",
-                                "serialNum": "水漾",
-                                "capacity": 0,
-                                "type": 1,
-                                "model": null,
-                                "gpsDeviceId": "6c5677ad-3b3b-4c36-a441-6f879cb41405",
-                                "pictureId": null,
-                                "maintenanceStatus": 0,
-                                "maintenanceDate": null,
-                                "purchaseDate": null,
-                                "description": null,
-                                "scenicAreaId": null,
-                                "deleted": false
-                            },
-                            "gpsDeviceId": null,
-                            "gpsDeviceName": null,
-                            "pictureId": null,
-                            "picturePath": null,
-                            "gpsData": {
-                                "deviceId": "1008601",
-                                "ioTDeviceId": "1008601",
-                                "deviceName": "\ufffd\ufffd\ufffd",
-                                "createTime": "2018-10-16 09:48:50",
-                                "longitude": 120.134399,
-                                "latitude": 30.321667,
-                                "altitude": null,
-                                "direction": null,
-                                "speed": 0,
-                                "telephone": null,
-                                "deviceNum": "1008601",
-                                "coordinate": "",
-                                "tag": "671233ad-f55d-49f3-91a3-f4879e0fde19"
-                            },
-                            "realTimeRatio": 0.4,
-                            "driver": null,
-                            "prevStation": null,
-                            "curStation": "59e5e6f0-e730-4dd0-8d04-506fcd400a60",
-                            "nextStation": "1c4c5e2e-31a0-4e65-92d1-673a702dce75",
-                            "arriveTime": 0,
-                            "willArriveTime": 4,
-                            "direction": false,
-                            "vacancy":10
-                        },
+                        "willArriveVeFW": null,
                         "willArriveVeRE": null,
                         "route": {
-                            "id": "7a4dc215-f7ab-4ccc-a033-26964677d3c6",
-                            "name": "船只路线1",
+                            "id": "6f5a899b-9cb6-4b37-ac80-8f4c46d3a7d7",
+                            "name": "2-结婚-1",
                             "type": 3,
                             "description": null,
                             "creator": "admin",
-                            "createTime": "2018-10-10",
+                            "createTime": "2018-10-17",
                             "modifier": null,
                             "modifyTime": null,
                             "scenicAreaId": null,
                             "stations": [
                                 {
-                                    "id": "99801774-db1d-4aa0-9ec3-4edbb012f1a3",
+                                    "id": "34ba111f-9a92-49a8-84be-bde6e3bc8478",
                                     "creator": "admin",
-                                    "createTime": "2018-10-08",
+                                    "createTime": "2018-10-17",
                                     "modifier": "admin",
-                                    "modifyTime": "2018-10-08",
-                                    "name": "那地方",
+                                    "modifyTime": "2018-10-17",
+                                    "name": "二号码头",
                                     "pictureId": null,
-                                    "capacity": 44,
-                                    "description": "东方红",
+                                    "capacity": 63,
+                                    "description": null,
                                     "scenicAreaId": null,
                                     "type": "1",
                                     "status": "CURRENT",
-                                    "regionId": "2d5807d6-87c9-4031-a07d-8bdf60eb4168",
-                                    "regionName": "小河",
-                                    "longitude": 120.13351651746035,
-                                    "latitude": 30.308427886587783,
+                                    "regionId": "9752ae86-c863-4adb-9c2a-8c75a081fb64",
+                                    "regionName": "浙窑",
+                                    "longitude": 120.13243626077417,
+                                    "latitude": 30.307825346211757,
                                     "epsg": 4326,
                                     "deleted": false
                                 },
@@ -304,44 +296,44 @@
                                     "deleted": false
                                 },
                                 {
-                                    "id": "1c4c5e2e-31a0-4e65-92d1-673a702dce75",
-                                    "creator": null,
-                                    "createTime": null,
+                                    "id": "66c2b041-e9cd-4759-b688-82770bd3fc3e",
+                                    "creator": "admin",
+                                    "createTime": "2018-10-17",
                                     "modifier": "admin",
-                                    "modifyTime": "2018-10-09",
-                                    "name": "阿道夫广发基金",
+                                    "modifyTime": "2018-10-17",
+                                    "name": "一号码头",
                                     "pictureId": null,
-                                    "capacity": null,
-                                    "description": "sdf",
+                                    "capacity": 33,
+                                    "description": "打的费",
                                     "scenicAreaId": null,
                                     "type": "1",
                                     "status": "TO",
-                                    "regionId": "a23c0a6e-e146-427e-b94a-ea79f4ab6316",
-                                    "regionName": "富义仓",
-                                    "longitude": 120.13337260411663,
-                                    "latitude": 30.30723043082261,
+                                    "regionId": "2d5807d6-87c9-4031-a07d-8bdf60eb4168",
+                                    "regionName": "小河",
+                                    "longitude": 120.13756309096141,
+                                    "latitude": 30.303278761154342,
                                     "epsg": 4326,
                                     "deleted": false
                                 }
                             ],
                             "reStations": [
                                 {
-                                    "id": "1c4c5e2e-31a0-4e65-92d1-673a702dce75",
-                                    "creator": null,
-                                    "createTime": null,
+                                    "id": "66c2b041-e9cd-4759-b688-82770bd3fc3e",
+                                    "creator": "admin",
+                                    "createTime": "2018-10-17",
                                     "modifier": "admin",
-                                    "modifyTime": "2018-10-09",
-                                    "name": "阿道夫广发基金",
+                                    "modifyTime": "2018-10-17",
+                                    "name": "一号码头",
                                     "pictureId": null,
-                                    "capacity": null,
-                                    "description": "sdf",
+                                    "capacity": 33,
+                                    "description": "打的费",
                                     "scenicAreaId": null,
                                     "type": "1",
                                     "status": "FROM",
-                                    "regionId": "a23c0a6e-e146-427e-b94a-ea79f4ab6316",
-                                    "regionName": "富义仓",
-                                    "longitude": 120.13337260411663,
-                                    "latitude": 30.30723043082261,
+                                    "regionId": "2d5807d6-87c9-4031-a07d-8bdf60eb4168",
+                                    "regionName": "小河",
+                                    "longitude": 120.13756309096141,
+                                    "latitude": 30.303278761154342,
                                     "epsg": 4326,
                                     "deleted": false
                                 },
@@ -366,30 +358,28 @@
                                     "deleted": false
                                 },
                                 {
-                                    "id": "99801774-db1d-4aa0-9ec3-4edbb012f1a3",
+                                    "id": "34ba111f-9a92-49a8-84be-bde6e3bc8478",
                                     "creator": "admin",
-                                    "createTime": "2018-10-08",
+                                    "createTime": "2018-10-17",
                                     "modifier": "admin",
-                                    "modifyTime": "2018-10-08",
-                                    "name": "那地方",
+                                    "modifyTime": "2018-10-17",
+                                    "name": "二号码头",
                                     "pictureId": null,
-                                    "capacity": 44,
-                                    "description": "东方红",
+                                    "capacity": 63,
+                                    "description": null,
                                     "scenicAreaId": null,
                                     "type": "1",
                                     "status": "CURRENT",
-                                    "regionId": "2d5807d6-87c9-4031-a07d-8bdf60eb4168",
-                                    "regionName": "小河",
-                                    "longitude": 120.13351651746035,
-                                    "latitude": 30.308427886587783,
+                                    "regionId": "9752ae86-c863-4adb-9c2a-8c75a081fb64",
+                                    "regionName": "浙窑",
+                                    "longitude": 120.13243626077417,
+                                    "latitude": 30.307825346211757,
                                     "epsg": 4326,
                                     "deleted": false
                                 }
-
-
                             ],
                             "deleted": false,
-                            "geo": "[[120.13352396944646,30.308400124154943],[120.13482737331145,30.306783199631724],[120.13339004719933,30.307239479283965]]"
+                            "geo": "[[120.1324194524691,30.30783244120617],[120.13381520508307,30.3064637281329],[120.13489169935139,30.306753311263034],[120.13742407971495,30.303364795731383]]"
                         },
                         "enabled": true,
                         "deleted": false,
@@ -487,7 +477,7 @@
                                 let prevDistance = stationPrevious.getBoundingClientRect().left - stationContent.getBoundingClientRect().left
                                 let totalDistance
 
-                                item.realTimeRatio = Math.random().toFixed(1)
+//                                item.realTimeRatio = Math.random().toFixed(1)
                                 if(item.realTimeRatio){
                                     totalDistance = prevDistance + (1-item.realTimeRatio)*(stationNext.getBoundingClientRect().left - stationPrevious.getBoundingClientRect().left)
                                     item.distance = true
@@ -498,12 +488,38 @@
                     })
                 }
 
+            },
+            async saveVehicleDetail(){
+                let params = {
+                    "vehicleId":"753e56f3-fa3a-4f83-9c47-3c6fef52b40d",
+                    "stationId":"34ba111f-9a92-49a8-84be-bde6e3bc8478",
+                    "arriveTime":"2018-10-16 16:30:00",
+                    "downNum":0,
+                    "upNum":10,
+                    "vacancy":10
+                }
+
+//                let params = {
+//                    "vehicleId":"753e56f3-fa3a-4f83-9c47-3c6fef52b40d",
+//                    "stationId":"59e5e6f0-e730-4dd0-8d04-506fcd400a60",
+//                    "arriveTime":"2018-10-16 17:30:00",
+//                    "downNum":1,
+//                    "upNum":12,
+//                    "vacancy":21
+//                }
+                await api.transport.saveVehicleDetail(params).then(res=>{
+                    console.log(res,'插入成功')
+
+                })
             }
         },
         watch:{
 
         },
         created() {
+
+//            this.saveVehicleDetail()
+
             let url = window.parent.document.getElementById("stationIframe").contentWindow.location.href;
             console.log(url)
 
