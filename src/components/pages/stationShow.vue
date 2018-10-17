@@ -406,6 +406,7 @@
             async getStationData(){
                 await api.transport.getRouteById(this.stationId).then(res=>{
                     console.log(res,'stationData  res')
+                    this.routes = []
                     //假数据
 //                    res = this.result
                     if(res instanceof Array && res.length >0){
@@ -417,6 +418,11 @@
                             let positiveVes = []
                             let reverseVes = []
                             if(schedule.vehicles.length > 0){
+                                schedule.vehicles.forEach(ve=>{
+//                                    this.$set(ve,'distance',true)
+                                    ve['distance'] = true
+                                })
+
                                 schedule.vehicles.forEach(vehicle=>{
                                     if(vehicle.direction){
                                         positiveVes.push(vehicle)
@@ -424,16 +430,25 @@
                                         reverseVes.push(vehicle)
                                     }
                                 })
-                                this.$set(schedule.route,'vehicles',positiveVes)
-                                this.$set(cloneItem,'vehicles',reverseVes)
+//                                this.$set(schedule.route,'vehicles',positiveVes)
+//                                this.$set(cloneItem,'vehicles',reverseVes)
+                                schedule.route['vehicles'] = positiveVes
+                                cloneItem['vehicles'] = reverseVes
                             }
 
                             if(schedule.willArriveVeFW){
-                                this.$set(schedule.route,'willArriveVe',schedule.willArriveVeFW)
+//                                this.$set(schedule.willArriveVeFW,'distance',true)
+//                                this.$set(schedule.route,'willArriveVe',schedule.willArriveVeFW)
+                                schedule.willArriveVeFW['distance'] = true
+                                schedule.route['willArriveVe'] = schedule.willArriveVeFW
                             }
 
                             if(schedule.willArriveVeRE){
-                                this.$set(cloneItem,'willArriveVe',schedule.willArriveVeRE)
+//                                this.$set(schedule.willArriveVeRE,'distance',true)
+//                                this.$set(cloneItem,'willArriveVe',schedule.willArriveVeRE)
+
+                                schedule.willArriveVeRE['distance'] = true
+                                cloneItem['willArriveVe'] = schedule.willArriveVeRE
                             }
 
                             this.routes.push(schedule.route)
@@ -450,7 +465,7 @@
                             if (route.includes('/station')) {
                                 this.getStationData();//长轮询
                             }
-                        },60000)
+                        },6000)
 
                     }
                 })
@@ -461,8 +476,9 @@
                 if(this.routes.length > 0){
                     this.routes.forEach(route=>{
                             route.vehicles.forEach(item=>{
-                                this.$set(route,"distance",false)
+
                                 if(!item.curStation || !item.nextStation){
+                                    item.distance = false
                                     return
                                 }
                                 let stationPrevious = document.getElementById(item.curStation)
@@ -471,9 +487,10 @@
                                 let prevDistance = stationPrevious.getBoundingClientRect().left - stationContent.getBoundingClientRect().left
                                 let totalDistance
 
+                                item.realTimeRatio = Math.random().toFixed(1)
                                 if(item.realTimeRatio){
                                     totalDistance = prevDistance + (1-item.realTimeRatio)*(stationNext.getBoundingClientRect().left - stationPrevious.getBoundingClientRect().left)
-                                    route.distance = true
+                                    item.distance = true
                                 }
                                 let el = document.getElementById(item.vehicle.id)
                                 el.style.left = totalDistance+"px"
