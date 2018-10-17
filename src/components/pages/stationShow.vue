@@ -6,7 +6,7 @@
                     <div class="contentBody">
                         <div class="desc">
                             <div class="left">
-                                <span>{{route.routeName}}</span>
+                                <span>{{route.name}}</span>
                             </div>
                             <div  class="center" v-if="route.willArriveVe">
                                 <span >{{route.willArriveVe.vehicle.serialNum}}还有{{route.willArriveVe.willArriveTime}}分钟到达</span>
