@@ -103,7 +103,12 @@ router.beforeEach((to, from, next) => {
             }
         }
     } else {
-        next('/login')
+        if (to.path.includes('/station') && to.fullPath.includes('/station?stationId')) {
+            next()
+        } else {
+            next('/login')
+        }
+
     }
 })
 export default router

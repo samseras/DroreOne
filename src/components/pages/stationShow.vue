@@ -471,15 +471,19 @@
                                     item.distance = false
                                     return
                                 }
-                                let stationPrevious = document.getElementById(item.curStation)
-                                let stationNext = document.getElementById(item.nextStation)
+                                let stationPrevious = document.getElementById(item.curStation.id)
+                                let stationCurrent = document.getElementById(this.stationId)
                                 let stationContent = document.getElementById(route.id)
                                 let prevDistance = stationPrevious.getBoundingClientRect().left - stationContent.getBoundingClientRect().left
                                 let totalDistance
 
-//                                item.realTimeRatio = Math.random().toFixed(1)
                                 if(item.realTimeRatio){
-                                    totalDistance = prevDistance + (1-item.realTimeRatio)*(stationNext.getBoundingClientRect().left - stationPrevious.getBoundingClientRect().left)
+                                    if(item.direction){
+                                        totalDistance = prevDistance + (1-item.realTimeRatio)*(stationCurrent.getBoundingClientRect().left - stationPrevious.getBoundingClientRect().left)
+                                    }else{
+                                        totalDistance = prevDistance + item.realTimeRatio*(stationPrevious.getBoundingClientRect().left - stationCurrent.getBoundingClientRect().left )
+
+                                    }
                                     item.distance = true
                                 }
                                 let el = document.getElementById(item.vehicle.id)
@@ -499,14 +503,6 @@
                     "vacancy":10
                 }
 
-//                let params = {
-//                    "vehicleId":"753e56f3-fa3a-4f83-9c47-3c6fef52b40d",
-//                    "stationId":"59e5e6f0-e730-4dd0-8d04-506fcd400a60",
-//                    "arriveTime":"2018-10-16 17:30:00",
-//                    "downNum":1,
-//                    "upNum":12,
-//                    "vacancy":21
-//                }
                 await api.transport.saveVehicleDetail(params).then(res=>{
                     console.log(res,'插入成功')
 
@@ -519,8 +515,12 @@
         created() {
 
 //            this.saveVehicleDetail()
-
-            let url = window.parent.document.getElementById("stationIframe").contentWindow.location.href;
+            let url
+            if(window.parent.document.getElementById("stationIframe")){
+                url = window.parent.document.getElementById("stationIframe").contentWindow.location.href;
+            }else{
+                url = window.location.href
+            }
             console.log(url)
 
             let reg=new RegExp('[?&]'+'stationId'+'=([^&#]+)');

@@ -7,7 +7,7 @@ import store from './store'
 axios.interceptors.request.use(
     config => {
         // 此处做请求拦截，如果有需要
-        if (!(config.url.includes('login'))) {
+        if (!(config.url.includes('login')) && !(config.url.includes('schedule/vehicle'))) {
             config.headers = {
                 'request-token': JSON.parse(sessionStorage.getItem('token')),
                 "x-ajax": true,
