@@ -2,6 +2,9 @@
     <div class="station">
         <ScrollContainer>
             <div class="content">
+                <div class="contentTitle">
+                    <span>旅游路线信息</span>
+                </div>
                 <div class="contentDiv"  v-for="route in routes">
                     <div class="contentBody">
                         <div class="desc">
@@ -18,20 +21,20 @@
                         <div class="trend">
                             <div class="route"></div>
 
-                            <div class="stationContent" :id="route.id">
+                            <div class="stationContent" :id="route.key">
                                 <div class="vehicleStyle" :id="item.vehicle.id" v-if="item.distance" v-for="item in route.vehicles">
                                     <span style="font-size: 10px;display: block;">{{item.vehicle.serialNum}}</span>
                                     <img src="../../../static/img/icon/station/vehicleShip.png">
                                 </div>
                                 <div class="stationFlex" v-for="station in route.stations">
                                     <div class="stationInfo">
-                                        <img :id = "station.id" v-if="station.status == 'FROM'" src="../../../static/img/icon/station/firstStation.png">
-                                        <img :id = "station.id"  v-if="station.status == 'TO'" src="../../../static/img/icon/station/endStation.png">
+                                        <img :id = "station.key" v-if="station.status == 'FROM'" src="../../../static/img/icon/station/firstStation.png">
+                                        <img :id = "station.key"  v-if="station.status == 'TO'" src="../../../static/img/icon/station/endStation.png">
 
-                                        <img :id = "station.id" v-if="station.status == 'CURRENT'" src="../../../static/img/icon/station/currentStation1.png">
-                                        <img :id = "station.id" v-if="station.status == 'CURRENT'"  class="currentImg"  src="../../../static/img/icon/station/currentStation2.png">
+                                        <img :id = "station.key" v-if="station.status == 'CURRENT'" src="../../../static/img/icon/station/currentStation1.png">
+                                        <img :id = "station.key" v-if="station.status == 'CURRENT'"  class="currentImg"  src="../../../static/img/icon/station/currentStation2.png">
 
-                                        <img :id = "station.id" v-if="station.status == 'OTHER'" src="../../../static/img/icon/station/normalStation.png">
+                                        <img :id = "station.key" v-if="station.status == 'OTHER'" src="../../../static/img/icon/station/normalStation.png">
 
                                         <div :class="{'stationName': station.status == 'OTHER','stationStartEndName':station.status == 'FROM'|| station.status == 'TO',
                                                      'stationCurrentName': station.status == 'CURRENT',
@@ -394,6 +397,7 @@
         },
         methods: {
             async getStationData(){
+                debugger
                 await api.transport.getRouteById(this.stationId).then(res=>{
                     console.log(res,'stationData  res')
                     this.routes = []
@@ -402,47 +406,66 @@
                     if(res instanceof Array && res.length >0){
                         res.forEach(schedule=>{
 
-                            let cloneItem = Object.assign({},schedule.route)
-                            cloneItem.stations = cloneItem.reStations
+                            let cloneItemFW = Object.assign({},schedule.route)
+                            let cloneItemRE = Object.assign({},schedule.route)
+                            cloneItemRE.stations = cloneItemRE.reStations
 
                             let positiveVes = []
                             let reverseVes = []
                             if(schedule.vehicles.length > 0){
                                 schedule.vehicles.forEach(ve=>{
-//                                    this.$set(ve,'distance',true)
                                     ve['distance'] = true
                                 })
 
                                 schedule.vehicles.forEach(vehicle=>{
-                                    if(vehicle.direction){
+                                    if(vehicle.direction){     //正向
+                                        if(vehicle.curStation){
+                                            vehicle['curStation']['key'] = vehicle['curStation']['id']+"FW"
+                                        }
                                         positiveVes.push(vehicle)
                                     }else{
+                                        if(vehicle.curStation){
+                                            vehicle['curStation']['key'] = vehicle['curStation']['id']+"RE"
+                                        }
                                         reverseVes.push(vehicle)
                                     }
                                 })
-//                                this.$set(schedule.route,'vehicles',positiveVes)
-//                                this.$set(cloneItem,'vehicles',reverseVes)
-                                schedule.route['vehicles'] = positiveVes
-                                cloneItem['vehicles'] = reverseVes
+
+                                cloneItemFW['vehicles'] = positiveVes
+                                cloneItemRE['vehicles'] = reverseVes
                             }
+
+                            if(cloneItemFW.stations.length >0){
+                                cloneItemFW.stations.forEach(station=>{
+                                        station['key'] = station.id + "FW"
+                                })
+                            }
+
+                            if(cloneItemRE.stations.length >0){
+                                cloneItemRE.stations.forEach(reStation=>{
+                                    reStation['key'] = reStation.id+"RE"
+                                })
+                            }
+
 
                             if(schedule.willArriveVeFW){
-//                                this.$set(schedule.willArriveVeFW,'distance',true)
-//                                this.$set(schedule.route,'willArriveVe',schedule.willArriveVeFW)
                                 schedule.willArriveVeFW['distance'] = true
-                                schedule.route['willArriveVe'] = schedule.willArriveVeFW
+                                cloneItemFW['willArriveVe'] = schedule.willArriveVeFW
                             }
+
 
                             if(schedule.willArriveVeRE){
-//                                this.$set(schedule.willArriveVeRE,'distance',true)
-//                                this.$set(cloneItem,'willArriveVe',schedule.willArriveVeRE)
-
                                 schedule.willArriveVeRE['distance'] = true
-                                cloneItem['willArriveVe'] = schedule.willArriveVeRE
+                                cloneItemRE['willArriveVe'] = schedule.willArriveVeRE
                             }
 
-                            this.routes.push(schedule.route)
-                            this.routes.push(cloneItem)
+                            cloneItemFW['key'] = cloneItemFW.id+"FW"
+                            cloneItemRE['key'] = cloneItemRE.id+"RE"
+
+                            cloneItemFW.name = cloneItemFW.name+"(去)"
+                            cloneItemRE.name = cloneItemRE.name+"(返)"
+                            this.routes.push(cloneItemFW)
+                            this.routes.push(cloneItemRE)
                         })
 
                         this.$nextTick(function () {
@@ -471,23 +494,27 @@
                                     item.distance = false
                                     return
                                 }
-                                let stationPrevious = document.getElementById(item.curStation.id)
-                                let stationCurrent = document.getElementById(this.stationId)
-                                let stationContent = document.getElementById(route.id)
+                                let stationPrevious = document.getElementById(item.curStation.key)
+                                let stationCurrent
+                                if(item.direction){
+                                    stationCurrent = document.getElementById(this.stationId+"FW")
+                                }else{
+                                    stationCurrent = document.getElementById(this.stationId+"RE")
+                                }
+//                                let stationCurrent = document.getElementById(this.stationId)
+                                let stationContent = document.getElementById(route.key)
                                 let prevDistance = stationPrevious.getBoundingClientRect().left - stationContent.getBoundingClientRect().left
                                 let totalDistance
 
                                 if(item.realTimeRatio){
-                                    if(item.direction){
-                                        totalDistance = prevDistance + (1-item.realTimeRatio)*(stationCurrent.getBoundingClientRect().left - stationPrevious.getBoundingClientRect().left)
-                                    }else{
-                                        totalDistance = prevDistance + item.realTimeRatio*(stationPrevious.getBoundingClientRect().left - stationCurrent.getBoundingClientRect().left )
-
-                                    }
+                                    totalDistance = prevDistance + (1-item.realTimeRatio)*(stationCurrent.getBoundingClientRect().left - stationPrevious.getBoundingClientRect().left)
                                     item.distance = true
+                                    let el = document.getElementById(item.vehicle.id)
+                                    el.style.left = totalDistance+"px"
+                                }else{
+                                    item.distance = false
                                 }
-                                let el = document.getElementById(item.vehicle.id)
-                                el.style.left = totalDistance+"px"
+
                             })
                     })
                 }
@@ -495,8 +522,8 @@
             },
             async saveVehicleDetail(){
                 let params = {
-                    "vehicleId":"753e56f3-fa3a-4f83-9c47-3c6fef52b40d",
-                    "stationId":"34ba111f-9a92-49a8-84be-bde6e3bc8478",
+                    "vehicleId":"6f813686-0d21-4bae-b8d8-058653fca0ef",
+                    "stationId":"6655d11c-3a49-40ac-a9c5-30b32484bc01",
                     "arriveTime":"2018-10-16 16:30:00",
                     "downNum":0,
                     "upNum":10,
@@ -545,12 +572,25 @@
         .content{
             width: 100%;
             height:100%;
+            .contentTitle{
+                height:8%;
+                width:100%;
+                text-align: center;
+                span{
+                    display:block;
+                    position: relative;
+                    top:50%;
+                    transform:translateY(-50%);
+                    font-size:rem(20);
+                    color: #26bbf0;
+                }
+            }
             .contentDiv{
                 width:100%;
                 height:35%;
                 position:relative;
                 .contentBody{
-                    width:85%;
+                    width:95%;
                     height:90%;
                     border-radius: rem(10);
                     border:1px solid #dcdfe6;
