@@ -646,24 +646,44 @@
 </script>
 
 <style lang="scss">
-    .station {
-        .content{
-            .el-carousel{
-                width:100%;
-                height: 90%;
-                .el-carousel__container{
-                    height: 100%;
+    @media all and (max-width: 395px){
+        .station {
+            .content{
+                .el-carousel{
+                    width:100%;
+                    height: 90%;
+                    .el-carousel__container{
+                        height: 100%;
+                        .el-carousel__item{
+                            height:100%;
+                        }
+                    }
                 }
             }
-
         }
+    }
 
+    @media all and (min-width: 396px){
+        .station {
+            .content{
+                .el-carousel{
+                    width:100%;
+                    height: 96%;
+                    .el-carousel__container{
+                        height: 100%;
+                        .el-carousel__item{
+                            height:100%;
+                        }
+                    }
+                }
+            }
+        }
     }
 
 </style>
 
 <style lang="scss" scoped>
-    @media (max-width: 400px){
+    @media all and (max-width: 395px) {
         .station {
             width: 100%;
             height: 100%;
@@ -750,7 +770,7 @@
                                 width:100%;
                                 height:2px;
                                 /*     margin-top:60px;*/
-                                margin-top:45px;
+                                margin-top:40px;
                                 padding:0px;
                                 background-color: #ffc600;
                                 overflow:hidden;
@@ -770,7 +790,7 @@
                                     align-items:center;
                                     .stationInfo{
                                         position: absolute;
-                                        top: 35px;
+                                        top: 30px;
                                         text-align: center;
                                         .stationName{
                                             width:100%;
@@ -829,7 +849,7 @@
             }
         }
     }
-    @media (min-width: 401px){
+    @media all and (min-width: 396px) {
         .station {
             width: 100%;
             height: 100%;
