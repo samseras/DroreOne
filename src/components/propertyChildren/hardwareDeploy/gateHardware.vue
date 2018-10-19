@@ -1,4 +1,4 @@
-s't<template>
+<template>
     <div class="gateList">
         <div class="title">
             闸机信息
@@ -59,7 +59,7 @@ s't<template>
                             label="所属片区">
                         </el-table-column>
                         <el-table-column
-                            label="摄像头介绍">
+                            label="描述">
                             <template slot-scope="scope">
                                 <div class="box" v-if="scope.row.description">
                                     <div class="bottom">

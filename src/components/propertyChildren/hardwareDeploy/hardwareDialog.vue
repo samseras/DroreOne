@@ -242,9 +242,9 @@
                             <el-option value='否' label="否"></el-option>
                         </el-select>
                     </p>
-                    <!--<p class="IP">设&nbsp;&nbsp;备&nbsp;&nbsp;IP:
+                    <p class="IP">设&nbsp;&nbsp;备&nbsp;&nbsp;IP:
                         <el-input type="text" v-model="wifi.ip" :disabled="isDisabled"></el-input>
-                    </p>-->
+                    </p>
 
                     <p class="IP">
                         <span>设备端口：</span>
@@ -309,9 +309,9 @@
                             </el-option>
                         </el-select>
                     </p >
-                    <!--<p class="IP">设&nbsp;&nbsp;备&nbsp;&nbsp;IP:
+                    <p class="IP">设&nbsp;&nbsp;备&nbsp;&nbsp;IP:
                         <el-input type="text" v-model="monitors.ip" :disabled="isDisabled"></el-input>
-                    </p>-->
+                    </p>
                     <p class="host">
                         <span>设备编号：</span>
                         <el-input type="text" v-model="monitors.serialNum" :disabled="isDisabled"></el-input>
@@ -437,9 +437,9 @@
                             </el-option>
                         </el-select>
                     </p>
-                    <!--<p class="IP">设&nbsp;&nbsp;备&nbsp;&nbsp;IP:
+                    <p class="IP">设&nbsp;&nbsp;备&nbsp;&nbsp;IP:
                         <el-input type="text" v-model="gate.ip" :disabled="isDisabled"></el-input>
-                    </p>-->
+                    </p>
                     <p class="num">
                         <span>设备编号：</span>
                         <el-input type="text" v-model="gate.serialNum" :disabled="isDisabled"></el-input>
