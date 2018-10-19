@@ -66,6 +66,9 @@
             <el-tooltip class="item" effect="dark" content="电话" placement="top">
                 <button @click="menuPhone" class="menuPhone"></button>
             </el-tooltip>
+            <el-tooltip class="item" effect="dark" content="查看周围人员" placement="top">
+                <button @click="menuPeople" class="menuPeople"></button>
+            </el-tooltip>
             <el-tooltip class="item" effect="dark" content="广播" placement="top">
                 <button @click="menuBroadcast" class="menuBroadcast"></button>
             </el-tooltip>
@@ -176,6 +179,7 @@
                 isDisabled: true,
                 lightCheckout:[],
                 searchFacilityList:[],
+                searchPeopleList:[],
                 jsonAttrList:[],
                 menuBroadvolume:false,
                 heatShow:true,
@@ -234,7 +238,7 @@
                 this.getAllBroadcast();//广播现有标注
                 this.getAllCamera();//摄像头现有标注
                 this.overView();//鹰眼
-                // this.rangeSearch();// 范围查找
+                this.rangeSearch();// 范围查找
                 this.getAllRoute();//调度路线
                 this.getAllAlarmTypes();
                 this.getAllAlarmEvent();//告警事件现有标注
@@ -3342,11 +3346,15 @@
                 }
             },
             warnCamera(){
-                this.menuBroadvolume=false;
                 droreMap.map.panToCoord(this.menulist.coordinate);
                 droreMap.map.setZoom(3)
                 let Circle = new droreMap.geom.Circle()
-                let radius= 100
+                let radius=''
+                if(this.menulist.data.rule!=null && this.menulist.data.rule.deviceScope!=null){
+                    radius=this.menulist.data.rule.deviceScope
+                }else {
+                    radius=100
+                }
                 let coordinate=droreMap.trans.transLayerToWgs(this.menulist.coordinate)
                 let longitude = parseFloat(coordinate[0])
                 let latitude = parseFloat(coordinate[1])
@@ -3364,7 +3372,6 @@
                 Circle.setCenter(this.menulist.coordinate,radius+80);
             },
             warnListShow(data){
-                this.menuBroadvolume=false;
                 droreMap.map.panToCoord(data.coordinate);
                 droreMap.map.setZoom(3)
                 let Circle = new droreMap.geom.Circle()
@@ -3405,11 +3412,17 @@
                 })
             },
             menuBroadcast(){
-                $("#contextmenu_container").hide();
+                // $("#contextmenu_container").hide();
+
                 droreMap.map.panToCoord(this.menulist.coordinate);
                 droreMap.map.setZoom(3)
                 let Circle = new droreMap.geom.Circle()
-                let radius=100
+                let radius=''
+                if(this.menulist.data.rule!=null && this.menulist.data.rule.deviceScope!=null){
+                    radius=this.menulist.data.rule.deviceScope
+                }else {
+                    radius=100
+                }
                 let coordinate=droreMap.trans.transLayerToWgs(this.menulist.coordinate)
                 let longitude = parseFloat(coordinate[0])
                 let latitude = parseFloat(coordinate[1])
@@ -3424,6 +3437,29 @@
                     types:types
                 }
                 this.getSearchFacility(SearchFacility)
+                Circle.setCenter(this.menulist.coordinate,radius+80);
+            },
+            menuPeople(){
+                // $("#contextmenu_container").hide();
+                droreMap.map.panToCoord(this.menulist.coordinate);
+                droreMap.map.setZoom(3)
+                let radius=''
+                if(this.menulist.data.rule!=null && this.menulist.data.rule.securityScope!=null){
+                    radius=this.menulist.data.rule.securityScope
+                }else {
+                    radius=100
+                }
+                let Circle = new droreMap.geom.Circle()
+                let coordinate=droreMap.trans.transLayerToWgs(this.menulist.coordinate)
+                let longitude = parseFloat(coordinate[0])
+                let latitude = parseFloat(coordinate[1])
+                let SearchPeople = {
+                    radius: radius,
+                    latitude: latitude,
+                    longitude: longitude,
+                    epsg:'4326',
+                }
+                this.getSearchPeople(SearchPeople)
                 Circle.setCenter(this.menulist.coordinate,radius+80);
             },
             menuDelete(){
@@ -3572,8 +3608,15 @@
                         epsg:'4326',
                         types:types
                     }
+                    let SearchPeople = {
+                        radius: radius,
+                        latitude: latitude,
+                        longitude: longitude,
+                        epsg:'4326',
+                    }
                     that.getSearchFacility(SearchFacility)
-                    Circle.setCenter(evt.coordinate,radius+35);
+                    that.getSearchPeople(SearchPeople)
+                    Circle.setCenter(evt.coordinate,radius+80);
                 })
             },
             escFun(){
@@ -3589,7 +3632,14 @@
                     epsg:'4326',
                     types:types
                 }
+                let SearchPeople = {
+                    radius: 0,
+                    latitude: 0,
+                    longitude: 0,
+                    epsg:'4326',
+                }
                 this.getSearchFacility(SearchFacility)
+                this.getSearchPeople(SearchPeople)
                 Circle.setCenter([0,0],0);
             },
             async getSearchFacility (SearchFacility) {//点击范围搜索
@@ -3618,6 +3668,21 @@
                     }
                     console.log(broadListId)
                     console.log(cameraListId)
+                }).catch(err => {
+                    this.$message.error('查询失败')
+                })
+            },
+            async getSearchPeople (SearchPeople) {//点击范围搜索
+                await api.controler.getSearchPeople(JSON.stringify(SearchPeople)).then(res => {
+                    if(this.searchPeopleList.length>0){
+                        for (let i=0;i< this.searchPeopleList.length;i++) {
+                            this.treeHideID(this.searchPeopleList[i].id);
+                        }
+                    }
+                    this.searchPeopleList= res
+                    for (let i=0;i< this.searchPeopleList.length;i++) {
+                        this.treeShowID(this.searchPeopleList[i].id);
+                    }
                 }).catch(err => {
                     this.$message.error('查询失败')
                 })
@@ -5104,6 +5169,15 @@
             width: rem(24);
             height: rem(24);
         }
+        button.menuPeople{
+            background: url("/static/img/security.svg");
+            background-size: cover;
+            top:rem(8);
+            left: rem(50);
+            display: none;
+            width: rem(20);
+            height: rem(20);
+        }
         button.menuCamera{
             background: url("/static/img/menuCamera.svg");
             background-size: cover;
@@ -5292,8 +5366,12 @@
             display: block;
         }
         button.menuShow{
+            display: none;
+        }
+        button.menuPeople{
             left:rem(30);
             top:rem(15);
+            display: block;
         }
         button.warnCamera{
             display: block;

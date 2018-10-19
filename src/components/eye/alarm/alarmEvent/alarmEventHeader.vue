@@ -13,7 +13,7 @@
 
             <div class="checkStyle">
                 <el-checkbox-group v-model="filterList" @change="choseType">
-                    <el-checkbox v-for="item in statusInfo" :label="item.id">{{item.name}}</el-checkbox>
+                    <el-checkbox v-for="item in statusInfo" :label="item.id" :key="item.id">{{item.name}}</el-checkbox>
                 </el-checkbox-group>
             </div>
             <div class="selectDepar">

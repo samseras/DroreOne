@@ -288,7 +288,8 @@
                 mobileNum:'',
                 mapTitle:'',
                 selectedCasts:[],
-                statusCurrent:''
+                statusCurrent:'',
+                timer: null  // 定时器名称
             }
         },
         components: {
@@ -453,33 +454,25 @@
             async getHistoryRoute(param){
                 return await api.boat.getHistoryRouteByVehicle(param)
             },
-           getWifiById(){
-                //假数据
-                this.Info.currentConnections = Math.floor(Math.random() * 20 + 1)
-                this.Info.upRate = (Math.random()*300+1).toFixed(3)
-                this.Info.downRate = (Math.random()*1000+1).toFixed(3)
-
-                setTimeout(()=>{
-                    let route = this.$route.path
-                    if (route.includes('controler')) {
-                        this.getWifiById()
+            async getWifiById(){
+                // console.log(this.Info.id,"获取得wifi详情")
+                await api.wifi.getDeviceById(this.Info.id).then(res=>{
+                    // console.log(res,"获取得wifi详情")
+                    this.Info.currentConnections = res.currentConnections
+                    this.Info.upRate = res.upRate
+                    this.Info.downRate = res.downRate
+                    this.Info.modelName = res.modelName
+                    this.Info.description = res.description
+                    if(this.Info.currentConnections==null){
+                        this.Info.currentConnections='0'
                     }
-                },2000)
-                // await api.wifi.getDeviceById(this.Info.id).then(res=>{
-                //     // this.Info.currentConnections = res.currentConnections
-                //     // this.Info.currentConnections = res.currentConnections
-                //     // this.Info.upRate = res.upRate
-                //     // this.Info.downRate = res.downRate
-                //     // this.Info.modelName = res.modelName
-                //     // this.Info.description = res.description
-                //
-                //     setTimeout(()=>{
-                //         let route = this.$route.path
-                //         if (route.includes('controler')) {
-                //             this.getWifiById()
-                //         }
-                //     },60000)
-                // })
+                    if(this.Info.upRate==null){
+                        this.Info.upRate='0'
+                    }
+                    if(this.Info.downRate==null){
+                        this.Info.downRate='0'
+                    }
+                })
             },
             async getTransportById(){
                 await api.boat.getAllVehicleGpsById(this.Info.id).then(res=>{
@@ -507,9 +500,12 @@
         mounted () {
 
         },
+        beforeDestroy() {
+            clearInterval(this.timer);
+            this.timer = null;
+        },
         created () {
-            console.log(this.Info);
-            console.log(this.Info.id);
+            // console.log(this.Info,'this.info')
             let route = this.$route.path
             if (route.includes('facility')) {
                 this.facility=false
@@ -517,7 +513,18 @@
             (this.selectedCasts).push(this.Info.id);
             if(this.Info.type==="wifi"){
                 this.wifiShow=true
-                this.getWifiById()
+                if(this.Info.currentConnections==null){
+                    this.Info.currentConnections='0'
+                }
+                if(this.Info.upRate==null){
+                    this.Info.upRate='0'
+                }
+                if(this.Info.downRate==null){
+                    this.Info.downRate='0'
+                }
+                this.timer = setInterval(() => {
+                    this.getWifiById()
+                }, 60000)
             }
             if(this.Info.type==="广播"){
                 this.jsonAttr=JSON.parse(this.Info.jsonAttr)
