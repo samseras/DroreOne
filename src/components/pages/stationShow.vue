@@ -11,11 +11,11 @@
                             <div class="left">
                                 <span>{{route.name}}</span>
                             </div>
-                            <div  class="center" v-if="route.willArriveVe">
-                                <span >{{route.willArriveVe.vehicle.serialNum}}还有{{route.willArriveVe.willArriveTime}}分钟到达</span>
+                            <div  class="center">
+                                <span  v-if="route.willArriveVe"><{{route.willArriveVe.vehicle.serialNum}}>还有{{route.willArriveVe.willArriveTime}}分钟到达</span>
                             </div>
-                            <div  class="right" v-if="route.willArriveVe">
-                                <span>剩余人数：{{route.willArriveVe.vacancy}}人</span>
+                            <div  class="right">
+                                <span v-if="route.willArriveVe">空余座位：{{route.willArriveVe.vacancy}}人</span>
                             </div>
                         </div>
                         <div class="trend">
@@ -573,7 +573,7 @@
             width: 100%;
             height:100%;
             .contentTitle{
-                height:8%;
+                height:4%;
                 width:100%;
                 text-align: center;
                 span{
@@ -581,17 +581,17 @@
                     position: relative;
                     top:50%;
                     transform:translateY(-50%);
-                    font-size:rem(20);
+                    font-size:rem(15);
                     color: #26bbf0;
                 }
             }
             .contentDiv{
                 width:100%;
-                height:35%;
+                height:16%;
                 position:relative;
                 .contentBody{
                     width:95%;
-                    height:90%;
+                    height:95%;
                     border-radius: rem(10);
                     border:1px solid #dcdfe6;
                     background-color: #f2f2f2;
@@ -608,7 +608,7 @@
                         background-color: #f2f2f2;
                         display: flex;
                         flex-direction: row;
-                        font-size: 1.14em;
+                        font-size: rem(15);
                         border-radius: rem(10) rem(10) 0 0;
                         .left{
                             flex:1;
@@ -651,7 +651,8 @@
                         .route{
                             width:100%;
                             height:2px;
-                            margin-top:60px;
+                       /*     margin-top:60px;*/
+                            margin-top:45px;
                             padding:0px;
                             background-color: #ffc600;
                             overflow:hidden;
@@ -671,28 +672,31 @@
                                 align-items:center;
                                 .stationInfo{
                                     position: absolute;
-                                    top: 50px;
-                                    width: 20px;
+                                    top: 35px;
                                     text-align: center;
                                     .stationName{
                                         width:100%;
-                                        margin-top: 10px;
-                                        font-size: 14px;
+                                        margin-top: 12px;
+                                        font-size: rem(14);
                                         line-height: 1em;
                                     }
                                     .currentImg{
-                                        vertical-align: top;
+                                        /*vertical-align: top;*/
+                                        display: block;
+                                        position: absolute;
+                                        left:50%;
+                                        transform:translateX(-50%);
                                     }
                                     .stationStartEndName{
                                         width:100%;
-                                        margin-top: 6px;
-                                        font-size: 14px;
+                                        margin-top: 8px;
+                                        font-size: rem(14);
                                         line-height: 1em;
                                     }
                                     .stationCurrentName{
                                         width:100%;
-                                        margin-top: -10px;
-                                        font-size: 14px;
+                                        margin-top: 12px;
+                                        font-size: rem(14);
                                         line-height: 1em;
                                     }
                                 }
