@@ -359,7 +359,7 @@
                     sensorType:info.sensorType,
                     name:info.name,
                     model:info.model,
-                    /*ip:info.ip,*/
+                    ip:info.ip,
                     mac:info.mac,
                     port:info.port,
                     serialNum:info.serialNum,
