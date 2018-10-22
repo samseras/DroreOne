@@ -5,10 +5,10 @@
             :visible="stationShow"
             :before-close="closeDialog"
             :title="stationInfo.name"
-            width="50%"
+            width="35%"
             center>
            <!--<iframe src="http://124.90.43.59:8000?user=yunhe&token=dfsdgsdgsd" frameborder="0"></iframe>-->
-            <iframe src="http://localhost:8080/station" frameborder="0"></iframe>
+            <iframe id="stationIframe" :src="stationUrl" frameborder="0"></iframe>
 
         </el-dialog>
     </div>
@@ -20,7 +20,9 @@
         props: ["stationShow",'stationInfo'],
 
         data () {
-            return {}
+            return {
+                stationUrl:''
+            }
         },
         methods: {
             closeDialog () {
@@ -31,7 +33,7 @@
 
         },
         created () {
-
+           this.stationUrl = "http://"+window.location.host+"/station?stationId="+this.stationInfo.id
         },
         computed: {
 
@@ -47,6 +49,15 @@
 </style>
 <style lang="scss">
     .stationDialog{
+        .el-dialog__header{
+            padding: rem(10) 0 rem(5) rem(20);
+            text-align: left;
+            background-color: #fafafa;
+            border-bottom: 1px solid #dcdfe6;
+        }
+        .el-dialog__title{
+            font-size: 1.14em;
+        }
         .el-dialog .el-dialog--center{
             width: 100%;
         }
@@ -59,7 +70,7 @@
             height:rem(700);
         }
         .el-dialog__headerbtn {
-            top: rem(8);
+            top: rem(12);
             right: rem(10);
             i{
                 font-size: rem(20);

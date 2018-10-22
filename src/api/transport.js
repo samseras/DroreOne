@@ -66,7 +66,19 @@ const transport = {
 
         })
     },
-
+    getRouteById (id) {
+        return axios ({
+            method: 'GET',
+            url: getUrl('/schedule/vehicle?stationId='+id)
+        })
+    },
+    saveVehicleDetail (params) {
+        return axios ({
+            method: 'POST',
+            url: getUrl('/vehicle/detail'),
+            data: params
+        })
+    }
 
 }
 

@@ -11,7 +11,7 @@ import eye from './eye'
 import GIS from './gis'
 
 // iot
-import iot from './iot'
+// import iot from './iot'
 
 // 数据分析 (图表)
 import analyze from './analyze'
@@ -34,10 +34,6 @@ const routes = [
       redirect: '/droreone',
       name: 'Index',
       component: resolve => require(['@/components/pages/index'], resolve)
-    },
-    {
-      path: '/MicServiceManagementSystem',
-      component: resolve => require(['@/components/pages/MicroService/MicroServiceManagementSystem'], resolve)
     },
       // 主页面
     {
@@ -71,8 +67,6 @@ const routes = [
   //  gis 地图
     ...GIS,
 
-  //   iot
-    ...iot,
   //  分析（图表）
     ...analyze,
 
@@ -103,7 +97,12 @@ router.beforeEach((to, from, next) => {
             }
         }
     } else {
-        next('/login')
+        if (to.path.includes('/station') && to.fullPath.includes('/station?stationId')) {
+            next()
+        } else {
+            next('/login')
+        }
+
     }
 })
 export default router

@@ -66,6 +66,9 @@
             <el-tooltip class="item" effect="dark" content="电话" placement="top">
                 <button @click="menuPhone" class="menuPhone"></button>
             </el-tooltip>
+            <el-tooltip class="item" effect="dark" content="查看周围人员" placement="top">
+                <button @click="menuPeople" class="menuPeople"></button>
+            </el-tooltip>
             <el-tooltip class="item" effect="dark" content="广播" placement="top">
                 <button @click="menuBroadcast" class="menuBroadcast"></button>
             </el-tooltip>
@@ -176,6 +179,7 @@
                 isDisabled: true,
                 lightCheckout:[],
                 searchFacilityList:[],
+                searchPeopleList:[],
                 jsonAttrList:[],
                 menuBroadvolume:false,
                 heatShow:true,
@@ -234,7 +238,7 @@
                 this.getAllBroadcast();//广播现有标注
                 this.getAllCamera();//摄像头现有标注
                 this.overView();//鹰眼
-                // this.rangeSearch();// 范围查找
+                this.rangeSearch();// 范围查找
                 this.getAllRoute();//调度路线
                 this.getAllAlarmTypes();
                 this.getAllAlarmEvent();//告警事件现有标注
@@ -2621,104 +2625,6 @@
                 Promise.all([this.getAllUser()]).then(result=>{
                     console.log(result,'00000')
                     let users = result[0]
-                    // let users = [
-                    //     {
-                    //         "id": "165d0c3918c-2706abc77a5ee8e8",
-                    //         "creator": "admin",
-                    //         "createTime": "2018-09-13 10:30:02",
-                    //         "modifier": "admin",
-                    //         "modifyTime": "2018-09-13 10:30:02",
-                    //         "name": "binge",
-                    //         "cnName": "斌",
-                    //         "gender": 1,
-                    //         "iconId": null,
-                    //         "mobileNum": "18629086642",
-                    //         "fixedPhoneNum": "",
-                    //         "idCardNum": "",
-                    //         "email": null,
-                    //         "workAddress": null,
-                    //         "description": null,
-                    //         "departmentId": null,
-                    //         "jobId": null,
-                    //         "roleId": "1",
-                    //         "gpsId": null,
-                    //         "gpsData": {
-                    //             "deviceId": "c13e503f-713d-4cd7-9a5d-c62220e1f612",
-                    //             "ioTDeviceId": "1000000",
-                    //             "deviceName": "gps0",
-                    //             "createTime": "2018-09-21 10:15:56",
-                    //             "longitude": 120.13337197656278,
-                    //             "latitude": 30.307558496764344,
-                    //             "altitude": null,
-                    //             "direction": null,
-                    //             "speed": 0,
-                    //             "telephone": null,
-                    //             "deviceNum": "1000000",
-                    //             "coordinate": "",
-                    //             "tag": "ceb54f57-08d4-49a0-81db-a3e7c486b154"
-                    //         },
-                    //         "role": {
-                    //             "id": "1",
-                    //             "creator": null,
-                    //             "createTime": null,
-                    //             "modifier": null,
-                    //             "modifyTime": null,
-                    //             "name": "admin",
-                    //             "description": "",
-                    //             "permissions": null
-                    //         },
-                    //         "job": null,
-                    //         "department": null
-                    //     },
-                    //     {
-                    //         "id": "3p696d8b-7f38-41dc-8b3c-8db147c05269",
-                    //         "creator": null,
-                    //         "createTime": null,
-                    //         "modifier": "admin",
-                    //         "modifyTime": "2018-09-11 18:00:00",
-                    //         "name": "admin",
-                    //         "cnName": " 系统管理员",
-                    //         "gender": 0,
-                    //         "iconId": null,
-                    //         "mobileNum": "18800000000",
-                    //         "fixedPhoneNum": null,
-                    //         "idCardNum": null,
-                    //         "email": null,
-                    //         "workAddress": null,
-                    //         "description": null,
-                    //         "departmentId": null,
-                    //         "jobId": null,
-                    //         "roleId": "1",
-                    //         "gpsId": null,
-                    //         "gpsData":{
-                    //             "deviceId": "2b696d8b-7f38-41dc-8b3c-8db147c02c32",
-                    //             "ioTDeviceId": "1000007",
-                    //             "deviceName": "gps1",
-                    //             "createTime": "2018-09-21 10:15:56",
-                    //             "longitude": 120.13500857210744,
-                    //             "latitude": 30.305894893713628,
-                    //             "altitude": null,
-                    //             "direction": null,
-                    //             "speed": 0,
-                    //             "telephone": null,
-                    //             "deviceNum": "1000007",
-                    //             "coordinate": "",
-                    //             "tag": "966fda56-8cc3-4847-86cc-7e939df14369"
-                    //         },
-                    //         "role": {
-                    //             "id": "1",
-                    //             "creator": null,
-                    //             "createTime": null,
-                    //             "modifier": null,
-                    //             "modifyTime": null,
-                    //             "name": "admin",
-                    //             "description": "",
-                    //             "permissions": null
-                    //         },
-                    //         "job": null,
-                    //         "department": null
-                    //     }
-                    // ]
                     if(users.length > 0){
                         users.forEach(obj=>{
                             let latitude = ''
@@ -2729,12 +2635,15 @@
                             }
                             obj.status=obj.gpsData ? "ONLINE" : "OFFLINE";
                             obj.location=[longitude,latitude];
+                            let _coord = droreMap.trans.transFromWgsToLayer(obj.location);
+                            _coord[0] = _coord[0]+parseFloat('-110')
+                            _coord[1] = _coord[1]+parseFloat('-20')
                             var icon = new droreMap.icon.Marker({
-                                coordinate: droreMap.trans.transFromWgsToLayer(obj.location),
+                                coordinate: _coord,
                                 name:obj.cnName,
                                 subtype:'securityPerson',
                                 id:obj.id,
-                                url:'/static/img/icon/people_small.svg',
+                                url:'/static/img/icon/people_small.png',
                                 type:'security',
                                 status:obj.gpsData ? "ONLINE" : "OFFLINE",
                                 description:obj.description,
@@ -2748,7 +2657,7 @@
                             icon.onclick(function (e) {
                                 that.menulist = e.data;
                                 var div = document.getElementById('contextmenu_container')
-                                var popup = new  droreMap.pop.Popup(div,droreMap.trans.transFromWgsToLayer([longitude,latitude]),"contextmenu_container")
+                                var popup = new  droreMap.pop.Popup(div,_coord,"contextmenu_container")
                                 droreMap.pop.addChild(popup,e.data.id);
                                 $("#contextmenu_container").attr("class","contextmenu "+e.subtype);
                                 if(e.data.status =="FAULT"){
@@ -2770,105 +2679,6 @@
             async getAllLangPerson(){
                 Promise.all([this.getAllUser()]).then(result=>{
                     let users = result[0]
-                    // let users = [
-                    //     {
-                    //         "id": "165d0c3918c-2706abc77a5ee8e8",
-                    //         "creator": "admin",
-                    //         "createTime": "2018-09-13 10:30:02",
-                    //         "modifier": "admin",
-                    //         "modifyTime": "2018-09-13 10:30:02",
-                    //         "name": "binge",
-                    //         "cnName": "斌",
-                    //         "gender": 1,
-                    //         "iconId": null,
-                    //         "mobileNum": "18629086642",
-                    //         "fixedPhoneNum": "",
-                    //         "idCardNum": "",
-                    //         "email": null,
-                    //         "workAddress": null,
-                    //         "description": null,
-                    //         "departmentId": null,
-                    //         "jobId": null,
-                    //         "roleId": "1",
-                    //         "gpsId": null,
-                    //         "gpsData": {
-                    //             "deviceId": "c13e503f-713d-4cd7-9a5d-c62220e1f612",
-                    //             "ioTDeviceId": "1000000",
-                    //             "deviceName": "gps0",
-                    //             "createTime": "2018-09-21 10:15:56",
-                    //             "longitude": 120.13337197656278,
-                    //             "latitude": 30.307558496764344,
-                    //             "altitude": null,
-                    //             "direction": null,
-                    //             "speed": 0,
-                    //             "telephone": null,
-                    //             "deviceNum": "1000000",
-                    //             "coordinate": "",
-                    //             "tag": "ceb54f57-08d4-49a0-81db-a3e7c486b154"
-                    //         },
-                    //         "role": {
-                    //             "id": "1",
-                    //             "creator": null,
-                    //             "createTime": null,
-                    //             "modifier": null,
-                    //             "modifyTime": null,
-                    //             "name": "admin",
-                    //             "description": "",
-                    //             "permissions": null
-                    //         },
-                    //         "job": null,
-                    //         "department": null
-                    //     },
-                    //     {
-                    //         "id": "3p696d8b-7f38-41dc-8b3c-8db147c05269",
-                    //         "creator": null,
-                    //         "createTime": null,
-                    //         "modifier": "admin",
-                    //         "modifyTime": "2018-09-11 18:00:00",
-                    //         "name": "admin",
-                    //         "cnName": " 系统管理员",
-                    //         "gender": 0,
-                    //         "iconId": null,
-                    //         "mobileNum": "18800000000",
-                    //         "fixedPhoneNum": null,
-                    //         "idCardNum": null,
-                    //         "email": null,
-                    //         "workAddress": null,
-                    //         "description": null,
-                    //         "departmentId": null,
-                    //         "jobId": null,
-                    //         "roleId": "1",
-                    //         "gpsId": null,
-                    //         "gpsData":{
-                    //             "deviceId": "2b696d8b-7f38-41dc-8b3c-8db147c02c32",
-                    //             "ioTDeviceId": "1000007",
-                    //             "deviceName": "gps1",
-                    //             "createTime": "2018-09-21 10:15:56",
-                    //             "longitude": 120.13500857210744,
-                    //             "latitude": 30.305894893713628,
-                    //             "altitude": null,
-                    //             "direction": null,
-                    //             "speed": 0,
-                    //             "telephone": null,
-                    //             "deviceNum": "1000007",
-                    //             "coordinate": "",
-                    //             "tag": "966fda56-8cc3-4847-86cc-7e939df14369"
-                    //         },
-                    //         "role": {
-                    //             "id": "1",
-                    //             "creator": null,
-                    //             "createTime": null,
-                    //             "modifier": null,
-                    //             "modifyTime": null,
-                    //             "name": "admin",
-                    //             "description": "",
-                    //             "permissions": null
-                    //         },
-                    //         "job": null,
-                    //         "department": null
-                    //     }
-                    // ]
-
                     if(users.length > 0){
                         users.forEach(obj=>{
                             let latitude = ''
@@ -2879,12 +2689,15 @@
                             }
                             obj.status=obj.gpsData ? "ONLINE" : "OFFLINE";
                             obj.location=[longitude,latitude];
+                            let _coord = droreMap.trans.transFromWgsToLayer(obj.location);
+                            _coord[0] = _coord[0]+parseFloat('-110')
+                            _coord[1] = _coord[1]+parseFloat('-20')
                             var icon = new droreMap.icon.Marker({
-                                coordinate: droreMap.trans.transFromWgsToLayer(obj.location),
+                                coordinate: _coord,
                                 name:obj.name,
                                 subtype:'securityPerson',
                                 id:obj.id,
-                                url:'/static/img/icon/people_small.svg',
+                                url:'/static/img/icon/people_small.png',
                                 type:'security',
                                 status:obj.gpsData ? "ONLINE" : "OFFLINE",
                                 description:obj.description,
@@ -2898,7 +2711,7 @@
                             icon.onclick(function (e) {
                                 that.menulist = e.data;
                                 var div = document.getElementById('contextmenu_container')
-                                var popup = new  droreMap.pop.Popup(div,droreMap.trans.transFromWgsToLayer([longitude,latitude]),"contextmenu_container")
+                                var popup = new  droreMap.pop.Popup(div,_coord,"contextmenu_container")
                                 droreMap.pop.addChild(popup,e.data.id);
                                 $("#contextmenu_container").attr("class","contextmenu "+e.subtype);
                                 if(e.data.status =="FAULT"){
@@ -3053,13 +2866,13 @@
                             }
                         }else if(res[i].alarmType.id =="10") {
                             if (res[i].status.id =="1")  {
-                                res[i].url = '/static/img/icon/pollingRule_one.svg'
+                                res[i].url = '/static/img/icon/pollingRule_one.png'
                                 res[i].subtype ='pollingRule_one'
                             } else  if (res[i].status.id =="2") {
-                                res[i].url = '/static/img/icon/pollingRule_two.svg'
+                                res[i].url = '/static/img/icon/pollingRule_two.png'
                                 res[i].subtype ='pollingRule_two'
                             }else {
-                                res[i].url = '/static/img/icon/pollingRule_three.svg'
+                                res[i].url = '/static/img/icon/pollingRule_three.png'
                                 res[i].subtype ='pollingRule_three'
                             }
                             res[i]['rule']['alarmTypeName'] = '巡检告警'
@@ -3339,11 +3152,15 @@
                 }
             },
             warnCamera(){
-                this.menuBroadvolume=false;
                 droreMap.map.panToCoord(this.menulist.coordinate);
                 droreMap.map.setZoom(3)
                 let Circle = new droreMap.geom.Circle()
-                let radius= 100
+                let radius=''
+                if(this.menulist.data.rule!=null && this.menulist.data.rule.deviceScope!=null){
+                    radius=this.menulist.data.rule.deviceScope
+                }else {
+                    radius=100
+                }
                 let coordinate=droreMap.trans.transLayerToWgs(this.menulist.coordinate)
                 let longitude = parseFloat(coordinate[0])
                 let latitude = parseFloat(coordinate[1])
@@ -3361,7 +3178,6 @@
                 Circle.setCenter(this.menulist.coordinate,radius+80);
             },
             warnListShow(data){
-                this.menuBroadvolume=false;
                 droreMap.map.panToCoord(data.coordinate);
                 droreMap.map.setZoom(3)
                 let Circle = new droreMap.geom.Circle()
@@ -3402,11 +3218,17 @@
                 })
             },
             menuBroadcast(){
-                $("#contextmenu_container").hide();
+                // $("#contextmenu_container").hide();
+
                 droreMap.map.panToCoord(this.menulist.coordinate);
                 droreMap.map.setZoom(3)
                 let Circle = new droreMap.geom.Circle()
-                let radius=100
+                let radius=''
+                if(this.menulist.data.rule!=null && this.menulist.data.rule.deviceScope!=null){
+                    radius=this.menulist.data.rule.deviceScope
+                }else {
+                    radius=100
+                }
                 let coordinate=droreMap.trans.transLayerToWgs(this.menulist.coordinate)
                 let longitude = parseFloat(coordinate[0])
                 let latitude = parseFloat(coordinate[1])
@@ -3421,6 +3243,29 @@
                     types:types
                 }
                 this.getSearchFacility(SearchFacility)
+                Circle.setCenter(this.menulist.coordinate,radius+80);
+            },
+            menuPeople(){
+                // $("#contextmenu_container").hide();
+                droreMap.map.panToCoord(this.menulist.coordinate);
+                droreMap.map.setZoom(3)
+                let radius=''
+                if(this.menulist.data.rule!=null && this.menulist.data.rule.securityScope!=null){
+                    radius=this.menulist.data.rule.securityScope
+                }else {
+                    radius=100
+                }
+                let Circle = new droreMap.geom.Circle()
+                let coordinate=droreMap.trans.transLayerToWgs(this.menulist.coordinate)
+                let longitude = parseFloat(coordinate[0])
+                let latitude = parseFloat(coordinate[1])
+                let SearchPeople = {
+                    radius: radius,
+                    latitude: latitude,
+                    longitude: longitude,
+                    epsg:'4326',
+                }
+                this.getSearchPeople(SearchPeople)
                 Circle.setCenter(this.menulist.coordinate,radius+80);
             },
             menuDelete(){
@@ -3569,8 +3414,15 @@
                         epsg:'4326',
                         types:types
                     }
+                    let SearchPeople = {
+                        radius: radius,
+                        latitude: latitude,
+                        longitude: longitude,
+                        epsg:'4326',
+                    }
                     that.getSearchFacility(SearchFacility)
-                    Circle.setCenter(evt.coordinate,radius+35);
+                    that.getSearchPeople(SearchPeople)
+                    Circle.setCenter(evt.coordinate,radius+80);
                 })
             },
             escFun(){
@@ -3586,7 +3438,14 @@
                     epsg:'4326',
                     types:types
                 }
+                let SearchPeople = {
+                    radius: 0,
+                    latitude: 0,
+                    longitude: 0,
+                    epsg:'4326',
+                }
                 this.getSearchFacility(SearchFacility)
+                this.getSearchPeople(SearchPeople)
                 Circle.setCenter([0,0],0);
             },
             async getSearchFacility (SearchFacility) {//点击范围搜索
@@ -3615,6 +3474,21 @@
                     }
                     console.log(broadListId)
                     console.log(cameraListId)
+                }).catch(err => {
+                    this.$message.error('查询失败')
+                })
+            },
+            async getSearchPeople (SearchPeople) {//点击范围搜索
+                await api.controler.getSearchPeople(JSON.stringify(SearchPeople)).then(res => {
+                    if(this.searchPeopleList.length>0){
+                        for (let i=0;i< this.searchPeopleList.length;i++) {
+                            this.treeHideID(this.searchPeopleList[i].id);
+                        }
+                    }
+                    this.searchPeopleList= res
+                    for (let i=0;i< this.searchPeopleList.length;i++) {
+                        this.treeShowID(this.searchPeopleList[i].id);
+                    }
                 }).catch(err => {
                     this.$message.error('查询失败')
                 })
@@ -5101,6 +4975,15 @@
             width: rem(24);
             height: rem(24);
         }
+        button.menuPeople{
+            background: url("/static/img/security.svg");
+            background-size: cover;
+            top:rem(8);
+            left: rem(50);
+            display: none;
+            width: rem(20);
+            height: rem(20);
+        }
         button.menuCamera{
             background: url("/static/img/menuCamera.svg");
             background-size: cover;
@@ -5290,8 +5173,12 @@
             display: block;
         }
         button.menuShow{
+            display: none;
+        }
+        button.menuPeople{
             left:rem(30);
             top:rem(15);
+            display: block;
         }
         button.warnCamera{
             display: block;

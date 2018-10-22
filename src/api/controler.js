@@ -19,6 +19,13 @@ const controler={
             data: params
         })
     },
+    getSearchPeople(params){
+        return axios ({
+            method: 'POST',
+            url: getUrl('/searchuser'),
+            data: params
+        })
+    },
 }
 
 export default controler

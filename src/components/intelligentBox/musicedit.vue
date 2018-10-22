@@ -69,7 +69,7 @@
                         </div>
                         <div class="content">
                             <el-checkbox-group v-model="checkedmusics"  @change="handleCheckedmusicsChange">
-                                <el-checkbox v-for="music in musics" :label="music" >
+                                <el-checkbox v-for="music in musics" :label="music" :key="music">
                                     <span class="all-name">
                                         <!--{{music.title}}</span><span class="all-time">{{music.artist}}-->
                                         {{music}}
