@@ -457,11 +457,7 @@
                     let obj = {totalNum: res.length}
                     obj[date] = new Date().getTime()
                     this.$store.commit('TOTAL_NUM', obj)
-                    this.parkList = this.allParkList.filter((item,index) =>{
-                        if(index <(this.getCurrentNum*35) && index>(this.getCurrentNum-1)*35-1){
-                            return item
-                        }
-                    })
+
                     this.allDotList.close=[]
                     this.allDotList.open=[]
                     for (let i = 0; i < res.length; i++) {
@@ -477,30 +473,35 @@
                         }
                     }
 
-                    for (let i = 0; i < this.parkList.length; i++) {
-                        this.parkList[i].checked = false
-                        this.parkList[i].status = true
-                        this.parkList[i].id = this.parkList[i].parkingBean.id
-                        this.parkList[i].description = this.parkList[i].parkingBean.description
-                        this.parkList[i].parkingBean.currentNum = this.currentNum
-                        this.parkList[i].parkingBean.surplusNum = this.parkList[i].parkingBean.capacity - this.parkList[i].parkingBean.currentNum
-                        this.parkList[i].location = `${this.parkList[i].longitude},${this.parkList[i].latitude}`
-                        if (this.parkList[i].parkingBean.capacity == 0 ){
-                            this.parkList[i].parkingBean.state = '已满'
+                    for (let i = 0; i < this.allParkList.length; i++) {
+                        this.allParkList[i].checked = false
+                        this.allParkList[i].status = true
+                        this.allParkList[i].id = this.allParkList[i].parkingBean.id
+                        this.allParkList[i].description = this.allParkList[i].parkingBean.description
+                        this.allParkList[i].parkingBean.currentNum = this.currentNum
+                        this.allParkList[i].parkingBean.surplusNum = this.allParkList[i].parkingBean.capacity - this.allParkList[i].parkingBean.currentNum
+                        this.allParkList[i].location = `${this.allParkList[i].longitude},${this.allParkList[i].latitude}`
+                        if (this.allParkList[i].parkingBean.capacity == 0 ){
+                            this.allParkList[i].parkingBean.state = '已满'
                         } else {
-                            let parcent = this.parkList[i].parkingBean.currentNum/this.parkList[i].parkingBean.capacity
+                            let parcent = this.allParkList[i].parkingBean.currentNum/this.allParkList[i].parkingBean.capacity
                             if (parcent < .5){
-                                this.parkList[i].parkingBean.state = '充裕'
+                                this.allParkList[i].parkingBean.state = '充裕'
                             } else if (parcent < .9){
-                                this.parkList[i].parkingBean.state = '紧张'
+                                this.allParkList[i].parkingBean.state = '紧张'
                             } else {
-                                this.parkList[i].parkingBean.state = '已满'
+                                this.allParkList[i].parkingBean.state = '已满'
                             }
                         }
-                        this.parkList[i].parkingBean.modifyTime=this.parkList[i].parkingBean.modifyTime.replace("-","/")
-                        this.parkList[i].byTime = -(new Date(this.parkList[i].parkingBean.modifyTime)).getTime()
+                        this.allParkList[i].parkingBean.modifyTime=this.allParkList[i].parkingBean.modifyTime.replace("-","/")
+                        this.allParkList[i].byTime = -(new Date(this.allParkList[i].parkingBean.modifyTime)).getTime()
                     }
-                    this.parkList = _.sortBy(this.parkList, 'byTime')
+                    this.allParkList = _.sortBy(this.allParkList, 'byTime')
+                    this.parkList = this.allParkList.filter((item,index) =>{
+                        if(index <(this.getCurrentNum*35) && index>(this.getCurrentNum-1)*35-1){
+                            return item
+                        }
+                    })
                     this.checkList = this.parkList
                     this.choseInfoId = []
 

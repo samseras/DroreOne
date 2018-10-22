@@ -381,19 +381,20 @@
                     let obj = {totalNum: res.devices.length}
                     obj[date] = new Date().getTime()
                     this.$store.commit('TOTAL_NUM', obj)
+
+
+                    for (let i=0;i<this.allGpsList.length;i++){
+                        this.allGpsList[i].checked=false
+                        this.allGpsList[i].status=true
+                        this.allGpsList[i].modifyTime=this.allGpsList[i].modifyTime.replace("-","/")
+                        this.allGpsList[i].byTime = -(new Date(this.allGpsList[i].modifyTime)).getTime()
+                    }
+                    this.allGpsList = _.sortBy(this.allGpsList,'byTime')
                     this.gpsList = this.allGpsList.filter((item,index) => {
                         if (index < (this.getCurrentNum * 35 ) && index > ((this.getCurrentNum -1) * 35 ) - 1 ) {
                             return item
                         }
                     })
-
-                    for (let i=0;i<this.gpsList.length;i++){
-                        this.gpsList[i].checked=false
-                        this.gpsList[i].status=true
-                        this.gpsList[i].modifyTime=this.gpsList[i].modifyTime.replace("-","/")
-                        this.gpsList[i].byTime = -(new Date(this.gpsList[i].modifyTime)).getTime()
-                    }
-                    this.gpsList = _.sortBy(this.gpsList,'byTime')
                     this.checkList = this.gpsList
 
                     this.selectFlag=false

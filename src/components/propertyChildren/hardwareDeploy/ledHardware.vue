@@ -488,11 +488,7 @@
                     let obj = {totalNum: res.devices.length}
                     obj[date] = new Date().getTime()
                     this.$store.commit('TOTAL_NUM', obj)
-                    this.ledList = this.allLedList.filter((item,index) => {
-                        if (index < (this.getCurrentNum * 35 ) && index > ((this.getCurrentNum -1) * 35 ) - 1 ) {
-                            return item
-                        }
-                    })
+
                     this.allDotList.close=[]
                     this.allDotList.open=[]
                     let resDevices=res.devices
@@ -507,17 +503,22 @@
                             this.allDotList.open.push(resDevices[i])
                         }
                     }
-                    for (let i=0;i<this.ledList.length;i++){
-                        this.ledList[i].checked=false
-                        this.ledList[i].status=true
-                        this.ledList[i].id = this.ledList[i].id
-                        this.ledList[i].mac = this.ledList[i].mac
-                        this.ledList[i].location=`${this.ledList[i].longitude},${this.ledList[i].latitude}`
-//                        this.ledList[i].area=`${this.ledList[i].screenWidth},${this.ledList[i].screenHeight}`
-                        this.ledList[i].modifyTime=this.ledList[i].modifyTime.replace("-","/")
-                        this.ledList[i].byTime = -(new Date(this.ledList[i].modifyTime)).getTime()
+                    for (let i=0;i<this.allLedList.length;i++){
+                        this.allLedList[i].checked=false
+                        this.allLedList[i].status=true
+                        this.allLedList[i].id = this.allLedList[i].id
+                        this.allLedList[i].mac = this.allLedList[i].mac
+                        this.allLedList[i].location=`${this.allLedList[i].longitude},${this.allLedList[i].latitude}`
+//                        this.allLedList[i].area=`${this.allLedList[i].screenWidth},${this.allLedList[i].screenHeight}`
+                        this.allLedList[i].modifyTime=this.allLedList[i].modifyTime.replace("-","/")
+                        this.allLedList[i].byTime = -(new Date(this.allLedList[i].modifyTime)).getTime()
                     }
-                    this.ledList = _.sortBy(this.ledList,'byTime')
+                    this.allLedList = _.sortBy(this.allLedList,'byTime')
+                    this.ledList = this.allLedList.filter((item,index) => {
+                        if (index < (this.getCurrentNum * 35 ) && index > ((this.getCurrentNum -1) * 35 ) - 1 ) {
+                            return item
+                        }
+                    })
                     this.checkList = this.ledList
 
                     this.selectFlag=false

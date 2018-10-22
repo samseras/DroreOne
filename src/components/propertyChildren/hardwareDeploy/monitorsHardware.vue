@@ -472,11 +472,7 @@
                     let obj = {totalNum: res.devices.length}
                     obj[date] = new Date().getTime()
                     this.$store.commit('TOTAL_NUM', obj)
-                    this.monitorsList = this.allMonitorsList.filter((item,index) => {
-                        if (index < (this.getCurrentNum * 35 ) && index > ((this.getCurrentNum -1) * 35 ) - 1 ) {
-                            return item
-                        }
-                    })
+
                     this.allDotList.close=[]
                     this.allDotList.open=[]
                     let resDevices=res.devices
@@ -491,16 +487,21 @@
                             this.allDotList.open.push(resDevices[i])
                         }
                     }
-                    for (let i=0;i<this.monitorsList.length;i++){
-                        this.monitorsList[i].checked=false
-                        this.monitorsList[i].status=true
-                        this.monitorsList[i].id=this.monitorsList[i].id
-                        this.monitorsList[i].mac=this.monitorsList[i].mac
-                        this.monitorsList[i].location=`${this.monitorsList[i].longitude},${this.monitorsList[i].latitude}`
-                        this.monitorsList[i].modifyTime=this.monitorsList[i].modifyTime.replace("-","/")
-                        this.monitorsList[i].byTime = -(new Date(this.monitorsList[i].modifyTime)).getTime()
+                    for (let i=0;i<this.allMonitorsList.length;i++){
+                        this.allMonitorsList[i].checked=false
+                        this.allMonitorsList[i].status=true
+                        this.allMonitorsList[i].id=this.allMonitorsList[i].id
+                        this.allMonitorsList[i].mac=this.allMonitorsList[i].mac
+                        this.allMonitorsList[i].location=`${this.allMonitorsList[i].longitude},${this.allMonitorsList[i].latitude}`
+                        this.allMonitorsList[i].modifyTime=this.allMonitorsList[i].modifyTime.replace("-","/")
+                        this.allMonitorsList[i].byTime = -(new Date(this.allMonitorsList[i].modifyTime)).getTime()
                     }
-                    this.monitorsList = _.sortBy(this.monitorsList,'byTime')
+                    this.allMonitorsList = _.sortBy(this.allMonitorsList,'byTime')
+                    this.monitorsList = this.allMonitorsList.filter((item,index) => {
+                        if (index < (this.getCurrentNum * 35 ) && index > ((this.getCurrentNum -1) * 35 ) - 1 ) {
+                            return item
+                        }
+                    })
                     this.checkList = this.monitorsList
 
                     this.selectFlag=false

@@ -423,23 +423,20 @@
                     let obj = {totalNum: res.length}
                     obj[date] = new Date().getTime()
                     this.$store.commit('TOTAL_NUM', obj)
+                    for (let i = 0; i < this.allBoatCarList.length; i++) {
+                        this.allBoatCarList[i].checked = false
+                        this.allBoatCarList[i].status = true
+                        this.allBoatCarList[i].id = this.allBoatCarList[i].vehicle.id
+                        this.allBoatCarList[i].description = this.allBoatCarList[i].vehicle.description
+                        this.allBoatCarList[i].vehicle.modifyTime=this.allBoatCarList[i].vehicle.modifyTime.replace("-","/")
+                        this.allBoatCarList[i].byTime = -(new Date(this.allBoatCarList[i].vehicle.modifyTime)).getTime()
+                    }
+                    this.allBoatCarList = _.sortBy(this.allBoatCarList,'byTime')
                     this.boatCarList = this.allBoatCarList.filter((item,index) => {
                         if (index < (this.getCurrentNum * 35 ) && index > ((this.getCurrentNum -1) * 35 ) - 1 ) {
                             return item
                         }
                     })
-
-                    console.log(res, '这是请求回来的')
-
-                    for (let i = 0; i < this.boatCarList.length; i++) {
-                        this.boatCarList[i].checked = false
-                        this.boatCarList[i].status = true
-                        this.boatCarList[i].id = this.boatCarList[i].vehicle.id
-                        this.boatCarList[i].description = this.boatCarList[i].vehicle.description
-                        this.boatCarList[i].vehicle.modifyTime=this.boatCarList[i].vehicle.modifyTime.replace("-","/")
-                        this.boatCarList[i].byTime = -(new Date(this.boatCarList[i].vehicle.modifyTime)).getTime()
-                    }
-                    this.boatCarList = _.sortBy(this.boatCarList,'byTime')
                     console.log(this.boatCarList);
                     this.checkList = this.boatCarList
                     this.choseInfoId = []

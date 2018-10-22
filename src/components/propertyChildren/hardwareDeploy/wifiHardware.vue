@@ -486,11 +486,7 @@
                     let obj = {totalNum: res.devices.length}
                     obj[date] = new Date().getTime()
                     this.$store.commit('TOTAL_NUM', obj)
-                    this.wifiList = this.allWifiList.filter((item,index) => {
-                        if (index < (this.getCurrentNum * 35 ) && index > ((this.getCurrentNum -1) * 35 ) - 1 ) {
-                            return item
-                        }
-                    })
+
                     this.allDotList.close=[]
                     this.allDotList.open=[]
                     let resDevices=res.devices
@@ -505,15 +501,20 @@
                             this.allDotList.open.push(resDevices[i])
                         }
                     }
-                    for(let i=0;i<this.wifiList.length;i++){
-                        this.wifiList[i].checked=false
-                        this.wifiList[i].status=true
-                        this.wifiList[i].id=this.wifiList[i].id
-                        this.wifiList[i].location=`${this.wifiList[i].longitude},${this.wifiList[i].latitude}`
-                        this.wifiList[i].modifyTime=this.wifiList[i].modifyTime.replace("-","/")
-                        this.wifiList[i].byTime = -(new Date(this.wifiList[i].modifyTime)).getTime()
+                    for(let i=0;i<this.allWifiList.length;i++){
+                        this.allWifiList[i].checked=false
+                        this.allWifiList[i].status=true
+                        this.allWifiList[i].id=this.allWifiList[i].id
+                        this.allWifiList[i].location=`${this.allWifiList[i].longitude},${this.allWifiList[i].latitude}`
+                        this.allWifiList[i].modifyTime=this.allWifiList[i].modifyTime.replace("-","/")
+                        this.allWifiList[i].byTime = -(new Date(this.allWifiList[i].modifyTime)).getTime()
                     }
-                    this.wifiList = _.sortBy(this.wifiList,'byTime')
+                    this.allWifiList = _.sortBy(this.allWifiList,'byTime')
+                    this.wifiList = this.allWifiList.filter((item,index) => {
+                        if (index < (this.getCurrentNum * 35 ) && index > ((this.getCurrentNum -1) * 35 ) - 1 ) {
+                            return item
+                        }
+                    })
                     this.checkList = this.wifiList
                     this.selectFlag=false
 

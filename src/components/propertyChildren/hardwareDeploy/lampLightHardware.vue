@@ -465,11 +465,7 @@
                     let obj = {totalNum: res.devices.length}
                     obj[date] = new Date().getTime()
                     this.$store.commit('TOTAL_NUM', obj)
-                    this.lightList = this.allLightList.filter((item,index) => {
-                        if (index < (this.getCurrentNum * 35 ) && index > ((this.getCurrentNum -1) * 35 ) - 1 ) {
-                            return item
-                        }
-                    })
+
                     this.allDotList.close=[]
                     this.allDotList.open=[]
                     let resDevices=res.devices
@@ -484,16 +480,19 @@
                             this.allDotList.open.push(resDevices[i])
                         }
                     }
-                    for (let i=0;i<this.lightList.length;i++){
-
-                        this.lightList[i].checked=false
-                        this.lightList[i].status=true
-
-                        this.lightList[i].location=`${this.lightList[i].longitude},${this.lightList[i].latitude}`
-                        this.lightList[i].modifyTime=this.lightList[i].modifyTime.replace("-","/")
-                        this.lightList[i].byTime = -(new Date(this.lightList[i].modifyTime)).getTime()
+                    for (let i=0;i<this.allLightList.length;i++){
+                        this.allLightList[i].checked=false
+                        this.allLightList[i].status=true
+                        this.allLightList[i].location=`${this.allLightList[i].longitude},${this.allLightList[i].latitude}`
+                        this.allLightList[i].modifyTime=this.allLightList[i].modifyTime.replace("-","/")
+                        this.allLightList[i].byTime = -(new Date(this.allLightList[i].modifyTime)).getTime()
                     }
-                    this.lightList = _.sortBy(this.lightList,'byTime')
+                    this.allLightList = _.sortBy(this.allLightList,'byTime')
+                    this.lightList = this.allLightList.filter((item,index) => {
+                        if (index < (this.getCurrentNum * 35 ) && index > ((this.getCurrentNum -1) * 35 ) - 1 ) {
+                            return item
+                        }
+                    })
                     this.checkList = this.lightList
 
                     this.selectFlag=false
