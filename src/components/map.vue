@@ -2643,7 +2643,7 @@
                                 name:obj.cnName,
                                 subtype:'securityPerson',
                                 id:obj.id,
-                                url:'/static/img/icon/people_small.svg',
+                                url:'/static/img/icon/people_small.png',
                                 type:'security',
                                 status:obj.gpsData ? "ONLINE" : "OFFLINE",
                                 description:obj.description,
@@ -2697,7 +2697,7 @@
                                 name:obj.name,
                                 subtype:'securityPerson',
                                 id:obj.id,
-                                url:'/static/img/icon/people_small.svg',
+                                url:'/static/img/icon/people_small.png',
                                 type:'security',
                                 status:obj.gpsData ? "ONLINE" : "OFFLINE",
                                 description:obj.description,
@@ -2866,13 +2866,13 @@
                             }
                         }else if(res[i].alarmType.id =="10") {
                             if (res[i].status.id =="1")  {
-                                res[i].url = '/static/img/icon/pollingRule_one.svg'
+                                res[i].url = '/static/img/icon/pollingRule_one.png'
                                 res[i].subtype ='pollingRule_one'
                             } else  if (res[i].status.id =="2") {
-                                res[i].url = '/static/img/icon/pollingRule_two.svg'
+                                res[i].url = '/static/img/icon/pollingRule_two.png'
                                 res[i].subtype ='pollingRule_two'
                             }else {
-                                res[i].url = '/static/img/icon/pollingRule_three.svg'
+                                res[i].url = '/static/img/icon/pollingRule_three.png'
                                 res[i].subtype ='pollingRule_three'
                             }
                             res[i]['rule']['alarmTypeName'] = '巡检告警'
