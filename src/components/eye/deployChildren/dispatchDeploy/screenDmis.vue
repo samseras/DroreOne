@@ -12,7 +12,6 @@
                         @searchAnything="searchAnything"
                         @choseType="choseType"
                         :selectLength="choseInfoId.length"
-                        :listLength="screenList.length"
                         @fixedInfo = 'fixedInfo'>
                 </Header>
             </div>
@@ -96,6 +95,7 @@
     import PersonDetail from './dmisDialog'
     import api from '@/api'
     import moment from 'moment'
+    import {mapGetters,mapMutations} from 'vuex'
     export default {
         name: 'area-deploy',
         data(){
@@ -103,6 +103,7 @@
                 isShowAreaCard: true,
                 checkList: [],
                 filterList: [],
+                allScreenList:[],
                 screenList:[],
                 visible: false,
                 screenInfo: {},
@@ -119,10 +120,11 @@
             }
         },
         methods: {
+            ...mapMutations(['TOTAL_NUM']),
             searchAnything (info) {
                 console.log(info, '这是要过滤的')
                 if (info.trim() !== '') {
-                    this.screenList = this.checkList.filter(item => {
+                    this.screenList = this.allScreenList.filter(item => {
                         if (item.ledSchedule.name.includes(info)) {
                             return item
                         }
@@ -419,8 +421,8 @@
                 await api.scheduleled.getAllScerrnLed().then(res => {
                     console.log(res, '请求成功')
                     this.isShowLoading = false
-                    this.screenList = res
-                    this.screenList.forEach(item => {
+                    this.allScreenList = res
+                    this.allScreenList.forEach(item => {
                         item.id = item.ledSchedule.id;
                         item.checked = false;
                         item.ledSchedule.time = [item.ledSchedule.startDate,item.ledSchedule.endDate]
@@ -430,6 +432,11 @@
                         }
                     })
                     this.choseInfoId = []
+                    this.screenList = this.allScreenList.filter((item,index) => {
+                        if (index < (this.getCurrentNum * 35) && index > ((this.getCurrentNum -1) * 35 ) - 1 ) {
+                            return item
+                        }
+                    })
                     this.checkList = this.screenList
                 }).catch(err => {
                     console.log(err, '请求失败')
@@ -445,6 +452,14 @@
             Header,
             PersonDetail
         },
+        watch: {
+            getCurrentNum () {
+                this.getAllScreenLed()
+            }
+        },
+        computed: {
+            ...mapGetters(['getCurrentNum'])
+        }
     }
 
 </script>

@@ -12,7 +12,6 @@
                         @searchAnything="searchAnything"
                         @choseType="choseType"
                         :selectLength="choseInfoId.length"
-                        :listLength="lamppostList.length"
                         @fixedInfo = 'fixedInfo'>
                 </Header>
             </div>
@@ -106,6 +105,7 @@
     import Header from './dmisHeader'
     import PersonDetail from './dmisDialog'
     import CheckDetail from './lamppostCheckDialog'
+    import {mapGetters,mapMutations} from 'vuex'
     export default {
         name: 'area-deploy',
         data(){
@@ -114,6 +114,7 @@
                 checkList: [],
                 filterList: [],
                 lamppostList: [],
+                allLamppostList: [],
                 checkVisible:false,
                 visible: false,
                 lamppostInfo: {},
@@ -129,10 +130,11 @@
             }
         },
         methods: {
+            ...mapMutations(['TOTAL_NUM']),
             searchAnything (info) {
                 console.log(info, '这是要过滤的')
                 if (info.trim() !== '') {
-                    this.lamppostList = this.checkList.filter(item => {
+                    this.lamppostList = this.allLamppostList.filter(item => {
                         if (item.lightSchedule.name.includes(info)) {
                             return item
                         }
@@ -258,8 +260,12 @@
                 await api.lamppost.getLamppostList().then(res => {
                     console.log(res,"pppppppppppppp");
                     this.isShowLoading = false
-                    this.lamppostList = res
-                    this.lamppostList.forEach(item => {
+                    this.allLamppostList = res
+                    let date = new Date().getTime()
+                    let obj = {totalNum: res.length}
+                    obj[date] = new Date().getTime()
+                    this.$store.commit('TOTAL_NUM', obj)
+                    this.allLamppostList.forEach(item => {
                         item.checked = false;
                         item.isStop = true;
                         item.isStart = false;
@@ -268,6 +274,11 @@
                         item.id = item.lightSchedule.id
                         if (!item.lightSchedule.customizedDays) {
                             item.lightSchedule.days = item.lightSchedule.days.split(',')
+                        }
+                    })
+                    this.lamppostList = this.allLamppostList.filter((item,index) => {
+                        if (index < (this.getCurrentNum * 35) && index > ((this.getCurrentNum -1) * 35 ) - 1 ) {
+                            return item
                         }
                     })
                     this.choseInfoId = []
@@ -457,8 +468,13 @@
             PersonDetail,
             CheckDetail
         },
-        mounted:function(){
-
+        watch: {
+            getCurrentNum () {
+                this.getLamppostList()
+            }
+        },
+        computed: {
+            ...mapGetters(['getCurrentNum'])
         }
     }
 

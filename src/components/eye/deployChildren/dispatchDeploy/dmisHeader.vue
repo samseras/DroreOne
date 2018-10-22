@@ -18,15 +18,14 @@
         </div>
 
         <div class="page">
-            <span>当前第1页/共1页</span>
-            <span class="upPage"><</span>
-            <span class="downPage">></span>
-            <!--<span class="listForm"><i class="el-icon-tickets"></i></span>-->
+            <Pagination class="pageSize"></Pagination>
         </div>
     </div>
 </template>
 
 <script>
+    import {mapGetters,mapMutations} from 'vuex'
+    import Pagination from '@/components/public/Pagination'
     export default {
         props:['selectLength', 'listLength'],
         name: "fun-header",
@@ -42,6 +41,7 @@
             }
         },
         methods: {
+            ...mapMutations(['SHOWBASICICON', 'CURRENT_NUM']),
             startSearch () {
                 // if (this.searchContent !== '') {
                 this.$emit('searchAnything', this.searchContent)
@@ -74,6 +74,12 @@
                 this.$emit('fixedInfo')
             },
             showPersonJob () {
+                let date = new Date().getTime()
+                let obj = {
+                    currentNum: 1
+                }
+                obj[date] = new Date().getTime()
+                this.$store.commit('CURRENT_NUM', obj)
                 this.route = this.$route.path
             },
             startPlan () {
@@ -94,10 +100,16 @@
                 } else  {
                     this.isSelected = false
                 }
+            },
+            searchContent () {
+                this.startSearch()
             }
         },
         created () {
             this.showPersonJob()
+        },
+        components: {
+            Pagination
         }
     }
 </script>
@@ -225,11 +237,15 @@
             margin-left: rem(20);
             font-size: rem(12);
             float: right;
-            margin-top: rem(3);
+            margin-top: rem(-3);
+            .pageSize{
+                margin-top: rem(-3);
+            }
             span{
-                display: inline-block;
+                float: right;
                 cursor: pointer;
-                margin-left: rem(5);
+                margin-left: rem(10);
+                margin-top: rem(6);
             }
             .upPage,downPage,listForm,cardForm{
                 padding: rem(5);
@@ -237,7 +253,7 @@
             }
             .cardForm{
                 i{
-                    color: #a13309;
+                    color: #e44b4e;
                 }
             }
         }

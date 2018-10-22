@@ -105,7 +105,6 @@
                 alarmTypeId:'',
                 listLength:'',
                 pageNum:1
-
             }
         },
         methods: {
