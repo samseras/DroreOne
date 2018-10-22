@@ -646,7 +646,7 @@
 </script>
 
 <style lang="scss">
-    @media all and (max-width: 395px){
+    @media all and (max-width: 450px){
         .station {
             .content{
                 .el-carousel{
@@ -663,7 +663,7 @@
         }
     }
 
-    @media all and (min-width: 396px){
+    @media all and (min-width: 451px){
         .station {
             .content{
                 .el-carousel{
@@ -683,7 +683,7 @@
 </style>
 
 <style lang="scss" scoped>
-    @media all and (max-width: 395px) {
+    @media all and (max-width: 450px) {
         .station {
             width: 100%;
             height: 100%;
@@ -849,7 +849,7 @@
             }
         }
     }
-    @media all and (min-width: 396px) {
+    @media all and (min-width: 451px) {
         .station {
             width: 100%;
             height: 100%;
@@ -875,7 +875,7 @@
                     position:relative;
                     .contentBody{
                         width:95%;
-                        height:95%;
+                        height:97%;
                         border-radius: rem(10);
                         border:1px solid #dcdfe6;
                         background-color: #f2f2f2;
