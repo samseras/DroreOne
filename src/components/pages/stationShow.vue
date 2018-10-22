@@ -5,7 +5,7 @@
                 <div class="contentTitle">
                     <span>旅游路线信息</span>
                 </div>
-                <el-carousel :interval="5000">
+                <el-carousel :interval="5000" indicator-position="none">
                     <el-carousel-item v-for="schedule in schedules">
                         <div class="contentDiv"  v-for="route in schedule.routes">
                             <div class="contentBody">
@@ -786,29 +786,29 @@
                                     align-items:center;
                                     .stationInfo{
                                         position: absolute;
-                                        top: 30px;
+                                        top: 32px;
                                         text-align: center;
                                         .stationName{
                                             width:100%;
-                                            margin-top: 12px;
+                                            margin-top: 10px;
                                             font-size: rem(12);
                                             line-height: 1em;
                                         }
                                         .currentImg{
                                             display: block;
                                             position: absolute;
-                                            left:25%;
+                                            left:45%;
                                             /*transform:translateX(-50%);*/
                                         }
                                         .stationStartEndName{
                                             width:100%;
-                                            margin-top: 8px;
+                                            margin-top: 6px;
                                             font-size: rem(12);
                                             line-height: 1em;
                                         }
                                         .stationCurrentName{
                                             width:100%;
-                                            margin-top: 12px;
+                                            margin-top: 10px;
                                             font-size: rem(12);
                                             line-height: 1em;
                                         }
@@ -832,6 +832,9 @@
                                     font-size: rem(12);
                                     img{
                                         display: block;
+                                    }
+                                    span{
+                                        color: #26bbf0;
                                     }
                                 }
 
