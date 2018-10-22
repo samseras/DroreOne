@@ -36,7 +36,7 @@
                                                 <img :id = "station.key" v-if="station.status == 'CURRENT'" src="../../../static/img/icon/station/currentStation1.png">
                                                 <img :id = "station.key" v-if="station.status == 'CURRENT'"  class="currentImg"  src="../../../static/img/icon/station/currentStation2.png">
 
-                                                <img :id = "station.key" v-if="station.status == 'OTHER'" src="../../../static/img/icon/station/normalStation.png">
+                                                <img :id = "station.key" v-if="station.status == 'OTHER'" src="../../../static/img/icon/station/normalStation2.png">
 
                                                 <div :class="{'stationName': station.status == 'OTHER','stationStartEndName':station.status == 'FROM'|| station.status == 'TO',
                                                      'stationCurrentName': station.status == 'CURRENT',
@@ -521,8 +521,6 @@
                             cloneItemFW.name = cloneItemFW.name+"(去)"
                             cloneItemRE.name = cloneItemRE.name+"(返)"
 
-//                            this.routes.push(cloneItemFW)
-//                            this.routes.push(cloneItemRE)
                             let routeArray = []
                             routeArray.push(cloneItemFW)
                             routeArray.push(cloneItemRE)
@@ -540,12 +538,11 @@
 
                         setTimeout(() => {
                             console.log("aaaaaaaaaaaaaaaaaa")
-                            let route = this.$route.path
-                            if (route.includes('/station')) {
-
-                                this.getStationData();//长轮询
-
-                            }
+                            this.getStationData();
+//                            let route = this.$route.path
+//                            if (route.includes('/station')) {
+//                                this.getStationData();//长轮询
+//                            }
                         },5000)
 
                     }
@@ -697,8 +694,9 @@
                     span{
                         display:block;
                         position: relative;
-                        top:50%;
-                        transform:translateY(-50%);
+                        top:0;
+                        /*top:50%;
+                        transform:translateY(-50%);*/
                         font-size:rem(15);
                         color: #26bbf0;
                     }
@@ -712,7 +710,6 @@
                         height:95%;
                         border-radius: rem(10);
                         border:1px solid #dcdfe6;
-                        background-color: #f2f2f2;
                         position: absolute;
                         margin: auto;
                         top:0;
@@ -723,7 +720,6 @@
                         flex-direction: column;
                         .desc{
                             height:20%;
-                            background-color: #f2f2f2;
                             display: flex;
                             flex-direction: row;
                             font-size: rem(12);
@@ -732,6 +728,7 @@
                                 flex:1;
                                 text-align: center;
                                 span{
+                                    color: #cf9236;
                                     display:block;
                                     position: relative;
                                     top:50%;
@@ -763,7 +760,6 @@
                         }
                         .trend{
                             height:80%;
-                            background-color: #f2f2f2;
                             position: relative;
                             border-radius: 0 0 rem(10) rem(10) ;
                             .route{
@@ -801,7 +797,7 @@
                                         .currentImg{
                                             display: block;
                                             position: absolute;
-                                            left:30%;
+                                            left:25%;
                                             /*transform:translateX(-50%);*/
                                         }
                                         .stationStartEndName{
@@ -821,7 +817,7 @@
                                         color: #26bbf0;
                                     }
                                     .normal{
-                                        color: #909090;
+                                        color: #62c062;
                                     }
                                     .current{
                                         color: #f36a5a;
