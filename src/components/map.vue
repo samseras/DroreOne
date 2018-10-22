@@ -5156,7 +5156,7 @@
             display:none;
         }
     }
-    .broadcast_close{
+    .broadcast_close,.broadcast{
         button.showCast{
             display: block;
         }
@@ -5268,7 +5268,8 @@
             top:rem(13);
         }
         button.menuBroad{
-            display: block;
+            //display: block;
+            display: none;
         }
 
     }
