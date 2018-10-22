@@ -5,7 +5,7 @@
             :visible="stationShow"
             :before-close="closeDialog"
             :title="stationInfo.name"
-            width="30%"
+            width="35%"
             center>
            <!--<iframe src="http://124.90.43.59:8000?user=yunhe&token=dfsdgsdgsd" frameborder="0"></iframe>-->
             <iframe id="stationIframe" :src="stationUrl" frameborder="0"></iframe>

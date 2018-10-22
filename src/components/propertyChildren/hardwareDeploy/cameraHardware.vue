@@ -489,8 +489,15 @@
                     let resDevices=res.devices
                     for (let i = 0; i < resDevices.length; i++) {
                         resDevices[i].iconName = resDevices[i].name
+                        if(resDevices[i].cameraType != 0){
+                            resDevices[i].cameraType = 1
+                        }
                         resDevices[i].iconSubtype = 'camera'
-                        resDevices[i].iconUrl = '/static/img/icon/camera.png'
+                        if(resDevices[i].cameraType==0){
+                            resDevices[i].iconUrl = '/static/img/icon/camera1.png'
+                        }else {
+                            resDevices[i].iconUrl = '/static/img/icon/camera.png'
+                        }
                         resDevices[i].iconType = '摄像头'
                         if(resDevices[i].longitude==null&&resDevices[i].latitude==null){
                             this.allDotList.close.push(resDevices[i])
@@ -505,6 +512,9 @@
                         this.cameraList[i].location = `${this.cameraList[i].longitude},${this.cameraList[i].latitude}`
                         this.cameraList[i].modifyTime=this.cameraList[i].modifyTime.replace("-","/")
                         this.cameraList[i].byTime = -(new Date(this.cameraList[i].modifyTime)).getTime()
+                        if(this.cameraList[i].cameraType != 0){
+                            this.cameraList[i].cameraType = 1
+                        }
                     }
                     this.cameraList = _.sortBy(this.cameraList,'byTime')
                     this.checkList = this.cameraList

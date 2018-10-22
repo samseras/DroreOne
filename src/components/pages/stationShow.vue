@@ -5,17 +5,66 @@
                 <div class="contentTitle">
                     <span>旅游路线信息</span>
                 </div>
-                <div class="contentDiv"  v-for="route in routes">
+                <el-carousel :interval="5000">
+                    <el-carousel-item v-for="schedule in schedules">
+                        <div class="contentDiv"  v-for="route in schedule.routes">
+                            <div class="contentBody">
+                                <div class="desc">
+                                    <div class="left">
+                                        <span>{{route.name}}</span>
+                                    </div>
+                                    <div  class="center">
+                                        <span  v-if="route.willArriveVe"><{{route.willArriveVe.vehicle.serialNum}}>还有{{route.willArriveVe.willArriveTime}}分钟到达</span>
+                                    </div>
+                                    <div  class="right">
+                                        <span v-if="route.willArriveVe">空余座位：{{route.willArriveVe.vacancy}}人</span>
+                                    </div>
+                                </div>
+                                <div class="trend">
+                                    <div class="route"></div>
+
+                                    <div class="stationContent" :id="route.key">
+                                        <div class="vehicleStyle" :id="item.vehicle.id" v-if="item.distance" v-for="item in route.vehicles">
+                                            <span>{{item.vehicle.serialNum}}</span>
+                                            <img src="../../../static/img/icon/station/vehicleShip.png">
+                                        </div>
+                                        <div class="stationFlex" v-for="station in route.stations">
+                                            <div class="stationInfo">
+                                                <img :id = "station.key" v-if="station.status == 'FROM'" src="../../../static/img/icon/station/firstStation.png">
+                                                <img :id = "station.key"  v-if="station.status == 'TO'" src="../../../static/img/icon/station/endStation.png">
+
+                                                <img :id = "station.key" v-if="station.status == 'CURRENT'" src="../../../static/img/icon/station/currentStation1.png">
+                                                <img :id = "station.key" v-if="station.status == 'CURRENT'"  class="currentImg"  src="../../../static/img/icon/station/currentStation2.png">
+
+                                                <img :id = "station.key" v-if="station.status == 'OTHER'" src="../../../static/img/icon/station/normalStation.png">
+
+                                                <div :class="{'stationName': station.status == 'OTHER','stationStartEndName':station.status == 'FROM'|| station.status == 'TO',
+                                                     'stationCurrentName': station.status == 'CURRENT',
+                                                     'firstEnd': station.status == 'FROM' || station.status == 'TO',
+                                                     'normal':station.status == 'OTHER','current':station.status == 'CURRENT'}">
+                                                    {{station.name}}
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </el-carousel-item>
+                </el-carousel>
+                <!--<div class="contentDiv"  v-for="route in routes">
                     <div class="contentBody">
                         <div class="desc">
                             <div class="left">
                                 <span>{{route.name}}</span>
                             </div>
-                            <div  class="center" v-if="route.willArriveVe">
-                                <span >{{route.willArriveVe.vehicle.serialNum}}还有{{route.willArriveVe.willArriveTime}}分钟到达</span>
+                            <div  class="center">
+                                <span  v-if="route.willArriveVe"><{{route.willArriveVe.vehicle.serialNum}}>还有{{route.willArriveVe.willArriveTime}}分钟到达</span>
                             </div>
-                            <div  class="right" v-if="route.willArriveVe">
-                                <span>剩余人数：{{route.willArriveVe.vacancy}}人</span>
+                            <div  class="right">
+                                <span v-if="route.willArriveVe">空余座位：{{route.willArriveVe.vacancy}}人</span>
                             </div>
                         </div>
                         <div class="trend">
@@ -23,7 +72,7 @@
 
                             <div class="stationContent" :id="route.key">
                                 <div class="vehicleStyle" :id="item.vehicle.id" v-if="item.distance" v-for="item in route.vehicles">
-                                    <span style="font-size: 10px;display: block;">{{item.vehicle.serialNum}}</span>
+                                    <span>{{item.vehicle.serialNum}}</span>
                                     <img src="../../../static/img/icon/station/vehicleShip.png">
                                 </div>
                                 <div class="stationFlex" v-for="station in route.stations">
@@ -49,7 +98,7 @@
 
                         </div>
                     </div>
-                </div>
+                </div>-->
             </div>
         </ScrollContainer>
     </div>
@@ -389,7 +438,8 @@
                         "customizedDays": false
                     }
                 ],
-                routes:[]
+                routes:[],
+                schedules:[]
             }
         },
         components: {
@@ -397,10 +447,10 @@
         },
         methods: {
             async getStationData(){
-                debugger
                 await api.transport.getRouteById(this.stationId).then(res=>{
                     console.log(res,'stationData  res')
                     this.routes = []
+                    this.schedules = []
                     //假数据
 //                    res = this.result
                     if(res instanceof Array && res.length >0){
@@ -422,10 +472,16 @@
                                         if(vehicle.curStation){
                                             vehicle['curStation']['key'] = vehicle['curStation']['id']+"FW"
                                         }
+                                        if(vehicle.nextStation){
+                                            vehicle['nextStation']['key'] = vehicle['nextStation']['id']+"FW"
+                                        }
                                         positiveVes.push(vehicle)
                                     }else{
                                         if(vehicle.curStation){
                                             vehicle['curStation']['key'] = vehicle['curStation']['id']+"RE"
+                                        }
+                                        if(vehicle.nextStation){
+                                            vehicle['nextStation']['key'] = vehicle['nextStation']['id']+"RE"
                                         }
                                         reverseVes.push(vehicle)
                                     }
@@ -464,21 +520,33 @@
 
                             cloneItemFW.name = cloneItemFW.name+"(去)"
                             cloneItemRE.name = cloneItemRE.name+"(返)"
-                            this.routes.push(cloneItemFW)
-                            this.routes.push(cloneItemRE)
+
+//                            this.routes.push(cloneItemFW)
+//                            this.routes.push(cloneItemRE)
+                            let routeArray = []
+                            routeArray.push(cloneItemFW)
+                            routeArray.push(cloneItemRE)
+
+                            this.schedules.push({
+                                routes:routeArray
+                            })
+
                         })
 
+                        console.log(this.schedules,'schedules')
                         this.$nextTick(function () {
                             this.initVehiclePosition()
                         })
 
-
                         setTimeout(() => {
+                            console.log("aaaaaaaaaaaaaaaaaa")
                             let route = this.$route.path
                             if (route.includes('/station')) {
+
                                 this.getStationData();//长轮询
+
                             }
-                        },6000)
+                        },5000)
 
                     }
                 })
@@ -486,36 +554,48 @@
 
             initVehiclePosition(){
                 console.log(this.routes,'this.routes')
-                if(this.routes.length > 0){
-                    this.routes.forEach(route=>{
-                            route.vehicles.forEach(item=>{
+                if(this.schedules.length > 0){
+                    this.schedules.forEach(schedule=>{
+                          if(schedule.routes.length>0) {
+                              schedule.routes.forEach(route=>{
+                                  route.vehicles.forEach(item=>{
+                                      if(!item.curStation || !item.nextStation){
+                                          item.distance = false
+                                          return
+                                      }
+                                      let stationPrevious = document.getElementById(item.curStation.key)
+                                      let stationNext  =document.getElementById(item.nextStation.key)
+                                      let stationCurrent
+                                      if(item.direction){
+                                          stationCurrent = document.getElementById(this.stationId+"FW")
+                                      }else{
+                                          stationCurrent = document.getElementById(this.stationId+"RE")
+                                      }
+                                      let stationContent = document.getElementById(route.key)
+                                      let prevDistance = stationPrevious.getBoundingClientRect().left - stationContent.getBoundingClientRect().left
+                                      let prevDistanceBig = stationCurrent.getBoundingClientRect().left - stationContent.getBoundingClientRect().left
+                                      let totalDistance
 
-                                if(!item.curStation || !item.nextStation){
-                                    item.distance = false
-                                    return
-                                }
-                                let stationPrevious = document.getElementById(item.curStation.key)
-                                let stationCurrent
-                                if(item.direction){
-                                    stationCurrent = document.getElementById(this.stationId+"FW")
-                                }else{
-                                    stationCurrent = document.getElementById(this.stationId+"RE")
-                                }
-//                                let stationCurrent = document.getElementById(this.stationId)
-                                let stationContent = document.getElementById(route.key)
-                                let prevDistance = stationPrevious.getBoundingClientRect().left - stationContent.getBoundingClientRect().left
-                                let totalDistance
+                                      if(item.realTimeRatio){
+                                          if(item.realTimeRatio < 1){
+                                              totalDistance = prevDistance + (1-item.realTimeRatio)*(stationCurrent.getBoundingClientRect().left - stationPrevious.getBoundingClientRect().left)
+                                              item.distance = true
+                                          }else if(item.realTimeRatio > 1){
+                                              totalDistance = prevDistanceBig + item.realTimeRatio*(stationPrevious.getBoundingClientRect().left - stationCurrent.getBoundingClientRect().left)
+                                              item.distance = true
+                                          }
+                                      } else{
+                                          totalDistance = prevDistance + item.realTimeRatio*(stationNext.getBoundingClientRect().left -stationPrevious.getBoundingClientRect().left)
+                                          item.distance = true
+                                      }
 
-                                if(item.realTimeRatio){
-                                    totalDistance = prevDistance + (1-item.realTimeRatio)*(stationCurrent.getBoundingClientRect().left - stationPrevious.getBoundingClientRect().left)
-                                    item.distance = true
-                                    let el = document.getElementById(item.vehicle.id)
-                                    el.style.left = totalDistance+"px"
-                                }else{
-                                    item.distance = false
-                                }
+                                      let el = document.getElementById(item.vehicle.id)
+                                      el.style.left = totalDistance+"px"
 
-                            })
+                                  })
+                              })
+                          }
+
                     })
                 }
 
@@ -565,158 +645,371 @@
     }
 </script>
 
-<style lang="scss" scoped>
-    .station {
-        width: 100%;
-        height: 100%;
-        .content{
-            width: 100%;
-            height:100%;
-            .contentTitle{
-                height:8%;
-                width:100%;
-                text-align: center;
-                span{
-                    display:block;
-                    position: relative;
-                    top:50%;
-                    transform:translateY(-50%);
-                    font-size:rem(20);
-                    color: #26bbf0;
-                }
-            }
-            .contentDiv{
-                width:100%;
-                height:35%;
-                position:relative;
-                .contentBody{
-                    width:95%;
-                    height:90%;
-                    border-radius: rem(10);
-                    border:1px solid #dcdfe6;
-                    background-color: #f2f2f2;
-                    position: absolute;
-                    margin: auto;
-                    top:0;
-                    bottom:0;
-                    left:0;
-                    right:0;
-                    display: flex;
-                    flex-direction: column;
-                    .desc{
-                        height:20%;
-                        background-color: #f2f2f2;
-                        display: flex;
-                        flex-direction: row;
-                        font-size: 1.14em;
-                        border-radius: rem(10) rem(10) 0 0;
-                        .left{
-                            flex:1;
-                            text-align: center;
-                            span{
-                                display:block;
-                                position: relative;
-                                top:50%;
-                                transform:translateY(-50%);
-                            }
-                        }
-                        .right{
-                            flex:1;
-                            text-align: center;
-                            span{
-                                color:#cf9236;
-                                display:block;
-                                position: relative;
-                                top:50%;
-                                transform:translateY(-50%);
-                            }
-                        }
-                        .center{
-                            flex:1;
-                            text-align: center;
-                            span{
-                                color:#cf9236;
-                                display:block;
-                                position: relative;
-                                top:50%;
-                                transform:translateY(-50%);
-                            }
+<style lang="scss">
+    @media all and (max-width: 450px){
+        .station {
+            .content{
+                .el-carousel{
+                    width:100%;
+                    height: 90%;
+                    .el-carousel__container{
+                        height: 100%;
+                        .el-carousel__item{
+                            height:100%;
                         }
                     }
-                    .trend{
-                        height:80%;
-                        background-color: #f2f2f2;
-                        position: relative;
-                        border-radius: 0 0 rem(10) rem(10) ;
-                        .route{
-                            width:100%;
-                            height:2px;
-                            margin-top:60px;
-                            padding:0px;
-                            background-color: #ffc600;
-                            overflow:hidden;
+                }
+            }
+        }
+    }
+
+    @media all and (min-width: 451px){
+        .station {
+            .content{
+                .el-carousel{
+                    width:100%;
+                    height: 96%;
+                    .el-carousel__container{
+                        height: 100%;
+                        .el-carousel__item{
+                            height:100%;
                         }
-                        .stationContent{
-                            margin: auto;
-                            position: absolute;
-                            top: 0; left: 0; bottom: 0; right: 0;
-                            width:95%;
+                    }
+                }
+            }
+        }
+    }
+
+</style>
+
+<style lang="scss" scoped>
+    @media all and (max-width: 450px) {
+        .station {
+            width: 100%;
+            height: 100%;
+            .content{
+                width: 100%;
+                height:100%;
+                .contentTitle{
+                    height:10%;
+                    width:100%;
+                    text-align: center;
+                    span{
+                        display:block;
+                        position: relative;
+                        top:50%;
+                        transform:translateY(-50%);
+                        font-size:rem(15);
+                        color: #26bbf0;
+                    }
+                }
+                .contentDiv{
+                    width:100%;
+                    height:50%;
+                    position:relative;
+                    .contentBody{
+                        width:95%;
+                        height:95%;
+                        border-radius: rem(10);
+                        border:1px solid #dcdfe6;
+                        background-color: #f2f2f2;
+                        position: absolute;
+                        margin: auto;
+                        top:0;
+                        bottom:0;
+                        left:0;
+                        right:0;
+                        display: flex;
+                        flex-direction: column;
+                        .desc{
+                            height:20%;
+                            background-color: #f2f2f2;
                             display: flex;
                             flex-direction: row;
-                            justify-content: space-between;
-                            .stationFlex{
+                            font-size: rem(12);
+                            border-radius: rem(10) rem(10) 0 0;
+                            .left{
                                 flex:1;
-                                display:flex;
-                                justify-content:center;
-                                align-items:center;
-                                .stationInfo{
-                                    position: absolute;
-                                    top: 50px;
-                                    width: 20px;
-                                    text-align: center;
-                                    .stationName{
-                                        width:100%;
-                                        margin-top: 10px;
-                                        font-size: 14px;
-                                        line-height: 1em;
-                                    }
-                                    .currentImg{
-                                        vertical-align: top;
-                                    }
-                                    .stationStartEndName{
-                                        width:100%;
-                                        margin-top: 6px;
-                                        font-size: 14px;
-                                        line-height: 1em;
-                                    }
-                                    .stationCurrentName{
-                                        width:100%;
-                                        margin-top: -10px;
-                                        font-size: 14px;
-                                        line-height: 1em;
-                                    }
-                                }
-                                .firstEnd{
-                                    color: #26bbf0;
-                                }
-                                .normal{
-                                    color: #909090;
-                                }
-                                .current{
-                                    color: #f36a5a;
+                                text-align: center;
+                                span{
+                                    display:block;
+                                    position: relative;
+                                    top:50%;
+                                    transform:translateY(-50%);
                                 }
                             }
-                            .vehicleStyle{
+                            .right{
+                                flex:1;
+                                text-align: center;
+                                span{
+                                    color:#cf9236;
+                                    display:block;
+                                    position: relative;
+                                    top:50%;
+                                    transform:translateY(-50%);
+                                }
+                            }
+                            .center{
+                                flex:1.5;
+                                text-align: center;
+                                span{
+                                    color:#cf9236;
+                                    display:block;
+                                    position: relative;
+                                    top:50%;
+                                    transform:translateY(-50%);
+                                }
+                            }
+                        }
+                        .trend{
+                            height:80%;
+                            background-color: #f2f2f2;
+                            position: relative;
+                            border-radius: 0 0 rem(10) rem(10) ;
+                            .route{
+                                width:100%;
+                                height:2px;
+                                /*     margin-top:60px;*/
+                                margin-top:40px;
+                                padding:0px;
+                                background-color: #ffc600;
+                                overflow:hidden;
+                            }
+                            .stationContent{
+                                margin: auto;
                                 position: absolute;
-                                top: 0;
-                                left: 5px;
-                                bottom: 0;
-                                right: 0;
+                                top: 0; left: 0; bottom: 0; right: 0;
+                                width:95%;
+                                display: flex;
+                                flex-direction: row;
+                                justify-content: space-between;
+                                .stationFlex{
+                                    flex:1;
+                                    display:flex;
+                                    justify-content:center;
+                                    align-items:center;
+                                    .stationInfo{
+                                        position: absolute;
+                                        top: 30px;
+                                        text-align: center;
+                                        .stationName{
+                                            width:100%;
+                                            margin-top: 12px;
+                                            font-size: rem(12);
+                                            line-height: 1em;
+                                        }
+                                        .currentImg{
+                                            /*vertical-align: top;*/
+                                            display: block;
+                                            position: absolute;
+                                            left:50%;
+                                            transform:translateX(-50%);
+                                        }
+                                        .stationStartEndName{
+                                            width:100%;
+                                            margin-top: 8px;
+                                            font-size: rem(12);
+                                            line-height: 1em;
+                                        }
+                                        .stationCurrentName{
+                                            width:100%;
+                                            margin-top: 12px;
+                                            font-size: rem(12);
+                                            line-height: 1em;
+                                        }
+                                    }
+                                    .firstEnd{
+                                        color: #26bbf0;
+                                    }
+                                    .normal{
+                                        color: #909090;
+                                    }
+                                    .current{
+                                        color: #f36a5a;
+                                    }
+                                }
+                                .vehicleStyle{
+                                    position: absolute;
+                                    top: 0;
+                                    left: 5px;
+                                    bottom: 0;
+                                    right: 0;
+                                    font-size: rem(12);
+                                    img{
+                                        display: block;
+                                    }
+                                }
+
                             }
+
 
                         }
+                    }
+                }
+            }
+        }
+    }
+    @media all and (min-width: 451px) {
+        .station {
+            width: 100%;
+            height: 100%;
+            .content{
+                width: 100%;
+                height:100%;
+                .contentTitle{
+                    height:4%;
+                    width:100%;
+                    text-align: center;
+                    span{
+                        display:block;
+                        position: relative;
+                        top:50%;
+                        transform:translateY(-50%);
+                        font-size:rem(15);
+                        color: #26bbf0;
+                    }
+                }
+                .contentDiv{
+                    width:100%;
+                    height:16%;
+                    position:relative;
+                    .contentBody{
+                        width:95%;
+                        height:97%;
+                        border-radius: rem(10);
+                        border:1px solid #dcdfe6;
+                        background-color: #f2f2f2;
+                        position: absolute;
+                        margin: auto;
+                        top:0;
+                        bottom:0;
+                        left:0;
+                        right:0;
+                        display: flex;
+                        flex-direction: column;
+                        .desc{
+                            height:20%;
+                            background-color: #f2f2f2;
+                            display: flex;
+                            flex-direction: row;
+                            font-size: rem(15);
+                            border-radius: rem(10) rem(10) 0 0;
+                            .left{
+                                flex:1;
+                                text-align: center;
+                                span{
+                                    display:block;
+                                    position: relative;
+                                    top:50%;
+                                    transform:translateY(-50%);
+                                }
+                            }
+                            .right{
+                                flex:1;
+                                text-align: center;
+                                span{
+                                    color:#cf9236;
+                                    display:block;
+                                    position: relative;
+                                    top:50%;
+                                    transform:translateY(-50%);
+                                }
+                            }
+                            .center{
+                                flex:1;
+                                text-align: center;
+                                span{
+                                    color:#cf9236;
+                                    display:block;
+                                    position: relative;
+                                    top:50%;
+                                    transform:translateY(-50%);
+                                }
+                            }
+                        }
+                        .trend{
+                            height:80%;
+                            background-color: #f2f2f2;
+                            position: relative;
+                            border-radius: 0 0 rem(10) rem(10) ;
+                            .route{
+                                width:100%;
+                                height:2px;
+                                /*     margin-top:60px;*/
+                                margin-top:45px;
+                                padding:0px;
+                                background-color: #ffc600;
+                                overflow:hidden;
+                            }
+                            .stationContent{
+                                margin: auto;
+                                position: absolute;
+                                top: 0; left: 0; bottom: 0; right: 0;
+                                width:95%;
+                                display: flex;
+                                flex-direction: row;
+                                justify-content: space-between;
+                                .stationFlex{
+                                    flex:1;
+                                    display:flex;
+                                    justify-content:center;
+                                    align-items:center;
+                                    .stationInfo{
+                                        position: absolute;
+                                        top: 35px;
+                                        text-align: center;
+                                        .stationName{
+                                            width:100%;
+                                            margin-top: 12px;
+                                            font-size: rem(14);
+                                            line-height: 1em;
+                                        }
+                                        .currentImg{
+                                            /*vertical-align: top;*/
+                                            display: block;
+                                            position: absolute;
+                                            left:50%;
+                                            transform:translateX(-50%);
+                                        }
+                                        .stationStartEndName{
+                                            width:100%;
+                                            margin-top: 8px;
+                                            font-size: rem(14);
+                                            line-height: 1em;
+                                        }
+                                        .stationCurrentName{
+                                            width:100%;
+                                            margin-top: 12px;
+                                            font-size: rem(14);
+                                            line-height: 1em;
+                                        }
+                                    }
+                                    .firstEnd{
+                                        color: #26bbf0;
+                                    }
+                                    .normal{
+                                        color: #909090;
+                                    }
+                                    .current{
+                                        color: #f36a5a;
+                                    }
+                                }
+                                .vehicleStyle{
+                                    position: absolute;
+                                    top: 0;
+                                    left: 5px;
+                                    bottom: 0;
+                                    right: 0;
+                                    font-size: rem(12);
+                                    img{
+                                        display: block;
+                                    }
+                                }
+
+                            }
 
 
+                        }
                     }
                 }
             }
