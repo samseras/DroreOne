@@ -11,10 +11,7 @@
                         @addNewInfo="addNewInfo"
                         @batchEnabled="batchEnabled"
                         :choseId="choseInfoId"
-                        :listsLength = "listLength"
-                        @searchAnything="searchAnything"
-                        @previousPage="previousPage"
-                        @nextPage="nextPage">
+                        @searchAnything="searchAnything">
                 </Header>
             </div>
             <div class="personList" v-loading="loading">
@@ -90,10 +87,12 @@
     import api from '@/api'
     import Header from './alarmRuleHeader'
     import AlarmDetail from './alarmRuleDialog'
+    import {mapGetters,mapMutations} from 'vuex'
     // import moment from 'moment'
     export default {
         data(){
             return{
+                allOfftrackList: [],
                 offtrackList: [],
                 offtrackInfo:{},
                 visible: false,
@@ -110,10 +109,11 @@
             }
         },
         methods: {
+            ...mapMutations(['TOTAL_NUM']),
             searchAnything (info) {
                 console.log(info, '这是要过滤的')
                 if (info.trim() !== '') {
-                    this.offtrackList = this.offtrackList.filter(item => {
+                    this.offtrackList = this.allOfftrackList.filter(item => {
                         if (item.name.includes(info)) {
                             return item
                         }
@@ -423,16 +423,6 @@
                 await this.getAllAlarmTypes();
                 await this.getAlarmRule();
             },
-            previousPage (page) {
-                console.log(page, '这是传过来的pageNum')
-                this.pageNum = page
-                this.getAlarmRule ()
-            },
-            nextPage (page) {
-                console.log(page, '这个是下一页的pageNUM')
-                this.pageNum = page
-                this.getAlarmRule ()
-            },
             async getAlarmRule(){
                 this.loading = true
                 this.alarmTypeId = this.getAlarmTypeId("偏离轨迹")
@@ -440,10 +430,13 @@
                 await api.alarm.getAlarmRulesByParameters(this.alarmTypeId).then(res => {
                     console.log(res, '请求成功')
                     this.loading = false
-                    this.offtrackList = res
-                    this.listLength = this.offtrackList.length
-                    this.offtrackList.forEach(item => {
+                    this.allOfftrackList = res
+                    this.allOfftrackList.forEach(item => {
                         item.checked = false;
+                        let date = new Date().getTime()
+                        let obj = {totalNum: res.length}
+                        obj[date] = new Date().getTime()
+                        this.$store.commit('TOTAL_NUM', obj)
                         if(item.relatedSchedules.length > 0){
                             item.relatedScheduleNames =  item.relatedSchedules.map(device=>device.name)
                             item.relatedScheduleIds =  item.relatedSchedules.map(device=>device.id)
@@ -460,12 +453,14 @@
                             item.relatedManagerNames = ''
                             item.relatedManagerIds = []
                         }
-                        item.modifyTime=item.modifyTime.replace("-","/")
-                        item.byTime = -(new Date(item.modifyTime)).getTime()
+                        if (item.modifyTime) {
+                            item.modifyTime=item.modifyTime.replace("-","/")
+                            item.byTime = -(new Date(item.modifyTime)).getTime()
+                        }
                     })
-                    this.offtrackList = _.sortBy(this.offtrackList,'byTime')
-                    this.offtrackList = this.offtrackList.filter((item,index) => {
-                        if (index < (this.pageNum * 10 ) && index > ((this.pageNum -1) * 10 ) - 1 ) {
+                    this.allOfftrackList = _.sortBy(this.allOfftrackList,'byTime')
+                    this.offtrackList = this.allOfftrackList.filter((item,index) => {
+                        if (index < (this.getCurrentNum * 35 ) && index > ((this.getCurrentNum -1) * 35 ) - 1 ) {
                             return item
                         }
                     })
@@ -495,6 +490,14 @@
             Header,
             AlarmDetail
         },
+        watch: {
+            getCurrentNum () {
+                this.getAlarmRule()
+            }
+        },
+        computed: {
+            ...mapGetters(['getCurrentNum'])
+        }
     }
 
 </script>

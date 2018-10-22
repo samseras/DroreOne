@@ -1,7 +1,7 @@
 <template>
     <div class="ruleHeader">
         <div class="searchInfo">
-            <input type="text" placeholder="请输入搜索内容" v-model="searchContent" @keyup="startSearch">
+            <input type="text" placeholder="请输入搜索内容" v-model="searchContent">
             <i class="el-icon-search"></i>
         </div>
         <div class="funcBtn">
@@ -15,19 +15,20 @@
         </div>
 
         <div class="page">
-            <span>当前第{{currentPageNum}}页/共{{pageAllNum}}页</span>
-            <span class="upPage"@click="previousPage"><</span>
-            <span class="downPage" @click="nextPage">></span>
+            <Pagination class="pageSize"></Pagination>
         </div>
     </div>
 </template>
 
 <script>
     import api from '@/api'
+    import {mapGetters,mapMutations} from 'vuex'
+    import Pagination from '@/components/public/Pagination'
     export default {
         props: ['choseId','listsLength'],
         data () {
             return {
+                currentPage3: 1,
                 route: '',
                 isSelected: false,
                 isShowJobType: true,
@@ -40,6 +41,7 @@
             }
         },
         methods: {
+            ...mapMutations(['SHOWBASICICON', 'CURRENT_NUM']),
             startSearch(){
                 console.log(this.searchContent)
                 this.$emit('searchAnything',this.searchContent)
@@ -137,27 +139,17 @@
                 }
 
             },
-            previousPage() {//上一页
-                this.currentPageNum--
-                if (this.currentPageNum < 1) {
-                    this.currentPageNum = 1
-                    return
-                }
-                this.$emit('previousPage', this.currentPageNum)
-            },
-            nextPage() {//下一页
-                this.currentPageNum++
-                if (this.currentPageNum > this.pageAllNum) {
-                    this.currentPageNum = this.pageAllNum
-                    return
-                }
-                this.$emit('nextPage', this.currentPageNum)
-            },
             getAlarmTypeId(typeName){
                 let typeInfo =  this.alarmType.filter(item=>item.name == typeName)
                 return typeInfo[0].id;
             },
             async getAllAlarmTypes(){
+                let date = new Date().getTime()
+                let obj = {
+                    currentNum: 1
+                }
+                obj[date] = new Date().getTime()
+                this.$store.commit('CURRENT_NUM', obj)
                 await api.alarm.getAllAlarmTypes().then(res => {
                     this.alarmType = res;
                 }).catch(err => {
@@ -172,11 +164,17 @@
                 if (this.listsLength > 0) {
                     this.pageAllNum = Math.ceil(this.listsLength / 10)
                 }
+            },
+            searchContent () {
+                this.startSearch()
             }
         },
         created () {
             this.getAllAlarmTypes()
             this.showPersonJob()
+        },
+        components: {
+            Pagination
         }
     }
 </script>
@@ -293,11 +291,15 @@
             margin-left: rem(20);
             font-size: rem(12);
             float: right;
-            margin-top: rem(3);
+            margin-top: rem(-3);
+            .pageSize{
+                margin-top: rem(-3);
+            }
             span{
-                display: inline-block;
+                float: right;
                 cursor: pointer;
-                margin-left: rem(5);
+                margin-left: rem(10);
+                margin-top: rem(6);
             }
             .upPage,downPage,listForm,cardForm{
                 padding: rem(5);
@@ -305,7 +307,7 @@
             }
             .cardForm{
                 i{
-                    color: #a13309;
+                    color: #e44b4e;
                 }
             }
         }

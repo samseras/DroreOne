@@ -11,10 +11,7 @@
                         @addNewInfo="addNewInfo"
                         @batchEnabled="batchEnabled"
                         :choseId="choseInfoId"
-                        :listsLength = "listLength"
-                        @searchAnything="searchAnything"
-                        @previousPage="previousPage"
-                        @nextPage="nextPage">
+                        @searchAnything="searchAnything">
                 </Header>
             </div>
             <div class="personList" v-loading="loading">
@@ -90,10 +87,12 @@
     import api from '@/api'
     import Header from './alarmRuleHeader'
     import AlarmDetail from './alarmRuleDialog'
+    import {mapGetters,mapMutations} from 'vuex'
     // import moment from 'moment'
     export default {
         data(){
             return{
+                allWaterlevelList: [],
                 waterlevelList: [],
                 waterlevelInfo:{},
                 visible: false,
@@ -106,14 +105,14 @@
                 isBatchEdit:false,
                 listLength:'',
                 pageNum:1
-
             }
         },
         methods: {
+            ...mapMutations(['TOTAL_NUM']),
             searchAnything (info) {
                 console.log(info, '这是要过滤的')
                 if (info.trim() !== '') {
-                    this.waterlevelList = this.waterlevelList.filter(item => {
+                    this.waterlevelList = this.allWaterlevelList.filter(item => {
                         if (item.name.includes(info)) {
                             return item
                         }
@@ -439,9 +438,12 @@
                 await api.alarm.getAlarmRulesByParameters(this.alarmTypeId).then(res => {
                     console.log(res, '请求成功')
                     this.loading = false
-                    this.waterlevelList = res
-                    this.listLength = this.waterlevelList.length
-                    this.waterlevelList.forEach(item => {
+                    let date = new Date().getTime()
+                    let obj = {totalNum: res.length}
+                    obj[date] = new Date().getTime()
+                    this.$store.commit('TOTAL_NUM', obj)
+                    this.allWaterlevelList = res
+                    this.allWaterlevelList.forEach(item => {
                         item.checked = false;
                         if(item.relatedDevices.length > 0){
                             item.relatedDeviceNames =  item.relatedDevices.map(device=>device.name)
@@ -459,12 +461,14 @@
                             item.relatedManagerNames = ''
                             item.relatedManagerIds = []
                         }
-                        item.modifyTime=item.modifyTime.replace("-","/")
-                        item.byTime = -(new Date(item.modifyTime)).getTime()
+                        if (item.modifyTime) {
+                            item.modifyTime=item.modifyTime.replace("-","/")
+                            item.byTime = -(new Date(item.modifyTime)).getTime()
+                        }
                     })
-                    this.waterlevelList = _.sortBy(this.waterlevelList,'byTime')
-                    this.waterlevelList = this.waterlevelList.filter((item,index) => {
-                        if (index < (this.pageNum * 10 ) && index > ((this.pageNum -1) * 10 ) - 1 ) {
+                    this.allWaterlevelList = _.sortBy(this.allWaterlevelList,'byTime')
+                    this.waterlevelList = this.allWaterlevelList.filter((item,index) => {
+                        if (index < (this.getCurrentNum * 35 ) && index > ((this.getCurrentNum -1) * 35 ) - 1 ) {
                             return item
                         }
                     })
@@ -494,6 +498,14 @@
             Header,
             AlarmDetail
         },
+        watch: {
+            getCurrentNum () {
+                this.getAlarmRule()
+            }
+        },
+        computed: {
+            ...mapGetters(['getCurrentNum'])
+        }
     }
 
 </script>

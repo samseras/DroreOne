@@ -378,10 +378,6 @@
                 await api.alarm.getAllAlarmEvent().then(res => {
                     console.log(res,'123123123')
                                 this.loading = false
-                                let date = new Date().getTime()
-                                let obj = {totalNum: res.length}
-                                obj[date] = new Date().getTime()
-                                this.$store.commit('TOTAL_NUM', obj)
                                 let  list = JSON.parse(JSON.stringify(res))
                                 if(list.length >0){
                                     list.forEach(obj=>{
@@ -390,19 +386,17 @@
                                         }
                                     })
                                 }
-                                this.warningEventList = this.allWarningEventList.filter((item,index) => {
-                                    if (index < (this.pageNum * 35 ) && index > ((this.pageNum -1) * 35 ) - 1 ) {
-                                        return item
-                                    }
-                                })
-                                this.warningEventList.forEach(item => {
+                                console.log(this.allWarningEventList, '././././././.')
+                                this.allWarningEventList.forEach(item => {
+
                                     item.checked = false;
                                     if(item.rule && item.rule.alarmTypeId){
                                         item.rule.alarmTypeName = this.getAlarmTypeNameById(item.rule.alarmTypeId)
                                     }else{
-                                        item.rule.alarmTypeName = ''
+                                        item.rule = {
+                                            alarmTypeName : ""
+                                        }
                                     }
-
                                     if(!item.rule || !item.rule.name){
                                         item.rule = {
                                             name : ""
@@ -437,11 +431,23 @@
                                             item.fileList = fileList
                                         }
                                     }
-                                    item.modifyTime=item.modifyTime.replace("-","/")
-                                    item.byTime = -(new Date(item.modifyTime)).getTime()
+                                    if (item.modifyTime) {
+                                        item.modifyTime=item.modifyTime.replace("-","/")
+                                        item.byTime = -(new Date(item.modifyTime)).getTime()
+                                    }
                                 })
-
-                                this.allWarningEventList = _.sortBy(this.warningEventList,'byTime')
+                    console.log(this.allWarningEventList, 'm,m,,,m,,,,m,')
+                                let date = new Date().getTime()
+                                let obj = {totalNum: this.allWarningEventList.length}
+                                obj[date] = new Date().getTime()
+                                this.$store.commit('TOTAL_NUM', obj)
+                                this.allWarningEventList = _.sortBy(this.allWarningEventList,'byTime')
+                                this.warningEventList = this.allWarningEventList.filter((item,index) => {
+                                    if (index < (this.pageNum * 35 ) && index > ((this.pageNum -1) * 35 ) - 1 ) {
+                                        return item
+                                    }
+                                })
+                    console.log(this.warningEventList, 'klklllklkl')
                                 this.warningEventListTemp = JSON.parse(JSON.stringify(this.warningEventList))
 
                         }).catch(err => {

@@ -42,11 +42,11 @@
                                 index: '/alarm/alarmcolumn-Rule',
                                 title: 'SOS'
                             },
-                            {
-                                icon: './../../static/img/alarm/firefightingRule.svg',
-                                index: '/alarm/firefighting-Rule',
-                                title: '消防'
-                            },
+                            // {
+                            //     icon: './../../static/img/alarm/firefightingRule.svg',
+                            //     index: '/alarm/firefighting-Rule',
+                            //     title: '消防'
+                            // },
 //                            {
 //                                icon: './../../static/img/alarm/crossborderRule.svg',
 //                                index: '/alarm/crossborder-Rule',
@@ -62,21 +62,21 @@
 //                                index: '/alarm/offtrack-Rule',
 //                                title: '偏离轨迹'
 //                            },
-                            {
-                                icon: './../../static/img/alarm/overlimitRule.svg',
-                                index: '/alarm/overlimit-Rule',
-                                title: '客流量超限'
-                            },
-                            {
-                                icon: './../../static/img/alarm/waterlevelRule.svg',
-                                index: '/alarm/waterlevel-Rule',
-                                title: '水位'
-                            },
-                            {
-                                icon: './../../static/img/alarm/conditionRule.svg',
-                                index: '/alarm/condition-Rule',
-                                title: '环境'
-                            }
+//                             {
+//                                 icon: './../../static/img/alarm/overlimitRule.svg',
+//                                 index: '/alarm/overlimit-Rule',
+//                                 title: '客流量超限'
+//                             },
+//                             {
+//                                 icon: './../../static/img/alarm/waterlevelRule.svg',
+//                                 index: '/alarm/waterlevel-Rule',
+//                                 title: '水位'
+//                             },
+//                             {
+//                                 icon: './../../static/img/alarm/conditionRule.svg',
+//                                 index: '/alarm/condition-Rule',
+//                                 title: '环境'
+//                             }
 
 
                         ]

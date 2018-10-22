@@ -11,7 +11,6 @@
                         @searchAnything="searchAnything"
                         @choseType="choseType"
                         :selectLength="choseInfoId.length"
-                        :listLength="patrolList.length"
                         @fixedInfo = 'fixedInfo'>
                 </Header>
             </div>
@@ -116,6 +115,7 @@
     import PersonDetail from './dmisDialog'
     import api from '@/api'
     import moment from 'moment'
+    import {mapGetters,mapMutations} from 'vuex'
     export default {
         name: 'area-deploy',
         data(){
@@ -124,6 +124,7 @@
                 checkList: [],
                 filterList: [],
                 patrolList:[],
+                allPatrolList:[],
                 visible: false,
                 patrolInfo: {},
                 choseInfoId: [],
@@ -139,10 +140,11 @@
             }
         },
         methods: {
+            ...mapMutations(['TOTAL_NUM']),
             searchAnything (info) {
                 console.log(info, '这是要过滤的')
                 if (info.trim() !== '') {
-                    this.patrolList = this.checkList.filter(item => {
+                    this.patrolList = this.allPatrolList.filter(item => {
                         if (item.inspectionSchedule.name.includes(info)) {
                             return item
                         }
@@ -438,8 +440,12 @@
                 await api.patrol.getAllPatrol().then(res => {
                     console.log(JSON.stringify(res), '请求成功')
                     this.isShowLoading = false
-                    this.patrolList = res
-                    this.patrolList.forEach(item => {
+                    this.allPatrolList = res
+                    let date = new Date().getTime()
+                    let obj = {totalNum: res.length}
+                    obj[date] = new Date().getTime()
+                    this.$store.commit('TOTAL_NUM', obj)
+                    this.allPatrolList.forEach(item => {
                         item.id = item.inspectionSchedule.id
                         item.checked = false;
                         if (item.inspectionSchedule.customizedDays) {
@@ -452,6 +458,11 @@
                             item.inspectionSchedule.classTime = [`2018-04-25,${item.inspectionSchedule.customizedStartTime}`,`2018-04-25,${item.inspectionSchedule.customizedEndTime}`]
                         } else {
                             item.inspectionSchedule.shifts = item.inspectionSchedule.shifts.split(',')
+                        }
+                    })
+                    this.patrolList = this.allPatrolList.filter((item,index) => {
+                        if (index < (this.getCurrentNum * 35) && index > ((this.getCurrentNum -1) * 35 ) - 1 ) {
+                            return item
                         }
                     })
                     this.choseInfoId = []
@@ -488,6 +499,14 @@
             Header,
             PersonDetail
         },
+        watch: {
+            getCurrentNum () {
+                this.getAllpatrol()
+            }
+        },
+        computed: {
+            ...mapGetters(['getCurrentNum'])
+        }
     }
 
 </script>
