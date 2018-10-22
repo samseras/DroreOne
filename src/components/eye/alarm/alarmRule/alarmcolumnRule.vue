@@ -11,10 +11,7 @@
                         @addNewInfo="addNewInfo"
                         @batchEnabled="batchEnabled"
                         :choseId="choseInfoId"
-                        :listsLength = "listLength"
-                        @searchAnything="searchAnything"
-                        @previousPage="previousPage"
-                        @nextPage="nextPage">
+                        @searchAnything="searchAnything">
                 </Header>
             </div>
             <div class="personList" v-loading="loading">
@@ -90,9 +87,11 @@
     import api from '@/api'
     import Header from './alarmRuleHeader'
     import AlarmDetail from './alarmRuleDialog'
+    import {mapGetters,mapMutations} from 'vuex'
     export default {
         data(){
             return{
+                allAlarmcolumnList: [],
                 alarmcolumnList: [],
                 alarmcolumnInfo:{},
                 visible: false,
@@ -110,10 +109,11 @@
             }
         },
         methods: {
+            ...mapMutations(['TOTAL_NUM']),
             searchAnything (info) {
                 console.log(info, '这是要过滤的')
                 if (info.trim() !== '') {
-                    this.alarmcolumnList = this.alarmcolumnList.filter(item => {
+                    this.alarmcolumnList = this.allAlarmcolumnList.filter(item => {
                         if (item.name.includes(info)) {
                             return item
                         }
@@ -414,24 +414,17 @@
               await this.getAllAlarmTypes();
               await this.getAlarmRule();
             },
-            previousPage (page) {
-                console.log(page, '这是传过来的pageNum')
-                this.pageNum = page
-                this.getAlarmRule ()
-            },
-            nextPage (page) {
-                console.log(page, '这个是下一页的pageNUM')
-                this.pageNum = page
-                this.getAlarmRule ()
-            },
             async getAlarmRule(){
                 this.loading = true
+                this.allAlarmcolumnList = []
                 this.alarmTypeId = this.getAlarmTypeId("SOS")
                 await api.alarm.getAlarmRulesByParameters(this.alarmTypeId).then(res => {
                     this.loading = false
-                    this.alarmcolumnList = res
-                    this.listLength = this.alarmcolumnList.length
-                    this.alarmcolumnList.forEach(item => {
+                    let date = new Date().getTime()
+                    let obj = {totalNum: res.length}
+                    obj[date] = new Date().getTime()
+                    this.$store.commit('TOTAL_NUM', obj)
+                    res.filter(item => {
                         item.checked = false;
                         if(item.relatedDevices.length > 0){
                             item.relatedDeviceNames =  item.relatedDevices.map(device=>device.name)
@@ -449,12 +442,15 @@
                             item.relatedManagerNames = ''
                             item.relatedManagerIds = []
                         }
-                        item.modifyTime=item.modifyTime.replace("-","/")
-                        item.byTime = -(new Date(item.modifyTime)).getTime()
+                        if (item.modifyTime) {
+                            item.modifyTime=item.modifyTime.replace("-","/")
+                            item.byTime = -(new Date(item.modifyTime)).getTime()
+                        }
                     })
+                    this.allAlarmcolumnList = res
                     this.alarmcolumnList = _.sortBy(this.alarmcolumnList,'byTime')
-                    this.alarmcolumnList = this.alarmcolumnList.filter((item,index) => {
-                        if (index < (this.pageNum * 10 ) && index > ((this.pageNum -1) * 10 ) - 1 ) {
+                    this.alarmcolumnList = this.allAlarmcolumnList.filter((item,index) => {
+                        if (index < (this.getCurrentNum * 35 ) && index > ((this.getCurrentNum -1) * 35 ) - 1 ) {
                             return item
                         }
                     })
@@ -474,15 +470,22 @@
             },
 
         },
-        created () {
-
-            this.init();
+        async created () {
+            await this.init();
         },
         components: {
             ScrollContainer,
             Header,
             AlarmDetail
         },
+        watch: {
+            getCurrentNum () {
+                this.getAlarmRule()
+            }
+        },
+        computed: {
+            ...mapGetters(['getCurrentNum'])
+        }
     }
 
 </script>

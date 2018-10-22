@@ -430,12 +430,7 @@
                 this.allPatrolEventList = []
                 await api.alarm.getAllAlarmEvent().then(res => {
                                 this.loading = false
-                                let date = new Date().getTime()
-                                let obj = {totalNum: res.length}
-                                obj[date] = new Date().getTime()
-                                this.$store.commit('TOTAL_NUM', obj)
                                 let list = JSON.parse(JSON.stringify(res))
-                    console.log(list, 'ioioioiooi')
                                 if(list.length >0){
                                     list.forEach(obj=>{
                                         if(obj.alarmType && obj.alarmType.id == "10"){
@@ -443,12 +438,7 @@
                                         }
                                     })
                                 }
-                                this.patrolEventList = this.allPatrolEventList.filter((item,index) => {
-                                    if (index < (this.getCurrentNum *  35) && index > ((this.getCurrentNum -1) * 35 ) - 1 ) {
-                                        return item
-                                    }
-                                })
-                                this.patrolEventList.forEach(item => {
+                                this.allPatrolEventList.forEach(item => {
                                     item.checked = false;
                                     if(!item.device){
                                         item.device = {
@@ -489,12 +479,22 @@
                                             item.fileList = fileList
                                         }
                                     }
-                                    item.modifyTime=item.modifyTime.replace("-","/")
-                                    item.byTime = -(new Date(item.modifyTime)).getTime()
+                                    if (item.modifyTime) {
+                                        item.modifyTime=item.modifyTime.replace("-","/")
+                                        item.byTime = -(new Date(item.modifyTime)).getTime()
+                                    }
                                     if(item.longitude && item.latitude){
                                         item.location = item.longitude+','+item.latitude
                                     }
-
+                                })
+                                let date = new Date().getTime()
+                                let obj = {totalNum: this.allPatrolEventList.length}
+                                obj[date] = new Date().getTime()
+                                this.$store.commit('TOTAL_NUM', obj)
+                                this.patrolEventList = this.allPatrolEventList.filter((item,index) => {
+                                    if (index < (this.getCurrentNum *  35) && index > ((this.getCurrentNum -1) * 35 ) - 1 ) {
+                                        return item
+                                    }
                                 })
                                 this.patrolEventList = _.sortBy(this.patrolEventList,'byTime')
                                 this.patrolEventListTemp = JSON.parse(JSON.stringify(this.patrolEventList))
