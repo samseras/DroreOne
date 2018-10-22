@@ -799,11 +799,10 @@
                                             line-height: 1em;
                                         }
                                         .currentImg{
-                                            /*vertical-align: top;*/
                                             display: block;
                                             position: absolute;
-                                            left:50%;
-                                            transform:translateX(-50%);
+                                            left:30%;
+                                            /*transform:translateX(-50%);*/
                                         }
                                         .stationStartEndName{
                                             width:100%;
