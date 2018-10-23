@@ -540,10 +540,10 @@
                                 that.initVehiclePosition()
                             })
 
-                            setTimeout(() => {
-                                console.log("aaaaaaaaaaaaaaaaaa")
-                                that.getStationData();
-                            },5000)
+//                            setTimeout(() => {
+//                                console.log("aaaaaaaaaaaaaaaaaa")
+//                                that.getStationData();
+//                            },5000)
 
                         }
                     }
