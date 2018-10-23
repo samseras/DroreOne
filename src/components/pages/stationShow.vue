@@ -797,7 +797,7 @@
                                         .currentImg{
                                             display: block;
                                             position: absolute;
-                                            left:45%;
+                                            left:35%;
                                             /*transform:translateX(-50%);*/
                                         }
                                         .stationStartEndName{
