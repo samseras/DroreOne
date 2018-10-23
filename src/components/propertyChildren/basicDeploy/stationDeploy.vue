@@ -432,11 +432,7 @@
                     let obj = {totalNum: res.length}
                     obj[date] = new Date().getTime()
                     this.$store.commit('TOTAL_NUM', obj)
-                    this.stationList = this.allStationList.filter((item,index) =>{
-                        if(index <(this.getCurrentNum*35) && index>(this.getCurrentNum-1)*35-1){
-                            return item
-                        }
-                    })
+
                     this.allDotList.close=[]
                     this.allDotList.open=[]
                     for (let i = 0; i < res.length; i++) {
@@ -459,15 +455,20 @@
                             this.allDotList.open.push(res[i])
                         }
                     }
-                    for (let i = 0; i < this.stationList.length; i++) {
-                        this.stationList[i].checked = false
-                        this.stationList[i].status = true
-                        this.stationList[i].location = `${this.stationList[i].longitude},${this.stationList[i].latitude}`
-                        this.stationList[i].modifyTime=this.stationList[i].modifyTime.replace("-","/")
-                        this.stationList[i].byTime = -(new Date(this.stationList[i].modifyTime)).getTime()
-                        this.stationList[i].typeName = this.stationTypeId2Name[this.stationList[i].type]
+                    for (let i = 0; i < this.allStationList.length; i++) {
+                        this.allStationList[i].checked = false
+                        this.allStationList[i].status = true
+                        this.allStationList[i].location = `${this.allStationList[i].longitude},${this.allStationList[i].latitude}`
+                        this.allStationList[i].modifyTime=this.allStationList[i].modifyTime.replace("-","/")
+                        this.allStationList[i].byTime = -(new Date(this.allStationList[i].modifyTime)).getTime()
+                        this.allStationList[i].typeName = this.stationTypeId2Name[this.allStationList[i].type]
                     }
-                    this.stationList = _.sortBy(this.stationList, 'byTime')
+                    this.allStationList = _.sortBy(this.allStationList, 'byTime')
+                    this.stationList = this.allStationList.filter((item,index) =>{
+                        if(index <(this.getCurrentNum*35) && index>(this.getCurrentNum-1)*35-1){
+                            return item
+                        }
+                    })
                     this.checkList = this.stationList
                     this.choseInfoId = []
                     this.selectFlag=false

@@ -478,11 +478,7 @@
                     let obj = {totalNum: res.devices.length}
                     obj[date] = new Date().getTime()
                     this.$store.commit('TOTAL_NUM', obj)
-                    this.broadList = this.allBroadList.filter((item,index) => {
-                        if (index < (this.getCurrentNum * 35 ) && index > ((this.getCurrentNum -1) * 35 ) - 1 ) {
-                            return item
-                        }
-                    })
+
                     this.allDotList.close=[]
                     this.allDotList.open=[]
                     let resDevices=res.devices
@@ -497,15 +493,20 @@
                             this.allDotList.open.push(resDevices[i])
                         }
                     }
-                    for (let i=0;i<this.broadList.length;i++) {
-                        this.broadList[i].checked = false
-                        this.broadList[i].status = true
-                        this.broadList[i].id=this.broadList[i].id
-                        this.broadList[i].location=`${this.broadList[i].longitude},${this.broadList[i].latitude}`
-                        this.broadList[i].modifyTime=this.broadList[i].modifyTime.replace("-","/")
-                        this.broadList[i].byTime = -(new Date(this.broadList[i].modifyTime)).getTime()
+                    for (let i=0;i<this.allBroadList.length;i++) {
+                        this.allBroadList[i].checked = false
+                        this.allBroadList[i].status = true
+                        this.allBroadList[i].id=this.allBroadList[i].id
+                        this.allBroadList[i].location=`${this.allBroadList[i].longitude},${this.allBroadList[i].latitude}`
+                        this.allBroadList[i].modifyTime=this.allBroadList[i].modifyTime.replace("-","/")
+                        this.allBroadList[i].byTime = -(new Date(this.allBroadList[i].modifyTime)).getTime()
                     }
-                    this.broadList = _.sortBy(this.broadList,'byTime')
+                    this.allBroadList = _.sortBy(this.allBroadList,'byTime')
+                    this.broadList = this.allBroadList.filter((item,index) => {
+                        if (index < (this.getCurrentNum * 35 ) && index > ((this.getCurrentNum -1) * 35 ) - 1 ) {
+                            return item
+                        }
+                    })
                     this.checkList = this.broadList
 
                     this.selectFlag=false

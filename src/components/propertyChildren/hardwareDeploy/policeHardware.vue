@@ -471,11 +471,7 @@
                     obj[date] = new Date().getTime()
                     this.$store.commit('TOTAL_NUM', obj)
                     console.log(this.getCurrentNum, 'kokokookllklklklklko')
-                    this.policeList = this.allPoliceList.filter((item,index) => {
-                        if (index < (this.getCurrentNum * 35 ) && index > ((this.getCurrentNum -1) * 35 ) - 1 ) {
-                            return item
-                        }
-                    })
+
                     this.allDotList.close=[]
                     this.allDotList.open=[]
                     let resDevices=res.devices
@@ -490,17 +486,21 @@
                             this.allDotList.open.push(resDevices[i])
                         }
                     }
-                    for (let i=0;i<this.policeList.length;i++){
-                        this.policeList[i].checked=false
-                        this.policeList[i].status=true
-                        this.policeList[i].id=this.policeList[i].id
-                        this.policeList[i].mac=this.policeList[i].mac
-//                        this.policeList[i].ip = this.policeList[i].ip
-                        this.policeList[i].location=`${this.policeList[i].longitude},${this.policeList[i].latitude}`
-                        this.policeList[i].modifyTime=this.policeList[i].modifyTime.replace("-","/")
-                        this.policeList[i].byTime = -(new Date(this.policeList[i].modifyTime)).getTime()
+                    for (let i=0;i<this.allPoliceList.length;i++){
+                        this.allPoliceList[i].checked=false
+                        this.allPoliceList[i].status=true
+                        this.allPoliceList[i].id=this.allPoliceList[i].id
+                        this.allPoliceList[i].mac=this.allPoliceList[i].mac
+                        this.allPoliceList[i].location=`${this.allPoliceList[i].longitude},${this.allPoliceList[i].latitude}`
+                        this.allPoliceList[i].modifyTime=this.allPoliceList[i].modifyTime.replace("-","/")
+                        this.allPoliceList[i].byTime = -(new Date(this.allPoliceList[i].modifyTime)).getTime()
                     }
-                    this.policeList = _.sortBy(this.policeList,'byTime')
+                    this.allPoliceList = _.sortBy(this.allPoliceList,'byTime')
+                    this.policeList = this.allPoliceList.filter((item,index) => {
+                        if (index < (this.getCurrentNum * 35 ) && index > ((this.getCurrentNum -1) * 35 ) - 1 ) {
+                            return item
+                        }
+                    })
                     this.checkList = this.policeList
 
                     this.selectFlag=false

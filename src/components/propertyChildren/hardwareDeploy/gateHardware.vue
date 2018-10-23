@@ -479,11 +479,7 @@
                     let obj = {totalNum: res.devices.length}
                     obj[date] = new Date().getTime()
                     this.$store.commit('TOTAL_NUM', obj)
-                    this.gateList = this.allGateList.filter((item,index) => {
-                        if (index < (this.getCurrentNum * 35 ) && index > ((this.getCurrentNum -1) * 35 ) - 1 ) {
-                            return item
-                        }
-                    })
+
                     this.allDotList.close=[]
                     this.allDotList.open=[]
                     let resDevices=res.devices
@@ -499,15 +495,20 @@
                         }
                     }
 
-                    for (let i=0;i<this.gateList.length;i++){
-                        this.gateList[i].checked=false
-                        this.gateList[i].mac=this.gateList[i].mac
-                        this.gateList[i].status=true
-                        this.gateList[i].location=`${this.gateList[i].longitude},${this.gateList[i].latitude}`
-                        this.gateList[i].modifyTime=this.gateList[i].modifyTime.replace("-","/")
-                        this.gateList[i].byTime = -(new Date(this.gateList[i].modifyTime)).getTime()
+                    for (let i=0;i<this.allGateList.length;i++){
+                        this.allGateList[i].checked=false
+                        this.allGateList[i].mac=this.allGateList[i].mac
+                        this.allGateList[i].status=true
+                        this.allGateList[i].location=`${this.allGateList[i].longitude},${this.allGateList[i].latitude}`
+                        this.allGateList[i].modifyTime=this.allGateList[i].modifyTime.replace("-","/")
+                        this.allGateList[i].byTime = -(new Date(this.allGateList[i].modifyTime)).getTime()
                     }
-                    this.gateList = _.sortBy(this.gateList,'byTime')
+                    this.allGateList = _.sortBy(this.allGateList,'byTime')
+                    this.gateList = this.allGateList.filter((item,index) => {
+                        if (index < (this.getCurrentNum * 35 ) && index > ((this.getCurrentNum -1) * 35 ) - 1 ) {
+                            return item
+                        }
+                    })
                     this.checkList = this.gateList
 
                     this.selectFlag=false

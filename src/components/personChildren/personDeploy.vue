@@ -387,13 +387,7 @@
                     let obj = {totalNum: res.length}
                     obj[date] = new Date().getTime()
                     this.$store.commit('TOTAL_NUM', obj)
-                    this.personList = this.allPersonList.filter((item,index) => {
-                        if (index < (this.getCurrentNum * 35 ) && index > ((this.getCurrentNum-1) * 35 ) - 1 ) {
-                            return item
-                        }
-                    })
-                    this.personList = _.sortBy(this.personList,'byTime')
-                    this.personList.forEach(item => {
+                    this.allPersonList.forEach(item => {
                         item.status = true
                         item.checked = false
                         if (item.department) {
@@ -413,7 +407,12 @@
                         }
                         item.byTime = -(new Date(item.modifyTime).getTime())
                     })
-                    this.personList = _.sortBy(this.personList, 'byTime')
+                    this.allPersonList = _.sortBy(this.allPersonList, 'byTime')
+                    this.personList = this.allPersonList.filter((item,index) => {
+                        if (index < (this.getCurrentNum * 35 ) && index > ((this.getCurrentNum-1) * 35 ) - 1 ) {
+                            return item
+                        }
+                    })
                     this.checkList = this.personList
                     this.selectFlag=false
                 }).catch(err => {

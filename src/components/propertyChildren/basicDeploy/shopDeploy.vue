@@ -484,11 +484,7 @@
                     let obj = {totalNum: res.length}
                     obj[date] = new Date().getTime()
                     this.$store.commit('TOTAL_NUM', obj)
-                    this.shopList = this.allShopList.filter((item,index) =>{
-                        if(index <(this.getCurrentNum*35)&& index>(this.getCurrentNum-1)*35-1){
-                            return item
-                        }
-                    })
+
 
                     this.allDotList.close=[]
                     this.allDotList.open=[]
@@ -528,27 +524,32 @@
                         }
                     }
 
-                    for (let i = 0; i < this.shopList.length; i++) {
-                        this.shopList[i].checked = false
-                        this.shopList[i].status = true
-                        this.shopList[i].id = this.shopList[i].businessBean.id
-                        this.shopList[i].description = this.shopList[i].businessBean.description
-                        this.shopList[i].location = `${this.shopList[i].longitude},${this.shopList[i].latitude}`
-                        this.shopList[i].businessBean.currentNum = this.currentNum
-                        if (this.shopList[i].businessBean.capacity == 0 ){
-                            this.shopList[i].businessBean.state = '已满'
+                    for (let i = 0; i < this.allShopList.length; i++) {
+                        this.allShopList[i].checked = false
+                        this.allShopList[i].status = true
+                        this.allShopList[i].id = this.allShopList[i].businessBean.id
+                        this.allShopList[i].description = this.allShopList[i].businessBean.description
+                        this.allShopList[i].location = `${this.allShopList[i].longitude},${this.allShopList[i].latitude}`
+                        this.allShopList[i].businessBean.currentNum = this.currentNum
+                        if (this.allShopList[i].businessBean.capacity == 0 ){
+                            this.allShopList[i].businessBean.state = '已满'
                         } else {
-                            let parcent = this.shopList[i].businessBean.currentNum/this.shopList[i].businessBean.capacity
+                            let parcent = this.allShopList[i].businessBean.currentNum/this.allShopList[i].businessBean.capacity
                             if (parcent > .9){
-                                this.shopList[i].businessBean.state = '已满'
+                                this.allShopList[i].businessBean.state = '已满'
                             } else {
-                                this.shopList[i].businessBean.state = '充裕'
+                                this.allShopList[i].businessBean.state = '充裕'
                             }
                         }
-                        this.shopList[i].businessBean.modifyTime=this.shopList[i].businessBean.modifyTime.replace("-","/")
-                        this.shopList[i].byTime = -(new Date(this.shopList[i].businessBean.modifyTime)).getTime()
+                        this.allShopList[i].businessBean.modifyTime=this.allShopList[i].businessBean.modifyTime.replace("-","/")
+                        this.allShopList[i].byTime = -(new Date(this.allShopList[i].businessBean.modifyTime)).getTime()
                     }
-                    this.shopList = _.sortBy(this.shopList, 'byTime')
+                    this.allShopList = _.sortBy(this.allShopList, 'byTime')
+                    this.shopList = this.allShopList.filter((item,index) =>{
+                        if(index <(this.getCurrentNum*35)&& index>(this.getCurrentNum-1)*35-1){
+                            return item
+                        }
+                    })
                     this.checkList = this.shopList
                     this.choseInfoId = []
 

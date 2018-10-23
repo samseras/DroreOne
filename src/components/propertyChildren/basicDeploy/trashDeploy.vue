@@ -449,11 +449,7 @@
                     let obj = {totalNum: res.length}
                     obj[date] = new Date().getTime()
                     this.$store.commit('TOTAL_NUM', obj)
-                    this.trashList = this.allTrashList.filter((item,index) =>{
-                        if(index < (this.getCurrentNum*35)&& index>(this.getCurrentNum-1)*35 -1){
-                            return item
-                        }
-                    })
+
                     this.allDotList.close=[]
                     this.allDotList.open=[]
                     for (let i = 0; i < res.length; i++) {
@@ -468,16 +464,21 @@
                             this.allDotList.open.push(res[i])
                         }
                     }
-                    for (let i = 0; i < this.trashList.length; i++) {
-                        this.trashList[i].location = `${this.trashList[i].longitude},${this.trashList[i].latitude}`
-                        this.trashList[i].checked = false
-                        this.trashList[i].status = true
-                        this.trashList[i].id = this.trashList[i].dustbinBean.id
-                        this.trashList[i].description = this.trashList[i].dustbinBean.description
-                        this.trashList[i].dustbinBean.modifyTime=this.trashList[i].dustbinBean.modifyTime.replace("-","/")
-                        this.trashList[i].byTime = -(new Date(this.trashList[i].dustbinBean.modifyTime)).getTime()
+                    for (let i = 0; i < this.allTrashList.length; i++) {
+                        this.allTrashList[i].location = `${this.allTrashList[i].longitude},${this.allTrashList[i].latitude}`
+                        this.allTrashList[i].checked = false
+                        this.allTrashList[i].status = true
+                        this.allTrashList[i].id = this.allTrashList[i].dustbinBean.id
+                        this.allTrashList[i].description = this.allTrashList[i].dustbinBean.description
+                        this.allTrashList[i].dustbinBean.modifyTime=this.allTrashList[i].dustbinBean.modifyTime.replace("-","/")
+                        this.allTrashList[i].byTime = -(new Date(this.allTrashList[i].dustbinBean.modifyTime)).getTime()
                     }
-                    this.trashList = _.sortBy(this.trashList, 'byTime')
+                    this.allTrashList = _.sortBy(this.allTrashList, 'byTime')
+                    this.trashList = this.allTrashList.filter((item,index) =>{
+                        if(index < (this.getCurrentNum*35)&& index>(this.getCurrentNum-1)*35 -1){
+                            return item
+                        }
+                    })
                     this.checkList = this.trashList
                     this.choseInfoId = []
 
