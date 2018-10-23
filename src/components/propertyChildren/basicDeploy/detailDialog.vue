@@ -246,8 +246,8 @@
                     <p class="type wrapstyle selectstyle" v-if="isDisabled">
                        <span>状&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;态：</span>
                         <el-select v-model="shop.businessBean.state" placeholder="请选择" :disabled="isDisabled">
-                            <el-option label="充裕" :value="充裕"></el-option>
-                            <el-option label="已满" :value="已满"></el-option>
+                            <el-option label="充裕" value="充裕"></el-option>
+                            <el-option label="已满" value="已满"></el-option>
                         </el-select>
                     </p>
                     <p class="idNum">
