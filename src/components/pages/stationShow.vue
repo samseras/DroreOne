@@ -446,107 +446,208 @@
             ScrollContainer
         },
         methods: {
-            async getStationData(){
-                await api.transport.getRouteById(this.stationId).then(res=>{
-                    console.log(res,'stationData  res')
-                    this.routes = []
-                    this.schedules = []
-                    //假数据
-//                    res = this.result
-                    if(res instanceof Array && res.length >0){
-                        res.forEach(schedule=>{
+            getStationData(){
+                let that = this
+                $.ajax({
+                    url:'/v1/schedule/vehicle?stationId='+this.stationId,
+                    type:'get',
+                    dataType:'json',
+                    success:function(res){
+                        debugger
+                        console.log(res,'stationData  res')
+                        that.routes = []
+                        that.schedules = []
+                        //假数据
+                        if(res instanceof Array && res.length >0){
+                            res.forEach(schedule=>{
+                                let cloneItemFW = Object.assign({},schedule.route)
+                                let cloneItemRE = Object.assign({},schedule.route)
+                                cloneItemRE.stations = cloneItemRE.reStations
 
-                            let cloneItemFW = Object.assign({},schedule.route)
-                            let cloneItemRE = Object.assign({},schedule.route)
-                            cloneItemRE.stations = cloneItemRE.reStations
+                                let positiveVes = []
+                                let reverseVes = []
+                                if(schedule.vehicles.length > 0){
+                                    schedule.vehicles.forEach(ve=>{
+                                        ve['distance'] = true
+                                    })
 
-                            let positiveVes = []
-                            let reverseVes = []
-                            if(schedule.vehicles.length > 0){
-                                schedule.vehicles.forEach(ve=>{
-                                    ve['distance'] = true
-                                })
-
-                                schedule.vehicles.forEach(vehicle=>{
-                                    if(vehicle.direction){     //正向
-                                        if(vehicle.curStation){
-                                            vehicle['curStation']['key'] = vehicle['curStation']['id']+"FW"
+                                    schedule.vehicles.forEach(vehicle=>{
+                                        if(vehicle.direction){     //正向
+                                            if(vehicle.curStation){
+                                                vehicle['curStation']['key'] = vehicle['curStation']['id']+"FW"
+                                            }
+                                            if(vehicle.nextStation){
+                                                vehicle['nextStation']['key'] = vehicle['nextStation']['id']+"FW"
+                                            }
+                                            positiveVes.push(vehicle)
+                                        }else{
+                                            if(vehicle.curStation){
+                                                vehicle['curStation']['key'] = vehicle['curStation']['id']+"RE"
+                                            }
+                                            if(vehicle.nextStation){
+                                                vehicle['nextStation']['key'] = vehicle['nextStation']['id']+"RE"
+                                            }
+                                            reverseVes.push(vehicle)
                                         }
-                                        if(vehicle.nextStation){
-                                            vehicle['nextStation']['key'] = vehicle['nextStation']['id']+"FW"
-                                        }
-                                        positiveVes.push(vehicle)
-                                    }else{
-                                        if(vehicle.curStation){
-                                            vehicle['curStation']['key'] = vehicle['curStation']['id']+"RE"
-                                        }
-                                        if(vehicle.nextStation){
-                                            vehicle['nextStation']['key'] = vehicle['nextStation']['id']+"RE"
-                                        }
-                                        reverseVes.push(vehicle)
-                                    }
-                                })
+                                    })
 
-                                cloneItemFW['vehicles'] = positiveVes
-                                cloneItemRE['vehicles'] = reverseVes
-                            }
+                                    cloneItemFW['vehicles'] = positiveVes
+                                    cloneItemRE['vehicles'] = reverseVes
+                                }
 
-                            if(cloneItemFW.stations.length >0){
-                                cloneItemFW.stations.forEach(station=>{
+                                if(cloneItemFW.stations.length >0){
+                                    cloneItemFW.stations.forEach(station=>{
                                         station['key'] = station.id + "FW"
+                                    })
+                                }
+
+                                if(cloneItemRE.stations.length >0){
+                                    cloneItemRE.stations.forEach(reStation=>{
+                                        reStation['key'] = reStation.id+"RE"
+                                    })
+                                }
+
+
+                                if(schedule.willArriveVeFW){
+                                    schedule.willArriveVeFW['distance'] = true
+                                    cloneItemFW['willArriveVe'] = schedule.willArriveVeFW
+                                }
+
+
+                                if(schedule.willArriveVeRE){
+                                    schedule.willArriveVeRE['distance'] = true
+                                    cloneItemRE['willArriveVe'] = schedule.willArriveVeRE
+                                }
+
+                                cloneItemFW['key'] = cloneItemFW.id+"FW"
+                                cloneItemRE['key'] = cloneItemRE.id+"RE"
+
+                                cloneItemFW.name = cloneItemFW.name+"(去)"
+                                cloneItemRE.name = cloneItemRE.name+"(返)"
+
+                                let routeArray = []
+                                routeArray.push(cloneItemFW)
+                                routeArray.push(cloneItemRE)
+
+                                that.schedules.push({
+                                    routes:routeArray
                                 })
-                            }
 
-                            if(cloneItemRE.stations.length >0){
-                                cloneItemRE.stations.forEach(reStation=>{
-                                    reStation['key'] = reStation.id+"RE"
-                                })
-                            }
-
-
-                            if(schedule.willArriveVeFW){
-                                schedule.willArriveVeFW['distance'] = true
-                                cloneItemFW['willArriveVe'] = schedule.willArriveVeFW
-                            }
-
-
-                            if(schedule.willArriveVeRE){
-                                schedule.willArriveVeRE['distance'] = true
-                                cloneItemRE['willArriveVe'] = schedule.willArriveVeRE
-                            }
-
-                            cloneItemFW['key'] = cloneItemFW.id+"FW"
-                            cloneItemRE['key'] = cloneItemRE.id+"RE"
-
-                            cloneItemFW.name = cloneItemFW.name+"(去)"
-                            cloneItemRE.name = cloneItemRE.name+"(返)"
-
-                            let routeArray = []
-                            routeArray.push(cloneItemFW)
-                            routeArray.push(cloneItemRE)
-
-                            this.schedules.push({
-                                routes:routeArray
                             })
 
-                        })
+                            console.log(that.schedules,'schedules')
+                            that.$nextTick(function () {
+                                that.initVehiclePosition()
+                            })
 
-                        console.log(this.schedules,'schedules')
-                        this.$nextTick(function () {
-                            this.initVehiclePosition()
-                        })
+                            setTimeout(() => {
+                                console.log("aaaaaaaaaaaaaaaaaa")
+                                that.getStationData();
+                            },5000)
 
-                        setTimeout(() => {
-                            console.log("aaaaaaaaaaaaaaaaaa")
-                            this.getStationData();
-//                            let route = this.$route.path
-//                            if (route.includes('/station')) {
-//                                this.getStationData();//长轮询
-//                            }
-                        },5000)
-
+                        }
                     }
                 })
+//                await api.transport.getRouteById(this.stationId).then(res=>{
+//                    console.log(res,'stationData  res')
+//                    this.routes = []
+//                    this.schedules = []
+//                    //假数据
+////                    res = this.result
+//                    if(res instanceof Array && res.length >0){
+//                        res.forEach(schedule=>{
+//
+//                            let cloneItemFW = Object.assign({},schedule.route)
+//                            let cloneItemRE = Object.assign({},schedule.route)
+//                            cloneItemRE.stations = cloneItemRE.reStations
+//
+//                            let positiveVes = []
+//                            let reverseVes = []
+//                            if(schedule.vehicles.length > 0){
+//                                schedule.vehicles.forEach(ve=>{
+//                                    ve['distance'] = true
+//                                })
+//
+//                                schedule.vehicles.forEach(vehicle=>{
+//                                    if(vehicle.direction){     //正向
+//                                        if(vehicle.curStation){
+//                                            vehicle['curStation']['key'] = vehicle['curStation']['id']+"FW"
+//                                        }
+//                                        if(vehicle.nextStation){
+//                                            vehicle['nextStation']['key'] = vehicle['nextStation']['id']+"FW"
+//                                        }
+//                                        positiveVes.push(vehicle)
+//                                    }else{
+//                                        if(vehicle.curStation){
+//                                            vehicle['curStation']['key'] = vehicle['curStation']['id']+"RE"
+//                                        }
+//                                        if(vehicle.nextStation){
+//                                            vehicle['nextStation']['key'] = vehicle['nextStation']['id']+"RE"
+//                                        }
+//                                        reverseVes.push(vehicle)
+//                                    }
+//                                })
+//
+//                                cloneItemFW['vehicles'] = positiveVes
+//                                cloneItemRE['vehicles'] = reverseVes
+//                            }
+//
+//                            if(cloneItemFW.stations.length >0){
+//                                cloneItemFW.stations.forEach(station=>{
+//                                        station['key'] = station.id + "FW"
+//                                })
+//                            }
+//
+//                            if(cloneItemRE.stations.length >0){
+//                                cloneItemRE.stations.forEach(reStation=>{
+//                                    reStation['key'] = reStation.id+"RE"
+//                                })
+//                            }
+//
+//
+//                            if(schedule.willArriveVeFW){
+//                                schedule.willArriveVeFW['distance'] = true
+//                                cloneItemFW['willArriveVe'] = schedule.willArriveVeFW
+//                            }
+//
+//
+//                            if(schedule.willArriveVeRE){
+//                                schedule.willArriveVeRE['distance'] = true
+//                                cloneItemRE['willArriveVe'] = schedule.willArriveVeRE
+//                            }
+//
+//                            cloneItemFW['key'] = cloneItemFW.id+"FW"
+//                            cloneItemRE['key'] = cloneItemRE.id+"RE"
+//
+//                            cloneItemFW.name = cloneItemFW.name+"(去)"
+//                            cloneItemRE.name = cloneItemRE.name+"(返)"
+//
+//                            let routeArray = []
+//                            routeArray.push(cloneItemFW)
+//                            routeArray.push(cloneItemRE)
+//
+//                            this.schedules.push({
+//                                routes:routeArray
+//                            })
+//
+//                        })
+//
+//                        console.log(this.schedules,'schedules')
+//                        this.$nextTick(function () {
+//                            this.initVehiclePosition()
+//                        })
+//
+//                        setTimeout(() => {
+//                            console.log("aaaaaaaaaaaaaaaaaa")
+//                            this.getStationData();
+////                            let route = this.$route.path
+////                            if (route.includes('/station')) {
+////                                this.getStationData();//长轮询
+////                            }
+//                        },5000)
+//
+//                    }
+//                })
             },
 
             initVehiclePosition(){
