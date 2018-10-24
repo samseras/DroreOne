@@ -453,7 +453,6 @@
                     type:'get',
                     dataType:'json',
                     success:function(res){
-                        debugger
                         console.log(res,'stationData  res')
                         that.routes = []
                         that.schedules = []
@@ -540,14 +539,16 @@
                                 that.initVehiclePosition()
                             })
 
-//                            setTimeout(() => {
-//                                console.log("aaaaaaaaaaaaaaaaaa")
-//                                that.getStationData();
-//                            },5000)
+                            setTimeout(() => {
+                                console.log("aaaaaaaaaaaaaaaaaa")
+                                that.getStationData();
+                            },5000)
 
                         }
                     }
                 })
+
+
 //                await api.transport.getRouteById(this.stationId).then(res=>{
 //                    console.log(res,'stationData  res')
 //                    this.routes = []
@@ -697,21 +698,6 @@
                     })
                 }
 
-            },
-            async saveVehicleDetail(){
-                let params = {
-                    "vehicleId":"6f813686-0d21-4bae-b8d8-058653fca0ef",
-                    "stationId":"6655d11c-3a49-40ac-a9c5-30b32484bc01",
-                    "arriveTime":"2018-10-16 16:30:00",
-                    "downNum":0,
-                    "upNum":10,
-                    "vacancy":10
-                }
-
-                await api.transport.saveVehicleDetail(params).then(res=>{
-                    console.log(res,'插入成功')
-
-                })
             }
         },
         watch:{
@@ -719,7 +705,6 @@
         },
         created() {
 
-//            this.saveVehicleDetail()
             let url
             if(window.parent.document.getElementById("stationIframe")){
                 url = window.parent.document.getElementById("stationIframe").contentWindow.location.href;

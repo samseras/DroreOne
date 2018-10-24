@@ -1,0 +1,1145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <style type="text/css">
+        @media (max-width: 450px) {
+            html,body{height:100%}
+
+            body{ margin:0}
+            .station {
+                width: 100%;
+                height: 100%;
+            }
+            .content {
+                width: 100%;
+                height: 100%;
+            }
+            .contentTitle {
+                height: 10%;
+                width: 100%;
+                text-align: center;
+            }
+            .contentTitle > span{
+                display:block;
+                position: relative;
+                top:0;
+                font-size:15px;
+                color: #26bbf0;
+            }
+            .swiper-container{
+                height: 90%;
+                width: 100%;
+            }
+            .swiper-wrapper{
+                height: 1000%;
+                width: 100%;
+            }
+            .carouselContent{
+                height: 100%;
+                width: 100%;
+            }
+            .contentDiv{
+                width:100%;
+                height:50%;
+                position:relative;
+            }
+            .contentBody{
+                width:95%;
+                height:95%;
+                border-radius: 10px;
+                border:1px solid #dcdfe6;
+                position: absolute;
+                margin: auto;
+                top:0;
+                bottom:0;
+                left:0;
+                right:0;
+                display: flex;
+                flex-direction: column;
+            }
+            .desc{
+                height:20%;
+                display: flex;
+                flex-direction: row;
+                font-size: 12px;
+                border-radius: 10px 10px 0 0;
+            }
+
+            .left{
+                flex:1;
+                text-align: center;
+            }
+
+            .left>span{
+                color: #cf9236;
+                display:block;
+                position: relative;
+                top:50%;
+                transform:translateY(-50%);
+            }
+            .right{
+                flex:1;
+                text-align: center;
+            }
+            .right >span{
+                color:#cf9236;
+                display:block;
+                position: relative;
+                top:50%;
+                transform:translateY(-50%);
+            }
+            .center{
+                flex:1.5;
+                text-align: center;
+            }
+            .center>span{
+                color:#cf9236;
+                display:block;
+                position: relative;
+                top:50%;
+                transform:translateY(-50%);
+            }
+            .trend {
+                height: 80%;
+                position: relative;
+                border-radius: 0 0 10px 10px;
+            }
+            .route{
+                width:100%;
+                height:2px;
+                /*     margin-top:60px;*/
+                margin-top:40px;
+                padding:0px;
+                background-color: #ffc600;
+                overflow:hidden;
+            }
+
+            .stationContent {
+                margin: auto;
+                position: absolute;
+                top: 0;
+                left: 0;
+                bottom: 0;
+                right: 0;
+                width: 95%;
+                display: flex;
+                flex-direction: row;
+                justify-content: space-between;
+            }
+            .stationFlex{
+                flex:1;
+                display:flex;
+                justify-content:center;
+                align-items:center;
+            }
+            .stationInfo {
+                position: absolute;
+                top: 32px;
+                text-align: center;
+            }
+
+            .stationName{
+                width:100%;
+                margin-top: 10px;
+                font-size: 12px;
+                line-height: 1em;
+            }
+
+            .currentImg{
+                display: block;
+                position: absolute;
+                left:35%;
+                /*transform:translateX(-50%);*/
+            }
+            .stationStartEndName{
+                width:100%;
+                margin-top: 6px;
+                font-size: 12px;
+                line-height: 1em;
+            }
+            .stationCurrentName{
+                width:100%;
+                margin-top: 10px;
+                font-size: 12px;
+                line-height: 1em;
+            }
+            .firstEnd{
+                color: #26bbf0;
+            }
+            .normal{
+                color: #62c062;
+            }
+            .current{
+                color: #f36a5a;
+            }
+
+            .vehicleStyle{
+                position: absolute;
+                top: 0;
+                left: 5px;
+                bottom: 0;
+                right: 0;
+                font-size: 12px;
+            }
+            .vehicleStyle > img{
+                display: block;
+            }
+
+            .vehicleStyle > span{
+                color: #26bbf0;
+            }
+
+        }
+    </style>
+    <link rel="stylesheet" href="./css/swiper-3.4.2.min.css">
+    <script src="./js/jquery-1.8.3.min.js"></script>
+    <script src="./js/swiper-3.4.2.min.js"></script>
+</head>
+<body>
+    <div class="station">
+        <div class="content">
+            <div class="contentTitle">
+                <span>旅游路线信息</span>
+            </div>
+            <div class="swiper-container">
+                <div class="swiper-wrapper">
+
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+<script>
+
+        let stationId = ''
+        let  result = [
+            {
+                "id": "a435e789-f922-4c65-91ea-ca09324e4ce5",
+                "creator": "admin",
+                "createTime": "2018-10-17",
+                "modifier": "admin",
+                "modifyTime": "2018-10-17",
+                "name": "船只计划=",
+                "days": "1,2,3,4,5,6,7",
+                "startDate": null,
+                "endDate": null,
+                "startTime": "08:24:59",
+                "endTime": "21:24:59",
+                "routeId": "6f5a899b-9cb6-4b37-ac80-8f4c46d3a7d7",
+                "description": "sdf",
+                "scenicAreaId": null,
+                "type": "1",
+                "svDriverMaps": [
+                    {
+                        "vehicleId": "753e56f3-fa3a-4f83-9c47-3c6fef52b40d",
+                        "driverIds": [
+                            "166153e1798-c168105afba35c5c"
+                        ]
+                    }
+                ],
+                "stations": [
+                    {
+                        "id": "34ba111f-9a92-49a8-84be-bde6e3bc8478",
+                        "creator": "admin",
+                        "createTime": "2018-10-17",
+                        "modifier": "admin",
+                        "modifyTime": "2018-10-17",
+                        "name": "二号码头",
+                        "pictureId": null,
+                        "capacity": 63,
+                        "description": null,
+                        "scenicAreaId": null,
+                        "type": "1",
+                        "status": null,
+                        "regionId": "9752ae86-c863-4adb-9c2a-8c75a081fb64",
+                        "regionName": "浙窑",
+                        "longitude": 120.13243626077417,
+                        "latitude": 30.307825346211757,
+                        "epsg": 4326,
+                        "deleted": false
+                    },
+                    {
+                        "id": "59e5e6f0-e730-4dd0-8d04-506fcd400a60",
+                        "creator": "admin",
+                        "createTime": "2018-10-08",
+                        "modifier": "admin",
+                        "modifyTime": "2018-10-08",
+                        "name": "结婚后",
+                        "pictureId": null,
+                        "capacity": 32,
+                        "description": "桑",
+                        "scenicAreaId": null,
+                        "type": "1",
+                        "status": null,
+                        "regionId": "a23c0a6e-e146-427e-b94a-ea79f4ab6316",
+                        "regionName": "富义仓",
+                        "longitude": 120.13486638109748,
+                        "latitude": 30.306761263274716,
+                        "epsg": 4326,
+                        "deleted": false
+                    },
+                    {
+                        "id": "66c2b041-e9cd-4759-b688-82770bd3fc3e",
+                        "creator": "admin",
+                        "createTime": "2018-10-17",
+                        "modifier": "admin",
+                        "modifyTime": "2018-10-17",
+                        "name": "一号码头",
+                        "pictureId": null,
+                        "capacity": 33,
+                        "description": "打的费",
+                        "scenicAreaId": null,
+                        "type": "1",
+                        "status": null,
+                        "regionId": "2d5807d6-87c9-4031-a07d-8bdf60eb4168",
+                        "regionName": "小河",
+                        "longitude": 120.13756309096141,
+                        "latitude": 30.303278761154342,
+                        "epsg": 4326,
+                        "deleted": false
+                    }
+                ],
+                "status": "ONLINE",
+                "state": null,
+                "vehicles": [
+                    {
+                        "vehicle": {
+                            "id": "753e56f3-fa3a-4f83-9c47-3c6fef52b40d",
+                            "createTime": "2018-09-27 12:51:43",
+                            "creator": "admin",
+                            "modifyTime": "2018-09-27 12:51:43",
+                            "modifier": "admin",
+                            "serialNum": "运河行02",
+                            "capacity": 0,
+                            "type": 1,
+                            "model": null,
+                            "gpsDeviceId": "1d9472f0-1719-48fd-bd2b-71a5deacbc3e",
+                            "pictureId": null,
+                            "maintenanceStatus": 0,
+                            "maintenanceDate": null,
+                            "purchaseDate": null,
+                            "description": null,
+                            "scenicAreaId": null,
+                            "deleted": false
+                        },
+                        "gpsDeviceId": null,
+                        "gpsDeviceName": null,
+                        "pictureId": null,
+                        "picturePath": null,
+                        "gpsData": {
+                            "deviceId": "1019092",
+                            "ioTDeviceId": "1019092",
+                            "deviceName": "\ufffd˺\ufffd\ufffd\ufffd02",
+                            "createTime": "2018-10-17 14:29:22",
+                            "longitude": 120.157898,
+                            "latitude": 30.276783,
+                            "altitude": null,
+                            "direction": null,
+                            "speed": 0,
+                            "telephone": null,
+                            "deviceNum": "1019092",
+                            "coordinate": "",
+                            "tag": "753e56f3-fa3a-4f83-9c47-3c6fef52b40d"
+                        },
+                        "realTimeRatio": null,
+                        "driver": null,
+                        "prevStation": null,
+                        "curStation": {
+                            "id": "34ba111f-9a92-49a8-84be-bde6e3bc8478",
+                            "creator": "admin",
+                            "createTime": "2018-10-17",
+                            "modifier": "admin",
+                            "modifyTime": "2018-10-17",
+                            "name": "二号码头",
+                            "pictureId": null,
+                            "capacity": 63,
+                            "description": null,
+                            "scenicAreaId": null,
+                            "type": "1",
+                            "status": "CURRENT",
+                            "regionId": "9752ae86-c863-4adb-9c2a-8c75a081fb64",
+                            "regionName": "浙窑",
+                            "longitude": 120.13243626077417,
+                            "latitude": 30.307825346211757,
+                            "epsg": 4326,
+                            "deleted": false
+                        },
+                        "nextStation": {
+                            "id": "59e5e6f0-e730-4dd0-8d04-506fcd400a60",
+                            "creator": "admin",
+                            "createTime": "2018-10-08",
+                            "modifier": "admin",
+                            "modifyTime": "2018-10-08",
+                            "name": "结婚后",
+                            "pictureId": null,
+                            "capacity": 32,
+                            "description": "桑",
+                            "scenicAreaId": null,
+                            "type": "1",
+                            "status": "OTHER",
+                            "regionId": "a23c0a6e-e146-427e-b94a-ea79f4ab6316",
+                            "regionName": "富义仓",
+                            "longitude": 120.13486638109748,
+                            "latitude": 30.306761263274716,
+                            "epsg": 4326,
+                            "deleted": false
+                        },
+                        "arriveTime": 0,
+                        "willArriveTime": 3,
+                        "direction": false,
+                        "upNum": null,
+                        "downNum": null,
+                        "vacancy": 10
+                    }
+                ],
+                "willArriveVeFW": null,
+                "willArriveVeRE": null,
+                "route": {
+                    "id": "6f5a899b-9cb6-4b37-ac80-8f4c46d3a7d7",
+                    "name": "2-结婚-1",
+                    "type": 3,
+                    "description": null,
+                    "creator": "admin",
+                    "createTime": "2018-10-17",
+                    "modifier": null,
+                    "modifyTime": null,
+                    "scenicAreaId": null,
+                    "stations": [
+                        {
+                            "id": "34ba111f-9a92-49a8-84be-bde6e3bc8478",
+                            "creator": "admin",
+                            "createTime": "2018-10-17",
+                            "modifier": "admin",
+                            "modifyTime": "2018-10-17",
+                            "name": "二号码头",
+                            "pictureId": null,
+                            "capacity": 63,
+                            "description": null,
+                            "scenicAreaId": null,
+                            "type": "1",
+                            "status": "CURRENT",
+                            "regionId": "9752ae86-c863-4adb-9c2a-8c75a081fb64",
+                            "regionName": "浙窑",
+                            "longitude": 120.13243626077417,
+                            "latitude": 30.307825346211757,
+                            "epsg": 4326,
+                            "deleted": false
+                        },
+                        {
+                            "id": "59e5e6f0-e730-4dd0-8d04-506fcd400a60",
+                            "creator": "admin",
+                            "createTime": "2018-10-08",
+                            "modifier": "admin",
+                            "modifyTime": "2018-10-08",
+                            "name": "结婚后",
+                            "pictureId": null,
+                            "capacity": 32,
+                            "description": "桑",
+                            "scenicAreaId": null,
+                            "type": "1",
+                            "status": "OTHER",
+                            "regionId": "a23c0a6e-e146-427e-b94a-ea79f4ab6316",
+                            "regionName": "富义仓",
+                            "longitude": 120.13486638109748,
+                            "latitude": 30.306761263274716,
+                            "epsg": 4326,
+                            "deleted": false
+                        },
+                        {
+                            "id": "66c2b041-e9cd-4759-b688-82770bd3fc3e",
+                            "creator": "admin",
+                            "createTime": "2018-10-17",
+                            "modifier": "admin",
+                            "modifyTime": "2018-10-17",
+                            "name": "一号码头",
+                            "pictureId": null,
+                            "capacity": 33,
+                            "description": "打的费",
+                            "scenicAreaId": null,
+                            "type": "1",
+                            "status": "TO",
+                            "regionId": "2d5807d6-87c9-4031-a07d-8bdf60eb4168",
+                            "regionName": "小河",
+                            "longitude": 120.13756309096141,
+                            "latitude": 30.303278761154342,
+                            "epsg": 4326,
+                            "deleted": false
+                        }
+                    ],
+                    "reStations": [
+                        {
+                            "id": "66c2b041-e9cd-4759-b688-82770bd3fc3e",
+                            "creator": "admin",
+                            "createTime": "2018-10-17",
+                            "modifier": "admin",
+                            "modifyTime": "2018-10-17",
+                            "name": "一号码头",
+                            "pictureId": null,
+                            "capacity": 33,
+                            "description": "打的费",
+                            "scenicAreaId": null,
+                            "type": "1",
+                            "status": "FROM",
+                            "regionId": "2d5807d6-87c9-4031-a07d-8bdf60eb4168",
+                            "regionName": "小河",
+                            "longitude": 120.13756309096141,
+                            "latitude": 30.303278761154342,
+                            "epsg": 4326,
+                            "deleted": false
+                        },
+                        {
+                            "id": "59e5e6f0-e730-4dd0-8d04-506fcd400a60",
+                            "creator": "admin",
+                            "createTime": "2018-10-08",
+                            "modifier": "admin",
+                            "modifyTime": "2018-10-08",
+                            "name": "结婚后",
+                            "pictureId": null,
+                            "capacity": 32,
+                            "description": "桑",
+                            "scenicAreaId": null,
+                            "type": "1",
+                            "status": "OTHER",
+                            "regionId": "a23c0a6e-e146-427e-b94a-ea79f4ab6316",
+                            "regionName": "富义仓",
+                            "longitude": 120.13486638109748,
+                            "latitude": 30.306761263274716,
+                            "epsg": 4326,
+                            "deleted": false
+                        },
+                        {
+                            "id": "34ba111f-9a92-49a8-84be-bde6e3bc8478",
+                            "creator": "admin",
+                            "createTime": "2018-10-17",
+                            "modifier": "admin",
+                            "modifyTime": "2018-10-17",
+                            "name": "二号码头",
+                            "pictureId": null,
+                            "capacity": 63,
+                            "description": null,
+                            "scenicAreaId": null,
+                            "type": "1",
+                            "status": "CURRENT",
+                            "regionId": "9752ae86-c863-4adb-9c2a-8c75a081fb64",
+                            "regionName": "浙窑",
+                            "longitude": 120.13243626077417,
+                            "latitude": 30.307825346211757,
+                            "epsg": 4326,
+                            "deleted": false
+                        }
+                    ],
+                    "deleted": false,
+                    "geo": "[[120.1324194524691,30.30783244120617],[120.13381520508307,30.3064637281329],[120.13489169935139,30.306753311263034],[120.13742407971495,30.303364795731383]]"
+                },
+                "enabled": true,
+                "deleted": false,
+                "customizedDays": false
+            },
+            {
+                "id": "fjdffshr3-f922-4c65-ca0932228811",
+                "creator": "admin",
+                "createTime": "2018-10-17",
+                "modifier": "admin",
+                "modifyTime": "2018-10-17",
+                "name": "船只计划的归属感",
+                "days": "1,2,3,4,5,6,7",
+                "startDate": null,
+                "endDate": null,
+                "startTime": "08:24:59",
+                "endTime": "21:24:59",
+                "routeId": "5r4wy7hfd-9cb6-4b37-sdgsadc",
+                "description": "sdf",
+                "scenicAreaId": null,
+                "type": "1",
+                "stations": [
+                    {
+                        "id": "34ba111f-9a92-49a8-84be-bde6e3bc8478",
+                        "creator": "admin",
+                        "createTime": "2018-10-17",
+                        "modifier": "admin",
+                        "modifyTime": "2018-10-17",
+                        "name": "二号码头",
+                        "pictureId": null,
+                        "capacity": 63,
+                        "description": null,
+                        "scenicAreaId": null,
+                        "type": "1",
+                        "status": "CURRENT",
+                        "regionId": "9752ae86-c863-4adb-9c2a-8c75a081fb64",
+                        "regionName": "浙窑",
+                        "longitude": 120.13243626077417,
+                        "latitude": 30.307825346211757,
+                        "epsg": 4326,
+                        "deleted": false
+                    },
+                    {
+                        "id": "7jgfj34fhdf-23-hg-bd-bdfhdfs",
+                        "creator": "admin",
+                        "createTime": "2018-10-08",
+                        "modifier": "admin",
+                        "modifyTime": "2018-10-08",
+                        "name": "你的粉丝",
+                        "pictureId": null,
+                        "capacity": 32,
+                        "description": "桑",
+                        "scenicAreaId": null,
+                        "type": "1",
+                        "status": null,
+                        "regionId": "a23c0a6e-e146-427e-b94a-ea79f4ab6316",
+                        "regionName": "富义仓",
+                        "longitude": 120.13486638109748,
+                        "latitude": 30.306761263274716,
+                        "epsg": 4326,
+                        "deleted": false
+                    },
+                    {
+                        "id": "gfj5y-e9cd-4759-b688-gjfghjgfj",
+                        "creator": "admin",
+                        "createTime": "2018-10-17",
+                        "modifier": "admin",
+                        "modifyTime": "2018-10-17",
+                        "name": "贝多芬高度",
+                        "pictureId": null,
+                        "capacity": 33,
+                        "description": "恢复规划咋爱的",
+                        "scenicAreaId": null,
+                        "type": "1",
+                        "status": null,
+                        "regionId": "2d5807d6-87c9-4031-a07d-8bdf60eb4168",
+                        "regionName": "小河",
+                        "longitude": 120.13756309096141,
+                        "latitude": 30.303278761154342,
+                        "epsg": 4326,
+                        "deleted": false
+                    }
+                ],
+                "status": "ONLINE",
+                "state": null,
+                "vehicles": [
+                    {
+                        "vehicle": {
+                            "id": "rtret43g46456-fa3a-4f83-njmfggf",
+                            "createTime": "2018-09-27 12:51:43",
+                            "creator": "admin",
+                            "modifyTime": "2018-09-27 12:51:43",
+                            "modifier": "admin",
+                            "serialNum": "那跳出来了",
+                            "capacity": 0,
+                            "type": 1,
+                            "model": null,
+                            "gpsDeviceId": "1d9472f0-1719-48fd-bd2b-71a5deacbc3e",
+                            "pictureId": null,
+                            "maintenanceStatus": 0,
+                            "maintenanceDate": null,
+                            "purchaseDate": null,
+                            "description": null,
+                            "scenicAreaId": null,
+                            "deleted": false
+                        },
+                        "gpsDeviceId": null,
+                        "gpsDeviceName": null,
+                        "pictureId": null,
+                        "picturePath": null,
+                        "gpsData": {
+                            "deviceId": "1019092",
+                            "ioTDeviceId": "1019092",
+                            "deviceName": "\ufffd˺\ufffd\ufffd\ufffd02",
+                            "createTime": "2018-10-17 14:29:22",
+                            "longitude": 120.157898,
+                            "latitude": 30.276783,
+                            "altitude": null,
+                            "direction": null,
+                            "speed": 0,
+                            "telephone": null,
+                            "deviceNum": "1019092",
+                            "coordinate": "",
+                            "tag": "753e56f3-fa3a-4f83-9c47-3c6fef52b40d"
+                        },
+                        "realTimeRatio": null,
+                        "driver": null,
+                        "prevStation": null,
+                        "curStation": {
+                            "id": "34ba111f-9a92-49a8-84be-bde6e3bc8478",
+                            "creator": "admin",
+                            "createTime": "2018-10-17",
+                            "modifier": "admin",
+                            "modifyTime": "2018-10-17",
+                            "name": "二号码头",
+                            "pictureId": null,
+                            "capacity": 63,
+                            "description": null,
+                            "scenicAreaId": null,
+                            "type": "1",
+                            "status": "CURRENT",
+                            "regionId": "9752ae86-c863-4adb-9c2a-8c75a081fb64",
+                            "regionName": "浙窑",
+                            "longitude": 120.13243626077417,
+                            "latitude": 30.307825346211757,
+                            "epsg": 4326,
+                            "deleted": false
+                        },
+                        "nextStation": {
+                            "id": "59e5e6f0-e730-4dd0-8d04-506fcd400a60",
+                            "creator": "admin",
+                            "createTime": "2018-10-08",
+                            "modifier": "admin",
+                            "modifyTime": "2018-10-08",
+                            "name": "结婚后",
+                            "pictureId": null,
+                            "capacity": 32,
+                            "description": "桑",
+                            "scenicAreaId": null,
+                            "type": "1",
+                            "status": "OTHER",
+                            "regionId": "a23c0a6e-e146-427e-b94a-ea79f4ab6316",
+                            "regionName": "富义仓",
+                            "longitude": 120.13486638109748,
+                            "latitude": 30.306761263274716,
+                            "epsg": 4326,
+                            "deleted": false
+                        },
+                        "arriveTime": 0,
+                        "willArriveTime": 3,
+                        "direction": false,
+                        "upNum": null,
+                        "downNum": null,
+                        "vacancy": 10
+                    }
+                ],
+                "willArriveVeFW": null,
+                "willArriveVeRE": null,
+                "route": {
+                    "id": "5r4wy7hfd-9cb6-4b37-sdgsadc",
+                    "name": "东方红东方红",
+                    "type": 3,
+                    "description": null,
+                    "creator": "admin",
+                    "createTime": "2018-10-17",
+                    "modifier": null,
+                    "modifyTime": null,
+                    "scenicAreaId": null,
+                    "stations": [
+                        {
+                            "id": "34ba111f-9a92-49a8-84be-bde6e3bc8478",
+                            "creator": "admin",
+                            "createTime": "2018-10-17",
+                            "modifier": "admin",
+                            "modifyTime": "2018-10-17",
+                            "name": "二号码头",
+                            "pictureId": null,
+                            "capacity": 63,
+                            "description": null,
+                            "scenicAreaId": null,
+                            "type": "1",
+                            "status": "CURRENT",
+                            "regionId": "9752ae86-c863-4adb-9c2a-8c75a081fb64",
+                            "regionName": "浙窑",
+                            "longitude": 120.13243626077417,
+                            "latitude": 30.307825346211757,
+                            "epsg": 4326,
+                            "deleted": false
+                        },
+                        {
+                            "id": "7jgfj34fhdf-23-hg-bd-bdfhdfs",
+                            "creator": "admin",
+                            "createTime": "2018-10-08",
+                            "modifier": "admin",
+                            "modifyTime": "2018-10-08",
+                            "name": "你的粉丝",
+                            "pictureId": null,
+                            "capacity": 32,
+                            "description": "桑",
+                            "scenicAreaId": null,
+                            "type": "1",
+                            "status": null,
+                            "regionId": "a23c0a6e-e146-427e-b94a-ea79f4ab6316",
+                            "regionName": "富义仓",
+                            "longitude": 120.13486638109748,
+                            "latitude": 30.306761263274716,
+                            "epsg": 4326,
+                            "deleted": false
+                        },
+                        {
+                            "id": "gfj5y-e9cd-4759-b688-gjfghjgfj",
+                            "creator": "admin",
+                            "createTime": "2018-10-17",
+                            "modifier": "admin",
+                            "modifyTime": "2018-10-17",
+                            "name": "贝多芬高度",
+                            "pictureId": null,
+                            "capacity": 33,
+                            "description": "恢复规划咋爱的",
+                            "scenicAreaId": null,
+                            "type": "1",
+                            "status": null,
+                            "regionId": "2d5807d6-87c9-4031-a07d-8bdf60eb4168",
+                            "regionName": "小河",
+                            "longitude": 120.13756309096141,
+                            "latitude": 30.303278761154342,
+                            "epsg": 4326,
+                            "deleted": false
+                        }
+                    ],
+                    "reStations": [
+                        {
+                            "id": "gfj5y-e9cd-4759-b688-gjfghjgfj",
+                            "creator": "admin",
+                            "createTime": "2018-10-17",
+                            "modifier": "admin",
+                            "modifyTime": "2018-10-17",
+                            "name": "贝多芬高度",
+                            "pictureId": null,
+                            "capacity": 33,
+                            "description": "恢复规划咋爱的",
+                            "scenicAreaId": null,
+                            "type": "1",
+                            "status": null,
+                            "regionId": "2d5807d6-87c9-4031-a07d-8bdf60eb4168",
+                            "regionName": "小河",
+                            "longitude": 120.13756309096141,
+                            "latitude": 30.303278761154342,
+                            "epsg": 4326,
+                            "deleted": false
+                        },
+                        {
+                            "id": "7jgfj34fhdf-23-hg-bd-bdfhdfs",
+                            "creator": "admin",
+                            "createTime": "2018-10-08",
+                            "modifier": "admin",
+                            "modifyTime": "2018-10-08",
+                            "name": "你的粉丝",
+                            "pictureId": null,
+                            "capacity": 32,
+                            "description": "桑",
+                            "scenicAreaId": null,
+                            "type": "1",
+                            "status": null,
+                            "regionId": "a23c0a6e-e146-427e-b94a-ea79f4ab6316",
+                            "regionName": "富义仓",
+                            "longitude": 120.13486638109748,
+                            "latitude": 30.306761263274716,
+                            "epsg": 4326,
+                            "deleted": false
+                        },
+                        {
+                            "id": "34ba111f-9a92-49a8-84be-bde6e3bc8478",
+                            "creator": "admin",
+                            "createTime": "2018-10-17",
+                            "modifier": "admin",
+                            "modifyTime": "2018-10-17",
+                            "name": "二号码头",
+                            "pictureId": null,
+                            "capacity": 63,
+                            "description": null,
+                            "scenicAreaId": null,
+                            "type": "1",
+                            "status": "CURRENT",
+                            "regionId": "9752ae86-c863-4adb-9c2a-8c75a081fb64",
+                            "regionName": "浙窑",
+                            "longitude": 120.13243626077417,
+                            "latitude": 30.307825346211757,
+                            "epsg": 4326,
+                            "deleted": false
+                        }
+                    ],
+                    "deleted": false,
+                    "geo": "[[120.1324194524691,30.30783244120617],[120.13381520508307,30.3064637281329],[120.13489169935139,30.306753311263034],[120.13742407971495,30.303364795731383]]"
+                },
+                "enabled": true,
+                "deleted": false,
+                "customizedDays": false
+            }
+        ]
+        let routes = []
+        let schedules = []
+        window.onload = function(){
+            let url = window.location.href
+            console.log(url)
+
+            let reg=new RegExp('[?&]'+'stationId'+'=([^&#]+)');
+            let query=url.match(reg);
+            stationId = query?query[1]:null;
+            console.log(stationId,'stationId')
+            getStationData(stationId)
+        }
+
+
+
+        function getStationData(){
+                $.ajax({
+                    url:'/v1/schedule/vehicle?stationId='+stationId,
+                    type:'get',
+                    dataType:'json',
+                    success:function(res){
+                        console.log(res,'stationData  res')
+                        routes = []
+                        schedules = []
+                        //假数据
+                        if(res instanceof Array && res.length >0){
+                            res.forEach(schedule=>{
+                                let cloneItemFW = Object.assign({},schedule.route)
+                                let cloneItemRE = Object.assign({},schedule.route)
+                                cloneItemRE.stations = cloneItemRE.reStations
+
+                                let positiveVes = []
+                                let reverseVes = []
+                                if(schedule.vehicles.length > 0){
+                                    schedule.vehicles.forEach(vehicle=>{
+                                        if(vehicle.direction){     //正向
+                                            if(vehicle.curStation){
+                                                vehicle['curStation']['key'] = vehicle['curStation']['id']+"FW"
+                                            }
+                                            if(vehicle.nextStation){
+                                                vehicle['nextStation']['key'] = vehicle['nextStation']['id']+"FW"
+                                            }
+                                            positiveVes.push(vehicle)
+                                        }else{
+                                            if(vehicle.curStation){
+                                                vehicle['curStation']['key'] = vehicle['curStation']['id']+"RE"
+                                            }
+                                            if(vehicle.nextStation){
+                                                vehicle['nextStation']['key'] = vehicle['nextStation']['id']+"RE"
+                                            }
+                                            reverseVes.push(vehicle)
+                                        }
+                                    })
+
+                                    cloneItemFW['vehicles'] = positiveVes
+                                    cloneItemRE['vehicles'] = reverseVes
+                                }
+
+                                if(cloneItemFW.stations.length >0){
+                                    cloneItemFW.stations.forEach(station=>{
+                                        station['key'] = station.id + "FW"
+                                    })
+                                }
+
+                                if(cloneItemRE.stations.length >0){
+                                    cloneItemRE.stations.forEach(reStation=>{
+                                        reStation['key'] = reStation.id+"RE"
+                                    })
+                                }
+
+                                if(schedule.willArriveVeFW){
+                                    cloneItemFW['willArriveVe'] = schedule.willArriveVeFW
+                                }
+
+                                if(schedule.willArriveVeRE){
+                                    cloneItemRE['willArriveVe'] = schedule.willArriveVeRE
+                                }
+
+                                cloneItemFW['key'] = cloneItemFW.id+"FW"
+                                cloneItemRE['key'] = cloneItemRE.id+"RE"
+
+                                cloneItemFW.name = cloneItemFW.name+"(去)"
+                                cloneItemRE.name = cloneItemRE.name+"(返)"
+
+                                let routeArray = []
+                                routeArray.push(cloneItemFW)
+                                routeArray.push(cloneItemRE)
+
+                                schedules.push({
+                                    id:schedule.id,
+                                    routes:routeArray
+                                })
+
+                            })
+
+                            console.log(schedules,'schedules')
+
+                            initDom(schedules)
+
+                            setTimeout(() => {
+                                console.log("aaaaaaaaaaaaaaaaaa")
+                                getStationData();
+                            },600000)
+
+                        }
+                    }
+                })
+            }
+
+        function initDom(schedules){
+            console.log(schedules,'schedules')
+
+            if(schedules.length > 0){
+                $('#myCarousel').empty()
+                let carouselDiv = ''
+                for(var i=0;i<schedules.length;i++){
+                    let routeContent = ''
+                    if(schedules[i].routes.length>0) {
+                        schedules[i].routes.forEach(route=>{
+
+                            let desc = '';
+                            if(route.willArriveVe){
+                                desc = `<div class="desc">
+                                            <div class="left">
+                                                <span>${route.name}</span>
+                                            </div>
+                                            <div class="center">
+                                                    <span><${route.willArriveVe.vehicle.serialNum}>还有${route.willArriveVe.willArriveTime}分钟到达</span>
+                                            </div>
+                                            <div class="right">
+                                                <span>空余座位：${route.willArriveVe.vacancy}人</span>
+                                            </div>
+                                        </div>`
+                            }else{
+                                desc = `<div class="desc">
+                                            <div class="left">
+                                                <span>${route.name}</span>
+                                            </div>
+                                            <div class="center">
+                                                <span>预计到达时间：未知</span>
+                                            </div>
+                                            <div class="right">
+                                                <span>空余座位：未知</span>
+                                            </div>
+                                        </div>`
+                            }
+
+                            let vehicleList = '';
+                            if(route.vehicles.length >0){
+                                route.vehicles.forEach(item=>{
+                                    if(item.curStation && item.nextStation){
+                                        vehicleList += `<div class="vehicleStyle" id="${item.vehicle.id}">
+                                                          <span>${item.vehicle.serialNum}</span>
+                                                          <img src="../../../static/img/icon/station/vehicleShip.png">
+                                                       </div>`
+                                    }
+                                })
+                            }
+
+                            let stationList = ''
+                            if(route.stations.length >0){
+                                route.stations.forEach(station=> {
+                                    let stationHtml
+                                    if (station.status == 'FROM') {
+                                        stationHtml = `<div class="stationFlex">
+                                                            <div class="stationInfo">
+                                                                <img id = "${station.key}" src="../../../static/img/icon/station/firstStation.png">
+                                                                <div class="stationStartEndName firstEnd">
+                                                                 ${station.name}
+                                                                </div>
+                                                            </div>
+                                                        </div>`
+                                    } else if (station.status == 'TO') {
+                                        stationHtml = `<div class="stationFlex">
+                                                            <div class="stationInfo">
+                                                                <img id = "${station.key}" src="../../../static/img/icon/station/endStation.png">
+                                                                <div class="stationStartEndName firstEnd">
+                                                                 ${station.name}
+                                                                </div>
+                                                            </div>
+                                                        </div>`
+                                    } else if (station.status == 'CURRENT') {
+                                        stationHtml = `<div class="stationFlex">
+                                                            <div class="stationInfo">
+                                                                <img id = "${station.key}"  src="../../../static/img/icon/station/currentStation1.png">
+                                                                <img id = "${station.key}" class="currentImg"  src="../../../static/img/icon/station/currentStation2.png">
+                                                                <div class="stationCurrentName current">
+                                                                 ${station.name}
+                                                                </div>
+                                                            </div>
+                                                        </div>`
+                                    } else if (station.status == 'OTHER') {
+                                        stationHtml = `<div class="stationFlex">
+                                                            <div class="stationInfo">
+                                                                <img id = "${station.key}" src="../../../static/img/icon/station/normalStation2.png">
+                                                                <div class="stationName normal">
+                                                                 ${station.name}
+                                                                </div>
+                                                            </div>
+                                                        </div>`
+                                    }
+
+                                    stationList += stationHtml
+                                })
+                            }
+
+                            let trend = `<div class="trend">
+                                            <div class="route"></div>
+                                            <div class="stationContent" id="${route.key}">
+                                              ${vehicleList}
+                                              ${stationList}
+                                            </div>
+                                         </div>`
+
+                            let routeHtml = `<div class="contentDiv">
+                                                  <div class="contentBody">
+                                                       ${desc}
+                                                       ${trend}
+                                                  </div>
+                                             </div>`
+
+                            routeContent += routeHtml
+
+                        })
+                    }
+
+
+                    carouselDiv += `<div id="${schedules[i].id}" class="swiper-slide carouselContent">
+                                       ${routeContent}
+                                   </div>`
+                }
+                $('.swiper-wrapper').append(carouselDiv)
+                initVehiclePosition(schedules);
+
+                var mySwiper = new Swiper ('.swiper-container', {
+                    loop: true,
+                    autoplay: 5000
+                })
+            }
+
+        }
+
+        function  initVehiclePosition(schedules){
+            if(schedules.length > 0){
+                schedules.forEach(schedule=>{
+                    if(schedule.routes.length>0) {
+                        schedule.routes.forEach(route=>{
+                            route.vehicles.forEach(item=>{
+                                if(!item.curStation || !item.nextStation){
+                                    return
+                                }
+                                let stationPrevious = document.getElementById(item.curStation.key)
+                                let stationNext  =document.getElementById(item.nextStation.key)
+                                let stationCurrent
+                                if(item.direction){
+                                    stationCurrent = document.getElementById(stationId+"FW")
+                                }else{
+                                    stationCurrent = document.getElementById(stationId+"RE")
+                                }
+                                let stationContent = document.getElementById(route.key)
+                                let prevDistance = stationPrevious.getBoundingClientRect().left - stationContent.getBoundingClientRect().left
+                                let prevDistanceBig = stationCurrent.getBoundingClientRect().left - stationContent.getBoundingClientRect().left
+                                let totalDistance
+
+                                if(item.realTimeRatio){
+                                    if(item.realTimeRatio < 1){
+                                        totalDistance = prevDistance + (1-item.realTimeRatio)*(stationCurrent.getBoundingClientRect().left - stationPrevious.getBoundingClientRect().left)
+                                    }else if(item.realTimeRatio > 1){
+                                        totalDistance = prevDistanceBig + item.realTimeRatio*(stationPrevious.getBoundingClientRect().left - stationCurrent.getBoundingClientRect().left)
+                                    }
+                                } else{
+                                    totalDistance = prevDistance + item.realTimeRatio*(stationNext.getBoundingClientRect().left -stationPrevious.getBoundingClientRect().left)
+                                }
+
+                                let el = document.getElementById(item.vehicle.id)
+                                el.style.left = totalDistance+"px"
+
+                            })
+                        })
+                    }
+
+                })
+            }
+        }
+
+</script>
+
+
+
+
+</html>
