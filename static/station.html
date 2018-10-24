@@ -210,8 +210,8 @@
 
 <script>
 
-        let stationId = ''
-        let  result = [
+        var stationId = ''
+        var  result = [
             {
                 "id": "a435e789-f922-4c65-91ea-ca09324e4ce5",
                 "creator": "admin",
@@ -849,19 +849,26 @@
                 "customizedDays": false
             }
         ]
-        let routes = []
-        let schedules = []
-        window.onload = function(){
-            let url = window.location.href
-            console.log(url)
+        var routes = []
+        var schedules = []
+//        window.onload = function(){
+//            var url = window.location.href
+//            console.log(url)
+//
+//            var reg=new RegExp('[?&]'+'stationId'+'=([^&#]+)');
+//            var query=url.match(reg);
+//            stationId = query?query[1]:null;
+//            console.log(stationId,'stationId')
+//            getStationData(stationId)
+//        }
+        var url = window.location.href
+        console.log(url)
 
-            let reg=new RegExp('[?&]'+'stationId'+'=([^&#]+)');
-            let query=url.match(reg);
-            stationId = query?query[1]:null;
-            console.log(stationId,'stationId')
-            getStationData(stationId)
-        }
-
+        var reg=new RegExp('[?&]'+'stationId'+'=([^&#]+)');
+        var query=url.match(reg);
+        stationId = query?query[1]:null;
+        console.log(stationId,'stationId')
+        getStationData(stationId)
 
 
         function getStationData(){
@@ -875,15 +882,15 @@
                         schedules = []
                         //假数据
                         if(res instanceof Array && res.length >0){
-                            res.forEach(schedule=>{
-                                let cloneItemFW = Object.assign({},schedule.route)
-                                let cloneItemRE = Object.assign({},schedule.route)
+                            res.forEach(function(schedule){
+                                var cloneItemFW = Object.assign({},schedule.route)
+                                var cloneItemRE = Object.assign({},schedule.route)
                                 cloneItemRE.stations = cloneItemRE.reStations
 
-                                let positiveVes = []
-                                let reverseVes = []
+                                var positiveVes = []
+                                var reverseVes = []
                                 if(schedule.vehicles.length > 0){
-                                    schedule.vehicles.forEach(vehicle=>{
+                                    schedule.vehicles.forEach(function(vehicle){
                                         if(vehicle.direction){     //正向
                                             if(vehicle.curStation){
                                                 vehicle['curStation']['key'] = vehicle['curStation']['id']+"FW"
@@ -908,13 +915,13 @@
                                 }
 
                                 if(cloneItemFW.stations.length >0){
-                                    cloneItemFW.stations.forEach(station=>{
+                                    cloneItemFW.stations.forEach(function(station){
                                         station['key'] = station.id + "FW"
                                     })
                                 }
 
                                 if(cloneItemRE.stations.length >0){
-                                    cloneItemRE.stations.forEach(reStation=>{
+                                    cloneItemRE.stations.forEach(function(reStation){
                                         reStation['key'] = reStation.id+"RE"
                                     })
                                 }
@@ -933,7 +940,7 @@
                                 cloneItemFW.name = cloneItemFW.name+"(去)"
                                 cloneItemRE.name = cloneItemRE.name+"(返)"
 
-                                let routeArray = []
+                                var routeArray = []
                                 routeArray.push(cloneItemFW)
                                 routeArray.push(cloneItemRE)
 
@@ -948,7 +955,7 @@
 
                             initDom(schedules)
 
-                            setTimeout(() => {
+                            setTimeout(function(){
                                 console.log("aaaaaaaaaaaaaaaaaa")
                                 getStationData();
                             },600000)
@@ -963,112 +970,99 @@
 
             if(schedules.length > 0){
                 $('#myCarousel').empty()
-                let carouselDiv = ''
+                var carouselDiv = ''
                 for(var i=0;i<schedules.length;i++){
-                    let routeContent = ''
+                    var routeContent = ''
                     if(schedules[i].routes.length>0) {
-                        schedules[i].routes.forEach(route=>{
+                        schedules[i].routes.forEach(function(route){
 
-                            let desc = '';
+                            var desc = '';
                             if(route.willArriveVe){
-                                desc = `<div class="desc">
-                                            <div class="left">
-                                                <span>${route.name}</span>
-                                            </div>
-                                            <div class="center">
-                                                    <span><${route.willArriveVe.vehicle.serialNum}>还有${route.willArriveVe.willArriveTime}分钟到达</span>
-                                            </div>
-                                            <div class="right">
-                                                <span>空余座位：${route.willArriveVe.vacancy}人</span>
-                                            </div>
-                                        </div>`
+                                desc = "<div class='desc'>"+
+                                            "<div class='left'>"+
+                                                "<span>"+route.name+"</span>"+
+                                            "</div>"+
+                                            "<div class='center'>"+
+                                                    "<span><"+route.willArriveVe.vehicle.serialNum+">还有"+route.willArriveVe.willArriveTime+"分钟到达</span>"+
+                                            "</div>"+
+                                            "<div class='right'>"+
+                                                "<span>空余座位："+route.willArriveVe.vacancy+"人</span>"+
+                                            "</div>"+
+                                        "</div>"
                             }else{
-                                desc = `<div class="desc">
-                                            <div class="left">
-                                                <span>${route.name}</span>
-                                            </div>
-                                            <div class="center">
-                                                <span>预计到达时间：未知</span>
-                                            </div>
-                                            <div class="right">
-                                                <span>空余座位：未知</span>
-                                            </div>
-                                        </div>`
+                                desc = "<div class='desc'>"+
+                                            "<div class='left'>"+
+                                                "<span>"+route.name+"</span>"+
+                                            "</div>"+
+                                            "<div class='center'>"+
+                                                "<span>预计到达时间：未知</span>"+
+                                            "</div>"+
+                                            "<div class='right'>"+
+                                                "<span>空余座位：未知</span>"+
+                                            "</div>"+
+                                       "</div>"
                             }
 
-                            let vehicleList = '';
+                            var vehicleList = '';
                             if(route.vehicles.length >0){
-                                route.vehicles.forEach(item=>{
+                                route.vehicles.forEach(function(item){
                                     if(item.curStation && item.nextStation){
-                                        vehicleList += `<div class="vehicleStyle" id="${item.vehicle.id}">
-                                                          <span>${item.vehicle.serialNum}</span>
-                                                          <img src="../../../static/img/icon/station/vehicleShip.png">
-                                                       </div>`
+                                        vehicleList += "<div class='vehicleStyle' id='"+item.vehicle.id+"'>"+
+                                                            "<span>"+item.vehicle.serialNum+"</span>"+
+                                                            "<img src='../../../static/img/icon/station/vehicleShip.png'>"+
+                                                        "</div>"
                                     }
                                 })
                             }
 
-                            let stationList = ''
+                            var stationList = ''
                             if(route.stations.length >0){
-                                route.stations.forEach(station=> {
-                                    let stationHtml
+                                route.stations.forEach(function(station) {
+                                    var stationHtml
                                     if (station.status == 'FROM') {
-                                        stationHtml = `<div class="stationFlex">
-                                                            <div class="stationInfo">
-                                                                <img id = "${station.key}" src="../../../static/img/icon/station/firstStation.png">
-                                                                <div class="stationStartEndName firstEnd">
-                                                                 ${station.name}
-                                                                </div>
-                                                            </div>
-                                                        </div>`
+                                        stationHtml = "<div class='stationFlex'>"+
+                                                        "<div class='stationInfo'>"+
+                                                            "<img id = '"+station.key+"' src='../../../static/img/icon/station/firstStation.png'>"+
+                                                            "<div class='stationStartEndName firstEnd'>"+station.name+ "</div>"+
+                                                        "</div>"+
+                                                      "</div>"
                                     } else if (station.status == 'TO') {
-                                        stationHtml = `<div class="stationFlex">
-                                                            <div class="stationInfo">
-                                                                <img id = "${station.key}" src="../../../static/img/icon/station/endStation.png">
-                                                                <div class="stationStartEndName firstEnd">
-                                                                 ${station.name}
-                                                                </div>
-                                                            </div>
-                                                        </div>`
+                                        stationHtml = "<div class='stationFlex'>"+
+                                                            "<div class='stationInfo'>"+
+                                                                "<img id = '"+station.key+"' src='../../../static/img/icon/station/endStation.png'>"+
+                                                                "<div class='stationStartEndName firstEnd'>"+station.name+"</div>"+
+                                                            "</div>"+
+                                                      "</div>"
                                     } else if (station.status == 'CURRENT') {
-                                        stationHtml = `<div class="stationFlex">
-                                                            <div class="stationInfo">
-                                                                <img id = "${station.key}"  src="../../../static/img/icon/station/currentStation1.png">
-                                                                <img id = "${station.key}" class="currentImg"  src="../../../static/img/icon/station/currentStation2.png">
-                                                                <div class="stationCurrentName current">
-                                                                 ${station.name}
-                                                                </div>
-                                                            </div>
-                                                        </div>`
+                                        stationHtml = "<div class='stationFlex'>"+
+                                                            "<div class='stationInfo'>"+
+                                                                "<img id ='"+station.key+"' src='../../../static/img/icon/station/currentStation1.png'>"+
+                                                                "<img id ='"+station.key+"' class='currentImg'  src='../../../static/img/icon/station/currentStation2.png'>"+
+                                                                "<div class='stationCurrentName current'>"+station.name+"</div>"+
+                                                            "</div>"+
+                                                      "</div>"
+
                                     } else if (station.status == 'OTHER') {
-                                        stationHtml = `<div class="stationFlex">
-                                                            <div class="stationInfo">
-                                                                <img id = "${station.key}" src="../../../static/img/icon/station/normalStation2.png">
-                                                                <div class="stationName normal">
-                                                                 ${station.name}
-                                                                </div>
-                                                            </div>
-                                                        </div>`
+                                        stationHtml = "<div class='stationFlex'>"+
+                                                            "<div class='stationInfo'>"+
+                                                                "<img id = '"+station.key+"' src='../../../static/img/icon/station/normalStation2.png'>"+
+                                                                "<div class='stationName normal'>"+station.name+"</div>"+
+                                                            "</div>"+
+                                                      "</div>"
                                     }
 
                                     stationList += stationHtml
                                 })
                             }
 
-                            let trend = `<div class="trend">
-                                            <div class="route"></div>
-                                            <div class="stationContent" id="${route.key}">
-                                              ${vehicleList}
-                                              ${stationList}
-                                            </div>
-                                         </div>`
+                            var trend = "<div class='trend'>"+
+                                            "<div class='route'></div>"+
+                                            "<div class='stationContent' id='"+route.key+"'>"+vehicleList+stationList+"</div>"+
+                                        "</div>"
 
-                            let routeHtml = `<div class="contentDiv">
-                                                  <div class="contentBody">
-                                                       ${desc}
-                                                       ${trend}
-                                                  </div>
-                                             </div>`
+                            var routeHtml = "<div class='contentDiv'>"+
+                                                "<div class='contentBody'>"+desc+trend+"</div>"+
+                                            "</div>"
 
                             routeContent += routeHtml
 
@@ -1076,9 +1070,7 @@
                     }
 
 
-                    carouselDiv += `<div id="${schedules[i].id}" class="swiper-slide carouselContent">
-                                       ${routeContent}
-                                   </div>`
+                    carouselDiv += "<div id='"+schedules[i].id+"' class='swiper-slide carouselContent'>"+routeContent+"</div>"
                 }
                 $('.swiper-wrapper').append(carouselDiv)
                 initVehiclePosition(schedules);
@@ -1093,25 +1085,25 @@
 
         function  initVehiclePosition(schedules){
             if(schedules.length > 0){
-                schedules.forEach(schedule=>{
+                schedules.forEach(function(schedule){
                     if(schedule.routes.length>0) {
-                        schedule.routes.forEach(route=>{
-                            route.vehicles.forEach(item=>{
+                        schedule.routes.forEach(function(route){
+                            route.vehicles.forEach(function(item){
                                 if(!item.curStation || !item.nextStation){
                                     return
                                 }
-                                let stationPrevious = document.getElementById(item.curStation.key)
-                                let stationNext  =document.getElementById(item.nextStation.key)
-                                let stationCurrent
+                                var stationPrevious = document.getElementById(item.curStation.key)
+                                var stationNext  =document.getElementById(item.nextStation.key)
+                                var stationCurrent
                                 if(item.direction){
                                     stationCurrent = document.getElementById(stationId+"FW")
                                 }else{
                                     stationCurrent = document.getElementById(stationId+"RE")
                                 }
-                                let stationContent = document.getElementById(route.key)
-                                let prevDistance = stationPrevious.getBoundingClientRect().left - stationContent.getBoundingClientRect().left
-                                let prevDistanceBig = stationCurrent.getBoundingClientRect().left - stationContent.getBoundingClientRect().left
-                                let totalDistance
+                                var stationContent = document.getElementById(route.key)
+                                var prevDistance = stationPrevious.getBoundingClientRect().left - stationContent.getBoundingClientRect().left
+                                var prevDistanceBig = stationCurrent.getBoundingClientRect().left - stationContent.getBoundingClientRect().left
+                                var totalDistance
 
                                 if(item.realTimeRatio){
                                     if(item.realTimeRatio < 1){
@@ -1123,7 +1115,7 @@
                                     totalDistance = prevDistance + item.realTimeRatio*(stationNext.getBoundingClientRect().left -stationPrevious.getBoundingClientRect().left)
                                 }
 
-                                let el = document.getElementById(item.vehicle.id)
+                                var el = document.getElementById(item.vehicle.id)
                                 el.style.left = totalDistance+"px"
 
                             })
