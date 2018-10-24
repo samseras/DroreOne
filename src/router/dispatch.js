@@ -10,7 +10,7 @@ const dispatch = [
     {
         path: '/deploy',
         name: 'deploy',
-        redirect: '/deploy/broadcast-Dmis',
+        redirect: '/deploy/security-Dmis',
         component: resolve => require(['@/components/deploy'], resolve),
         meta: {id: '0103'},
         children:[

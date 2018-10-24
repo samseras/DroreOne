@@ -12,7 +12,6 @@
                         @searchAnything="searchAnything"
                         @choseType="choseType"
                         :selectLength="choseInfoId.length"
-                        :listLength="transportList.length"
                         @fixedInfo = 'fixedInfo'>
                 </Header>
             </div>
@@ -101,7 +100,7 @@
     import api from '@/api'
     import moment from 'moment'
     import PersonDetail from './dmisDialog'
-
+    import {mapGetters,mapMutations} from 'vuex'
     export default {
         name: 'area-deploy',
         data(){
@@ -110,6 +109,7 @@
                 checkList: [],
                 filterList: [],
                 transportList:[],
+                allTransportList:[],
                 visible: false,
                 transportInfo: {},
                 choseInfoId: [],
@@ -126,10 +126,11 @@
             }
         },
         methods: {
+            ...mapMutations(['TOTAL_NUM']),
             searchAnything (info) {
                 console.log(info, '这是要过滤的')
                 if (info.trim() !== '') {
-                    this.transportList = this.checkList.filter(item => {
+                    this.transportList = this.allTransportList.filter(item => {
                         if (item.name && item.name.includes(info)) {
                             return item
                         }
@@ -443,8 +444,12 @@
                 await api.transport.getTransport().then(res => {
                     console.log(res, '请求成功')
                     this.isShowLoading = false
-                    this.transportList = res
-                    this.transportList.forEach(item => {
+                    this.allTransportList = res
+                    let date = new Date().getTime()
+                    let obj = {totalNum: res.length}
+                    obj[date] = new Date().getTime()
+                    this.$store.commit('TOTAL_NUM', obj)
+                    this.allTransportList.forEach(item => {
                         item.checked = false;
                         item.time = [item.startDate,item.endDate]
                         item.watchTime = [`2018-04-25,${item.startTime}`,`2018-04-25,${item.endTime}`]
@@ -458,6 +463,11 @@
                                 item.routeName = route.name;
                             }
                         })
+                    })
+                    this.transportList = this.allTransportList.filter((item,index) => {
+                        if (index < (this.getCurrentNum * 35) && index > ((this.getCurrentNum -1) * 35 ) - 1 ) {
+                            return item
+                        }
                     })
                     this.choseInfoId = []
                     this.checkList = this.transportList
@@ -484,6 +494,14 @@
             Header,
             PersonDetail
         },
+        watch: {
+            getCurrentNum () {
+                this.getAllRoat()
+            }
+        },
+        computed: {
+            ...mapGetters(['getCurrentNum'])
+        }
     }
 
 </script>

@@ -434,11 +434,6 @@
                     let obj = {totalNum: res.length}
                     obj[date] = new Date().getTime()
                     this.$store.commit('TOTAL_NUM', obj)
-                    this.indicatorList = this.allIndicatorList.filter((item,index) =>{
-                        if(index < (this.getCurrentNum*35)&& index>(this.getCurrentNum-1)*35 -1){
-                            return item
-                        }
-                    })
                     this.allDotList.close=[]
                     this.allDotList.open=[]
                     for (let i = 0; i < res.length; i++) {
@@ -460,15 +455,20 @@
                         }
                     }
                     for (let i = 0; i < this.indicatorList.length; i++) {
-                        this.indicatorList[i].checked = false
-                        this.indicatorList[i].status = true
-                        this.indicatorList[i].id = this.indicatorList[i].signboardBean.id
-                        this.indicatorList[i].description = this.indicatorList[i].signboardBean.description
-                        this.indicatorList[i].location = `${this.indicatorList[i].longitude},${this.indicatorList[i].latitude}`
-                        this.indicatorList[i].signboardBean.modifyTime=this.indicatorList[i].signboardBean.modifyTime.replace("-","/")
-                        this.indicatorList[i].byTime = -(new Date(this.indicatorList[i].signboardBean.modifyTime)).getTime()
+                        this.allIndicatorList[i].checked = false
+                        this.allIndicatorList[i].status = true
+                        this.allIndicatorList[i].id = this.allIndicatorList[i].signboardBean.id
+                        this.allIndicatorList[i].description = this.allIndicatorList[i].signboardBean.description
+                        this.allIndicatorList[i].location = `${this.allIndicatorList[i].longitude},${this.indicatorList[i].latitude}`
+                        this.allIndicatorList[i].signboardBean.modifyTime=this.allIndicatorList[i].signboardBean.modifyTime.replace("-","/")
+                        this.allIndicatorList[i].byTime = -(new Date(this.allIndicatorList[i].signboardBean.modifyTime)).getTime()
                     }
-                    this.indicatorList = _.sortBy(this.indicatorList, 'byTime')
+                    this.allIndicatorList = _.sortBy(this.allIndicatorList, 'byTime')
+                    this.indicatorList = this.allIndicatorList.filter((item,index) =>{
+                        if(index < (this.getCurrentNum*35)&& index>(this.getCurrentNum-1)*35 -1){
+                            return item
+                        }
+                    })
                     this.checkList =this.indicatorList
                     this.choseInfoId = []
 

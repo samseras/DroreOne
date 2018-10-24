@@ -5,7 +5,7 @@
                 <div class="contentTitle">
                     <span>旅游路线信息</span>
                 </div>
-                <el-carousel :interval="5000">
+                <el-carousel :interval="5000" indicator-position="none">
                     <el-carousel-item v-for="schedule in schedules">
                         <div class="contentDiv"  v-for="route in schedule.routes">
                             <div class="contentBody">
@@ -36,7 +36,7 @@
                                                 <img :id = "station.key" v-if="station.status == 'CURRENT'" src="../../../static/img/icon/station/currentStation1.png">
                                                 <img :id = "station.key" v-if="station.status == 'CURRENT'"  class="currentImg"  src="../../../static/img/icon/station/currentStation2.png">
 
-                                                <img :id = "station.key" v-if="station.status == 'OTHER'" src="../../../static/img/icon/station/normalStation.png">
+                                                <img :id = "station.key" v-if="station.status == 'OTHER'" src="../../../static/img/icon/station/normalStation2.png">
 
                                                 <div :class="{'stationName': station.status == 'OTHER','stationStartEndName':station.status == 'FROM'|| station.status == 'TO',
                                                      'stationCurrentName': station.status == 'CURRENT',
@@ -446,110 +446,208 @@
             ScrollContainer
         },
         methods: {
-            async getStationData(){
-                await api.transport.getRouteById(this.stationId).then(res=>{
-                    console.log(res,'stationData  res')
-                    this.routes = []
-                    this.schedules = []
-                    //假数据
-//                    res = this.result
-                    if(res instanceof Array && res.length >0){
-                        res.forEach(schedule=>{
+            getStationData(){
+                let that = this
+                $.ajax({
+                    url:'/v1/schedule/vehicle?stationId='+this.stationId,
+                    type:'get',
+                    dataType:'json',
+                    success:function(res){
+                        debugger
+                        console.log(res,'stationData  res')
+                        that.routes = []
+                        that.schedules = []
+                        //假数据
+                        if(res instanceof Array && res.length >0){
+                            res.forEach(schedule=>{
+                                let cloneItemFW = Object.assign({},schedule.route)
+                                let cloneItemRE = Object.assign({},schedule.route)
+                                cloneItemRE.stations = cloneItemRE.reStations
 
-                            let cloneItemFW = Object.assign({},schedule.route)
-                            let cloneItemRE = Object.assign({},schedule.route)
-                            cloneItemRE.stations = cloneItemRE.reStations
+                                let positiveVes = []
+                                let reverseVes = []
+                                if(schedule.vehicles.length > 0){
+                                    schedule.vehicles.forEach(ve=>{
+                                        ve['distance'] = true
+                                    })
 
-                            let positiveVes = []
-                            let reverseVes = []
-                            if(schedule.vehicles.length > 0){
-                                schedule.vehicles.forEach(ve=>{
-                                    ve['distance'] = true
-                                })
-
-                                schedule.vehicles.forEach(vehicle=>{
-                                    if(vehicle.direction){     //正向
-                                        if(vehicle.curStation){
-                                            vehicle['curStation']['key'] = vehicle['curStation']['id']+"FW"
+                                    schedule.vehicles.forEach(vehicle=>{
+                                        if(vehicle.direction){     //正向
+                                            if(vehicle.curStation){
+                                                vehicle['curStation']['key'] = vehicle['curStation']['id']+"FW"
+                                            }
+                                            if(vehicle.nextStation){
+                                                vehicle['nextStation']['key'] = vehicle['nextStation']['id']+"FW"
+                                            }
+                                            positiveVes.push(vehicle)
+                                        }else{
+                                            if(vehicle.curStation){
+                                                vehicle['curStation']['key'] = vehicle['curStation']['id']+"RE"
+                                            }
+                                            if(vehicle.nextStation){
+                                                vehicle['nextStation']['key'] = vehicle['nextStation']['id']+"RE"
+                                            }
+                                            reverseVes.push(vehicle)
                                         }
-                                        if(vehicle.nextStation){
-                                            vehicle['nextStation']['key'] = vehicle['nextStation']['id']+"FW"
-                                        }
-                                        positiveVes.push(vehicle)
-                                    }else{
-                                        if(vehicle.curStation){
-                                            vehicle['curStation']['key'] = vehicle['curStation']['id']+"RE"
-                                        }
-                                        if(vehicle.nextStation){
-                                            vehicle['nextStation']['key'] = vehicle['nextStation']['id']+"RE"
-                                        }
-                                        reverseVes.push(vehicle)
-                                    }
-                                })
+                                    })
 
-                                cloneItemFW['vehicles'] = positiveVes
-                                cloneItemRE['vehicles'] = reverseVes
-                            }
+                                    cloneItemFW['vehicles'] = positiveVes
+                                    cloneItemRE['vehicles'] = reverseVes
+                                }
 
-                            if(cloneItemFW.stations.length >0){
-                                cloneItemFW.stations.forEach(station=>{
+                                if(cloneItemFW.stations.length >0){
+                                    cloneItemFW.stations.forEach(station=>{
                                         station['key'] = station.id + "FW"
+                                    })
+                                }
+
+                                if(cloneItemRE.stations.length >0){
+                                    cloneItemRE.stations.forEach(reStation=>{
+                                        reStation['key'] = reStation.id+"RE"
+                                    })
+                                }
+
+
+                                if(schedule.willArriveVeFW){
+                                    schedule.willArriveVeFW['distance'] = true
+                                    cloneItemFW['willArriveVe'] = schedule.willArriveVeFW
+                                }
+
+
+                                if(schedule.willArriveVeRE){
+                                    schedule.willArriveVeRE['distance'] = true
+                                    cloneItemRE['willArriveVe'] = schedule.willArriveVeRE
+                                }
+
+                                cloneItemFW['key'] = cloneItemFW.id+"FW"
+                                cloneItemRE['key'] = cloneItemRE.id+"RE"
+
+                                cloneItemFW.name = cloneItemFW.name+"(去)"
+                                cloneItemRE.name = cloneItemRE.name+"(返)"
+
+                                let routeArray = []
+                                routeArray.push(cloneItemFW)
+                                routeArray.push(cloneItemRE)
+
+                                that.schedules.push({
+                                    routes:routeArray
                                 })
-                            }
 
-                            if(cloneItemRE.stations.length >0){
-                                cloneItemRE.stations.forEach(reStation=>{
-                                    reStation['key'] = reStation.id+"RE"
-                                })
-                            }
-
-
-                            if(schedule.willArriveVeFW){
-                                schedule.willArriveVeFW['distance'] = true
-                                cloneItemFW['willArriveVe'] = schedule.willArriveVeFW
-                            }
-
-
-                            if(schedule.willArriveVeRE){
-                                schedule.willArriveVeRE['distance'] = true
-                                cloneItemRE['willArriveVe'] = schedule.willArriveVeRE
-                            }
-
-                            cloneItemFW['key'] = cloneItemFW.id+"FW"
-                            cloneItemRE['key'] = cloneItemRE.id+"RE"
-
-                            cloneItemFW.name = cloneItemFW.name+"(去)"
-                            cloneItemRE.name = cloneItemRE.name+"(返)"
-
-//                            this.routes.push(cloneItemFW)
-//                            this.routes.push(cloneItemRE)
-                            let routeArray = []
-                            routeArray.push(cloneItemFW)
-                            routeArray.push(cloneItemRE)
-
-                            this.schedules.push({
-                                routes:routeArray
                             })
 
-                        })
+                            console.log(that.schedules,'schedules')
+                            that.$nextTick(function () {
+                                that.initVehiclePosition()
+                            })
 
-                        console.log(this.schedules,'schedules')
-                        this.$nextTick(function () {
-                            this.initVehiclePosition()
-                        })
+                            setTimeout(() => {
+                                console.log("aaaaaaaaaaaaaaaaaa")
+                                that.getStationData();
+                            },5000)
 
-                        setTimeout(() => {
-                            console.log("aaaaaaaaaaaaaaaaaa")
-                            let route = this.$route.path
-                            if (route.includes('/station')) {
-
-                                this.getStationData();//长轮询
-
-                            }
-                        },5000)
-
+                        }
                     }
                 })
+//                await api.transport.getRouteById(this.stationId).then(res=>{
+//                    console.log(res,'stationData  res')
+//                    this.routes = []
+//                    this.schedules = []
+//                    //假数据
+////                    res = this.result
+//                    if(res instanceof Array && res.length >0){
+//                        res.forEach(schedule=>{
+//
+//                            let cloneItemFW = Object.assign({},schedule.route)
+//                            let cloneItemRE = Object.assign({},schedule.route)
+//                            cloneItemRE.stations = cloneItemRE.reStations
+//
+//                            let positiveVes = []
+//                            let reverseVes = []
+//                            if(schedule.vehicles.length > 0){
+//                                schedule.vehicles.forEach(ve=>{
+//                                    ve['distance'] = true
+//                                })
+//
+//                                schedule.vehicles.forEach(vehicle=>{
+//                                    if(vehicle.direction){     //正向
+//                                        if(vehicle.curStation){
+//                                            vehicle['curStation']['key'] = vehicle['curStation']['id']+"FW"
+//                                        }
+//                                        if(vehicle.nextStation){
+//                                            vehicle['nextStation']['key'] = vehicle['nextStation']['id']+"FW"
+//                                        }
+//                                        positiveVes.push(vehicle)
+//                                    }else{
+//                                        if(vehicle.curStation){
+//                                            vehicle['curStation']['key'] = vehicle['curStation']['id']+"RE"
+//                                        }
+//                                        if(vehicle.nextStation){
+//                                            vehicle['nextStation']['key'] = vehicle['nextStation']['id']+"RE"
+//                                        }
+//                                        reverseVes.push(vehicle)
+//                                    }
+//                                })
+//
+//                                cloneItemFW['vehicles'] = positiveVes
+//                                cloneItemRE['vehicles'] = reverseVes
+//                            }
+//
+//                            if(cloneItemFW.stations.length >0){
+//                                cloneItemFW.stations.forEach(station=>{
+//                                        station['key'] = station.id + "FW"
+//                                })
+//                            }
+//
+//                            if(cloneItemRE.stations.length >0){
+//                                cloneItemRE.stations.forEach(reStation=>{
+//                                    reStation['key'] = reStation.id+"RE"
+//                                })
+//                            }
+//
+//
+//                            if(schedule.willArriveVeFW){
+//                                schedule.willArriveVeFW['distance'] = true
+//                                cloneItemFW['willArriveVe'] = schedule.willArriveVeFW
+//                            }
+//
+//
+//                            if(schedule.willArriveVeRE){
+//                                schedule.willArriveVeRE['distance'] = true
+//                                cloneItemRE['willArriveVe'] = schedule.willArriveVeRE
+//                            }
+//
+//                            cloneItemFW['key'] = cloneItemFW.id+"FW"
+//                            cloneItemRE['key'] = cloneItemRE.id+"RE"
+//
+//                            cloneItemFW.name = cloneItemFW.name+"(去)"
+//                            cloneItemRE.name = cloneItemRE.name+"(返)"
+//
+//                            let routeArray = []
+//                            routeArray.push(cloneItemFW)
+//                            routeArray.push(cloneItemRE)
+//
+//                            this.schedules.push({
+//                                routes:routeArray
+//                            })
+//
+//                        })
+//
+//                        console.log(this.schedules,'schedules')
+//                        this.$nextTick(function () {
+//                            this.initVehiclePosition()
+//                        })
+//
+//                        setTimeout(() => {
+//                            console.log("aaaaaaaaaaaaaaaaaa")
+//                            this.getStationData();
+////                            let route = this.$route.path
+////                            if (route.includes('/station')) {
+////                                this.getStationData();//长轮询
+////                            }
+//                        },5000)
+//
+//                    }
+//                })
             },
 
             initVehiclePosition(){
@@ -646,7 +744,7 @@
 </script>
 
 <style lang="scss">
-    @media all and (max-width: 395px){
+    @media all and (max-width: 450px){
         .station {
             .content{
                 .el-carousel{
@@ -663,7 +761,7 @@
         }
     }
 
-    @media all and (min-width: 396px){
+    @media all and (min-width: 451px){
         .station {
             .content{
                 .el-carousel{
@@ -683,7 +781,7 @@
 </style>
 
 <style lang="scss" scoped>
-    @media all and (max-width: 395px) {
+    @media all and (max-width: 450px) {
         .station {
             width: 100%;
             height: 100%;
@@ -697,8 +795,9 @@
                     span{
                         display:block;
                         position: relative;
-                        top:50%;
-                        transform:translateY(-50%);
+                        top:0;
+                        /*top:50%;
+                        transform:translateY(-50%);*/
                         font-size:rem(15);
                         color: #26bbf0;
                     }
@@ -712,7 +811,6 @@
                         height:95%;
                         border-radius: rem(10);
                         border:1px solid #dcdfe6;
-                        background-color: #f2f2f2;
                         position: absolute;
                         margin: auto;
                         top:0;
@@ -723,7 +821,6 @@
                         flex-direction: column;
                         .desc{
                             height:20%;
-                            background-color: #f2f2f2;
                             display: flex;
                             flex-direction: row;
                             font-size: rem(12);
@@ -732,6 +829,7 @@
                                 flex:1;
                                 text-align: center;
                                 span{
+                                    color: #cf9236;
                                     display:block;
                                     position: relative;
                                     top:50%;
@@ -763,7 +861,6 @@
                         }
                         .trend{
                             height:80%;
-                            background-color: #f2f2f2;
                             position: relative;
                             border-radius: 0 0 rem(10) rem(10) ;
                             .route{
@@ -790,30 +887,29 @@
                                     align-items:center;
                                     .stationInfo{
                                         position: absolute;
-                                        top: 30px;
+                                        top: 32px;
                                         text-align: center;
                                         .stationName{
                                             width:100%;
-                                            margin-top: 12px;
+                                            margin-top: 10px;
                                             font-size: rem(12);
                                             line-height: 1em;
                                         }
                                         .currentImg{
-                                            /*vertical-align: top;*/
                                             display: block;
                                             position: absolute;
-                                            left:50%;
-                                            transform:translateX(-50%);
+                                            left:35%;
+                                            /*transform:translateX(-50%);*/
                                         }
                                         .stationStartEndName{
                                             width:100%;
-                                            margin-top: 8px;
+                                            margin-top: 6px;
                                             font-size: rem(12);
                                             line-height: 1em;
                                         }
                                         .stationCurrentName{
                                             width:100%;
-                                            margin-top: 12px;
+                                            margin-top: 10px;
                                             font-size: rem(12);
                                             line-height: 1em;
                                         }
@@ -822,7 +918,7 @@
                                         color: #26bbf0;
                                     }
                                     .normal{
-                                        color: #909090;
+                                        color: #62c062;
                                     }
                                     .current{
                                         color: #f36a5a;
@@ -838,6 +934,9 @@
                                     img{
                                         display: block;
                                     }
+                                    span{
+                                        color: #26bbf0;
+                                    }
                                 }
 
                             }
@@ -849,7 +948,7 @@
             }
         }
     }
-    @media all and (min-width: 396px) {
+    @media all and (min-width: 451px) {
         .station {
             width: 100%;
             height: 100%;
@@ -875,7 +974,7 @@
                     position:relative;
                     .contentBody{
                         width:95%;
-                        height:95%;
+                        height:97%;
                         border-radius: rem(10);
                         border:1px solid #dcdfe6;
                         background-color: #f2f2f2;

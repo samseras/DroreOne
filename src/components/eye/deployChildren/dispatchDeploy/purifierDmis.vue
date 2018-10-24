@@ -12,7 +12,6 @@
                         @searchAnything="searchAnything"
                         @choseType="choseType"
                         :selectLength="choseInfoId.length"
-                        :listLength="purifierList.length"
                         @fixedInfo = 'fixedInfo'>
                 </Header>
             </div>
@@ -122,6 +121,7 @@
     import PersonDetail from './dmisDialog'
     import api from '@/api'
     import moment from 'moment'
+    import {mapGetters,mapMutations} from 'vuex'
     export default {
         name: 'purifier-dmis',
         data(){
@@ -129,6 +129,7 @@
                 isShowAreaCard: true,
                 checkList: [],
                 filterList: [],
+                allPurifierList: [],
                 purifierList: [],
                 visible: false,
                 purifierInfo: {},
@@ -144,10 +145,11 @@
             }
         },
         methods: {
+            ...mapMutations(['TOTAL_NUM']),
             searchAnything (info) {
                 console.log(info, '这是要过滤的')
                 if (info.trim() !== '') {
-                    this.purifierList = this.checkList.filter(item => {
+                    this.purifierList = this.allPurifierList.filter(item => {
                         if (item.cleanSchedule.name.includes(info)) {
                             return item
                         }
@@ -448,8 +450,12 @@
                 await api.purifier.getPurifierList().then(res => {
                     this.isShowLoading = false
                     console.log(res, '请求成功')
-                    this.purifierList = res
-                    this.purifierList.forEach(item => {
+                    this.allPurifierList = res
+                    let date = new Date().getTime()
+                    let obj = {totalNum: res.length}
+                    obj[date] = new Date().getTime()
+                    this.$store.commit('TOTAL_NUM', obj)
+                    this.allPurifierList.forEach(item => {
                         item.id = item.cleanSchedule.id
                         item.checked = false;
                         if (item.cleanSchedule.customizedDays) {
@@ -464,6 +470,11 @@
                         }
                         if (item.regions.length > 0) {
                             item.regionIds = [item.regions[0].id]
+                        }
+                    })
+                    this.purifierList = this.allPurifierList.filter((item,index) => {
+                        if (index < (this.getCurrentNum * 35) && index > ((this.getCurrentNum -1) * 35 ) - 1 ) {
+                            return item
                         }
                     })
                     this.choseInfoId = []
@@ -499,6 +510,14 @@
             ScrollContainer,
             Header,
             PersonDetail
+        },
+        watch: {
+            getCurrentNum () {
+                this.getAllPurifier()
+            }
+        },
+        computed: {
+            ...mapGetters(['getCurrentNum'])
         }
     }
 

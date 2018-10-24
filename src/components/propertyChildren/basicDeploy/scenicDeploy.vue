@@ -439,11 +439,7 @@
                     let obj = {totalNum: res.length}
                     obj[date] = new Date().getTime()
                     this.$store.commit('TOTAL_NUM', obj)
-                    this.scenicList = this.allScenicList.filter((item,index) => {
-                        if (index < (this.getCurrentNum * 35 ) && index > ((this.getCurrentNum -1) * 35 ) - 1 ) {
-                            return item
-                        }
-                    })
+
                     this.allDotList.close=[]
                     this.allDotList.open=[]
                     for (let i = 0; i < res.length; i++) {
@@ -458,28 +454,33 @@
                             this.allDotList.open.push(res[i])
                         }
                     }
-                    for (let i = 0; i < this.scenicList.length; i++) {
-                        this.scenicList[i].checked = false
-                        this.scenicList[i].status = true
-                        this.scenicList[i].id = this.scenicList[i].scenicspotBean.id
-                        this.scenicList[i].description = this.scenicList[i].scenicspotBean.description
-                        this.scenicList[i].location = `${this.scenicList[i].longitude},${this.scenicList[i].latitude}`
-                        this.scenicList[i].scenicspotBean.currentNum = this.currentNum
+                    for (let i = 0; i < this.allScenicList.length; i++) {
+                        this.allScenicList[i].checked = false
+                        this.allScenicList[i].status = true
+                        this.allScenicList[i].id = this.allScenicList[i].scenicspotBean.id
+                        this.allScenicList[i].description = this.allScenicList[i].scenicspotBean.description
+                        this.allScenicList[i].location = `${this.allScenicList[i].longitude},${this.allScenicList[i].latitude}`
+                        this.allScenicList[i].scenicspotBean.currentNum = this.currentNum
                         // scenicspotBean.status
-                        if (this.scenicList[i].scenicspotBean.capacity == 0) {
-                            this.scenicList[i].scenicspotBean.statu = '已满'
+                        if (this.allScenicList[i].scenicspotBean.capacity == 0) {
+                            this.allScenicList[i].scenicspotBean.statu = '已满'
                         } else {
-                            let parcent = this.scenicList[i].scenicspotBean.currentNum/this.scenicList[i].scenicspotBean.capacity
+                            let parcent = this.allScenicList[i].scenicspotBean.currentNum/this.allScenicList[i].scenicspotBean.capacity
                             if (parcent < .9){
-                                this.scenicList[i].scenicspotBean.statu = '充裕'
+                                this.allScenicList[i].scenicspotBean.statu = '充裕'
                             } else {
-                                this.scenicList[i].scenicspotBean.statu = '已满'
+                                this.allScenicList[i].scenicspotBean.statu = '已满'
                             }
                         }
-                        this.scenicList[i].scenicspotBean.modifyTime=this.scenicList[i].scenicspotBean.modifyTime.replace("-","/")
-                        this.scenicList[i].byTime = -(new Date(this.scenicList[i].scenicspotBean.modifyTime)).getTime()
+                        this.allScenicList[i].scenicspotBean.modifyTime=this.allScenicList[i].scenicspotBean.modifyTime.replace("-","/")
+                        this.allScenicList[i].byTime = -(new Date(this.allScenicList[i].scenicspotBean.modifyTime)).getTime()
                     }
-                    this.scenicList = _.sortBy(this.scenicList, 'byTime')
+                    this.allScenicList = _.sortBy(this.allScenicList, 'byTime')
+                    this.scenicList = this.allScenicList.filter((item,index) => {
+                        if (index < (this.getCurrentNum * 35 ) && index > ((this.getCurrentNum -1) * 35 ) - 1 ) {
+                            return item
+                        }
+                    })
                     this.checkList = this.scenicList
                     this.choseInfoId = []
                     this.selectFlag=false

@@ -453,11 +453,7 @@
                     let obj = {totalNum: res.length}
                     obj[date] = new Date().getTime()
                     this.$store.commit('TOTAL_NUM', obj)
-                    this.treeList = this.allTreeList.filter((item,index) =>{
-                        if(index < (this.getCurrentNum*35)&& index>(this.getCurrentNum-1)*35 -1){
-                            return item
-                        }
-                    })
+
                     this.allDotList.close=[]
                     this.allDotList.open=[]
                     for (let i = 0; i < res.length; i++) {
@@ -472,17 +468,22 @@
                             this.allDotList.open.push(res[i])
                         }
                     }
-                    for (let i = 0; i < this.treeList.length; i++) {
-                        this.treeList[i].checked = false
-                        this.treeList[i].status = true
-                        this.treeList[i].location = `${this.treeList[i].longitude},${this.treeList[i].latitude}`
-                        this.treeList[i].id = this.treeList[i].plant.id
-                        this.treeList[i].description = this.treeList[i].plant.description
-                        // this.treeList[i].state = '正常'
-                        this.treeList[i].plant.modifyTime=this.treeList[i].plant.modifyTime.replace("-","/")
-                        this.treeList[i].byTime = -(new Date(this.treeList[i].plant.modifyTime)).getTime()
+                    for (let i = 0; i < this.allTreeList.length; i++) {
+                        this.allTreeList[i].checked = false
+                        this.allTreeList[i].status = true
+                        this.allTreeList[i].location = `${this.allTreeList[i].longitude},${this.allTreeList[i].latitude}`
+                        this.allTreeList[i].id = this.allTreeList[i].plant.id
+                        this.allTreeList[i].description = this.allTreeList[i].plant.description
+                        // this.allTreeList[i].state = '正常'
+                        this.allTreeList[i].plant.modifyTime=this.allTreeList[i].plant.modifyTime.replace("-","/")
+                        this.allTreeList[i].byTime = -(new Date(this.allTreeList[i].plant.modifyTime)).getTime()
                     }
-                    this.treeList = _.sortBy(this.treeList, 'byTime')
+                    this.allTreeList = _.sortBy(this.allTreeList, 'byTime')
+                    this.treeList = this.allTreeList.filter((item,index) =>{
+                        if(index < (this.getCurrentNum*35)&& index>(this.getCurrentNum-1)*35 -1){
+                            return item
+                        }
+                    })
                     this.checkList = this.treeList
                     this.choseInfoId = []
 

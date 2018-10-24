@@ -452,19 +452,22 @@
                         }
                     }
 
-                    for (let i = 0; i < this.toiletList.length; i++) {
-                        this.toiletList[i].checked = false
-                        this.toiletList[i].status = true
-                        this.toiletList[i].location = `${this.toiletList[i].longitude},${this.toiletList[i].latitude}`
-                        this.toiletList[i].id = this.toiletList[i].toiletBean.id
-                        this.toiletList[i].description = this.toiletList[i].toiletBean.description
-                        this.toiletList[i].state = '正常'
-                        this.toiletList[i].toiletBean.modifyTime=this.toiletList[i].toiletBean.modifyTime.replace("-","/")
-                        this.toiletList[i].byTime = -(new Date(this.toiletList[i].toiletBean.modifyTime)).getTime()
+                    for (let i = 0; i < this.allToiletList.length; i++) {
+                        this.allToiletList[i].checked = false
+                        this.allToiletList[i].status = true
+                        this.allToiletList[i].location = `${this.allToiletList[i].longitude},${this.allToiletList[i].latitude}`
+                        this.allToiletList[i].id = this.allToiletList[i].toiletBean.id
+                        this.allToiletList[i].description = this.allToiletList[i].toiletBean.description
+                        this.allToiletList[i].state = '正常'
+                        this.allToiletList[i].toiletBean.modifyTime=this.allToiletList[i].toiletBean.modifyTime.replace("-","/")
+                        this.allToiletList[i].byTime = -(new Date(this.allToiletList[i].toiletBean.modifyTime)).getTime()
                     }
-
-                    console.log(this.toiletList)
-                    this.toiletList = _.sortBy(this.toiletList, 'byTime')
+                    this.allToiletList = _.sortBy(this.allToiletList, 'byTime')
+                    this.toiletList = this.allToiletList.filter((item,index) =>{
+                        if(index < (this.getCurrentNum*35)&& index>(this.getCurrentNum-1)*35 -1){
+                            return item
+                        }
+                    })
                     this.checkList = this.toiletList
                     this.choseInfoId = []
 

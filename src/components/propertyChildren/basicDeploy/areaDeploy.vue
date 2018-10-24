@@ -189,15 +189,6 @@
                         api.area.deleteRegion(this.choseInfoId).then(res => {
                             console.log(res, '删除成功')
                             this.$message.success('删除成功')
-                            // for (let i = 0; i < this.choseInfoId.length; i++) {
-                            //     this.areaList = this.areaList.filter((item, index) => {
-                            //         if (item.id === this.choseInfoId[i]){
-                            //             this.areaList[index].checked = false
-                            //             //this.areaList[index].status = false
-                            //         }
-                            //         return item.id !== this.choseInfoId[i]
-                            //     })
-                            // }
                             this.getAllArea()
                             this.choseInfoId = []
                             this.getAllArea()
@@ -378,21 +369,19 @@
                     let obj = {totalNum: res.length}
                     obj[date] = new Date().getTime()
                     this.$store.commit('TOTAL_NUM', obj)
+                    for (let i = 0; i < this.allAreaList.length; i++) {
+                        this.allAreaList[i].checked = false
+                        this.allAreaList[i].status = true
+                        this.allAreaList[i].location = this.allAreaList[i].geo
+                        this.allAreaList[i].modifyTime=this.allAreaList[i].modifyTime.replace("-","/")
+                        this.allAreaList[i].byTime = -(new Date(this.allAreaList[i].modifyTime)).getTime()
+                    }
+                    this.allAreaList = _.sortBy(this.allAreaList,'byTime')
                     this.areaList = this.allAreaList.filter((item,index) => {
                         if (index < (this.getCurrentNum *  35) && index > ((this.getCurrentNum -1) * 35 ) - 1 ) {
                             return item
                         }
                     })
-                    for (let i = 0; i < this.areaList.length; i++) {
-                        this.areaList[i].checked = false
-                        this.areaList[i].status = true
-                        this.areaList[i].location = this.areaList[i].geo
-                        this.areaList[i].modifyTime=this.areaList[i].modifyTime.replace("-","/")
-                        this.areaList[i].byTime = -(new Date(this.areaList[i].modifyTime)).getTime()
-                    }
-                    console.log(this.areaList)
-                    this.areaList = _.sortBy(this.areaList,'byTime')
-
                     this.checkList = this.areaList
                     this.choseInfoId = []
                     this.selectFlag=false

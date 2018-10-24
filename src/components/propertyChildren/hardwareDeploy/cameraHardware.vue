@@ -479,11 +479,7 @@
                     let obj = {totalNum: res.devices.length}
                     obj[date] = new Date().getTime()
                     this.$store.commit('TOTAL_NUM', obj)
-                    this.cameraList = this.allCameraList.filter((item,index) => {
-                        if (index < (this.getCurrentNum * 35 ) && index > ((this.getCurrentNum -1) * 35 ) - 1 ) {
-                            return item
-                        }
-                    })
+
                     this.allDotList.close=[]
                     this.allDotList.open=[]
                     let resDevices=res.devices
@@ -505,18 +501,23 @@
                             this.allDotList.open.push(resDevices[i])
                         }
                     }
-                    for (let i=0; i < this.cameraList.length; i++) {
-                        this.cameraList[i].checked = false
-                        this.cameraList[i].statu = true
-                        this.cameraList[i].id=this.cameraList[i].id
-                        this.cameraList[i].location = `${this.cameraList[i].longitude},${this.cameraList[i].latitude}`
-                        this.cameraList[i].modifyTime=this.cameraList[i].modifyTime.replace("-","/")
-                        this.cameraList[i].byTime = -(new Date(this.cameraList[i].modifyTime)).getTime()
-                        if(this.cameraList[i].cameraType != 0){
-                            this.cameraList[i].cameraType = 1
+                    for (let i=0; i < this.allCameraList.length; i++) {
+                        this.allCameraList[i].checked = false
+                        this.allCameraList[i].statu = true
+                        this.allCameraList[i].id=this.allCameraList[i].id
+                        this.allCameraList[i].location = `${this.allCameraList[i].longitude},${this.allCameraList[i].latitude}`
+                        this.allCameraList[i].modifyTime=this.allCameraList[i].modifyTime.replace("-","/")
+                        this.allCameraList[i].byTime = -(new Date(this.allCameraList[i].modifyTime)).getTime()
+                        if(this.allCameraList[i].cameraType != 0){
+                            this.allCameraList[i].cameraType = 1
                         }
                     }
-                    this.cameraList = _.sortBy(this.cameraList,'byTime')
+                    this.allCameraList = _.sortBy(this.allCameraList,'byTime')
+                    this.cameraList = this.allCameraList.filter((item,index) => {
+                        if (index < (this.getCurrentNum * 35 ) && index > ((this.getCurrentNum -1) * 35 ) - 1 ) {
+                            return item
+                        }
+                    })
                     this.checkList = this.cameraList
 
                     this.selectFlag=false

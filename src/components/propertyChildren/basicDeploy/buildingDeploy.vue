@@ -456,11 +456,6 @@
                     let obj = {totalNum: res.length}
                     obj[date] = new Date().getTime()
                     this.$store.commit('TOTAL_NUM', obj)
-                    this.buildList = this.allBuildList.filter((item,index) =>{
-                        if(index < (this.getCurrentNum*35)&& index>(this.getCurrentNum-1)*35 -1){
-                            return item
-                        }
-                    })
                     this.allDotList.close=[]
                     this.allDotList.open=[]
                     for (let i = 0; i < res.length; i++) {
@@ -475,16 +470,20 @@
                             this.allDotList.open.push(res[i])
                         }
                     }
-                    for (let i = 0; i < this.buildList.length; i++) {
-                        this.buildList[i].checked = false
-                        this.buildList[i].status = true
-                        this.buildList[i].location = `${this.buildList[i].longitude},${this.buildList[i].latitude}`
-                        this.buildList[i].id = this.buildList[i].building.id
-                        // this.treeList[i].state = '正常'
-                        this.buildList[i].building.modifyTime=this.buildList[i].building.modifyTime.replace("-","/")
-                        this.buildList[i].byTime = -(new Date(this.buildList[i].building.modifyTime)).getTime()
+                    for (let i = 0; i < this.allBuildList.length; i++) {
+                        this.allBuildList[i].checked = false
+                        this.allBuildList[i].status = true
+                        this.allBuildList[i].location = `${this.allBuildList[i].longitude},${this.allBuildList[i].latitude}`
+                        this.allBuildList[i].id = this.allBuildList[i].building.id
+                        this.allBuildList[i].building.modifyTime=this.allBuildList[i].building.modifyTime.replace("-","/")
+                        this.allBuildList[i].byTime = -(new Date(this.allBuildList[i].building.modifyTime)).getTime()
                     }
-                    this.buildList = _.sortBy(this.buildList,'byTime')
+                    this.allBuildList = _.sortBy(this.allBuildList,'byTime')
+                    this.buildList = this.allBuildList.filter((item,index) =>{
+                        if(index < (this.getCurrentNum*35)&& index>(this.getCurrentNum-1)*35 -1){
+                            return item
+                        }
+                    })
                     this.checkList = this.buildList
                     this.choseInfoId = []
 

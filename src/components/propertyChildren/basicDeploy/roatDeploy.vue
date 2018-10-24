@@ -359,29 +359,30 @@
                     let obj = {totalNum: res.length}
                     obj[date] = new Date().getTime()
                     this.$store.commit('TOTAL_NUM', obj)
+
+                    for (let i = 0; i < this.allRoatList.length; i++) {
+                        this.allRoatList[i].checked = false
+                        this.allRoatList[i].status = true
+                        this.allRoatList[i].location = this.allRoatList[i].geo
+                        if (this.allRoatList[i].type == 1) {
+                            this.allRoatList[i].routeType = '水路'
+                        }
+                        if (this.allRoatList[i].type == 2) {
+                            this.allRoatList[i].routeType = '公交道路'
+                        }
+                        if (this.allRoatList[i].type == 3) {
+                            this.allRoatList[i].routeType = '步行道路'
+                        }
+                        if (this.allRoatList[i].type == 4) {
+                            this.allRoatList[i].routeType = '驾车路线'
+                        }
+                        // this.allRoatList[i].byTime = this.allRoatList[i].modifyTime
+                    }
                     this.roatList = this.allRoatList.filter((item,index) => {
                         if (index < (this.getCurrentNum * 35 ) && index > ((this.getCurrentNum -1) * 35 ) - 1 ) {
                             return item
                         }
                     })
-                    for (let i = 0; i < this.roatList.length; i++) {
-                        this.roatList[i].checked = false
-                        this.roatList[i].status = true
-                        this.roatList[i].location = this.roatList[i].geo
-                        if (this.roatList[i].type == 1) {
-                            this.roatList[i].routeType = '水路'
-                        }
-                        if (this.roatList[i].type == 2) {
-                            this.roatList[i].routeType = '公交道路'
-                        }
-                        if (this.roatList[i].type == 3) {
-                            this.roatList[i].routeType = '步行道路'
-                        }
-                        if (this.roatList[i].type == 4) {
-                            this.roatList[i].routeType = '驾车路线'
-                        }
-                        // this.roatList[i].byTime = this.roatList[i].modifyTime
-                    }
                     this.checkList = this.roatList
                     this.choseInfoId = []
 

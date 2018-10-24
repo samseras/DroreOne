@@ -11,10 +11,7 @@
                         @addNewInfo="addNewInfo"
                         @batchEnabled="batchEnabled"
                         :choseId="choseInfoId"
-                        :listsLength = "listLength"
-                        @searchAnything="searchAnything"
-                        @previousPage="previousPage"
-                        @nextPage="nextPage">
+                        @searchAnything="searchAnything">
                 </Header>
             </div>
             <div class="personList" v-loading="loading">
@@ -90,9 +87,11 @@
     import api from '@/api'
     import Header from './alarmRuleHeader'
     import AlarmDetail from './alarmRuleDialog'
+    import {mapGetters,mapMutations} from 'vuex'
     export default {
         data(){
             return{
+                allSpeedingList: [],
                 speedingList: [],
                 speedingInfo:{},
                 visible: false,
@@ -110,10 +109,11 @@
             }
         },
         methods: {
+            ...mapMutations(['TOTAL_NUM']),
             searchAnything (info) {
                 console.log(info, '这是要过滤的')
                 if (info.trim() !== '') {
-                    this.speedingList = this.speedingList.filter(item => {
+                    this.speedingList = this.allSpeedingList.filter(item => {
                         if (item.name.includes(info)) {
                             return item
                         }
@@ -427,25 +427,18 @@
               await this.getAllAlarmTypes();
               await this.getAlarmRule();
             },
-            previousPage (page) {
-                console.log(page, '这是传过来的pageNum')
-                this.pageNum = page
-                this.getAlarmRule ()
-            },
-            nextPage (page) {
-                console.log(page, '这个是下一页的pageNUM')
-                this.pageNum = page
-                this.getAlarmRule ()
-            },
             async getAlarmRule(){
                 this.loading = true
                 this.alarmTypeId = this.getAlarmTypeId("超速")
                 await api.alarm.getAlarmRulesByParameters(this.alarmTypeId).then(res => {
                     console.log(res, '请求成功')
                     this.loading = false
-                    this.speedingList = res
-                    this.listLength = this.speedingList.length
-                    this.speedingList.forEach(item => {
+                    let date = new Date().getTime()
+                    let obj = {totalNum: res.length}
+                    obj[date] = new Date().getTime()
+                    this.$store.commit('TOTAL_NUM', obj)
+                    this.allSpeedingList = res
+                    this.allSpeedingList.forEach(item => {
                         item.checked = false;
                         if(item.relatedDevices.length > 0){
                             item.relatedDeviceNames =  item.relatedDevices.map(device=>device.name)
@@ -472,13 +465,14 @@
                             item.relatedVehicleNames = ''
                             item.relatedVehicleIds = []
                         }
-                        item.modifyTime=item.modifyTime.replace("-","/")
-                        item.byTime = -(new Date(item.modifyTime)).getTime()
-
+                        if (item.modifyTime) {
+                            item.modifyTime=item.modifyTime.replace("-","/")
+                            item.byTime = -(new Date(item.modifyTime)).getTime()
+                        }
                     })
-                    this.speedingList = _.sortBy(this.speedingList,'byTime')
-                    this.speedingList = this.speedingList.filter((item,index) => {
-                        if (index < (this.pageNum * 10 ) && index > ((this.pageNum -1) * 10 ) - 1 ) {
+                    this.allSpeedingList = _.sortBy(this.allSpeedingList,'byTime')
+                    this.speedingList = this.allSpeedingList.filter((item,index) => {
+                        if (index < (this.getCurrentNum * 35 ) && index > ((this.getCurrentNum -1) * 35 ) - 1 ) {
                             return item
                         }
                     })
@@ -511,6 +505,14 @@
             Header,
             AlarmDetail
         },
+        watch: {
+            getCurrentNum () {
+                this.getAlarmRule()
+            }
+        },
+        computed: {
+            ...mapGetters(['getCurrentNum'])
+        }
     }
 
 </script>

@@ -11,7 +11,6 @@
                         @startEndPlan="startEndPlan"
                         @searchAnything="searchAnything"
                         :selectLength="choseInfoId.length"
-                        :listLength="broadCastList.length"
                         @choseType="choseType"
                         @fixedInfo = 'fixedInfo'>
                 </Header>
@@ -99,10 +98,12 @@
     import Header from './dmisHeader'
     import PersonDetail from './dmisDialog'
     import moment from 'moment'
+    import {mapGetters,mapMutations} from 'vuex'
     export default {
         name: 'area-deploy',
         data(){
             return{
+                allBroadCastList: [],
                 checkList: [],
                 filterList: [],
                 broadCastList: [],
@@ -121,10 +122,11 @@
             }
         },
         methods: {
+            ...mapMutations(['TOTAL_NUM']),
             searchAnything (info) {
                 console.log(info, '这是要过滤的')
                 if (info.trim() !== '') {
-                    this.broadCastList = this.checkList.filter(item => {
+                    this.broadCastList = this.allBroadCastList.filter(item => {
                         if (item.broadcastSchedule.name.includes(info)) {
                             return item
                         }
@@ -433,8 +435,12 @@
                 await api.schedulebroadcast.getAllBroadcast().then(res => {
                     console.log(res, '请求成功')
                     this.isShowLoading = false
-                    this.broadCastList = res
-                    this.broadCastList.forEach(item => {
+                    this.allBroadCastList = res
+                    let date = new Date().getTime()
+                    let obj = {totalNum: res.length}
+                    obj[date] = new Date().getTime()
+                    this.$store.commit('TOTAL_NUM', obj)
+                    this.allBroadCastList.forEach(item => {
                         item.checked = false;
                         item.status = true
                         item.broadcastSchedule.time = [item.broadcastSchedule.startDate,item.broadcastSchedule.endDate]
@@ -450,6 +456,11 @@
                                 item.title = item.musicPath.substring(startNum,endNum)
                                 item.id = item.musicId
                             })
+                        }
+                    })
+                    this.broadCastList = this.allBroadCastList.filter((item,index) => {
+                        if (index < (this.getCurrentNum * 35) && index > ((this.getCurrentNum -1) * 35 ) - 1 ) {
+                            return item
                         }
                     })
                     this.choseInfoId = []
@@ -468,6 +479,14 @@
             Header,
             PersonDetail
         },
+        watch: {
+            getCurrentNum () {
+                this.getAllBroadcast()
+            }
+        },
+        computed: {
+            ...mapGetters(['getCurrentNum'])
+        }
     }
 
 </script>

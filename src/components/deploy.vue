@@ -39,26 +39,26 @@
                         index: '3',
                         title: '调度管理',
                         subs: [
-                            {
-                                icon: './../../static/img/broadcast.svg',
-                                index: '/deploy/broadcast-Dmis',
-                                title: '广播'
-                            },
-                            {
-                                icon: './../../static/img/light.svg',
-                                index: '/deploy/lamppost-Dmis',
-                                title: '路灯'
-                            },
-                            {
-                                icon: './../../static/img/led.svg',
-                                index: '/deploy/screen-Dmis',
-                                title: 'LED'
-                            },
-                            {
-                                icon: './../../static/img/clearer.svg',
-                                index: '/deploy/purifier-Dmis',
-                                title: '保洁'
-                            },
+                            // {
+                            //     icon: './../../static/img/broadcast.svg',
+                            //     index: '/deploy/broadcast-Dmis',
+                            //     title: '广播'
+                            // },
+                            // {
+                            //     icon: './../../static/img/light.svg',
+                            //     index: '/deploy/lamppost-Dmis',
+                            //     title: '路灯'
+                            // },
+                            // {
+                            //     icon: './../../static/img/led.svg',
+                            //     index: '/deploy/screen-Dmis',
+                            //     title: 'LED'
+                            // },
+                            // {
+                            //     icon: './../../static/img/clearer.svg',
+                            //     index: '/deploy/purifier-Dmis',
+                            //     title: '保洁'
+                            // },
                             {
                                 icon: './../../static/img/security.svg',
                                 index: '/deploy/security-Dmis',
@@ -71,17 +71,17 @@
                             }
                         ]
                     },
-                    {
-                        icon: './../../static/img/record.svg',
-                        index: '4',
-                        title: '调度记录',
-                        subs: [
-                            {
-                                index: '/deploy/dispatch-Record',
-                                title: '调度统计'
-                            }
-                        ]
-                    },
+                    // {
+                    //     icon: './../../static/img/record.svg',
+                    //     index: '4',
+                    //     title: '调度记录',
+                    //     subs: [
+                    //         {
+                    //             index: '/deploy/dispatch-Record',
+                    //             title: '调度统计'
+                    //         }
+                    //     ]
+                    // },
                 ]
             }
         },
