@@ -6,7 +6,7 @@
                     <span>旅游路线信息</span>
                 </div>
                 <el-carousel :interval="5000" indicator-position="none">
-                    <el-carousel-item v-for="schedule in schedules">
+                    <el-carousel-item v-for="schedule in schedules" :key="schedule">
                         <div class="contentDiv"  v-for="route in schedule.routes">
                             <div class="contentBody">
                                 <div class="desc">

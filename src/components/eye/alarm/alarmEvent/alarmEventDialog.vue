@@ -378,11 +378,11 @@
                 'getLocation'
             ]),
           orderByTime(){
-                if(this.route.includes('warning')){
+              if(this.Info.alarmType.id!='10'){
                     if(this.eventInfo.handleRecords && this.eventInfo.handleRecords.length >0){
                         return this.eventInfo.handleRecords.reverse()
                     }
-                }else if(this.route.includes('patrol')){
+                }else if(this.Info.alarmType.id=='10'){
                     if(this.addEventInfo.handleRecords && this.addEventInfo.handleRecords.length >0){
                         return this.addEventInfo.handleRecords.reverse()
                     }
@@ -463,10 +463,8 @@
             async saveDialog(){
                 let objArray = [];
                 let newInfo = {};
-
-                if(this.route.includes('warning') || (this.route.includes('warn') && this.eventInfo.alarmType.id != '10')){
+                if(this.Info.alarmType.id!='10'){
                     if(this.isBatchEdit){    //批量编辑
-                        console.log(this.choseInfoId);
                         if(!this.batchlevel && !this.batchstatus){
                             return;
                         }
@@ -564,11 +562,9 @@
                         }
                         await this.$emit('saveEditInfo',param)
                     }
-                }else if(this.route.includes('patrol') || (this.route.includes('warn') && this.eventInfo.alarmType.id == '10')){
-                    if(this.route.includes('warn') && this.eventInfo.alarmType.id == '10'){
-                        this.addEventInfo = this.eventInfo
-                    }
-                    console.log(this.addEventInfo)
+                }else if(this.Info.alarmType.id =='10'){
+                    // console.log(this.eventInfo)
+                    // this.addEventInfo = this.eventInfo
                     if(!this.addEventInfo.severity.id){
                         this.$message.error('请选择严重性等级！')
                         return;
@@ -853,9 +849,8 @@
         },
         async created () {
             this.init();
-            console.log(this.Info);
             this.route = this.$route.path
-            if(this.route.includes('patrol')){
+            if(this.Info.alarmType.id=='10'){
                 this.isPatrolEvent = true
                 if(this.Info.fileList && this.Info.fileList instanceof Array && this.Info.fileList.length > 0){
                     this.initFileList = JSON.parse(JSON.stringify(this.Info.fileList))
@@ -864,6 +859,7 @@
                 if(Object.keys(this.Info).length != 0){
                     this.isPatrolAdd = false
                     this.addEventInfo = JSON.parse(JSON.stringify(this.Info));
+                    // this.eventInfo = JSON.parse(JSON.stringify(this.Info));
                     if(this.addEventInfo.device && this.addEventInfo.device.typeId){
                         this.getDeviceById(this.addEventInfo.device.typeId)
                     }

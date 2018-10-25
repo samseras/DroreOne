@@ -198,9 +198,80 @@
                 isGroup:false,
                 selectedCast:[],
                 selectedCastContent:[],
-                alarmType:[]
-
-
+                warningID:'',
+                alarmType:[],
+                deviceType:[
+                    {
+                        "id": 1,
+                        "name": "广播",
+                        "iconId": null,
+                        "description": null,
+                        "enable": true
+                    },
+                    {
+                        "id": 2,
+                        "name": "摄像头",
+                        "iconId": null,
+                        "description": null,
+                        "enable": true
+                    },
+                    {
+                        "id": 3,
+                        "name": "闸机",
+                        "iconId": null,
+                        "description": null,
+                        "enable": true
+                    },
+                    {
+                        "id": 4,
+                        "name": "LED大屏",
+                        "iconId": null,
+                        "description": null,
+                        "enable": true
+                    },
+                    {
+                        "id": 5,
+                        "name": "路灯",
+                        "iconId": null,
+                        "description": null,
+                        "enable": true
+                    },
+                    {
+                        "id": 6,
+                        "name": "传感器",
+                        "iconId": null,
+                        "description": null,
+                        "enable": true
+                    },
+                    {
+                        "id": 7,
+                        "name": "WIFI",
+                        "iconId": null,
+                        "description": null,
+                        "enable": true
+                    },
+                    {
+                        "id": 8,
+                        "name": "报警柱",
+                        "iconId": null,
+                        "description": null,
+                        "enable": true
+                    },
+                    {
+                        "id": 9,
+                        "name": "GPS",
+                        "iconId": null,
+                        "description": null,
+                        "enable": true
+                    },
+                    {
+                        "id": 10,
+                        "name": "智能音箱",
+                        "iconId": null,
+                        "description": null,
+                        "enable": true
+                    }
+                ],
             }
         },
         created () {
@@ -2746,9 +2817,23 @@
                 }).catch(err => {
                 })
             },
+            async getDeviceTypeById(typeId){
+                // console.log(this.deviceType)
+                let deviceInfo =  this.deviceType.filter(item=>item.id == typeId)
+                return deviceInfo[0].name;
+            },
+            // async getAllDeviceType () {
+            //     await api.lib.getAllDeviceType().then(res => {
+            //         console.log(res, '查询设备类型成功')
+            //         this.deviceType = res
+            //     }).catch(err => {
+            //         // console.log(error, '查询设备类型失败')
+            //     })
+            // },
             async getAllAlarmEvent () {
                 await api.alarm.getAllAlarmEventundone().then(res => {
                     for (let i=0;i<res.length;i++) {
+                        this.warningID=res[0].id
                         res[i].location = [res[i].longitude,res[i].latitude]
 
                         if(res[i].rule && res[i].rule.alarmTypeId){
@@ -2762,6 +2847,16 @@
                         }
 
                         res[i].device = !res[i].device ? "" : res[i].device
+
+                        if(!res[i].device){
+                            res[i].device = {
+                                id:'',
+                                typeId:0,
+                                typeName:'非设备故障'
+                            }
+                        }else{
+                            res[i].device['typeName'] = this.getDeviceTypeById( res[i].device.typeId)
+                        }
                         res[i].acturalExtendValue = !res[i].acturalExtendValue ? "" : res[i].acturalExtendValue
                         if(!res[i].owner || !res[i].owner.id){
                             res[i].owner = {
@@ -2897,16 +2992,199 @@
                             // that.warnListShow(e);
                         });
                     }
+                    this.treeShow(this.getSearchInfo);
                     let route = this.$route.path
                     if (route.includes('controler')) {
-                        this.treeShow(this.getSearchInfo);
+                        let that =this
+                        $(document).keyup(function(event){
+                            switch(event.keyCode) {
+                                case 27:
+                                    that.escFun();
+                            }
+                        });
                     }
-                    // setTimeout(() => {
-                    //     let route = this.$route.path
-                    //     if (route.includes('controler')) {
-                    //         this.getAllAlarmEvent();//长轮询
-                    //     }
-                    // },10000)
+                    setTimeout(() => {
+                        let route = this.$route.path
+                        if (route.includes('controler')) {
+                            this.getAllAlarmEventRest();//长轮询
+                        }
+                    },10000)
+                }).catch(err => {
+                    console.log(err, '请求失败')
+                })
+            },
+            async getAllAlarmEventRest () {
+                await api.alarm.getAllAlarmEventundone().then(res => {
+                    for (let i=0;i<res.length;i++) {
+                        if (this.warningID == res[i].id) {
+                            break; //加上这句
+                        } else {
+                            res[i].location = [res[i].longitude, res[i].latitude]
+
+                            if (res[i].rule && res[i].rule.alarmTypeId) {
+                                res[i].rule['alarmTypeName'] = this.getAlarmTypeNameById(res[i].rule.alarmTypeId)
+                            }
+
+                            if (!res[i].rule || !res[i].rule.name) {
+                                res[i].rule = {
+                                    name: ""
+                                }
+                            }
+
+                            res[i].device = !res[i].device ? "" : res[i].device
+
+                            if (!res[i].device) {
+                                res[i].device = {
+                                    id: '',
+                                    typeId: 0,
+                                    typeName: '非设备故障'
+                                }
+                            } else {
+                                res[i].device['typeName'] = this.getDeviceTypeById(res[i].device.typeId)
+                            }
+                            res[i].acturalExtendValue = !res[i].acturalExtendValue ? "" : res[i].acturalExtendValue
+                            if (!res[i].owner || !res[i].owner.id) {
+                                res[i].owner = {
+                                    id: ""
+                                }
+                            }
+                            if (!res[i].owner || !res[i].owner.mobileNum) {
+                                res[i].owner = {
+                                    mobileNum: ""
+                                }
+                            }
+                            res[i].actualValue = !res[i].actualValue ? "" : res[i].actualValue
+                            res[i].type = "warn"
+
+                            if (res[i].alarmType.id == "2") {
+                                if (res[i].status.id == "1") {
+                                    res[i].url = '/static/img/icon/alarmcolumnRule_one.png'
+                                    res[i].subtype = 'alarmcolumnRule_one'
+                                } else if (res[i].status.id == "2") {
+                                    res[i].url = '/static/img/icon/alarmcolumnRule_two.png'
+                                    res[i].subtype = 'alarmcolumnRule_two'
+                                } else {
+                                    res[i].url = '/static/img/icon/alarmcolumnRule_three.png'
+                                    res[i].subtype = 'alarmcolumnRule_three'
+                                }
+                            } else if (res[i].alarmType.id == "3") {
+                                if (res[i].status.id == "1") {
+                                    res[i].url = '/static/img/icon/firefightingRule_one.png'
+                                    res[i].subtype = 'firefightingRule_one'
+                                } else if (res[i].status.id == "2") {
+                                    res[i].url = '/static/img/icon/firefightingRule_two.png'
+                                    res[i].subtype = 'firefightingRule_two'
+                                } else {
+                                    res[i].url = '/static/img/icon/firefightingRule_three.png'
+                                    res[i].subtype = 'firefightingRule_three'
+                                }
+                            } else if (res[i].alarmType.id == "4") {
+                                if (res[i].status.id == "1") {
+                                    res[i].url = '/static/img/icon/crossborderRule_one.png'
+                                    res[i].subtype = 'crossborderRule_one'
+                                } else if (res[i].status.id == "2") {
+                                    res[i].url = '/static/img/icon/crossborderRule_two.png'
+                                    res[i].subtype = 'crossborderRule_two'
+                                } else {
+                                    res[i].url = '/static/img/icon/crossborderRule_three.png'
+                                    res[i].subtype = 'crossborderRule_three'
+                                }
+                            } else if (res[i].alarmType.id == "5") {
+                                if (res[i].status.id == "1") {
+                                    res[i].url = '/static/img/icon/speedingRule_one.png'
+                                    res[i].subtype = 'speedingRule_one'
+                                } else if (res[i].status.id == "2") {
+                                    res[i].url = '/static/img/icon/speedingRule_two.png'
+                                    res[i].subtype = 'speedingRule_two'
+                                } else {
+                                    res[i].url = '/static/img/icon/speedingRule_three.png'
+                                    res[i].subtype = 'speedingRule_three'
+                                }
+                            } else if (res[i].alarmType.id == "6") {
+                                if (res[i].status.id == "1") {
+                                    res[i].url = '/static/img/icon/offtrackRule_one.png'
+                                    res[i].subtype = 'offtrackRule_one'
+                                } else if (res[i].status.id == "2") {
+                                    res[i].url = '/static/img/icon/offtrackRule_two.png'
+                                    res[i].subtype = 'offtrackRule_two'
+                                } else {
+                                    res[i].url = '/static/img/icon/offtrackRule_three.png'
+                                    res[i].subtype = 'offtrackRule_three'
+                                }
+                            } else if (res[i].alarmType.id == "7") {
+                                if (res[i].status.id == "1") {
+                                    res[i].url = '/static/img/icon/overlimitRule_one.png'
+                                    res[i].subtype = 'overlimitRule_one'
+                                } else if (res[i].status.id == "2") {
+                                    res[i].url = '/static/img/icon/overlimitRule_two.png'
+                                    res[i].subtype = 'overlimitRule_two'
+                                } else {
+                                    res[i].url = '/static/img/icon/overlimitRule_three.png'
+                                    res[i].subtype = 'overlimitRule_three'
+                                }
+                            } else if (res[i].alarmType.id == "8") {
+                                if (res[i].status.id == "1") {
+                                    res[i].url = '/static/img/icon/waterlevelRule_one.png'
+                                    res[i].subtype = 'waterlevelRule_one'
+                                } else if (res[i].status.id == "2") {
+                                    res[i].url = '/static/img/icon/waterlevelRule_two.png'
+                                    res[i].subtype = 'waterlevelRule_two'
+                                } else {
+                                    res[i].url = '/static/img/icon/waterlevelRule_three.png'
+                                    res[i].subtype = 'waterlevelRule_three'
+                                }
+                            } else if (res[i].alarmType.id == "9") {
+                                if (res[i].status.id == "1") {
+                                    res[i].url = '/static/img/icon/conditionRule_one.png'
+                                    res[i].subtype = 'conditionRule_one'
+                                } else if (res[i].status.id == "2") {
+                                    res[i].url = '/static/img/icon/conditionRule_two.png'
+                                    res[i].subtype = 'conditionRule_two'
+                                } else {
+                                    res[i].url = '/static/img/icon/conditionRule_three.png'
+                                    res[i].subtype = 'conditionRule_three'
+                                }
+                            } else if (res[i].alarmType.id == "10") {
+                                if (res[i].status.id == "1") {
+                                    res[i].url = '/static/img/icon/pollingRule_one.png'
+                                    res[i].subtype = 'pollingRule_one'
+                                } else if (res[i].status.id == "2") {
+                                    res[i].url = '/static/img/icon/pollingRule_two.png'
+                                    res[i].subtype = 'pollingRule_two'
+                                } else {
+                                    res[i].url = '/static/img/icon/pollingRule_three.png'
+                                    res[i].subtype = 'pollingRule_three'
+                                }
+                                res[i]['rule']['alarmTypeName'] = '巡检告警'
+                            }
+                            var icon = new droreMap.icon.Marker({
+                                coordinate: droreMap.trans.transFromWgsToLayer(res[i].location),
+                                name: res[i].serialNum,
+                                subtype: res[i].subtype,
+                                id: res[i].id,
+                                url: res[i].url,
+                                type: 'warn',
+                                status: res[i].id,
+                                data: res[i],
+                            });
+                            droreMap.icon.addChild(icon);
+                            droreMap.icon.showLayer(icon.id, false);
+                            icon.showName = true
+                            let that = this;
+                            icon.onclick(function (e) {
+                                that.menulist = e.data;
+                                that.droreMappopup(that.menulist);
+                                // that.warnListShow(e);
+                            });
+                        }
+                    }
+                    this.warningID=res[0].id
+                    setTimeout(() => {
+                        let route = this.$route.path
+                        if (route.includes('controler')) {
+                            this.getAllAlarmEventRest();//长轮询
+                        }
+                    },10000)
                 }).catch(err => {
                     console.log(err, '请求失败')
                 })
@@ -3103,12 +3381,15 @@
                     alert("操作当前内容"+this.menulist.id);
                 }else {
                     if(this.menulist.type=="warn"){
-                        console.log(this.menulist.data)
+                        if(this.menulist.data.alarmType.id=='10'){
+                            this.title = '编辑巡检事件';
+                        }else {
+                            this.title = '编辑告警事件';
+                        }
                         this.warningEventInfo = this.menulist.data;
                         this.AlarmDetailShow = true;
                         this.isBatchEdit = false;
                         this.readOnly = false;
-                        this.title = '编辑告警事件';
                     }else {
                         this.$message.success(this.menulist.name+'使用正常')
                     }
