@@ -142,23 +142,28 @@
                 title: '',
                 show:false,
                 isShowLoading : false,
-                currentNum: 50,
+                filterCondition: ''
             }
         },
         methods: {
-            ...mapMutations(['TOTAL_NUM']),
+            ...mapMutations(['TOTAL_NUM', 'CURRENT_NUM']),
             closeDialog () {
                 this.visible = false
                 this.getAllArea()
             },
             searchAnything (info) {
                 console.log(info, '这是要过滤的')
+                this.filterCondition = info
                 if (info.trim() !== '') {
                     this.areaList = this.allAreaList.filter(item => {
                         if (item.name.includes(info)) {
                             return item
                         }
                     })
+                    let date = new Date().getTime()
+                    let obj = {totalNum: this.areaList.length}
+                    obj[date] = new Date().getTime()
+                    this.$store.commit('TOTAL_NUM', obj)
                 } else {
                     this.getAllArea()
                 }
@@ -365,10 +370,6 @@
                     }
                     this.isShowLoading = false
                     this.allAreaList = res
-                    let date = new Date().getTime()
-                    let obj = {totalNum: res.length}
-                    obj[date] = new Date().getTime()
-                    this.$store.commit('TOTAL_NUM', obj)
                     for (let i = 0; i < this.allAreaList.length; i++) {
                         this.allAreaList[i].checked = false
                         this.allAreaList[i].status = true
@@ -377,6 +378,13 @@
                         this.allAreaList[i].byTime = -(new Date(this.allAreaList[i].modifyTime)).getTime()
                     }
                     this.allAreaList = _.sortBy(this.allAreaList,'byTime')
+                    if (this.filterCondition.trim() !== '') {
+                        this.allAreaList = this.filterDataList(this.allAreaList)
+                    }
+                    let date = new Date().getTime()
+                    let obj = {totalNum: this.allAreaList.length}
+                    obj[date] = new Date().getTime()
+                    this.$store.commit('TOTAL_NUM', obj)
                     this.areaList = this.allAreaList.filter((item,index) => {
                         if (index < (this.getCurrentNum *  35) && index > ((this.getCurrentNum -1) * 35 ) - 1 ) {
                             return item
@@ -389,6 +397,14 @@
                     console.log(err, '失败')
                     this.isShowLoading = false
                 })
+            },
+            filterDataList (list) {
+                list = list.filter(item => {
+                    if (item.name.includes(this.filterCondition)) {
+                        return item
+                    }
+                })
+                return list
             }
         },
         created () {

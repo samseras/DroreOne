@@ -5,6 +5,7 @@
             @current-change="handleCurrentChange"
             :current-page.sync="currentPage"
             :page-size="35"
+            layout="total, prev, pager, next, jumper"
             :total="getTotalNum">
         </el-pagination>
     </div>
@@ -21,7 +22,7 @@
         },
         methods: {
             ...mapMutations(['CURRENT_NUM']),
-            handleSizeChange () {
+            handleSizeChange (val) {
             },
             handleCurrentChange (val) {
                 console.log(val, 'currentChange')
@@ -32,6 +33,12 @@
                 obj[date] = new Date().getTime()
                 this.$store.commit('CURRENT_NUM', obj)
             },
+        },
+        watch: {
+            getTotalNum () {
+                this.currentPage = 1
+                this.handleCurrentChange(1)
+            }
         },
         computed: {
             ...mapGetters(['getTotalNum']),

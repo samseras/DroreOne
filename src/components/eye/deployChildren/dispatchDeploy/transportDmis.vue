@@ -122,13 +122,15 @@
                 isStart:false,
                 selection:[],
                 isShowLoading: false,
-                routeObjs:[]
+                routeObjs:[],
+                filterCondition: ''
             }
         },
         methods: {
             ...mapMutations(['TOTAL_NUM']),
             searchAnything (info) {
                 console.log(info, '这是要过滤的')
+                this.filterCondition = info
                 if (info.trim() !== '') {
                     this.transportList = this.allTransportList.filter(item => {
                         if (item.name && item.name.includes(info)) {
@@ -138,6 +140,10 @@
                             return item
                         }
                     })
+                    let date = new Date().getTime()
+                    let obj = {totalNum: this.transportList.length}
+                    obj[date] = new Date().getTime()
+                    this.$store.commit('TOTAL_NUM', obj)
                 } else {
                     this.getAllRoat()
                 }
@@ -445,10 +451,7 @@
                     console.log(res, '请求成功')
                     this.isShowLoading = false
                     this.allTransportList = res
-                    let date = new Date().getTime()
-                    let obj = {totalNum: res.length}
-                    obj[date] = new Date().getTime()
-                    this.$store.commit('TOTAL_NUM', obj)
+
                     this.allTransportList.forEach(item => {
                         item.checked = false;
                         item.time = [item.startDate,item.endDate]
@@ -464,6 +467,13 @@
                             }
                         })
                     })
+                    if (this.filterCondition.trim() !== '') {
+                        this.allTransportList = this.filterDataList(this.allTransportList)
+                    }
+                    let date = new Date().getTime()
+                    let obj = {totalNum: this.allTransportList.length}
+                    obj[date] = new Date().getTime()
+                    this.$store.commit('TOTAL_NUM', obj)
                     this.transportList = this.allTransportList.filter((item,index) => {
                         if (index < (this.getCurrentNum * 35) && index > ((this.getCurrentNum -1) * 35 ) - 1 ) {
                             return item
@@ -475,6 +485,17 @@
                     console.log(err, '请求失败')
                     this.isShowLoading = false
                 })
+            },
+            filterDataList (list) {
+                list = list.filter(item => {
+                    if (item.name && item.name.includes(this.filterCondition)) {
+                        return item
+                    }
+                    if (item.description && item.description.includes(this.filterCondition)) {
+                        return item
+                    }
+                })
+                return list
             },
             async getAllRoat(){
                 await api.roat.getAllRoat().then(res => {

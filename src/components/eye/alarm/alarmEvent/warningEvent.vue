@@ -128,11 +128,12 @@
                 listLength:'',
                 dataLength:'',
                 updateParams:[],
-                pageNum:1
+                pageNum:1,
+                filterCondition: ''
             }
         },
         methods: {
-            ...mapMutations(['TOTAL_NUM']),
+            ...mapMutations(['TOTAL_NUM', 'CURRENT_NUM']),
             filterOnwer (onwer) {
                 console.log(onwer, '选择的人员信息')
                 if (onwer.length === 0) {
@@ -152,6 +153,7 @@
             },
             searchAnything (info) {
                 console.log(info, '这是要过滤的')
+                this.filterCondition = info
                 if (info.trim() !== '') {
                     this.warningEventList = this.allWarningEventList.filter(item => {
                         if (item.serialNum.includes(info)) {
@@ -176,6 +178,10 @@
                             return item
                         }
                     })
+                    let date = new Date().getTime()
+                    let obj = {totalNum: this.warningEventList.length}
+                    obj[date] = new Date().getTime()
+                    this.$store.commit('TOTAL_NUM', obj)
                 } else {
                     this.getAllAlarmEvent()
                 }
@@ -376,7 +382,6 @@
                 this.loading = true
                 this.allWarningEventList = []
                 await api.alarm.getAllAlarmEvent().then(res => {
-                    console.log(res,'123123123')
                                 this.loading = false
                                 let  list = JSON.parse(JSON.stringify(res))
                                 if(list.length >0){
@@ -388,7 +393,6 @@
                                 }
                                 console.log(this.allWarningEventList, '././././././.')
                                 this.allWarningEventList.forEach(item => {
-
                                     item.checked = false;
                                     if(item.rule && item.rule.alarmTypeId){
                                         item.rule.alarmTypeName = this.getAlarmTypeNameById(item.rule.alarmTypeId)
@@ -431,28 +435,53 @@
                                             item.fileList = fileList
                                         }
                                     }
-                                    if (item.modifyTime) {
-                                        item.modifyTime=item.modifyTime.replace("-","/")
-                                        item.byTime = -(new Date(item.modifyTime)).getTime()
-                                    }
+                                    item.modifyTime=item.modifyTime.replace("-","/")
+                                    item.byTime = -(new Date(item.modifyTime)).getTime()
                                 })
-                    console.log(this.allWarningEventList, 'm,m,,,m,,,,m,')
-                                let date = new Date().getTime()
-                                let obj = {totalNum: this.allWarningEventList.length}
-                                obj[date] = new Date().getTime()
-                                this.$store.commit('TOTAL_NUM', obj)
                                 this.allWarningEventList = _.sortBy(this.allWarningEventList,'byTime')
-                                this.warningEventList = this.allWarningEventList.filter((item,index) => {
-                                    if (index < (this.pageNum * 35 ) && index > ((this.pageNum -1) * 35 ) - 1 ) {
-                                        return item
-                                    }
-                                })
-                    console.log(this.warningEventList, 'klklllklkl')
+                    if (this.filterCondition.trim() !== '') {
+                        this.allWarningEventList = this.filterDataList(this.allWarningEventList)
+                    }
+                    let date = new Date().getTime()
+                    let obj = {totalNum: this.allWarningEventList.length}
+                    obj[date] = new Date().getTime()
+                    this.$store.commit('TOTAL_NUM', obj)
+                    this.warningEventList = this.allWarningEventList.filter((item,index) => {
+                        if (index < (this.getCurrentNum * 35 ) && index > ((this.getCurrentNum -1) * 35 ) - 1 ) {
+                            return item
+                        }
+                    })
                                 this.warningEventListTemp = JSON.parse(JSON.stringify(this.warningEventList))
 
                         }).catch(err => {
                             this.loading = false
                         })
+            },
+            filterDataList (list) {
+                list = list.filter(item => {
+                    if (item.serialNum.includes(this.filterCondition)) {
+                        return item
+                    }
+                    if(item.severity.name.includes(this.filterCondition)){
+                        return item
+                    }
+                    if(item.status.name.includes(this.filterCondition)){
+                        return item
+                    }
+                    if(item.owner.name.includes(this.filterCondition)){
+                        return item
+                    }
+                    if(item.owner.mobileNum.includes(this.filterCondition)){
+                        return item
+                    }
+                    if(item.rule.alarmTypeName.includes(this.filterCondition)){
+                        return item
+                    }
+                    if(item.device.name.includes(this.filterCondition)){
+                        return item
+                    }
+                })
+                return list
             },
             getAlarmTypeNameById(typeId){
                 let typeInfo =  this.alarmType.filter(item=>item.id == typeId)

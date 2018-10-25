@@ -169,11 +169,12 @@
                 allDotList:{
                     close:[],
                     open:[]
-                }
+                },
+                filterCondition: ''
             }
         },
         methods: {
-            ...mapMutations(['TOTAL_NUM']),
+            ...mapMutations(['TOTAL_NUM', 'CURRENT_NUM']),
             imgError (e) {
                 e.target.src = this.getUrl(null,0);
             },
@@ -217,6 +218,7 @@
                 })
             },
             searchAnything (info) {
+                this.filterCondition = info
                 if (info.trim() !== '') {
                     this.stationList = this.allStationList.filter(item => {
                         if (item.regionName && item.regionName.includes(info)) {
@@ -226,6 +228,10 @@
                             return item
                         }
                     })
+                    let date = new Date().getTime()
+                    let obj = {totalNum: this.stationList.length}
+                    obj[date] = new Date().getTime()
+                    this.$store.commit('TOTAL_NUM', obj)
                 } else {
                     this.getAllStation()
                 }
@@ -428,10 +434,7 @@
                     }
                     this.isShowLoading = false
                     this.allStationList = res
-                    let date = new Date().getTime()
-                    let obj = {totalNum: res.length}
-                    obj[date] = new Date().getTime()
-                    this.$store.commit('TOTAL_NUM', obj)
+
 
                     this.allDotList.close=[]
                     this.allDotList.open=[]
@@ -464,6 +467,13 @@
                         this.allStationList[i].typeName = this.stationTypeId2Name[this.allStationList[i].type]
                     }
                     this.allStationList = _.sortBy(this.allStationList, 'byTime')
+                    if (this.filterCondition.trim() !== '') {
+                        this.allStationList = this.filterDataList(this.allStationList)
+                    }
+                    let date = new Date().getTime()
+                    let obj = {totalNum: this.allStationList.length}
+                    obj[date] = new Date().getTime()
+                    this.$store.commit('TOTAL_NUM', obj)
                     this.stationList = this.allStationList.filter((item,index) =>{
                         if(index <(this.getCurrentNum*35) && index>(this.getCurrentNum-1)*35-1){
                             return item
@@ -476,6 +486,23 @@
                     console.log(err)
                     this.isShowLoading = false
                 })
+            },
+            filterDataList (list) {
+                list = list.filter(item => {
+                    if ((item.regionName)&&(item.regionName.includes(this.filterCondition))) {
+                        return item
+                    }
+                    if (item.plant.name.includes(this.filterCondition)) {
+                        return item
+                    }
+                    if (item.regionName && item.regionName.includes(this.filterCondition)) {
+                        return item
+                    }
+                    if (item.name.includes(this.filterCondition)) {
+                        return item
+                    }
+                })
+                return list
             }
         },
         created () {

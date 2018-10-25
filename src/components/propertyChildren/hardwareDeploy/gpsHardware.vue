@@ -146,10 +146,11 @@
                 show:false,
                 isShowLoading:false,
                 currentNum: 50,
+                filterCondition: ''
             }
         },
         methods:{
-            ...mapMutations(['TOTAL_NUM']),
+            ...mapMutations(['TOTAL_NUM','CURRENT_NUM']),
             imgError (e) {
                 e.target.src = this.getUrl(null);
             },
@@ -167,6 +168,7 @@
             },
             searchAnything (info) {
                 console.log(info, '这是要过滤的')
+                this.filterCondition = info
                 if (info.trim() !== '') {
                     this.gpsList = this.allGpsList.filter(item => {
                         if (item.regionName && item.regionName.includes(info)) {
@@ -185,6 +187,10 @@
                             return item
                         }
                     })
+                    let date = new Date().getTime()
+                    let obj = {totalNum: this.gpsList.length}
+                    obj[date] = new Date().getTime()
+                    this.$store.commit('TOTAL_NUM', obj)
                 } else {
                     this.getAllGps()
                 }
@@ -377,11 +383,6 @@
                     }
                     this.isShowLoading=false
                     this.allGpsList=res.devices
-                    let date = new Date().getTime()
-                    let obj = {totalNum: res.devices.length}
-                    obj[date] = new Date().getTime()
-                    this.$store.commit('TOTAL_NUM', obj)
-
 
                     for (let i=0;i<this.allGpsList.length;i++){
                         this.allGpsList[i].checked=false
@@ -390,6 +391,13 @@
                         this.allGpsList[i].byTime = -(new Date(this.allGpsList[i].modifyTime)).getTime()
                     }
                     this.allGpsList = _.sortBy(this.allGpsList,'byTime')
+                    if (this.filterCondition.trim() !== '') {
+                        this.allGpsList = this.filterDataList(this.allGpsList)
+                    }
+                    let date = new Date().getTime()
+                    let obj = {totalNum: this.allGpsList.length}
+                    obj[date] = new Date().getTime()
+                    this.$store.commit('TOTAL_NUM', obj)
                     this.gpsList = this.allGpsList.filter((item,index) => {
                         if (index < (this.getCurrentNum * 35 ) && index > ((this.getCurrentNum -1) * 35 ) - 1 ) {
                             return item
@@ -402,6 +410,26 @@
                 }).catch((err)=>{
                     console.log(err)
                 })
+            },
+            filterDataList (list) {
+                list = list.filter(item => {
+                    if (item.regionName && item.regionName.includes(this.filterCondition)) {
+                        return item
+                    }
+                    if (item.ip && item.ip.includes(this.filterCondition)) {
+                        return item
+                    }
+                    if (item.name.includes(this.filterCondition)) {
+                        return item
+                    }
+                    if (item.modelName && item.modelName.includes(this.filterCondition)) {
+                        return item
+                    }
+                    if (item.description && item.description.includes(this.filterCondition)) {
+                        return item
+                    }
+                })
+                return list
             }
         },
         created (){

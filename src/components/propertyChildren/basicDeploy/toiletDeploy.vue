@@ -147,11 +147,12 @@
                 allDotList:{
                     close:[],
                     open:[]
-                }
+                },
+                filterCondition: ''
             }
         },
         methods: {
-            ...mapMutations(['TOTAL_NUM']),
+            ...mapMutations(['TOTAL_NUM', 'CURRENT_NUM']),
             imgError (e) {
                 e.target.src = this.getUrl(null);
             },
@@ -189,7 +190,7 @@
             },
             searchAnything (info) {
                 console.log(info, '这是要过滤的')
-                console.log(this.checkList)
+                this.filterCondition = info
                 if (info.trim() !== '') {
                     this.toiletList = this.allToiletList.filter(item => {
                         if ((item.regionName)&&(item.regionName.includes(info))) {
@@ -199,6 +200,10 @@
                             return item
                         }
                     })
+                    let date = new Date().getTime()
+                    let obj = {totalNum: this.treeList.length}
+                    obj[date] = new Date().getTime()
+                    this.$store.commit('TOTAL_NUM', obj)
                 } else {
                     this.getAllToilet()
                 }
@@ -427,16 +432,6 @@
                     }
                     this.isShowLoading = false
                     this.allToiletList = res
-                    let date = new Date().getTime()
-                    let obj = {totalNum: res.length}
-                    obj[date] = new Date().getTime()
-                    this.$store.commit('TOTAL_NUM', obj)
-                    this.toiletList = this.allToiletList.filter((item,index) =>{
-                        if(index < (this.getCurrentNum*35)&& index>(this.getCurrentNum-1)*35 -1){
-                            return item
-                        }
-                    })
-
                     this.allDotList.close=[]
                     this.allDotList.open=[]
                     for (let i = 0; i < res.length; i++) {
@@ -463,6 +458,13 @@
                         this.allToiletList[i].byTime = -(new Date(this.allToiletList[i].toiletBean.modifyTime)).getTime()
                     }
                     this.allToiletList = _.sortBy(this.allToiletList, 'byTime')
+                    if (this.filterCondition.trim() !== '') {
+                        this.allToiletList = this.filterDataList(this.allToiletList)
+                    }
+                    let date = new Date().getTime()
+                    let obj = {totalNum: this.allToiletList.length}
+                    obj[date] = new Date().getTime()
+                    this.$store.commit('TOTAL_NUM', obj)
                     this.toiletList = this.allToiletList.filter((item,index) =>{
                         if(index < (this.getCurrentNum*35)&& index>(this.getCurrentNum-1)*35 -1){
                             return item
@@ -477,6 +479,17 @@
                     console.log(err, '请求失败')
                     this.isShowLoading = false
                 })
+            },
+            filterDataList (list) {
+                list = list.filter(item => {
+                    if ((item.regionName)&&(item.regionName.includes(this.filterCondition))) {
+                        return item
+                    }
+                    if (item.toiletBean.name.includes(this.filterCondition)) {
+                        return item
+                    }
+                })
+                return list
             }
         },
         created () {
