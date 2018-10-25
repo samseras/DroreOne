@@ -529,7 +529,7 @@
                 });
                 console.log(arr1,arr2);*/
                 await api.intelligentBox.getAllSongs().then(res=>{
-                    console.log(res,'传回来的所有歌曲1');
+                    // console.log(res,'传回来的所有歌曲1');
                     this.musics=res;
                     this.firstmusics=res;
                     /*this.musics=this.firstmusics.slice(0);  //排除数组地址传递的相互影响

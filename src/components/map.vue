@@ -537,7 +537,7 @@
                         params.push(this.uploadFile(data));
 
                     })
-                    console.log(params)
+                    // console.log(params)
                     Promise.all(params).then((result)=>{
                         console.log(result)
                         objArray[0].attachmentIds = objArray[0].attachmentIds.concat(result.map(item=>item.id))
@@ -581,7 +581,6 @@
                     url: "/static/xxsd_mapData.json",
                     async: false,
                     success: function(data) {
-                        console.log(data);
                         var obj = data.data;
                         var mapdata = {
                             "olTileX": obj.olTileX,
@@ -615,13 +614,13 @@
                 droreMap.event.addMouseEvent(Event.SINGLECLICK_EVENT, "single", function(evt){
                     droreMap.interaction.ifDrag = true;
                     icon.setPosition(evt.coordinate)
-                    console.log(evt.coordinate)
+                    // console.log(evt.coordinate)
                     that.$store.commit('MAP_LOCATION', droreMap.trans.transLayerToWgs(evt.coordinate))
                 })
                 droreMap.event.DragEvent(function(tabInfor) {
                     var data = tabInfor.data
                     if(data.data.id === '12214_'){
-                        console.log(droreMap.trans.transLayerToWgs(data.end));
+                        // console.log(droreMap.trans.transLayerToWgs(data.end));
                         that.$store.commit('MAP_LOCATION', droreMap.trans.transLayerToWgs(data.end))
                     }
                 })
@@ -2656,7 +2655,7 @@
                                 let wgs = droreMap.trans.transLayerToWgs(e.unSelect.area[i])
                                 arrayObj.push(wgs);
                             }
-                            console.log(arrayObj);
+                            // console.log(arrayObj);
                             that.$store.commit('MAP_ROAT_LOCATION', arrayObj)
                             that.$store.commit('ROAT_LOCATION_STATE', true)
                         }
@@ -2671,7 +2670,7 @@
 
             async getAllScheduleRoute(){
                 await api.roat.getTransportRoat(1).then(res=>{
-                    console.log(res,'巡检路线')
+                    // console.log(res,'巡检路线')
                     for (var i = 0; i < res.length; i++) {
                         var areaEvtList =new droreMap.road.RoadLayer('ROUTE_list', '#26bbf0', 'blue')
                         let geo =JSON.parse(res[i].geo);
@@ -2694,7 +2693,7 @@
             },
             getAllPerson(){
                 Promise.all([this.getAllUser()]).then(result=>{
-                    console.log(result,'00000')
+                    // console.log(result,'00000')
                     let users = result[0]
                     if(users.length > 0){
                         users.forEach(obj=>{
@@ -3221,7 +3220,7 @@
                             });
 
                         }else if(icon.subtype.includes("led")){
-                            console.log("aaaaaaaaaa")
+                            // console.log("aaaaaaaaaa")
                             icon.onclick(function (e) {
                                 that.ledvisible = true
                             });
@@ -3243,7 +3242,7 @@
                             that.menulist = e.data;
                             that.droreMappopup(that.menulist);
                             that.menuShow()
-                            console.log( that.menulist,'123123123');
+                            // console.log( that.menulist,'123123123');
                         });
                         this.facility();//之前打的点
                     }
@@ -3281,7 +3280,7 @@
                     // this.heatEm();//环境数据
             },
             searchShow() {//搜索
-                console.log(this.getSearchInfo,'123123');
+                // console.log(this.getSearchInfo,'123123');
                 if(this.getSearchInfo.entityType =="12"){
                     this.roadShow(this.getSearchInfo)
                 }else if(this.getSearchInfo.entityType=="14"){
@@ -3346,7 +3345,7 @@
                 }
             },
             menuShow(){
-                console.log(this.menulist)
+                // console.log(this.menulist)
                 this.menuBroadvolume=false;
                 if(this.menulist.type=="warn"){
                     this.buildInfo = this.menulist.data
@@ -3555,7 +3554,7 @@
                 this.escFun();
             },
             treeShow(data){
-                console.log(data,'23123123')
+                // console.log(data,'23123123')
                 if(data.longitude&&data.latitude){
                     data.location = [data.longitude,data.latitude]
                     droreMap.map.panToCoord(droreMap.trans.transFromWgsToLayer(data.location));
@@ -3799,7 +3798,7 @@
                 this.tsContentShow=!this.tsContentShow
             },
             sortStation(type,item){
-                console.log(item)
+                // console.log(item)
                 let index = this.stationCheckList.indexOf(item)
                 if(type == "up"){
                     this.stationCheckList.splice(index, 1, ...this.stationCheckList.splice(index-1 , 1, this.stationCheckList[index]))
@@ -3809,7 +3808,7 @@
                 this.stationOpt()
             },
             stationOpt(){
-                console.log(this.stationCheckedList)
+                // console.log(this.stationCheckedList)
                 let objArray = []
                 if(this.stationCheckList.length>0){
                     let i = 1;
@@ -3822,7 +3821,7 @@
                             i++;
                         }
                     })
-                    console.log(objArray,'objArray')
+                    // console.log(objArray,'objArray')
                     this.$store.commit('STATION_CHECKED',objArray);
                 }
             }
@@ -3843,7 +3842,7 @@
                 this.searchShow(this.getSearchInfo);
             },
             getMusicShow(){
-                console.log(this.getMusicShow,'哈哈哈哈')
+                // console.log(this.getMusicShow,'哈哈哈哈')
 
                 if(this.getMusicShow===true){
                     if(this.selectedCast.length>0){
@@ -3861,7 +3860,7 @@
                 }
             },
             getTreeState(){
-                console.log(this.getTreeState,'选择树的内容')
+                // console.log(this.getTreeState,'选择树的内容')
                 if(((this.getTreeState)[0]).checked){
                     this.selectedCast=(((this.getTreeState)[0]).checked).checkedNodes;
                 }
@@ -4666,7 +4665,7 @@
                         if(this.getTreeShow.type =='person'){
                             this.roadShowID(this.getTreeShow.routeId);
                         }else if(this.getTreeShow.type == "transport") {
-                            console.log(this.getTreeShow,'1')
+                            // console.log(this.getTreeShow,'1')
                             if(this.getTreeShow.status == "ONLINE"){
                                 this.treeShow(this.getTreeShow);
                                 let layer = droreMap.icon.returnLayer(this.getTreeShow.id)
@@ -4688,7 +4687,7 @@
                                 }
                             }
                         }else if(this.getTreeShow.type == "security") {
-                            console.log(this.getTreeShow,'1')
+                            // console.log(this.getTreeShow,'1')
                             if(this.getTreeShow.status == "ONLINE"){
                                 this.treeShow(this.getTreeShow);
                                 let layer = droreMap.icon.returnLayer(this.getTreeShow.id)
@@ -4710,7 +4709,7 @@
                                 }
                             }
                         } else if(this.getTreeShow.type == "led") {
-                            console.log(this.getTreeShow,'1')
+                            // console.log(this.getTreeShow,'1')
                             if(this.getTreeShow.status == "ONLINE"){
                                 this.treeShow(this.getTreeShow);
                                 // let layer = droreMap.icon.returnLayer(this.getTreeShow.id)
