@@ -11,29 +11,6 @@
                 <div class="alarmEventContent">
                     <!--批量编辑-->
                     <ScrollContainer>
-                        <div class="alarmContent" v-if="!isPatrolEvent && isBatchEdit">
-                            <p class="level">严重等级：
-                            <el-select  v-model="batchlevel" size="mini" class="" placeholder="请选择">
-                                <el-option
-                                    v-for="item in levelInfo"
-                                    :key="item.id"
-                                    :label="item.name"
-                                    :value="item.id">
-                                </el-option>
-                            </el-select>
-                        </p>
-                            <p class="status">状&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 态：
-                                <el-select  v-model="batchstatus" size="mini" class="" placeholder="请选择">
-                                    <el-option
-                                        v-for="item in statusInfo"
-                                        :key="item.id"
-                                        :label="item.name"
-                                        :value="item.id">
-                                    </el-option>
-                                </el-select>
-                            </p>
-                        </div>
-
                         <div  v-if="!isPatrolEvent && !isBatchEdit"  class="alarmContent">
                             <p class="serialNum">
                                 <span>编&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 号：</span>
@@ -701,7 +678,9 @@
             async getAllAlarmTypes(){
                 await api.alarm.getAllAlarmTypes().then(res => {
                     this.alarmType = res;
+                    console.log(res, '查询告警类型成功')
                 }).catch(err => {
+                    console.log(error, '查询告警类型失败')
                 })
             },
             getAlarmTypeNameById(typeId){
@@ -716,11 +695,6 @@
                 return deviceInfo[0].name;
             },
             init () {
-                if(this.Info.alarmType.id=='10'){
-                    this.isPatrolEvent = true
-                }else{
-                    this.isPatrolEvent = false
-                }
                 this.getAllAlarmTypes();
                 this.getAllDeviceType();
                 this.getPersonInfo();
@@ -961,7 +935,34 @@
         },
         created () {
             this.init();
-            // this.route = this.$route.path
+            if(this.Info.alarmType.id=='10'){
+                this.isPatrolEvent = true
+                if(this.Info.fileList && this.Info.fileList instanceof Array && this.Info.fileList.length > 0){
+                    this.initFileList = JSON.parse(JSON.stringify(this.Info.fileList))
+                    this.fileList = JSON.parse(JSON.stringify(this.Info.fileList));
+                }
+                if(Object.keys(this.Info).length != 0){
+                    this.isPatrolAdd = false
+                    this.addEventInfo = JSON.parse(JSON.stringify(this.Info));
+                    if(this.addEventInfo.device && this.addEventInfo.device.typeId){
+                        this.getDeviceById(this.addEventInfo.device.typeId)
+                    }
+                }else{
+                    this.isPatrolAdd = true
+                    this.getSerialNum()
+                }
+            }else{
+                this.isPatrolEvent = false
+                if(this.Info.fileList && this.Info.fileList instanceof Array && this.Info.fileList.length > 0){
+                    this.initFileList = JSON.parse(JSON.stringify(this.Info.fileList))
+                    this.fileList = JSON.parse(JSON.stringify(this.Info.fileList));
+                }
+                this.eventInfo = JSON.parse(JSON.stringify(this.Info));
+                if(this.eventInfo.rule && this.eventInfo.rule.id){
+                    this.getAlarmRuleById(this.eventInfo.rule.id)
+                }
+            }
+
         },
         components : {
             AlarmDetail,
