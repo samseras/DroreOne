@@ -156,11 +156,12 @@
                 dataLength:'',
                 updateParams:[],
                 pageNum:1,
-                deviceType:[]
+                deviceType:[],
+                filterCondition: ''
             }
         },
         methods: {
-            ...mapMutations(['TOTAL_NUM']),
+            ...mapMutations(['TOTAL_NUM', 'CURRENT_NUM']),
             filterOnwer (onwer,creator) {
                 console.log(onwer, '选择的人员信息')
                 console.log(creator, 'fvfvdf')
@@ -182,6 +183,7 @@
             },
             searchAnything (info) {
                 console.log(info, '这是要过滤的')
+                this.filterCondition = info
                 if (info.trim() !== '') {
                     this.patrolEventList = this.allPatrolEventList.filter(item => {
                         if (item.serialNum.includes(info)) {
@@ -193,10 +195,10 @@
                         if(item.status.name.includes(info)){
                             return item
                         }
-                        if(item.owner.name.includes(info)){
+                        if(item.owner && item.owner.name.includes(info)){
                             return item
                         }
-                        if(item.owner.mobileNum.includes(info)){
+                        if(item.owner && item.owner.mobileNum.includes(info)){
                             return item
                         }
                         if(item.device.name.includes(info)){
@@ -206,6 +208,10 @@
                             return item
                         }
                     })
+                    let date = new Date().getTime()
+                    let obj = {totalNum: this.patrolEventList.length}
+                    obj[date] = new Date().getTime()
+                    this.$store.commit('TOTAL_NUM', obj)
                 } else {
                     this.getAllAlarmEvent()
                 }
@@ -487,6 +493,10 @@
                                         item.location = item.longitude+','+item.latitude
                                     }
                                 })
+                                this.allPatrolEventList = _.sortBy(this.allPatrolEventList,'byTime')
+                                if (this.filterCondition.trim() !== '') {
+                                    this.allPatrolEventList = this.filterDataList(this.allPatrolEventList)
+                                }
                                 let date = new Date().getTime()
                                 let obj = {totalNum: this.allPatrolEventList.length}
                                 obj[date] = new Date().getTime()
@@ -496,11 +506,37 @@
                                         return item
                                     }
                                 })
-                                this.patrolEventList = _.sortBy(this.patrolEventList,'byTime')
                                 this.patrolEventListTemp = JSON.parse(JSON.stringify(this.patrolEventList))
                         }).catch(err => {
                             this.loading = false
                         })
+            },
+            filterDataList (list) {
+                list = list.filter(item => {
+                    let info = this.filterCondition
+                    if (item.serialNum.includes(info)) {
+                        return item
+                    }
+                    if(item.severity.name.includes(info)){
+                        return item
+                    }
+                    if(item.status.name.includes(info)){
+                        return item
+                    }
+                    if(item.owner && item.owner.name.includes(info)){
+                        return item
+                    }
+                    if(item.owner && item.owner.mobileNum.includes(info)){
+                        return item
+                    }
+                    if(item.device.name.includes(info)){
+                        return item
+                    }
+                    if(item.device.typeName.includes(info)){
+                        return item
+                    }
+                })
+                return list
             },
             getAlarmTypeNameById(typeId){
                 let typeInfo =  this.alarmType.filter(item=>item.id == typeId)

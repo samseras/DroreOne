@@ -141,13 +141,15 @@
                 isDisabled: true,
                 isStop:true,
                 isStart:false,
-                isShowLoading: false
+                isShowLoading: false,
+                filterCondition: ''
             }
         },
         methods: {
-            ...mapMutations(['TOTAL_NUM']),
+            ...mapMutations(['TOTAL_NUM', 'CURRENT_NUM']),
             searchAnything (info) {
                 console.log(info, '这是要过滤的')
+                this.filterCondition = info
                 if (info.trim() !== '') {
                     this.purifierList = this.allPurifierList.filter(item => {
                         if (item.cleanSchedule.name.includes(info)) {
@@ -157,6 +159,10 @@
                             return item
                         }
                     })
+                    let date = new Date().getTime()
+                    let obj = {totalNum: this.treeList.length}
+                    obj[date] = new Date().getTime()
+                    this.$store.commit('TOTAL_NUM', obj)
                 } else {
                     this.getAllPurifier()
                 }
@@ -451,10 +457,7 @@
                     this.isShowLoading = false
                     console.log(res, '请求成功')
                     this.allPurifierList = res
-                    let date = new Date().getTime()
-                    let obj = {totalNum: res.length}
-                    obj[date] = new Date().getTime()
-                    this.$store.commit('TOTAL_NUM', obj)
+
                     this.allPurifierList.forEach(item => {
                         item.id = item.cleanSchedule.id
                         item.checked = false;
@@ -472,6 +475,13 @@
                             item.regionIds = [item.regions[0].id]
                         }
                     })
+                    if (this.filterCondition.trim() !== '') {
+                        this.allPurifierList = this.filterDataList(this.allPurifierList)
+                    }
+                    let date = new Date().getTime()
+                    let obj = {totalNum: this.allPurifierList.length}
+                    obj[date] = new Date().getTime()
+                    this.$store.commit('TOTAL_NUM', obj)
                     this.purifierList = this.allPurifierList.filter((item,index) => {
                         if (index < (this.getCurrentNum * 35) && index > ((this.getCurrentNum -1) * 35 ) - 1 ) {
                             return item
@@ -483,6 +493,17 @@
                     console.log(err, '请求失败')
                     this.isShowLoading = false
                 })
+            },
+            filterDataList (list) {
+                list = list.filter(item => {
+                    if (item.cleanSchedule.name.includes(this.filterCondition)) {
+                        return item
+                    }
+                    if (item.cleanSchedule.description.includes(this.filterCondition)) {
+                        return item
+                    }
+                })
+                return list
             }
         },
         created () {

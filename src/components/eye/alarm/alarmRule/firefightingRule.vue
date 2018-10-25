@@ -103,14 +103,16 @@
                 loading: false,
                 isBatchEdit:false,
                 listLength:'',
-                pageNum:1
+                pageNum:1,
+                filterCondition: ''
 
             }
         },
         methods: {
-            ...mapMutations(['TOTAL_NUM']),
+            ...mapMutations(['TOTAL_NUM', 'CURRENT_NUM']),
             searchAnything (info) {
                 console.log(info, '这是要过滤的')
+                this.filterCondition = info
                 if (info.trim() !== '') {
                     this.firefightingList = this.allFirefightingList.filter(item => {
                         if (item.name.includes(info)) {
@@ -129,6 +131,10 @@
                             return item
                         }
                     })
+                    let date = new Date().getTime()
+                    let obj = {totalNum: this.firefightingList.length}
+                    obj[date] = new Date().getTime()
+                    this.$store.commit('TOTAL_NUM', obj)
                 } else {
                     this.getAlarmRule()
                 }
@@ -429,10 +435,7 @@
                 await api.alarm.getAlarmRulesByParameters(this.alarmTypeId).then(res => {
                     console.log(res, '请求成功')
                     this.loading = false
-                    let date = new Date().getTime()
-                    let obj = {totalNum: res.length}
-                    obj[date] = new Date().getTime()
-                    this.$store.commit('TOTAL_NUM', obj)
+
                     this.allFirefightingList = res
                     this.allFirefightingList.forEach(item => {
                         item.checked = false;
@@ -458,6 +461,14 @@
                         }
                     })
                     this.allFirefightingList = _.sortBy(this.allFirefightingList,'byTime')
+
+                    if (this.filterCondition.trim() !== '') {
+                        this.allFirefightingList = this.filterDataList(this.allFirefightingList)
+                    }
+                    let date = new Date().getTime()
+                    let obj = {totalNum: this.allFirefightingList.length}
+                    obj[date] = new Date().getTime()
+                    this.$store.commit('TOTAL_NUM', obj)
                     this.firefightingList = this.allFirefightingList.filter((item,index) => {
                         if (index < (this.getCurrentNum * 35 ) && index > ((this.getCurrentNum -1) * 35 ) - 1 ) {
                             return item
@@ -467,6 +478,27 @@
                     console.log(err, '请求失败')
                     this.loading = false
                 })
+            },
+            filterDataList (list) {
+                list = list.filter(item => {
+                    let info = this.filterCondition
+                    if (item.name.includes(info)) {
+                        return item
+                    }
+                    if(item.relatedManagerNames.includes(info)){
+                        return item
+                    }
+                    if(item.deviceScope.toString().includes(info)){
+                        return item
+                    }
+                    if(item.securityScope.toString().includes(info)){
+                        return item
+                    }
+                    if(item.alarmSeverity.name.includes(info)){
+                        return item
+                    }
+                })
+                return list
             },
             getAlarmTypeId(typeName){
                 let typeInfo =  this.alarmType.filter(item=>item.name == typeName)

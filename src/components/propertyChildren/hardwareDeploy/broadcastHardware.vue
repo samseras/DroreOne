@@ -166,11 +166,12 @@
                 allDotList:{
                     close:[],
                     open:[]
-                }
+                },
+                filterCondition: ''
             }
         },
         methods:{
-            ...mapMutations(['TOTAL_NUM']),
+            ...mapMutations(['TOTAL_NUM','CURRENT_NUM']),
             imgError (e) {
                 e.target.src = this.getUrl(null);
             },
@@ -221,6 +222,7 @@
             },
             searchAnything (info) {
                 console.log(info, '这是要过滤的')
+                this.filterCondition = info
                 if (info.trim() !== '') {
                     this.broadList = this.allBroadList.filter(item => {
                         if (item.regionName && item.regionName.includes(info)) {
@@ -239,6 +241,10 @@
                             return item
                         }
                     })
+                    let date = new Date().getTime()
+                    let obj = {totalNum: this.broadList.length}
+                    obj[date] = new Date().getTime()
+                    this.$store.commit('TOTAL_NUM', obj)
                 } else {
                     this.getAllBroadcast()
                 }
@@ -474,11 +480,6 @@
                     }
                     this.isShowLoading=false
                     this.allBroadList=res.devices
-                    let date = new Date().getTime()
-                    let obj = {totalNum: res.devices.length}
-                    obj[date] = new Date().getTime()
-                    this.$store.commit('TOTAL_NUM', obj)
-
                     this.allDotList.close=[]
                     this.allDotList.open=[]
                     let resDevices=res.devices
@@ -502,6 +503,13 @@
                         this.allBroadList[i].byTime = -(new Date(this.allBroadList[i].modifyTime)).getTime()
                     }
                     this.allBroadList = _.sortBy(this.allBroadList,'byTime')
+                    if (this.filterCondition.trim() !== '') {
+                        this.allBroadList = this.filterDataList(this.allBroadList)
+                    }
+                    let date = new Date().getTime()
+                    let obj = {totalNum: this.allBroadList.length}
+                    obj[date] = new Date().getTime()
+                    this.$store.commit('TOTAL_NUM', obj)
                     this.broadList = this.allBroadList.filter((item,index) => {
                         if (index < (this.getCurrentNum * 35 ) && index > ((this.getCurrentNum -1) * 35 ) - 1 ) {
                             return item
@@ -515,6 +523,26 @@
                     console.log(err)
                     this.isShowLoading=false
                 })
+            },
+            filterDataList (list) {
+                list = list.filter(item => {
+                    if (item.regionName && item.regionName.includes(this.filterCondition)) {
+                        return item
+                    }
+                    if (item.ip && item.ip.includes(this.filterCondition)) {
+                        return item
+                    }
+                    if (item.name.includes(this.filterCondition)) {
+                        return item
+                    }
+                    if (item.modelName && item.modelName.includes(this.filterCondition)) {
+                        return item
+                    }
+                    if (item.description && item.description.includes(this.filterCondition)) {
+                        return item
+                    }
+                })
+                return list
             }
         },
         created (){

@@ -104,13 +104,16 @@
                 isBatchEdit:false,
                 alarmTypeId:'',
                 listLength:'',
-                pageNum:1
+                pageNum:1,
+                filterCondition: ''
+
             }
         },
         methods: {
-            ...mapMutations(['TOTAL_NUM']),
+            ...mapMutations(['TOTAL_NUM', 'CURRENT_NUM']),
             searchAnything (info) {
                 console.log(info, '这是要过滤的')
+                this.filterCondition = info
                 if (info.trim() !== '') {
                     this.alarmcolumnList = this.allAlarmcolumnList.filter(item => {
                         if (item.name.includes(info)) {
@@ -132,6 +135,10 @@
                             return item
                         }
                     })
+                    let date = new Date().getTime()
+                    let obj = {totalNum: this.alarmcolumnList.length}
+                    obj[date] = new Date().getTime()
+                    this.$store.commit('TOTAL_NUM', obj)
                 } else {
                     this.getAlarmRule()
                 }
@@ -419,10 +426,6 @@
                 this.alarmTypeId = this.getAlarmTypeId("SOS")
                 await api.alarm.getAlarmRulesByParameters(this.alarmTypeId).then(res => {
                     this.loading = false
-                    let date = new Date().getTime()
-                    let obj = {totalNum: res.length}
-                    obj[date] = new Date().getTime()
-                    this.$store.commit('TOTAL_NUM', obj)
                     res.filter(item => {
                         item.checked = false;
                         if(item.relatedDevices.length > 0){
@@ -447,7 +450,14 @@
                         }
                     })
                     this.allAlarmcolumnList = res
-                    this.alarmcolumnList = _.sortBy(this.alarmcolumnList,'byTime')
+                    this.allAlarmcolumnList = _.sortBy(this.allAlarmcolumnList,'byTime')
+                    if (this.filterCondition.trim() !== '') {
+                        this.allAlarmcolumnList = this.filterDataList(this.allAlarmcolumnList)
+                    }
+                    let date = new Date().getTime()
+                    let obj = {totalNum: this.allAlarmcolumnList.length}
+                    obj[date] = new Date().getTime()
+                    this.$store.commit('TOTAL_NUM', obj)
                     this.alarmcolumnList = this.allAlarmcolumnList.filter((item,index) => {
                         if (index < (this.getCurrentNum * 35 ) && index > ((this.getCurrentNum -1) * 35 ) - 1 ) {
                             return item
@@ -456,6 +466,29 @@
                 }).catch(err => {
                     this.loading = false
                 })
+            },
+            filterDataList (list) {
+                list = list.filter(item => {
+                    if (item.name.includes(this.filterCondition)) {
+                        return item
+                    }
+                    if(item.relatedManagerNames.includes(this.filterCondition)){
+                        return item
+                    }
+                    if(item.relatedDeviceNames.includes(this.filterCondition)){
+                        return item
+                    }
+                    if(item.deviceScope.toString().includes(this.filterCondition)){
+                        return item
+                    }
+                    if(item.securityScope.toString().includes(this.filterCondition)){
+                        return item
+                    }
+                    if(item.alarmSeverity.name.includes(this.filterCondition)){
+                        return item
+                    }
+                })
+                return list
             },
             getAlarmTypeId(typeName){
                 let typeInfo =  this.alarmType.filter(item=>item.name == typeName)

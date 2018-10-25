@@ -136,22 +136,28 @@
                 title:'',
                 isStart:false,
                 selection:[],
-                isShowLoading: false
+                isShowLoading: false,
+                filterCondition: ''
             }
         },
         methods: {
-            ...mapMutations(['TOTAL_NUM']),
+            ...mapMutations(['TOTAL_NUM', 'CURRENT_NUM']),
             searchAnything (info) {
                 console.log(info, '这是要过滤的')
+                this.filterCondition = info
                 if (info.trim() !== '') {
                     this.patrolList = this.allPatrolList.filter(item => {
                         if (item.inspectionSchedule.name.includes(info)) {
                             return item
                         }
-                        if (item.inspectionSchedule.description.includes(info)) {
+                        if (item.inspectionSchedule.description && item.inspectionSchedule.description.includes(info)) {
                             return item
                         }
                     })
+                    let date = new Date().getTime()
+                    let obj = {totalNum: this.patrolList.length}
+                    obj[date] = new Date().getTime()
+                    this.$store.commit('TOTAL_NUM', obj)
                 } else {
                     this.getAllpatrol()
                 }
@@ -441,10 +447,6 @@
                     console.log(JSON.stringify(res), '请求成功')
                     this.isShowLoading = false
                     this.allPatrolList = res
-                    let date = new Date().getTime()
-                    let obj = {totalNum: res.length}
-                    obj[date] = new Date().getTime()
-                    this.$store.commit('TOTAL_NUM', obj)
                     this.allPatrolList.forEach(item => {
                         item.id = item.inspectionSchedule.id
                         item.checked = false;
@@ -460,6 +462,13 @@
                             item.inspectionSchedule.shifts = item.inspectionSchedule.shifts.split(',')
                         }
                     })
+                    if (this.filterCondition.trim() !== '') {
+                        this.allPatrolList = this.filterDataList(this.allPatrolList)
+                    }
+                    let date = new Date().getTime()
+                    let obj = {totalNum: this.allPatrolList.length}
+                    obj[date] = new Date().getTime()
+                    this.$store.commit('TOTAL_NUM', obj)
                     this.patrolList = this.allPatrolList.filter((item,index) => {
                         if (index < (this.getCurrentNum * 35) && index > ((this.getCurrentNum -1) * 35 ) - 1 ) {
                             return item
@@ -471,6 +480,18 @@
                     console.log(err, '请求失败')
                     this.isShowLoading = false
                 })
+            },
+            filterDataList (list) {
+                list = list.filter(item => {
+
+                    if (item.inspectionSchedule.name.includes(this.filterCondition)) {
+                        return item
+                    }
+                    if (item.inspectionSchedule.description && item.inspectionSchedule.description.includes(this.filterCondition)) {
+                        return item
+                    }
+                })
+                return list
             }
         },
         created () {

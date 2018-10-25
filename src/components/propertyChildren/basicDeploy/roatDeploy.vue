@@ -133,16 +133,18 @@
                 isShowLoading: false,
                 currentNum: 50,
                 listLength: '',
+                filterCondition: ''
             }
         },
         methods: {
-            ...mapMutations(['TOTAL_NUM']),
+            ...mapMutations(['TOTAL_NUM', 'CURRENT_NUM']),
             closeDialog () {
                 this.visible = false
                 this.getAllRoat()
             },
             searchAnything (info) {
                 console.log(info, '这是要过滤的')
+                this.filterCondition = info
                 if (info.trim() !== '') {
                     this.roatList = this.allRoatList.filter(item => {
                         if (item.name.includes(info)) {
@@ -152,6 +154,10 @@
                             return item
                         }
                     })
+                    let date = new Date().getTime()
+                    let obj = {totalNum: this.roatList.length}
+                    obj[date] = new Date().getTime()
+                    this.$store.commit('TOTAL_NUM', obj)
                 } else {
                     this.getAllRoat()
                 }
@@ -355,10 +361,6 @@
                     }
                     this.isShowLoading = false
                     this.allRoatList = res
-                    let date = new Date().getTime()
-                    let obj = {totalNum: res.length}
-                    obj[date] = new Date().getTime()
-                    this.$store.commit('TOTAL_NUM', obj)
 
                     for (let i = 0; i < this.allRoatList.length; i++) {
                         this.allRoatList[i].checked = false
@@ -378,6 +380,13 @@
                         }
                         // this.allRoatList[i].byTime = this.allRoatList[i].modifyTime
                     }
+                    if (this.filterCondition.trim() !== '') {
+                        this.allRoatList = this.filterDataList(this.allRoatList)
+                    }
+                    let date = new Date().getTime()
+                    let obj = {totalNum: this.allRoatList.length}
+                    obj[date] = new Date().getTime()
+                    this.$store.commit('TOTAL_NUM', obj)
                     this.roatList = this.allRoatList.filter((item,index) => {
                         if (index < (this.getCurrentNum * 35 ) && index > ((this.getCurrentNum -1) * 35 ) - 1 ) {
                             return item
@@ -391,6 +400,17 @@
                 }).catch(err => {
                     console.log(err, '请求失败')
                 })
+            },
+            filterDataList (list) {
+                list = list.filter(item => {
+                    if (item.name.includes(this.filterCondition)) {
+                        return item
+                    }
+                    if (item.routeType.includes(this.filterCondition)) {
+                        return item
+                    }
+                })
+                return list
             }
         },
         created () {

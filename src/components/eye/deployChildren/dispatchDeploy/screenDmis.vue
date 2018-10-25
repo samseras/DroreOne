@@ -116,13 +116,15 @@
                 isStop:true,
                 isStart:false,
                 selection:[],
-                isShowLoading: false
+                isShowLoading: false,
+                filterCondition: ''
             }
         },
         methods: {
-            ...mapMutations(['TOTAL_NUM']),
+            ...mapMutations(['TOTAL_NUM', 'CURRENT_NUM']),
             searchAnything (info) {
                 console.log(info, '这是要过滤的')
+                this.filterCondition = info
                 if (info.trim() !== '') {
                     this.screenList = this.allScreenList.filter(item => {
                         if (item.ledSchedule.name.includes(info)) {
@@ -132,6 +134,10 @@
                             return item
                         }
                     })
+                    let date = new Date().getTime()
+                    let obj = {totalNum: this.screenList.length}
+                    obj[date] = new Date().getTime()
+                    this.$store.commit('TOTAL_NUM', obj)
                 } else {
                     this.getAllScreenLed()
                 }
@@ -432,6 +438,13 @@
                         }
                     })
                     this.choseInfoId = []
+                    if (this.filterCondition.trim() !== '') {
+                        this.allScreenList = this.filterDataList(this.allScreenList)
+                    }
+                    let date = new Date().getTime()
+                    let obj = {totalNum: this.allScreenList.length}
+                    obj[date] = new Date().getTime()
+                    this.$store.commit('TOTAL_NUM', obj)
                     this.screenList = this.allScreenList.filter((item,index) => {
                         if (index < (this.getCurrentNum * 35) && index > ((this.getCurrentNum -1) * 35 ) - 1 ) {
                             return item
@@ -442,6 +455,17 @@
                     console.log(err, '请求失败')
                     this.isShowLoading = false
                 })
+            },
+            filterDataList (list) {
+                list = list.filter(item => {
+                    if (item.ledSchedule.name.includes(this.filterCondition)) {
+                        return item
+                    }
+                    if (item.ledSchedule.description.includes(this.filterCondition)) {
+                        return item
+                    }
+                })
+                return list
             }
         },
         created () {

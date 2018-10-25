@@ -127,12 +127,14 @@
                 isStart:false,
                 selection:[],
                 isDisabled:true,
+                filterCondition: ''
             }
         },
         methods: {
-            ...mapMutations(['TOTAL_NUM']),
+            ...mapMutations(['TOTAL_NUM', 'CURRENT_NUM']),
             searchAnything (info) {
                 console.log(info, '这是要过滤的')
+                this.filterCondition = info
                 if (info.trim() !== '') {
                     this.lamppostList = this.allLamppostList.filter(item => {
                         if (item.lightSchedule.name.includes(info)) {
@@ -142,6 +144,10 @@
                             return item
                         }
                     })
+                    let date = new Date().getTime()
+                    let obj = {totalNum: this.lamppostList.length}
+                    obj[date] = new Date().getTime()
+                    this.$store.commit('TOTAL_NUM', obj)
                 } else {
                     this.getLamppostList()
                 }
@@ -261,10 +267,6 @@
                     console.log(res,"pppppppppppppp");
                     this.isShowLoading = false
                     this.allLamppostList = res
-                    let date = new Date().getTime()
-                    let obj = {totalNum: res.length}
-                    obj[date] = new Date().getTime()
-                    this.$store.commit('TOTAL_NUM', obj)
                     this.allLamppostList.forEach(item => {
                         item.checked = false;
                         item.isStop = true;
@@ -276,6 +278,13 @@
                             item.lightSchedule.days = item.lightSchedule.days.split(',')
                         }
                     })
+                    if (this.filterCondition.trim() !== '') {
+                        this.allLamppostList = this.filterDataList(this.allLamppostList)
+                    }
+                    let date = new Date().getTime()
+                    let obj = {totalNum: this.allLamppostList.length}
+                    obj[date] = new Date().getTime()
+                    this.$store.commit('TOTAL_NUM', obj)
                     this.lamppostList = this.allLamppostList.filter((item,index) => {
                         if (index < (this.getCurrentNum * 35) && index > ((this.getCurrentNum -1) * 35 ) - 1 ) {
                             return item
@@ -287,6 +296,17 @@
                     console.log(err, '请求失败')
                     this.isShowLoading = false
                 })
+            },
+            filterDataList (list) {
+                list = list.filter(item => {
+                    if (item.lightSchedule.name.includes(this.filterCondition)) {
+                        return item
+                    }
+                    if (item.lightSchedule.description.includes(this.filterCondition)) {
+                        return item
+                    }
+                })
+                return list
             },
             showPersonDetail (info,title,state) {
                 this.lamppostInfo = info;
