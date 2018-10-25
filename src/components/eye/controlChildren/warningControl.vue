@@ -14,7 +14,7 @@
                     <!--</li>-->
                     <!--<li><img src="../../../../static/img/player.png" class="broad"/></li>-->
                     <!--<li><img src="../../../../static/img/microphone.png" alt=""/></li>-->
-                    <li><img src="../../../../static/img/search.png" alt="" class="search"/></li>
+                    <!--<li><img src="../../../../static/img/search.png" alt="" class="search"/></li>-->
                 </ul>
             </div>
             <div class="middle">
@@ -89,7 +89,7 @@
         },
         methods: {
             treeShow(){
-                console.log(this.getcontroleWarn)
+                // console.log(this.getcontroleWarn)
                 if(this.getcontroleWarn){
                     this.lightCheckout=this.getcontroleWarn
                 }
@@ -165,7 +165,7 @@
             },
             async getAllAlarmEvent () {
                 await api.alarm.getAllAlarmEventundone().then(res => {
-                    console.log(res,'16565623');
+                    // console.log(res,'16565623');
                     this.lightList=res
                     this.number=this.lightList.length
                     let regionIdList = []
@@ -177,11 +177,15 @@
                     this.lightList.forEach(item => {
                         item.label = item.serialNum
                         item.type = 'warn'
-                        if(item.rule==null){
-                            item.rule=[]
-                            item.rule.alarmTypeId=10
+                        if(!item.device){
+                            item.device = {
+                                id:'',
+                                typeId:0,
+                                typeName:'非设备故障'
+                            }
                         }
-                        if(item.rule.alarmTypeId =="10") {
+                        if(item.alarmType.id =="10") {
+                            //alert(555);
                             item.regionName="巡检告警"
                             if (item.status.id =="1")  {
                                 this.pendinglist.push(item.id)
@@ -193,7 +197,7 @@
                                 this.stockslist.push(item.id)
                                 item.icon = '../../../static/img/alarm/ollingIconRule_three.svg'
                             }
-                        }else if(item.rule.alarmTypeId =="1"){
+                        }else if(item.alarmType.id =="1"){
                             item.regionName="设备故障"
                             if (item.status.id =="1")  {
                                 this.pendinglist.push(item.id)
@@ -259,8 +263,8 @@
                                     item.icon = '../../../static/img/detection_big.svg'
                                 }
                             }
-                        }else if(item.rule.alarmTypeId =="2") {
-                            item.regionName="SOS"
+                        }else if(item.alarmType.id =="2") {
+                            item.regionName="报警柱"
                             if (item.status.id =="1")  {
                                 this.pendinglist.push(item.id)
                                 item.icon = '../../../static/img/alarm/alarmcolumnRule_one.svg'
@@ -271,7 +275,7 @@
                                 this.stockslist.push(item.id)
                                 item.icon = '../../../static/img/alarm/alarmcolumnRule_three.svg'
                             }
-                        }else if(item.rule.alarmTypeId =="3") {
+                        }else if(item.alarmType.id =="3") {
                             item.regionName="消防"
                             if (item.status.id =="1")  {
                                 this.pendinglist.push(item.id)
@@ -283,7 +287,7 @@
                                 this.stockslist.push(item.id)
                                 item.icon = '../../../static/img/alarm/firefightingRule_three.svg'
                             }
-                        }else if(item.rule.alarmTypeId =="4") {
+                        }else if(item.alarmType.id =="4") {
                             item.regionName="越界"
                             if (item.status.id =="1")  {
                                 this.pendinglist.push(item.id)
@@ -295,7 +299,7 @@
                                 this.stockslist.push(item.id)
                                 item.icon = '../../../static/img/alarm/crossborderRule_three.svg'
                             }
-                        }else if(item.rule.alarmTypeId =="5") {
+                        }else if(item.alarmType.id =="5") {
                             item.regionName="超速"
                             if (item.status.id =="1")  {
                                 this.pendinglist.push(item.id)
@@ -307,7 +311,7 @@
                                 this.stockslist.push(item.id)
                                 item.icon = '../../../static/img/alarm/speedingRule_three.svg'
                             }
-                        }else if(item.rule.alarmTypeId =="6") {
+                        }else if(item.alarmType.id =="6") {
                             item.regionName="偏离轨迹"
                             if (item.status.id =="1")  {
                                 this.pendinglist.push(item.id)
@@ -319,7 +323,8 @@
                                 this.stockslist.push(item.id)
                                 item.icon = '../../../static/img/alarm/offtrackRule_three.svg'
                             }
-                        }else if(item.rule.alarmTypeId =="7") {
+                        }else if(item.alarmType.id =="7") {
+                            //alert(666);
                             item.regionName="客流量"
                             if (item.status.id =="1")  {
                                 this.pendinglist.push(item.id)
@@ -331,7 +336,7 @@
                                 this.stockslist.push(item.id)
                                 item.icon = '../../../static/img/alarm/overlimitRule_three.svg'
                             }
-                        }else if(item.rule.alarmTypeId =="8") {
+                        }else if(item.alarmType.id =="8") {
                             item.regionName="水位"
                             if (item.status.id =="1")  {
                                 this.pendinglist.push(item.id)
@@ -343,7 +348,7 @@
                                 this.stockslist.push(item.id)
                                 item.icon = '../../../static/img/alarm/waterlevelRule_three.svg'
                             }
-                        }else if(item.rule.alarmTypeId =="9") {
+                        }else if(item.alarmType.id =="9") {
                             item.regionName="环境"
                             if (item.status.id =="1")  {
                                 this.pendinglist.push(item.id)
@@ -356,18 +361,18 @@
                                 item.icon = '../../../static/img/alarm/conditionRule_three.svg'
                             }
                         }
-                        if (!regionIdList.includes(item.rule.alarmTypeId)) {
-                            regionIdList.push(item.rule.alarmTypeId)
+                        if (!regionIdList.includes(item.alarmType.id)) {
+                            regionIdList.push(item.alarmType.id)
                             let obj = {
-                                label: item.regionName,
+                                label: item.alarmType.name,
                                 type: 'warn',
-                                id: item.rule.alarmTypeId,
+                                id: item.alarmType.id,
                                 children: []
                             }
                             arr.push(obj)
                         }
                         arr.forEach(item1 => {
-                            if (item1.id == item.rule.alarmTypeId) {
+                            if (item1.id == item.alarmType.id) {
                                 if (item1.children.length < 1) {
                                     item1.children.push(item)
                                 } else {

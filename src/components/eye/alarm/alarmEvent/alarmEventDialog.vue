@@ -11,29 +11,6 @@
                 <div class="alarmEventContent">
                     <!--批量编辑-->
                     <ScrollContainer>
-                        <div class="alarmContent" v-if="!isPatrolEvent && isBatchEdit">
-                            <p class="level">严重等级：
-                            <el-select  v-model="batchlevel" size="mini" class="" placeholder="请选择">
-                                <el-option
-                                    v-for="item in levelInfo"
-                                    :key="item.id"
-                                    :label="item.name"
-                                    :value="item.id">
-                                </el-option>
-                            </el-select>
-                        </p>
-                            <p class="status">状&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 态：
-                                <el-select  v-model="batchstatus" size="mini" class="" placeholder="请选择">
-                                    <el-option
-                                        v-for="item in statusInfo"
-                                        :key="item.id"
-                                        :label="item.name"
-                                        :value="item.id">
-                                    </el-option>
-                                </el-select>
-                            </p>
-                        </div>
-
                         <div  v-if="!isPatrolEvent && !isBatchEdit"  class="alarmContent">
                             <p class="serialNum">
                                 <span>编&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 号：</span>
@@ -98,7 +75,7 @@
 
                             <p class="tel">
                                 <span>电话号码：</span>
-                                <el-input type="text" v-model="eventInfo.owner.mobileNum" class="inputText" :maxlength="15" :disabled="true"></el-input>
+                                <el-input type="text" v-model="eventInfo.owner.mobileNum" class="inputText" :maxlength="15"></el-input>
                             </p>
                             <p class="status">
                                 <span>状&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 态:</span>
@@ -191,7 +168,7 @@
                             </p>
                             <p class="tel" v-if="addEventInfo.creator && addEventInfo.creator.name">
                                 <span>电&nbsp;&nbsp;话&nbsp;&nbsp;号&nbsp;&nbsp;&nbsp;码：</span>
-                                <el-input type="text" v-model="addEventInfo.creator.mobileNum" class="inputText" :disabled="true"></el-input>
+                                <el-input type="text" v-model="addEventInfo.creator.mobileNum" class="inputText"></el-input>
                             </p>
                             <p class="owner">
                                 <span>负&nbsp;&nbsp;责&nbsp;&nbsp;人&nbsp;&nbsp;&nbsp;员：</span>
@@ -212,7 +189,7 @@
 
                             <p class="tel">
                                 <span>电&nbsp;&nbsp;话&nbsp;&nbsp;号&nbsp;&nbsp;&nbsp;码：</span>
-                                <el-input type="text" v-model="addEventInfo.owner.mobileNum" class="inputText" :maxlength="15" :disabled="true"></el-input>
+                                <el-input type="text" v-model="addEventInfo.owner.mobileNum" class="inputText" :maxlength="15"></el-input>
                             </p>
                             <p>
                                 <span>发&nbsp;&nbsp;生&nbsp;&nbsp;位&nbsp;&nbsp;&nbsp;置：</span>
@@ -370,7 +347,11 @@
                     occurenceTime:'',
                     description:''
                 },
-                route:''
+                route:'',
+                alarmType:[],
+                deviceType:[],
+                alarmInfo:[],
+
             }
         },
         computed:{
@@ -378,11 +359,11 @@
                 'getLocation'
             ]),
           orderByTime(){
-                if(this.route.includes('warning')){
+              if(this.Info.alarmType.id!='10'){
                     if(this.eventInfo.handleRecords && this.eventInfo.handleRecords.length >0){
                         return this.eventInfo.handleRecords.reverse()
                     }
-                }else if(this.route.includes('patrol')){
+                }else if(this.Info.alarmType.id=='10'){
                     if(this.addEventInfo.handleRecords && this.addEventInfo.handleRecords.length >0){
                         return this.addEventInfo.handleRecords.reverse()
                     }
@@ -463,10 +444,8 @@
             async saveDialog(){
                 let objArray = [];
                 let newInfo = {};
-
-                if(this.route.includes('warning') || (this.route.includes('warn') && this.eventInfo.alarmType.id != '10')){
+                if(this.Info.alarmType.id!='10'){
                     if(this.isBatchEdit){    //批量编辑
-                        console.log(this.choseInfoId);
                         if(!this.batchlevel && !this.batchstatus){
                             return;
                         }
@@ -564,11 +543,9 @@
                         }
                         await this.$emit('saveEditInfo',param)
                     }
-                }else if(this.route.includes('patrol') || (this.route.includes('warn') && this.eventInfo.alarmType.id == '10')){
-                    if(this.route.includes('warn') && this.eventInfo.alarmType.id == '10'){
-                        this.addEventInfo = this.eventInfo
-                    }
-                    console.log(this.addEventInfo)
+                }else if(this.Info.alarmType.id =='10'){
+                    // console.log(this.eventInfo)
+                    // this.addEventInfo = this.eventInfo
                     if(!this.addEventInfo.severity.id){
                         this.$message.error('请选择严重性等级！')
                         return;
@@ -698,11 +675,116 @@
                 this.$message.success('删除成功')
 
             },
+            async getAllAlarmTypes(){
+                await api.alarm.getAllAlarmTypes().then(res => {
+                    this.alarmType = res;
+                    console.log(res, '查询告警类型成功')
+                }).catch(err => {
+                    console.log(error, '查询告警类型失败')
+                })
+            },
+            getAlarmTypeNameById(typeId){
+                let typeInfo =  this.alarmType.filter(item=>item.id == typeId)
+                if(typeInfo instanceof Array && typeInfo.length > 0){
+                    return typeInfo[0].name;
+                }
+                return "";
+            },
+            async getDeviceTypeById(typeId){
+                let deviceInfo =  this.deviceType.filter(item=>item.id == typeId)
+                return deviceInfo[0].name;
+            },
             init () {
+                this.getAllAlarmTypes();
+                this.getAllDeviceType();
                 this.getPersonInfo();
                 this.getSeverityType();
                 this.getAlarmEventStatus();
-                this.getAllDeviceType();
+                this.getAllEvent();
+            },
+            async getAllEvent(){
+                await api.alarm.getAllAlarmEventundone().then(res => {
+                    res.forEach(item=>{
+                        if(!item.device){
+                            item.device = {
+                                id:'',
+                                typeId:0,
+                                typeName:'非设备故障'
+                            }
+                        }else{
+                            item.device['typeName'] = this.getDeviceTypeById(item.device.typeId)
+                        }
+                        item.acturalExtendValue = !item.acturalExtendValue ? "" : item.acturalExtendValue
+                        if(!item.owner || !item.owner.id){
+                            item.owner = {
+                                id : ""
+                            }
+                        }
+                        if(!item.owner || !item.owner.mobileNum){
+                            item.owner = {
+                                mobileNum : ""
+                            }
+                        }
+                        item.actualValue = !item.actualValue ? "" : item.actualValue
+
+                        if(item.attachments && item.attachments.length > 0){
+                            let fileList = []
+                            item.attachments.forEach((obj)=>{
+                                let fileObj = {
+                                    title : obj.path.replace(/(.*\/)*([^.]+).*/ig,"$2").split('_')[0],
+                                    id:obj.id,
+                                    path:obj.path,
+                                    checked:false
+                                }
+                                fileList.push(fileObj)
+                            })
+                            if(fileList.length > 0){
+                                item.fileList = fileList
+                            }
+                        }
+                        if (item.modifyTime) {
+                            item.modifyTime=item.modifyTime.replace("-","/")
+                            item.byTime = -(new Date(item.modifyTime)).getTime()
+                        }
+                        if(item.longitude && item.latitude){
+                            item.location = item.longitude+','+item.latitude
+                        }
+                        if(this.Info.id==item.id){
+                            this.alarmInfo=item
+                        }
+                    })
+                    if(this.Info.alarmType.id=='10'){
+                        if(this.alarmInfo.fileList && this.alarmInfo.fileList instanceof Array && this.alarmInfo.fileList.length > 0){
+                            this.initFileList = JSON.parse(JSON.stringify(this.alarmInfo.fileList))
+                            this.fileList = JSON.parse(JSON.stringify(this.alarmInfo.fileList));
+                        }
+                        if(Object.keys(this.alarmInfo).length != 0){
+                            this.isPatrolAdd = false
+                            this.addEventInfo = JSON.parse(JSON.stringify(this.alarmInfo));
+                            // this.eventInfo = JSON.parse(JSON.stringify(this.Info));
+                            if(this.addEventInfo.device && this.addEventInfo.device.typeId){
+                                this.getDeviceById(this.addEventInfo.device.typeId)
+                            }
+                            console.log(this.addEventInfo.device.id);
+                            console.log(this.deviceObj)
+                        }else{
+                            this.isPatrolAdd = true
+                            this.getSerialNum()
+                        }
+                    }else{
+                        if(this.alarmInfo.fileList && this.alarmInfo.fileList instanceof Array && this.alarmInfo.fileList.length > 0){
+                            this.initFileList = JSON.parse(JSON.stringify(this.alarmInfo.fileList))
+                            this.fileList = JSON.parse(JSON.stringify(this.alarmInfo.fileList));
+                        }
+                        this.eventInfo = JSON.parse(JSON.stringify(this.alarmInfo));
+                        if(this.eventInfo.rule && this.eventInfo.rule.id){
+                            this.getAlarmRuleById(this.eventInfo.rule.id)
+                        }
+                    }
+                }).catch(err => {
+                    console.log(err, '请求失败')
+                })
+
             },
             async deleteUpload(){
                 if(this.initFileList.length > 0){
@@ -851,11 +933,9 @@
             }
 
         },
-        async created () {
+        created () {
             this.init();
-            console.log(this.Info);
-            this.route = this.$route.path
-            if(this.route.includes('patrol')){
+            if(this.Info.alarmType.id=='10'){
                 this.isPatrolEvent = true
                 if(this.Info.fileList && this.Info.fileList instanceof Array && this.Info.fileList.length > 0){
                     this.initFileList = JSON.parse(JSON.stringify(this.Info.fileList))
@@ -867,8 +947,6 @@
                     if(this.addEventInfo.device && this.addEventInfo.device.typeId){
                         this.getDeviceById(this.addEventInfo.device.typeId)
                     }
-                    console.log(this.addEventInfo.device.id);
-                    console.log(this.deviceObj)
                 }else{
                     this.isPatrolAdd = true
                     this.getSerialNum()
@@ -884,6 +962,7 @@
                     this.getAlarmRuleById(this.eventInfo.rule.id)
                 }
             }
+
         },
         components : {
             AlarmDetail,
