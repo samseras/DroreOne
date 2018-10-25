@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <link rel="stylesheet" href="./css/swiper-3.4.2.min.css">
+    <!--<link rel="stylesheet" href="./css/swiper-3.4.2.min.css">-->
     <style type="text/css">
             html,body{height:100%}
 
@@ -27,6 +27,34 @@
                 font-size:15px;
                 color: #26bbf0;
             }
+            .slideBox{
+                height: 90%;
+                width: 100%;
+                overflow:hidden;
+                position:relative;
+            }
+            .slideBox .bd{
+                position:relative;
+                height:100%;
+                z-index:0;
+            }
+            .slideBox .bd ul{
+                margin: 0;
+                padding: 0;
+                height:100%;
+            }
+            .slideBox .bd li{
+                margin: 0;
+                padding: 0;
+                height:100%;
+                zoom:1;
+                list-style: none;
+            }
+            .slideBox .bd > div{
+                height: 100%;
+                width: 100%;
+                display:block;
+            }
             .swiper-container{
                 height: 90%;
                 width: 100%;
@@ -36,6 +64,8 @@
                 width: 100%;
             }
             .carouselContent{
+                margin: 0;
+                padding: 0;
                 height: 100%;
                 width: 100%;
             }
@@ -190,8 +220,12 @@
                 color: #26bbf0;
             }
     </style>
+    <!--<script src="./js/jquery-1.8.3.min.js"></script>-->
+    <!--<script src="./js/swiper-3.4.2.min.js"></script>-->
+
+    <!--<script src="./js/jquery1.42.min.js"></script>-->
     <script src="./js/jquery-1.8.3.min.js"></script>
-    <script src="./js/swiper-3.4.2.min.js"></script>
+    <script src="./js/jquery.SuperSlide.2.1.3.js"></script>
 </head>
 <body>
     <div class="station">
@@ -199,9 +233,16 @@
             <div class="contentTitle">
                 <span>旅游路线信息</span>
             </div>
-            <div class="swiper-container">
-                <div class="swiper-wrapper">
+            <!--<div class="swiper-container">-->
+                <!--<div class="swiper-wrapper">-->
 
+                <!--</div>-->
+            <!--</div>-->
+            <div id="slideBox" class="slideBox">
+                <div class="bd">
+                    <ul>
+
+                    </ul>
                 </div>
             </div>
         </div>
@@ -882,15 +923,18 @@
                         schedules = []
                         //假数据
                         if(res instanceof Array && res.length >0){
-                            res.forEach(function(schedule){
-                                var cloneItemFW = Object.assign({},schedule.route)
-                                var cloneItemRE = Object.assign({},schedule.route)
+                            for(var i = 0;i <res.length;i++){
+                                var cloneItemFW = JSON.parse(JSON.stringify(res[i].route));
+                                var cloneItemRE = JSON.parse(JSON.stringify(res[i].route));
+//                                var cloneItemFW = Object.assign({},res[i].route)
+//                                var cloneItemRE = Object.assign({},res[i].route)
                                 cloneItemRE.stations = cloneItemRE.reStations
 
                                 var positiveVes = []
                                 var reverseVes = []
-                                if(schedule.vehicles.length > 0){
-                                    schedule.vehicles.forEach(function(vehicle){
+                                if(res[i].vehicles.length > 0){
+                                    for(var j=0;j<res[i].vehicles.length;j++){
+                                        var vehicle = (res[i].vehicles)[j]
                                         if(vehicle.direction){     //正向
                                             if(vehicle.curStation){
                                                 vehicle['curStation']['key'] = vehicle['curStation']['id']+"FW"
@@ -908,30 +952,32 @@
                                             }
                                             reverseVes.push(vehicle)
                                         }
-                                    })
+                                    }
 
                                     cloneItemFW['vehicles'] = positiveVes
                                     cloneItemRE['vehicles'] = reverseVes
                                 }
 
                                 if(cloneItemFW.stations.length >0){
-                                    cloneItemFW.stations.forEach(function(station){
+                                    for(var m=0;m<cloneItemFW.stations.length;m++){
+                                        var station = (cloneItemFW.stations)[m]
                                         station['key'] = station.id + "FW"
-                                    })
+                                    }
                                 }
 
                                 if(cloneItemRE.stations.length >0){
-                                    cloneItemRE.stations.forEach(function(reStation){
+                                    for(var n=0;n< cloneItemRE.stations.length;n++){
+                                        var reStation = (cloneItemRE.stations)[n]
                                         reStation['key'] = reStation.id+"RE"
-                                    })
+                                    }
                                 }
 
-                                if(schedule.willArriveVeFW){
-                                    cloneItemFW['willArriveVe'] = schedule.willArriveVeFW
+                                if(res[i].willArriveVeFW){
+                                    cloneItemFW['willArriveVe'] = res[i].willArriveVeFW
                                 }
 
-                                if(schedule.willArriveVeRE){
-                                    cloneItemRE['willArriveVe'] = schedule.willArriveVeRE
+                                if(res[i].willArriveVeRE){
+                                    cloneItemRE['willArriveVe'] = res[i].willArriveVeRE
                                 }
 
                                 cloneItemFW['key'] = cloneItemFW.id+"FW"
@@ -945,18 +991,17 @@
                                 routeArray.push(cloneItemRE)
 
                                 schedules.push({
-                                    id:schedule.id,
+                                    id:res[i].id,
                                     routes:routeArray
                                 })
 
-                            })
+                            }
 
                             console.log(schedules,'schedules')
 
                             initDom(schedules)
 
                             setTimeout(function(){
-                                console.log("aaaaaaaaaaaaaaaaaa")
                                 getStationData();
                             },600000)
 
@@ -970,125 +1015,139 @@
 
             if(schedules.length > 0){
                 $('#myCarousel').empty()
-                var carouselDiv = ''
+
                 for(var i=0;i<schedules.length;i++){
                     var routeContent = ''
                     if(schedules[i].routes.length>0) {
-                        schedules[i].routes.forEach(function(route){
+                        for(var j =0;j<schedules[i].routes.length;j++){
+                            var route = (schedules[i].routes)[j]
 
                             var desc = '';
                             if(route.willArriveVe){
                                 desc = "<div class='desc'>"+
-                                            "<div class='left'>"+
-                                                "<span>"+route.name+"</span>"+
-                                            "</div>"+
-                                            "<div class='center'>"+
-                                                    "<span><"+route.willArriveVe.vehicle.serialNum+">还有"+route.willArriveVe.willArriveTime+"分钟到达</span>"+
-                                            "</div>"+
-                                            "<div class='right'>"+
-                                                "<span>空余座位："+route.willArriveVe.vacancy+"人</span>"+
-                                            "</div>"+
-                                        "</div>"
+                                    "<div class='left'>"+
+                                    "<span>"+route.name+"</span>"+
+                                    "</div>"+
+                                    "<div class='center'>"+
+                                    "<span><"+route.willArriveVe.vehicle.serialNum+">还有"+route.willArriveVe.willArriveTime+"分钟到达</span>"+
+                                    "</div>"+
+                                    "<div class='right'>"+
+                                    "<span>空余座位："+route.willArriveVe.vacancy+"人</span>"+
+                                    "</div>"+
+                                    "</div>"
                             }else{
                                 desc = "<div class='desc'>"+
-                                            "<div class='left'>"+
-                                                "<span>"+route.name+"</span>"+
-                                            "</div>"+
-                                            "<div class='center'>"+
-                                                "<span>预计到达时间：未知</span>"+
-                                            "</div>"+
-                                            "<div class='right'>"+
-                                                "<span>空余座位：未知</span>"+
-                                            "</div>"+
-                                       "</div>"
+                                    "<div class='left'>"+
+                                    "<span>"+route.name+"</span>"+
+                                    "</div>"+
+                                    "<div class='center'>"+
+                                    "<span>预计到达时间：未知</span>"+
+                                    "</div>"+
+                                    "<div class='right'>"+
+                                    "<span>空余座位：未知</span>"+
+                                    "</div>"+
+                                    "</div>"
                             }
 
                             var vehicleList = '';
                             if(route.vehicles.length >0){
-                                route.vehicles.forEach(function(item){
+                                for(var m = 0;m<route.vehicles.length;m++){
+                                    var item = route.vehicles[m]
                                     if(item.curStation && item.nextStation){
                                         vehicleList += "<div class='vehicleStyle' id='"+item.vehicle.id+"'>"+
-                                                            "<span>"+item.vehicle.serialNum+"</span>"+
-                                                            "<img src='../../../static/img/icon/station/vehicleShip.png'>"+
-                                                        "</div>"
+                                            "<span>"+item.vehicle.serialNum+"</span>"+
+                                            "<img src='../../../static/img/icon/station/vehicleShip.png'>"+
+                                            "</div>"
                                     }
-                                })
+                                }
                             }
 
                             var stationList = ''
                             if(route.stations.length >0){
-                                route.stations.forEach(function(station) {
+                                for(var n = 0;n<route.stations.length;n++){
+                                    var station = route.stations[n]
                                     var stationHtml
                                     if (station.status == 'FROM') {
                                         stationHtml = "<div class='stationFlex'>"+
-                                                        "<div class='stationInfo'>"+
-                                                            "<img id = '"+station.key+"' src='../../../static/img/icon/station/firstStation.png'>"+
-                                                            "<div class='stationStartEndName firstEnd'>"+station.name+ "</div>"+
-                                                        "</div>"+
-                                                      "</div>"
+                                            "<div class='stationInfo'>"+
+                                            "<img id = '"+station.key+"' src='../../../static/img/icon/station/firstStation.png'>"+
+                                            "<div class='stationStartEndName firstEnd'>"+station.name+ "</div>"+
+                                            "</div>"+
+                                            "</div>"
                                     } else if (station.status == 'TO') {
                                         stationHtml = "<div class='stationFlex'>"+
-                                                            "<div class='stationInfo'>"+
-                                                                "<img id = '"+station.key+"' src='../../../static/img/icon/station/endStation.png'>"+
-                                                                "<div class='stationStartEndName firstEnd'>"+station.name+"</div>"+
-                                                            "</div>"+
-                                                      "</div>"
+                                            "<div class='stationInfo'>"+
+                                            "<img id = '"+station.key+"' src='../../../static/img/icon/station/endStation.png'>"+
+                                            "<div class='stationStartEndName firstEnd'>"+station.name+"</div>"+
+                                            "</div>"+
+                                            "</div>"
                                     } else if (station.status == 'CURRENT') {
                                         stationHtml = "<div class='stationFlex'>"+
-                                                            "<div class='stationInfo'>"+
-                                                                "<img id ='"+station.key+"' src='../../../static/img/icon/station/currentStation1.png'>"+
-                                                                "<img id ='"+station.key+"' class='currentImg'  src='../../../static/img/icon/station/currentStation2.png'>"+
-                                                                "<div class='stationCurrentName current'>"+station.name+"</div>"+
-                                                            "</div>"+
-                                                      "</div>"
+                                            "<div class='stationInfo'>"+
+                                            "<img id ='"+station.key+"' src='../../../static/img/icon/station/currentStation1.png'>"+
+                                            "<img id ='"+station.key+"' class='currentImg'  src='../../../static/img/icon/station/currentStation2.png'>"+
+                                            "<div class='stationCurrentName current'>"+station.name+"</div>"+
+                                            "</div>"+
+                                            "</div>"
 
                                     } else if (station.status == 'OTHER') {
                                         stationHtml = "<div class='stationFlex'>"+
-                                                            "<div class='stationInfo'>"+
-                                                                "<img id = '"+station.key+"' src='../../../static/img/icon/station/normalStation2.png'>"+
-                                                                "<div class='stationName normal'>"+station.name+"</div>"+
-                                                            "</div>"+
-                                                      "</div>"
+                                            "<div class='stationInfo'>"+
+                                            "<img id = '"+station.key+"' src='../../../static/img/icon/station/normalStation2.png'>"+
+                                            "<div class='stationName normal'>"+station.name+"</div>"+
+                                            "</div>"+
+                                            "</div>"
                                     }
 
                                     stationList += stationHtml
-                                })
+                                }
+
                             }
 
                             var trend = "<div class='trend'>"+
-                                            "<div class='route'></div>"+
-                                            "<div class='stationContent' id='"+route.key+"'>"+vehicleList+stationList+"</div>"+
-                                        "</div>"
+                                "<div class='route'></div>"+
+                                "<div class='stationContent' id='"+route.key+"'>"+vehicleList+stationList+"</div>"+
+                                "</div>"
 
                             var routeHtml = "<div class='contentDiv'>"+
-                                                "<div class='contentBody'>"+desc+trend+"</div>"+
-                                            "</div>"
+                                "<div class='contentBody'>"+desc+trend+"</div>"+
+                                "</div>"
 
                             routeContent += routeHtml
-
-                        })
+                        }
                     }
 
 
-                    carouselDiv += "<div id='"+schedules[i].id+"' class='swiper-slide carouselContent'>"+routeContent+"</div>"
+                    var carouselDiv = "<div id='"+schedules[i].id+"' class='swiper-slide carouselContent'>"+routeContent+"</div>"
+
+                    $('.bd ul').append("<li>"+carouselDiv+"</li>")
                 }
-                $('.swiper-wrapper').append(carouselDiv)
+
+
                 initVehiclePosition(schedules);
 
-                var mySwiper = new Swiper ('.swiper-container', {
-                    loop: true,
-                    autoplay: 5000
-                })
+                $(".slideBox").slide({
+                    effect:"left",
+                    mainCell:".bd ul",
+                    autoPlay:true,
+                    interTime:30000
+                });
+//                var mySwiper = new Swiper ('.swiper-container', {
+//                    autoplay: 30000
+//                })
             }
 
         }
 
         function  initVehiclePosition(schedules){
             if(schedules.length > 0){
-                schedules.forEach(function(schedule){
+                for(var i = 0;i<schedules.length;i++){
+                    var schedule = schedules[i]
                     if(schedule.routes.length>0) {
-                        schedule.routes.forEach(function(route){
-                            route.vehicles.forEach(function(item){
+                        for(var j=0;j<schedule.routes.length;j++){
+                            var route = schedule.routes[j]
+                            for(var x=0;x<route.vehicles.length;x++){
+                                var item = route.vehicles[x]
                                 if(!item.curStation || !item.nextStation){
                                     return
                                 }
@@ -1117,12 +1176,10 @@
 
                                 var el = document.getElementById(item.vehicle.id)
                                 el.style.left = totalDistance+"px"
-
-                            })
-                        })
+                            }
+                        }
                     }
-
-                })
+                }
             }
         }
 
