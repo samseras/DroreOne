@@ -201,7 +201,7 @@
                         }
                     })
                     let date = new Date().getTime()
-                    let obj = {totalNum: this.treeList.length}
+                    let obj = {totalNum: this.toiletList.length}
                     obj[date] = new Date().getTime()
                     this.$store.commit('TOTAL_NUM', obj)
                 } else {
