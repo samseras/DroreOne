@@ -753,12 +753,12 @@
                             this.alarmInfo=item
                         }
                     })
-                    if(this.Info.alarmType.id=='10'){
+                    if(this.Info.alarmType && this.Info.alarmType.id=='10'){
                         if(this.alarmInfo.fileList && this.alarmInfo.fileList instanceof Array && this.alarmInfo.fileList.length > 0){
                             this.initFileList = JSON.parse(JSON.stringify(this.alarmInfo.fileList))
                             this.fileList = JSON.parse(JSON.stringify(this.alarmInfo.fileList));
                         }
-                        if(Object.keys(this.alarmInfo).length != 0){
+                        if(this.Info.id){
                             this.isPatrolAdd = false
                             this.addEventInfo = JSON.parse(JSON.stringify(this.alarmInfo));
                             // this.eventInfo = JSON.parse(JSON.stringify(this.Info));
@@ -935,13 +935,13 @@
         },
         created () {
             this.init();
-            if(this.Info.alarmType.id=='10'){
+            if(this.Info.alarmType && this.Info.alarmType.id=='10'){
                 this.isPatrolEvent = true
                 if(this.Info.fileList && this.Info.fileList instanceof Array && this.Info.fileList.length > 0){
                     this.initFileList = JSON.parse(JSON.stringify(this.Info.fileList))
                     this.fileList = JSON.parse(JSON.stringify(this.Info.fileList));
                 }
-                if(Object.keys(this.Info).length != 0){
+                if(this.Info.id){
                     this.isPatrolAdd = false
                     this.addEventInfo = JSON.parse(JSON.stringify(this.Info));
                     if(this.addEventInfo.device && this.addEventInfo.device.typeId){

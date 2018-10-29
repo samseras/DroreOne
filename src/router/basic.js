@@ -37,6 +37,8 @@ const basic = [
             {path: '/basic-property/plant-deploy', name: 'PlantDeploy', component: resolve => require(['@/components/propertyChildren/basicDeploy/plantDeploy'], resolve), meta: {id: '0402'}},
             {path: '/basic-property/construction-deploy', name: 'BuildDeploy', component: resolve => require(['@/components/propertyChildren/basicDeploy/buildingDeploy'], resolve), meta: {id: '0402'}},
             {path: '/basic-property/station-deploy', name: 'StationDeploy', component: resolve => require(['@/components/propertyChildren/basicDeploy/stationDeploy'], resolve), meta: {id: '0402'}},
+            {path: '/basic-property/punch-deploy', name: 'PunchDeploy', component: resolve => require(['@/components/propertyChildren/basicDeploy/punchDeploy'], resolve), meta: {id: '0402'}},
+
         ]
     },
 ]

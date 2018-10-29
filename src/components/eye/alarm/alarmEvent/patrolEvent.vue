@@ -32,22 +32,18 @@
                         </el-table-column>
                         <el-table-column
                             prop="serialNum"
-                            width="120"
                             label="编号">
                         </el-table-column>
                         <el-table-column
-                            width="120"
                             prop="device.typeName"
                             label="故障设备类型">
                         </el-table-column>
                         <el-table-column
                             show-overflow-tooltip
                             prop="device.name"
-                            width="120"
                             label="故障设备">
                         </el-table-column>
                         <el-table-column
-                            width="140"
                             sortable
                             :filters="[{ text: '新告警', value: '1' }, { text: '处理中', value: '2' },{ text: '已处理', value: '3' }]"
                             :filter-method="filterStatus"
@@ -67,49 +63,35 @@
                         </el-table-column>
                         <el-table-column
                             sortable
-                            width="120"
                             prop="severity.name"
                             label="严重等级">
                         </el-table-column>
 
                         <el-table-column
-                            label="创建人"
-                            width="120">
+                            label="创建人">
                             <template slot-scope="scope">
                                 <span v-if="scope.row.creator">{{scope.row.creator.cnName?scope.row.creator.cnName:scope.row.creator.name}}</span>
                             </template>
                         </el-table-column>
 
                         <el-table-column
-                            width="120"
                             label="负责人">
                             <template slot-scope="scope">
                                 <span v-if="scope.row.owner">{{scope.row.owner.cnName?scope.row.owner.cnName:scope.row.owner.name}}</span>
                             </template>
                         </el-table-column>
-                        <!--<el-table-column-->
-                            <!--sortable-->
-                            <!--prop="owner.mobileNum"-->
-                            <!--label="负责人电话">-->
-                        <!--</el-table-column>-->
+
                         <el-table-column
-                            label="描述">
-                            <template slot-scope="scope">
-                                <div class="box" v-if="scope.row.description">
-                                    <div class="bottom">
-                                        <el-tooltip class="item" effect="light" :content=scope.row.description placement="bottom">
-                                            <el-button>{{scope.row.description}}</el-button>
-                                        </el-tooltip>
-                                    </div>
-                                </div>
-                            </template>
+                            label="描述"
+                            prop="description"
+                            show-overflow-tooltip>
                         </el-table-column>
                         <el-table-column label="操作" width="200">
                             <template slot-scope="scope">
-                                <span @click="editInfo(scope.row,false,'编辑巡检事件')" class="edit">处理</span> |
-                                <span @click="showDetail(scope.row,true,'查看巡检事件')">查看</span> |
-                                <span @click="deletInfo(scope.row.id)">删除</span>
-                                <span @click="patrolInfo(scope.row)"><img class="funcImg" v-if="scope.row.status.id==1 || scope.row.status.id==2" :src="scope.row.status.id == '1' ?'../../../../../static/img/alarm/newalarm.png':'../../../../../static/img/alarm/processing.png'"></span>
+                                <span @click="editInfo(scope.row,false,'编辑巡检事件')" class="operation">处理</span> |
+                                <span @click="showDetail(scope.row,true,'查看巡检事件')" class="operation">查看</span> |
+                                <span @click="deletInfo(scope.row.id)" class="operation">删除</span>
+                                <span @click="patrolInfo(scope.row)" class="operation"><img class="funcImg" v-if="scope.row.status.id==1 || scope.row.status.id==2" :src="scope.row.status.id == '1' ?'../../../../../static/img/alarm/newalarm.png':'../../../../../static/img/alarm/processing.png'"></span>
                             </template>
                         </el-table-column>
                     </el-table>
@@ -237,7 +219,7 @@
                 })
             },
             addNewInfo () {
-                this.showDetail({},false,'添加巡检事件',)
+                this.showDetail({alarmType:{id:'10'}},false,'添加巡检事件',)
             },
             showDetail (info,state,title) {
                 this.warningEventInfo = info;

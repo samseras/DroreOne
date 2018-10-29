@@ -79,10 +79,10 @@
                         <!--</el-table-column>-->
                         <el-table-column label="操作" width="200">
                             <template slot-scope="scope">
-                                <span @click="editInfo(scope.row,false,'编辑告警事件')" class="edit">处理</span> |
-                                <span @click="showDetail(scope.row,true,'查看告警事件')">查看</span> |
-                                <span @click="deletInfo(scope.row.id)">删除</span>
-                                <span @click="warnInfo(scope.row)"><img class="funcImg" v-if="scope.row.status.id==1 || scope.row.status.id==2" :src="scope.row.status.id == '1' ?'../../../../../static/img/alarm/newalarm.png':'../../../../../static/img/alarm/processing.png'"></span>
+                                <span @click="editInfo(scope.row,false,'编辑告警事件')" class="operation">处理</span> |
+                                <span @click="showDetail(scope.row,true,'查看告警事件')" class="operation">查看</span> |
+                                <span @click="deletInfo(scope.row.id)" class="operation">删除</span>
+                                <span @click="warnInfo(scope.row)" class="operation"><img class="funcImg" v-if="scope.row.status.id==1 || scope.row.status.id==2" :src="scope.row.status.id == '1' ?'../../../../../static/img/alarm/newalarm.png':'../../../../../static/img/alarm/processing.png'"></span>
                             </template>
                         </el-table-column>
                     </el-table>
