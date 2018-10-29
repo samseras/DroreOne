@@ -735,9 +735,8 @@
                     span{
                         display:block;
                         position: relative;
-                        top:0;
-                        /*top:50%;
-                        transform:translateY(-50%);*/
+                        top:50%;
+                        transform:translateY(-50%);
                         font-size:rem(15);
                         color: #26bbf0;
                     }
