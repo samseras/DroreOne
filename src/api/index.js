@@ -45,7 +45,7 @@ import station from './station'
 import user from './user'
 import intelligentBox from './intelligentBox'
 import passFlowAnalysis from './passFlowAnalysis'
-
+import punch from './punch'
 
 export default {
     analysis,
@@ -91,5 +91,6 @@ export default {
     station,
     user,
     intelligentBox,
-    passFlowAnalysis
+    passFlowAnalysis,
+    punch
 }

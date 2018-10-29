@@ -231,39 +231,60 @@
         }
     }
     .warningEvent{
-    .personList{
-        .el-table{
-            font-size: rem(14);
-            table{
-                th{
-                    background: #f3f3f3;
-                    /*.cell{*/
-                        /*font-size: rem(16);*/
-                        /*font-weight: 500;*/
-                        /*color: #333;*/
-                    /*}*/
-                    .caret-wrapper{
-                        height: rem(22);
-                        .sort-caret.ascending{
-                            top:0
+        .personList{
+            .el-table{
+                font-size: rem(14);
+                table{
+                    th{
+                        background: #f3f3f3;
+                        .caret-wrapper{
+                            height: rem(22);
+                            .sort-caret.ascending{
+                                top:0
+                            }
+                           .sort-caret.descending{
+                               bottom:0
+                           }
                         }
-                       .sort-caret.descending{
-                           bottom:0
-                       }
                     }
                 }
-            }
-            td,th{
-            }
-            .cell{
-                font-size: rem(14);
-                span:hover{
-                    color: #54c5f2;
-                    cursor:pointer;
+                .cell{
+                    font-size: rem(14);
+                    .operation:hover{
+                        color: #54c5f2;
+                        cursor:pointer;
+                    }
                 }
             }
         }
     }
+    .patrolEvent{
+        .personList{
+            .el-table{
+                font-size: rem(14);
+                table{
+                    th{
+                        background: #f3f3f3;
+                        .caret-wrapper{
+                            height: rem(22);
+                            .sort-caret.ascending{
+                                top:0
+                            }
+                            .sort-caret.descending{
+                                bottom:0
+                            }
+                        }
+                    }
+                }
+                .cell{
+                    font-size: rem(14);
+                    .operation:hover{
+                        color: #54c5f2;
+                        cursor:pointer;
+                    }
+                }
+            }
+        }
     }
 </style>
 

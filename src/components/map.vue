@@ -358,7 +358,15 @@
                 }else {
                     this.getAllStationEdit();// 站点修改
                 }
-            } else if (route.includes('transport-Dmis')) {
+            } else if (route.includes('punch-deploy'))  {
+                this.getAllArea();// 片区输出
+                if(!this.getLocationId) {
+                    this.getAllPunch();//打卡点现有标注
+                    this.labelDot();// 打卡点打点
+                }else {
+                    this.getAllPunchEdit();// 打卡点修改
+                }
+            }else if (route.includes('transport-Dmis')) {
                 this.tsShow = true
                 this.getStationList()
                 if(!this.getLocationId){
@@ -1227,6 +1235,68 @@
                     }
                 }).catch(err => {
                     console.log(err)
+                })
+            },
+            async getAllPunch(){ //打卡点现有标注
+                await api.punch.getAllPunch().then(res => {
+                    this.iconList=res
+                    for (let i=0;i<this.iconList.length;i++){
+                        this.iconList[i].type="打卡点"
+                        this.iconList[i].id=this.iconList[i].id
+                        this.iconList[i].name =this.iconList[i].name
+                        this.iconList[i].location = [this.iconList[i].longitude,this.iconList[i].latitude]
+                        this.iconList[i].url="/static/img/icon/trash.png"
+                        this.iconList[i].subtype='punch'
+                    }
+                    this.iconShow();
+                }).catch(err => {
+                    console.log(err)
+                    this.isShowLoading = false
+                })
+            },
+            async getAllPunchEdit(){
+                await api.punch.getAllPunch().then(res => {
+                    this.punchList = res
+                    for (let i = 0; i < this.trashList.length; i++) {
+                        if(this.punchList[i].dustbinBean.id === this.getLocationId){
+                            this.punchList[i].location = [this.trashList[i].longitude,this.punchList[i].latitude]
+                            var iconedit = new droreMap.icon.Marker({
+                                coordinate: droreMap.trans.transFromWgsToLayer(this.punchList[i].location),
+                                name: this.punchList[i].dustbinBean.name,
+                                subtype: "trash",
+                                id: this.punchList[i].dustbinBean.id,
+                                url: "/static/img/icon/trash_on.png"
+                            });
+                            droreMap.icon.addChild(iconedit);
+                            droreMap.interaction.ifDrag = true;
+                            let that =this
+                            droreMap.event.addMouseEvent(Event.SINGLECLICK_EVENT, "single", function(evt){
+                                iconedit.setPosition(evt.coordinate)
+                                console.log(evt.coordinate)
+                                that.$store.commit('MAP_LOCATION', droreMap.trans.transLayerToWgs(evt.coordinate))
+                            })
+                            droreMap.event.DragEvent(function(tabInfor) {
+                                var data = tabInfor.data
+                                if(data.data.id === that.getLocationId){
+                                    console.log(droreMap.trans.transLayerToWgs(data.end));
+                                    that.$store.commit('MAP_LOCATION', droreMap.trans.transLayerToWgs(data.end))
+                                }
+                            })
+                        }else{
+                            this.punchList[i].location = [this.punchList[i].longitude,this.punchList[i].latitude]
+                            var icon1 = new droreMap.icon.Marker({
+                                coordinate: droreMap.trans.transFromWgsToLayer(this.punchList[i].location),
+                                name: this.punchList[i].dustbinBean.name,
+                                subtype: "trash",
+                                id: this.punchList[i].dustbinBean.id,
+                                url: "/static/img/icon/trash.png"
+                            });
+                            droreMap.icon.addChild(icon1);
+                        }
+                    }
+                }).catch(err => {
+                    console.log(err)
+                    this.isShowLoading = false
                 })
             },
             async getAllTrash () { //垃圾桶现有标注
