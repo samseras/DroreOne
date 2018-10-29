@@ -832,7 +832,7 @@
                }
            }
            .ticketPrice::before{
-               content: '各景区门票收入统计';
+               content: '各景区门票收入分析';
                position: absolute;
                width: 200px;
                color: #01f5ff;
@@ -864,7 +864,7 @@
                }
            }
            .ticketMarketType::before{
-               content: '门票销售类型统计';
+               content: '门票销售类型分析';
                position: absolute;
                width: 200px;
                color: #01f5ff;
