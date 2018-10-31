@@ -753,7 +753,7 @@
             border: none;
         }
         .el-date-editor{
-            width: 250px;
+            width: 230px;
         }
         .el-input__inner{
             background:none;

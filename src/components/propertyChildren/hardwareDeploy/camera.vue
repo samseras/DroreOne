@@ -389,6 +389,9 @@
                 }else if(route.includes('police')){
                     type = 8
                     fileNames = '报警柱.csv'
+                }else if(route.includes('gps')){
+                    type = 9
+                    fileNames = 'gps.csv'
                 }
                 if (this.choseId.length > 0) {
                     api.exportFile.exportSingle(this.choseId).then((res) =>{

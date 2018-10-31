@@ -12,7 +12,6 @@
                         @selectedAll = 'selectedAll'
                         @fixedInfo = 'fixedInfo'
                         :choseId="choseInfoId"
-                        :listsLength="listLength"
                         :personListFlag="selectFlag"
                         @allDotInfo = 'allDotInfo'
                         @searchAnything="searchAnything"
