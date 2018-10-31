@@ -526,7 +526,6 @@
                         </label>
                     </div>
                 </div>
-
                 <!--站点-->
                 <div class="personCardContent boatCardContent" v-if="route.includes('station')">
                     <p class="type">
@@ -574,6 +573,44 @@
                         </label>
                     </div>
                 </div>
+
+                <!--打卡点-->
+                <div class="personCardContent boatCardContent" v-if="route.includes('punch')">
+                    <p class="sex">
+                        <span>名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称：</span>
+                        <el-input type="text"v-model="punch.name" :disabled="isDisabled" :maxlength="50"></el-input>
+                    </p>
+                    <p class="sex">
+                        <span>卡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;号：</span>
+                        <el-input type="text"v-model="punch.cardNumber" :disabled="isDisabled" :maxlength="50"></el-input>
+                    </p>
+                    <p class="phone">
+                        <span>所属片区：</span>
+                        <el-select v-model="punch.regionId" placeholder="请选择" :disabled="isDisabled">
+                            <el-option
+                                v-for="item in regions"
+                                :key="item.id"
+                                :label="item.name"
+                                :value="item.id">
+                            </el-option>
+                        </el-select>
+                    </p>
+                    <p class="phoneNum">
+                        <span>位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置：</span>
+                        <span :class="{ps:isDisabled}">{{punch.location}}</span><i class="el-icon-location-outline" @click="showMapDialog"></i>
+                    </p>
+                    <p class="textarea ms">
+                        <span class="des">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：</span>
+                        <el-input type="textarea" :rows="3"  v-model="punch.description" :disabled="isDisabled" :maxlength="140"></el-input>
+                    </p>
+                    <div class="img">
+                        <img :src="getUrl(punch.picturePath)" alt="" v-if="isDisabled" @error="imgError">
+                        <label for="avatar" v-if="!isDisabled">
+                            <img :src="files.length ? files[0].url : getUrl(punch.picturePath)"  @error="imgError" class="rounded-circle" />
+                        </label>
+                    </div>
+                </div>
+
 
                 <div class="text-center p-2">
                     <file-upload
@@ -754,6 +791,13 @@
                     location:'',
                     regionId: '',
                 },
+                punch: {
+                    name: '',
+                    cardNumber:'',
+                    description: '',
+                    location:'',
+                    regionId: '',
+                },
                 siteType:[
                     {
                         id:'0',
@@ -829,37 +873,39 @@
                     } else {
                         console.log(this.$route.path, 'p[ppppp[p')
                         let route = this.$route.path
-                        if (route.includes('shop')) {//商铺
-                            imgSrc = './../../../../static/img/businesCard.png'
+                       if (route.includes('shop')) {//商铺
+                           imgSrc = './../../../../static/img/businesCard.png'
 
-                        }else if (route.includes('park')) {//停车
-                            imgSrc = './../../../../static/img/parkCard.png'
-                        }else if (route.includes('toilet')) {//卫生间
-                            imgSrc = './../../../../static/img/toiletCard.png'
-                        }else if (route.includes('scenic')) {//景点
-                            imgSrc = './../../../../static/img/scenicCard.png'
-                        }else if (route.includes('trash')) {//垃圾桶
-                            imgSrc = './../../../../static/img/wasteCard.png'
-                        }else if (route.includes('indicator')) {//指示牌
-                            imgSrc = './../../../../static/img/indicatorCard.png'
-                        }else if (route.includes('plant')) {//植物
-                            imgSrc = './../../../../static/img/botanyCard.png'
-                        }else if (route.includes('construction')) {//建筑
-                            imgSrc = './../../../../static/img/bulidCard.png'
-                        } else if (route.includes('boat')) {//车船
-                            if(this.boatCar.vehicle.type == 0){
-                                imgSrc = './../../../static/img/carPic.png';
-                            }else{
-                                imgSrc = './../../../static/img/boatPic.png';
-                            }
-                        } else if (route.includes('station')) {// 站点码头
-                            console.log(this.station)
-                            if(!this.station.type || this.station.type == "0"){
-                                imgSrc = './../../../../static/img/stationCard.svg'
-                            }else if(this.station.type == "1"){
-                                imgSrc = './../../../../static/img/landingCard.svg'
-                            }
-                        }
+                       }else if (route.includes('park')) {//停车
+                           imgSrc = './../../../../static/img/parkCard.png'
+                       }else if (route.includes('toilet')) {//卫生间
+                           imgSrc = './../../../../static/img/toiletCard.png'
+                       }else if (route.includes('scenic')) {//景点
+                           imgSrc = './../../../../static/img/scenicCard.png'
+                       }else if (route.includes('trash')) {//垃圾桶
+                           imgSrc = './../../../../static/img/wasteCard.png'
+                       }else if (route.includes('indicator')) {//指示牌
+                           imgSrc = './../../../../static/img/indicatorCard.png'
+                       }else if (route.includes('plant')) {//植物
+                           imgSrc = './../../../../static/img/botanyCard.png'
+                       }else if (route.includes('construction')) {//建筑
+                           imgSrc = './../../../../static/img/bulidCard.png'
+                       } else if (route.includes('boat')) {//车船
+                           if(this.boatCar.vehicle.type == 0){
+                               imgSrc = './../../../static/img/carPic.png';
+                           }else{
+                               imgSrc = './../../../static/img/boatPic.png';
+                           }
+                       } else if (route.includes('station')) {// 站点码头
+                           console.log(this.station)
+                           if(!this.station.type || this.station.type == "0"){
+                               imgSrc = './../../../../static/img/stationCard.svg'
+                           }else if(this.station.type == "1"){
+                               imgSrc = './../../../../static/img/landingCard.svg'
+                           }
+                        } else if (route.includes('punch')){
+                           imgSrc = './../../../../static/img/landingCard.svg'
+                       }
                     }
                     return imgSrc
                 } else {
@@ -903,6 +949,8 @@
                     this.wharf.location = locationString
                 } else if (this.route.includes('station')){
                     this.station.location = locationString
+                } else if (this.route.includes('punch')){
+                    this.punch.location = locationString
                 }
                 this.mapVisible = false
             },
@@ -1063,6 +1111,15 @@
                         this.$message.error('请输入完整信息')
                         return
                     }
+                } else if (this.route.includes('punch')) {
+                    newInfo = this.punch
+                    if (!(newInfo.name && newInfo.name.trim() !== '') ||
+                        !(newInfo.location && newInfo.location !== '') ||
+                        !(newInfo.regionId && newInfo.regionId !== '')
+                    ) {
+                        this.$message.error('请输入完整信息')
+                        return
+                    }
                 }
                 newInfo.status = true
                 newInfo.checked = false
@@ -1209,6 +1266,8 @@
                 if(this.Info.id){
                     this.$store.commit('TRANSPORT_TYPE', this.Info.type)
                 }
+            }else if (this.route.includes('punch')) {
+                this.punch = this.Info
             }
             if (this.Info.id) {
                 console.log(this.Info.id, '这是拿到的Id')

@@ -221,10 +221,15 @@
         },
         methods:{
             init(){
+                // 各时段客流
                 this.selectKindQuantum();
+                // 累计客流数据当日
                 this.selectKindReal();
+                // 总客流分析
                 this.selectKindtotal();
+                // 景区环比客流
                 this.selectKindTrip();
+                //实施客流
                 this.realTimeFlow();
                 // this.totalFlow();
                 // this.totalInfo();
@@ -265,6 +270,7 @@
                 d = d < 10 ? ('0' + d) : d;
                 return y + '-' + m + '-' + d;
             },
+            // 各时段客流
             async selectKindQuantum(){
                 await api.passFlowAnalysis.todayPassFlow().then(res=>{
                      console.log(res,"各时段客流")
@@ -372,6 +378,7 @@
                     this.totalFlow()
                 })
             },
+            // 总客流分析
             async selectKindtotal(val){
                 let obj = {
                     "timeRangeType": "lastWeek"
@@ -409,6 +416,7 @@
                 })
                 this.currtotalTime='';
             },
+            // 景区环比客流
             async selectKindTrip(val){
                 let obj = {
                     "timeUnit": "week"
@@ -493,6 +501,7 @@
                 })
                 console.log(val,"@@@@@@@@@@@@@@@@@@@@@@@@@")
             },
+            //实施客流
            async realTimeFlow(){
                 await api.passFlowAnalysis.realPassFlow().then(res=>{
                     // let count = 0;
