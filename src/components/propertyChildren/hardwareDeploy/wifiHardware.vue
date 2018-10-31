@@ -232,7 +232,7 @@
                     if (this.typeContent.length > 0) {
                         this.allWifiList = this.filterTypeList(this.allWifiList)
                     }
-                    let checkList = this.allWifiList.filter(item => {
+                    this.checkList = this.allWifiList.filter(item => {
                         if (item.regionName && item.regionName.includes(info)) {
                             return item
                         }
@@ -247,10 +247,10 @@
                         }
                     })
                     let date = new Date().getTime()
-                    let obj = {totalNum: checkList.length}
+                    let obj = {totalNum: this.checkList.length}
                     obj[date] = new Date().getTime()
                     this.$store.commit('TOTAL_NUM', obj)
-                    this.wifiList = checkList.filter((item,index) => {
+                    this.wifiList = this.checkList.filter((item,index) => {
                         if (index < (this.getCurrentNum * 35 ) && index > ((this.getCurrentNum -1) * 35 ) - 1 ) {
                             return item
                         }

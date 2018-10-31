@@ -226,7 +226,7 @@
                     if (this.typeContent.length > 0) {
                         this.allGateList = this.filterTypeList(this.allGateList)
                     }
-                    let checkList = this.allGateList.filter(item => {
+                    this.checkList = this.allGateList.filter(item => {
                         if (item.ip && item.ip.includes(info)) {
                             return item
                         }
@@ -241,10 +241,10 @@
                         }
                     })
                     let date = new Date().getTime()
-                    let obj = {totalNum: checkList.length}
+                    let obj = {totalNum: this.checkList.length}
                     obj[date] = new Date().getTime()
                     this.$store.commit('TOTAL_NUM', obj)
-                    this.gateList = checkList.filter((item,index) => {
+                    this.gateList = this.checkList.filter((item,index) => {
                         if (index < (this.getCurrentNum * 35 ) && index > ((this.getCurrentNum -1) * 35 ) - 1 ) {
                             return item
                         }

@@ -165,7 +165,8 @@
                     close:[],
                     open:[]
                 },
-                filterCondition: ''
+                filterCondition: '',
+                typeContent: []
             }
         },
         methods:{
@@ -222,7 +223,10 @@
                 console.log(info, '这是要过滤的')
                 this.filterCondition = info
                 if (info.trim() !== '') {
-                    this.ledList = this.allLedList.filter(item => {
+                    if (this.typeContent.length > 0) {
+                        this.allLedList = this.filterTypeList(this.allLedList)
+                    }
+                    this.checkList = this.allLedList.filter(item => {
                         if (item.ip && item.ip.includes(info)) {
                             return item
                         }
@@ -237,9 +241,14 @@
                         }
                     })
                     let date = new Date().getTime()
-                    let obj = {totalNum: this.ledList.length}
+                    let obj = {totalNum: this.checkList.length}
                     obj[date] = new Date().getTime()
                     this.$store.commit('TOTAL_NUM', obj)
+                    this.ledList = this.checkList.filter((item,index) => {
+                        if (index < (this.getCurrentNum * 35 ) && index > ((this.getCurrentNum -1) * 35 ) - 1 ) {
+                            return item
+                        }
+                    })
                 } else {
                     this.getAllLed()
                 }
@@ -436,14 +445,14 @@
             },
             choseType(type){
                 console.log(type)
+                this.typeContent = type
                 if(type.length===0){
-                    this.ledList=this.checkList.filter((item)=>{
-                        item.status=true
-                        return item
-                    })
+                   this.getAllLed()
                 }else{
-                    this.ledList=this.checkList.filter((item,index)=>{
-                        console.log(item, 'ioioojjkjjjjkjkjk')
+                    if (this.filterCondition.trim() !== '') {
+                        this.allLedList = this.filterDataList(this.allLedList)
+                    }
+                    this.checkList=this.allLedList.filter((item,index)=>{
                         if (item.positionType == 0) {
                             item.type = '室内'
                         } else{
@@ -458,6 +467,15 @@
                         return item.status === true
                     })
                 }
+                let date = new Date().getTime()
+                let obj = {totalNum: this.checkList.length}
+                obj[date] = new Date().getTime()
+                this.$store.commit('TOTAL_NUM', obj)
+                this.ledList = this.checkList.filter((item,index) => {
+                    if (index < (this.getCurrentNum * 35 ) && index > ((this.getCurrentNum -1) * 35 ) - 1 ) {
+                        return item
+                    }
+                })
             },
             selectedAll(state){
                 this.ledList=this.ledList.filter((item)=>{
@@ -519,6 +537,9 @@
                     if (this.filterCondition.trim() !== '') {
                         this.allLedList = this.filterDataList(this.allLedList)
                     }
+                    if (this.typeContent.length > 0) {
+                        this.allLedList = this.filterTypeList(this.allLedList)
+                    }
                     let date = new Date().getTime()
                     let obj = {totalNum: this.allLedList.length}
                     obj[date] = new Date().getTime()
@@ -535,6 +556,24 @@
                 }).catch((err)=>{
                     console.log(err)
                 })
+            },
+            filterTypeList (list) {
+                let type = this.typeContent
+                list = list.filter((item,index) => {
+                    if (item.positionType == 0) {
+                        item.type = '室内'
+                    } else{
+                        item.type = '室外'
+                    }
+                    if(type.includes(item.type)){
+                        item.status=true
+                    }else {
+                        item.status=false
+                        console.log(item.type)
+                    }
+                    return item.status === true
+                })
+                return list
             },
             filterDataList (list) {
                 list = list.filter(item => {

@@ -221,7 +221,7 @@
                     if (this.typeContent.length > 0) {
                         this.allCameraList = this.filterTypeList(this.allCameraList)
                     }
-                    let checkList = this.allCameraList.filter(item => {
+                    this.checkList = this.allCameraList.filter(item => {
                         if (item.name.includes(info)) {
                             return item
                         }
@@ -239,10 +239,10 @@
                         }
                     })
                     let date = new Date().getTime()
-                    let obj = {totalNum: checkList.length}
+                    let obj = {totalNum: this.checkList.length}
                     obj[date] = new Date().getTime()
                     this.$store.commit('TOTAL_NUM', obj)
-                    this.cameraList = checkList.filter((item,index) => {
+                    this.cameraList = this.checkList.filter((item,index) => {
                         if (index < (this.getCurrentNum * 35 ) && index > ((this.getCurrentNum -1) * 35 ) - 1 ) {
                             return item
                         }

@@ -219,7 +219,7 @@
                 console.log(info, '这是要过滤的')
                 this.filterCondition = info
                 if (info.trim() !== '') {
-                    let checkList = this.allLightList.filter(item => {
+                    this.checkList = this.allLightList.filter(item => {
                         if (item.regionName && item.regionName.includes(info)) {
                             return item
                         }
@@ -234,10 +234,10 @@
                         }
                     })
                     let date = new Date().getTime()
-                    let obj = {totalNum: checkList.length}
+                    let obj = {totalNum: this.checkList.length}
                     obj[date] = new Date().getTime()
                     this.$store.commit('TOTAL_NUM', obj)
-                    this.lightList = checkList.filter((item,index) => {
+                    this.lightList = this.checkList.filter((item,index) => {
                         if (index < (this.getCurrentNum * 35 ) && index > ((this.getCurrentNum -1) * 35 ) - 1 ) {
                             return item
                         }
