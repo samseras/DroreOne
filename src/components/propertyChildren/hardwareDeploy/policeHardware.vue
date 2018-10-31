@@ -165,7 +165,8 @@
                     close:[],
                     open:[]
                 },
-                filterCondition: ''
+                filterCondition: '',
+                typeContent: []
             }
         },
         methods:{
@@ -220,7 +221,10 @@
                 console.log(info, '这是要过滤的')
                 this.filterCondition = info
                 if (info.trim() !== '') {
-                    this.policeList = this.allPoliceList.filter(item => {
+                    if (this.typeContent.length > 0) {
+                        this.allPoliceList = this.filterTypeList(this.allPoliceList)
+                    }
+                    this.checkList = this.allPoliceList.filter(item => {
                         if (item.name.includes(info)) {
                             return item
                         }
@@ -232,9 +236,14 @@
                         }
                     })
                     let date = new Date().getTime()
-                    let obj = {totalNum: this.policeList.length}
+                    let obj = {totalNum: this.checkList.length}
                     obj[date] = new Date().getTime()
                     this.$store.commit('TOTAL_NUM', obj)
+                    this.policeList = this.checkList.filter((item,index) => {
+                        if (index < (this.getCurrentNum * 35 ) && index > ((this.getCurrentNum -1) * 35 ) - 1 ) {
+                            return item
+                        }
+                    })
                 } else {
                     this.getAllPolice()
                 }
@@ -421,13 +430,14 @@
             },
             choseType(type){
                 console.log(type)
+                this.typeContent = type
                 if(type.length===0){
-                    this.policeList=this.checkList.filter((item) => {
-                        item.status=true
-                        return item
-                    })
+                    this.getAllPolice()
                 }else{
-                    this.policeList = this.checkList.filter((item,index) => {
+                    if (this.filterCondition.trim() !== '') {
+                        this.allPoliceList = this.filterDataList(this.allPoliceList)
+                    }
+                    this.checkList = this.allPoliceList.filter((item,index) => {
                         if(item.sensorType == 10){
                             item.type = '报警柱'
                         }else{
@@ -442,6 +452,15 @@
                         return item.status === true
                     })
                 }
+                let date = new Date().getTime()
+                let obj = {totalNum: this.checkList.length}
+                obj[date] = new Date().getTime()
+                this.$store.commit('TOTAL_NUM', obj)
+                this.policeList = this.checkList.filter((item,index) => {
+                    if (index < (this.getCurrentNum * 35 ) && index > ((this.getCurrentNum -1) * 35 ) - 1 ) {
+                        return item
+                    }
+                })
             },
             selectedAll(state){
                 this.policeList=this.policeList.filter((item)=>{
@@ -499,6 +518,9 @@
                     if (this.filterCondition.trim() !== '') {
                         this.allPoliceList = this.filterDataList(this.allPoliceList)
                     }
+                    if (this.typeContent.length > 0) {
+                        this.allPoliceList = this.filterTypeList(this.allPoliceList)
+                    }
                     let date = new Date().getTime()
                     let obj = {totalNum: this.allPoliceList.length}
                     obj[date] = new Date().getTime()
@@ -515,6 +537,24 @@
                     console.log(err)
                 })
 
+            },
+            filterTypeList (list) {
+                let type = this.typeContent
+                list = list.filter((item,index) => {
+                    if(item.sensorType == 10){
+                        item.type = '报警柱'
+                    }else{
+                        item.type = '越界'
+                    }
+                    if(type.includes(item.type)){
+                        item.status=true
+                    }else{
+                        item.status=false
+                        console.log(item.type)
+                    }
+                    return item.status === true
+                })
+                return list
             },
             filterDataList (list) {
                 list = list.filter(item => {

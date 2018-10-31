@@ -80,7 +80,6 @@
                                 <span v-if="scope.row.owner">{{scope.row.owner.cnName?scope.row.owner.cnName:scope.row.owner.name}}</span>
                             </template>
                         </el-table-column>
-
                         <el-table-column
                             label="描述"
                             prop="description"
@@ -97,14 +96,14 @@
                     </el-table>
                 </ScrollContainer>
                 <AlarmDetail v-if="visible"
-                              :visible="visible"
-                              :Info="warningEventInfo"
-                              :readOnly="readOnly"
-                              @closeDialog ="closeDialog"
-                              :title = "title"
-                              @saveEditInfo="saveEditInfo"
-                              :isBatchEdit="isBatchEdit"
-                              :choseInfos = 'choseInfos'>
+                             :visible="visible"
+                             :Info="warningEventInfo"
+                             :readOnly="readOnly"
+                             @closeDialog ="closeDialog"
+                             :title = "title"
+                             @saveEditInfo="saveEditInfo"
+                             :isBatchEdit="isBatchEdit"
+                             :choseInfos = 'choseInfos'>
                 </AlarmDetail>
             </div>
         </div>
@@ -116,6 +115,7 @@
     import api from '@/api'
     import Header from './alarmEventHeader'
     import AlarmDetail from './alarmEventDialog'
+    import _ from 'lodash'
     // import moment from 'moment'
     import {mapGetters,mapMutations} from 'vuex'
     export default {
@@ -167,7 +167,7 @@
                 console.log(info, '这是要过滤的')
                 this.filterCondition = info
                 if (info.trim() !== '') {
-                    this.patrolEventList = this.allPatrolEventList.filter(item => {
+                    let checkList = this.allPatrolEventList.filter(item => {
                         if (item.serialNum.includes(info)) {
                             return item
                         }
@@ -177,7 +177,7 @@
                         if(item.status.name.includes(info)){
                             return item
                         }
-                        if(item.owner && item.owner.name.includes(info)){
+                        if(item.owner && item.owner.name && item.owner.name.includes(info)){
                             return item
                         }
                         if(item.owner && item.owner.mobileNum.includes(info)){
@@ -191,9 +191,14 @@
                         }
                     })
                     let date = new Date().getTime()
-                    let obj = {totalNum: this.patrolEventList.length}
+                    let obj = {totalNum: checkList.length}
                     obj[date] = new Date().getTime()
                     this.$store.commit('TOTAL_NUM', obj)
+                    this.patrolEventList = checkList.filter((item,index) => {
+                        if (index < (this.getCurrentNum *  35) && index > ((this.getCurrentNum -1) * 35 ) - 1 ) {
+                            return item
+                        }
+                    })
                 } else {
                     this.getAllAlarmEvent()
                 }
@@ -208,7 +213,7 @@
                     tempList = dataList;
                 }
 
-               return this.patrolEventList = tempList;
+                return this.patrolEventList = tempList;
             },
             closeDialog () {
                 this.visible = false
@@ -402,96 +407,96 @@
             },
             async addAlarmEvent(obj){
                 await api.alarm.addAlarmEvent(obj).then(res => {
-                        console.log(res, '添加成功')
-                        this.$message.success('添加成功')
-                        this.choseInfos = []
-                        this.visible = false
-                        this.getAllAlarmEvent();
-                    }).catch(err => {
-                        this.$message.error('添加失败，'+err.message)
-                        console.log(err)
-                        this.choseInfos = []
-                    })
+                    console.log(res, '添加成功')
+                    this.$message.success('添加成功')
+                    this.choseInfos = []
+                    this.visible = false
+                    this.getAllAlarmEvent();
+                }).catch(err => {
+                    this.$message.error('添加失败，'+err.message)
+                    console.log(err)
+                    this.choseInfos = []
+                })
             },
             async getAllAlarmEvent () {
                 this.loading = true
                 this.allPatrolEventList = []
                 await api.alarm.getAllAlarmEvent().then(res => {
-                                this.loading = false
-                                let list = JSON.parse(JSON.stringify(res))
-                                if(list.length >0){
-                                    list.forEach(obj=>{
-                                        if(obj.alarmType && obj.alarmType.id == "10"){
-                                            this.allPatrolEventList.push(obj)
-                                        }
-                                    })
-                                }
-                                this.allPatrolEventList.forEach(item => {
-                                    item.checked = false;
-                                    if(!item.device){
-                                        item.device = {
-                                            id:'',
-                                            typeId:0,
-                                            typeName:'非设备故障'
-                                        }
-                                    }else{
-                                        console.log('00')
-                                        item.device['typeName'] = this.getDeviceTypeById(item.device.typeId)
-                                        console.log(item.device.typeName,'typeName')
-                                    }
-                                    item.acturalExtendValue = !item.acturalExtendValue ? "" : item.acturalExtendValue
-                                    if(!item.owner || !item.owner.id){
-                                        item.owner = {
-                                            id : ""
-                                        }
-                                    }
-                                    if(!item.owner || !item.owner.mobileNum){
-                                        item.owner = {
-                                            mobileNum : ""
-                                        }
-                                    }
-                                    item.actualValue = !item.actualValue ? "" : item.actualValue
-
-                                    if(item.attachments && item.attachments.length > 0){
-                                        let fileList = []
-                                        item.attachments.forEach((obj)=>{
-                                               let fileObj = {
-                                                   title : obj.path.replace(/(.*\/)*([^.]+).*/ig,"$2").split('_')[0],
-                                                   id:obj.id,
-                                                   path:obj.path,
-                                                   checked:false
-                                               }
-                                            fileList.push(fileObj)
-                                        })
-                                        if(fileList.length > 0){
-                                            item.fileList = fileList
-                                        }
-                                    }
-                                    if (item.modifyTime) {
-                                        item.modifyTime=item.modifyTime.replace("-","/")
-                                        item.byTime = -(new Date(item.modifyTime)).getTime()
-                                    }
-                                    if(item.longitude && item.latitude){
-                                        item.location = item.longitude+','+item.latitude
-                                    }
-                                })
-                                this.allPatrolEventList = _.sortBy(this.allPatrolEventList,'byTime')
-                                if (this.filterCondition.trim() !== '') {
-                                    this.allPatrolEventList = this.filterDataList(this.allPatrolEventList)
-                                }
-                                let date = new Date().getTime()
-                                let obj = {totalNum: this.allPatrolEventList.length}
-                                obj[date] = new Date().getTime()
-                                this.$store.commit('TOTAL_NUM', obj)
-                                this.patrolEventList = this.allPatrolEventList.filter((item,index) => {
-                                    if (index < (this.getCurrentNum *  35) && index > ((this.getCurrentNum -1) * 35 ) - 1 ) {
-                                        return item
-                                    }
-                                })
-                                this.patrolEventListTemp = JSON.parse(JSON.stringify(this.patrolEventList))
-                        }).catch(err => {
-                            this.loading = false
+                    this.loading = false
+                    let list = JSON.parse(JSON.stringify(res))
+                    if(list.length >0){
+                        list.forEach(obj=>{
+                            if(obj.alarmType && obj.alarmType.id == "10"){
+                                this.allPatrolEventList.push(obj)
+                            }
                         })
+                    }
+                    this.allPatrolEventList.forEach(item => {
+                        item.checked = false;
+                        if(!item.device){
+                            item.device = {
+                                id:'',
+                                typeId:0,
+                                typeName:'非设备故障'
+                            }
+                        }else{
+                            console.log('00')
+                            item.device['typeName'] = this.getDeviceTypeById(item.device.typeId)
+                            console.log(item.device.typeName,'typeName')
+                        }
+                        item.acturalExtendValue = !item.acturalExtendValue ? "" : item.acturalExtendValue
+                        if(!item.owner || !item.owner.id){
+                            item.owner = {
+                                id : ""
+                            }
+                        }
+                        if(!item.owner || !item.owner.mobileNum){
+                            item.owner = {
+                                mobileNum : ""
+                            }
+                        }
+                        item.actualValue = !item.actualValue ? "" : item.actualValue
+
+                        if(item.attachments && item.attachments.length > 0){
+                            let fileList = []
+                            item.attachments.forEach((obj)=>{
+                                let fileObj = {
+                                    title : obj.path.replace(/(.*\/)*([^.]+).*/ig,"$2").split('_')[0],
+                                    id:obj.id,
+                                    path:obj.path,
+                                    checked:false
+                                }
+                                fileList.push(fileObj)
+                            })
+                            if(fileList.length > 0){
+                                item.fileList = fileList
+                            }
+                        }
+                        if (item.modifyTime) {
+                            item.modifyTime=item.modifyTime.replace("-","/")
+                            item.byTime = -(new Date(item.modifyTime)).getTime()
+                        }
+                        if(item.longitude && item.latitude){
+                            item.location = item.longitude+','+item.latitude
+                        }
+                    })
+                    this.allPatrolEventList = _.sortBy(this.allPatrolEventList,'byTime')
+                    if (this.filterCondition.trim() !== '') {
+                        this.allPatrolEventList = this.filterDataList(this.allPatrolEventList)
+                    }
+                    let date = new Date().getTime()
+                    let obj = {totalNum: this.allPatrolEventList.length}
+                    obj[date] = new Date().getTime()
+                    this.$store.commit('TOTAL_NUM', obj)
+                    this.patrolEventList = this.allPatrolEventList.filter((item,index) => {
+                        if (index < (this.getCurrentNum *  35) && index > ((this.getCurrentNum -1) * 35 ) - 1 ) {
+                            return item
+                        }
+                    })
+                    this.patrolEventListTemp = JSON.parse(JSON.stringify(this.patrolEventList))
+                }).catch(err => {
+                    this.loading = false
+                })
             },
             filterDataList (list) {
                 list = list.filter(item => {
@@ -505,7 +510,7 @@
                     if(item.status.name.includes(info)){
                         return item
                     }
-                    if(item.owner && item.owner.name.includes(info)){
+                    if(item.owner && item.owner.name && item.owner.name.includes(info)){
                         return item
                     }
                     if(item.owner && item.owner.mobileNum.includes(info)){

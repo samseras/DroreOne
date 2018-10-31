@@ -147,7 +147,7 @@
                 console.log(info, '这是要过滤的')
                 this.filterCondition = info
                 if (info.trim() !== '') {
-                    this.patrolList = this.allPatrolList.filter(item => {
+                    let checkList = this.allPatrolList.filter(item => {
                         if (item.inspectionSchedule.name.includes(info)) {
                             return item
                         }
@@ -156,9 +156,14 @@
                         }
                     })
                     let date = new Date().getTime()
-                    let obj = {totalNum: this.patrolList.length}
+                    let obj = {totalNum: checkList.length}
                     obj[date] = new Date().getTime()
                     this.$store.commit('TOTAL_NUM', obj)
+                    this.patrolList = checkList.filter((item,index) => {
+                        if (index < (this.getCurrentNum * 35) && index > ((this.getCurrentNum -1) * 35 ) - 1 ) {
+                            return item
+                        }
+                    })
                 } else {
                     this.getAllpatrol()
                 }

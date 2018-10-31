@@ -166,7 +166,8 @@
                     close:[],
                     open:[]
                 },
-                filterCondition: ''
+                filterCondition: '',
+                typeContent: []
             }
         },
         methods: {
@@ -212,7 +213,10 @@
                 console.log(info, '这是要过滤的')
                 this.filterCondition = info
                 if (info.trim() !== '') {
-                    this.shopList = this.allShopList.filter(item => {
+                    if (this.typeContent.length > 0) {
+                        this.allShopList = this.filterTypeList(this.allShopList)
+                    }
+                    this.checkList = this.allShopList.filter(item => {
                         if (item.businessTypeName.includes(info)) {
                             return item
                         }
@@ -224,9 +228,14 @@
                         }
                     })
                     let date = new Date().getTime()
-                    let obj = {totalNum: this.shopList.length}
+                    let obj = {totalNum: this.checkList.length}
                     obj[date] = new Date().getTime()
                     this.$store.commit('TOTAL_NUM', obj)
+                    this.shopList = this.checkList.filter((item,index) =>{
+                        if(index <(this.getCurrentNum*35)&& index>(this.getCurrentNum-1)*35-1){
+                            return item
+                        }
+                    })
                 } else {
                     this.getAllShop()
                 }
@@ -348,13 +357,18 @@
             },
             choseType (type) {
                 console.log(type)
+                this.typeContent = type
                 if (type.length === 0){
-                    this.shopList = this.checkList.filter((item) => {
-                        item.status = true
-                        return item
-                    })
+                    // this.shopList = this.allShopList.filter((item) => {
+                    //     item.status = true
+                    //     return item
+                    // })
+                    this.getAllShop()
                 } else {
-                    this.shopList = this.checkList.filter((item,index) => {
+                    if (this.filterCondition.trim() !== '') {
+                        this.allShopList = this.filterDataList(this.allShopList)
+                    }
+                    this.checkList = this.allShopList.filter((item,index) => {
                         if (type.includes(item.businessTypeName)){
                             item.status = true
                         } else if(!type.includes(item.businessTypeName)){
@@ -363,6 +377,15 @@
                         return item.status === true
                     })
                 }
+                let date = new Date().getTime()
+                let obj = {totalNum: this.checkList.length}
+                obj[date] = new Date().getTime()
+                this.$store.commit('TOTAL_NUM', obj)
+                this.shopList = this.checkList.filter((item,index) =>{
+                    if(index <(this.getCurrentNum*35)&& index>(this.getCurrentNum-1)*35-1){
+                        return item
+                    }
+                })
             },
             selectedAll (state) {
                 console.log(state, 'opopopopop')
@@ -548,6 +571,9 @@
                     if (this.filterCondition.trim() !== '') {
                         this.allShopList = this.filterDataList(this.allShopList)
                     }
+                    if (this.typeContent.length > 0) {
+                        this.allShopList = this.filterTypeList(this.allShopList)
+                    }
                     let date = new Date().getTime()
                     let obj = {totalNum: this.allShopList.length}
                     obj[date] = new Date().getTime()
@@ -566,6 +592,18 @@
                     console.log(err)
                     this.isShowLoading = false
                 })
+            },
+            filterTypeList (list) {
+                let type = this.typeContent
+                list = list.filter((item,index) => {
+                    if (type.includes(item.businessTypeName)){
+                        item.status = true
+                    } else if(!type.includes(item.businessTypeName)){
+                        item.status = false
+                    }
+                    return item.status === true
+                })
+                return list
             },
             filterDataList (list) {
                 list = list.filter(item => {

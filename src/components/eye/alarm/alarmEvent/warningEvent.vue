@@ -108,6 +108,7 @@
     import Header from './alarmEventHeader'
     import AlarmDetail from './alarmEventDialog'
     import {mapGetters,mapMutations} from 'vuex'
+    import _ from 'lodash'
     // import moment from 'moment'
     export default {
         data(){
@@ -155,7 +156,7 @@
                 console.log(info, '这是要过滤的')
                 this.filterCondition = info
                 if (info.trim() !== '') {
-                    this.warningEventList = this.allWarningEventList.filter(item => {
+                    let checkList = this.allWarningEventList.filter(item => {
                         if (item.serialNum.includes(info)) {
                             return item
                         }
@@ -165,23 +166,28 @@
                         if(item.status.name.includes(info)){
                             return item
                         }
-                        if(item.owner.name.includes(info)){
+                        if(item.owner &&item.owner.name&& item.owner.name.includes(info)){
                             return item
                         }
-                        if(item.owner.mobileNum.includes(info)){
+                        if(item.owner &&item.owner.mobileNum&& item.owner.mobileNum.includes(info)){
                             return item
                         }
                         if(item.rule.alarmTypeName.includes(info)){
                             return item
                         }
-                        if(item.device.name.includes(info)){
+                        if(item.device &&item.device.name&& item.device.name.includes(info)){
                             return item
                         }
                     })
                     let date = new Date().getTime()
-                    let obj = {totalNum: this.warningEventList.length}
+                    let obj = {totalNum: checkList.length}
                     obj[date] = new Date().getTime()
                     this.$store.commit('TOTAL_NUM', obj)
+                    this.warningEventList = checkList.filter((item,index) => {
+                        if (index < (this.getCurrentNum * 35 ) && index > ((this.getCurrentNum -1) * 35 ) - 1 ) {
+                            return item
+                        }
+                    })
                 } else {
                     this.getAllAlarmEvent()
                 }
@@ -468,7 +474,7 @@
                     if(item.status.name.includes(this.filterCondition)){
                         return item
                     }
-                    if(item.owner.name.includes(this.filterCondition)){
+                    if(item.owner && item.owner.name && item.owner.name.includes(this.filterCondition)){
                         return item
                     }
                     if(item.owner.mobileNum.includes(this.filterCondition)){
@@ -500,7 +506,6 @@
         created () {
             this.initData();
             this.getAllAlarmEvent();
-            console.log(this.personInfo)
         },
         components: {
             ScrollContainer,

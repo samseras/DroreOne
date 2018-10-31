@@ -12,7 +12,7 @@
                 <!--车船-->
                 <div class="personCardContent boatCardContent" v-if="route.includes('boat')">
                     <p class="name wrapstyle">
-                       <span>类&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;型：</span>
+                        <span>类&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;型：</span>
                         <el-select v-model="boatCar.vehicle.type" placeholder="请选择" @change="selectePerson(boatCar.vehicle.type)" :disabled="isDisabled">
                             <el-option label="船只" :value="1"></el-option>
                             <el-option label="车辆" :value="0"></el-option>
@@ -64,7 +64,7 @@
                     <!--目前车船人员不显示，暂时隐藏-->
                     <p class="phoneNum " v-if="false">
                         <span>联系电话：</span>
-                    <!--<p class="phoneNum person-driv" v-if="isDisabled">联系电话：-->
+                        <!--<p class="phoneNum person-driv" v-if="isDisabled">联系电话：-->
                         <el-input type="text"v-model="boatCar.driverPhone" :disabled="isDisabled"></el-input>
                     </p>
                     <p class="phoneNm">
@@ -244,7 +244,7 @@
                         <el-input type="text"v-model="shop.businessBean.name" :disabled="isDisabled" :maxlength="50"></el-input>
                     </p>
                     <p class="type wrapstyle selectstyle" v-if="isDisabled">
-                       <span>状&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;态：</span>
+                        <span>状&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;态：</span>
                         <el-select v-model="shop.businessBean.state" placeholder="请选择" :disabled="isDisabled">
                             <el-option label="充裕" value="充裕"></el-option>
                             <el-option label="已满" value="已满"></el-option>
@@ -388,7 +388,7 @@
                 <!--路网-->
                 <div class="personCardContent boatCardContent" v-if="route.includes('roat')">
                     <p class="sex">
-                       <span>路线名称：</span>
+                        <span>路线名称：</span>
                         <el-input type="text"v-model="roat.name" :disabled="isDisabled" :maxlength="50"></el-input>
                     </p>
                     <p class="phoneNum">
@@ -705,7 +705,7 @@
                 scenic: {
                     scenicspotBean: {
                         capacity: '',
-                       /* currentNum: '',*/
+                        /* currentNum: '',*/
                         name: '',
                     },
                     regionId: '',
@@ -826,7 +826,7 @@
                 this.$store.commit('TRANSPORT_TYPE', val)
             },
             ad () {
-              console.log(9999999999)
+                console.log(9999999999)
             },
             ...mapMutations(['LOCATION_ID']),
             imgError (e) {
@@ -969,8 +969,8 @@
                     if(!(newInfo.vehicle.hasOwnProperty("type") && integerreg.test(newInfo.vehicle.type)) ||
                         !(newInfo.vehicle.serialNum && newInfo.vehicle.serialNum.trim() !== '')   //编号改为名称
 //                        !(newInfo.vehicle.hasOwnProperty("maintenanceStatus") && integerreg.test(newInfo.vehicle.maintenanceStatus)) ||
-                       /* !(newInfo.vehicle.maintenanceDate && newInfo.vehicle.maintenanceDate !== '') ||*/
-                        //!(newInfo.driverId  && newInfo.driverId !== '') ||   //驾驶员信息
+                    /* !(newInfo.vehicle.maintenanceDate && newInfo.vehicle.maintenanceDate !== '') ||*/
+                    //!(newInfo.driverId  && newInfo.driverId !== '') ||   //驾驶员信息
 //                        !(newInfo.vehicle.model && newInfo.vehicle.model.trim() !== '')
                     ){
 
@@ -1058,7 +1058,7 @@
                     newInfo = this.area;
                     if(!(newInfo.name && newInfo.name.trim() !== '') ||
                         !(newInfo.location && newInfo.location !== '')
-                        // !(newInfo.placeScenic && newInfo.placeScenic !== '') ||
+                    // !(newInfo.placeScenic && newInfo.placeScenic !== '') ||
                     ){
 
                         this.$message.error('请输入完整信息')
@@ -1820,8 +1820,8 @@
                         }
                     }
                     i {
-                       display: inline-block;
-                       font-size: rem(16);
+                        display: inline-block;
+                        font-size: rem(16);
                         vertical-align: middle;
                         cursor: pointer;
                         margin-left:1rem

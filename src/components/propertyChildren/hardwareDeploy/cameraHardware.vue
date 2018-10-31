@@ -162,7 +162,8 @@
                     close:[],
                     open:[]
                 },
-                filterCondition: ''
+                filterCondition: '',
+                typeContent: []
             }
         },
         methods:{
@@ -217,7 +218,10 @@
                 console.log(info, '这是要过滤的')
                 this.filterCondition = info
                 if (info.trim() !== '') {
-                    this.cameraList = this.allCameraList.filter(item => {
+                    if (this.typeContent.length > 0) {
+                        this.allCameraList = this.filterTypeList(this.allCameraList)
+                    }
+                    this.checkList = this.allCameraList.filter(item => {
                         if (item.name.includes(info)) {
                             return item
                         }
@@ -235,9 +239,14 @@
                         }
                     })
                     let date = new Date().getTime()
-                    let obj = {totalNum: this.cameraList.length}
+                    let obj = {totalNum: this.checkList.length}
                     obj[date] = new Date().getTime()
                     this.$store.commit('TOTAL_NUM', obj)
+                    this.cameraList = this.checkList.filter((item,index) => {
+                        if (index < (this.getCurrentNum * 35 ) && index > ((this.getCurrentNum -1) * 35 ) - 1 ) {
+                            return item
+                        }
+                    })
                 } else {
                     this.getAllCamera()
                 }
@@ -430,13 +439,14 @@
             },
             choseType(type){
                 console.log(type)
+                this.typeContent = type
                 if(type.length===0){
-                    this.cameraList=this.checkList.filter((item)=>{
-                        item.statu=true
-                        return item
-                    })
+                    this.getAllCamera()
                 }else{
-                    this.cameraList=this.checkList.filter((item,index)=>{
+                    if (this.filterCondition.trim() !== '') {
+                        this.allCameraList = this.filterDataList(this.allCameraList)
+                    }
+                    this.checkList = this.allCameraList.filter((item,index)=>{
                         if(item.cameraType == 0){
                             item.type = '球机'
                         }else {
@@ -451,6 +461,15 @@
                         return item.statu === true
                     })
                 }
+                let date = new Date().getTime()
+                let obj = {totalNum: this.checkList.length}
+                obj[date] = new Date().getTime()
+                this.$store.commit('TOTAL_NUM', obj)
+                this.cameraList = this.checkList.filter((item,index) => {
+                    if (index < (this.getCurrentNum * 35 ) && index > ((this.getCurrentNum -1) * 35 ) - 1 ) {
+                        return item
+                    }
+                })
             },
             selectedAll(state){
                 this.cameraList=this.cameraList.filter((item)=>{
@@ -517,6 +536,9 @@
                     if (this.filterCondition.trim() !== '') {
                         this.allCameraList = this.filterDataList(this.allCameraList)
                     }
+                    if (this.typeContent.length > 0) {
+                        this.allCameraList = this.filterTypeList(this.allCameraList)
+                    }
                     let date = new Date().getTime()
                     let obj = {totalNum: this.allCameraList.length}
                     obj[date] = new Date().getTime()
@@ -533,6 +555,24 @@
                 }).catch((err)=> {
                     console.log(err)
                 })
+            },
+            filterTypeList (list) {
+                let type = this.typeContent
+                list = list.filter((item,index) => {
+                    if(item.cameraType == 0){
+                        item.type = '球机'
+                    }else {
+                        item.type = '枪机'
+                    }
+                    if(type.includes(item.type)){
+                        item.statu=true
+                    }else{
+                        item.statu=false
+                        console.log(item.type)
+                    }
+                    return item.status === true
+                })
+                return list
             },
             filterDataList (list) {
                 list = list.filter(item => {

@@ -141,7 +141,8 @@
                     close:[],
                     open:[]
                 },
-                filterCondition: ''
+                filterCondition: '',
+                typeContent: []
 
             }
         },
@@ -186,15 +187,23 @@
                 console.log(info, '这是要过滤的')
                 this.filterCondition = info
                 if (info.trim() !== '') {
-                    this.indicatorList = this.allIndicatorList.filter(item => {
+                    if (this.typeContent.length > 0) {
+                        this.allIndicatorList = this.filterTypeList(this.allIndicatorList)
+                    }
+                    let checkList = this.allIndicatorList.filter(item => {
                         if (item.regionName && item.regionName.includes(info)) {
                             return item
                         }
                     })
                     let date = new Date().getTime()
-                    let obj = {totalNum: this.indicatorList.length}
+                    let obj = {totalNum: checkList.length}
                     obj[date] = new Date().getTime()
                     this.$store.commit('TOTAL_NUM', obj)
+                    this.indicatorList = checkList.filter((item,index) =>{
+                        if(index < (this.getCurrentNum*35)&& index>(this.getCurrentNum-1)*35 -1){
+                            return item
+                        }
+                    })
                 } else {
                     this.getAllIndicator()
                 }
@@ -297,13 +306,14 @@
             },
             choseType (type) {
                 console.log(type)
+                this.typeContent = type
                 if (type.length === 0){
-                    this.indicatorList = this.checkList.filter((item) => {
-                        item.status = true
-                        return item.status === true
-                    })
+                    this.getAllIndicator()
                 } else {
-                    this.indicatorList = this.checkList.filter((item,index) => {
+                    if (this.filterCondition.trim() !== '') {
+                        this.allIndicatorList = this.filterDataList(this.allIndicatorList)
+                    }
+                    this.checkList = this.allIndicatorList.filter((item,index) => {
                         if (item.signboardBean.type == 0){
                             item.type = '标语'
                         } else if (item.signboardBean.type == 1){
@@ -315,12 +325,19 @@
                             item.status = true
                         } else if(!type.includes(item.type)){
                             item.status = false
-                            console.log(item.type, 'p[p[p[');
                         }
                         return item.status === true
                     })
                 }
-                console.log(this.indicatorList);
+                let date = new Date().getTime()
+                let obj = {totalNum: this.checkList.length}
+                obj[date] = new Date().getTime()
+                this.$store.commit('TOTAL_NUM', obj)
+                this.indicatorList = this.checkList.filter((item,index) => {
+                    if (index < (this.getCurrentNum * 35 ) && index > ((this.getCurrentNum -1) * 35 ) - 1 ) {
+                        return item
+                    }
+                })
             },
             selectedAll (state) {
                 this.indicatorList = this.indicatorList.filter((item) => {
@@ -470,6 +487,9 @@
                     if (this.filterCondition.trim() !== '') {
                         this.allIndicatorList = this.filterDataList(this.allIndicatorList)
                     }
+                    if (this.typeContent.length > 0) {
+                        this.allIndicatorList = this.filterTypeList(this.allIndicatorList)
+                    }
                     let date = new Date().getTime()
                     let obj = {totalNum: this.allIndicatorList.length}
                     obj[date] = new Date().getTime()
@@ -488,6 +508,25 @@
                     console.log(err)
                     this.isShowLoading = false
                 })
+            },
+            filterTypeList (list) {
+                let type = this.typeContent
+                list = list.filter((item,index) => {
+                    if (item.signboardBean.type == 0){
+                        item.type = '标语'
+                    } else if (item.signboardBean.type == 1){
+                        item.type = '路线'
+                    } else{
+                        item.type = '设施'
+                    }
+                    if (type.includes(item.type)){
+                        item.status = true
+                    } else if(!type.includes(item.type)){
+                        item.status = false
+                    }
+                    return item.status === true
+                })
+                return list
             },
             filterDataList (list) {
                 list = list.filter(item => {
