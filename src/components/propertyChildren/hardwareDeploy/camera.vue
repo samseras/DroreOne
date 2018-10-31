@@ -32,10 +32,10 @@
                 <el-checkbox v-for="item in cameraList" :label="item.type" :key="item.type"></el-checkbox>
             </el-checkbox-group>
         </div>
-         <div class="titleCheck" v-if="route.includes('led')" >
-                <el-checkbox-group v-model="filterList" @change="choseType">
-                    <el-checkbox v-for="item in cameraList" :label="item.type" :key="item.type"></el-checkbox>
-                </el-checkbox-group>
+        <div class="titleCheck" v-if="route.includes('led')" >
+            <el-checkbox-group v-model="filterList" @change="choseType">
+                <el-checkbox v-for="item in cameraList" :label="item.type" :key="item.type"></el-checkbox>
+            </el-checkbox-group>
         </div>
         <div class="titleCheck" v-if="route.includes('wifi')" >
             <el-checkbox-group v-model="filterList" @change="choseType">
@@ -548,10 +548,10 @@
             margin-right: rem(2);
         }
         .importFile{
-             width: 0;
-             height: 0;
-             display: none;
-         }
+            width: 0;
+            height: 0;
+            display: none;
+        }
     }
 </style>
 
@@ -588,7 +588,7 @@
                 }
             }
             .el-button .selectedAll{
-               padding-bottom:rem(0);
+                padding-bottom:rem(0);
             }
             .el-button{
                 padding:rem(5) rem(5);

@@ -1,22 +1,20 @@
 <template>
-    <div class="parkDeploy">
+    <div class="punchDeploy">
         <div class="title">
-            停车场信息
+            打卡处信息
         </div>
         <div class="personContent">
             <div class="funcTitle">
                 <Header @addNewInfo = "addNewInfo"
                         @deletInfo = "deletInfo"
                         @toggleList = "toggleList"
-                        @choseType = 'choseType'
                         @selectedAll = 'selectedAll'
                         @fixedInfo = 'fixedInfo'
                         :choseId="choseInfoId"
                         :personListFlag="selectFlag"
                         @allDotInfo = 'allDotInfo'
                         @searchAnything="searchAnything"
-                        @getAllPark="getAllPark">
-
+                        @getAllPunch="getAllPunch">
                 </Header>
             </div>
             <div class="personList" v-loading="isShowLoading">
@@ -24,7 +22,7 @@
                     <el-table
                         v-if="!isShowParkCard && !show"
                         ref="multipleTable"
-                        :data="parkList"
+                        :data="punchList"
                         tooltip-effect="dark"
                         style="width: 100%"
                         @selection-change="handleSelectionChange">
@@ -36,37 +34,18 @@
                             </template>
                         </el-table-column>
                         <el-table-column
-                            prop="parkingBean.name"
+                            prop="name"
                             label="名称"
                             width="150">
                         </el-table-column>
                         <el-table-column
-                            width="140"
-                            label="类型">
-                            <template slot-scope="scope">
-                                <span>{{scope.row.parkingBean.type | typeFilter}}</span>
-                            </template>
+                            prop="cardNumber"
+                            label="卡号"
+                            width="150">
                         </el-table-column>
-                        <el-table-column
-                            width="140"
-                            prop="parkingBean.state"
-                            label="状态">
-                        </el-table-column>
-
-                        <!--<el-table-column
-                            width="100"
-                            prop="parkingBean.surplusNum"
-                            label="空余车位">
-                        </el-table-column>
-                        <el-table-column
-                            width="100"
-                            prop="parkingBean.capacity"
-                            label="车位总数">
-                        </el-table-column>-->
-
                         <el-table-column
                             prop="location"
-                            width="700"
+                            width="400"
                             label="位置">
                         </el-table-column>
                         <el-table-column
@@ -75,10 +54,22 @@
                             label="所属片区">
                         </el-table-column>
                         <el-table-column
+                            label="描述">
+                            <template slot-scope="scope">
+                                <div class="box" v-if="scope.row.description">
+                                    <div class="bottom">
+                                        <el-tooltip class="item" effect="light" :content=scope.row.description placement="bottom">
+                                            <el-button>{{scope.row.description}}</el-button>
+                                        </el-tooltip>
+                                    </div>
+                                </div>
+                            </template>
+                        </el-table-column>
+                        <el-table-column
                             label="操作">
                             <template slot-scope="scope">
                                 <div class="handle">
-                                    <span @click="showParkDetail(scope.row, '停车场信息',true)">查看</span>
+                                    <span @click="showPunchDetail(scope.row, '打卡处信息',true)">查看</span>
                                     <span class="line">|</span>
                                     <span @click="fixedInfo(scope.row.id )">修改</span>
                                     <span class="line">|</span>
@@ -87,23 +78,21 @@
                             </template>
                         </el-table-column>
                     </el-table>
-                    <div class="personInfo" v-for="item in parkList" v-if="isShowParkCard && item.status">
+                    <div class="personInfo" v-for="item in punchList" v-if="isShowParkCard && item.status">
                         <div class="checkBox">
                             <el-checkbox v-model="item.checked" @change="checked(item.id)" class="checkBtn"></el-checkbox>
                         </div>
-                        <div class="personType" @click.stop="showParkDetail(item, '停车场信息',true)">
-                            <!--<img src="../../../../static/img/parkCard.png" alt="">-->
-                            <img :src="getUrl(item.picturePath)" alt="" @error="imgError">
+                        <div class="personType" @click.stop="showPunchDetail(item, '打卡处信息',true)">
+                            <!--<img src="../../../../static/img/station_deploy.png" alt="">-->
+                            <img :src="getUrl(item.picturePath,item.type)" alt="" @error="imgError">
                             <span class="type">
-                                  {{item.parkingBean.name}}
-                                </span>
+                                  {{item.name}}
+                            </span>
                         </div>
                         <div class="specificInfo">
                             <p class="name">所属区域：<span>{{item.regionName}}</span></p>
-                            <p class="sex">状&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;态：<span>{{item.parkingBean.state}}</span></p>
-                            <p class="sex text">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：<span>{{item.parkingBean.description}}</span></p>
-                            <!-- <p class="idNum">空余车位：<span>{{item.parkingBean.surplusNum}}</span></p>
-                             <p class="phoneNum">车位总数：<span>{{item.parkingBean.capacity}}</span></p>-->
+                            <p class="idNum">站点容量：<span>{{item.capacity}}</span></p>
+                            <p class="sex text">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：<span>{{item.description}}</span></p>
                         </div>
                     </div>
                     <div class="tip" v-if="show">
@@ -112,12 +101,12 @@
                 </ScrollContainer>
                 <PersonDetail v-if="visible"
                               :visible="visible"
-                              :Info="parkInfo"
+                              :Info="punchInfo"
                               :isDisabled="isDisabled"
                               :title="title"
                               @closeInfoDialog ="closeDialog"
                               @fixInfo = "fixInfo"
-                              @addNewInfo="addNewPark">
+                              @addNewInfo="addNewPunch">
                 </PersonDetail>
                 <allDotMap v-if="allDotvisible"
                            :visible="allDotvisible"
@@ -141,18 +130,18 @@
     import _ from 'lodash'
     import {mapGetters,mapMutations} from 'vuex'
     export default {
-        name: "park-deploy",
+        name: "station-deploy",
         data(){
             return{
-                allParkList: [],
+                allpunchList: [],
                 selectFlag:false,
                 tempSelects:[],
                 isShowParkCard: true,
                 checkList: [],
                 filterList: [],
-                parkList: [],
+                punchList: [],
                 visible: false,
-                parkInfo: {},
+                punchInfo: {},
                 choseInfoId: [],
                 choseList: [],
                 isDisabled: true,
@@ -173,14 +162,24 @@
         methods: {
             ...mapMutations(['TOTAL_NUM', 'CURRENT_NUM']),
             imgError (e) {
-                e.target.src = this.getUrl(null);
+                e.target.src = this.getUrl(null,0);
             },
-            getUrl (url) {
-                if (url === null) {
-                    return '../../../../static/img/parkCard.png'
+            getUrl (url,type) {
+                console.log(type,'这是type')
+                if (url === null || !url) {
+                    if(type == 1){
+                        return  '../../../../static/img/landingCard.png'
+                    }else{
+                            return '../../ ../../static/img/stationCard.png'
+                    }
                 } else {
                     return url
                 }
+            },
+            closeDialog () {
+                this.visible = false
+                this.allDotvisible=false
+                this.getAllPunch()
             },
             iconListfixInfo(infoList){
                 infoList.forEach(obj=>{
@@ -191,58 +190,54 @@
             async iconfixInfo(info,index){
                 let scenicObj = {
                     description:info.description,
-                    id: info.parkingBean.id,
-                    name: info.parkingBean.name,
-                    type: info.parkingBean.type,
+                    id: info.id,
+                    name: info.name,
+                    type:info.type,
+                    capacity: info.capacity,
                     regionId: info.regionId,
                     latitude: index[1],
                     longitude: index[0],
                     pictureId:info.pictureId
                 }
-                await api.park.updatePark(JSON.stringify(scenicObj)).then(res => {
+                await api.station.updateStation(JSON.stringify(scenicObj)).then(res => {
                     console.log('修改成功')
                 })
             },
-            closeDialog () {
-                this.visible = false
-                this.allDotvisible=false
-                this.getAllPark()
-            },
             searchAnything (info) {
-                console.log(info, '这是要过滤的')
                 this.filterCondition = info
                 if (info.trim() !== '') {
-                    this.parkList = this.allParkList.filter(item => {
-                        if ((item.regionName)&&(item.regionName.includes(info))) {
+                    this.punchList = this.allpunchList.filter(item => {
+                        if (item.regionName && item.regionName.includes(info)) {
                             return item
                         }
-                        if (item.parkingBean.name.includes(info)) {
+                        if (item.name.includes(info)) {
                             return item
                         }
                     })
                     let date = new Date().getTime()
-                    let obj = {totalNum: this.parkList.length}
+                    let obj = {totalNum: this.punchList.length}
                     obj[date] = new Date().getTime()
                     this.$store.commit('TOTAL_NUM', obj)
                 } else {
-                    this.getAllPark()
+                    this.getAllPunch()
                 }
             },
             handleSelectionChange(val) {
                 this.multipleSelection = val;
             },
-            showParkDetail (info, title,state) {
-                this.parkInfo = info
+            showPunchDetail (info, title,state) {
+                this.punchInfo = info
                 this.visible = true
                 this.isDisabled = state
                 this.title = title
             },
             allDotInfo(){
                 this.allDotvisible = true
-                this.title = '停车场批量打点'
+                this.title = '站点批量打点'
+                // console.log(this.allDotvisible,this.allDotList, this.title)
             },
             addNewInfo () {
-                this.showParkDetail({parkingBean:{}},'添加停车场信息',false)
+                this.showPunchDetail({},'添加打卡处信息',false)
                 this.isDisabled = false
             },
             deletInfo (id) {
@@ -255,20 +250,11 @@
                         cancelButtonText: '取消',
                         type: 'warning'
                     }).then(() => {
-                        api.park.deletePark(this.choseInfoId).then(res => {
+                        api.station.deleteStation(this.choseInfoId).then(res => {
                             console.log(res, '删除成功')
                             this.$message.success('删除成功')
-                            // for (let i = 0; i < this.choseInfoId.length; i++) {
-                            //     this.parkList = this.parkList.filter((item, index) => {
-                            //         if (item.id === this.parkList[i]){
-                            //             this.parkList[index].checked = false
-                            //         }
-                            //         return item.id !== this.choseInfoId[i]
-                            //     })
-                            // }
-                            this.getAllPark()
                             this.choseInfoId = []
-                            this.getAllPark()
+                            this.getAllPunch()
                         }).catch(err => {
                             console.log(err)
                             this.$message.error('删除失败，请稍后重试')
@@ -278,7 +264,7 @@
                         this.$message.info('取消删除')
                     })
                 } else {
-                    this.$message.error('请选择要删除的停车场数据')
+                    this.$message.error('请选择要删除的站点数据')
                 }
 
             },
@@ -291,7 +277,7 @@
             },
             checked (id) {
                 this.tempSelects=[];
-                this.parkList = this.parkList.filter(item => {
+                this.punchList = this.punchList.filter(item => {
                     if (item.id === id) {
                         item.checked = item.checked
                     }
@@ -305,44 +291,19 @@
                     this.choseInfoId.push(id)
                 }
                 let that=this;
-                this.parkList.forEach(function(item,i){
+                this.punchList.forEach(function(item,i){
                     (item.checked)&&(that.tempSelects.push(item))
                 })
                 console.log(this.tempSelects)
-                if(this.tempSelects.length===this.parkList.length){
+                if(this.tempSelects.length === this.punchList.length){
                     this.selectFlag=true
                 }else{
                     this.selectFlag=false
                 }
             },
-            choseType (type) {
-                console.log(type)
-                if (type.length === 0){
-                    this.parkList = this.checkList.filter((item) => {
-                        item.status = true
-                        return item
-                    })
-                } else {
-                    this.parkList = this.checkList.filter((item,index) => {
-                        if (item.parkingBean.type === 0) {
-                            item.type = '室外'
-                        } else{
-                            item.type = '室内'
-                        }
-                        if (type.includes(item.type)){
-                            item.status = true
-                        } else if(!type.includes(item.type)){
-                            item.status = false
-                        }
-                        return item.status === true
-                    })
-                    console.log(this.parkList)
-                    console.log(this.isShowParkCard)
-                }
-            },
             selectedAll (state) {
                 console.log(state, 'opopopopop')
-                this.parkList = this.parkList.filter((item) => {
+                this.punchList = this.punchList.filter((item) => {
                     if (state === true) {
                         item.checked = true
                         this.choseInfoId.push(item.id)
@@ -361,12 +322,12 @@
                 let index = info.location.includes(',')?info.location.indexOf(','):info.location.indexOf('，')
                 let longitude = info.location.substring(0, index)
                 let latitude = info.location.substring(index + 1)
-                let parkObj = {
+                let stationObj = {
                     description:info.description,
-                    id: info.parkingBean.id,
-                    name: info.parkingBean.name,
-                    //capacity: info.parkingBean.capacity,
-                    type: info.parkingBean.type,
+                    type:info.type,
+                    id: info.id,
+                    name: info.name,
+                    capacity: info.capacity,
                     regionId: info.regionId,
                     latitude: latitude,
                     longitude: longitude
@@ -374,34 +335,34 @@
                 if (info.imgUrl !== '') {
                     await api.person.updataAva(info.imgUrl).then(res => {
                         console.log(res, '上传成功')
-                        parkObj.pictureId = res.id
+                        stationObj.pictureId = res.id
                     }).catch(err => {
                         console.log(err, '上传失败')
                         this.$message.error('上传失败，其请稍后重试')
                         return
                     })
                 } else {
-                    parkObj.pictureId = info.pictureId
+                    stationObj.pictureId = info.pictureId
                 }
-                await api.park.updatePark(JSON.stringify(parkObj)).then(res => {
+                await api.station.updateStation(JSON.stringify(stationObj)).then(res => {
                     this.closeDialog()
-                    console.log(res, '修改停车场成功')
+                    console.log(res, '修改站点成功')
                     this.$message.success('修改成功')
                     this.choseInfoId = []
-                    this.getAllPark()
+                    this.getAllPunch()
                 }).catch(err => {
                     this.$message.error('修改失败，请稍后重试')
                 })
             },
-            async addNewPark (info) {
+            async addNewPunch (info) {
                 let index = info.location.includes(',')?info.location.indexOf(','):info.location.indexOf('，')
                 let longitude = info.location.substring(0, index)
                 let latitude = info.location.substring(index + 1)
-                let parkObj = {
+                let stationObj = {
+                    type:info.type,
                     description:info.description,
-                    name: info.parkingBean.name,
-                    //capacity: info.parkingBean.capacity,
-                    type: info.parkingBean.type,
+                    name: info.name,
+                    capacity: info.capacity,
                     regionId: info.regionId,
                     latitude: latitude,
                     longitude: longitude
@@ -409,18 +370,18 @@
                 if (info.imgUrl !== '') {
                     await api.person.updataAva(info.imgUrl).then(res => {
                         console.log(res, '上传成功')
-                        parkObj.pictureId = res.id
+                        stationObj.pictureId = res.id
                     }).catch(err => {
                         console.log(err, '上传失败')
                         this.$message.error('上传失败，其请稍后重试')
                         return
                     })
                 }
-                await api.park.createPark(JSON.stringify(parkObj)).then(res => {
+                await api.station.createStation(JSON.stringify(stationObj)).then(res => {
                     this.closeDialog()
-                    console.log(res, '创建停车场成功')
+                    console.log(res, '创建站点成功')
                     this.$message.success('创建成功')
-                    this.getAllPark()
+                    this.getAllPunch()
                 }).catch(err => {
                     this.$message.error('创建失败，请稍后重试')
                 })
@@ -434,21 +395,42 @@
                     return
                 }
                 if (this.choseInfoId.length > 0) {
-                    this.parkList.map((item) => {
+                    this.punchList.map((item) => {
                         if (item.id === this.choseInfoId[0]){
-                            this.parkInfo = item
+                            this.punchInfo = item
                         }
                     })
-                    this.showParkDetail(this.parkInfo, '修改停车场信息',false)
+                    this.showPunchDetail(this.punchInfo, '修改打卡处信息',false)
                     this.isDisabled = false
                     //this.choseInfoId = []
                 } else {
                     this.$message.error('请选择一条数据')
                 }
             },
-            async getAllPark () {
+
+            async getAllPunch () {
                 this.isShowLoading = true
-                await api.park.getAllPark().then(res => {
+                await api.punch.getAllPunch().then(res => {
+
+//                    re = [
+//                        {
+//                            "id": "1",
+//                            "createTime": null,
+//                            "creator": null,
+//                            "modifyTime": null,
+//                            "modifier": null,
+//                            "name": "啦啦",
+//                            "cardNumber": "123456",
+//                            "description": null,
+//                            "scenicAreaId": null,
+//                            "regionId": null,
+//                            "regionName": null,
+//                            "longitude": null,
+//                            "latitude": null,
+//                            "epsg": 4326,
+//                            "deleted": false
+//                        }
+//                    ]
                     console.log(res, '这是数据')
                     if(res.length === 0){
                         this.show = true
@@ -456,64 +438,54 @@
                         this.show =false
                     }
                     this.isShowLoading = false
-                    this.allParkList = res
+                    this.allpunchList = res
+
 
                     this.allDotList.close=[]
                     this.allDotList.open=[]
-                    for (let i = 0; i < res.length; i++) {
-                        res[i].id = res[i].parkingBean.id
-                        res[i].iconName = res[i].parkingBean.name
-                        res[i].iconSubtype = 'park'
-                        res[i].iconUrl = '/static/img/icon/park.png'
-                        res[i].iconType = '停车场'
-                        if(res[i].longitude==null&&res[i].latitude==null){
-                            this.allDotList.close.push(res[i])
-                        }else {
-                            this.allDotList.open.push(res[i])
-                        }
+//                    for (let i = 0; i < res.length; i++) {
+//                        res[i].id = res[i].id
+//                        res[i].iconName = res[i].name
+//                        if(res[i].type == "0"){
+//                            //假数据
+//                            res[i].iconType == "transport"
+//                            res[i].iconSubtype = "car"
+//                            res[i].iconUrl="/static/img/icon/station_check.png"
+//                        }else{
+//                            //假数据
+//                            res[i].iconType == "transport"
+//                            res[i].iconSubtype = "boat"
+//                            res[i].iconUrl="/static/img/icon/landing_check.png"
+//                        }
+//                        if(res[i].longitude==null&&res[i].latitude==null){
+//                            this.allDotList.close.push(res[i])
+//                        }else {
+//                            this.allDotList.open.push(res[i])
+//                        }
+//                    }
+                    for (let i = 0; i < this.allpunchList.length; i++) {
+                        this.allpunchList[i].checked = false
+                        this.allpunchList[i].status = true
+                        this.allpunchList[i].location = `${this.allpunchList[i].longitude},${this.allpunchList[i].latitude}`
+                        this.allpunchList[i].modifyTime=this.allpunchList[i].modifyTime.replace("-","/")
+                        this.allpunchList[i].byTime = -(new Date(this.allpunchList[i].modifyTime)).getTime()
                     }
-
-                    for (let i = 0; i < this.allParkList.length; i++) {
-                        this.allParkList[i].checked = false
-                        this.allParkList[i].status = true
-                        this.allParkList[i].id = this.allParkList[i].parkingBean.id
-                        this.allParkList[i].description = this.allParkList[i].parkingBean.description
-                        this.allParkList[i].parkingBean.currentNum = this.currentNum
-                        this.allParkList[i].parkingBean.surplusNum = this.allParkList[i].parkingBean.capacity - this.allParkList[i].parkingBean.currentNum
-                        this.allParkList[i].location = `${this.allParkList[i].longitude},${this.allParkList[i].latitude}`
-                        if (this.allParkList[i].parkingBean.capacity == 0 ){
-                            this.allParkList[i].parkingBean.state = '已满'
-                        } else {
-                            let parcent = this.allParkList[i].parkingBean.currentNum/this.allParkList[i].parkingBean.capacity
-                            if (parcent < .5){
-                                this.allParkList[i].parkingBean.state = '充裕'
-                            } else if (parcent < .9){
-                                this.allParkList[i].parkingBean.state = '紧张'
-                            } else {
-                                this.allParkList[i].parkingBean.state = '已满'
-                            }
-                        }
-                        this.allParkList[i].parkingBean.modifyTime=this.allParkList[i].parkingBean.modifyTime.replace("-","/")
-                        this.allParkList[i].byTime = -(new Date(this.allParkList[i].parkingBean.modifyTime)).getTime()
-                    }
-                    this.allParkList = _.sortBy(this.allParkList, 'byTime')
+                    this.allpunchList = _.sortBy(this.allpunchList, 'byTime')
                     if (this.filterCondition.trim() !== '') {
-                        this.allParkList = this.filterDataList(this.allParkList)
+                        this.allpunchList = this.filterDataList(this.allpunchList)
                     }
                     let date = new Date().getTime()
-                    let obj = {totalNum: this.allParkList.length}
+                    let obj = {totalNum: this.allpunchList.length}
                     obj[date] = new Date().getTime()
                     this.$store.commit('TOTAL_NUM', obj)
-                    this.parkList = this.allParkList.filter((item,index) =>{
+                    this.punchList = this.allpunchList.filter((item,index) =>{
                         if(index <(this.getCurrentNum*35) && index>(this.getCurrentNum-1)*35-1){
                             return item
                         }
                     })
-                    this.checkList = this.parkList
+                    this.checkList = this.punchList
                     this.choseInfoId = []
-
                     this.selectFlag=false
-
                 }).catch(err => {
                     console.log(err)
                     this.isShowLoading = false
@@ -524,7 +496,13 @@
                     if ((item.regionName)&&(item.regionName.includes(this.filterCondition))) {
                         return item
                     }
-                    if (item.parkingBean.name.includes(this.filterCondition)) {
+                    if (item.plant.name.includes(this.filterCondition)) {
+                        return item
+                    }
+                    if (item.regionName && item.regionName.includes(this.filterCondition)) {
+                        return item
+                    }
+                    if (item.name.includes(this.filterCondition)) {
                         return item
                     }
                 })
@@ -532,7 +510,7 @@
             }
         },
         created () {
-            this.getAllPark()
+            this.getAllPunch()
         },
         filters: {
             typeFilter (item) {
@@ -551,7 +529,7 @@
         },
         watch: {
             getCurrentNum () {
-                this.getAllPark()
+                this.getAllPunch()
             }
         },
         computed: {
@@ -561,22 +539,28 @@
 </script>
 
 <style lang="scss" type="text/scss">
-    .parkDeploy {
+    .punchDeploy {
         .el-checkbox__input{
             vertical-align: top;
         }
     }
-    .parkDeploy {
+    .punchDeploy {
         .el-table__header-wrapper .has-gutter {
             background-color: #f3f3f3;
         }
         .el-table th, .el-table tr{
             background-color: transparent !important;
         }
+         .box .el-tooltip{
+            background: transparent;
+            text-align: left;
+            border: none;
+            padding: 0;
+        }
     }
 </style>
 <style lang="scss" scoped type="text/scss">
-    .parkDeploy{
+    .punchDeploy{
         width: 100%;
         height: 100%;
         display: flex;

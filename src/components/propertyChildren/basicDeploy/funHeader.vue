@@ -7,7 +7,7 @@
         <div class="funcBtn">
             <el-button size="mini" plain @click="addNewInfo"><i class="el-icon-circle-plus"></i>添加</el-button>
 
-                <el-checkbox v-model="isSelected" @change="selectedAll" class="selectedAll">全选</el-checkbox>
+            <el-checkbox v-model="isSelected" @change="selectedAll" class="selectedAll">全选</el-checkbox>
 
             <!--<el-button size="mini"plain v-if="isShowHeader">导入</el-button>-->
             <div class="el-upload" v-if="isShowHeader">
@@ -23,9 +23,9 @@
             </div>
         </div>
         <!--<div class="filite" v-if="route.includes('person')">-->
-            <!--<el-checkbox-group v-model="filterList" @change="choseType">-->
-                <!--<el-checkbox v-for="item in personTypeList" :label="item.name"></el-checkbox>-->
-            <!--</el-checkbox-group>-->
+        <!--<el-checkbox-group v-model="filterList" @change="choseType">-->
+        <!--<el-checkbox v-for="item in personTypeList" :label="item.name"></el-checkbox>-->
+        <!--</el-checkbox-group>-->
         <!--</div>-->
         <div class="filite" v-if="route.includes('indicator')">
             <el-checkbox-group v-model="filterList" @change="choseType">
