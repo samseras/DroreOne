@@ -115,6 +115,7 @@
     import api from '@/api'
     import Header from './alarmEventHeader'
     import AlarmDetail from './alarmEventDialog'
+    import _ from 'lodash'
     // import moment from 'moment'
     import {mapGetters,mapMutations} from 'vuex'
     export default {
@@ -166,7 +167,7 @@
                 console.log(info, '这是要过滤的')
                 this.filterCondition = info
                 if (info.trim() !== '') {
-                    this.patrolEventList = this.allPatrolEventList.filter(item => {
+                    let checkList = this.allPatrolEventList.filter(item => {
                         if (item.serialNum.includes(info)) {
                             return item
                         }
@@ -176,7 +177,7 @@
                         if(item.status.name.includes(info)){
                             return item
                         }
-                        if(item.owner && item.owner.name.includes(info)){
+                        if(item.owner && item.owner.name && item.owner.name.includes(info)){
                             return item
                         }
                         if(item.owner && item.owner.mobileNum.includes(info)){
@@ -190,9 +191,14 @@
                         }
                     })
                     let date = new Date().getTime()
-                    let obj = {totalNum: this.patrolEventList.length}
+                    let obj = {totalNum: checkList.length}
                     obj[date] = new Date().getTime()
                     this.$store.commit('TOTAL_NUM', obj)
+                    this.patrolEventList = checkList.filter((item,index) => {
+                        if (index < (this.getCurrentNum *  35) && index > ((this.getCurrentNum -1) * 35 ) - 1 ) {
+                            return item
+                        }
+                    })
                 } else {
                     this.getAllAlarmEvent()
                 }
@@ -504,7 +510,7 @@
                     if(item.status.name.includes(info)){
                         return item
                     }
-                    if(item.owner && item.owner.name.includes(info)){
+                    if(item.owner && item.owner.name && item.owner.name.includes(info)){
                         return item
                     }
                     if(item.owner && item.owner.mobileNum.includes(info)){

@@ -167,7 +167,8 @@
                     close:[],
                     open:[]
                 },
-                filterCondition: ''
+                filterCondition: '',
+                typeContent: []
             }
         },
         methods:{
@@ -222,7 +223,10 @@
                 console.log(info, '这是要过滤的')
                 this.filterCondition = info
                 if (info.trim() !== '') {
-                    this.gateList = this.allGateList.filter(item => {
+                    if (this.typeContent.length > 0) {
+                        this.allGateList = this.filterTypeList(this.allGateList)
+                    }
+                    let checkList = this.allGateList.filter(item => {
                         if (item.ip && item.ip.includes(info)) {
                             return item
                         }
@@ -237,9 +241,14 @@
                         }
                     })
                     let date = new Date().getTime()
-                    let obj = {totalNum: this.gateList.length}
+                    let obj = {totalNum: checkList.length}
                     obj[date] = new Date().getTime()
                     this.$store.commit('TOTAL_NUM', obj)
+                    this.gateList = checkList.filter((item,index) => {
+                        if (index < (this.getCurrentNum * 35 ) && index > ((this.getCurrentNum -1) * 35 ) - 1 ) {
+                            return item
+                        }
+                    })
                 } else {
                     this.getAllGate()
                 }
@@ -427,13 +436,14 @@
             },
             choseType(type){
                 console.log(type)
+                this.typeContent = type
                 if(type.length===0){
-                    this.gateList=this.checkList.filter((item)=>{
-                        item.status=true
-                        return item
-                    })
+                    this.getAllGate()
                 }else{
-                    this.gateList=this.checkList.filter((item,index)=>{
+                    if (this.filterCondition.trim() !== '') {
+                        this.allGateList = this.filterDataList(this.allGateList)
+                    }
+                    this.checkList=this.allGateList.filter((item,index)=>{
                         if(item.gateType == 1){
                             item.type = '翼闸'
                         }else if(item.gateType == 2){
@@ -452,6 +462,15 @@
                         return item.status === true
                     })
                 }
+                let date = new Date().getTime()
+                let obj = {totalNum: this.checkList.length}
+                obj[date] = new Date().getTime()
+                this.$store.commit('TOTAL_NUM', obj)
+                this.gateList = this.checkList.filter((item,index) => {
+                    if (index < (this.getCurrentNum * 35 ) && index > ((this.getCurrentNum -1) * 35 ) - 1 ) {
+                        return item
+                    }
+                })
             },
             selectedAll(state){
                 this.gateList=this.gateList.filter((item)=>{
@@ -509,6 +528,9 @@
                     if (this.filterCondition.trim() !== '') {
                         this.allGateList = this.filterDataList(this.allGateList)
                     }
+                    if (this.typeContent.length > 0) {
+                        this.allGateList = this.filterTypeList(this.allGateList)
+                    }
                     let date = new Date().getTime()
                     let obj = {totalNum: this.allGateList.length}
                     obj[date] = new Date().getTime()
@@ -525,6 +547,28 @@
                 }).catch((err)=>{
                     console.log(err)
                 })
+            },
+            filterTypeList (list) {
+                let type = this.typeContent
+                list = list.filter((item,index) => {
+                    if(item.gateType == 1){
+                        item.type = '翼闸'
+                    }else if(item.gateType == 2){
+                        item.type = '摆闸'
+                    }else if(item.gateType ==3){
+                        item.type ='三角闸'
+                    }else if(item.gateType ==4){
+                        item.type = '平移闸'
+                    }
+                    if(type.includes(item.type)){
+                        item.status=true
+                    }else{
+                        item.status=false
+                        console.log(item.type)
+                    }
+                    return item.status === true
+                })
+                return list
             },
             filterDataList (list) {
                 list = list.filter(item => {

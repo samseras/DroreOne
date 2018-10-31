@@ -167,7 +167,8 @@
                     close:[],
                     open:[]
                 },
-                filterCondition: ''
+                filterCondition: '',
+                typeContent: []
             }
         },
         methods:{
@@ -224,7 +225,10 @@
                 console.log(info, '这是要过滤的')
                 this.filterCondition = info
                 if (info.trim() !== '') {
-                    this.broadList = this.allBroadList.filter(item => {
+                    if (this.typeContent.length > 0) {
+                        this.allBroadList = this.filterTypeList(this.allBroadList)
+                    }
+                    let checkList = this.allBroadList.filter(item => {
                         if (item.regionName && item.regionName.includes(info)) {
                             return item
                         }
@@ -242,9 +246,14 @@
                         }
                     })
                     let date = new Date().getTime()
-                    let obj = {totalNum: this.broadList.length}
+                    let obj = {totalNum: checkList.length}
                     obj[date] = new Date().getTime()
                     this.$store.commit('TOTAL_NUM', obj)
+                    this.broadList = checkList.filter((item,index) => {
+                        if (index < (this.getCurrentNum * 35 ) && index > ((this.getCurrentNum -1) * 35 ) - 1 ) {
+                            return item
+                        }
+                    })
                 } else {
                     this.getAllBroadcast()
                 }
@@ -427,14 +436,14 @@
             },
             choseType(type){
                 console.log(type)
+                this.typeContent = type
                 if(type.length===0){
-                    this.broadList=this.checkList.filter((item)=>{
-
-                        item.status=true
-                        return item
-                    })
+                    this.getAllBroadcast()
                 }else{
-                    this.broadList=this.checkList.filter((item,index)=>{
+                    if (this.filterCondition.trim() !== '') {
+                        this.allBroadList = this.filterDataList(this.allBroadList)
+                    }
+                    this.checkList=this.allBroadList.filter((item,index)=>{
                             console.log(item.positionType)
                         if (item.positionType == 0) {
                             item.type = '室内'
@@ -445,12 +454,19 @@
                             item.status=true
                         }else{
                             item.status=false
-                            console.log(item.type)
-                            console.log(item.positionType)
                         }
                         return item.status === true
                     })
                 }
+                let date = new Date().getTime()
+                let obj = {totalNum: this.checkList.length}
+                obj[date] = new Date().getTime()
+                this.$store.commit('TOTAL_NUM', obj)
+                this.broadList = this.checkList.filter((item,index) => {
+                    if (index < (this.getCurrentNum * 35 ) && index > ((this.getCurrentNum -1) * 35 ) - 1 ) {
+                        return item
+                    }
+                })
             },
             selectedAll(state){
                 this.broadList=this.broadList.filter((item)=>{
@@ -506,6 +522,9 @@
                     if (this.filterCondition.trim() !== '') {
                         this.allBroadList = this.filterDataList(this.allBroadList)
                     }
+                    if (this.typeContent.length > 0) {
+                        this.allBroadList = this.filterTypeList(this.allBroadList)
+                    }
                     let date = new Date().getTime()
                     let obj = {totalNum: this.allBroadList.length}
                     obj[date] = new Date().getTime()
@@ -523,6 +542,24 @@
                     console.log(err)
                     this.isShowLoading=false
                 })
+            },
+            filterTypeList (list) {
+                let type = this.typeContent
+                list = list.filter((item,index) => {
+                    if (item.positionType == 0) {
+                        item.type = '室内'
+                    } else{
+                        item.type = '室外'
+                    }
+                    if(type.includes(item.type)){
+                        item.status=true
+                    }else {
+                        item.status=false
+                        console.log(item.type)
+                    }
+                    return item.status === true
+                })
+                return list
             },
             filterDataList (list) {
                 list = list.filter(item => {

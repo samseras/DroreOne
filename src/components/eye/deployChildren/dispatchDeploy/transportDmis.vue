@@ -132,7 +132,7 @@
                 console.log(info, '这是要过滤的')
                 this.filterCondition = info
                 if (info.trim() !== '') {
-                    this.transportList = this.allTransportList.filter(item => {
+                    let checkList = this.allTransportList.filter(item => {
                         if (item.name && item.name.includes(info)) {
                             return item
                         }
@@ -141,9 +141,14 @@
                         }
                     })
                     let date = new Date().getTime()
-                    let obj = {totalNum: this.transportList.length}
+                    let obj = {totalNum: checkList.length}
                     obj[date] = new Date().getTime()
                     this.$store.commit('TOTAL_NUM', obj)
+                    this.transportList = checkList.filter((item,index) => {
+                        if (index < (this.getCurrentNum * 35) && index > ((this.getCurrentNum -1) * 35 ) - 1 ) {
+                            return item
+                        }
+                    })
                 } else {
                     this.getAllRoat()
                 }

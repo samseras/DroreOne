@@ -158,7 +158,8 @@
                     close:[],
                     open:[]
                 },
-                filterCondition: ''
+                filterCondition: '',
+                typeContent: []
             }
         },
         methods : {
@@ -204,7 +205,10 @@
                 console.log(info, '这是要过滤的')
                 this.filterCondition = info
                 if (info.trim() !== '') {
-                    this.trashList = this.allTrashList.filter(item => {
+                    if (this.typeContent.length > 0) {
+                        this.allTrashList = this.filterTypeList(this.allTrashList)
+                    }
+                    let checkList = this.allTrashList.filter(item => {
                         if (item.regionName && item.regionName.includes(info)) {
                             return item
                         }
@@ -213,9 +217,14 @@
                         }
                     })
                     let date = new Date().getTime()
-                    let obj = {totalNum: this.treeList.length}
+                    let obj = {totalNum: checkList.length}
                     obj[date] = new Date().getTime()
                     this.$store.commit('TOTAL_NUM', obj)
+                    this.trashList = checkList.filter((item,index) =>{
+                        if(index < (this.getCurrentNum*35)&& index>(this.getCurrentNum-1)*35 -1){
+                            return item
+                        }
+                    })
                 } else {
                     this.getAllTrash()
                 }
@@ -309,13 +318,14 @@
             },
             choseType (type) {
                 console.log(type)
+                this.typeContent = type
                 if (type.length === 0){
-                    this.trashList = this.checkList.filter((item) => {
-                        item.status = true
-                        return item
-                    })
+                    this.getAllTrash()
                 } else {
-                    this.trashList = this.checkList.filter((item,index) => {
+                    if (this.filterCondition.trim() !== '') {
+                        this.allTrashList = this.filterDataList(this.allTrashList)
+                    }
+                    this.checkList = this.allTrashList.filter((item,index) => {
                         if (item.dustbinBean.type){
                             item.dustbinBean.typeName = '临时'
                         } else {
@@ -330,6 +340,15 @@
                         return item.status === true
                     })
                 }
+                let date = new Date().getTime()
+                let obj = {totalNum: this.checkList.length}
+                obj[date] = new Date().getTime()
+                this.$store.commit('TOTAL_NUM', obj)
+                this.trashList = this.checkList.filter((item,index) => {
+                    if (index < (this.getCurrentNum * 35 ) && index > ((this.getCurrentNum -1) * 35 ) - 1 ) {
+                        return item
+                    }
+                })
             },
             selectedAll (state) {
                 console.log(state, 'opopopopop')
@@ -440,7 +459,6 @@
                 }
             },
             async getAllTrash () {
-                console.log('垃圾桶')
                 this.isShowLoading = true
                 await api.dustbin.getAllDustbin().then(res => {
                     console.log(res, '这是请求回来的数据')
@@ -479,6 +497,9 @@
                     if (this.filterCondition.trim() !== '') {
                         this.allTrashList = this.filterDataList(this.allTrashList)
                     }
+                    if (this.typeContent.length > 0) {
+                        this.allTrashList = this.filterTypeList(this.allTrashList)
+                    }
                     let date = new Date().getTime()
                     let obj = {totalNum: this.allTrashList.length}
                     obj[date] = new Date().getTime()
@@ -497,6 +518,23 @@
                     console.log(err)
                     this.isShowLoading = false
                 })
+            },
+            filterTypeList (list) {
+                let type = this.typeContent
+                list = list.filter((item,index) => {
+                    if (item.dustbinBean.type){
+                        item.dustbinBean.typeName = '临时'
+                    } else {
+                        item.dustbinBean.typeName = '固定'
+                    }
+                    if (type.includes(item.dustbinBean.typeName)){
+                        item.status = true
+                    } else if(!type.includes(item.dustbinBean.typeName)){
+                        item.status = false
+                    }
+                    return item.status === true
+                })
+                return list
             },
             filterDataList (list) {
                 list = list.filter(item => {
