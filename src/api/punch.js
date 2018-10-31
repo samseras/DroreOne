@@ -13,6 +13,14 @@ const punch = {
         })
 
     },
+
+    getAllPunchRecord(params){
+        return axios ({
+            method: 'POST',
+            url: getUrl('/clockin'),
+            data:params
+        })
+    },
     updatePunch  (params) {
         return axios ({
             method: 'PUT',

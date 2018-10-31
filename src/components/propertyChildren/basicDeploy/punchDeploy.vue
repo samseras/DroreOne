@@ -83,8 +83,8 @@
                             <el-checkbox v-model="item.checked" @change="checked(item.id)" class="checkBtn"></el-checkbox>
                         </div>
                         <div class="personType" @click.stop="showPunchDetail(item, '打卡处信息',true)">
-                            <!--<img src="../../../../static/img/station_deploy.png" alt="">-->
-                            <img :src="getUrl(item.picturePath,item.type)" alt="" @error="imgError">
+                            <img src="../../../../static/img/punch_deploy.svg" alt="">
+                            <!--<img :src="getUrl(item.picturePath,item.type)" alt="" @error="imgError">-->
                             <span class="type">
                                   {{item.name}}
                             </span>
@@ -233,7 +233,7 @@
             },
             allDotInfo(){
                 this.allDotvisible = true
-                this.title = '站点批量打点'
+                this.title = '打卡点批量打点'
                 // console.log(this.allDotvisible,this.allDotList, this.title)
             },
             addNewInfo () {
@@ -250,7 +250,7 @@
                         cancelButtonText: '取消',
                         type: 'warning'
                     }).then(() => {
-                        api.station.deleteStation(this.choseInfoId).then(res => {
+                        api.punch.deletePunch(this.choseInfoId).then(res => {
                             console.log(res, '删除成功')
                             this.$message.success('删除成功')
                             this.choseInfoId = []
@@ -266,7 +266,6 @@
                 } else {
                     this.$message.error('请选择要删除的站点数据')
                 }
-
             },
             toggleList (type) {
                 if (type === 'list') {
@@ -322,31 +321,19 @@
                 let index = info.location.includes(',')?info.location.indexOf(','):info.location.indexOf('，')
                 let longitude = info.location.substring(0, index)
                 let latitude = info.location.substring(index + 1)
-                let stationObj = {
+                let punchObj = {
                     description:info.description,
-                    type:info.type,
                     id: info.id,
                     name: info.name,
-                    capacity: info.capacity,
+                    cardNumber:info.cardNumber,
                     regionId: info.regionId,
                     latitude: latitude,
                     longitude: longitude
                 }
-                if (info.imgUrl !== '') {
-                    await api.person.updataAva(info.imgUrl).then(res => {
-                        console.log(res, '上传成功')
-                        stationObj.pictureId = res.id
-                    }).catch(err => {
-                        console.log(err, '上传失败')
-                        this.$message.error('上传失败，其请稍后重试')
-                        return
-                    })
-                } else {
-                    stationObj.pictureId = info.pictureId
-                }
-                await api.station.updateStation(JSON.stringify(stationObj)).then(res => {
+
+                await api.punch.updatePunch(JSON.stringify(punchObj)).then(res => {
                     this.closeDialog()
-                    console.log(res, '修改站点成功')
+                    console.log(res, '修改打卡点成功')
                     this.$message.success('修改成功')
                     this.choseInfoId = []
                     this.getAllPunch()
@@ -358,28 +345,17 @@
                 let index = info.location.includes(',')?info.location.indexOf(','):info.location.indexOf('，')
                 let longitude = info.location.substring(0, index)
                 let latitude = info.location.substring(index + 1)
-                let stationObj = {
-                    type:info.type,
+                let punchObj = {
                     description:info.description,
                     name: info.name,
-                    capacity: info.capacity,
+                    cardNumber:info.cardNumber,
                     regionId: info.regionId,
                     latitude: latitude,
                     longitude: longitude
                 }
-                if (info.imgUrl !== '') {
-                    await api.person.updataAva(info.imgUrl).then(res => {
-                        console.log(res, '上传成功')
-                        stationObj.pictureId = res.id
-                    }).catch(err => {
-                        console.log(err, '上传失败')
-                        this.$message.error('上传失败，其请稍后重试')
-                        return
-                    })
-                }
-                await api.station.createStation(JSON.stringify(stationObj)).then(res => {
+                await api.punch.createPunch(JSON.stringify(punchObj)).then(res => {
                     this.closeDialog()
-                    console.log(res, '创建站点成功')
+                    console.log(res, '创建打卡点成功')
                     this.$message.success('创建成功')
                     this.getAllPunch()
                 }).catch(err => {

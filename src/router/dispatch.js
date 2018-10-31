@@ -21,6 +21,8 @@ const dispatch = [
             {path:'/deploy/purifier-Dmis',name:'purifierDmis',component: resolve => require(['@/components/eye/deployChildren/dispatchDeploy/purifierDmis'], resolve), meta: {id: '0103'}},
             {path:'/deploy/transport-Dmis',name:'transportDmis',component: resolve => require(['@/components/eye/deployChildren/dispatchDeploy/transportDmis'], resolve), meta: {id: '0103'}},
             {path:'/deploy/dispatch-Record',name:'dispatchRecord',component: resolve => require(['@/components/eye/deployChildren/recordDeploy/dispatchRecord'], resolve), meta: {id: '0103'}},
+            {path:'/deploy/punch-Record',name:'punchRecord',component: resolve => require(['@/components/eye/deployChildren/recordDeploy/punchRecord'], resolve), meta: {id: '0103'}},
+
         ]
     }
 ]

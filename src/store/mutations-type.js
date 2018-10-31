@@ -20,6 +20,7 @@ export const COMPANY_DATA_NAME = 'COMPANY_DATA_NAME'
 
  export const SHOW_TREE = 'SHOW_TREE'
  export const TREE_SHOW = 'TREE_SHOW'
+ export const PUNCH_TREE = 'PUNCH_TREE'
 
  export const CONTROLER_LIGHT = 'CONTROLER_LIGHT'
  export const CONTROLER_ENVIRONMENT = 'CONTROLER_ENVIRONMENT'

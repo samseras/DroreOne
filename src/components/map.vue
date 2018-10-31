@@ -40,6 +40,21 @@
                 </div>
             </div>
         </div>
+        <div class="securityPunch" v-if='spShow'>
+            <button @click="securityPunchShowButton" class="securityPunchShowButton">
+                <span>»</span>
+            </button>
+            <div class="spcontent" v-show="spContentShow">
+                <div class="spcontentList">
+                    <h4>路线关联打卡点</h4>
+                    <el-tree :data="securityPunchList"
+                             show-checkbox
+                             @check="handleNodeClick">
+
+                    </el-tree>
+                </div>
+            </div>
+        </div>
         <musicedit :dialogisshow="dialogVisible" :isGroup="isGroup" :selectedCast="selectedCast" @closeDialog="closeMusicEdit" :Infos="menulist"></musicedit>
         <div id="contextmenu_container" class="contextmenu">
             <i @click="menuDelete"></i>
@@ -137,7 +152,9 @@
                 stationCheckedList:[],
                 stationCheckList:[],
                 tsContentShow:true,
+                spContentShow:true,
                 tsShow:false,
+                spShow:false,
                 heatEmShow:false,
                 AlarmDetailShow:false,
                 warningEventInfo: [],
@@ -272,6 +289,41 @@
                         "enable": true
                     }
                 ],
+                securityPunchList:[{
+                    label: '一级 1',
+                    children: [{
+                        label: '二级 1-1',
+                        children: [{
+                            label: '三级 1-1-1'
+                        }]
+                    }]
+                }, {
+                    label: '一级 2',
+                    children: [{
+                        label: '二级 2-1',
+                        children: [{
+                            label: '三级 2-1-1'
+                        }]
+                    }, {
+                        label: '二级 2-2',
+                        children: [{
+                            label: '三级 2-2-1'
+                        }]
+                    }]
+                }, {
+                    label: '一级 3',
+                    children: [{
+                        label: '二级 3-1',
+                        children: [{
+                            label: '三级 3-1-1'
+                        }]
+                    }, {
+                        label: '二级 3-2',
+                        children: [{
+                            label: '三级 3-2-1'
+                        }]
+                    }]
+                }]
             }
         },
         created () {
@@ -335,6 +387,8 @@
                     this.getAllRoatedit();//修改路线
                 }
             }else if (route.includes('security-Dmis')) {
+                this.spShow = true
+                this.getPunchList()
                 if(!this.getLocationId){
                     this.getSecurityRoute();// 巡检路线输出
                     this.road(); // 路线打点
@@ -513,6 +567,17 @@
                 'SET_MUSIC',
                 'STATION_CHECKED'
             ]),
+            handleNodeClick(data,checked){
+                console.log(data);
+                //返回所有叶子节点
+                checked.checkedNodes = checked.checkedNodes.filter(item => {
+                    if (!item.children) {
+                        return item
+                    }
+                })
+
+                this.$store.commit('PUNCH_TREE', checked.checkedNodes)
+            },
             closeStationDialog(){
               this.stationShow = false
             },
@@ -913,6 +978,56 @@
                     }
                 },5000)
             },
+            async getPunchList(){
+                await api.punch.getAllPunch().then(res=>{
+                    console.log(res)
+                    let regionIdList = []
+                    let arr = []
+                    let idList = []
+                    let noRegion = {
+                        label: '未知片区设备',
+                        id: '10010',
+                        type:'punch',
+                        children:[]
+                    }
+                    res.forEach(item => {
+                        item.label = item.name
+                        item.type = 'punch'
+                        if (item.regionId) {
+                            if (!regionIdList.includes(item.regionId)) {
+                                regionIdList.push(item.regionId)
+                                let obj = {
+                                    label: item.regionName,
+                                    type: 'punch',
+                                    id: item.regionId,
+                                    children: []
+                                }
+                                arr.push(obj)
+                            }
+                            arr.forEach(item1 => {
+                                if (item1.id == item.regionId) {
+                                    if (item1.children.length < 1) {
+                                        item1.children.push(item)
+                                    } else {
+                                        item1.children.forEach(item2 => {
+                                            if (!idList.includes(item2.id)) {
+                                                idList.push(item.id)
+                                                item1.children.push(item)
+                                            }
+                                        })
+                                    }
+                                }
+                            })
+                        }else {
+                            noRegion.children.push(item)
+                        }
+                    })
+                    if (noRegion.children.length > 0) {
+                        arr.push(noRegion)
+                    }
+                    this.securityPunchList = arr
+                })
+            },
             async getStationList(){ //站点
                 await api.station.getAllStation().then(res=>{
                     if(this.getTransportType == '0'){
@@ -1245,7 +1360,7 @@
                         this.iconList[i].id=this.iconList[i].id
                         this.iconList[i].name =this.iconList[i].name
                         this.iconList[i].location = [this.iconList[i].longitude,this.iconList[i].latitude]
-                        this.iconList[i].url="/static/img/icon/trash.png"
+                        this.iconList[i].url="/static/img/icon/punch.png"
                         this.iconList[i].subtype='punch'
                     }
                     this.iconShow();
@@ -1257,15 +1372,16 @@
             async getAllPunchEdit(){
                 await api.punch.getAllPunch().then(res => {
                     this.punchList = res
-                    for (let i = 0; i < this.trashList.length; i++) {
-                        if(this.punchList[i].dustbinBean.id === this.getLocationId){
-                            this.punchList[i].location = [this.trashList[i].longitude,this.punchList[i].latitude]
+                    console.log(this.punchList,this.getLocationId)
+                    for (let i = 0; i < this.punchList.length; i++) {
+                        if(this.punchList[i].id === this.getLocationId){
+                            this.punchList[i].location = [this.punchList[i].longitude,this.punchList[i].latitude]
                             var iconedit = new droreMap.icon.Marker({
                                 coordinate: droreMap.trans.transFromWgsToLayer(this.punchList[i].location),
-                                name: this.punchList[i].dustbinBean.name,
-                                subtype: "trash",
-                                id: this.punchList[i].dustbinBean.id,
-                                url: "/static/img/icon/trash_on.png"
+                                name: this.punchList[i].name,
+                                subtype: "punch",
+                                id: this.punchList[i].id,
+                                url: "/static/img/icon/punch_on.png"
                             });
                             droreMap.icon.addChild(iconedit);
                             droreMap.interaction.ifDrag = true;
@@ -1286,10 +1402,10 @@
                             this.punchList[i].location = [this.punchList[i].longitude,this.punchList[i].latitude]
                             var icon1 = new droreMap.icon.Marker({
                                 coordinate: droreMap.trans.transFromWgsToLayer(this.punchList[i].location),
-                                name: this.punchList[i].dustbinBean.name,
-                                subtype: "trash",
-                                id: this.punchList[i].dustbinBean.id,
-                                url: "/static/img/icon/trash.png"
+                                name: this.punchList[i].name,
+                                subtype: "punch",
+                                id: this.punchList[i].id,
+                                url: "/static/img/icon/punch.png"
                             });
                             droreMap.icon.addChild(icon1);
                         }
@@ -2764,7 +2880,105 @@
             getAllPerson(){
                 Promise.all([this.getAllUser()]).then(result=>{
                     // console.log(result,'00000')
-                    let users = result[0]
+//                    let users = result[0]
+                    let users = [
+                        {
+                            "id": "165d0c3918c-2706abc77a5ee8e8",
+                            "creator": "admin",
+                            "createTime": "2018-09-13 10:30:02",
+                            "modifier": "admin",
+                            "modifyTime": "2018-09-13 10:30:02",
+                            "name": "binge",
+                            "cnName": "斌",
+                            "gender": 1,
+                            "iconId": null,
+                            "mobileNum": "18629086642",
+                            "fixedPhoneNum": "",
+                            "idCardNum": "",
+                            "email": null,
+                            "workAddress": null,
+                            "description": null,
+                            "departmentId": null,
+                            "jobId": null,
+                            "roleId": "1",
+                            "gpsId": null,
+                            "gpsData": {
+                                "deviceId": "c13e503f-713d-4cd7-9a5d-c62220e1f612",
+                                "ioTDeviceId": "1000000",
+                                "deviceName": "gps0",
+                                "createTime": "2018-09-21 10:15:56",
+                                "longitude": 120.13337197656278,
+                                "latitude": 30.307558496764344,
+                                "altitude": null,
+                                "direction": null,
+                                "speed": 0,
+                                "telephone": null,
+                                "deviceNum": "1000000",
+                                "coordinate": "",
+                                "tag": "ceb54f57-08d4-49a0-81db-a3e7c486b154"
+                            },
+                            "role": {
+                                "id": "1",
+                                "creator": null,
+                                "createTime": null,
+                                "modifier": null,
+                                "modifyTime": null,
+                                "name": "admin",
+                                "description": "",
+                                "permissions": null
+                            },
+                            "job": null,
+                            "department": null
+                        },
+                        {
+                            "id": "3p696d8b-7f38-41dc-8b3c-8db147c05269",
+                            "creator": null,
+                            "createTime": null,
+                            "modifier": "admin",
+                            "modifyTime": "2018-09-11 18:00:00",
+                            "name": "admin",
+                            "cnName": " 系统管理员",
+                            "gender": 0,
+                            "iconId": null,
+                            "mobileNum": "18800000000",
+                            "fixedPhoneNum": null,
+                            "idCardNum": null,
+                            "email": null,
+                            "workAddress": null,
+                            "description": null,
+                            "departmentId": null,
+                            "jobId": null,
+                            "roleId": "1",
+                            "gpsId": null,
+                            "gpsData":{
+                                "deviceId": "2b696d8b-7f38-41dc-8b3c-8db147c02c32",
+                                "ioTDeviceId": "1000007",
+                                "deviceName": "gps1",
+                                "createTime": "2018-09-21 10:15:56",
+                                "longitude": 120.13500857210744,
+                                "latitude": 30.305894893713628,
+                                "altitude": null,
+                                "direction": null,
+                                "speed": 0,
+                                "telephone": null,
+                                "deviceNum": "1000007",
+                                "coordinate": "",
+                                "tag": "966fda56-8cc3-4847-86cc-7e939df14369"
+                            },
+                            "role": {
+                                "id": "1",
+                                "creator": null,
+                                "createTime": null,
+                                "modifier": null,
+                                "modifyTime": null,
+                                "name": "admin",
+                                "description": "",
+                                "permissions": null
+                            },
+                            "job": null,
+                            "department": null
+                        }
+                    ]
                     if(users.length > 0){
                         users.forEach(obj=>{
                             let latitude = ''
@@ -2783,7 +2997,7 @@
                                 name:obj.cnName,
                                 subtype:'securityPerson',
                                 id:obj.id,
-                                url:'/static/img/icon/people_small.png',
+                                url:'/static/img/icon/people_small.svg',
                                 type:'security',
                                 status:obj.gpsData ? "ONLINE" : "OFFLINE",
                                 description:obj.description,
@@ -2818,7 +3032,105 @@
             },
             async getAllLangPerson(){
                 Promise.all([this.getAllUser()]).then(result=>{
-                    let users = result[0]
+//                    let users = result[0]
+                    let users = [
+                        {
+                            "id": "165d0c3918c-2706abc77a5ee8e8",
+                            "creator": "admin",
+                            "createTime": "2018-09-13 10:30:02",
+                            "modifier": "admin",
+                            "modifyTime": "2018-09-13 10:30:02",
+                            "name": "binge",
+                            "cnName": "斌",
+                            "gender": 1,
+                            "iconId": null,
+                            "mobileNum": "18629086642",
+                            "fixedPhoneNum": "",
+                            "idCardNum": "",
+                            "email": null,
+                            "workAddress": null,
+                            "description": null,
+                            "departmentId": null,
+                            "jobId": null,
+                            "roleId": "1",
+                            "gpsId": null,
+                            "gpsData": {
+                                "deviceId": "c13e503f-713d-4cd7-9a5d-c62220e1f612",
+                                "ioTDeviceId": "1000000",
+                                "deviceName": "gps0",
+                                "createTime": "2018-09-21 10:15:56",
+                                "longitude": 120.13337197656278,
+                                "latitude": 30.307558496764344,
+                                "altitude": null,
+                                "direction": null,
+                                "speed": 0,
+                                "telephone": null,
+                                "deviceNum": "1000000",
+                                "coordinate": "",
+                                "tag": "ceb54f57-08d4-49a0-81db-a3e7c486b154"
+                            },
+                            "role": {
+                                "id": "1",
+                                "creator": null,
+                                "createTime": null,
+                                "modifier": null,
+                                "modifyTime": null,
+                                "name": "admin",
+                                "description": "",
+                                "permissions": null
+                            },
+                            "job": null,
+                            "department": null
+                        },
+                        {
+                            "id": "3p696d8b-7f38-41dc-8b3c-8db147c05269",
+                            "creator": null,
+                            "createTime": null,
+                            "modifier": "admin",
+                            "modifyTime": "2018-09-11 18:00:00",
+                            "name": "admin",
+                            "cnName": " 系统管理员",
+                            "gender": 0,
+                            "iconId": null,
+                            "mobileNum": "18800000000",
+                            "fixedPhoneNum": null,
+                            "idCardNum": null,
+                            "email": null,
+                            "workAddress": null,
+                            "description": null,
+                            "departmentId": null,
+                            "jobId": null,
+                            "roleId": "1",
+                            "gpsId": null,
+                            "gpsData":{
+                                "deviceId": "2b696d8b-7f38-41dc-8b3c-8db147c02c32",
+                                "ioTDeviceId": "1000007",
+                                "deviceName": "gps1",
+                                "createTime": "2018-09-21 10:15:56",
+                                "longitude": 120.13500857210744,
+                                "latitude": 30.305894893713628,
+                                "altitude": null,
+                                "direction": null,
+                                "speed": 0,
+                                "telephone": null,
+                                "deviceNum": "1000007",
+                                "coordinate": "",
+                                "tag": "966fda56-8cc3-4847-86cc-7e939df14369"
+                            },
+                            "role": {
+                                "id": "1",
+                                "creator": null,
+                                "createTime": null,
+                                "modifier": null,
+                                "modifyTime": null,
+                                "name": "admin",
+                                "description": "",
+                                "permissions": null
+                            },
+                            "job": null,
+                            "department": null
+                        }
+                    ]
                     if(users.length > 0){
                         users.forEach(obj=>{
                             let latitude = ''
@@ -2837,7 +3149,7 @@
                                 name:obj.name,
                                 subtype:'securityPerson',
                                 id:obj.id,
-                                url:'/static/img/icon/people_small.png',
+                                url:'/static/img/icon/people_small.svg',
                                 type:'security',
                                 status:obj.gpsData ? "ONLINE" : "OFFLINE",
                                 description:obj.description,
@@ -3866,6 +4178,14 @@
                     $(".transportShowButton span").text("»");
                 }
                 this.tsContentShow=!this.tsContentShow
+            },
+            securityPunchShowButton(){
+                if(this.spContentShow){
+                    $(".securityPunchShowButton span").text("«");
+                }else {
+                    $(".securityPunchShowButton span").text("»");
+                }
+                this.spContentShow=!this.spContentShow
             },
             sortStation(type,item){
                 // console.log(item)
@@ -5099,6 +5419,23 @@
             }
         }
     }
+    .securityPunch{
+        .spcontent{
+            .el-tree{
+                background-color:rgba(0,0,0,0);
+                color: #fff;
+                .el-tree-node__content:hover {
+                    background-color: rgba(0,0,0,0);
+                }
+                .el-tree-node:focus>.el-tree-node__content{
+                    background-color: rgba(0,0,0,0);
+                }
+                .el-checkbox__label{
+                    color: #fff;
+                }
+            }
+        }
+    }
 
 </style>
 <style lang="scss" scoped>
@@ -5258,6 +5595,55 @@
                 }
                 .checkRow{
                     display: block;
+                }
+            }
+        }
+    }
+    .securityPunch{
+        position: absolute;
+        left: rem(50);
+        top:rem(70);
+        .securityPunchShowButton{
+            display:block;
+            margin:1px;
+            padding:0;
+            color:#fff;
+            font-size:1.14em;
+            font-weight:700;
+            text-decoration:none;
+            text-align:center;
+            height:rem(30);
+            width:rem(30);
+            line-height:.4em;
+            background-color:rgba(0,60,136,.5);
+            border:2px solid #999;
+            border-radius:2px;
+            top: 2px;
+            left: 2px;
+            position: absolute;
+            z-index: 2;
+            cursor: pointer;
+            outline:none;
+        }
+        .spcontent{
+            position: relative;
+            -moz-border-radius: 5px;
+            -webkit-border-radius: 5px;
+            border-radius: 5px;
+            color: #fff;
+            z-index: 1;
+            -moz-border-radius: 5px;
+            -webkit-border-radius: 5px;
+            border-radius: 5px;
+            background-color:rgba(0,0,0,.4);
+            .spcontentList{
+                position: relative;
+                z-index: 1;
+                padding:rem(10) rem(20);
+                h4{
+                    font-size: 14px;
+                    line-height: rem(24);
+                    margin-left: rem(30);
                 }
             }
         }

@@ -71,17 +71,22 @@
                             }
                         ]
                     },
-                    // {
-                    //     icon: './../../static/img/record.svg',
-                    //     index: '4',
-                    //     title: '调度记录',
-                    //     subs: [
-                    //         {
-                    //             index: '/deploy/dispatch-Record',
-                    //             title: '调度统计'
-                    //         }
-                    //     ]
-                    // },
+                     {
+                         icon: './../../static/img/record.svg',
+                         index: '4',
+                         title: '调度统计',
+                         subs: [
+//                             {
+//                                 index: '/deploy/dispatch-Record',
+//                                 title: '调度统计'
+//                             }
+                             {
+                                 icon: './../../static/img/securityPunch.svg',
+                                 index: '/deploy/punch-Record',
+                                 title: '巡更打卡'
+                             }
+                         ]
+                     },
                 ]
             }
         },

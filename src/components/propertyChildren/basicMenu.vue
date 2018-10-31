@@ -123,7 +123,7 @@
                         title: '站点'
                     },
                     {
-                        icon: './../../../static/img/station_menu.svg',
+                        icon: './../../../static/img/punch_menu.svg',
                         index: '/basic-property/punch-deploy',
                         title: '打卡点'
                     }

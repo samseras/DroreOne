@@ -37,13 +37,24 @@
                 this.$emit('closeMapDialog')
             },
             saveRoat () {
+                console.log(this.getPunchTreeData)
+                let punchData = []
+                if(this.getPunchTreeData.length>0){
+                    punchData = this.getPunchTreeData.map(item=>{
+                        return {
+                            entityId:item.id
+                        }
+                    })
+                }
+
                 let roatObj = {
                     name: this.name,
                     geo: {
                         type:"LineString",
                         coordinates: this.getRoatLocation
                     },
-                    type:1
+                    type:1,
+                    eOrders:punchData
                 }
                 api.roat.createRoat(JSON.stringify(roatObj)).then(res => {
                     console.log(res, '创建成功')
@@ -60,7 +71,7 @@
             Map
         },
         computed: {
-            ...mapGetters(['getRoatLocation'])
+            ...mapGetters(['getRoatLocation','getPunchTreeData'])
         }
     }
 </script>

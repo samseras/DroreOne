@@ -120,7 +120,6 @@
 
                         <div class="uploadText row">
                             <span class="updataTitle dmisTitle">线路绘制：</span>
-                            <!--<input type="text"v-model="security.location" class="location">-->
                             <el-select v-model="security.inspectionSchedule.routeId" placeholder="请选择" :disabled='isDisabled'>
                                 <el-option
                                     v-for="ite in options"
@@ -130,6 +129,10 @@
                                 </el-option>
                             </el-select>
                             <i class="el-icon-location-outline" @click="showMapDialog"></i>
+                        </div>
+                        <div class="row">
+                            <span class="dmisTitle">巡检轮次：</span>
+                            <el-input type="text"v-model="security.inspectionSchedule.checkNum"class="inputText" :maxlength="15" :disabled='isDisabled'></el-input>
                         </div>
                         <div class="textArea row">
                             <span class="description dmisTitle">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：</span>
@@ -1712,16 +1715,20 @@
             height: rem(30);
             line-height: rem(20);
         }
-        .el-tree-node__children{
-            /*display: inline-block;*/
-            .el-tree-node,.is-focusable {
+
+        .name{
+            .el-tree-node__children{
                 /*display: inline-block;*/
-                float: left;
+                .el-tree-node,.is-focusable {
+                    /*display: inline-block;*/
+                    float: left;
+                }
+            }
+            .el-tree-node__label {
+                font-size: rem(12);
             }
         }
-        .el-tree-node__label {
-            font-size: rem(12);
-        }
+
          .textArea .el-textarea{
             font-size: rem(12);
         }

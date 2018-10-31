@@ -10,6 +10,7 @@
             center>
             <div id="historymap" class="historymap">
             </div>
+            <div class="punchList"></div>
         </el-dialog>
     </div>
 </template>
@@ -113,6 +114,7 @@
         position: relative;
         .el-dialog__body {
             padding: rem(10) rem(10);
+            position: relative;
         }
 
         .ol-rotate{
@@ -135,6 +137,17 @@
                 width: 100%;
                 height: rem(550);
                 background: yellowgreen;
+            }
+            .punchList{
+                height: 96.5%;
+                width:20%;
+                display: flex;
+                position: absolute;
+                right: 0px;
+                background-color: #fff;
+                top:10px;
+                padding: rem(10) rem(10);
+                box-sizing: border-box;
             }
         }
     }

@@ -1,7 +1,8 @@
 <template>
     <div class="securityDmis">
         <div class="title">
-            巡更路线        </div>
+            巡更路线
+        </div>
         <div class="personContent">
             <div class="funcTitle">
                 <Header @addNewInfo = "addNewInfo"
@@ -444,7 +445,7 @@
             async getAllpatrol () {
                 this.isShowLoading = true
                 await api.patrol.getAllPatrol().then(res => {
-                    console.log(JSON.stringify(res), '请求成功')
+                    console.log(res, '请求成功')
                     this.isShowLoading = false
                     this.allPatrolList = res
                     this.allPatrolList.forEach(item => {

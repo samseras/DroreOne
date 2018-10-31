@@ -904,7 +904,7 @@
                                imgSrc = './../../../../static/img/landingCard.svg'
                            }
                         } else if (route.includes('punch')){
-                           imgSrc = './../../../../static/img/landingCard.svg'
+                           imgSrc = './../../../../static/img/punch_deploy.svg'
                        }
                     }
                     return imgSrc
@@ -1114,6 +1114,7 @@
                 } else if (this.route.includes('punch')) {
                     newInfo = this.punch
                     if (!(newInfo.name && newInfo.name.trim() !== '') ||
+                        !(newInfo.cardNumber && newInfo.cardNumber !== '') ||
                         !(newInfo.location && newInfo.location !== '') ||
                         !(newInfo.regionId && newInfo.regionId !== '')
                     ) {
