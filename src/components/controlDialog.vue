@@ -13,9 +13,6 @@
                     <p class="name">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称：
                         {{this.Info.name}}
                     </p>
-                    <!--<p class="name">所属片区：-->
-                        <!--{{this.Info.regionName}}-->
-                    <!--</p>-->
                     <div v-if="wifiShow" class="wifiShow">
                         <p class="name">当前连接数：
                             {{this.Info.currentConnections}}（人）
@@ -171,6 +168,7 @@
                     :visible="historyvisible"
                     @closeHistoryDialog = "closeHistoryDialog"
                     :historyData="historyData"
+                    :punchHistory = "punchHistory"
                     :title="mapTitle"
                     :Info = "Info"
                     :isvehicle="isvehicle">
@@ -189,6 +187,7 @@
                 isvehicle:true,
                 historyvisible:false,
                 historyData:[],
+                punchHistory:[],
                 wifiInfo:{},
                 route:'',
                 wifiShow:false,
@@ -376,6 +375,13 @@
                     }
                     this.mapTitle = '人员历史轨迹'
                     this.isvehicle = false
+
+                    var punchParam = {
+                        entityId:this.Info.id,
+                        from:this.dateRange[0],
+                        to:this.dateRange[1],
+                        status:null
+                    }
 //                     this.historyData = [
 //                         {
 //                             id:'1',
@@ -394,20 +400,32 @@
 //                     ]
 //                     this.historyvisible = true
                     console.log(param)
-                    Promise.all([this.getPersonHistory(param)]).then(res=>{
+                    Promise.all([this.getPersonHistory(param),this.getPunchHistory(punchParam)]).then(res=>{
                         console.log(res,'人员历史轨迹数据')
                         console.log(JSON.stringify(res))
                         this.historyData = res[0]
-//                        this.historyData = []
-//                        res[0].forEach(item=>{
-//                            this.historyData.push({
-//                                 id:'1',
-//                                 deviceId:'2',
-//                                 deviceName:'aaa',
-//                                 longitude:item.longitude,
-//                                 latitude:item.latitude
-//                            })
-//                        })
+                        this.punchHistory = res[1]
+//                        {
+//                            punchTime:'2018-10-04 14:20:50',
+//                                date:'2018-10-04',
+//                            time:'14:20:50',
+//                            name:'富义仓点位1',
+//                            status:'正常',
+//                            checked:false
+//                        },
+                        if(this.punchHistory.length >0){
+                            this.punchHistory = this.punchHistory.map(item=>{
+                                return {
+                                    id:item.cStation.id,
+                                    name:item.cStation.name,
+                                    status:item.status,
+                                    statusName:item.status == "NORMAL" ? "正常" : "异常",
+                                    checked:false,
+                                    date:item.occurTime.split(" ")[0],
+                                    time:item.occurTime.split(" ")[1]
+                                }
+                            })
+                        }
                         console.log(this.historyData)
                         this.historyvisible = true
                     })
@@ -450,6 +468,9 @@
             },
             async getPersonHistory(param){
                 return await api.user.getUserHistoryRoute(param)
+            },
+            async getPunchHistory(param){
+                return await api.punch.getAllPunchRecord(JSON.stringify(param))
             },
             async getHistoryRoute(param){
                 return await api.boat.getHistoryRouteByVehicle(param)

@@ -21,27 +21,12 @@ const punch = {
             data:params
         })
     },
-    updatePunch  (params) {
-        return axios ({
-            method: 'PUT',
-            url: getUrl('/clockstation'),
-            data:params
-        })
-    },
-    createPunch (params) {
-        return axios ({
-            method: 'POST',
-            url: getUrl('/clockstation'),
-            data:params
-        })
-    },
-    deletePunch (par) {
+
+    removeErrPunch(param){
         return axios ({
             method: 'DELETE',
-            url: getUrl('/clockstation'),
-            data:{
-                ids: par
-            }
+            url: getUrl('/clocklack'),
+            data:JSON.stringify(param)
         })
     }
 }

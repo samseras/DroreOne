@@ -10,19 +10,107 @@
             center>
             <div id="historymap" class="historymap">
             </div>
-            <div class="punchList"></div>
+            <div class="punchList">
+                <div class="contentList">
+                    <ScrollContainer>
+                        <div class="contentBody">
+                            <div class="content" v-for="item in punchList">
+                                <div class="punchTime">
+                                    <div class="timeCenter">
+                                        <span>{{item.date}}</span>
+                                        <span>{{item.time}}</span>
+                                    </div>
+                                </div>
+                                <div class="punchCheck">
+                                    <img v-if="item.status == 'NORMAL'" src="../../static/img/icon/normalPunch.png" alt="">
+                                    <el-checkbox v-if="item.status == 'ABNORMAL'" v-model="item.checked"></el-checkbox>
+                                </div>
+                                <div class="punchInfo">
+                                    <div class="infoCenter">
+                                        <div>
+                                            点位：<span>{{item.name}}</span>
+                                        </div>
+                                        <div>
+                                            状态：<span :class="[item.status == 'NORMAL' ? 'normal' : 'abnormal']">{{item.statusName}}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </ScrollContainer>
+                </div>
+
+                <div class="footerButton">
+                    <el-button @click="removeError">消除异常</el-button>
+                </div>
+            </div>
         </el-dialog>
     </div>
 </template>
 
 <script>
     import historyMap from "../../static/js/historyMap.js"
+    import ScrollContainer from '@/components/ScrollContainer'
     import api from '@/api'
     export default {
-        props: ['visible','historyData','title','isvehicle','Info'],
+        props: ['visible','historyData','punchHistory','title','isvehicle','Info'],
         name: "historyDialog",
         data () {
             return{
+                punchList:[
+                    {
+                        id:'1',
+                        date:'2018-10-04',
+                        time:'14:20:50',
+                        name:'富义仓点位1',
+                        status:'NORMAL',
+                        statusName:'正常',
+                        checked:false
+                    },
+                    {
+                        id:'2',
+                        date:'2018-10-04',
+                        time:'14:20:50',
+                        name:'富义仓点位2',
+                        status:'NORMAL',
+                        statusName:'正常',
+                        checked:false
+                    },
+                    {
+                        id:'3',
+                        date:'2018-10-04',
+                        time:'14:20:50',
+                        name:'富义仓点位3',
+                        status:'ABNORMAL',
+                        statusName:'异常',
+                        checked:false
+                    },
+                    {
+                        id:'4',
+                        date:'2018-10-04',
+                        time:'14:20:50',
+                        name:'富义仓点位4',
+                        status:'NORMAL',
+                        statusName:'正常',
+                        checked:false
+                    },{
+                        id:'5',
+                        date:'2018-10-04',
+                        time:'14:20:50',
+                        name:'富义仓点位5',
+                        status:'NORMAL',
+                        statusName:'正常',
+                        checked:false
+                    },{
+                        id:'6',
+                        date:'2018-10-04',
+                        time:'14:20:50',
+                        name:'富义仓点位6',
+                        status:'NORMAL',
+                        statusName:'正常',
+                        checked:false
+                    }
+                ]
             }
         },
         methods: {
@@ -92,6 +180,27 @@
                     historyMap.map.panToCoord(_coord);
                 }
             },
+            async removeError(){
+                console.log(this.punchList)
+                let ids =  []
+                this.punchList.forEach(item=>{
+                    if(item.checked){
+                        ids.push(item.id)
+                    }
+                })
+                console.log(ids)
+                if(ids.length == 0){
+                    this.$message.warning("请至少选择一条数据！")
+                }
+
+                await api.punch.removeErrPunch({'ids':ids}).then(res=>{
+                     this.$message.success("操作成功！")
+                }).catch(err => {
+                    this.$message.error("操作失败！")
+                })
+
+
+            }
         },
         mounted() {
               setTimeout(()=>{
@@ -101,7 +210,7 @@
         created () {
         },
         components : {
-
+            ScrollContainer
         },
         computed: {
 
@@ -116,7 +225,9 @@
             padding: rem(10) rem(10);
             position: relative;
         }
-
+        .el-dialog__header{
+            background-color: #f2f2f2;
+        }
         .ol-rotate{
             display: none;
         }
@@ -140,14 +251,84 @@
             }
             .punchList{
                 height: 96.5%;
-                width:20%;
+                width:23%;
                 display: flex;
                 position: absolute;
                 right: 0px;
                 background-color: #fff;
                 top:10px;
-                padding: rem(10) rem(10);
+                flex-direction: column;
                 box-sizing: border-box;
+                .contentList{
+                    height:400px;
+                    flex:4;
+                    background-color: #fff;
+                    .contentBody{
+                        width:100%;
+                        height:100%;
+                        .content{
+                            width:100%;
+                            height:20%;
+                            display: flex;
+                            .punchTime{
+                                flex:1.5;
+                                position: relative;
+                                .timeCenter{
+                                    width:100%;
+                                    position: absolute;
+                                    top:50%;
+                                    transform: translateY(-50%);
+                                    span{
+                                        display: block;
+                                        text-align: right;
+                                    }
+                                }
+                            }
+                            .punchCheck{
+                                flex:0.8;
+                                display: flex;
+                                justify-content: center;
+                                align-items: center;
+                            }
+                            .punchInfo{
+                                flex:2;
+                                position: relative;
+                                .infoCenter{
+                                    width: 100%;
+                                    position: absolute;
+                                    left:50%;
+                                    top:50%;
+                                    transform: translate(-50%,-50%);
+                                    .normal{
+                                        color: #4db3a4;
+                                    }
+                                    .abnormal{
+                                        color:#f58377;
+                                    }
+                                }
+
+                            }
+
+                        }
+                    }
+
+
+                }
+                .footerButton{
+                    flex:1;
+                    display: flex;
+                    background-color: #fff;
+                    justify-content: center;
+                    align-items: center;
+                    button{
+                        width:220px;
+                        font-size: rem(14);
+                        letter-spacing:1.5px;
+                        background-color: #ffc600;
+                        color: #fff;
+                        line-height: 0.5;
+                    }
+                }
             }
         }
     }

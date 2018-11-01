@@ -372,6 +372,7 @@
                 this.heatEm();//环境数据
                 this.getAllScheduleRoute(); //巡检路线输出
                 this.getAllPerson();  //人员输出
+                this.getAllPunch()
             } else if (route.includes('area-deploy')) {
                 if(!this.getLocationId){
                     this.getAllArea();// 片区输出
@@ -2977,6 +2978,42 @@
                             },
                             "job": null,
                             "department": null
+                        },
+                        {
+                            "id": "1665d640b49-c45d01a1a0e0910e",
+                            "creator": "admin",
+                            "createTime": "2018-10-10 17:52:09",
+                            "modifier": "admin",
+                            "modifyTime": "2018-10-23 14:11:16",
+                            "name": "wang",
+                            "cnName": "王司机",
+                            "gender": 1,
+                            "iconId": null,
+                            "mobileNum": null,
+                            "fixedPhoneNum": null,
+                            "idCardNum": null,
+                            "email": null,
+                            "workAddress": null,
+                            "description": null,
+                            "departmentId": "1665d613663-ab3f7860a94b7eca",
+                            "jobId": "1669a577d5b-6d3132a183fa2eee",
+                            "roleId": "165d1e76037-f99c8ddf41f4dea3",
+                            "gpsId": "cf2e849f-35a9-4e93-aee8-6a9a70b87ff3",
+                            "gpsData": {
+                                "deviceId": "cf2e849f-35a9-4e93-aee8-6a9a70b87ff3",
+                                "ioTDeviceId": "1000000",
+                                "deviceName": "gps0",
+                                "createTime": "2018-09-21 10:15:56",
+                                "longitude": 120.13492966687454,
+                                "latitude": 30.308066310370048,
+                                "altitude": null,
+                                "direction": null,
+                                "speed": 0,
+                                "telephone": null,
+                                "deviceNum": "1000000",
+                                "coordinate": "",
+                                "tag": "ceb54f57-08d4-49a0-81db-a3e7c486b154"
+                            }
                         }
                     ]
                     if(users.length > 0){
@@ -3129,6 +3166,42 @@
                             },
                             "job": null,
                             "department": null
+                        },
+                        {
+                            "id": "1665d640b49-c45d01a1a0e0910e",
+                            "creator": "admin",
+                            "createTime": "2018-10-10 17:52:09",
+                            "modifier": "admin",
+                            "modifyTime": "2018-10-23 14:11:16",
+                            "name": "wang",
+                            "cnName": "王司机",
+                            "gender": 1,
+                            "iconId": null,
+                            "mobileNum": null,
+                            "fixedPhoneNum": null,
+                            "idCardNum": null,
+                            "email": null,
+                            "workAddress": null,
+                            "description": null,
+                            "departmentId": "1665d613663-ab3f7860a94b7eca",
+                            "jobId": "1669a577d5b-6d3132a183fa2eee",
+                            "roleId": "165d1e76037-f99c8ddf41f4dea3",
+                            "gpsId": "cf2e849f-35a9-4e93-aee8-6a9a70b87ff3",
+                            "gpsData": {
+                                "deviceId": "cf2e849f-35a9-4e93-aee8-6a9a70b87ff3",
+                                "ioTDeviceId": "1000000",
+                                "deviceName": "gps0",
+                                "createTime": "2018-09-21 10:15:56",
+                                "longitude": 120.13492966687454,
+                                "latitude": 30.308066310370048,
+                                "altitude": null,
+                                "direction": null,
+                                "speed": 0,
+                                "telephone": null,
+                                "deviceNum": "1000000",
+                                "coordinate": "",
+                                "tag": "ceb54f57-08d4-49a0-81db-a3e7c486b154"
+                            }
                         }
                     ]
                     if(users.length > 0){
@@ -3600,6 +3673,9 @@
                                 that.stationInfo = e.data.data
                                 that.stationShow = true
                             });
+
+                        }else if(icon.subtype=="punch"){
+                            //打卡点没有点击事件
 
                         }else if(icon.subtype.includes("led")){
                             // console.log("aaaaaaaaaa")
@@ -4464,6 +4540,11 @@
                                     if(data[i].status == "ONLINE"){
                                         this.treeShow(data[i]);
                                         this.roadShow(data[i].routeObj)
+                                        if(data[i].stations && data[i].stations.length>0){
+                                            data[i].stations.forEach(item=>{
+                                                this.treeShow(item)
+                                            })
+                                        }
                                     }
                                 }else if(data[i].type =='security' && data[i].subtype =="securityPerson"){
                                     if(data[i].status == "ONLINE"){
@@ -4586,6 +4667,11 @@
                                     this.treeHide(this.getTreeState[0].children[i]);
                                 } else if(this.getTreeState[0].children[i].type =='security' && this.getTreeState[0].children[i].subtype =='securitySchedule'){
                                     this.treeHide(this.getTreeState[0].children[i]);
+                                    if(this.getTreeState[0].children[i].stations && this.getTreeState[0].children[i].stations.length>0){
+                                        this.getTreeState[0].children[i].stations.forEach(item=>{
+                                            this.treeHide(item)
+                                        })
+                                    }
                                     this.roadHide(this.getTreeState[0].children[i].routeObj)
                                 }else if(this.getTreeState[0].children[i].type =='transport' && this.getTreeState[0].children[i].subtype =='transportSchedule'){
                                     this.treeHide(this.getTreeState[0].children[i]);
@@ -4769,6 +4855,11 @@
                                 }else if(this.getTreeState[0].type =='security' && this.getTreeState[0].subtype =='securitySchedule'){
                                     if(this.getTreeState[0].status == "ONLINE"){
                                         this.treeShow(this.getTreeState[0]);
+                                        if(this.getTreeState[0].stations && this.getTreeState[0].stations.length>0){
+                                            this.getTreeState[0].stations.forEach(item=>{
+                                                this.treeShow(item)
+                                            })
+                                        }
                                         this.roadShow(this.getTreeState[0].routeObj)
                                     }
                                 }else {
@@ -4894,7 +4985,6 @@
                                                     this.treeHide(item)
                                                 })
                                             }
-
                                             this.roadHide(this.getTreeState[0].routeObj)
                                         }
                                     }
@@ -4902,6 +4992,11 @@
                                     if(this.getTreeState[0].status == "ONLINE"){
                                         this.treeHide(this.getTreeState[0]);
                                         if(this.selectedCast.length == 0){
+                                            if(this.getTreeState[0].stations && this.getTreeState[0].stations.length>0){
+                                                this.getTreeState[0].stations.forEach(item=>{
+                                                    this.treeHide(item)
+                                                })
+                                            }
                                             this.roadHide(this.getTreeState[0].routeObj)
                                         }
                                     }
