@@ -57,60 +57,61 @@
         name: "historyDialog",
         data () {
             return{
-                punchList:[
-                    {
-                        id:'1',
-                        date:'2018-10-04',
-                        time:'14:20:50',
-                        name:'富义仓点位1',
-                        status:'NORMAL',
-                        statusName:'正常',
-                        checked:false
-                    },
-                    {
-                        id:'2',
-                        date:'2018-10-04',
-                        time:'14:20:50',
-                        name:'富义仓点位2',
-                        status:'NORMAL',
-                        statusName:'正常',
-                        checked:false
-                    },
-                    {
-                        id:'3',
-                        date:'2018-10-04',
-                        time:'14:20:50',
-                        name:'富义仓点位3',
-                        status:'ABNORMAL',
-                        statusName:'异常',
-                        checked:false
-                    },
-                    {
-                        id:'4',
-                        date:'2018-10-04',
-                        time:'14:20:50',
-                        name:'富义仓点位4',
-                        status:'NORMAL',
-                        statusName:'正常',
-                        checked:false
-                    },{
-                        id:'5',
-                        date:'2018-10-04',
-                        time:'14:20:50',
-                        name:'富义仓点位5',
-                        status:'NORMAL',
-                        statusName:'正常',
-                        checked:false
-                    },{
-                        id:'6',
-                        date:'2018-10-04',
-                        time:'14:20:50',
-                        name:'富义仓点位6',
-                        status:'NORMAL',
-                        statusName:'正常',
-                        checked:false
-                    }
-                ]
+                punchList:this.punchHistory,
+//                punchList:[
+//                    {
+//                        id:'1',
+//                        date:'2018-10-04',
+//                        time:'14:20:50',
+//                        name:'富义仓点位1',
+//                        status:'NORMAL',
+//                        statusName:'正常',
+//                        checked:false
+//                    },
+//                    {
+//                        id:'2',
+//                        date:'2018-10-04',
+//                        time:'14:20:50',
+//                        name:'富义仓点位2',
+//                        status:'NORMAL',
+//                        statusName:'正常',
+//                        checked:false
+//                    },
+//                    {
+//                        id:'3',
+//                        date:'2018-10-04',
+//                        time:'14:20:50',
+//                        name:'富义仓点位3',
+//                        status:'ABNORMAL',
+//                        statusName:'异常',
+//                        checked:false
+//                    },
+//                    {
+//                        id:'4',
+//                        date:'2018-10-04',
+//                        time:'14:20:50',
+//                        name:'富义仓点位4',
+//                        status:'NORMAL',
+//                        statusName:'正常',
+//                        checked:false
+//                    },{
+//                        id:'5',
+//                        date:'2018-10-04',
+//                        time:'14:20:50',
+//                        name:'富义仓点位5',
+//                        status:'NORMAL',
+//                        statusName:'正常',
+//                        checked:false
+//                    },{
+//                        id:'6',
+//                        date:'2018-10-04',
+//                        time:'14:20:50',
+//                        name:'富义仓点位6',
+//                        status:'NORMAL',
+//                        statusName:'正常',
+//                        checked:false
+//                    }
+//                ]
             }
         },
         methods: {
@@ -182,6 +183,9 @@
             },
             async removeError(){
                 console.log(this.punchList)
+                if(this.punchList.length == 0){
+                    this.$message.warning("没有打卡点数据！")
+                }
                 let ids =  []
                 this.punchList.forEach(item=>{
                     if(item.checked){
@@ -194,7 +198,12 @@
                 }
 
                 await api.punch.removeErrPunch({'ids':ids}).then(res=>{
-                     this.$message.success("操作成功！")
+                    this.$message.success("操作成功！")
+                    this.punchList = this.punchList.filter(item=>{
+                        if(!ids.includes(item.id)){
+                            return true
+                        }
+                    })
                 }).catch(err => {
                     this.$message.error("操作失败！")
                 })

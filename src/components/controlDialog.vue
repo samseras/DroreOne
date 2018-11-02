@@ -405,18 +405,10 @@
                         console.log(JSON.stringify(res))
                         this.historyData = res[0]
                         this.punchHistory = res[1]
-//                        {
-//                            punchTime:'2018-10-04 14:20:50',
-//                                date:'2018-10-04',
-//                            time:'14:20:50',
-//                            name:'富义仓点位1',
-//                            status:'正常',
-//                            checked:false
-//                        },
                         if(this.punchHistory.length >0){
                             this.punchHistory = this.punchHistory.map(item=>{
                                 return {
-                                    id:item.cStation.id,
+                                    id:item.id,
                                     name:item.cStation.name,
                                     status:item.status,
                                     statusName:item.status == "NORMAL" ? "正常" : "异常",
