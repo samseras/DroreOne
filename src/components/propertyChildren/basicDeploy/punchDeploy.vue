@@ -83,7 +83,7 @@
                             <el-checkbox v-model="item.checked" @change="checked(item.id)" class="checkBtn"></el-checkbox>
                         </div>
                         <div class="personType" @click.stop="showPunchDetail(item, '打卡处信息',true)">
-                            <img src="../../../../static/img/punch_deploy.svg" alt="">
+                            <img src="../../../../static/img/punch_deploy.png" alt="">
                             <!--<img :src="getUrl(item.picturePath,item.type)" alt="" @error="imgError">-->
                             <span class="type">
                                   {{item.name}}
@@ -163,18 +163,6 @@
             ...mapMutations(['TOTAL_NUM', 'CURRENT_NUM']),
             imgError (e) {
                 e.target.src = this.getUrl(null,0);
-            },
-            getUrl (url,type) {
-                console.log(type,'这是type')
-                if (url === null || !url) {
-                    if(type == 1){
-                        return  '../../../../static/img/landingCard.png'
-                    }else{
-                            return '../../ ../../static/img/stationCard.png'
-                    }
-                } else {
-                    return url
-                }
             },
             closeDialog () {
                 this.visible = false

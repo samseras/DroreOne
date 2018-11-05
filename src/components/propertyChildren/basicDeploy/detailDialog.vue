@@ -904,7 +904,7 @@
                                imgSrc = './../../../../static/img/landingCard.svg'
                            }
                         } else if (route.includes('punch')){
-                           imgSrc = './../../../../static/img/punch_deploy.svg'
+                           imgSrc = './../../../../static/img/punch_deploy.png'
                        }
                     }
                     return imgSrc

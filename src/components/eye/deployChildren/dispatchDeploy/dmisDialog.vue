@@ -132,7 +132,7 @@
                         </div>
                         <div class="row">
                             <span class="dmisTitle">巡检轮次：</span>
-                            <el-input type="text"v-model="security.inspectionSchedule.checkNum"class="inputText" :maxlength="15" :disabled='isDisabled'></el-input>
+                            <el-input type="text"v-model="security.inspectionSchedule.round"class="inputText" :maxlength="15" :disabled='isDisabled'></el-input>
                         </div>
                         <div class="textArea row">
                             <span class="description dmisTitle">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：</span>
@@ -533,7 +533,7 @@
                 <el-button size="mini" @click = 'closeDialog' :disabled='isDisabled'>取消</el-button>
             </div>
         </el-dialog>
-        <MapDialog v-if="mapVisible" :visible="mapVisible" class="map" @closeMapDialog = 'closeMapDialog'></MapDialog>
+        <MapDialog v-if="mapVisible" :visible="mapVisible" class="map" :routeObj = "routeObj" @closeMapDialog = 'closeMapDialog'></MapDialog>
         <broadcastDialog v-if="broadcastVisible" :visible="broadcastVisible" :broadList="broadList.musics" class="broadcastContent" @closeBroadcastDialog = 'closeBroadcastDialog' @saveMusicList = "musicList"></broadcastDialog>
         <ScreenDialog v-if="screenVisible" :visible="screenVisible" :screenContentList="screen.contents" class="screenContent" @closeScreenDialog = 'closeScreenDialog' @saveContent="saveContent"></ScreenDialog>
         <SiteMap v-if="siteMapVisible" :visible="siteMapVisible" :type="transport.type" class="map" @closeMapDialog = 'closeSiteMapDialog' :isDisabled="isDisabled"></SiteMap>
@@ -698,7 +698,8 @@
                 copyPersonList: [],
                 rowNum:0,
                 routeName:'',
-                gpsOption:[]
+                gpsOption:[],
+                routeObj:{}
             }
         },
         methods: {
@@ -934,8 +935,16 @@
             },
             addNewInfo () {
                 let newInfo = {}
+                let intreg = /^[1-9]\d*$/; //非零正整数校验
+                let emptyreg = /^$/;//空
                 if (this.route.includes('security')) {
                     console.log(!this.security.inspectionSchedule.name, '这个是啥')
+
+                    if(this.security.inspectionSchedule.round && !emptyreg.test(this.security.inspectionSchedule.round) && !intreg.test(this.security.inspectionSchedule.round)) {
+
+                        this.$message.error('轮次只能为数字')
+                        return
+                    }
 
                     if(this.security.iScheduleMaps.length == 0){
                         this.$message.error('请至少添加一条人员信息')
@@ -1405,6 +1414,13 @@
                 }).catch((err)=>{
                     console.log(err)
                 })
+            },
+            async getRouteById(id){
+                await api.roat.getRouteById(id).then(res=>{
+                    this.routeObj = res
+                }).catch(err => {
+                    this.$message.error(err.message)
+                })
             }
         },
         async created () {
@@ -1432,7 +1448,10 @@
                 }
 
                 if (this.Info.id) {
-                    this.$store.commit('LOCATION_ID', this.Info.id)
+                    if(this.security.inspectionSchedule.routeId){
+                        this.getRouteById(this.security.inspectionSchedule.routeId)
+                    }
+                    this.$store.commit('LOCATION_ID', this.Info.inspectionSchedule.routeId)
                 }else {
                     this.$store.commit('LOCATION_ID', '')
                 }
@@ -1502,6 +1521,9 @@
                 this.timeSelect = this.transport.watchTime
 
                 if (this.Info.id) {
+                    if(this.transport.routeId){
+                        this.getRouteById(this.transport.routeId)
+                    }
                     this.$store.commit('LOCATION_ID', this.Info.id)
 
                     if(!this.transport.vDriverMaps){

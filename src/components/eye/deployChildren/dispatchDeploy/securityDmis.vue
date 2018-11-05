@@ -346,7 +346,8 @@
                     customizedShift: info.inspectionSchedule.customizedShift,
                     routeId: info.inspectionSchedule.routeId,
                     description: info.inspectionSchedule.description,
-                    iScheduleMaps:info.iScheduleMaps
+                    iScheduleMaps:info.iScheduleMaps,
+                    round:parseInt(info.inspectionSchedule.round)
                 }
                 if (info.inspectionSchedule.customizedDays) {
                     obj.startDate = moment(info.inspectionSchedule.time[0]).format('YYYY-MM-DD')
@@ -377,7 +378,8 @@
                     customizedShift: info.inspectionSchedule.customizedShift,
                     routeId: info.inspectionSchedule.routeId,
                     description: info.inspectionSchedule.description,
-                    iScheduleMaps:info.iScheduleMaps
+                    iScheduleMaps:info.iScheduleMaps,
+                    round:parseInt(info.inspectionSchedule.round)
                 }
                 if (info.inspectionSchedule.customizedDays) {
                     obj.startDate = moment(info.inspectionSchedule.time[0]).format('YYYY-MM-DD')

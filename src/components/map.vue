@@ -40,7 +40,7 @@
                 </div>
             </div>
         </div>
-        <div class="securityPunch" v-if='spShow'>
+        <div class="securityPunch" v-show='spShow'>
             <button @click="securityPunchShowButton" class="securityPunchShowButton">
                 <span>»</span>
             </button>
@@ -49,6 +49,8 @@
                     <h4>路线关联打卡点</h4>
                     <el-tree :data="securityPunchList"
                              show-checkbox
+                             node-key="id"
+                             ref="tree"
                              @check="handleNodeClick">
 
                     </el-tree>
@@ -396,7 +398,8 @@
                     this.road(); // 路线打点
                 }else {
                     this.getSecurityRouteEdit();//修改路线调度
-                    this.road(); // 路线打点
+                    this.getPunchStation();
+                    this.initPunchTree();//修改路线时初始化树节点选中状态
                 }
             } else if (route.includes('indicator-deploy'))  {
                 this.getAllArea();// 片区输出
@@ -2832,10 +2835,13 @@
                             var areaEvtList =new droreMap.road.RoadLayer('ROUTE_list', '#fb9000', 'blue')
                             let geo =JSON.parse(res[i].geo);
                             let area = [];
-                            for(var j = 0; j < geo.length; j++) {
-                                let wgs=droreMap.trans.transFromWgsToLayer(geo[j])
-                                area.push(wgs);
+                            if(geo.length > 0){
+                                for(var j = 0; j < geo.length; j++) {
+                                    let wgs=droreMap.trans.transFromWgsToLayer(geo[j])
+                                    area.push(wgs);
+                                }
                             }
+
                             var data = {"id": res[i].id, "name": res[i].name,"constructor":''}
                             areaEvtList.addRoad(area, data)
                             droreMap.road.addRoadLayer(areaEvtList,res[i].id)
@@ -4351,6 +4357,16 @@
                     // console.log(objArray,'objArray')
                     this.$store.commit('STATION_CHECKED',objArray);
                 }
+            },
+            initPunchTree(){
+                console.log(this.getSetPunchTree)
+                if(this.getSetPunchTree.length > 0){
+                    let checkedKeysId = []
+                    this.getSetPunchTree.forEach(item=>{
+                        checkedKeysId.push(item.id)
+                    })
+                    this.$refs.tree.setCheckedKeys(checkedKeysId)
+                }
             }
         },
         components: {
@@ -5315,7 +5331,8 @@
                 'getfacilityRoad',
                 'getfacilityStation',
                 'getTreeShow',
-                'getMusicShow'
+                'getMusicShow',
+                'getSetPunchTree',
             ])
         }
     }
