@@ -29,14 +29,20 @@
             </button>
             <div class="tscontent" v-show="tsContentShow">
                 <div class="tscontentList">
-                    <h4>路线关联站点</h4>
-                    <el-checkbox-group v-model="stationCheckedList" @change="stationOpt">
-                        <div class="checkRow" v-for="item in stationCheckList" >
-                            <el-checkbox :label="item.id">{{item.name}}</el-checkbox>
-                            <img src="../../static/img/moveUp.svg"  @click="sortStation('up',item)" />
-                            <img src="../../static/img/moveDown.svg"  @click="sortStation('down',item)" />
-                        </div>
-                    </el-checkbox-group>
+                    <div class="relatetitle">
+                        <h4>路线关联站点</h4>
+                    </div>
+                    <div class="relatecontent">
+                        <Scrollcontainer>
+                            <el-checkbox-group v-model="stationCheckedList" @change="stationOpt">
+                                <div class="checkRow" v-for="item in stationCheckList" >
+                                    <el-checkbox :label="item.id">{{item.name}}</el-checkbox>
+                                    <img src="../../static/img/moveUp.svg"  @click="sortStation('up',item)" />
+                                    <img src="../../static/img/moveDown.svg"  @click="sortStation('down',item)" />
+                                </div>
+                            </el-checkbox-group>
+                        </Scrollcontainer>
+                    </div>
                 </div>
             </div>
         </div>
@@ -1261,17 +1267,6 @@
                             var data = {"id": res[i].id, "name": res[i].name,"constructor":''}
                             areaEvts.addRoad(area, data)
                             droreMap.road.addRoadLayer(areaEvts,res[i].id)
-                        }else{
-                            var areaEvtList =new droreMap.road.RoadLayer('ROUTE_list', '#fb9000', 'blue')
-                            let geo =JSON.parse(res[i].geo);
-                            let area = [];
-                            for(var j = 0; j < geo.length; j++) {
-                                let wgs=droreMap.trans.transFromWgsToLayer(geo[j])
-                                area.push(wgs);
-                            }
-                            var data = {"id": res[i].id, "name": res[i].name,"constructor":''}
-                            areaEvtList.addRoad(area, data)
-                            droreMap.road.addRoadLayer(areaEvtList,res[i].id)
                         }
                     }
                     let that =this
@@ -2833,20 +2828,6 @@
                             var data = {"id": res[i].id, "name": res[i].name,"constructor":''}
                             areaEvts.addRoad(area, data)
                             droreMap.road.addRoadLayer(areaEvts,res[i].id)
-                        }else{
-                            var areaEvtList =new droreMap.road.RoadLayer('ROUTE_list', '#fb9000', 'blue')
-                            let geo =JSON.parse(res[i].geo);
-                            let area = [];
-                            if(geo.length > 0){
-                                for(var j = 0; j < geo.length; j++) {
-                                    let wgs=droreMap.trans.transFromWgsToLayer(geo[j])
-                                    area.push(wgs);
-                                }
-                            }
-
-                            var data = {"id": res[i].id, "name": res[i].name,"constructor":''}
-                            areaEvtList.addRoad(area, data)
-                            droreMap.road.addRoadLayer(areaEvtList,res[i].id)
                         }
                     }
                     let that =this
@@ -5783,17 +5764,25 @@
             border-radius: 5px;
             background-color:rgba(0,0,0,.4);
             .tscontentList{
+                height:rem(400);
                 position: relative;
                 z-index: 1;
                 padding:rem(10) rem(20);
-                h4{
-                    font-size: 14px;
-                    line-height: rem(24);
-                    margin-left: rem(30);
+                .relatetitle{
+                    height:10%;
+                    h4{
+                        font-size: 14px;
+                        line-height: rem(24);
+                        margin-left: rem(30);
+                    }
                 }
-                .checkRow{
-                    display: block;
+                .relatecontent{
+                    height:90%;
+                    .checkRow{
+                        display: block;
+                    }
                 }
+
             }
         }
     }
