@@ -130,6 +130,15 @@ const importfile={
             contentType : false,
             data:params
         })
+    },
+    importStation(params){
+        return axios({
+            method:'POST',
+            url:getUrl('/station/import'),
+            processData : false,
+            contentType : false,
+            data:params
+        })
     }
 }
 export default importfile
