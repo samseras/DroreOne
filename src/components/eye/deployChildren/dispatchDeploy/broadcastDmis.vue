@@ -118,19 +118,30 @@
                 // isStart:false,
                 // isStop:true,
                 selection:[],
-                isShowloading: false
+                isShowloading: false,
+                filterCondition: ''
             }
         },
         methods: {
-            ...mapMutations(['TOTAL_NUM']),
+            ...mapMutations(['TOTAL_NUM', 'CURRENT_NUM']),
             searchAnything (info) {
                 console.log(info, '这是要过滤的')
+                this.filterCondition = info
                 if (info.trim() !== '') {
-                    this.broadCastList = this.allBroadCastList.filter(item => {
+                   let checkList = this.allBroadCastList.filter(item => {
                         if (item.broadcastSchedule.name.includes(info)) {
                             return item
                         }
                         if (item.broadcastSchedule.description.includes(info)) {
+                            return item
+                        }
+                    })
+                    let date = new Date().getTime()
+                    let obj = {totalNum: checkList.length}
+                    obj[date] = new Date().getTime()
+                    this.$store.commit('TOTAL_NUM', obj)
+                    this.broadCastList = checkList.filter((item,index) => {
+                        if (index < (this.getCurrentNum * 35) && index > ((this.getCurrentNum -1) * 35 ) - 1 ) {
                             return item
                         }
                     })
@@ -436,10 +447,6 @@
                     console.log(res, '请求成功')
                     this.isShowLoading = false
                     this.allBroadCastList = res
-                    let date = new Date().getTime()
-                    let obj = {totalNum: res.length}
-                    obj[date] = new Date().getTime()
-                    this.$store.commit('TOTAL_NUM', obj)
                     this.allBroadCastList.forEach(item => {
                         item.checked = false;
                         item.status = true
@@ -458,6 +465,13 @@
                             })
                         }
                     })
+                    if (this.filterCondition.trim() !== '') {
+                        this.allBroadCastList = this.filterDataList(this.allBroadCastList)
+                    }
+                    let date = new Date().getTime()
+                    let obj = {totalNum: this.allBroadCastList.length}
+                    obj[date] = new Date().getTime()
+                    this.$store.commit('TOTAL_NUM', obj)
                     this.broadCastList = this.allBroadCastList.filter((item,index) => {
                         if (index < (this.getCurrentNum * 35) && index > ((this.getCurrentNum -1) * 35 ) - 1 ) {
                             return item
@@ -469,6 +483,18 @@
                     console.log(err, '请求失败')
                     this.isShowLoading = false
                 })
+            },
+            filterDataList (list) {
+                list = list.filter(item => {
+                    let info = this.filterCondition
+                    if (item.broadcastSchedule.name.includes(info)) {
+                        return item
+                    }
+                    if (item.broadcastSchedule.description.includes(info)) {
+                        return item
+                    }
+                })
+                return list
             }
         },
         created () {

@@ -120,7 +120,6 @@
 
                         <div class="uploadText row">
                             <span class="updataTitle dmisTitle">线路绘制：</span>
-                            <!--<input type="text"v-model="security.location" class="location">-->
                             <el-select v-model="security.inspectionSchedule.routeId" placeholder="请选择" :disabled='isDisabled'>
                                 <el-option
                                     v-for="ite in options"
@@ -130,6 +129,10 @@
                                 </el-option>
                             </el-select>
                             <i class="el-icon-location-outline" @click="showMapDialog"></i>
+                        </div>
+                        <div class="row">
+                            <span class="dmisTitle">巡检轮次：</span>
+                            <el-input type="text"v-model="security.inspectionSchedule.round"class="inputText" :maxlength="15" :disabled='isDisabled'></el-input>
                         </div>
                         <div class="textArea row">
                             <span class="description dmisTitle">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：</span>
@@ -530,10 +533,10 @@
                 <el-button size="mini" @click = 'closeDialog' :disabled='isDisabled'>取消</el-button>
             </div>
         </el-dialog>
-        <MapDialog v-if="mapVisible" :visible="mapVisible" class="map" @closeMapDialog = 'closeMapDialog'></MapDialog>
+        <MapDialog v-if="mapVisible" :visible="mapVisible" class="map" :routeObj = "routeObj" @closeMapDialog = 'closeMapDialog'></MapDialog>
         <broadcastDialog v-if="broadcastVisible" :visible="broadcastVisible" :broadList="broadList.musics" class="broadcastContent" @closeBroadcastDialog = 'closeBroadcastDialog' @saveMusicList = "musicList"></broadcastDialog>
         <ScreenDialog v-if="screenVisible" :visible="screenVisible" :screenContentList="screen.contents" class="screenContent" @closeScreenDialog = 'closeScreenDialog' @saveContent="saveContent"></ScreenDialog>
-        <SiteMap v-if="siteMapVisible" :visible="siteMapVisible" :type="transport.type" class="map" @closeMapDialog = 'closeSiteMapDialog' :isDisabled="isDisabled"></SiteMap>
+        <SiteMap v-if="siteMapVisible" :visible="siteMapVisible" :type="transport.type" :routeObj = "routeObj" class="map" @closeMapDialog = 'closeSiteMapDialog' :isDisabled="isDisabled"></SiteMap>
     </div>
 </template>
 
@@ -695,7 +698,8 @@
                 copyPersonList: [],
                 rowNum:0,
                 routeName:'',
-                gpsOption:[]
+                gpsOption:[],
+                routeObj:{}
             }
         },
         methods: {
@@ -931,8 +935,16 @@
             },
             addNewInfo () {
                 let newInfo = {}
+                let intreg = /^[1-9]\d*$/; //非零正整数校验
+                let emptyreg = /^$/;//空
                 if (this.route.includes('security')) {
                     console.log(!this.security.inspectionSchedule.name, '这个是啥')
+
+                    if(this.security.inspectionSchedule.round && !emptyreg.test(this.security.inspectionSchedule.round) && !intreg.test(this.security.inspectionSchedule.round)) {
+
+                        this.$message.error('轮次只能为数字')
+                        return
+                    }
 
                     if(this.security.iScheduleMaps.length == 0){
                         this.$message.error('请至少添加一条人员信息')
@@ -1198,15 +1210,23 @@
                 this.daycustom =false;
             },
             showMapDialog () {
-                this.mapVisible  = true
+                if (this.Info.id) {
+                    if(this.security.inspectionSchedule.routeId){
+                        this.getRouteById(this.security.inspectionSchedule.routeId,'security')
+                    }
+                }else{
+                    this.mapVisible  = true
+                }
+
             },
             showSiteMap(){
-                this.siteMapVisible = true
-                this.lineOptions.forEach(item=>{
-                    if(this.transport.routeId && item.id == this.transport.routeId){
-                        this.routeName = item.name;
+                if (this.Info.id) {
+                    if(this.transport.routeId){
+                        this.getRouteById(this.transport.routeId,'transport')
                     }
-                })
+                }else{
+                    this.siteMapVisible = true
+                }
             },
             showBroadcastDialog () {
                 this.broadcastVisible  = true
@@ -1402,6 +1422,18 @@
                 }).catch((err)=>{
                     console.log(err)
                 })
+            },
+            async getRouteById(id,type){
+                await api.roat.getRouteById(id).then(res=>{
+                    this.routeObj = res
+                    if(type == 'security'){
+                        this.mapVisible = true
+                    }else if(type == 'transport'){
+                        this.siteMapVisible = true
+                    }
+                }).catch(err => {
+                    this.$message.error(err.message)
+                })
             }
         },
         async created () {
@@ -1429,7 +1461,7 @@
                 }
 
                 if (this.Info.id) {
-                    this.$store.commit('LOCATION_ID', this.Info.id)
+                    this.$store.commit('LOCATION_ID', this.Info.inspectionSchedule.routeId)
                 }else {
                     this.$store.commit('LOCATION_ID', '')
                 }
@@ -1499,7 +1531,7 @@
                 this.timeSelect = this.transport.watchTime
 
                 if (this.Info.id) {
-                    this.$store.commit('LOCATION_ID', this.Info.id)
+                    this.$store.commit('LOCATION_ID', this.Info.routeId)
 
                     if(!this.transport.vDriverMaps){
                         this.$set(this.transport,"vDriverMaps",[])
@@ -1712,16 +1744,20 @@
             height: rem(30);
             line-height: rem(20);
         }
-        .el-tree-node__children{
-            /*display: inline-block;*/
-            .el-tree-node,.is-focusable {
+
+        .name{
+            .el-tree-node__children{
                 /*display: inline-block;*/
-                float: left;
+                .el-tree-node,.is-focusable {
+                    /*display: inline-block;*/
+                    float: left;
+                }
+            }
+            .el-tree-node__label {
+                font-size: rem(12);
             }
         }
-        .el-tree-node__label {
-            font-size: rem(12);
-        }
+
          .textArea .el-textarea{
             font-size: rem(12);
         }

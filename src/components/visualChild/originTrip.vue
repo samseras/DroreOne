@@ -64,13 +64,13 @@
                 <div class="originTripRightTopContent">
                     <div class="originDateChoose">
                         <el-date-picker
-                            v-model="currTime"
+                            v-model="currOriginTime"
                             type="daterange"
                             range-separator="至"
                             start-placeholder="开始日期"
                             end-placeholder="结束日期">
                         </el-date-picker>
-                        <el-select v-model="totalFlowCurr" class="flowKind">
+                        <el-select v-model="totalFlowOriginCurr" class="flowKind">
                             <el-option
                                 v-for="item in totalFlowOption"
                                 :key="item.value"
@@ -126,6 +126,7 @@
         data () {
             return {
                 currTime:'',
+                currOriginTime:'',
                 totalFlowOption: [
                     {value: '1', label: '每年'},
                     {value: '2', label: '每月'},
@@ -133,6 +134,7 @@
                     {value: '4', label: '每日'}
                 ],
                 totalFlowCurr:'每周',
+                totalFlowOriginCurr:'每月',
                 geoCoordMap: {
                     '丽水': [119.933512, 28.502719],
                     '杭州': [120.145081, 30.282981],
@@ -751,7 +753,7 @@
             border: none;
         }
         .el-date-editor{
-            width: 250px;
+            width: 230px;
         }
         .el-input__inner{
             background:none;

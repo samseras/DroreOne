@@ -104,16 +104,18 @@
                 isBatchEdit:false,
                 alarmTypeId:'',
                 listLength:'',
-                pageNum:1
+                pageNum:1,
+                filterCondition: ''
 
             }
         },
         methods: {
-            ...mapMutations(['TOTAL_NUM']),
+            ...mapMutations(['TOTAL_NUM', 'CURRENT_NUM']),
             searchAnything (info) {
                 console.log(info, '这是要过滤的')
+                this.filterCondition = info
                 if (info.trim() !== '') {
-                    this.speedingList = this.allSpeedingList.filter(item => {
+                    let checkList = this.allSpeedingList.filter(item => {
                         if (item.name.includes(info)) {
                             return item
                         }
@@ -130,6 +132,15 @@
                             return item
                         }
                         if(item.upperThreshold.toString().includes(info)){
+                            return item
+                        }
+                    })
+                    let date = new Date().getTime()
+                    let obj = {totalNum: checkList.length}
+                    obj[date] = new Date().getTime()
+                    this.$store.commit('TOTAL_NUM', obj)
+                    this.speedingList = checkList.filter((item,index) => {
+                        if (index < (this.getCurrentNum * 35 ) && index > ((this.getCurrentNum -1) * 35 ) - 1 ) {
                             return item
                         }
                     })
@@ -433,10 +444,6 @@
                 await api.alarm.getAlarmRulesByParameters(this.alarmTypeId).then(res => {
                     console.log(res, '请求成功')
                     this.loading = false
-                    let date = new Date().getTime()
-                    let obj = {totalNum: res.length}
-                    obj[date] = new Date().getTime()
-                    this.$store.commit('TOTAL_NUM', obj)
                     this.allSpeedingList = res
                     this.allSpeedingList.forEach(item => {
                         item.checked = false;
@@ -471,6 +478,13 @@
                         }
                     })
                     this.allSpeedingList = _.sortBy(this.allSpeedingList,'byTime')
+                    if (this.filterCondition.trim() !== '') {
+                        this.allSpeedingList = this.filterDataList(this.allSpeedingList)
+                    }
+                    let date = new Date().getTime()
+                    let obj = {totalNum: this.allSpeedingList.length}
+                    obj[date] = new Date().getTime()
+                    this.$store.commit('TOTAL_NUM', obj)
                     this.speedingList = this.allSpeedingList.filter((item,index) => {
                         if (index < (this.getCurrentNum * 35 ) && index > ((this.getCurrentNum -1) * 35 ) - 1 ) {
                             return item
@@ -480,6 +494,31 @@
                     console.log(err, '请求失败')
                     this.loading = false
                 })
+            },
+            filterDataList (list) {
+                list = list.filter(item => {
+
+                    let info = this.filterCondition
+                    if (item.name.includes(info)) {
+                        return item
+                    }
+                    if(item.relatedManagerNames.includes(info)){
+                        return item
+                    }
+                    if(item.relatedVehicleNames.includes(info)){
+                        return item
+                    }
+                    if(item.alarmSeverity.name.includes(info)){
+                        return item
+                    }
+                    if(item.extendThreshold.toString().includes(info)){
+                        return item
+                    }
+                    if(item.upperThreshold.toString().includes(info)){
+                        return item
+                    }
+                })
+                return list
             },
             getAlarmTypeId(typeName){
                 let typeInfo =  this.alarmType.filter(item=>item.name == typeName)

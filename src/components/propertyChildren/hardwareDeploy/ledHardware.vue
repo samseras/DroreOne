@@ -164,11 +164,13 @@
                 allDotList:{
                     close:[],
                     open:[]
-                }
+                },
+                filterCondition: '',
+                typeContent: []
             }
         },
         methods:{
-            ...mapMutations(['TOTAL_NUM']),
+            ...mapMutations(['TOTAL_NUM', 'CURRENT_NUM']),
             imgError (e) {
                 e.target.src = this.getUrl(null);
             },
@@ -219,8 +221,12 @@
             },
             searchAnything (info) {
                 console.log(info, '这是要过滤的')
+                this.filterCondition = info
                 if (info.trim() !== '') {
-                    this.ledList = this.allLedList.filter(item => {
+                    if (this.typeContent.length > 0) {
+                        this.allLedList = this.filterTypeList(this.allLedList)
+                    }
+                    this.checkList = this.allLedList.filter(item => {
                         if (item.ip && item.ip.includes(info)) {
                             return item
                         }
@@ -231,6 +237,15 @@
                             return item
                         }
                         if (item.description && item.description.includes(info)) {
+                            return item
+                        }
+                    })
+                    let date = new Date().getTime()
+                    let obj = {totalNum: this.checkList.length}
+                    obj[date] = new Date().getTime()
+                    this.$store.commit('TOTAL_NUM', obj)
+                    this.ledList = this.checkList.filter((item,index) => {
+                        if (index < (this.getCurrentNum * 35 ) && index > ((this.getCurrentNum -1) * 35 ) - 1 ) {
                             return item
                         }
                     })
@@ -430,14 +445,14 @@
             },
             choseType(type){
                 console.log(type)
+                this.typeContent = type
                 if(type.length===0){
-                    this.ledList=this.checkList.filter((item)=>{
-                        item.status=true
-                        return item
-                    })
+                   this.getAllLed()
                 }else{
-                    this.ledList=this.checkList.filter((item,index)=>{
-                        console.log(item, 'ioioojjkjjjjkjkjk')
+                    if (this.filterCondition.trim() !== '') {
+                        this.allLedList = this.filterDataList(this.allLedList)
+                    }
+                    this.checkList=this.allLedList.filter((item,index)=>{
                         if (item.positionType == 0) {
                             item.type = '室内'
                         } else{
@@ -452,6 +467,15 @@
                         return item.status === true
                     })
                 }
+                let date = new Date().getTime()
+                let obj = {totalNum: this.checkList.length}
+                obj[date] = new Date().getTime()
+                this.$store.commit('TOTAL_NUM', obj)
+                this.ledList = this.checkList.filter((item,index) => {
+                    if (index < (this.getCurrentNum * 35 ) && index > ((this.getCurrentNum -1) * 35 ) - 1 ) {
+                        return item
+                    }
+                })
             },
             selectedAll(state){
                 this.ledList=this.ledList.filter((item)=>{
@@ -484,10 +508,6 @@
                     this.listLength = res.devices.length
                     this.isShowLoading=false
                     this.allLedList=res.devices
-                    let date = new Date().getTime()
-                    let obj = {totalNum: res.devices.length}
-                    obj[date] = new Date().getTime()
-                    this.$store.commit('TOTAL_NUM', obj)
 
                     this.allDotList.close=[]
                     this.allDotList.open=[]
@@ -514,6 +534,16 @@
                         this.allLedList[i].byTime = -(new Date(this.allLedList[i].modifyTime)).getTime()
                     }
                     this.allLedList = _.sortBy(this.allLedList,'byTime')
+                    if (this.filterCondition.trim() !== '') {
+                        this.allLedList = this.filterDataList(this.allLedList)
+                    }
+                    if (this.typeContent.length > 0) {
+                        this.allLedList = this.filterTypeList(this.allLedList)
+                    }
+                    let date = new Date().getTime()
+                    let obj = {totalNum: this.allLedList.length}
+                    obj[date] = new Date().getTime()
+                    this.$store.commit('TOTAL_NUM', obj)
                     this.ledList = this.allLedList.filter((item,index) => {
                         if (index < (this.getCurrentNum * 35 ) && index > ((this.getCurrentNum -1) * 35 ) - 1 ) {
                             return item
@@ -526,6 +556,41 @@
                 }).catch((err)=>{
                     console.log(err)
                 })
+            },
+            filterTypeList (list) {
+                let type = this.typeContent
+                list = list.filter((item,index) => {
+                    if (item.positionType == 0) {
+                        item.type = '室内'
+                    } else{
+                        item.type = '室外'
+                    }
+                    if(type.includes(item.type)){
+                        item.status=true
+                    }else {
+                        item.status=false
+                        console.log(item.type)
+                    }
+                    return item.status === true
+                })
+                return list
+            },
+            filterDataList (list) {
+                list = list.filter(item => {
+                    if (item.ip && item.ip.includes(this.filterCondition)) {
+                        return item
+                    }
+                    if (item.name.includes(this.filterCondition)) {
+                        return item
+                    }
+                    if (item.regionName && item.regionName.includes(this.filterCondition)) {
+                        return item
+                    }
+                    if (item.description && item.description.includes(this.filterCondition)) {
+                        return item
+                    }
+                })
+                return list
             }
         },
         created (){

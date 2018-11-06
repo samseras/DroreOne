@@ -104,16 +104,18 @@
                 loading: false,
                 isBatchEdit:false,
                 listLength:'',
-                pageNum:1
+                pageNum:1,
+                filterCondition: ''
 
             }
         },
         methods: {
-            ...mapMutations(['TOTAL_NUM']),
+            ...mapMutations(['TOTAL_NUM', 'CURRENT_NUM']),
             searchAnything (info) {
                 console.log(info, '这是要过滤的')
+                this.filterCondition = info
                 if (info.trim() !== '') {
-                    this.crossborderList = this.allCrossborderList.filter(item => {
+                    let checkList = this.allCrossborderList.filter(item => {
                         if (item.name.includes(info)) {
                             return item
                         }
@@ -130,6 +132,15 @@
                             return item
                         }
                         if(item.alarmSeverity.name.includes(info)){
+                            return item
+                        }
+                    })
+                    let date = new Date().getTime()
+                    let obj = {totalNum: checkList.length}
+                    obj[date] = new Date().getTime()
+                    this.$store.commit('TOTAL_NUM', obj)
+                    this.crossborderList = checkList.filter((item,index) => {
+                        if (index < (this.getCurrentNum * 35 ) && index > ((this.getCurrentNum -1) * 35 ) - 1 ) {
                             return item
                         }
                     })
@@ -437,10 +448,7 @@
                 await api.alarm.getAlarmRulesByParameters(this.alarmTypeId).then(res => {
                     console.log(res, '请求成功')
                     this.loading = false
-                    let date = new Date().getTime()
-                    let obj = {totalNum: res.length}
-                    obj[date] = new Date().getTime()
-                    this.$store.commit('TOTAL_NUM', obj)
+
                     this.allCrossborderList = res
                     this.allCrossborderList.forEach(item => {
                         item.checked = false;
@@ -466,6 +474,13 @@
                         }
                     })
                     this.allCrossborderList = _.sortBy(this.allCrossborderList,'byTime')
+                    if (this.filterCondition.trim() !== '') {
+                        this.allCrossborderList = this.filterDataList(this.allCrossborderList)
+                    }
+                    let date = new Date().getTime()
+                    let obj = {totalNum: this.allCrossborderList.length}
+                    obj[date] = new Date().getTime()
+                    this.$store.commit('TOTAL_NUM', obj)
                     this.crossborderList = this.allCrossborderList.filter((item,index) => {
                         if (index < (this.getCurrentNum * 35 ) && index > ((this.getCurrentNum -1) * 35 ) - 1 ) {
                             return item
@@ -475,6 +490,27 @@
                     console.log(err, '请求失败')
                     this.loading = false
                 })
+            },
+            filterDataList (list) {
+                list = list.filter(item => {
+                    let info = this.filterCondition
+                    if (item.name.includes(info)) {
+                        return item
+                    }
+                    if(item.relatedManagerNames.includes(info)){
+                        return item
+                    }
+                    if(item.deviceScope.toString().includes(info)){
+                        return item
+                    }
+                    if(item.securityScope.toString().includes(info)){
+                        return item
+                    }
+                    if(item.alarmSeverity.name.includes(info)){
+                        return item
+                    }
+                })
+                return list
             },
             getAlarmTypeId(typeName){
                 let typeInfo =  this.alarmType.filter(item=>item.name == typeName)

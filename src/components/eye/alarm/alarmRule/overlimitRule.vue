@@ -100,7 +100,8 @@
                 loading: false,
                 isBatchEdit:false,
                 listLength:'',
-                pageNum:1
+                pageNum:1,
+                filterCondition: ''
 
             }
         },
@@ -108,8 +109,9 @@
             ...mapMutations(['TOTAL_NUM']),
             searchAnything (info) {
                 console.log(info, '这是要过滤的')
+                this.filterCondition = info
                 if (info.trim() !== '') {
-                    this.overlimitList = this.allOverlimitList.filter(item => {
+                    let checkList = this.allOverlimitList.filter(item => {
                         if (item.name.includes(info)) {
                             return item
                         }
@@ -123,6 +125,15 @@
                             return item
                         }
                         if(item.upperThreshold.toString().includes(info)){
+                            return item
+                        }
+                    })
+                    let date = new Date().getTime()
+                    let obj = {totalNum: checkList.length}
+                    obj[date] = new Date().getTime()
+                    this.$store.commit('TOTAL_NUM', obj)
+                    this.overlimitList = checkList.filter((item,index) => {
+                        if (index < (this.getCurrentNum * 35 ) && index > ((this.getCurrentNum -1) * 35 ) - 1 ) {
                             return item
                         }
                     })
@@ -424,10 +435,7 @@
                 await api.alarm.getAlarmRulesByParameters(this.alarmTypeId).then(res => {
                     console.log(res, '请求成功')
                     this.loading = false
-                    let date = new Date().getTime()
-                    let obj = {totalNum: res.length}
-                    obj[date] = new Date().getTime()
-                    this.$store.commit('TOTAL_NUM', obj)
+
                     this.allOverlimitList = res
                     this.allOverlimitList.forEach(item => {
                         item.checked = false;
@@ -453,6 +461,13 @@
                         }
                     })
                     this.allOverlimitList = _.sortBy(this.allOverlimitList,'byTime')
+                    if (this.filterCondition.trim() !== '') {
+                        this.allOverlimitList = this.filterDataList(this.allOverlimitList)
+                    }
+                    let date = new Date().getTime()
+                    let obj = {totalNum: this.allOverlimitList.length}
+                    obj[date] = new Date().getTime()
+                    this.$store.commit('TOTAL_NUM', obj)
                     this.overlimitList = this.allOverlimitList.filter((item,index) => {
                         if (index < (this.getCurrentNum * 35 ) && index > ((this.getCurrentNum -1) * 35 ) - 1 ) {
                             return item
@@ -462,6 +477,27 @@
                     console.log(err, '请求失败')
                     this.loading = false
                 })
+            },
+            filterDataList (list) {
+                list = list.filter(item => {
+                    let info = this.filterCondition
+                    if (item.name.includes(info)) {
+                        return item
+                    }
+                    if(item.relatedManagerNames.includes(info)){
+                        return item
+                    }
+                    if(item.relatedDeviceNames.includes(info)){
+                        return item
+                    }
+                    if(item.alarmSeverity.name.includes(info)){
+                        return item
+                    }
+                    if(item.upperThreshold.toString().includes(info)){
+                        return item
+                    }
+                })
+                return list
             },
             getAlarmTypeId(typeName){
                 let typeInfo =  this.alarmType.filter(item=>item.name == typeName)

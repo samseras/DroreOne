@@ -49,7 +49,14 @@ const roat = {
             method: 'GET',
             url: getUrl('/route?id='+id)
         })
+    },
+    getRouteById(id){
+        return axios ({
+            method: 'GET',
+            url: getUrl('/route/'+id)
+        })
     }
+
 }
 
 export default roat

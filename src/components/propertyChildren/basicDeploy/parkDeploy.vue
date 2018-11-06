@@ -12,7 +12,6 @@
                         @selectedAll = 'selectedAll'
                         @fixedInfo = 'fixedInfo'
                         :choseId="choseInfoId"
-                        :listsLength="listLength"
                         :personListFlag="selectFlag"
                         @allDotInfo = 'allDotInfo'
                         @searchAnything="searchAnything"
@@ -103,8 +102,8 @@
                             <p class="name">所属区域：<span>{{item.regionName}}</span></p>
                             <p class="sex">状&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;态：<span>{{item.parkingBean.state}}</span></p>
                             <p class="sex text">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：<span>{{item.parkingBean.description}}</span></p>
-                           <!-- <p class="idNum">空余车位：<span>{{item.parkingBean.surplusNum}}</span></p>
-                            <p class="phoneNum">车位总数：<span>{{item.parkingBean.capacity}}</span></p>-->
+                            <!-- <p class="idNum">空余车位：<span>{{item.parkingBean.surplusNum}}</span></p>
+                             <p class="phoneNum">车位总数：<span>{{item.parkingBean.capacity}}</span></p>-->
                         </div>
                     </div>
                     <div class="tip" v-if="show">
@@ -167,11 +166,13 @@
                 allDotList:{
                     close:[],
                     open:[]
-                }
+                },
+                filterCondition: '',
+                typeContent: []
             }
         },
         methods: {
-            ...mapMutations(['TOTAL_NUM']),
+            ...mapMutations(['TOTAL_NUM', 'CURRENT_NUM']),
             imgError (e) {
                 e.target.src = this.getUrl(null);
             },
@@ -210,13 +211,25 @@
             },
             searchAnything (info) {
                 console.log(info, '这是要过滤的')
-                console.log(this.checkList)
+                this.filterCondition = info
                 if (info.trim() !== '') {
-                    this.parkList = this.allParkList.filter(item => {
+                    if (this.typeContent.length > 0) {
+                        this.allParkList = this.filterTypeList(this.allParkList)
+                    }
+                    let checkList = this.allParkList.filter(item => {
                         if ((item.regionName)&&(item.regionName.includes(info))) {
                             return item
                         }
                         if (item.parkingBean.name.includes(info)) {
+                            return item
+                        }
+                    })
+                    let date = new Date().getTime()
+                    let obj = {totalNum: checkList.length}
+                    obj[date] = new Date().getTime()
+                    this.$store.commit('TOTAL_NUM', obj)
+                    this.parkList = checkList.filter((item,index) =>{
+                        if(index <(this.getCurrentNum*35) && index>(this.getCurrentNum-1)*35-1){
                             return item
                         }
                     })
@@ -313,13 +326,14 @@
             },
             choseType (type) {
                 console.log(type)
+                this.typeContent = type
                 if (type.length === 0){
-                    this.parkList = this.checkList.filter((item) => {
-                        item.status = true
-                        return item
-                    })
+                    this.getAllPark()
                 } else {
-                    this.parkList = this.checkList.filter((item,index) => {
+                    if (this.filterCondition.trim() !== '') {
+                        this.allParkList = this.filterDataList(this.allParkList)
+                    }
+                    this.checkList = this.allParkList.filter((item,index) => {
                         if (item.parkingBean.type === 0) {
                             item.type = '室外'
                         } else{
@@ -332,9 +346,16 @@
                         }
                         return item.status === true
                     })
-                    console.log(this.parkList)
-                    console.log(this.isShowParkCard)
                 }
+                let date = new Date().getTime()
+                let obj = {totalNum: this.checkList.length}
+                obj[date] = new Date().getTime()
+                this.$store.commit('TOTAL_NUM', obj)
+                this.parkList = this.checkList.filter((item,index) => {
+                    if (index < (this.getCurrentNum * 35 ) && index > ((this.getCurrentNum -1) * 35 ) - 1 ) {
+                        return item
+                    }
+                })
             },
             selectedAll (state) {
                 console.log(state, 'opopopopop')
@@ -453,10 +474,6 @@
                     }
                     this.isShowLoading = false
                     this.allParkList = res
-                    let date = new Date().getTime()
-                    let obj = {totalNum: res.length}
-                    obj[date] = new Date().getTime()
-                    this.$store.commit('TOTAL_NUM', obj)
 
                     this.allDotList.close=[]
                     this.allDotList.open=[]
@@ -497,6 +514,16 @@
                         this.allParkList[i].byTime = -(new Date(this.allParkList[i].parkingBean.modifyTime)).getTime()
                     }
                     this.allParkList = _.sortBy(this.allParkList, 'byTime')
+                    if (this.filterCondition.trim() !== '') {
+                        this.allParkList = this.filterDataList(this.allParkList)
+                    }
+                    if (this.typeContent.length > 0) {
+                        this.allParkList = this.filterTypeList(this.allParkList)
+                    }
+                    let date = new Date().getTime()
+                    let obj = {totalNum: this.allParkList.length}
+                    obj[date] = new Date().getTime()
+                    this.$store.commit('TOTAL_NUM', obj)
                     this.parkList = this.allParkList.filter((item,index) =>{
                         if(index <(this.getCurrentNum*35) && index>(this.getCurrentNum-1)*35-1){
                             return item
@@ -511,6 +538,34 @@
                     console.log(err)
                     this.isShowLoading = false
                 })
+            },
+            filterTypeList (list) {
+                let type = this.typeContent
+                list = list.filter((item,index) => {
+                    if (item.parkingBean.type === 0) {
+                        item.type = '室外'
+                    } else{
+                        item.type = '室内'
+                    }
+                    if (type.includes(item.type)){
+                        item.status = true
+                    } else if(!type.includes(item.type)){
+                        item.status = false
+                    }
+                    return item.status === true
+                })
+                return list
+            },
+            filterDataList (list) {
+                list = list.filter(item => {
+                    if ((item.regionName)&&(item.regionName.includes(this.filterCondition))) {
+                        return item
+                    }
+                    if (item.parkingBean.name.includes(this.filterCondition)) {
+                        return item
+                    }
+                })
+                return list
             }
         },
         created () {

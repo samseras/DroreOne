@@ -1,16 +1,28 @@
 <template>
     <div class="dmisHeader">
         <div class="searchInfo">
-            <input type="text" placeholder="Search Anything">
-            <i class="el-icon-search"></i>
+            <input type="text" placeholder="Search Anything"  v-model="searchContent">
+            <i class="el-icon-search" @click="startSearch"></i>
         </div>
-        <div class="funcBtn">
-            <el-button size="mini"plain @click="addNewInfo"><i class="el-icon-circle-plus"></i>添加</el-button>
-            <el-checkbox v-model="isSelected" @change="selectedAll"  class='selectedAll' >全选</el-checkbox>
-            <!--<el-button size="mini"plain>导入</el-button>-->
-            <!--<el-button size="mini"plain>导出</el-button>-->
-            <el-button size="mini"plain @click="deleteCard"><i class="el-icon-delete"></i>删除</el-button>
-            <!--<el-button size="mini"plain @click="fixCard"><i class="el-icon-edit"></i>修改</el-button>-->
+        <div class="funcBtn" v-if="route.includes('punch')">
+            <div class="checkStyle">
+                <el-checkbox-group v-model="filterList" @change="choseType">
+                    <el-checkbox v-for="item in statusList" :label="item.type" :key="item.type"></el-checkbox>
+                </el-checkbox-group>
+            </div>
+            <div class="selectDate">
+                <el-date-picker
+                    v-model="dateRange"
+                    type="datetimerange"
+                    :picker-options="pickerOptions"
+                    range-separator="至"
+                    start-placeholder="开始日期"
+                    end-placeholder="结束日期"
+                    align="right"
+                    value-format="yyyy-MM-dd HH:mm:ss"
+                    @change="dateCheck">
+                </el-date-picker>
+            </div>
         </div>
         <div class="filite" v-if="route.includes('person')">
             <el-checkbox-group v-model="filterList" @change="choseType">
@@ -27,7 +39,6 @@
             <span class="upPage"><</span>
             <span class="downPage">></span>
             <span class="listForm"><i class="el-icon-tickets"></i></span>
-            <!--<span class="cardForm" @click="toggleList('card')"><i class="el-icon-menu"></i></span>-->
         </div>
     </div>
 </template>
@@ -37,47 +48,87 @@
         name: "fun-header",
         data () {
             return {
+                dateRange:'',
+                pickerOptions: {
+                    shortcuts: [{
+                        text: '最近一天',
+                        onClick(picker) {
+                            const end = new Date();
+                            const start = new Date();
+                            start.setTime(start.getTime() - 3600 * 1000 * 24 * 1);
+                            picker.$emit('pick', [start, end]);
+                        }
+                    },{
+                        text: '最近一周',
+                        onClick(picker) {
+                            const end = new Date();
+                            const start = new Date();
+                            start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
+                            picker.$emit('pick', [start, end]);
+                        }
+                    }, {
+                        text: '最近一个月',
+                        onClick(picker) {
+                            const end = new Date();
+                            const start = new Date();
+                            start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
+                            picker.$emit('pick', [start, end]);
+                        }
+                    }]
+                },
                 filterList: [],
-                personTypeList: [
-                    {type: '安保'},
-                    {type: '售票'},
-                    {type: '保洁'},
-                    {type: '检票'}
-                ],
-                indicatorType: [
-                    {type: '广播'},
-                    {type: '路灯'},
-                    {type: 'LED'}
+                statusList:[
+                    {type: '正常'},
+                    {type: '异常'}
                 ],
                 route: '',
                 isSelected: false,
                 isShowJobType: true,
                 isShowIndicatorType: true,
-                isShowTrashType: true
+                isShowTrashType: true,
+                searchContent:''
             }
         },
         methods: {
-            addNewInfo () {
-                // console.log(this.$route.path, 'opop')
-
-                this.$emit('addNewInfo')
+            startSearch () {
+                // if (this.searchContent !== '') {
+                this.$emit('searchAnything', this.searchContent)
+                // }
             },
-            deleteCard () {
-                this.$emit('deletInfo')
+            dateCheck(val){
+                let status = ''
+                if(this.filterList.length == 1){
+                    if(this.filterList[0] == "正常"){
+                        status = 'NORMAL'
+                    }else{
+                        status = 'ABNORMAL'
+                    }
+                }
+                let filterObj ={
+                    "entityId":null,
+                    "from":this.dateRange.length>0 ? this.dateRange[0] : '',
+                    "to":this.dateRange.length>0 ? this.dateRange[1] : '',
+                    "status":status
+                }
+                this.$emit('choseType',filterObj)
             },
-            // toggleList (type) {
-            //     this.$emit('toggleList',type)
-            // },
             choseType () {
-                this.$emit('choseType',this.filterList)
-            },
-            selectedAll () {
-                // this.isSelected = !this.isSelected
-                console.log(this.isSelected, 'zhehis')
-                this.$emit('selectedAll', this.isSelected)
-            },
-            fixCard () {
-                this.$emit('fixedInfo')
+                if(this.filterList.length == 1){
+                    if(this.filterList[0] == "正常"){
+                        status = 'false'
+                    }else{
+                        status = 'true'
+                    }
+                }else{
+                    status = null
+                }
+                let filterObj ={
+                    "entityId":null,
+                    "from":this.dateRange.length>0 ? this.dateRange[0] : '',
+                    "to":this.dateRange.length>0 ? this.dateRange[1] : '',
+                    "status":status
+                }
+                this.$emit('choseType',filterObj)
             },
             showPersonJob () {
                 this.route = this.$route.path
@@ -115,32 +166,56 @@
             margin-top: rem(2);
             margin-right: rem(2);
         }
+        .selectDate{
+            .el-input__inner{
+                height: rem(30) !important;
+                line-height: 15px;
+            }
+            .el-range-editor.el-input__inner{
+                padding:0;
+                .el-range-input{
+                    height:89%;
+                }
+            }
+        }
     }
-    /*.personList{*/
-        /*.el-table{*/
-            /*font-size: rem(14);*/
-            /*table{*/
-                /*th{*/
-                    /*background: #f3f3f3;*/
-                    /*.cell{*/
-                        /*font-size: rem(14);*/
-                        /*font-weight: 500;*/
-                        /*color: #333;*/
-                    /*}*/
-                /*}*/
-            /*}*/
-            /*td,th{*/
-                /*padding: 5px 0;*/
-            /*}*/
-            /*.cell{*/
-                /*font-size: rem(12);*/
-                /*span:hover{*/
-                    /*color: #54c5f2;*/
-                    /*cursor:pointer;*/
-                /*}*/
-            /*}*/
-        /*}*/
-    /*}*/
+    .punchRecord{
+        .personList{
+            .el-table{
+                font-size: rem(14);
+                table{
+                    th{
+                        background: #f3f3f3;
+                        .caret-wrapper{
+                            height: rem(22);
+                            line-height:rem(22);
+                            .sort-caret.ascending{
+                                top:0
+                            }
+                            .sort-caret.descending{
+                                bottom:0
+                            }
+                        }
+                    }
+                }
+                td,th{
+                }
+                .cell{
+                    font-size: rem(14);
+                    span{
+                        display: inline-block;
+                        text-overflow: ellipsis;
+                        white-space: nowrap;
+                    }
+                    span:hover{
+                        color: #54c5f2;
+                        cursor:pointer;
+
+                    }
+                }
+            }
+        }
+    }
 </style>
 
 <style lang="scss" scoped type="text/scss">
@@ -185,6 +260,23 @@
             .el-button {
                 padding: rem(5) rem(5);
                 margin: 0;
+            }
+            .selectDate{
+                height: rem(30);
+                display: inline-block;
+                margin-top: rem(-10);
+                margin-left: rem(50);
+                float: right;
+                span{
+                    font-size: rem(14);
+                }
+            }
+            .checkStyle{
+                margin-left: rem(30);
+                .el-checkbox{
+                    margin-left: rem(10);
+                    margin-bottom: rem(2);
+                }
             }
         }
         .filite{

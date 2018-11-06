@@ -171,11 +171,13 @@
                 allDotList:{
                     close:[],
                     open:[]
-                }
+                },
+                filterCondition: '',
+                typeContent: []
             }
         },
         methods:{
-            ...mapMutations(['TOTAL_NUM']),
+            ...mapMutations(['TOTAL_NUM', 'CURRENT_NUM']),
             imgError (e) {
                 e.target.src = this.getUrl(null);
             },
@@ -225,9 +227,12 @@
             },
             searchAnything (info) {
                 console.log(info, '这是要过滤的')
+                this.filterCondition = info
                 if (info.trim() !== '') {
-                    // console.log(this.checkList, 'p[p[p[p[p[p[p[p[p')
-                    this.wifiList = this.allWifiList.filter(item => {
+                    if (this.typeContent.length > 0) {
+                        this.allWifiList = this.filterTypeList(this.allWifiList)
+                    }
+                    this.checkList = this.allWifiList.filter(item => {
                         if (item.regionName && item.regionName.includes(info)) {
                             return item
                         }
@@ -238,6 +243,15 @@
                             return item
                         }
                         if (item.description && item.description.includes(info)) {
+                            return item
+                        }
+                    })
+                    let date = new Date().getTime()
+                    let obj = {totalNum: this.checkList.length}
+                    obj[date] = new Date().getTime()
+                    this.$store.commit('TOTAL_NUM', obj)
+                    this.wifiList = this.checkList.filter((item,index) => {
+                        if (index < (this.getCurrentNum * 35 ) && index > ((this.getCurrentNum -1) * 35 ) - 1 ) {
                             return item
                         }
                     })
@@ -430,13 +444,14 @@
             },
             choseType(type){
                 console.log(type)
+                this.typeContent = type
                 if(type.length===0){
-                    this.wifiList=this.checkList.filter((item)=>{
-                        item.status=true
-                        return item
-                    })
+                    this.getAllWifi()
                 }else{
-                    this.wifiList=this.checkList.filter((item,index)=>{
+                    if (this.filterCondition.trim() !== '') {
+                        this.allWifiList = this.filterDataList(this.allWifiList)
+                    }
+                    this.checkList=this.allWifiList.filter((item,index)=>{
                         if (item.positionType == 0) {
                             item.type = '室内'
                         } else{
@@ -451,6 +466,15 @@
                         return item.status === true
                     })
                 }
+                let date = new Date().getTime()
+                let obj = {totalNum: this.checkList.length}
+                obj[date] = new Date().getTime()
+                this.$store.commit('TOTAL_NUM', obj)
+                this.wifiList = this.checkList.filter((item,index) => {
+                    if (index < (this.getCurrentNum * 35 ) && index > ((this.getCurrentNum -1) * 35 ) - 1 ) {
+                        return item
+                    }
+                })
             },
             selectedAll(state){
                 this.wifiList=this.wifiList.filter((item)=>{
@@ -482,10 +506,6 @@
                     this.listLength = res.devices.length
                     this.isShowLoading=false
                     this.allWifiList=res.devices
-                    let date = new Date().getTime()
-                    let obj = {totalNum: res.devices.length}
-                    obj[date] = new Date().getTime()
-                    this.$store.commit('TOTAL_NUM', obj)
 
                     this.allDotList.close=[]
                     this.allDotList.open=[]
@@ -510,6 +530,16 @@
                         this.allWifiList[i].byTime = -(new Date(this.allWifiList[i].modifyTime)).getTime()
                     }
                     this.allWifiList = _.sortBy(this.allWifiList,'byTime')
+                    if (this.filterCondition.trim() !== '') {
+                        this.allWifiList = this.filterDataList(this.allWifiList)
+                    }
+                    if (this.typeContent.length > 0) {
+                        this.allWifiList = this.filterTypeList(this.allWifiList)
+                    }
+                    let date = new Date().getTime()
+                    let obj = {totalNum: this.allWifiList.length}
+                    obj[date] = new Date().getTime()
+                    this.$store.commit('TOTAL_NUM', obj)
                     this.wifiList = this.allWifiList.filter((item,index) => {
                         if (index < (this.getCurrentNum * 35 ) && index > ((this.getCurrentNum -1) * 35 ) - 1 ) {
                             return item
@@ -522,6 +552,41 @@
                     console.log(err)
                 })
 
+            },
+            filterTypeList (list) {
+                let type = this.typeContent
+                list = list.filter((item,index) => {
+                    if (item.positionType == 0) {
+                        item.type = '室内'
+                    } else{
+                        item.type = '室外'
+                    }
+                    if(type.includes(item.type)){
+                        item.status=true
+                    }else if(!type.includes(item.type)){
+                        item.status=false
+                        console.log(item.type)
+                    }
+                    return item.status === true
+                })
+                return list
+            },
+            filterDataList (list) {
+                list = list.filter(item => {
+                    if (item.regionName && item.regionName.includes(this.filterCondition)) {
+                        return item
+                    }
+                    if (item.name.includes(this.filterCondition)) {
+                        return item
+                    }
+                    if (item.modelName && item.modelName.includes(this.filterCondition)) {
+                        return item
+                    }
+                    if (item.description && item.description.includes(this.filterCondition)) {
+                        return item
+                    }
+                })
+                return list
             }
         },
         created (){

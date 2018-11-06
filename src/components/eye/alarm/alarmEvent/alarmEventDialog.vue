@@ -8,249 +8,249 @@
             width="580px"
             :class="isBatchEdit ? 'batchHeight' : 'normalHeight'"
             center>
-                <div class="alarmEventContent">
-                    <!--批量编辑-->
-                    <ScrollContainer>
-                        <div  v-if="!isPatrolEvent && !isBatchEdit"  class="alarmContent">
-                            <p class="serialNum">
-                                <span>编&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 号：</span>
-                                <el-input type="text" v-model='eventInfo.serialNum' class="inputText" :maxlength="15" :disabled="true"></el-input>
-                            </p>
-                            <p class="type">
-                                <span>告警类型：</span>
-                                <el-input type="text" v-model='eventInfo.alarmType.name' class="inputText" :maxlength="15" :disabled='true'></el-input>
-                            </p>
-                            <p class="sourceDevice">
-                                <span>来&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 源：</span>
-                                <el-input type="text"  v-model='eventInfo.device.name' class="inputText" :maxlength="15" :disabled='true'></el-input>
-                            </p>
-                            <p class="occurenceTime">
-                                <span>发生时间：</span>
-                                <el-input type="text"  v-model='eventInfo.occurenceTime' class="inputText" :maxlength="15" :disabled='true'></el-input>
-                            </p>
-                            <p class="alarmRule" v-if="eventInfo.rule && eventInfo.rule.name">
-                                <span class="ruleStyle">关联规则：</span>
-                                <!--<el-input type="text" v-model='eventInfo.alarmRuleName' class="inputText" :maxlength="15" :readonly='true'></el-input>-->
-                                <span class="inputText el-input showRuleDetail ruleStyle" @click="showRuleDetail">{{eventInfo.rule.name}}</span>
-                                <!--<div class="inputText el-input"></div>-->
-                            </p>
-                            <p class="level">
-                                <span>严重等级：</span>
-                                <el-select  v-model="eventInfo.severity.id" size="mini" class="" placeholder="请选择" :disabled="readOnly">
+            <div class="alarmEventContent">
+                <!--批量编辑-->
+                <ScrollContainer>
+                    <div  v-if="!isPatrolEvent && !isBatchEdit"  class="alarmContent">
+                        <p class="serialNum">
+                            <span>编&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 号：</span>
+                            <el-input type="text" v-model='eventInfo.serialNum' class="inputText" :maxlength="15" :disabled="true"></el-input>
+                        </p>
+                        <p class="type">
+                            <span>告警类型：</span>
+                            <el-input type="text" v-model='eventInfo.alarmType.name' class="inputText" :maxlength="15" :disabled='true'></el-input>
+                        </p>
+                        <p class="sourceDevice">
+                            <span>来&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 源：</span>
+                            <el-input type="text"  v-model='eventInfo.device.name' class="inputText" :maxlength="15" :disabled='true'></el-input>
+                        </p>
+                        <p class="occurenceTime">
+                            <span>发生时间：</span>
+                            <el-input type="text"  v-model='eventInfo.occurenceTime' class="inputText" :maxlength="15" :disabled='true'></el-input>
+                        </p>
+                        <p class="alarmRule" v-if="eventInfo.rule && eventInfo.rule.name">
+                            <span class="ruleStyle">关联规则：</span>
+                            <!--<el-input type="text" v-model='eventInfo.alarmRuleName' class="inputText" :maxlength="15" :readonly='true'></el-input>-->
+                            <span class="inputText el-input showRuleDetail ruleStyle" @click="showRuleDetail">{{eventInfo.rule.name}}</span>
+                            <!--<div class="inputText el-input"></div>-->
+                        </p>
+                        <p class="level">
+                            <span>严重等级：</span>
+                            <el-select  v-model="eventInfo.severity.id" size="mini" class="" placeholder="请选择" :disabled="readOnly">
+                                <el-option
+                                    v-for="item in levelInfo"
+                                    :key="item.id"
+                                    :label="item.name"
+                                    :value="item.id">
+                                </el-option>
+                            </el-select>
+                        </p>
+                        <p class="owner">
+                            <span>负责人员：</span>
+                            <el-select  v-model="eventInfo.owner.id" @change="ownerChange" size="mini" class="" placeholder="请选择" :disabled="readOnly">
+                                <el-option-group
+                                    v-for="group in personInfo"
+                                    :key="group.label"
+                                    :label="group.label">
                                     <el-option
-                                        v-for="item in levelInfo"
+                                        v-for="item in group.options"
                                         :key="item.id"
                                         :label="item.name"
                                         :value="item.id">
                                     </el-option>
-                                </el-select>
-                            </p>
-                            <p class="owner">
-                                <span>负责人员：</span>
-                                <el-select  v-model="eventInfo.owner.id" @change="ownerChange" size="mini" class="" placeholder="请选择" :disabled="readOnly">
-                                    <el-option-group
-                                        v-for="group in personInfo"
-                                        :key="group.label"
-                                        :label="group.label">
-                                        <el-option
-                                            v-for="item in group.options"
-                                            :key="item.id"
-                                            :label="item.name"
-                                            :value="item.id">
-                                        </el-option>
-                                    </el-option-group>
-                                </el-select>
-                            </p>
+                                </el-option-group>
+                            </el-select>
+                        </p>
 
-                            <p v-if="ruleInfo.alarmTypeId && ruleInfo.alarmTypeId == '5'" class="name">
-                                <span>实际时长阈值：</span>
-                                <el-input type="text" v-model='eventInfo.acturalExtendValue' class="inputText" :maxlength="15" :disabled='true'></el-input>
-                                (千米/小时)
-                            </p>
-                            <p v-if="ruleInfo.alarmTypeId && ruleInfo.alarmTypeId == '5'" class="name">
-                                <span>实际最高速度：</span>
-                                <el-input type="text" v-model='eventInfo.actualValue' class="inputText" :maxlength="15" :disabled='true'></el-input>
-                                (千米/小时)
-                            </p>
+                        <p v-if="ruleInfo.alarmTypeId && ruleInfo.alarmTypeId == '5'" class="name">
+                            <span>实际时长阈值：</span>
+                            <el-input type="text" v-model='eventInfo.acturalExtendValue' class="inputText" :maxlength="15" :disabled='true'></el-input>
+                            (千米/小时)
+                        </p>
+                        <p v-if="ruleInfo.alarmTypeId && ruleInfo.alarmTypeId == '5'" class="name">
+                            <span>实际最高速度：</span>
+                            <el-input type="text" v-model='eventInfo.actualValue' class="inputText" :maxlength="15" :disabled='true'></el-input>
+                            (千米/小时)
+                        </p>
 
-                            <p class="tel">
-                                <span>电话号码：</span>
-                                <el-input type="text" v-model="eventInfo.owner.mobileNum" class="inputText" :maxlength="15"></el-input>
-                            </p>
-                            <p class="status">
-                                <span>状&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 态:</span>
-                                <el-select  v-model="eventInfo.status.id" size="mini" class="" placeholder="请选择" :disabled="readOnly">
-                                    <el-option
-                                        v-for="item in statusInfo"
-                                        :key="item.id"
-                                        :label="item.name"
-                                        :value="item.id">
-                                    </el-option>
-                                </el-select>
-                            </p>
-                            <p class="description textArea">
-                                <span>处理备注：</span>
-                                <el-input type="textarea" :rows='5' :cols="30" placeholder="请输入描述信息" v-model="handleDescription" :disabled="readOnly" :maxlength="140"></el-input>
-                            </p>
-                            <div class="attachment">
-                                <span>附&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;件：</span>
-                                <div class="showFilelist" >
-                                    <div class="uploadlist" v-for="item in fileList">
-                                        <el-checkbox v-model="item.checked" class="checkBoxBtn"></el-checkbox>
-                                        <span v-if="item.path" class="downloadThis" @click="downloadFile(item)">{{item.title}}</span>
-                                        <span v-else>{{item.title}}</span>
-                                    </div>
-                                </div>
-                                <div class="uploadContent">
-                                    <el-button size="mini" class="hold" @click="$refs.uploadFile.click()" :disabled="readOnly">上传附件</el-button>
-                                     <el-button size="mini" class="hold" @click="deleteFile" :disabled="readOnly || emptyFile">删除文件</el-button>
-                                    <input type="file" ref="uploadFile" class="multiFile"  multiple="multiple" @change="selectFile">
+                        <p class="tel">
+                            <span>电话号码：</span>
+                            <el-input type="text" v-model="eventInfo.owner.mobileNum" class="inputText" :maxlength="15"></el-input>
+                        </p>
+                        <p class="status">
+                            <span>状&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 态:</span>
+                            <el-select  v-model="eventInfo.status.id" size="mini" class="" placeholder="请选择" :disabled="readOnly">
+                                <el-option
+                                    v-for="item in statusInfo"
+                                    :key="item.id"
+                                    :label="item.name"
+                                    :value="item.id">
+                                </el-option>
+                            </el-select>
+                        </p>
+                        <p class="description textArea">
+                            <span>处理备注：</span>
+                            <el-input type="textarea" :rows='5' :cols="30" placeholder="请输入描述信息" v-model="handleDescription" :disabled="readOnly" :maxlength="140"></el-input>
+                        </p>
+                        <div class="attachment">
+                            <span>附&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;件：</span>
+                            <div class="showFilelist" >
+                                <div class="uploadlist" v-for="item in fileList">
+                                    <el-checkbox v-model="item.checked" class="checkBoxBtn"></el-checkbox>
+                                    <span v-if="item.path" class="downloadThis" @click="downloadFile(item)">{{item.title}}</span>
+                                    <span v-else>{{item.title}}</span>
                                 </div>
                             </div>
-
-                            <div class="processLog">
-                                <span>处理记录：</span>
-                                <div class="processDiv" v-for="(item, index) in orderByTime">
-                                    <div class="processTime">{{item.submitTime}}</div>
-                                    <img :src="getStatusPng(item.alarmStatusId,index)" alt="">
-                                    <div class="processContent">
-                                        编辑人：{{item.submitter}}<br>
-                                        <div>{{item.modifiedFields}}
-                                        </div>
-                                        {{item.handleDescription}}
-                                    </div>
-                                </div>
+                            <div class="uploadContent">
+                                <el-button size="mini" class="hold" @click="$refs.uploadFile.click()" :disabled="readOnly">上传附件</el-button>
+                                <el-button size="mini" class="hold" @click="deleteFile" :disabled="readOnly || emptyFile">删除文件</el-button>
+                                <input type="file" ref="uploadFile" class="multiFile"  multiple="multiple" @change="selectFile">
                             </div>
                         </div>
 
-                        <div  v-if="isPatrolEvent"  class="alarmContent">
-                            <p class="serialNum">
-                                <span>事&nbsp;&nbsp;件&nbsp;&nbsp;编&nbsp;&nbsp;&nbsp;号：</span>
-                                <el-input type="text" v-model='addEventInfo.serialNum' class="inputText" :maxlength="15" :disabled= "true"></el-input>
-                            </p>
-                            <p class="type">
-                                <span>故障设备类型：</span>
-                                <el-select @change="deviceTypeChange" v-model="addEventInfo.device.typeId" :disabled="readOnly" placeholder="请选择"  :maxlength="15">
-                                    <el-option
-                                        v-for="item in deviceType"
-                                        :key="item.id"
-                                        :label="item.name"
-                                        :value="item.id">
-                                    </el-option>
-                                </el-select>
-                            </p>
-                            <p class="sourceDevice">
-                                <span>故&nbsp;&nbsp;障&nbsp;&nbsp;设&nbsp;&nbsp;&nbsp;备：</span>
-                                <el-select filterable @change="deviceChange"  v-model="addEventInfo.device.id" :disabled= "isNotDevice" placeholder="请选择"  :maxlength="15">
-                                    <el-option
-                                        v-for="item in deviceObj"
-                                        :key="item.id"
-                                        :label="item.name"
-                                        :value="item.id">
-                                    </el-option>
-                                </el-select>
-                            </p>
-                            <p class="level">
-                                <span>严&nbsp;&nbsp;重&nbsp;&nbsp;等&nbsp;&nbsp;&nbsp;级：</span>
-                                <el-select  v-model="addEventInfo.severity.id" class="" :disabled="readOnly" placeholder="请选择" >
-                                    <el-option
-                                        v-for="item in levelInfo"
-                                        :key="item.id"
-                                        :label="item.name"
-                                        :value="item.id">
-                                    </el-option>
-                                </el-select>
-                            </p>
-
-                            <p class="tel" v-if="addEventInfo.creator && addEventInfo.creator.name">
-                                <span>创&nbsp;&nbsp;建&nbsp;&nbsp;人&nbsp;&nbsp;&nbsp;员：</span>
-                                <el-input type="text" v-model="addEventInfo.creator.cnName?addEventInfo.creator.cnName:addEventInfo.creator.name" class="inputText" :maxlength="15" :disabled="true"></el-input>
-                            </p>
-                            <p class="tel" v-if="addEventInfo.creator && addEventInfo.creator.name">
-                                <span>电&nbsp;&nbsp;话&nbsp;&nbsp;号&nbsp;&nbsp;&nbsp;码：</span>
-                                <el-input type="text" v-model="addEventInfo.creator.mobileNum" class="inputText"></el-input>
-                            </p>
-                            <p class="owner">
-                                <span>负&nbsp;&nbsp;责&nbsp;&nbsp;人&nbsp;&nbsp;&nbsp;员：</span>
-                                <el-select  v-model="addEventInfo.owner.id" @change="ownerChange" class="" placeholder="请选择" :disabled="readOnly">
-                                    <el-option-group
-                                        v-for="group in personInfo"
-                                        :key="group.label"
-                                        :label="group.label">
-                                        <el-option
-                                            v-for="item in group.options"
-                                            :key="item.id"
-                                            :label="item.name"
-                                            :value="item.id">
-                                        </el-option>
-                                    </el-option-group>
-                                </el-select>
-                            </p>
-
-                            <p class="tel">
-                                <span>电&nbsp;&nbsp;话&nbsp;&nbsp;号&nbsp;&nbsp;&nbsp;码：</span>
-                                <el-input type="text" v-model="addEventInfo.owner.mobileNum" class="inputText" :maxlength="15"></el-input>
-                            </p>
-                            <p>
-                                <span>发&nbsp;&nbsp;生&nbsp;&nbsp;位&nbsp;&nbsp;&nbsp;置：</span>
-                                <span class="ps">{{addEventInfo.location}}</span><i class="el-icon-location-outline" @click="showAlarmDialog"></i>
-                            </p>
-                            <p class="status">
-                                <span>状&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 态:</span>
-                                <el-select  v-model="addEventInfo.status.id" class="" :disabled="readOnly" placeholder="请选择" >
-                                    <el-option
-                                        v-for="item in statusInfo"
-                                        :key="item.id"
-                                        :label="item.name"
-                                        :value="item.id">
-                                    </el-option>
-                                </el-select>
-                            </p>
-                            <p class="description textArea">
-                                <span>描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：</span>
-                                <el-input type="textarea" :rows='5' :cols="30" placeholder="请输入描述信息" v-model="addEventInfo.description" :disabled="readOnly" :maxlength="140"></el-input>
-                            </p>
-                            <p class="description textArea" v-if="!isPatrolAdd">
-                                <span>处&nbsp;&nbsp;理&nbsp;&nbsp;备&nbsp;&nbsp;&nbsp;注：</span>
-                                <el-input type="textarea" :rows='5' :cols="30" placeholder="请输入描述信息" v-model="handleDescription" :disabled="readOnly" :maxlength="140"></el-input>
-                            </p>
-                            <div class="attachment">
-                                <span>附&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;件：</span>
-                                <div class="showFilelist" >
-                                    <div class="uploadlist" v-for="item in fileList">
-                                        <el-checkbox v-model="item.checked" class="checkBoxBtn"></el-checkbox>
-                                        <span v-if="item.path" class="downloadThis" @click="downloadFile(item)">{{item.title}}</span>
-                                        <span v-else>{{item.title}}</span>
+                        <div class="processLog">
+                            <span>处理记录：</span>
+                            <div class="processDiv" v-for="(item, index) in orderByTime">
+                                <div class="processTime">{{item.submitTime}}</div>
+                                <img :src="getStatusPng(item.alarmStatusId,index)" alt="">
+                                <div class="processContent">
+                                    编辑人：{{item.submitter}}<br>
+                                    <div>{{item.modifiedFields}}
                                     </div>
-                                </div>
-                                <div class="uploadContent">
-                                    <el-button size="mini" class="hold" @click="$refs.uploadFile.click()" :disabled="readOnly">上传附件</el-button>
-                                    <el-button size="mini" class="hold" @click="deleteFile" :disabled="readOnly || emptyFile">删除文件</el-button>
-                                    <input type="file" ref="uploadFile" class="multiFile"  multiple="multiple" @change="selectFile">
-                                </div>
-                            </div>
-
-                            <div class="processLog" v-if="!isPatrolAdd">
-                                <span>处理记录：</span>
-                                <div class="processDiv" v-for="(item, index) in orderByTime">
-                                    <div class="processTime">{{item.submitTime}}</div>
-                                    <img :src="getStatusPng(item.alarmStatusId,index)" alt="">
-                                    <div class="processContent">
-                                        编辑人：{{item.submitter}}<br>
-                                        <div>{{item.modifiedFields}}
-                                        </div>
-                                        {{item.handleDescription}}
-                                    </div>
+                                    {{item.handleDescription}}
                                 </div>
                             </div>
                         </div>
-                    </ScrollContainer>
-
-                    <div slot="footer" v-if="!readOnly || isBatchEdit" class="dialog-footer cardFooter">
-                        <el-button size="mini" class="hold" @click='saveDialog'>提交</el-button>
-                        <el-button size="mini" @click = 'closeEventDialog'>取消</el-button>
                     </div>
+
+                    <div  v-if="isPatrolEvent"  class="alarmContent">
+                        <p class="serialNum">
+                            <span>事&nbsp;&nbsp;件&nbsp;&nbsp;编&nbsp;&nbsp;&nbsp;号：</span>
+                            <el-input type="text" v-model='addEventInfo.serialNum' class="inputText" :maxlength="15" :disabled= "true"></el-input>
+                        </p>
+                        <p class="type">
+                            <span>故障设备类型：</span>
+                            <el-select @change="deviceTypeChange" v-model="addEventInfo.device.typeId" :disabled="readOnly" placeholder="请选择"  :maxlength="15">
+                                <el-option
+                                    v-for="item in deviceType"
+                                    :key="item.id"
+                                    :label="item.name"
+                                    :value="item.id">
+                                </el-option>
+                            </el-select>
+                        </p>
+                        <p class="sourceDevice">
+                            <span>故&nbsp;&nbsp;障&nbsp;&nbsp;设&nbsp;&nbsp;&nbsp;备：</span>
+                            <el-select filterable @change="deviceChange"  v-model="addEventInfo.device.id" :disabled= "isNotDevice" placeholder="请选择"  :maxlength="15">
+                                <el-option
+                                    v-for="item in deviceObj"
+                                    :key="item.id"
+                                    :label="item.name"
+                                    :value="item.id">
+                                </el-option>
+                            </el-select>
+                        </p>
+                        <p class="level">
+                            <span>严&nbsp;&nbsp;重&nbsp;&nbsp;等&nbsp;&nbsp;&nbsp;级：</span>
+                            <el-select  v-model="addEventInfo.severity.id" class="" :disabled="readOnly" placeholder="请选择" >
+                                <el-option
+                                    v-for="item in levelInfo"
+                                    :key="item.id"
+                                    :label="item.name"
+                                    :value="item.id">
+                                </el-option>
+                            </el-select>
+                        </p>
+
+                        <p class="tel" v-if="addEventInfo.creator && addEventInfo.creator.name">
+                            <span>创&nbsp;&nbsp;建&nbsp;&nbsp;人&nbsp;&nbsp;&nbsp;员：</span>
+                            <el-input type="text" v-model="addEventInfo.creator.cnName?addEventInfo.creator.cnName:addEventInfo.creator.name" class="inputText" :maxlength="15" :disabled="true"></el-input>
+                        </p>
+                        <p class="tel" v-if="addEventInfo.creator && addEventInfo.creator.name">
+                            <span>电&nbsp;&nbsp;话&nbsp;&nbsp;号&nbsp;&nbsp;&nbsp;码：</span>
+                            <el-input type="text" v-model="addEventInfo.creator.mobileNum" class="inputText"></el-input>
+                        </p>
+                        <p class="owner">
+                            <span>负&nbsp;&nbsp;责&nbsp;&nbsp;人&nbsp;&nbsp;&nbsp;员：</span>
+                            <el-select  v-model="addEventInfo.owner.id" @change="ownerChange" class="" placeholder="请选择" :disabled="readOnly">
+                                <el-option-group
+                                    v-for="group in personInfo"
+                                    :key="group.label"
+                                    :label="group.label">
+                                    <el-option
+                                        v-for="item in group.options"
+                                        :key="item.id"
+                                        :label="item.name"
+                                        :value="item.id">
+                                    </el-option>
+                                </el-option-group>
+                            </el-select>
+                        </p>
+
+                        <p class="tel">
+                            <span>电&nbsp;&nbsp;话&nbsp;&nbsp;号&nbsp;&nbsp;&nbsp;码：</span>
+                            <el-input type="text" v-model="addEventInfo.owner.mobileNum" class="inputText" :maxlength="15"></el-input>
+                        </p>
+                        <p>
+                            <span>发&nbsp;&nbsp;生&nbsp;&nbsp;位&nbsp;&nbsp;&nbsp;置：</span>
+                            <span class="ps">{{addEventInfo.location}}</span><i class="el-icon-location-outline" @click="showAlarmDialog"></i>
+                        </p>
+                        <p class="status">
+                            <span>状&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 态:</span>
+                            <el-select  v-model="addEventInfo.status.id" class="" :disabled="readOnly" placeholder="请选择" >
+                                <el-option
+                                    v-for="item in statusInfo"
+                                    :key="item.id"
+                                    :label="item.name"
+                                    :value="item.id">
+                                </el-option>
+                            </el-select>
+                        </p>
+                        <p class="description textArea">
+                            <span>描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：</span>
+                            <el-input type="textarea" :rows='5' :cols="30" placeholder="请输入描述信息" v-model="addEventInfo.description" :disabled="readOnly" :maxlength="140"></el-input>
+                        </p>
+                        <p class="description textArea" v-if="!isPatrolAdd">
+                            <span>处&nbsp;&nbsp;理&nbsp;&nbsp;备&nbsp;&nbsp;&nbsp;注：</span>
+                            <el-input type="textarea" :rows='5' :cols="30" placeholder="请输入描述信息" v-model="handleDescription" :disabled="readOnly" :maxlength="140"></el-input>
+                        </p>
+                        <div class="attachment">
+                            <span>附&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;件：</span>
+                            <div class="showFilelist" >
+                                <div class="uploadlist" v-for="item in fileList">
+                                    <el-checkbox v-model="item.checked" class="checkBoxBtn"></el-checkbox>
+                                    <span v-if="item.path" class="downloadThis" @click="downloadFile(item)">{{item.title}}</span>
+                                    <span v-else>{{item.title}}</span>
+                                </div>
+                            </div>
+                            <div class="uploadContent">
+                                <el-button size="mini" class="hold" @click="$refs.uploadFile.click()" :disabled="readOnly">上传附件</el-button>
+                                <el-button size="mini" class="hold" @click="deleteFile" :disabled="readOnly || emptyFile">删除文件</el-button>
+                                <input type="file" ref="uploadFile" class="multiFile"  multiple="multiple" @change="selectFile">
+                            </div>
+                        </div>
+
+                        <div class="processLog" v-if="!isPatrolAdd">
+                            <span>处理记录：</span>
+                            <div class="processDiv" v-for="(item, index) in orderByTime">
+                                <div class="processTime">{{item.submitTime}}</div>
+                                <img :src="getStatusPng(item.alarmStatusId,index)" alt="">
+                                <div class="processContent">
+                                    编辑人：{{item.submitter}}<br>
+                                    <div>{{item.modifiedFields}}
+                                    </div>
+                                    {{item.handleDescription}}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </ScrollContainer>
+
+                <div slot="footer" v-if="!readOnly || isBatchEdit" class="dialog-footer cardFooter">
+                    <el-button size="mini" class="hold" @click='saveDialog'>提交</el-button>
+                    <el-button size="mini" @click = 'closeEventDialog'>取消</el-button>
                 </div>
+            </div>
         </el-dialog>
         <AlarmDetail  v-if="ruleVisible"
                       :ruleVisible="ruleVisible"
@@ -260,7 +260,7 @@
         </AlarmDetail>
         <AlarmMap v-if="alarmMapVisible"
                   :visible="alarmMapVisible"
-                    @closeMapDialog = "closeMapDialog" @saveLocation = "saveLocation">
+                  @closeMapDialog = "closeMapDialog" @saveLocation = "saveLocation">
         </AlarmMap>
     </div>
 
@@ -268,9 +268,9 @@
 
 <script>
     import AlarmMap from '@/components/alarmMapDialog'
-     import ScrollContainer from '@/components/ScrollContainer'
-     import api from '@/api'
-     import AlarmDetail from '@/components/eye/alarm/alarmRule/alarmRuleDialog'
+    import ScrollContainer from '@/components/ScrollContainer'
+    import api from '@/api'
+    import AlarmDetail from '@/components/eye/alarm/alarmRule/alarmRuleDialog'
     import { mapGetters} from 'vuex'
     export default {
         props: ['title','visible','readOnly','isBatchEdit','choseInfoId','Info','choseInfos'],
@@ -279,7 +279,7 @@
                 alarmMapVisible:false,
                 eventInfo:{
                     severity:{
-                      id:''
+                        id:''
                     },
                     status:{
                         id:''
@@ -358,8 +358,8 @@
             ...mapGetters([
                 'getLocation'
             ]),
-          orderByTime(){
-              if(this.Info.alarmType.id!='10'){
+            orderByTime(){
+                if(this.Info.alarmType.id!='10'){
                     if(this.eventInfo.handleRecords && this.eventInfo.handleRecords.length >0){
                         return this.eventInfo.handleRecords.reverse()
                     }
@@ -368,7 +368,7 @@
                         return this.addEventInfo.handleRecords.reverse()
                     }
                 }
-          }
+            }
         },
 
         methods: {
@@ -628,10 +628,10 @@
 
             },
             guid() {
-                 return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-                     var r = Math.random()*16|0, v = c == 'x' ? r : (r&0x3|0x8);
-                     return v.toString(16);
-                 });
+                return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+                    var r = Math.random()*16|0, v = c == 'x' ? r : (r&0x3|0x8);
+                    return v.toString(16);
+                });
             },
             selectFile (e) {
                 let fileObjs = []
@@ -669,7 +669,7 @@
                 this.fileList = this.fileList.filter((item)=> !item.checked)
                 this.fileAddList  = this.fileAddList.filter((item)=> {
                     if(this.fileList.includes(item.id)){
-                       return item
+                        return item
                     }
                 })
                 this.$message.success('删除成功')
@@ -753,12 +753,12 @@
                             this.alarmInfo=item
                         }
                     })
-                    if(this.Info.alarmType.id=='10'){
+                    if(this.Info.alarmType && this.Info.alarmType.id=='10'){
                         if(this.alarmInfo.fileList && this.alarmInfo.fileList instanceof Array && this.alarmInfo.fileList.length > 0){
                             this.initFileList = JSON.parse(JSON.stringify(this.alarmInfo.fileList))
                             this.fileList = JSON.parse(JSON.stringify(this.alarmInfo.fileList));
                         }
-                        if(Object.keys(this.alarmInfo).length != 0){
+                        if(this.Info.id){
                             this.isPatrolAdd = false
                             this.addEventInfo = JSON.parse(JSON.stringify(this.alarmInfo));
                             // this.eventInfo = JSON.parse(JSON.stringify(this.Info));
@@ -805,7 +805,7 @@
                 }
             },
             getServityNameById(id){
-               let result =  this.levelInfo.filter((item)=>item.id == id)
+                let result =  this.levelInfo.filter((item)=>item.id == id)
                 return result[0].name
             },
             getStatusNameById(id){
@@ -902,12 +902,12 @@
             deviceTypeChange(val){
                 this.addEventInfo.device.id = ""
                 this.addEventInfo.location = ""
-               if(val == 0){
-                   this.isNotDevice = true
-               }else{
-                   this.isNotDevice = false
-                   this.getDeviceById(val)
-               }
+                if(val == 0){
+                    this.isNotDevice = true
+                }else{
+                    this.isNotDevice = false
+                    this.getDeviceById(val)
+                }
             },
             deviceChange(val){
                 this.deviceObj.forEach(item=>{
@@ -920,7 +920,7 @@
                     }
                 })
             },
-           async getDeviceById(id){
+            async getDeviceById(id){
                 await  api.lib.getDeviceById(id).then(res=>{
                     console.log(this.deviceObj)
                     this.deviceObj = res.devices
@@ -935,13 +935,13 @@
         },
         created () {
             this.init();
-            if(this.Info.alarmType.id=='10'){
+            if(this.Info.alarmType && this.Info.alarmType.id=='10'){
                 this.isPatrolEvent = true
                 if(this.Info.fileList && this.Info.fileList instanceof Array && this.Info.fileList.length > 0){
                     this.initFileList = JSON.parse(JSON.stringify(this.Info.fileList))
                     this.fileList = JSON.parse(JSON.stringify(this.Info.fileList));
                 }
-                if(Object.keys(this.Info).length != 0){
+                if(this.Info.id){
                     this.isPatrolAdd = false
                     this.addEventInfo = JSON.parse(JSON.stringify(this.Info));
                     if(this.addEventInfo.device && this.addEventInfo.device.typeId){
@@ -969,7 +969,7 @@
             ScrollContainer,
             AlarmMap
         },
-         mounted () {
+        mounted () {
         }
     }
 </script>
@@ -1153,15 +1153,15 @@
             width: 100%;
             height: 100%;
             .alarmContent {
-                 width: 100%;
-                 height: 100%;
-                 position: relative;
-                 .uploadContent{
-                     text-align: right;
-                     .multiFile{
-                         display: none;
-                     }
-                 }
+                width: 100%;
+                height: 100%;
+                position: relative;
+                .uploadContent{
+                    text-align: right;
+                    .multiFile{
+                        display: none;
+                    }
+                }
                 .alarmRule{
                     .showRuleDetail{
                         cursor:pointer;
@@ -1176,113 +1176,113 @@
                         line-height:rem(40);
                     }
                 }
-                 .attachment{
-                     .showFilelist{
-                         display: flex;
-                         flex-wrap: wrap;
-                         justify-content:flex-start;
-                         div {
-                             display:inline-block;
-                         }
-                     }
-                     .downloadThis{
-                         cursor:pointer;
-                     }
-                     .downloadThis:hover{
-                         color:blue;
-                         text-decoration: underline;
-                     }
-                 }
-                 .processLog{
-                     /*text-align: cente;*/
-                     p{
-                         border-bottom: 0;
-                     }
-                     .processDiv{
+                .attachment{
+                    .showFilelist{
+                        display: flex;
+                        flex-wrap: wrap;
+                        justify-content:flex-start;
+                        div {
+                            display:inline-block;
+                        }
+                    }
+                    .downloadThis{
+                        cursor:pointer;
+                    }
+                    .downloadThis:hover{
+                        color:blue;
+                        text-decoration: underline;
+                    }
+                }
+                .processLog{
+                    /*text-align: cente;*/
+                    p{
+                        border-bottom: 0;
+                    }
+                    .processDiv{
 
-                     }
-                     .processTime{
-                         width:30%;
-                         float:left;
-                     }
-                     img{
-                         display: inline-block;
-                         float:left;
-                         margin-right: rem(30);
-                     }
-                     .processContent{
-                         overflow: hidden;
-                     }
-                 }
-                 p{
-                     margin-top: rem(8);
-                     border-bottom: 1px solid #ccc;
-                     font-size: rem(12);
-                     input{
-                         border: none;
-                         list-style: none;
-                         outline: none;
-                         font-size: rem(12);
-                     }
-                     select{
-                         border: none;
-                         outline: none;
-                         width: rem(100);
-                         font-size: rem(12);
-                         option{
-                             appearance:none;
-                             list-style: none;
-                             border: none;
-                             width: 100%;
-                             outline: none;
-                             padding: 0;
-                             margin: 0;
-                             /*border:  1px solid #ccc;*/
-                             background: #fff;
+                    }
+                    .processTime{
+                        width:30%;
+                        float:left;
+                    }
+                    img{
+                        display: inline-block;
+                        float:left;
+                        margin-right: rem(30);
+                    }
+                    .processContent{
+                        overflow: hidden;
+                    }
+                }
+                p{
+                    margin-top: rem(8);
+                    border-bottom: 1px solid #ccc;
+                    font-size: rem(12);
+                    input{
+                        border: none;
+                        list-style: none;
+                        outline: none;
+                        font-size: rem(12);
+                    }
+                    select{
+                        border: none;
+                        outline: none;
+                        width: rem(100);
+                        font-size: rem(12);
+                        option{
+                            appearance:none;
+                            list-style: none;
+                            border: none;
+                            width: 100%;
+                            outline: none;
+                            padding: 0;
+                            margin: 0;
+                            /*border:  1px solid #ccc;*/
+                            background: #fff;
 
-                         }
-                     }
-                     .ps{
-                         color:#c0c4cc;
-                         width: rem(365);
-                         overflow: hidden;
-                         text-overflow: ellipsis;
-                         white-space: nowrap;
-                     }
-                     img {
-                         display: inline-block;
-                         width: rem(20);
-                         height: rem(20);
-                         border-radius: 50%;
-                         vertical-align: middle;
-                     }
-                     .location{
-                         width: rem(470);
-                     }
-                     textarea{
-                         resize: none;
-                         outline: none;
-                         padding: rem(3);
-                         box-sizing: border-box;
-                         border-radius: rem(5);
-                         border: 1px solid #ccc;
-                         line-height: rem(28);
-                         width: rem(490);
-                     }
-                     i{
-                         font-size: rem(16);
-                     }
-                     span{
-                         display: inline-block;
-                         line-height: rem(15);
-                         overflow: hidden;
-                         padding-bottom: rem(-1);
-                     }
-                 }
+                        }
+                    }
+                    .ps{
+                        color:#c0c4cc;
+                        width: rem(365);
+                        overflow: hidden;
+                        text-overflow: ellipsis;
+                        white-space: nowrap;
+                    }
+                    img {
+                        display: inline-block;
+                        width: rem(20);
+                        height: rem(20);
+                        border-radius: 50%;
+                        vertical-align: middle;
+                    }
+                    .location{
+                        width: rem(470);
+                    }
+                    textarea{
+                        resize: none;
+                        outline: none;
+                        padding: rem(3);
+                        box-sizing: border-box;
+                        border-radius: rem(5);
+                        border: 1px solid #ccc;
+                        line-height: rem(28);
+                        width: rem(490);
+                    }
+                    i{
+                        font-size: rem(16);
+                    }
+                    span{
+                        display: inline-block;
+                        line-height: rem(15);
+                        overflow: hidden;
+                        padding-bottom: rem(-1);
+                    }
+                }
                 .textArea{
                     border-bottom: none;
                 }
-             }
+            }
             .cardFooter {
                 width: 100%;
                 padding: rem(5) rem(10);

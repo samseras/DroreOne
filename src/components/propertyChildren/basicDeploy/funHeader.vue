@@ -7,14 +7,14 @@
         <div class="funcBtn">
             <el-button size="mini" plain @click="addNewInfo"><i class="el-icon-circle-plus"></i>添加</el-button>
 
-                <el-checkbox v-model="isSelected" @change="selectedAll" class="selectedAll">全选</el-checkbox>
+            <el-checkbox v-model="isSelected" @change="selectedAll" class="selectedAll">全选</el-checkbox>
 
             <!--<el-button size="mini"plain v-if="isShowHeader">导入</el-button>-->
             <div class="el-upload" v-if="isShowHeader">
                 <el-button size="mini" plain @click="$refs.uploadFile.click()"><i class="el-icon-upload2"></i>导入</el-button>
                 <input type="file" ref="uploadFile" class="importFile" @change="selectFile">
             </div>
-            <el-button size="mini"plain @click="expotInfo"><i class="el-icon-download"></i>导出</el-button>
+            <el-button size="mini"plain @click="expotInfo" v-if="isShowHeader"><i class="el-icon-download"></i>导出</el-button>
             <el-button size="mini"plain @click="exportTemplate" v-if="isShowHeader"><i class="el-icon-download"></i>下载模板</el-button>
             <el-button size="mini"plain @click="deleteCard"><i class="el-icon-delete"></i>删除</el-button>
             <el-button size="mini"plain @click="fixCard" v-if="isShowIcon"><i class="el-icon-edit" ></i>修改</el-button>
@@ -23,9 +23,9 @@
             </div>
         </div>
         <!--<div class="filite" v-if="route.includes('person')">-->
-            <!--<el-checkbox-group v-model="filterList" @change="choseType">-->
-                <!--<el-checkbox v-for="item in personTypeList" :label="item.name"></el-checkbox>-->
-            <!--</el-checkbox-group>-->
+        <!--<el-checkbox-group v-model="filterList" @change="choseType">-->
+        <!--<el-checkbox v-for="item in personTypeList" :label="item.name"></el-checkbox>-->
+        <!--</el-checkbox-group>-->
         <!--</div>-->
         <div class="filite" v-if="route.includes('indicator')">
             <el-checkbox-group v-model="filterList" @change="choseType">
@@ -476,6 +476,9 @@
                     } else if (route.includes('boat')) {
                         type = 'vehicle'  //车船
                         fileNames = '车船.csv'
+                    } else if (route.includes('station')) {
+                        type = 'station'  //车船
+                        fileNames = '站点.csv'
                     }
 
                     if (this.choseId.length > 0) {

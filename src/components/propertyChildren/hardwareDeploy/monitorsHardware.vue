@@ -165,10 +165,12 @@
                 allDotList:{
                     close:[],
                     open:[]
-                }
+                },
+                filterCondition: ''
             }
         },
         methods:{
+            ...mapMutations(['TOTAL_NUM', 'CURRENT_NUM']),
             imgError (e) {
                 e.target.src = this.getUrl(null);
             },
@@ -217,8 +219,9 @@
             },
             searchAnything (info) {
                 console.log(info, '这是要过滤的')
+                this.filterCondition = info
                 if (info.trim() !== '') {
-                    this.monitorsList = this.allMonitorsList.filter(item => {
+                    this.checkList = this.allMonitorsList.filter(item => {
                         if (item.regionName && item.regionName.includes(info)) {
                             return item
                         }
@@ -232,6 +235,15 @@
                             return item
                         }
                         if (item.description && item.description.includes(info)) {
+                            return item
+                        }
+                    })
+                    let date = new Date().getTime()
+                    let obj = {totalNum: this.checkList.length}
+                    obj[date] = new Date().getTime()
+                    this.$store.commit('TOTAL_NUM', obj)
+                    this.monitorsList = this.checkList.filter((item,index) => {
+                        if (index < (this.getCurrentNum * 35 ) && index > ((this.getCurrentNum -1) * 35 ) - 1 ) {
                             return item
                         }
                     })
@@ -468,10 +480,6 @@
                     }
                     this.isShowLoading=false
                     this.allMonitorsList=res.devices
-                    let date = new Date().getTime()
-                    let obj = {totalNum: res.devices.length}
-                    obj[date] = new Date().getTime()
-                    this.$store.commit('TOTAL_NUM', obj)
 
                     this.allDotList.close=[]
                     this.allDotList.open=[]
@@ -497,6 +505,13 @@
                         this.allMonitorsList[i].byTime = -(new Date(this.allMonitorsList[i].modifyTime)).getTime()
                     }
                     this.allMonitorsList = _.sortBy(this.allMonitorsList,'byTime')
+                    if (this.filterCondition.trim() !== '') {
+                        this.allMonitorsList = this.filterDataList(this.allMonitorsList)
+                    }
+                    let date = new Date().getTime()
+                    let obj = {totalNum: this.allMonitorsList.length}
+                    obj[date] = new Date().getTime()
+                    this.$store.commit('TOTAL_NUM', obj)
                     this.monitorsList = this.allMonitorsList.filter((item,index) => {
                         if (index < (this.getCurrentNum * 35 ) && index > ((this.getCurrentNum -1) * 35 ) - 1 ) {
                             return item
@@ -509,6 +524,26 @@
                 }).catch((err)=>{
                     console.log(err)
                 })
+            },
+            filterDataList (list) {
+                list = list.filter(item => {
+                    if (item.regionName && item.regionName.includes(this.filterCondition)) {
+                        return item
+                    }
+                    if (item.ip && item.ip.includes(this.filterCondition)) {
+                        return item
+                    }
+                    if (item.name.includes(this.filterCondition)) {
+                        return item
+                    }
+                    if (item.modelName && item.modelName.includes(this.filterCondition)) {
+                        return item
+                    }
+                    if (item.description && item.description.includes(this.filterCondition)) {
+                        return item
+                    }
+                })
+                return list
             }
         },
         created (){

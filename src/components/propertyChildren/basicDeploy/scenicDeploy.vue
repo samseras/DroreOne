@@ -158,11 +158,12 @@
                 allDotList:{
                     close:[],
                     open:[]
-                }
+                },
+                filterCondition: ''
             }
         },
         methods: {
-            ...mapMutations(['TOTAL_NUM']),
+            ...mapMutations(['TOTAL_NUM', 'CURRENT_NUM']),
             imgError (e) {
                 e.target.src = this.getUrl(null);
             },
@@ -201,12 +202,22 @@
             },
             searchAnything (info) {
                 console.log(info, '这是要过滤的')
+                this.filterCondition = info
                 if (info.trim() !== '') {
-                    this.scenicList = this.allScenicList.filter(item => {
+                    let checkList = this.allScenicList.filter(item => {
                         if ((item.regionName)&&(item.regionName.includes(info))) {
                             return item
                         }
                         if (item.scenicspotBean.name.includes(info)) {
+                            return item
+                        }
+                    })
+                    let date = new Date().getTime()
+                    let obj = {totalNum: checkList.length}
+                    obj[date] = new Date().getTime()
+                    this.$store.commit('TOTAL_NUM', obj)
+                    this.scenicList = checkList.filter((item,index) => {
+                        if (index < (this.getCurrentNum * 35 ) && index > ((this.getCurrentNum -1) * 35 ) - 1 ) {
                             return item
                         }
                     })
@@ -435,10 +446,6 @@
                     }
                     this.isShowLoading = false
                     this.allScenicList = res
-                    let date = new Date().getTime()
-                    let obj = {totalNum: res.length}
-                    obj[date] = new Date().getTime()
-                    this.$store.commit('TOTAL_NUM', obj)
 
                     this.allDotList.close=[]
                     this.allDotList.open=[]
@@ -476,6 +483,13 @@
                         this.allScenicList[i].byTime = -(new Date(this.allScenicList[i].scenicspotBean.modifyTime)).getTime()
                     }
                     this.allScenicList = _.sortBy(this.allScenicList, 'byTime')
+                    if (this.filterCondition.trim() !== '') {
+                        this.allScenicList = this.filterDataList(this.allScenicList)
+                    }
+                    let date = new Date().getTime()
+                    let obj = {totalNum: this.allScenicList.length}
+                    obj[date] = new Date().getTime()
+                    this.$store.commit('TOTAL_NUM', obj)
                     this.scenicList = this.allScenicList.filter((item,index) => {
                         if (index < (this.getCurrentNum * 35 ) && index > ((this.getCurrentNum -1) * 35 ) - 1 ) {
                             return item
@@ -488,6 +502,17 @@
                     console.log(err)
                     this.isShowLoading = false
                 })
+            },
+            filterDataList (list) {
+                list = list.filter(item => {
+                    if ((item.regionName)&&(item.regionName.includes(this.filterCondition))) {
+                        return item
+                    }
+                    if (item.scenicspotBean.name.includes(this.filterCondition)) {
+                        return item
+                    }
+                })
+                return list
             }
         },
         created () {

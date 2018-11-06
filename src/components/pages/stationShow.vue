@@ -5,9 +5,9 @@
                 <div class="contentTitle">
                     <span>旅游路线信息</span>
                 </div>
-                <el-carousel :interval="5000" indicator-position="none">
-                    <el-carousel-item v-for="schedule in schedules" :key="schedule">
-                        <div class="contentDiv"  v-for="route in schedule.routes">
+                <el-carousel :interval="30000" indicator-position="none">
+                    <el-carousel-item v-for="(schedule,index) in schedules" :key="index">
+                        <div class="contentDiv"  v-for="(route,index) in schedule.routes" :key="index">
                             <div class="contentBody">
                                 <div class="desc">
                                     <div class="left">
@@ -15,23 +15,26 @@
                                     </div>
                                     <div  class="center">
                                         <span  v-if="route.willArriveVe"><{{route.willArriveVe.vehicle.serialNum}}>还有{{route.willArriveVe.willArriveTime}}分钟到达</span>
+                                        <span  v-else>预计到达时间：未知</span>
+
                                     </div>
-                                    <div  class="right">
+                                    <div class="right">
                                         <span v-if="route.willArriveVe">空余座位：{{route.willArriveVe.vacancy}}人</span>
+                                        <span v-else>空余座位：未知</span>
                                     </div>
                                 </div>
                                 <div class="trend">
                                     <div class="route"></div>
 
                                     <div class="stationContent" :id="route.key">
-                                        <div class="vehicleStyle" :id="item.vehicle.id" v-if="item.distance" v-for="item in route.vehicles">
+                                        <div class="vehicleStyle" :id="item.vehicle.id" v-if="item.distance" v-for="(item,index) in route.vehicles" :key="index">
                                             <span>{{item.vehicle.serialNum}}</span>
                                             <img src="../../../static/img/icon/station/vehicleShip.png">
                                         </div>
                                         <div class="stationFlex" v-for="station in route.stations">
                                             <div class="stationInfo">
-                                                <img :id = "station.key" v-if="station.status == 'FROM'" src="../../../static/img/icon/station/firstStation.png">
-                                                <img :id = "station.key"  v-if="station.status == 'TO'" src="../../../static/img/icon/station/endStation.png">
+                                                <img :id = "station.key" v-if="station.status == 'FROM'" src="../../../static/img/icon/station/firstStation.svg">
+                                                <img :id = "station.key"  v-if="station.status == 'TO'" src="../../../static/img/icon/station/endStation.svg">
 
                                                 <img :id = "station.key" v-if="station.status == 'CURRENT'" src="../../../static/img/icon/station/currentStation1.png">
                                                 <img :id = "station.key" v-if="station.status == 'CURRENT'"  class="currentImg"  src="../../../static/img/icon/station/currentStation2.png">
@@ -54,51 +57,6 @@
                         </div>
                     </el-carousel-item>
                 </el-carousel>
-                <!--<div class="contentDiv"  v-for="route in routes">
-                    <div class="contentBody">
-                        <div class="desc">
-                            <div class="left">
-                                <span>{{route.name}}</span>
-                            </div>
-                            <div  class="center">
-                                <span  v-if="route.willArriveVe"><{{route.willArriveVe.vehicle.serialNum}}>还有{{route.willArriveVe.willArriveTime}}分钟到达</span>
-                            </div>
-                            <div  class="right">
-                                <span v-if="route.willArriveVe">空余座位：{{route.willArriveVe.vacancy}}人</span>
-                            </div>
-                        </div>
-                        <div class="trend">
-                            <div class="route"></div>
-
-                            <div class="stationContent" :id="route.key">
-                                <div class="vehicleStyle" :id="item.vehicle.id" v-if="item.distance" v-for="item in route.vehicles">
-                                    <span>{{item.vehicle.serialNum}}</span>
-                                    <img src="../../../static/img/icon/station/vehicleShip.png">
-                                </div>
-                                <div class="stationFlex" v-for="station in route.stations">
-                                    <div class="stationInfo">
-                                        <img :id = "station.key" v-if="station.status == 'FROM'" src="../../../static/img/icon/station/firstStation.png">
-                                        <img :id = "station.key"  v-if="station.status == 'TO'" src="../../../static/img/icon/station/endStation.png">
-
-                                        <img :id = "station.key" v-if="station.status == 'CURRENT'" src="../../../static/img/icon/station/currentStation1.png">
-                                        <img :id = "station.key" v-if="station.status == 'CURRENT'"  class="currentImg"  src="../../../static/img/icon/station/currentStation2.png">
-
-                                        <img :id = "station.key" v-if="station.status == 'OTHER'" src="../../../static/img/icon/station/normalStation.png">
-
-                                        <div :class="{'stationName': station.status == 'OTHER','stationStartEndName':station.status == 'FROM'|| station.status == 'TO',
-                                                     'stationCurrentName': station.status == 'CURRENT',
-                                                     'firstEnd': station.status == 'FROM' || station.status == 'TO',
-                                                     'normal':station.status == 'OTHER','current':station.status == 'CURRENT'}">
-                                            {{station.name}}
-                                        </div>
-                                    </div>
-
-                                </div>
-                            </div>
-
-                        </div>
-                    </div>
-                </div>-->
             </div>
         </ScrollContainer>
     </div>
@@ -698,12 +656,29 @@
                     })
                 }
 
+            },
+
+            async saveVehicleDetail(){
+                let params = {
+                    "vehicleId":"6f813686-0d21-4bae-b8d8-058653fca0ef",
+                    "stationId":"6655d11c-3a49-40ac-a9c5-30b32484bc01",
+                    "arriveTime":"2018-10-16 16:30:00",
+                    "downNum":0,
+                    "upNum":10,
+                    "vacancy":10
+                }
+
+                await api.transport.saveVehicleDetail(params).then(res=>{
+                    console.log(res,'插入成功')
+
+                })
             }
         },
         watch:{
 
         },
         created() {
+//            this.saveVehicleDetail()
 
             let url
             if(window.parent.document.getElementById("stationIframe")){

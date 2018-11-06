@@ -150,10 +150,11 @@
                 isShowLoading: false,
                 selection: [],
                 currentNum: 50,
+                filterCondition: ''
             }
         },
         methods: {
-            ...mapMutations(['TOTAL_NUM']),
+            ...mapMutations(['TOTAL_NUM', 'CURRENT_NUM ']),
             imgError (e) {
                 e.target.src = this.getUrl(null,0);
             },
@@ -174,8 +175,9 @@
             },
             searchAnything (info) {
                 console.log(info, '这是要过滤的')
+                this.filterCondition = info
                 if (info.trim() !== '') {
-                    this.boatCarList = this.allBoatCarList.filter(item => {
+                    let checkList = this.allBoatCarList.filter(item => {
                         /*if (item.driverName.includes(info)) {
                             return item
                         }
@@ -183,6 +185,15 @@
                             return item
                         }*/
                         if (item.vehicle.serialNum.includes(info)) {
+                            return item
+                        }
+                    })
+                    let date = new Date().getTime()
+                    let obj = {totalNum: checkList.length}
+                    obj[date] = new Date().getTime()
+                    this.$store.commit('TOTAL_NUM', obj)
+                    this.boatCarList = checkList.filter((item,index) => {
+                        if (index < (this.getCurrentNum * 35 ) && index > ((this.getCurrentNum -1) * 35 ) - 1 ) {
                             return item
                         }
                     })
@@ -419,10 +430,6 @@
                     }
                     this.isShowLoading = false
                     this.allBoatCarList = res
-                    let date = new Date().getTime()
-                    let obj = {totalNum: res.length}
-                    obj[date] = new Date().getTime()
-                    this.$store.commit('TOTAL_NUM', obj)
                     for (let i = 0; i < this.allBoatCarList.length; i++) {
                         this.allBoatCarList[i].checked = false
                         this.allBoatCarList[i].status = true
@@ -432,6 +439,13 @@
                         this.allBoatCarList[i].byTime = -(new Date(this.allBoatCarList[i].vehicle.modifyTime)).getTime()
                     }
                     this.allBoatCarList = _.sortBy(this.allBoatCarList,'byTime')
+                    if (this.filterCondition.trim() !== '') {
+                        this.allBoatCarList = this.filterDataList(this.allBoatCarList)
+                    }
+                    let date = new Date().getTime()
+                    let obj = {totalNum: this.allBoatCarList.length}
+                    obj[date] = new Date().getTime()
+                    this.$store.commit('TOTAL_NUM', obj)
                     this.boatCarList = this.allBoatCarList.filter((item,index) => {
                         if (index < (this.getCurrentNum * 35 ) && index > ((this.getCurrentNum -1) * 35 ) - 1 ) {
                             return item
@@ -447,6 +461,14 @@
                     console.log(err, '请求失败')
                     this.isShowLoading = false
                 })
+            },
+            filterDataList (list) {
+                list = list.filter(item => {
+                    if (item.vehicle.serialNum.includes(this.filterCondition)) {
+                        return item
+                    }
+                })
+                return list
             }
         },
         filters: {

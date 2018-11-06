@@ -113,15 +113,17 @@
                 loading: false,
                 isBatchEdit:false,
                 listLength:'',
-                pageNum:1
+                pageNum:1,
+                filterCondition: ''
             }
         },
         methods: {
-            ...mapMutations(['TOTAL_NUM']),
+            ...mapMutations(['TOTAL_NUM', 'CURRENT_NUM']),
             searchAnything (info) {
                 console.log(info, '这是要过滤的')
+                this.filterCondition = info
                 if (info.trim() !== '') {
-                    this.conditionList = this.allConditionList.filter(item => {
+                    let checkList = this.allConditionList.filter(item => {
                         if (item.name.includes(info)) {
                             return item
                         }
@@ -144,6 +146,15 @@
                             return item
                         }
                         if(item.relatedManagerNames.includes(info)){
+                            return item
+                        }
+                    })
+                    let date = new Date().getTime()
+                    let obj = {totalNum: checkList.length}
+                    obj[date] = new Date().getTime()
+                    this.$store.commit('TOTAL_NUM', obj)
+                    this.conditionList = checkList.filter((item,index) => {
+                        if (index < (this.getCurrentNum * 35) && index > ((this.getCurrentNum -1) * 35 ) - 1 ) {
                             return item
                         }
                     })
@@ -446,10 +457,6 @@
                     console.log(res, '请求成功')
                     this.loading = false
                     this.allConditionList = res
-                    let date = new Date().getTime()
-                    let obj = {totalNum: res.length}
-                    obj[date] = new Date().getTime()
-                    this.$store.commit('TOTAL_NUM', obj)
                     this.allConditionList.forEach(item => {
                         item.checked = false;
                         if(item.relatedDevices.length > 0){
@@ -480,6 +487,13 @@
                         }
                     })
                     this.allConditionList = _.sortBy(this.allConditionList,'byTime')
+                    if (this.filterCondition.trim() !== '') {
+                        this.allConditionList = this.filterDataList(this.allConditionList)
+                    }
+                    let date = new Date().getTime()
+                    let obj = {totalNum: this.allConditionList.length}
+                    obj[date] = new Date().getTime()
+                    this.$store.commit('TOTAL_NUM', obj)
                     this.conditionList = this.allConditionList.filter((item,index) => {
                         if (index < (this.getCurrentNum * 35) && index > ((this.getCurrentNum -1) * 35 ) - 1 ) {
                             return item
@@ -489,6 +503,36 @@
                     console.log(err, '请求失败')
                     this.loading = false
                 })
+            },
+            filterDataList (list) {
+                list = list.filter(item => {
+                    let info = this.filterCondition
+                    if (item.name.includes(info)) {
+                        return item
+                    }
+                    if(item.alarmEnvType.name.includes(info)){
+                        return item
+                    }
+                    if(item.envDataSourceName.includes(info)){
+                        return item
+                    }
+                    if(item.relatedDeviceNames.includes(info)){
+                        return item
+                    }
+                    if(item.alarmSeverity.name.includes(info)){
+                        return item
+                    }
+                    if(item.lowerThreshold.toString().includes(info)){
+                        return item
+                    }
+                    if(item.upperThreshold.toString().includes(info)){
+                        return item
+                    }
+                    if(item.relatedManagerNames.includes(info)){
+                        return item
+                    }
+                })
+                return list
             },
             getAlarmTypeId(typeName){
                 let typeInfo =  this.alarmType.filter(item=>item.name == typeName)

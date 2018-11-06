@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" preserveAspectRatio="xMidYMid" width="19.969" height="19.875" viewBox="0 0 19.969 19.875">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #1792be;
+      }
+
+      .cls-2, .cls-3 {
+        font-size: 12px;
+      }
+
+      .cls-3 {
+        fill: #ffc812;
+        font-family: "Microsoft YaHei";
+      }
+    </style>
+  </defs>
+  <g>
+    <ellipse cx="9.985" cy="9.938" rx="9.985" ry="9.938" class="cls-1"/>
+    <text transform="translate(3.97 14.97)" class="cls-2"><tspan class="cls-3">终</tspan></text>
+  </g>
+</svg>

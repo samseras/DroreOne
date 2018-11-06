@@ -32,22 +32,18 @@
                         </el-table-column>
                         <el-table-column
                             prop="serialNum"
-                            width="120"
                             label="编号">
                         </el-table-column>
                         <el-table-column
-                            width="120"
                             prop="device.typeName"
                             label="故障设备类型">
                         </el-table-column>
                         <el-table-column
                             show-overflow-tooltip
                             prop="device.name"
-                            width="120"
                             label="故障设备">
                         </el-table-column>
                         <el-table-column
-                            width="140"
                             sortable
                             :filters="[{ text: '新告警', value: '1' }, { text: '处理中', value: '2' },{ text: '已处理', value: '3' }]"
                             :filter-method="filterStatus"
@@ -67,62 +63,47 @@
                         </el-table-column>
                         <el-table-column
                             sortable
-                            width="120"
                             prop="severity.name"
                             label="严重等级">
                         </el-table-column>
 
                         <el-table-column
-                            label="创建人"
-                            width="120">
+                            label="创建人">
                             <template slot-scope="scope">
                                 <span v-if="scope.row.creator">{{scope.row.creator.cnName?scope.row.creator.cnName:scope.row.creator.name}}</span>
                             </template>
                         </el-table-column>
 
                         <el-table-column
-                            width="120"
                             label="负责人">
                             <template slot-scope="scope">
                                 <span v-if="scope.row.owner">{{scope.row.owner.cnName?scope.row.owner.cnName:scope.row.owner.name}}</span>
                             </template>
                         </el-table-column>
-                        <!--<el-table-column-->
-                            <!--sortable-->
-                            <!--prop="owner.mobileNum"-->
-                            <!--label="负责人电话">-->
-                        <!--</el-table-column>-->
                         <el-table-column
-                            label="描述">
-                            <template slot-scope="scope">
-                                <div class="box" v-if="scope.row.description">
-                                    <div class="bottom">
-                                        <el-tooltip class="item" effect="light" :content=scope.row.description placement="bottom">
-                                            <el-button>{{scope.row.description}}</el-button>
-                                        </el-tooltip>
-                                    </div>
-                                </div>
-                            </template>
+                            label="描述"
+                            prop="description"
+                            show-overflow-tooltip>
                         </el-table-column>
                         <el-table-column label="操作" width="200">
                             <template slot-scope="scope">
-                                <span @click="editInfo(scope.row,false,'编辑巡检事件')" class="edit">处理</span> |
-                                <span @click="showDetail(scope.row,true,'查看巡检事件')">查看</span> |
-                                <span @click="deletInfo(scope.row.id)">删除</span>
-                                <span @click="patrolInfo(scope.row)"><img class="funcImg" v-if="scope.row.status.id==1 || scope.row.status.id==2" :src="scope.row.status.id == '1' ?'../../../../../static/img/alarm/newalarm.png':'../../../../../static/img/alarm/processing.png'"></span>
+                                <span @click="editInfo(scope.row,false,'编辑巡检事件')" class="operation">处理</span> |
+                                <span @click="showDetail(scope.row,true,'查看巡检事件')" class="operation">查看</span> |
+                                <span @click="deletInfo(scope.row.id)" class="operation">删除</span>
+                                <span @click="patrolInfo(scope.row)" class="operation"><img class="funcImg" v-if="scope.row.status.id==1 || scope.row.status.id==2" :src="scope.row.status.id == '1' ?'../../../../../static/img/alarm/newalarm.png':'../../../../../static/img/alarm/processing.png'"></span>
                             </template>
                         </el-table-column>
                     </el-table>
                 </ScrollContainer>
                 <AlarmDetail v-if="visible"
-                              :visible="visible"
-                              :Info="warningEventInfo"
-                              :readOnly="readOnly"
-                              @closeDialog ="closeDialog"
-                              :title = "title"
-                              @saveEditInfo="saveEditInfo"
-                              :isBatchEdit="isBatchEdit"
-                              :choseInfos = 'choseInfos'>
+                             :visible="visible"
+                             :Info="warningEventInfo"
+                             :readOnly="readOnly"
+                             @closeDialog ="closeDialog"
+                             :title = "title"
+                             @saveEditInfo="saveEditInfo"
+                             :isBatchEdit="isBatchEdit"
+                             :choseInfos = 'choseInfos'>
                 </AlarmDetail>
             </div>
         </div>
@@ -134,6 +115,7 @@
     import api from '@/api'
     import Header from './alarmEventHeader'
     import AlarmDetail from './alarmEventDialog'
+    import _ from 'lodash'
     // import moment from 'moment'
     import {mapGetters,mapMutations} from 'vuex'
     export default {
@@ -156,11 +138,12 @@
                 dataLength:'',
                 updateParams:[],
                 pageNum:1,
-                deviceType:[]
+                deviceType:[],
+                filterCondition: ''
             }
         },
         methods: {
-            ...mapMutations(['TOTAL_NUM']),
+            ...mapMutations(['TOTAL_NUM', 'CURRENT_NUM']),
             filterOnwer (onwer,creator) {
                 console.log(onwer, '选择的人员信息')
                 console.log(creator, 'fvfvdf')
@@ -182,8 +165,9 @@
             },
             searchAnything (info) {
                 console.log(info, '这是要过滤的')
+                this.filterCondition = info
                 if (info.trim() !== '') {
-                    this.patrolEventList = this.allPatrolEventList.filter(item => {
+                    let checkList = this.allPatrolEventList.filter(item => {
                         if (item.serialNum.includes(info)) {
                             return item
                         }
@@ -193,16 +177,25 @@
                         if(item.status.name.includes(info)){
                             return item
                         }
-                        if(item.owner.name.includes(info)){
+                        if(item.owner && item.owner.name && item.owner.name.includes(info)){
                             return item
                         }
-                        if(item.owner.mobileNum.includes(info)){
+                        if(item.owner && item.owner.mobileNum.includes(info)){
                             return item
                         }
                         if(item.device.name.includes(info)){
                             return item
                         }
                         if(item.device.typeName.includes(info)){
+                            return item
+                        }
+                    })
+                    let date = new Date().getTime()
+                    let obj = {totalNum: checkList.length}
+                    obj[date] = new Date().getTime()
+                    this.$store.commit('TOTAL_NUM', obj)
+                    this.patrolEventList = checkList.filter((item,index) => {
+                        if (index < (this.getCurrentNum *  35) && index > ((this.getCurrentNum -1) * 35 ) - 1 ) {
                             return item
                         }
                     })
@@ -220,7 +213,7 @@
                     tempList = dataList;
                 }
 
-               return this.patrolEventList = tempList;
+                return this.patrolEventList = tempList;
             },
             closeDialog () {
                 this.visible = false
@@ -231,7 +224,7 @@
                 })
             },
             addNewInfo () {
-                this.showDetail({},false,'添加巡检事件',)
+                this.showDetail({alarmType:{id:'10'}},false,'添加巡检事件',)
             },
             showDetail (info,state,title) {
                 this.warningEventInfo = info;
@@ -414,93 +407,123 @@
             },
             async addAlarmEvent(obj){
                 await api.alarm.addAlarmEvent(obj).then(res => {
-                        console.log(res, '添加成功')
-                        this.$message.success('添加成功')
-                        this.choseInfos = []
-                        this.visible = false
-                        this.getAllAlarmEvent();
-                    }).catch(err => {
-                        this.$message.error('添加失败，'+err.message)
-                        console.log(err)
-                        this.choseInfos = []
-                    })
+                    console.log(res, '添加成功')
+                    this.$message.success('添加成功')
+                    this.choseInfos = []
+                    this.visible = false
+                    this.getAllAlarmEvent();
+                }).catch(err => {
+                    this.$message.error('添加失败，'+err.message)
+                    console.log(err)
+                    this.choseInfos = []
+                })
             },
             async getAllAlarmEvent () {
                 this.loading = true
                 this.allPatrolEventList = []
                 await api.alarm.getAllAlarmEvent().then(res => {
-                                this.loading = false
-                                let list = JSON.parse(JSON.stringify(res))
-                                if(list.length >0){
-                                    list.forEach(obj=>{
-                                        if(obj.alarmType && obj.alarmType.id == "10"){
-                                            this.allPatrolEventList.push(obj)
-                                        }
-                                    })
-                                }
-                                this.allPatrolEventList.forEach(item => {
-                                    item.checked = false;
-                                    if(!item.device){
-                                        item.device = {
-                                            id:'',
-                                            typeId:0,
-                                            typeName:'非设备故障'
-                                        }
-                                    }else{
-                                        console.log('00')
-                                        item.device['typeName'] = this.getDeviceTypeById(item.device.typeId)
-                                        console.log(item.device.typeName,'typeName')
-                                    }
-                                    item.acturalExtendValue = !item.acturalExtendValue ? "" : item.acturalExtendValue
-                                    if(!item.owner || !item.owner.id){
-                                        item.owner = {
-                                            id : ""
-                                        }
-                                    }
-                                    if(!item.owner || !item.owner.mobileNum){
-                                        item.owner = {
-                                            mobileNum : ""
-                                        }
-                                    }
-                                    item.actualValue = !item.actualValue ? "" : item.actualValue
-
-                                    if(item.attachments && item.attachments.length > 0){
-                                        let fileList = []
-                                        item.attachments.forEach((obj)=>{
-                                               let fileObj = {
-                                                   title : obj.path.replace(/(.*\/)*([^.]+).*/ig,"$2").split('_')[0],
-                                                   id:obj.id,
-                                                   path:obj.path,
-                                                   checked:false
-                                               }
-                                            fileList.push(fileObj)
-                                        })
-                                        if(fileList.length > 0){
-                                            item.fileList = fileList
-                                        }
-                                    }
-                                    if (item.modifyTime) {
-                                        item.modifyTime=item.modifyTime.replace("-","/")
-                                        item.byTime = -(new Date(item.modifyTime)).getTime()
-                                    }
-                                    if(item.longitude && item.latitude){
-                                        item.location = item.longitude+','+item.latitude
-                                    }
-                                })
-                                let date = new Date().getTime()
-                                let obj = {totalNum: this.allPatrolEventList.length}
-                                obj[date] = new Date().getTime()
-                                this.$store.commit('TOTAL_NUM', obj)
-                                this.patrolEventList = this.allPatrolEventList.filter((item,index) => {
-                                    if (index < (this.getCurrentNum *  35) && index > ((this.getCurrentNum -1) * 35 ) - 1 ) {
-                                        return item
-                                    }
-                                })
-                                this.patrolEventList = _.sortBy(this.patrolEventList,'byTime')
-                                this.patrolEventListTemp = JSON.parse(JSON.stringify(this.patrolEventList))
-                        }).catch(err => {
-                            this.loading = false
+                    this.loading = false
+                    let list = JSON.parse(JSON.stringify(res))
+                    if(list.length >0){
+                        list.forEach(obj=>{
+                            if(obj.alarmType && obj.alarmType.id == "10"){
+                                this.allPatrolEventList.push(obj)
+                            }
                         })
+                    }
+                    this.allPatrolEventList.forEach(item => {
+                        item.checked = false;
+                        if(!item.device){
+                            item.device = {
+                                id:'',
+                                typeId:0,
+                                typeName:'非设备故障'
+                            }
+                        }else{
+                            console.log('00')
+                            item.device['typeName'] = this.getDeviceTypeById(item.device.typeId)
+                            console.log(item.device.typeName,'typeName')
+                        }
+                        item.acturalExtendValue = !item.acturalExtendValue ? "" : item.acturalExtendValue
+                        if(!item.owner || !item.owner.id){
+                            item.owner = {
+                                id : ""
+                            }
+                        }
+                        if(!item.owner || !item.owner.mobileNum){
+                            item.owner = {
+                                mobileNum : ""
+                            }
+                        }
+                        item.actualValue = !item.actualValue ? "" : item.actualValue
+
+                        if(item.attachments && item.attachments.length > 0){
+                            let fileList = []
+                            item.attachments.forEach((obj)=>{
+                                let fileObj = {
+                                    title : obj.path.replace(/(.*\/)*([^.]+).*/ig,"$2").split('_')[0],
+                                    id:obj.id,
+                                    path:obj.path,
+                                    checked:false
+                                }
+                                fileList.push(fileObj)
+                            })
+                            if(fileList.length > 0){
+                                item.fileList = fileList
+                            }
+                        }
+                        if (item.modifyTime) {
+                            item.modifyTime=item.modifyTime.replace("-","/")
+                            item.byTime = -(new Date(item.modifyTime)).getTime()
+                        }
+                        if(item.longitude && item.latitude){
+                            item.location = item.longitude+','+item.latitude
+                        }
+                    })
+                    this.allPatrolEventList = _.sortBy(this.allPatrolEventList,'byTime')
+                    if (this.filterCondition.trim() !== '') {
+                        this.allPatrolEventList = this.filterDataList(this.allPatrolEventList)
+                    }
+                    let date = new Date().getTime()
+                    let obj = {totalNum: this.allPatrolEventList.length}
+                    obj[date] = new Date().getTime()
+                    this.$store.commit('TOTAL_NUM', obj)
+                    this.patrolEventList = this.allPatrolEventList.filter((item,index) => {
+                        if (index < (this.getCurrentNum *  35) && index > ((this.getCurrentNum -1) * 35 ) - 1 ) {
+                            return item
+                        }
+                    })
+                    this.patrolEventListTemp = JSON.parse(JSON.stringify(this.patrolEventList))
+                }).catch(err => {
+                    this.loading = false
+                })
+            },
+            filterDataList (list) {
+                list = list.filter(item => {
+                    let info = this.filterCondition
+                    if (item.serialNum.includes(info)) {
+                        return item
+                    }
+                    if(item.severity.name.includes(info)){
+                        return item
+                    }
+                    if(item.status.name.includes(info)){
+                        return item
+                    }
+                    if(item.owner && item.owner.name && item.owner.name.includes(info)){
+                        return item
+                    }
+                    if(item.owner && item.owner.mobileNum.includes(info)){
+                        return item
+                    }
+                    if(item.device.name.includes(info)){
+                        return item
+                    }
+                    if(item.device.typeName.includes(info)){
+                        return item
+                    }
+                })
+                return list
             },
             getAlarmTypeNameById(typeId){
                 let typeInfo =  this.alarmType.filter(item=>item.id == typeId)

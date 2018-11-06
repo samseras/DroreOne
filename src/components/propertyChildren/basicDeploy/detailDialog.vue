@@ -12,7 +12,7 @@
                 <!--车船-->
                 <div class="personCardContent boatCardContent" v-if="route.includes('boat')">
                     <p class="name wrapstyle">
-                       <span>类&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;型：</span>
+                        <span>类&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;型：</span>
                         <el-select v-model="boatCar.vehicle.type" placeholder="请选择" @change="selectePerson(boatCar.vehicle.type)" :disabled="isDisabled">
                             <el-option label="船只" :value="1"></el-option>
                             <el-option label="车辆" :value="0"></el-option>
@@ -64,7 +64,7 @@
                     <!--目前车船人员不显示，暂时隐藏-->
                     <p class="phoneNum " v-if="false">
                         <span>联系电话：</span>
-                    <!--<p class="phoneNum person-driv" v-if="isDisabled">联系电话：-->
+                        <!--<p class="phoneNum person-driv" v-if="isDisabled">联系电话：-->
                         <el-input type="text"v-model="boatCar.driverPhone" :disabled="isDisabled"></el-input>
                     </p>
                     <p class="phoneNm">
@@ -244,7 +244,7 @@
                         <el-input type="text"v-model="shop.businessBean.name" :disabled="isDisabled" :maxlength="50"></el-input>
                     </p>
                     <p class="type wrapstyle selectstyle" v-if="isDisabled">
-                       <span>状&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;态：</span>
+                        <span>状&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;态：</span>
                         <el-select v-model="shop.businessBean.state" placeholder="请选择" :disabled="isDisabled">
                             <el-option label="充裕" value="充裕"></el-option>
                             <el-option label="已满" value="已满"></el-option>
@@ -388,7 +388,7 @@
                 <!--路网-->
                 <div class="personCardContent boatCardContent" v-if="route.includes('roat')">
                     <p class="sex">
-                       <span>路线名称：</span>
+                        <span>路线名称：</span>
                         <el-input type="text"v-model="roat.name" :disabled="isDisabled" :maxlength="50"></el-input>
                     </p>
                     <p class="phoneNum">
@@ -526,7 +526,6 @@
                         </label>
                     </div>
                 </div>
-
                 <!--站点-->
                 <div class="personCardContent boatCardContent" v-if="route.includes('station')">
                     <p class="type">
@@ -574,6 +573,44 @@
                         </label>
                     </div>
                 </div>
+
+                <!--打卡点-->
+                <div class="personCardContent boatCardContent" v-if="route.includes('punch')">
+                    <p class="sex">
+                        <span>名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称：</span>
+                        <el-input type="text"v-model="punch.name" :disabled="isDisabled" :maxlength="50"></el-input>
+                    </p>
+                    <p class="sex">
+                        <span>卡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;号：</span>
+                        <el-input type="text"v-model="punch.cardNumber" :disabled="isDisabled" :maxlength="50"></el-input>
+                    </p>
+                    <p class="phone">
+                        <span>所属片区：</span>
+                        <el-select v-model="punch.regionId" placeholder="请选择" :disabled="isDisabled">
+                            <el-option
+                                v-for="item in regions"
+                                :key="item.id"
+                                :label="item.name"
+                                :value="item.id">
+                            </el-option>
+                        </el-select>
+                    </p>
+                    <p class="phoneNum">
+                        <span>位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置：</span>
+                        <span :class="{ps:isDisabled}">{{punch.location}}</span><i class="el-icon-location-outline" @click="showMapDialog"></i>
+                    </p>
+                    <p class="textarea ms">
+                        <span class="des">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：</span>
+                        <el-input type="textarea" :rows="3"  v-model="punch.description" :disabled="isDisabled" :maxlength="140"></el-input>
+                    </p>
+                    <div class="img">
+                        <img :src="getUrl(punch.picturePath)" alt="" v-if="isDisabled" @error="imgError">
+                        <label for="avatar" v-if="!isDisabled">
+                            <img :src="files.length ? files[0].url : getUrl(punch.picturePath)"  @error="imgError" class="rounded-circle" />
+                        </label>
+                    </div>
+                </div>
+
 
                 <div class="text-center p-2">
                     <file-upload
@@ -668,7 +705,7 @@
                 scenic: {
                     scenicspotBean: {
                         capacity: '',
-                       /* currentNum: '',*/
+                        /* currentNum: '',*/
                         name: '',
                     },
                     regionId: '',
@@ -754,6 +791,13 @@
                     location:'',
                     regionId: '',
                 },
+                punch: {
+                    name: '',
+                    cardNumber:'',
+                    description: '',
+                    location:'',
+                    regionId: '',
+                },
                 siteType:[
                     {
                         id:'0',
@@ -782,7 +826,7 @@
                 this.$store.commit('TRANSPORT_TYPE', val)
             },
             ad () {
-              console.log(9999999999)
+                console.log(9999999999)
             },
             ...mapMutations(['LOCATION_ID']),
             imgError (e) {
@@ -872,7 +916,9 @@
                            }else if(this.station.type == "1"){
                                imgSrc = './../../../../static/img/landingCard.svg'
                            }
-                        }
+                        } else if (route.includes('punch')){
+                           imgSrc = './../../../../static/img/punch_deploy.png'
+                       }
                     }
                     return imgSrc
                 } else {
@@ -916,6 +962,8 @@
                     this.wharf.location = locationString
                 } else if (this.route.includes('station')){
                     this.station.location = locationString
+                } else if (this.route.includes('punch')){
+                    this.punch.location = locationString
                 }
                 this.mapVisible = false
             },
@@ -934,8 +982,8 @@
                     if(!(newInfo.vehicle.hasOwnProperty("type") && integerreg.test(newInfo.vehicle.type)) ||
                         !(newInfo.vehicle.serialNum && newInfo.vehicle.serialNum.trim() !== '')   //编号改为名称
 //                        !(newInfo.vehicle.hasOwnProperty("maintenanceStatus") && integerreg.test(newInfo.vehicle.maintenanceStatus)) ||
-                       /* !(newInfo.vehicle.maintenanceDate && newInfo.vehicle.maintenanceDate !== '') ||*/
-                        //!(newInfo.driverId  && newInfo.driverId !== '') ||   //驾驶员信息
+                    /* !(newInfo.vehicle.maintenanceDate && newInfo.vehicle.maintenanceDate !== '') ||*/
+                    //!(newInfo.driverId  && newInfo.driverId !== '') ||   //驾驶员信息
 //                        !(newInfo.vehicle.model && newInfo.vehicle.model.trim() !== '')
                     ){
 
@@ -1023,7 +1071,7 @@
                     newInfo = this.area;
                     if(!(newInfo.name && newInfo.name.trim() !== '') ||
                         !(newInfo.location && newInfo.location !== '')
-                        // !(newInfo.placeScenic && newInfo.placeScenic !== '') ||
+                    // !(newInfo.placeScenic && newInfo.placeScenic !== '') ||
                     ){
 
                         this.$message.error('请输入完整信息')
@@ -1070,6 +1118,16 @@
                 } else if (this.route.includes('station')) {
                     newInfo = this.station
                     if (!(newInfo.name && newInfo.name.trim() !== '') ||
+                        !(newInfo.location && newInfo.location !== '') ||
+                        !(newInfo.regionId && newInfo.regionId !== '')
+                    ) {
+                        this.$message.error('请输入完整信息')
+                        return
+                    }
+                } else if (this.route.includes('punch')) {
+                    newInfo = this.punch
+                    if (!(newInfo.name && newInfo.name.trim() !== '') ||
+                        !(newInfo.cardNumber && newInfo.cardNumber !== '') ||
                         !(newInfo.location && newInfo.location !== '') ||
                         !(newInfo.regionId && newInfo.regionId !== '')
                     ) {
@@ -1222,6 +1280,8 @@
                 if(this.Info.id){
                     this.$store.commit('TRANSPORT_TYPE', this.Info.type)
                 }
+            }else if (this.route.includes('punch')) {
+                this.punch = this.Info
             }
             if (this.Info.id) {
                 console.log(this.Info.id, '这是拿到的Id')
@@ -1773,8 +1833,8 @@
                         }
                     }
                     i {
-                       display: inline-block;
-                       font-size: rem(16);
+                        display: inline-block;
+                        font-size: rem(16);
                         vertical-align: middle;
                         cursor: pointer;
                         margin-left:1rem
