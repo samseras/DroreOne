@@ -92,6 +92,9 @@
                 await api.shop.getAllShop().then(res => {
                     console.log(res,'这是请求的数据ddd')
                     this.lightList=res
+                    this.lightList.sort(function(i1,i2){
+                        return i1.businessBean.businessTypeId-i2.businessBean.businessTypeId;
+                    });
                     this.number=this.lightList.length
                     let regionIdList = []
                     let arr = []
@@ -112,7 +115,21 @@
                         item.label = item.businessBean.name
                         item.id =  item.businessBean.id
                         item.type = 'shop'
-                        item.icon = '../../../static/img/shop_big.svg'
+                        if(item.businessBean.businessTypeId == "1"){
+                            item.icon = '../../../static/img/shop_icon.svg'
+                        }else if(item.businessBean.businessTypeId == "2"){
+                            item.icon = '../../../static/img/supermarket_icon.svg'
+                        }else if(item.businessBean.businessTypeId == "3"){
+                            item.icon = '../../../static/img/restaurant_icon.svg'
+                        }else if(item.businessBean.businessTypeId == "4"){
+                            item.icon = '../../../static/img/hotel_icon.svg'
+                        }else if(item.businessBean.businessTypeId == "5"){
+                            item.icon = '../../../static/img/kursaal_icon.svg'
+                        }else if(item.businessBean.businessTypeId == "6"){
+                            item.icon = '../../../static/img/cafe_icon.svg'
+                        }else if(item.businessBean.businessTypeId == "7"){
+                            item.icon = '../../../static/img/teahouse_icon.svg'
+                        }
                         if (item.regionId) {
                             if (!regionIdList.includes(item.regionId)){
                                 regionIdList.push(item.regionId)

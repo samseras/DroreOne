@@ -33,6 +33,7 @@ const map = {
         facilityplant:[],
         facilityindicator:[],
         facilityroad:[],
+        facilityStation:[],
         transportType:'0',
         treeShow:[],
         musicShow:false,
@@ -164,7 +165,6 @@ const map = {
         },
         [types.MAP_LOCATION] (state, data) {
             state.location = data
-            console.log(state.location, '909090909090909090909')
         },
         [types.MAP_REGION_LOCATION] (state, data) {
             state.regionLocation = data
@@ -282,7 +282,7 @@ const map = {
             state.transportType = data
         },
         [types.FACILITY_STATION] (state, data) {
-            state.getfacilityStation= data
+            state.facilityStation= data
         },
         [types.SET_MUSIC](state,data){
             state.musicShow=data;

@@ -1120,7 +1120,7 @@
                             this.iconList[i].type ="车站"
                             this.iconList[i].subtype = "station"
                             this.iconList[i].url="/static/img/icon/station_check.png"
-                        }else if(this.iconList[i].type == "1"){
+                        }else{
                             // //假数据
                             // this.iconList[i].type == "transport"
                             // this.iconList[i].subtype = "boat"
@@ -1563,8 +1563,31 @@
                         this.iconList[i].id=this.iconList[i].businessBean.id
                         this.iconList[i].name =this.iconList[i].businessBean.name
                         this.iconList[i].location = [this.iconList[i].longitude,this.iconList[i].latitude]
-                        this.iconList[i].url="/static/img/icon/shop.png"
-                        this.iconList[i].subtype='shop'
+                        if(this.iconList[i].businessBean.businessTypeId == "1"){
+                            this.iconList[i].url="/static/img/icon/shop_small.png"
+                            this.iconList[i].subtype='shop'
+                        }else if(this.iconList[i].businessBean.businessTypeId == "2"){
+                            this.iconList[i].url="/static/img/icon/supermarket_small.png"
+                            this.iconList[i].subtype='supermarket'
+                        }else if(this.iconList[i].businessBean.businessTypeId == "3"){
+                            this.iconList[i].url="/static/img/icon/restaurant_small.png"
+                            this.iconList[i].subtype='restaurant'
+                        }else if(this.iconList[i].businessBean.businessTypeId == "4"){
+                            this.iconList[i].url="/static/img/icon/hotel_small.png"
+                            this.iconList[i].subtype='hotel'
+                        }else if(this.iconList[i].businessBean.businessTypeId == "5"){
+                            this.iconList[i].url="/static/img/icon/kursaal_small.png"
+                            this.iconList[i].subtype='kursaal'
+                        }else if(this.iconList[i].businessBean.businessTypeId == "6"){
+                            this.iconList[i].url="/static/img/icon/cafe_small.png"
+                            this.iconList[i].subtype='cafe'
+                        }else if(this.iconList[i].businessBean.businessTypeId == "7"){
+                            this.iconList[i].url="/static/img/icon/teahouse_small.png"
+                            this.iconList[i].subtype='teahouse'
+                        }else {
+                            this.iconList[i].url="/static/img/icon/shop.png"
+                            this.iconList[i].subtype='shop'
+                        }
                     }
                     this.iconShow();
                 }).catch(err => {
@@ -1575,6 +1598,32 @@
                 await api.shop.getAllShop().then(res => {
                     this.shopList = res
                     for (let i = 0; i < this.shopList.length; i++) {
+
+                        var urlSmall;
+                        var urlBig;
+                        if(this.shopList[i].businessBean.businessTypeId == "1"){
+                            urlSmall="/static/img/icon/shop_small.png"
+                            urlBig = "/static/img/icon/shop_big.png"
+                        }else if(this.shopList[i].businessBean.businessTypeId == "2"){
+                            urlSmall="/static/img/icon/supermarket_small.png"
+                            urlBig = "/static/img/icon/supermarket_big.png"
+                        }else if(this.shopList[i].businessBean.businessTypeId == "3"){
+                            urlSmall="/static/img/icon/restaurant_small.png"
+                            urlBig = "/static/img/icon/restaurant_big.png"
+                        }else if(this.shopList[i].businessBean.businessTypeId == "4"){
+                            urlSmall="/static/img/icon/hotel_small.png"
+                            urlBig = "/static/img/icon/hotel_big.png"
+                        }else if(this.shopList[i].businessBean.businessTypeId == "5"){
+                            urlSmall="/static/img/icon/kursaal_small.png"
+                            urlBig = "/static/img/icon/kursaal_big.png"
+                        }else if(this.shopList[i].businessBean.businessTypeId == "6"){
+                            urlSmall="/static/img/icon/cafe_small.png"
+                            urlBig = "/static/img/icon/cafe_big.png"
+                        }else if(this.shopList[i].businessBean.businessTypeId == "7"){
+                            urlSmall="/static/img/icon/teahouse_small.png"
+                            urlBig = "/static/img/icon/teahouse_big.png"
+                        }
+
                         if(this.shopList[i].businessBean.id === this.getLocationId){
                             this.shopList[i].location = [this.shopList[i].longitude,this.shopList[i].latitude]
                             var iconedit = new droreMap.icon.Marker({
@@ -1582,7 +1631,7 @@
                                 name: this.shopList[i].businessBean.name,
                                 subtype: "shop",
                                 id: this.shopList[i].businessBean.id,
-                                url: "/static/img/icon/shop_on.png"
+                                url: urlBig
                             });
                             droreMap.icon.addChild(iconedit);
                             droreMap.interaction.ifDrag = true;
@@ -1606,7 +1655,7 @@
                                 name: this.shopList[i].businessBean.name,
                                 subtype: "shop",
                                 id: this.shopList[i].businessBean.id,
-                                url: "/static/img/icon/shop.png"
+                                url: urlSmall
                             });
                             droreMap.icon.addChild(icon1);
                         }
@@ -6195,8 +6244,24 @@
         background: url("/static/img/icon/conditionRule_three_big.png") no-repeat;
     }
 
-    .contextmenu.gate,.contextmenu.police,.contextmenu.trash,.contextmenu.scenic,.contextmenu.construction,.contextmenu.plant,.contextmenu.park,.contextmenu.toilet,.contextmenu.indicator,.contextmenu.shop,
-    .contextmenu.station,.contextmenu.landing{
+    .contextmenu.gate,
+    .contextmenu.police,
+    .contextmenu.trash,
+    .contextmenu.scenic,
+    .contextmenu.construction,
+    .contextmenu.plant,
+    .contextmenu.park,
+    .contextmenu.toilet,
+    .contextmenu.indicator,
+    .contextmenu.shop,
+    .contextmenu.supermarket,
+    .contextmenu.restaurant,
+    .contextmenu.hotel,
+    .contextmenu.kursaal,
+    .contextmenu.cafe,
+    .contextmenu.teahouse,
+    .contextmenu.station,
+    .contextmenu.landing{
         background: none;
         width: 0;
         height: 0;
@@ -6237,5 +6302,24 @@
     .contextmenu.shop i{
         background: url("/static/img/icon/shop_big.png") no-repeat;
     }
+    .contextmenu.supermarket i{
+        background: url("/static/img/icon/supermarket_big.png") no-repeat;
+    }
+    .contextmenu.restaurant i{
+        background: url("/static/img/icon/restaurant_big.png") no-repeat;
+    }
+    .contextmenu.hotel i{
+        background: url("/static/img/icon/hotel_big.png") no-repeat;
+    }
+    .contextmenu.kursaal i{
+        background: url("/static/img/icon/kursaal_big.png") no-repeat;
+    }
+    .contextmenu.cafe i{
+        background: url("/static/img/icon/cafe_big.png") no-repeat;
+    }
+    .contextmenu.teahouse i{
+        background: url("/static/img/icon/teahouse_big.png") no-repeat;
+    }
+
 
 </style>

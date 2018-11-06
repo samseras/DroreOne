@@ -288,7 +288,7 @@
                         arrObj.forEach(item=>{
                             let str = item.hour.toString()+':00';
                             obj.name = str;
-                            obj.value = item.total_day_flow;
+                            obj.value = item.max_day_flow;
                             arr.push(obj);
                             lengentArr.push(str);
                             obj = {};str='';
@@ -296,7 +296,7 @@
                     }else{
                         let obj = {
                             hour:'',
-                            total_day_flow:0
+                            max_day_flow:0
                         }
                         let n = 10-res.length;
                         let m = res[res.length-1].hour;
@@ -305,13 +305,13 @@
                             res.push(obj);
                             obj = {
                                 hour:'',
-                                total_day_flow:0
+                                max_day_flow:0
                             }
                         }
                         res.forEach(item=>{
                             let str = item.hour.toString()+':00';
                             obj.name = str;
-                            obj.value = item.total_day_flow;
+                            obj.value = item.max_day_flow;
                             arr.push(obj);
                             lengentArr.push(str);
                             obj = {};str='';

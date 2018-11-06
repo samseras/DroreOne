@@ -380,7 +380,31 @@
                                 this.reload()
                             })
                             break;
-
+                        case route.includes("station"):
+                            api.importfile.importStation(form).then(res => {
+                                if(Object.keys(res).length > 0){
+                                    let messages = '';
+                                    for(let i in res){
+                                        messages += "第"+i+"行错误: "+res[i]+"<br>";
+                                    }
+                                    this.$alert(messages, '导入提示', {
+                                        confirmButtonText: '确定',
+                                        dangerouslyUseHTMLString:true,
+                                        callback: action => {
+                                            this.$message.success('导入成功');
+                                            this.reload()
+                                        }
+                                    });
+                                }else{
+                                    this.$message.success('导入成功');
+                                    this.reload()
+                                }
+                                this.$emit("getAllSentry");
+                            }).catch(err => {
+                                this.$message.error('导入失败，请稍后重试')
+                                this.reload()
+                            })
+                            break;
                     }
                 }
             },
@@ -414,6 +438,9 @@
                         break;
                     case route.includes("construction"):
                         window.location.href = "/static/template/facility/building.csv";
+                        break;
+                    case route.includes("station"):
+                        window.location.href = "/static/template/facility/station.csv";
                         break;
                     case route.includes("1"):
                         window.location.href = "/static/template/person/driver.csv";

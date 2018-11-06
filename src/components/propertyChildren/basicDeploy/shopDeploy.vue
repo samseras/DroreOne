@@ -93,7 +93,7 @@
                         </div>
                         <div class="personType" :class="getClass(item.businessBean.businessTypeId)" @click.stop="showPersonDetail(item, '商圈信息',true)">
                             <!--<img src="../../../../static/img/businesCard.png" alt="">-->
-                            <img :src="getUrl(item.picturePath)" alt="" @error="imgError">
+                            <img :src="getUrl(item.picturePath,item.businessBean.businessTypeId)" alt="" @error="imgError">
                             <span class="type">
                                   {{item.businessBean.name}}
                                 </span>
@@ -173,11 +173,25 @@
         methods: {
             ...mapMutations(['TOTAL_NUM', 'CURRENT_NUM']),
             imgError (e) {
-                e.target.src = this.getUrl(null);
+                e.target.src = this.getUrl(null,"1");
             },
-            getUrl (url) {
+            getUrl (url,type) {
                 if (url === null) {
-                    return '../../../../static/img/businesCard.png'
+                    if(type == "2"){
+                        return './../../../../static/img/supermarket.png'
+                    } else if(type == "3"){
+                        return './../../../../static/img/restaurant.png'
+                    } else if(type == "4"){
+                        return './../../../../static/img/hotel.png'
+                    } else if(type == "5"){
+                        return './../../../../static/img/kursaal.png'
+                    } else if(type == "6"){
+                        return './../../../../static/img/cafe.png'
+                    } else if(type == "7"){
+                        return './../../../../static/img/teahouse.png'
+                    } else{
+                        return './../../../../static/img/businesCard.png'
+                    }
                 } else {
                     return url
                 }
