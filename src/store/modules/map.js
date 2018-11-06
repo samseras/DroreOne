@@ -38,7 +38,8 @@ const map = {
         musicShow:false,
         stationChecked:[],
         punchTreeData:[],
-        punchChecked:[]
+        punchChecked:[],
+        stationSetTree:[]
     },
     getters: {
         getLocation (state) {
@@ -150,6 +151,9 @@ const map = {
         },
         getSetPunchTree(state){
             return state.punchChecked
+        },
+        getSetStationTree(state){
+            return state.stationSetTree
         }
     },
     setters: {},
@@ -288,6 +292,9 @@ const map = {
         },
         [types.SET_PUNCH_TREE](state,data){
             state.punchChecked = data
+        },
+        [types.SET_STATION_TREE](state,data){
+            state.stationSetTree = data
         }
     },
     actions: {

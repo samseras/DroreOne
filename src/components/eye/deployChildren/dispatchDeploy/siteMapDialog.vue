@@ -25,7 +25,7 @@
     import api from '@/api'
     import {mapGetters} from 'vuex'
     export default {
-        props: ['visible','type'],
+        props: ['visible','type','routeObj'],
         name: "map-dialog",
         data () {
             return{
@@ -38,19 +38,45 @@
             },
             saveRoat () {
                 console.log(this.getStationChecked,'getStationChecked')
-                let roatObj = {
-                    name: this.name,
-                    geo: {
-                        type:"LineString",
-                        coordinates: this.getRoatLocation
-                    },
-                    type:this.type == '0' ? 2 : 3,  //车 :2  船:3
-                    eOrders:this.getStationChecked
+                let roatObj = {}
+                if(this.routeObj.id){
+                    roatObj = {
+                        id: this.routeObj.id,
+                        name: this.name,
+                        geo: {
+                            type:"LineString",
+                            coordinates: this.getRoatLocation
+                        },
+                        type:this.type == '0' ? 2 : 3,  //车 :2  船:3
+                        eOrders:this.getStationChecked
+                    }
+                    this.updateRoat(roatObj)
+                }else{
+                    roatObj = {
+                        name: this.name,
+                        geo: {
+                            type:"LineString",
+                            coordinates: this.getRoatLocation
+                        },
+                        type:this.type == '0' ? 2 : 3,  //车 :2  船:3
+                        eOrders:this.getStationChecked
+                    }
+                    this.createRoat(roatObj)
                 }
-                console.log(this.type)
-                api.roat.createRoat(JSON.stringify(roatObj)).then(res => {
+            },
+            async createRoat(param){
+                await api.roat.createRoat(JSON.stringify(param)).then(res => {
                     console.log(res, '创建成功')
                     this.$message.success('创建成功')
+                    this.closeMapDialog()
+                }).catch(err => {
+                    this.$message.error(err.message)
+                })
+            },
+            async updateRoat(param){
+                await api.roat.updateRoat(JSON.stringify(param)).then(res => {
+                    console.log(res, '修改成功')
+                    this.$message.success('修改成功')
                     this.closeMapDialog()
                 }).catch(err => {
                     this.$message.error(err.message)
@@ -58,6 +84,11 @@
             }
         },
         created () {
+            if(this.routeObj.id){
+                this.name = this.routeObj.name
+
+                this.$store.commit('SET_STATION_TREE',this.routeObj.stations)
+            }
         },
         components : {
             Map

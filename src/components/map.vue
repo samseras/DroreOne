@@ -428,15 +428,7 @@
             }else if (route.includes('transport-Dmis')) {
                 this.tsShow = true
                 this.getStationList()
-                if(!this.getLocationId){
-                    this.getTransportRoute(); //车船调度路线输出
-                    this.getStation(); //站点现有标注
-                    this.road(); // 路线打点
-                }else {
-                    this.getStation();
-                    this.getAllTransportRouteEdit();//修改车船路线调度
-                    this.road();
-                }
+
             } else if (route.includes('trash-deploy'))  {
                 this.getAllArea();// 片区输出
                 if(!this.getLocationId) {
@@ -1063,6 +1055,16 @@
                         })
                     }
                     console.log(this.stationCheckList,'stationCheckList')
+                    if(!this.getLocationId){
+                        this.getTransportRoute(); //车船调度路线输出
+                        this.getStation(); //站点现有标注
+                        this.road(); // 路线打点
+                    }else {
+                        this.getStation();
+                        this.getAllTransportRouteEdit();//修改车船路线调度
+                        this.initStationCheck();
+                    }
+
                 }).catch(err=>{
                     console.log(err)
                 })
@@ -4341,7 +4343,6 @@
                 this.stationOpt()
             },
             stationOpt(){
-                // console.log(this.stationCheckedList)
                 let objArray = []
                 if(this.stationCheckList.length>0){
                     let i = 1;
@@ -4367,6 +4368,29 @@
                     })
                     this.$refs.tree.setCheckedKeys(checkedKeysId)
                 }
+            },
+            initStationCheck(){
+                console.log(this.getSetStationTree)
+                console.log(this.stationCheckList)
+                //取差集
+                if(this.getSetStationTree.length > 0){
+                    this.stationCheckedList = this.getSetStationTree.map(item=>{
+                        return item.id
+                    })
+                    let extraArray = this.extraMethod(this.stationCheckedList,this.stationCheckList)
+                    this.stationCheckList = this.getSetStationTree.concat(extraArray)
+                    console.log(this.stationCheckList)
+
+                }
+            },
+            extraMethod(arr1,arr2){
+                var subset = [];
+                arr2.forEach(item=>{
+                    if (!arr1.includes(item.id)) {
+                        subset.push(item);
+                    }
+                })
+                return subset;
             }
         },
         components: {
@@ -5333,6 +5357,7 @@
                 'getTreeShow',
                 'getMusicShow',
                 'getSetPunchTree',
+                'getSetStationTree'
             ])
         }
     }

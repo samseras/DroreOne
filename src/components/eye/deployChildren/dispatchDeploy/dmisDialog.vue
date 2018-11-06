@@ -536,7 +536,7 @@
         <MapDialog v-if="mapVisible" :visible="mapVisible" class="map" :routeObj = "routeObj" @closeMapDialog = 'closeMapDialog'></MapDialog>
         <broadcastDialog v-if="broadcastVisible" :visible="broadcastVisible" :broadList="broadList.musics" class="broadcastContent" @closeBroadcastDialog = 'closeBroadcastDialog' @saveMusicList = "musicList"></broadcastDialog>
         <ScreenDialog v-if="screenVisible" :visible="screenVisible" :screenContentList="screen.contents" class="screenContent" @closeScreenDialog = 'closeScreenDialog' @saveContent="saveContent"></ScreenDialog>
-        <SiteMap v-if="siteMapVisible" :visible="siteMapVisible" :type="transport.type" class="map" @closeMapDialog = 'closeSiteMapDialog' :isDisabled="isDisabled"></SiteMap>
+        <SiteMap v-if="siteMapVisible" :visible="siteMapVisible" :type="transport.type" :routeObj = "routeObj" class="map" @closeMapDialog = 'closeSiteMapDialog' :isDisabled="isDisabled"></SiteMap>
     </div>
 </template>
 
@@ -1210,15 +1210,23 @@
                 this.daycustom =false;
             },
             showMapDialog () {
-                this.mapVisible  = true
+                if (this.Info.id) {
+                    if(this.security.inspectionSchedule.routeId){
+                        this.getRouteById(this.security.inspectionSchedule.routeId,'security')
+                    }
+                }else{
+                    this.mapVisible  = true
+                }
+
             },
             showSiteMap(){
-                this.siteMapVisible = true
-                this.lineOptions.forEach(item=>{
-                    if(this.transport.routeId && item.id == this.transport.routeId){
-                        this.routeName = item.name;
+                if (this.Info.id) {
+                    if(this.transport.routeId){
+                        this.getRouteById(this.transport.routeId,'transport')
                     }
-                })
+                }else{
+                    this.siteMapVisible = true
+                }
             },
             showBroadcastDialog () {
                 this.broadcastVisible  = true
@@ -1415,9 +1423,14 @@
                     console.log(err)
                 })
             },
-            async getRouteById(id){
+            async getRouteById(id,type){
                 await api.roat.getRouteById(id).then(res=>{
                     this.routeObj = res
+                    if(type == 'security'){
+                        this.mapVisible = true
+                    }else if(type == 'transport'){
+                        this.siteMapVisible = true
+                    }
                 }).catch(err => {
                     this.$message.error(err.message)
                 })
@@ -1448,9 +1461,6 @@
                 }
 
                 if (this.Info.id) {
-                    if(this.security.inspectionSchedule.routeId){
-                        this.getRouteById(this.security.inspectionSchedule.routeId)
-                    }
                     this.$store.commit('LOCATION_ID', this.Info.inspectionSchedule.routeId)
                 }else {
                     this.$store.commit('LOCATION_ID', '')
@@ -1521,10 +1531,7 @@
                 this.timeSelect = this.transport.watchTime
 
                 if (this.Info.id) {
-                    if(this.transport.routeId){
-                        this.getRouteById(this.transport.routeId)
-                    }
-                    this.$store.commit('LOCATION_ID', this.Info.id)
+                    this.$store.commit('LOCATION_ID', this.Info.routeId)
 
                     if(!this.transport.vDriverMaps){
                         this.$set(this.transport,"vDriverMaps",[])
