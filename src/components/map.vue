@@ -1114,7 +1114,7 @@
                             this.iconList[i].type ="车站"
                             this.iconList[i].subtype = "station"
                             this.iconList[i].url="/static/img/icon/station_check.png"
-                        }else if(this.iconList[i].type == "1"){
+                        }else{
                             // //假数据
                             // this.iconList[i].type == "transport"
                             // this.iconList[i].subtype = "boat"
