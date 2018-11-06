@@ -112,7 +112,7 @@
                         item.label = item.toiletBean.name
                         item.id =  item.toiletBean.id
                         item.type = 'toilet'
-                        item.icon = '../../../static/img/shop_big.svg'
+                        item.icon = '../../../static/img/toilet_big.svg'
                         if (item.regionId) {
                             if (!regionIdList.includes(item.regionId)){
                                 regionIdList.push(item.regionId)

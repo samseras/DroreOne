@@ -827,10 +827,23 @@
                             }
                         }
                     } else {
-                        console.log(this.$route.path, 'p[ppppp[p')
                         let route = this.$route.path
                        if (route.includes('shop')) {//商铺
-                           imgSrc = './../../../../static/img/businesCard.png'
+                            if(this.shop.businessBean.businessTypeId == "2"){
+                                imgSrc = './../../../../static/img/supermarket.png'
+                            } else if(this.shop.businessBean.businessTypeId == "3"){
+                                imgSrc = './../../../../static/img/restaurant.png'
+                            } else if(this.shop.businessBean.businessTypeId == "4"){
+                                imgSrc = './../../../../static/img/hotel.png'
+                            } else if(this.shop.businessBean.businessTypeId == "5"){
+                                imgSrc = './../../../../static/img/kursaal.png'
+                            } else if(this.shop.businessBean.businessTypeId == "6"){
+                                imgSrc = './../../../../static/img/cafe.png'
+                            } else if(this.shop.businessBean.businessTypeId == "7"){
+                                imgSrc = './../../../../static/img/teahouse.png'
+                            } else{
+                               imgSrc = './../../../../static/img/businesCard.png'
+                            }
 
                        }else if (route.includes('park')) {//停车
                            imgSrc = './../../../../static/img/parkCard.png'
