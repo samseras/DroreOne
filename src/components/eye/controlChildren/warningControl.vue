@@ -386,6 +386,11 @@
                             }
                         })
                     })
+                    if(arr.length >0){
+                        arr.forEach(item=>{
+                            item.label = item.label+'（'+item.children.length+'个）'
+                        })
+                    }
                     this.lightInfo = arr
                     this.pending=this.pendinglist.length
                     this.fault=this.faultlist.length

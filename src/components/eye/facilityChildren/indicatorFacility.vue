@@ -151,6 +151,11 @@
                     if (noRegion.children.length > 0) {
                         arr.push(noRegion)
                     }
+                    if(arr.length >0){
+                        arr.forEach(item=>{
+                            item.label = item.label+'（'+item.children.length+'个）'
+                        })
+                    }
                     this.lightInfo = arr
                     console.log(this.lightInfo,'16565623');
                 }).catch(err =>{

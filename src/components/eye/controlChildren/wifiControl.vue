@@ -199,6 +199,11 @@
                     }
                     this.fault=this.faultlist.length
                     this.online= this.number - this.fault
+                    if(arr.length >0){
+                        arr.forEach(item=>{
+                            item.label = item.label+'（'+item.children.length+'个）'
+                        })
+                    }
                     this.lightInfo = arr
                     this.drawLine();
                 }).catch(err =>{

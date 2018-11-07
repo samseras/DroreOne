@@ -347,8 +347,6 @@
                         }
 
                         users.forEach(userObj=>{
-
-
                             if(userObj.id == '1665d640b49-c45d01a1a0e0910e'){
                                 userObj.gpsData =  {
                                     "deviceId": "c13e503f-713d-4cd7-9a5d-c62220e1f612",
@@ -399,6 +397,11 @@
                     }
 
                     this.securityPersonInfo.push(personObj)
+                    if(this.securityPersonInfo.length >0){
+                        this.securityPersonInfo.forEach(item=>{
+                            item.label = item.label+'（'+item.children.length+'个）'
+                        })
+                    }
                     console.log(this.securityPersonInfo)
                 })
 
@@ -638,6 +641,12 @@
                                 })
                             }
                             this.securityScheduleInfo.push(scheduleObj)
+                        })
+                    }
+
+                    if(this.securityScheduleInfo.length >0){
+                        this.securityScheduleInfo.forEach(item=>{
+                            item.label = item.label+'（'+item.children.length+'个）'
                         })
                     }
                     this.securityScheduleInfo.sort(this.compare("state"))
