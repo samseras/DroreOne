@@ -526,7 +526,12 @@
                 this.warnListShow=false
                 this.activeIndex = 0
                 this.$store.commit('SHOW_SEARCH', true)
-                this.$router.push('/controler/warn')
+                this.$router.push({
+                    path:"/controler/warn",
+                    query:{
+                        t:Date.now()
+                    },
+                })
             },
             warnShow(index){
                 this.warnListShow=false
