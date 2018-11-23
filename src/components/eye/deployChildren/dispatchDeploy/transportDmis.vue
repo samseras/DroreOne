@@ -361,11 +361,9 @@
                 }
                 api.transport.updateTransport(JSON.stringify(obj)).then(res => {
                     this.closeDmisDialog()
-                    console.log(res, '创建成功')
                     this.getAllRoat()
                     this.$message.success('修改成功')
                 }).catch(err => {
-                    console.log(err, '创建失败')
                     this.$message.error('修改失败，请稍后重试')
                 })
             },

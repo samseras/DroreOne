@@ -71,31 +71,28 @@
         created () {
             let route = this.$route.path;
             if (route.includes('camera')){
-                this.activeIndex = 4
+                this.activeIndex = 2
             }
             if (route.includes('broad')){
-                this.activeIndex = 5
+                this.activeIndex = 3
             }
             if (route.includes('wifi')){
                 this.activeIndex = 0
             }
-            if (route.includes('environment')){
-                this.activeIndex = 1
-            }
             if (route.includes('warn')){
-                this.activeIndex = 6
+                this.activeIndex = 5
             }
             if (route.includes('screen')){
-                this.activeIndex = 3
+                this.activeIndex = 1
             }
             if (route.includes('person')){
-                this.activeIndex = 8
+                this.activeIndex = 6
             }
             if (route.includes('car')){
-                this.activeIndex = 7
+                this.activeIndex = 4
             }
-            if (route.includes('light')){
-                this.activeIndex = 2
+            if (route.includes('security')){
+                this.activeIndex = 7
             }
             if (this.getSearchInfo.id) {
                 this.isShowControler = true

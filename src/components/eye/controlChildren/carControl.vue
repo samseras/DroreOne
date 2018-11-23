@@ -327,6 +327,11 @@
                     this.transportVehicleInfo.push(carObj)
                     this.transportVehicleInfo.push(boatObj)
 
+                    if(this.transportVehicleInfo.length >0){
+                        this.transportVehicleInfo.forEach(item=>{
+                            item.label = item.label+'（'+item.children.length+'个）'
+                        })
+                    }
                     // this.drawLine();
                     console.log(this.transportVehicleInfo)
                 })
@@ -415,6 +420,12 @@
                                 })
                             }
                             this.transportScheduleInfo.push(scheduleObj)
+                        })
+                    }
+
+                    if(this.transportScheduleInfo.length >0){
+                        this.transportScheduleInfo.forEach(item=>{
+                            item.label = item.label+'（'+item.children.length+'个）'
                         })
                     }
                     this.transportScheduleInfo.sort(this.compare('state'))

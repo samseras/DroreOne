@@ -310,21 +310,21 @@
                     this.choseInfoId = this.choseInfos.map(item=>item.id)
                 }
 
-                let isDelete = false
-                this.choseInfoId.forEach(item => {
-                    this.conditionList.forEach(item1 => {
-                        if (item === item1.id) {
-                            if (item1.isEnabled) {
-                                isDelete = true
-                                this.$message.info('所选计划已经开启，请关闭后再删除')
-                                return
-                            }
-                        }
-                    })
-                })
-                if (isDelete) {
-                    return
-                }
+//                let isDelete = false
+//                this.choseInfoId.forEach(item => {
+//                    this.conditionList.forEach(item1 => {
+//                        if (item === item1.id) {
+//                            if (item1.isEnabled) {
+//                                isDelete = true
+//                                this.$message.info('所选计划已经开启，请关闭后再删除')
+//                                return
+//                            }
+//                        }
+//                    })
+//                })
+//                if (isDelete) {
+//                    return
+//                }
 
                 if (this.choseInfoId.length > 0) {
                     this.$confirm('此操作将永久删除该数据, 是否继续?', '提示', {
@@ -397,10 +397,10 @@
             },
             editInfo (info,state,title) {
                 console.log(info);
-                if (info.isEnabled) {
-                    this.$message.info('所选规则已经开启，请关闭后再修改')
-                    return
-                }
+//                if (info.isEnabled) {
+//                    this.$message.info('所选规则已经开启，请关闭后再修改')
+//                    return
+//                }
                 this.showDetail(info,state,title);
             },
             batchEdit(){

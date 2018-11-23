@@ -38,6 +38,12 @@
             },
             saveRoat () {
                 console.log(this.getStationChecked,'getStationChecked')
+                //路线名称长度超过7，大屏展示不下
+                if(this.name.length > 7){
+                    this.$message.error('路线名称长度不能超过7')
+                    return
+                }
+
                 let roatObj = {}
                 if(this.routeObj.id){
                     roatObj = {

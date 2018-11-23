@@ -199,6 +199,12 @@
                     if (noRegion.children.length > 0) {
                         arr.push(noRegion)
                     }
+
+                    if(arr.length >0){
+                        arr.forEach(item=>{
+                            item.label = item.label+'（'+item.children.length+'个）'
+                        })
+                    }
                     this.fault=this.faultlist.length
                     this.online= this.number - this.fault
                     this.lightInfo = arr
