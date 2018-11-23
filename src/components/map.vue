@@ -5829,6 +5829,9 @@
                     height:90%;
                     .checkRow{
                         display: block;
+                        img{
+                            cursor:pointer;
+                        }
                     }
                 }
 
