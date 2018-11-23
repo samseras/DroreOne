@@ -525,8 +525,9 @@
             alarmBadge(){
                 this.warnListShow=false
                 this.activeIndex = 0
-                this.$store.commit('SHOW_SEARCH', true)
                 this.$router.push('/controler/warn')
+                this.$store.commit('SEARCH_INFO',[])
+                this.$store.commit('SHOW_SEARCH', true)
             },
             warnShow(index){
                 this.warnListShow=false
