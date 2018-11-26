@@ -660,9 +660,9 @@
 
             async saveVehicleDetail(){
                 let params = {
-                    "vehicleId":"6f813686-0d21-4bae-b8d8-058653fca0ef",
-                    "stationId":"6655d11c-3a49-40ac-a9c5-30b32484bc01",
-                    "arriveTime":"2018-10-16 16:30:00",
+                    "vehicleId":"671233ad-f55d-49f3-91a3-f4879e0fde19",
+                    "stationId":"d308f7b6-57c8-483a-8530-edad8fe70518",
+                    "arriveTime":"2018-11-22 16:30:00",
                     "downNum":0,
                     "upNum":10,
                     "vacancy":10
