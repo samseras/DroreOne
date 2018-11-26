@@ -59,7 +59,15 @@ const patrol = {
             }
 
         })
-    }
+    },
+
+    isBindInspectionByRoute  (par) {
+        console.log(par, '这是传递的id')
+            return axios ({
+            method: 'GET',
+            url: getUrl('/schedule/inspection?routeId='+par)
+        })
+    },
 }
 
 export default patrol

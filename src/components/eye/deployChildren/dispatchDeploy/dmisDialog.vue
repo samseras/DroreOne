@@ -126,6 +126,12 @@
                                     :key="ite.id"
                                     :label="ite.name"
                                     :value="ite.id">
+                                    <template slot-scope="scope">
+                                        <span style="float: left">{{ ite.name }}</span>
+                                        <span style="float: right;" @click="deleteRouteLine(ite.id,'inspection')">
+                                                <i class="el-icon-close"></i>
+                                        </span>
+                                    </template>
                                 </el-option>
                             </el-select>
                             <i class="el-icon-location-outline" @click="showMapDialog"></i>
@@ -512,7 +518,7 @@
                                     :value="ite.id">
                                     <template slot-scope="scope">
                                         <span style="float: left">{{ ite.name }}</span>
-                                        <span style="float: right;" @click="deleteRouteLine(ite.id)">
+                                        <span style="float: right;" @click="deleteRouteLine(ite.id,'vehicle')">
                                                 <i class="el-icon-close"></i>
                                         </span>
                                     </template>
@@ -703,21 +709,40 @@
             }
         },
         methods: {
-            async deleteRouteLine(id){
-                await api.transport.isBindScheduleByRoute(id).then(item=>{
-                    if(item){
-                        this.$message.error("该路线已绑定计划,无法删除！")
-                    }else{
-                        this.deleteLine(id)
-                    }
-                })
-            },
-            async deleteLine(id){
-               await api.roat.deleteRoat([id]).then(ite=>{
-                    this.lineOptions = this.lineOptions.filter(item=>{
-                        return  item.id != id
+            async deleteRouteLine(id,type){
+                if(type == 'inspection'){
+                    await api.patrol.isBindInspectionByRoute(id).then(item=>{
+                        if(item){
+                            this.$message.error("该路线已绑定计划,无法删除！")
+                        }else{
+                            this.deleteLine(id,type)
+                        }
                     })
-                    this.transport.routeId = ""
+                }else if(type =='vehicle'){
+                    await api.transport.isBindScheduleByRoute(id).then(item=>{
+                        if(item){
+                            this.$message.error("该路线已绑定计划,无法删除！")
+                        }else{
+                            this.deleteLine(id,type)
+                        }
+                    })
+                }
+
+            },
+            async deleteLine(id,type){
+               await api.roat.deleteRoat([id]).then(ite=>{
+                   if(type == 'inspection'){
+                       this.options = this.options.filter(item=>{
+                           return  item.id != id
+                       })
+                       this.security.inspectionSchedule.routeId = ''
+                   }else if(type =='vehicle'){
+                       this.lineOptions = this.lineOptions.filter(item=>{
+                           return  item.id != id
+                       })
+                       this.transport.routeId = ""
+                   }
+
                     this.$message.error("删除成功！")
                 }).catch(err=>{
                     console.log(err)
